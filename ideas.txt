@@ -1,0 +1,3 @@
+Usuarios:
+	-preceptor (maneja la carga de los estudiantes) y secretario. usuario y contraseña.
+	-familias (ven datos publicos, no pueden hacer cambios)
