@@ -1,13 +1,12 @@
-﻿using Clinica.Dominio.Types;
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Types;
 
 namespace Clinica.Dominio.Entidades;
 
-public record struct Paciente {
-	NombreCompleto Nombre;
-	DniArgentino Dni;
-	Contacto Contacto;
-	DomicilioArgentino Domicio;
-	FechaDeNacimiento FechaNacimiento;
-}
-
-
+public record Paciente(
+	NombreCompleto Nombre,
+	DniArgentino Dni,
+	Contacto Contacto,
+	DomicilioArgentino Domicilio,
+	FechaDeNacimiento FechaNacimiento
+);

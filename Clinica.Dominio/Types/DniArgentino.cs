@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using Clinica.Dominio.Comun;
+using System.Text.RegularExpressions;
 
 namespace Clinica.Dominio.Types;
 

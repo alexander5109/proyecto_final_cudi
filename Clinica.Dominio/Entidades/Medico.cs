@@ -2,13 +2,13 @@
 
 namespace Clinica.Dominio.Entidades;
 
-public record struct Medico {
-	NombreCompleto Nombre;
-	EspecialidadMedica Especialidad;
-	DniArgentino Dni;
-	DomicilioArgentino Domicilio;
-	Contacto Contacto;
-	MedicoDiasDeAtencion DiasDeAtencion;
-}
+public record struct Medico (
+	NombreCompleto Nombre,
+	EspecialidadMedica Especialidad,
+	DniArgentino Dni,
+	DomicilioArgentino Domicilio,
+	Contacto Contacto,
+	MedicoDiasDeAtencion DiasDeAtencion
+);
 
 
