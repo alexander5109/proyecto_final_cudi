@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -22,20 +23,46 @@ public partial class App : Application {
 	public void StyleButton_MouseEnter(object sender, RoutedEventArgs e) {
 		if (SoundOn)
 			PlaySound("uclicknofun.wav");
+		//System.Media.SystemSounds.Asterisk.Play();
+		//PlaySound("uclicknofun.wav");
+		//PlaySound(@"C:\Windows\Media\chimes.wav");
+		//PlaySystemSound("Windows Ding.wav");
+		//System.Media.SystemSounds.Beep.Play();
+		//System.Media.SystemSounds.Exclamation.Play();
+		//System.Media.SystemSounds.Hand.Play();
+		//System.Media.SystemSounds.Question.Play();
 	}
 
+	private static void PlaySystemSound(string fileName) {
+		string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+								   "Media", fileName);
+		try {
+			using var player = new SoundPlayer(path);
+			player.Play();
+		} catch (Exception ex) {
+			MessageBox.Show($"Error reproduciendo sonido del sistema: {ex.Message}");
+		}
+	}
 	public static void PlayClickJewel() {
 		if (SoundOn)
+		//PlaySound("uclick.wav");
+		//PlaySound("uclick_jewel.wav");
 			PlaySound("uclick_jewel.wav");
+
+		//PlaySystemSound("Windows Notify System Generic.wav");
+		//System.Media.SystemSounds.Asterisk.Play();
+
 	}
 
 	private static void PlaySound(string fileName) {
 		try {
 			string path = GetSoundPath(fileName);
-			Sonidito.Open(new Uri(path, UriKind.Absolute));
-			Sonidito.Play();
+			using var player = new SoundPlayer(path);
+			player.Load();  // forces immediate load (optional)
+			player.Play();  // PlaySync() blocks until done, Play() is async
 		} catch (Exception ex) {
-			MessageBox.Show($"Error reproduciendo sonido: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			MessageBox.Show($"Error reproduciendo sonido {fileName}: {ex.Message}",
+							"Error", MessageBoxButton.OK, MessageBoxImage.Error);
 		}
 	}
 
