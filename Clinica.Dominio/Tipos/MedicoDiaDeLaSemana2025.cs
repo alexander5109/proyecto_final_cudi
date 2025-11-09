@@ -57,7 +57,6 @@ public readonly record struct MedicoDiaDeLaSemana2025(
 			: throw new InvalidCastException($"No se pudo convertir '{input}' a MedicoDiaDeLaSemana2025.");
 	}
 
-	// --- ToString() en español ---
 	public override string ToString() =>
 		Value switch {
 			DayOfWeek.Sunday => "Domingo",

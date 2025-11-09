@@ -17,6 +17,5 @@ public readonly record struct MedicoDisponibilidadEnDia2025(
 		return new Result<MedicoDisponibilidadEnDia2025>.Ok(new(dia, lista));
 	}
 
-	public override string ToString() =>
-		$"{DiaSemana}: {string.Join(", ", FranjasHorarias.Select(f => f.ToString()))}";
+	public override string ToString() => $"{DiaSemana}: {string.Join(", ", FranjasHorarias.Select(f => f.ToString()))}";
 }

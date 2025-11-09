@@ -27,6 +27,4 @@ public readonly record struct NombreCompleto2025(
 		// Podríamos también normalizar mayúsculas/minúsculas si quisieras.
 		return new Result<NombreCompleto2025>.Ok(new(nombre, apellido));
 	}
-
-	public override string ToString() => $"{Nombre} {Apellido}";
 }

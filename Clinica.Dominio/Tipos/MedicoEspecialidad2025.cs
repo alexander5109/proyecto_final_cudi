@@ -39,6 +39,4 @@ public readonly record struct MedicoEspecialidad2025(
 
 		return new Result<MedicoEspecialidad2025>.Ok(candidato);
 	}
-
-	public override string ToString() => $"{Titulo} ({Rama})";
 }

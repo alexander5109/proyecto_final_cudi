@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Clinica.Dominio.Tipos;
 
-public readonly struct DniArgentino2025(
+public readonly record struct DniArgentino2025(
 	string Value
 ){ 
 	public static Result<DniArgentino2025> Crear(string input) {
@@ -18,7 +18,8 @@ public readonly struct DniArgentino2025(
 		return new Result<DniArgentino2025>.Ok(new DniArgentino2025(normalized));
 	}
 
-	public override string ToString() => Value;
+	// Conversión implícita hacia string
+	public static implicit operator string(DniArgentino2025 c) => c.Value;
 }
 
 

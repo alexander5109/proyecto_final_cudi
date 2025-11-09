@@ -49,5 +49,5 @@ public readonly record struct ProvinciaDeArgentina2025(
 	public static IReadOnlyCollection<string> ListarPosibles()
 		=> _provinciasValidas.ToList().AsReadOnly();
 
-	public override string ToString() => Nombre;
+
 }

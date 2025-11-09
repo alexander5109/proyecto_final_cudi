@@ -26,6 +26,4 @@ public readonly record struct DomicilioArgentino2025(
 			)
 		);
 	}
-
-	public override string ToString() => $"{Direccion}, {Localidad}";
 }

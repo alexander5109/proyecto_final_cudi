@@ -17,6 +17,4 @@ public readonly record struct LocalidadDeProvincia2025(
 
 		return new Result<LocalidadDeProvincia2025>.Ok(new(normalizado, provincia));
 	}
-
-	public override string ToString() => $"{Nombre}, {Provincia.Nombre}";
 }

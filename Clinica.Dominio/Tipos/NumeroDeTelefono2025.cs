@@ -14,4 +14,7 @@ public readonly record struct NumeroDeTelefono2025(
 
 		return new Result<NumeroDeTelefono2025>.Ok(new NumeroDeTelefono2025(input.Trim()));
 	}
+
+	// Conversión implícita hacia string
+	public static implicit operator string(NumeroDeTelefono2025 c) => c.Value;
 }

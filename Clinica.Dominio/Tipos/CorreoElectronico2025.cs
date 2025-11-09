@@ -15,7 +15,8 @@ public readonly record struct CorreoElectronico(
 		return new Result<CorreoElectronico>.Ok(new(input.Trim()));
 	}
 
-	public override string ToString() => Value;
+	// Conversión implícita hacia string
+	public static implicit operator string(CorreoElectronico c) => c.Value;
 }
 
 
