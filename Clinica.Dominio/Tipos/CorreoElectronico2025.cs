@@ -3,10 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace Clinica.Dominio.Tipos;
 
-public readonly record struct CorreoElectronico {
-	private readonly string _value;
-	private CorreoElectronico(string value) => _value = value;
-
+public readonly record struct CorreoElectronico(
+	string Value
+) {
 	public static Result<CorreoElectronico> Crear(string input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<CorreoElectronico>.Error("El correo no puede estar vacío.");
@@ -16,7 +15,7 @@ public readonly record struct CorreoElectronico {
 		return new Result<CorreoElectronico>.Ok(new(input.Trim()));
 	}
 
-	public override string ToString() => _value;
+	public override string ToString() => Value;
 }
 
 

@@ -42,7 +42,6 @@ namespace Clinica.AppWPF {
 			LeerDesdeVentana(window);
 		}
 		
-		
 		// Metodo para aplicarle los cambios de una ventana a una instancia de medico existente.
 		public void LeerDesdeVentana(PacientesModificar window) {
 			this.Dni = window.txtDni.Text;

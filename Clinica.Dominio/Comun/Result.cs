@@ -7,8 +7,8 @@ public abstract class Result<T> {
 	}
 
 	public sealed class Error : Result<T> {
-		public string Message { get; }
-		public Error(string message) => Message = message;
+		public string Mensaje { get; }
+		public Error(string message) => Mensaje = message;
 	}
 
 	public bool IsOk => this is Ok;
@@ -17,7 +17,7 @@ public abstract class Result<T> {
 	public TOut Match<TOut>(Func<T, TOut> ok, Func<string, TOut> error) =>
 		this switch {
 			Ok o => ok(o.Value),
-			Error e => error(e.Message),
+			Error e => error(e.Mensaje),
 			_ => throw new InvalidOperationException()
 		};
 }
