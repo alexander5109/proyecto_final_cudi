@@ -1,0 +1,304 @@
+﻿<Window x:Class="Clinica.AppWPF.MedicosModificar"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:Clinica.AppWPF"
+		mc:Ignorable="d"
+		Title="Clinica Medica - Medicos Modificar"
+		Height="675"
+		Width="930"
+		Icon="../images/icono.png"
+		WindowStartupLocation="CenterScreen">
+	<Window.Background>
+		<ImageBrush ImageSource="/images/MedicosFondo.jpg"
+				Stretch="UniformToFill"/>
+	</Window.Background>
+
+
+
+	<Grid Height="auto"
+			Width="auto">
+
+		<Label Content="Médico"
+			   HorizontalAlignment="Left"
+			   Margin="144,59,0,0"
+			   VerticalAlignment="Top"
+			   FontSize="32"
+			   FontFamily="Ringbearer"
+			   Height="65"/>
+
+
+		<Grid Margin="349,4,0,0"
+			  VerticalAlignment="Top"
+			  HorizontalAlignment="Left"
+			  MaxWidth="515"
+			  Height="645">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+
+			</Grid.RowDefinitions>
+
+			<Label Content="Nombre"
+				   Grid.Row="0"
+				   Grid.Column="0"
+				   HorizontalAlignment="Right"
+				   Width="Auto"
+				   VerticalAlignment="Center"/>
+			<TextBox x:Name="txtName"
+					Style="{StaticResource TextBoxLindo2}" 
+					 Grid.Row="0"
+					 Grid.Column="1"
+					 Width="Auto"
+					 Margin="5,5,5,5"/>
+
+			<Label Content="Apellido"
+				   Grid.Row="1"
+				   Grid.Column="0"
+				   HorizontalAlignment="Right"
+				   Width="Auto"
+				   VerticalAlignment="Center"/>
+			<TextBox x:Name="txtLastName"
+					Style="{StaticResource TextBoxLindo2}" 
+					 Grid.Row="1"
+					 Grid.Column="1"
+					 Width="Auto"
+					 Margin="5,5,5,5"/>
+
+			<Label Content="DNI"
+				   Grid.Row="2"
+				   Grid.Column="0"
+				   HorizontalAlignment="Right"
+				   Width="Auto"
+				   VerticalAlignment="Center"/>
+			<TextBox x:Name="txtDni"
+					Style="{StaticResource TextBoxLindo2}" 
+					 Grid.Row="2"
+					  MaxLength="8"
+					 Grid.Column="1"
+					 Width="Auto"
+					 Margin="5,5,5,5"/>
+
+			<Label Content="Teléfono"
+				   Grid.Row="3"
+				   Grid.Column="0"
+				   HorizontalAlignment="Right"
+				   Width="Auto"
+				   VerticalAlignment="Center"/>
+			<TextBox x:Name="txtTelefono"
+					Style="{StaticResource TextBoxLindo2}" 
+					 Grid.Row="3"
+					 Grid.Column="1"
+					 Width="Auto"
+					  MaxLength="20"
+					 Margin="5,5,5,5"/>
+
+			<Label Content="Provincia"
+				   Grid.Row="4"
+				   Grid.Column="0"
+				   HorizontalAlignment="Right"
+				   Width="Auto"
+				   VerticalAlignment="Center"/>
+			<TextBox x:Name="txtProvincia"
+					Style="{StaticResource TextBoxLindo2}" 
+					 Grid.Row="4"
+					 Grid.Column="1"
+					 Width="Auto"
+					 Margin="5,5,5,5"/>
+
+			<Label Content="Domicilio"
+				   Grid.Row="5"
+				   Grid.Column="0"
+				   HorizontalAlignment="Right"
+				   Width="Auto"
+				   VerticalAlignment="Center"/>
+			<TextBox x:Name="txtDomicilio"
+					Style="{StaticResource TextBoxLindo2}" 
+					 Grid.Row="5"
+					 Grid.Column="1"
+					 Width="Auto"
+					 Margin="5,5,5,5"/>
+
+			<Label Content="Localidad"
+				   Grid.Row="6"
+				   Grid.Column="0"
+				   HorizontalAlignment="Right"
+				   Width="Auto"
+				   VerticalAlignment="Center"/>
+			<TextBox x:Name="txtLocalidad"
+					Style="{StaticResource TextBoxLindo2}" 
+					 Grid.Row="6"
+					 Grid.Column="1"
+					 Width="Auto"
+					 Margin="5,5,5,5"/>
+
+			<Label Content="Especialidad"
+				   Grid.Row="7"
+				   Grid.Column="0"
+				   Width="Auto"
+				   VerticalAlignment="Center"
+				   HorizontalAlignment="Right"/>
+			<TextBox x:Name="txtEspecialidad"
+					Style="{StaticResource TextBoxLindo2}" 
+					 Grid.Row="7"
+					 Grid.Column="1"
+					 Width="Auto"
+					 Margin="5,5,5,5"/>
+
+			<Label Content="Sueldo Minimo Garantizado"
+				   Grid.Row="8"
+				   Width="Auto"
+				   Grid.Column="0"
+				   HorizontalContentAlignment="Center"
+				   HorizontalAlignment="Right"
+				   VerticalAlignment="Center"/>
+			<TextBox x:Name="txtSueldoMinimoGarantizado"
+					Style="{StaticResource TextBoxLindo2}" 
+					 Grid.Row="8"
+					 Grid.Column="1"
+					 Margin="5,5,5,5"/>
+
+			<Label Content="Fecha de Ingreso"
+				   Grid.Row="9"
+				   Grid.Column="0"
+				   Width="Auto"
+				   Height="Auto"
+				   HorizontalAlignment="Right"
+				   VerticalAlignment="Center"/>
+			<DatePicker Grid.Row="9"
+						Grid.Column="1"
+						x:Name="txtFechaIngreso"
+						Margin="5,5,5,5"
+						Grid.ColumnSpan="2"/>
+
+			<Label Content="Realiza Guardia"
+				   Grid.Row="10"
+				   Grid.Column="0"
+				   Width="Auto"
+				   Height="Auto"
+				   HorizontalAlignment="Right"
+				   VerticalAlignment="Center"/>
+			<CheckBox x:Name="txtGuardia"
+					  Grid.Row="10"
+					  Grid.Column="1"
+					  HorizontalAlignment="Center"
+					  Margin="5,5,5,5"
+					  Width="16"
+					  VerticalAlignment="Center">
+				<DatePicker/>
+			</CheckBox>
+			<Label Content="Días de atención"
+				   Grid.Row="11"
+				   Grid.Column="0"
+				   HorizontalAlignment="Right"
+				   Width="Auto"
+				   Height="Auto"
+				   Grid.RowSpan="3"
+				   VerticalAlignment="Center"
+				   HorizontalContentAlignment="Center"
+				   VerticalContentAlignment="Center"/>
+			<ListView x:Name="txtDiasDeAtencion"
+					  VerticalAlignment="Center"
+					  Height="auto"
+					  Grid.RowSpan="3"
+					  Grid.Row="11"
+					  Grid.Column="1"
+					  Margin="5,5,5,5"
+					  HorizontalAlignment="Center"
+					  HorizontalContentAlignment="Center"
+					  ScrollViewer.VerticalScrollBarVisibility="Auto"
+					  Width="auto"
+					  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+					  Grid.IsSharedSizeScope="True">
+				<ListView.View>
+					<GridView>
+						<GridViewColumn Header="Día de la Semana"
+										Width="auto"
+										DisplayMemberBinding="{Binding DiaSemana}"/>
+						<GridViewColumn Header="Inicio Horario"
+										Width="120">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<TextBox Text="{Binding HoraInicio}"
+											 Margin="1,1,1,1"
+											 Width="100"/>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+						<GridViewColumn Header="Fin Horario"
+										Width="120">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<TextBox Text="{Binding HoraFin}"
+											 Width="100"
+											 Margin="1,1,1,1"/>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+					</GridView>
+				</ListView.View>
+			</ListView>
+		</Grid>
+
+
+
+
+
+
+
+
+		<Button FontSize="20"
+				Content="Volver"
+				HorizontalAlignment="Left"
+				Style="{StaticResource BotonRedondeado}"
+				Height="43"
+				VerticalAlignment="Top"
+				Width="188"
+				BorderBrush="Black"
+				Background="White"
+				Click="ButtonCancelar"
+				FontFamily="Baskerville Old Face"
+				Margin="65,495,0,0"/>
+		<Button x:Name="botonMultiUso"
+				FontSize="20"
+				Content="Guardar cambios"
+				HorizontalAlignment="Left"
+				Height="38"
+				VerticalAlignment="Top"
+				Width="190"
+				Style="{StaticResource BotonRedondeado}"
+				BorderBrush="Black"
+				Background="White"
+				FontFamily="Baskerville Old Face"
+				Margin="65,386,0,0"
+				Click="ButtonGuardar"/>
+		<Button x:Name="buttonEliminar"
+				FontSize="20"
+				Content="Eliminar medico"
+				HorizontalAlignment="Left"
+				Height="38"
+				Margin="65,435,0,0"
+				Style="{StaticResource BotonRedondeado}"
+				VerticalAlignment="Top"
+				Width="188"
+				Click="ButtonEliminar"
+				BorderBrush="Black"
+				Background="White"
+				FontFamily="Baskerville Old Face"/>
+	</Grid>
+</Window>

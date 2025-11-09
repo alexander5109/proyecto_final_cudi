@@ -1,20 +1,72 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
+﻿using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace Clinica.AppWPF;
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
-public partial class MainWindow : Window {
-	public MainWindow() {
-		InitializeComponent();
+namespace Clinica.AppWPF{
+	public partial class MainWindow : Window {
+		
+		public MainWindow() {
+			InitializeComponent();
+			soundCheckBox.IsChecked = App.SoundOn;
+		}
+		public void MetodoBotonLogin(object sender, RoutedEventArgs e) {
+			this.AbrirComoDialogo<Login>();
+		}
+        private void MetodoBotonMedicos(object sender, RoutedEventArgs e) {
+			if (App.UsuarioLogueado) {
+				this.NavegarA<Medicos>();
+			} else {
+				this.AbrirComoDialogo<Login>();
+				if (App.UsuarioLogueado) {
+					this.NavegarA<Medicos>();
+				}
+			}
+		}
+
+        private void MetodoBotonPacientes(object sender, RoutedEventArgs e) {
+			if (App.UsuarioLogueado) {
+				this.NavegarA<Pacientes>();
+			}
+			else {
+				this.AbrirComoDialogo<Login>();
+				if (App.UsuarioLogueado) {
+					this.NavegarA<Pacientes>();
+				}
+			}
+		}
+
+		private void MetodoBotonTurnos(object sender, RoutedEventArgs e) {
+			if (App.UsuarioLogueado) {
+				this.NavegarA<Turnos>();
+			}
+			else {
+				this.AbrirComoDialogo<Login>();
+				if (App.UsuarioLogueado) {
+					this.NavegarA<Turnos>();
+				}
+			}
+		}
+		
+		private void Window_Activated(object sender, EventArgs e) {
+			App.UpdateLabelDataBaseModo(this.labelBaseDeDatosModo);
+		}
+
+		private void ButtonSalir(object sender, RoutedEventArgs e) {
+			this.Salir();
+		}
+
+		private void soundCheckBox_Checked(object sender, RoutedEventArgs e) {
+			if (soundCheckBox.IsChecked == true) {
+				App.SoundOn = true;
+				App.PlayClickJewel();
+			}
+			else {
+				App.SoundOn = false;
+			}
+		}
+		
+		
+		
+		
+		
 	}
 }
