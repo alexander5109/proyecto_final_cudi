@@ -8,10 +8,10 @@
 		Title="Clinica Medica - Medicos Modificar"
 		Height="675"
 		Width="930"
-		Icon="../images/icono.png"
+		Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 		WindowStartupLocation="CenterScreen">
 	<Window.Background>
-		<ImageBrush ImageSource="/images/MedicosFondo.jpg"
+		<ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/MedicosFondo.jpg"
 				Stretch="UniformToFill"/>
 	</Window.Background>
 

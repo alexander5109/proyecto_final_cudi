@@ -8,7 +8,7 @@
 		Title="Clinica Medica - Turnos Agregar"
 		Height="450"
 		Width="800"
-		Icon="../images/icono.png"
+		Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 		WindowStartupLocation="CenterScreen"
 		Padding="10,10,10,10">
 	<Grid Width="801">
@@ -156,6 +156,6 @@
 				Height="33" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"/>
 	</Grid>
 	<Window.Background>
-		<ImageBrush ImageSource="/images/MedicosFondo.jpg"/>
+		<ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/MedicosFondo.jpg"/>
 	</Window.Background>
 </Window>

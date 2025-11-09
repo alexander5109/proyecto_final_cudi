@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 
 namespace Clinica.AppWPF {
 	public class BaseDeDatosJSON : BaseDeDatosAbstracta{
-		static readonly string medicosPath = "databases/medicos.json";
-		static readonly string pacientesPath = "databases/pacientes.json";
-		static readonly string turnosPath = "databases/turnos.json";
+		static readonly string medicosPath = "json_database/medicos.json";
+		static readonly string pacientesPath = "json_database/pacientes.json";
+		static readonly string turnosPath = "json_database/turnos.json";
 		
 		public BaseDeDatosJSON() {
 			ConectadaExitosamente = (

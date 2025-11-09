@@ -10,41 +10,41 @@ namespace Clinica.AppWPF {
 		public static MediaPlayer Sonidito = new MediaPlayer();
 
 		// public void StyleButton_Click(object sender, System.Windows.RoutedEventArgs e) {
-			// Sonidito.Open(new Uri("sonidos\\uclick_jewel.wav", UriKind.Relative));
-			// Sonidito.Play();
+		// Sonidito.Open(new Uri("PublishedResources\\sonidos\\uclick_jewel.wav", UriKind.Relative));
+		// Sonidito.Play();
 		// }
 
-		public void StyleButton_MouseEnter(object sender, System.Windows.RoutedEventArgs e){
+		public void StyleButton_MouseEnter(object sender, System.Windows.RoutedEventArgs e) {
 			//Es muy molesto.
-			// Sonidito.Open(new Uri("sonidos\\uclicknofun.wav", UriKind.Relative));
+			// Sonidito.Open(new Uri("PublishedResources\\sonidos\\uclicknofun.wav", UriKind.Relative));
 			if (SoundOn) {
-				// Sonidito.Open(new Uri("sonidos\\PIU!.wav", UriKind.Relative));
-				Sonidito.Open(new Uri("sonidos\\uclicknofun.wav", UriKind.Relative));
+				// Sonidito.Open(new Uri("PublishedResources\\sonidos\\PIU!.wav", UriKind.Relative));
+				Sonidito.Open(new Uri("PublishedResources\\sonidos\\uclicknofun.wav", UriKind.Relative));
 				Sonidito.Play();
 			}
 		}
 
 		static public void PlayClickJewel() {
 			if (SoundOn) {
-				// Sonidito.Open(new Uri("sonidos\\ULTRAPEEOOU!.wav", UriKind.Relative));
-				Sonidito.Open(new Uri("sonidos\\uclick_jewel.wav", UriKind.Relative));
+				// Sonidito.Open(new Uri("PublishedResources\\sonidos\\ULTRAPEEOOU!.wav", UriKind.Relative));
+				Sonidito.Open(new Uri("PublishedResources\\sonidos\\uclick_jewel.wav", UriKind.Relative));
 				Sonidito.Play();
 			}
 		}
-		
-		
-		
-		public static bool TryParseHoraField(string campo){
-			if (TimeOnly.TryParse(campo, out _)){
+
+
+
+		public static bool TryParseHoraField(string campo) {
+			if (TimeOnly.TryParse(campo, out _)) {
 				return true;
 			} else {
 				return false;
-            }
+			}
 		}
-			
-		
+
+
 		public static void UpdateLabelDataBaseModo(Label label) {
-			if (App.BaseDeDatos is BaseDeDatosJSON ) {
+			if (App.BaseDeDatos is BaseDeDatosJSON) {
 				label.Content = "Modo JSON";
 			} else if (App.BaseDeDatos is BaseDeDatosSQL) {
 				label.Content = "Modo SQL";

@@ -8,13 +8,13 @@
         Title="Clinica Medica - Home" 
 		Height="600"
 		Width="1024"
-		Icon="images/icono.png"
+		Icon="pack://application:,,,/PublishedResources/icons/icono.ico"
         Activated="Window_Activated"
 		WindowStartupLocation="CenterScreen">
 
 	<Grid>
 		<Grid.Background>
-			<ImageBrush ImageSource="/images/fondo.jpg"/>
+			<ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/fondo.jpg"/>
 		</Grid.Background>
 
 		<Label Style="{StaticResource LabelLindo}"  x:Name="labelBaseDeDatosModo" Content="Elegir DB Modo" Margin="24,474,0,0" FontSize="35" HorizontalAlignment="Left" FontFamily="Palatino Linotype" VerticalAlignment="Top" Foreground="#FF0F0A2B" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="10,10,10,10" Width="316"/>
@@ -113,12 +113,12 @@
 									<Style.Triggers>
 										<!-- Checked state without hover -->
 										<DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}" Value="True">
-											<Setter Property="Source" Value="pack://application:,,,/images/sonidoOn.png"/>
+											<Setter Property="Source" Value="pack://application:,,,/PublishedResources/images/sonidoOn.png"/>
 										</DataTrigger>
 
 										<!-- Unchecked state without hover -->
 										<DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}" Value="False">
-											<Setter Property="Source" Value="pack://application:,,,/images/sonidoOff.png"/>
+											<Setter Property="Source" Value="pack://application:,,,/PublishedResources/images/sonidoOff.png"/>
 										</DataTrigger>
 
 										<!-- Checked state with hover -->
@@ -127,7 +127,7 @@
 												<Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}" Value="True"/>
 												<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=CheckBox}}" Value="True"/>
 											</MultiDataTrigger.Conditions>
-											<Setter Property="Source" Value="pack://application:,,,/images/sonidoOn_hover.png"/>
+											<Setter Property="Source" Value="pack://application:,,,/PublishedResources/images/sonidoOn_hover.png"/>
 										</MultiDataTrigger>
 
 										<!-- Unchecked state with hover -->
@@ -136,7 +136,7 @@
 												<Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}" Value="False"/>
 												<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=CheckBox}}" Value="True"/>
 											</MultiDataTrigger.Conditions>
-											<Setter Property="Source" Value="pack://application:,,,/images/sonidoOff_hover.png"/>
+											<Setter Property="Source" Value="pack://application:,,,/PublishedResources/images/sonidoOff_hover.png"/>
 										</MultiDataTrigger>
 									</Style.Triggers>
 								</Style>

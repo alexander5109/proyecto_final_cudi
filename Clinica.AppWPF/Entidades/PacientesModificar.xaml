@@ -6,12 +6,12 @@
 		xmlns:local="clr-namespace:Clinica.AppWPF"
 		mc:Ignorable="d"
 		Title="Clinica Medica - Pacientes Agregar"
-		Icon="../images/icono.png"
+		Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 		WindowStartupLocation="CenterScreen"
 		Width="725"
 		Height="505">
 	<Window.Background>
-		<ImageBrush ImageSource="/images/MedicosFondo.jpg"
+		<ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/MedicosFondo.jpg"
 				Stretch="UniformToFill"/>
 	</Window.Background>
 

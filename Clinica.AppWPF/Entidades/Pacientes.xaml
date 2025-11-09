@@ -8,7 +8,7 @@
 		Title="Clinica Medica - Pacientes"
 		Height="600"
 		Width="1024"
-		Icon="../images/icono.png"
+		Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 		WindowStartupLocation="CenterScreen"
 		Activated="Window_Activated">
 
@@ -19,7 +19,7 @@
 
 
 		<Grid.Background>
-			<ImageBrush ImageSource="/images/falopa.jpg"/>
+			<ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/falopa.jpg"/>
 		</Grid.Background>
 
 

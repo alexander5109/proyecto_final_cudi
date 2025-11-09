@@ -113,7 +113,7 @@
                             <Border x:Name="border"
                                     CornerRadius="15">
                                 <Border.Background>
-                                    <ImageBrush ImageSource="images/boton/doradito.jpg"/>
+                                    <ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/boton/doradito.jpg"/>
                                 </Border.Background>
                                 <TextBlock HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
@@ -127,7 +127,7 @@
                                 <Setter TargetName="border"
                                         Property="Background">
                                     <Setter.Value>
-                                        <ImageBrush ImageSource="images/boton/doraditoOscuro.jpg"/>
+                                        <ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/boton/doraditoOscuro.jpg"/>
                                     </Setter.Value>
                                 </Setter>
                                 <Setter Property="Foreground"
@@ -149,7 +149,7 @@
                                 <Setter TargetName="border"
                                         Property="Background">
                                     <Setter.Value>
-                                        <ImageBrush ImageSource="images/boton/disabled.jpg"/>
+                                        <ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/boton/disabled.jpg"/>
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
