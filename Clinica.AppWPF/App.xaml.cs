@@ -77,7 +77,8 @@ public partial class App : Application {
 
 
 	public static void UpdateLabelDataBaseModo(Label label) {
-		if (App.BaseDeDatos is BaseDeDatosJSON) {
+		if (App.BaseDeDatos is BaseDeDatosSQL) {
+		//if (App.BaseDeDatos is BaseDeDatosJSON) {
 			label.Content = "Modo JSON";
 		} else if (App.BaseDeDatos is BaseDeDatosSQL) {
 			label.Content = "Modo SQL";

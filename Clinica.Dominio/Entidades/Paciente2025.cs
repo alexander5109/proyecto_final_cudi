@@ -3,8 +3,11 @@ using Clinica.Dominio.Tipos;
 
 namespace Clinica.Dominio.Entidades;
 
+public readonly record struct Paciente2025EnDb (string Id, Paciente2025 Paciente);
+
+
 public readonly record struct Paciente2025(
-	NombreCompleto2025 Nombre,
+	NombreCompleto2025 NombreCompleto,
 	DniArgentino2025 Dni,
 	Contacto2025 Contacto,
 	DomicilioArgentino2025 Domicilio,
@@ -45,5 +48,5 @@ public readonly record struct Paciente2025(
 		));
 	}
 
-	public override string ToString() => $"{Nombre} ({Dni})";
+	public override string ToString() => $"{NombreCompleto} ({Dni})";
 }

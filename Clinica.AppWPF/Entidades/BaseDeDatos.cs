@@ -1,30 +1,31 @@
+using Clinica.Dominio.Entidades;
 using System.Windows;
 
 namespace Clinica.AppWPF {
 	public abstract class BaseDeDatosAbstracta{
 		public Dictionary<string, Turno> DictTurnos = new();
 		public Dictionary<string, Medico> DictMedicos = new();
-		public Dictionary<string, Paciente> DictPacientes = new();
+		public Dictionary<string, Paciente2025EnDb> DictPacientes = new();
 		public virtual bool ConectadaExitosamente { get; protected set; } = false;
 		
 		// Read methods
 		public abstract List<Medico> ReadMedicos();
-		public abstract List<Paciente> ReadPacientes();
+		public abstract List<Paciente2025EnDb> ReadPacientes();
 		public abstract List<Turno> ReadTurnos();
 
 		// Create methods
 		public abstract bool CreateMedico(Medico instance);
-		public abstract bool CreatePaciente(Paciente instance);
+		public abstract bool CreatePaciente(Paciente2025 instance);
 		public abstract bool CreateTurno(Turno instance);
 
 		// Update methods
 		public abstract bool UpdateMedico(Medico instance);
-		public abstract bool UpdatePaciente(Paciente instance);
+		public abstract bool UpdatePaciente(Paciente2025EnDb instance);
 		public abstract bool UpdateTurno(Turno instance);
 
 		// Delete methods
 		public abstract bool DeleteMedico(Medico instance);
-		public abstract bool DeletePaciente(Paciente instance);
+		public abstract bool DeletePaciente(Paciente2025EnDb instance);
 		public abstract bool DeleteTurno(Turno instance);
 		
 		// Filtros
@@ -34,10 +35,7 @@ namespace Clinica.AppWPF {
 			}
 			return DictTurnos.Values.Where(t => t.MedicoId == instance.Id).ToList();
 		}
-		public List<Turno> ReadTurnosWherePacienteId(Paciente instance) {
-			if (instance is null){
-				return null;
-			}
+		public List<Turno> ReadTurnosWherePacienteId(Paciente2025EnDb instance) {
 			return DictTurnos.Values.Where(t => t.PacienteId == instance.Id).ToList();
 		}
 

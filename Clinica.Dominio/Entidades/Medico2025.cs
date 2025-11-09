@@ -3,6 +3,10 @@ using Clinica.Dominio.Tipos;
 
 namespace Clinica.Dominio.Entidades;
 
+
+
+
+
 public readonly record struct Medico2025(
 	NombreCompleto2025 Nombre,
 	MedicoEspecialidad2025 Especialidad,
