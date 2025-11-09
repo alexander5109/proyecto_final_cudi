@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Clinica.Dominio;
 
@@ -24,17 +25,25 @@ public record struct LocalidadDeProvincia {
 	ProvinciaDeArgentina Provincia;
 }
 
-public record struct Domicilio {
-	string Direccion;
-	LocalidadDeProvincia Localidad;
-	string Provincia;
+public class DiaDeLaSemana {
+	public string DiaNombre;
 }
-
 public record struct Medico {
 	NombreCompleto Nombre;
 	EspecialidadMedica Especialidad;
+	DniArgentino Dni;
+	DomicilioArgentino Domicilio;
+	Contacto Contacto;
+	MedicoDiasDeAtencion DiasDeAtencion;
 }
 
+public record struct CorreoElectronico {
+	string Value;
+}
+
+public record struct NumeroDeTelefono {
+	string Value;
+}
 
 public readonly struct DniArgentino {
 	private readonly string _value;
@@ -63,10 +72,46 @@ public record struct Turno {
 	Medico Medico;
 	Paciente Paciente;
 	DateTime FechaYHora;
+	TimeSpan Duracion; // defaults to 40 minutes.
 }
 
+
+public record struct HorarioMedico {
+	DiaDeLaSemana DiaSemana;
+	TimeOnly Desde;
+	TimeOnly Hasta;
+}
+
+
+public record struct MedicoDiasDeAtencion {
+	List<HorarioMedico> DiaSemana;
+	// asegurar que los timespans no se pisen
+}
+
+
+
+public record struct DomicilioArgentino {
+	LocalidadDeProvincia Localidad;
+	ProvinciaDeArgentina Provincia;
+	string Direccion;
+}
+
+public record struct FechaDeNacimiento {
+	DateTime Value;
+}
+
+
+public record struct Contacto {
+	CorreoElectronico Email;
+	NumeroDeTelefono Telefono;
+}
 
 public record struct Paciente {
 	NombreCompleto Nombre;
 	DniArgentino Dni;
+	Contacto Contacto;
+	DomicilioArgentino Domicio;
+	FechaDeNacimiento FechaNacimiento;
 }
+
+
