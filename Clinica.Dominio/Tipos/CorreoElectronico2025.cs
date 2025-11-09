@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using System.Text.RegularExpressions;
 
-namespace Clinica.Dominio.Types;
+namespace Clinica.Dominio.Tipos;
 
 public readonly record struct CorreoElectronico {
 	private readonly string _value;
