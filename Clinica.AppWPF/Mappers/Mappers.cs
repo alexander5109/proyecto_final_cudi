@@ -4,39 +4,43 @@ using Clinica.Dominio.Tipos;
 
 namespace Clinica.AppWPF.Mappers;
 public static class PacienteMapper {
-	public static Result<Paciente2025> LeerDesdeVentana(PacientesModificar w) {
-		var nombre = NombreCompleto2025.Crear(w.txtName.Text, w.txtLastName.Text);
-		var dni = DniArgentino2025.Crear(w.txtDni.Text);
-		var contacto = Contacto2025.Crear(w.txtEmail.Text, w.txtTelefono.Text);
-		var domicilio = DomicilioArgentino2025.Crear(w.txtDomicilio.Text, w.txtLocalidad.Text, w.txtProvincia.Text);
-		var nacimiento = FechaDeNacimiento2025.Crear(w.txtFechaNacimiento.SelectedDate ?? DateTime.MinValue);
 
-		// Si alguno falló, devolver su error
-		if (!nombre.EsOk) return new Result<Paciente2025>.Error(nombre.Error);
-		if (!dni.EsOk) return new Result<Paciente2025>.Error(dni.Error);
-		if (!contacto.EsOk) return new Result<Paciente2025>.Error(contacto.Error);
-		if (!domicilio.EsOk) return new Result<Paciente2025>.Error(domicilio.Error);
 
-		return new Result<Paciente2025>.Ok(
-			new Paciente2025(
-				nombre.Valor,
-				dni.Valor,
-				contacto.Valor,
-				domicilio.Valor,
-				nacimiento
-			)
-		);
+
+
+	// Metodo para aplicarle los cambios de una ventana a una instancia de medico existente.
+	public static void LeerDesdeVentana(Paciente paciente, PacientesModificar window) {
+		paciente.Dni = window.txtDni.Text;
+		paciente.Name = window.txtName.Text;
+		paciente.LastName = window.txtLastName.Text;
+		paciente.FechaIngreso = (DateTime)window.txtFechaIngreso.SelectedDate;
+		paciente.Email = window.txtEmail.Text;
+		paciente.Telefono = window.txtTelefono.Text;
+		paciente.FechaNacimiento = (DateTime)window.txtFechaNacimiento.SelectedDate;
+		paciente.Domicilio = window.txtDomicilio.Text;
+		paciente.Localidad = window.txtLocalidad.Text;
+		paciente.Provincia = window.txtProvincia.Text;
+	}
+	public static void MostrarEnVentana(Paciente paciente, PacientesModificar ventana) {
+		ventana.txtDni.Text = paciente.Dni;
+		ventana.txtName.Text = paciente.Name;
+		ventana.txtLastName.Text = paciente.LastName;
+		ventana.txtFechaIngreso.SelectedDate = paciente.FechaIngreso;
+		ventana.txtEmail.Text = paciente.Email;
+		ventana.txtTelefono.Text = paciente.Telefono;
+		ventana.txtFechaNacimiento.SelectedDate = paciente.FechaNacimiento;
+		ventana.txtDomicilio.Text = paciente.Domicilio;
+		ventana.txtLocalidad.Text = paciente.Localidad;
+		ventana.txtProvincia.Text = paciente.Provincia;
 	}
 
-	public static void MostrarseEnVentana(Paciente2025 paciente, PacientesModificar w) {
-		w.txtName.Text = paciente.Nombre.Nombre;
-		w.txtLastName.Text = paciente.Nombre.Apellido;
-		w.txtDni.Text = paciente.Dni.ToString();
-		w.txtEmail.Text = paciente.Contacto.Email;
-		w.txtTelefono.Text = paciente.Contacto.Telefono;
-		w.txtDomicilio.Text = paciente.Domicilio.Calle;
-		w.txtLocalidad.Text = paciente.Domicilio.Localidad;
-		w.txtProvincia.Text = paciente.Domicilio.Provincia;
-		w.txtFechaNacimiento.SelectedDate = paciente.FechaNacimiento.Valor;
-	}
+
+
+
+
+
+
+
+
+
 }

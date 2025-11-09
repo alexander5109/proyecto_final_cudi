@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-
+using Clinica.AppWPF.Mappers;
 namespace Clinica.AppWPF {
     public partial class PacientesModificar : Window {
 		private static Paciente? SelectedPaciente;
@@ -14,7 +14,8 @@ namespace Clinica.AppWPF {
 		{
 			InitializeComponent();
 			SelectedPaciente = selectedPaciente;
-			SelectedPaciente.MostrarseEnVentana(this);
+			//SelectedPaciente.MostrarseEnVentana(this);
+			PacienteMapper.MostrarEnVentana(selectedPaciente, this);
 		}
 		
 
@@ -61,7 +62,7 @@ namespace Clinica.AppWPF {
 			}
 			//---------Modificar-----------//
 			else {
-				SelectedPaciente.LeerDesdeVentana(this);
+				PacienteMapper.LeerDesdeVentana(SelectedPaciente, this);
 				if (App.BaseDeDatos.UpdatePaciente(SelectedPaciente)){
 					this.Cerrar();
 				}
