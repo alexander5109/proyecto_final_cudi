@@ -14,6 +14,7 @@ public readonly record struct Paciente2025(
 	FechaDeNacimiento2025 FechaNacimiento
 ) {
 	public static Result<Paciente2025> Crear(
+	// esto seria el AND
 		string nombre,
 		string apellido,
 		string dni,

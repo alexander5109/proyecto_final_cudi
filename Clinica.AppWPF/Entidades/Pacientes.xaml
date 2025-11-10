@@ -37,7 +37,7 @@
 							
 							FontWeight="Bold" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
 				<ListView Name="pacientesListView"
-							  ItemsSource="{Binding PacientesList}"
+							  ItemsSource="{Binding PacientesModelViewList}"
 							  Width="Auto"
 							  Height="167"
 							
@@ -157,7 +157,7 @@
 				FontSize="35"
 				  FontFamily="Ringbearer"
 				  FontWeight="Bold" HorizontalAlignment="Center"/>
-				  
+
 				<ListView x:Name="turnosListView"
 				  Background="Transparent"
 				  BorderThickness="0"

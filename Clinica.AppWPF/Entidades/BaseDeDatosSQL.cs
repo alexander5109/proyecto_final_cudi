@@ -87,48 +87,6 @@ namespace Clinica.AppWPF {
 		}
 
 
-		//------------------------public.CREATE.Paciente----------------------//
-		public bool CreatePaciente(Paciente instancia) {
-			string insertQuery = @"
-				INSERT INTO Paciente (Dni, Name, LastName, FechaIngreso, Email, Telefono, FechaNacimiento, Domicilio, Localidad, Provincia) 
-				VALUES (@Dni, @Name, @LastName, @FechaIngreso, @Email, @Telefono, @FechaNacimiento, @Domicilio, @Localidad, @Provincia)
-				SELECT SCOPE_IDENTITY();"; // DEVOLEME RAPIDAMENTE LA ID QUE ACABAS DE GENERAR
-
-			try {
-				using (SqlConnection connection = new SqlConnection(connectionString)) {
-					connection.Open();
-					using (SqlCommand sqlComando = new SqlCommand(insertQuery, connection)) {
-						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni);
-						sqlComando.Parameters.AddWithValue("@Name", instancia.Name);
-						sqlComando.Parameters.AddWithValue("@LastName", instancia.LastName);
-						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso);
-						sqlComando.Parameters.AddWithValue("@Email", instancia.Email);
-						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono);
-						sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento);
-						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio);
-						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Localidad);
-						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Provincia);
-						instancia.Id = sqlComando.ExecuteScalar().ToString();   //ahora la instancia creada desde la ventana tiene su propia Id
-					}
-				}
-				// DISATEMPT// DictPacientes[instancia.Id] = instancia;
-				// MessageBox.Show($"Exito: Se ha creado la instancia de Paciente: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-				return true;
-			} catch (SqlException ex) when (ex.Number == 2627) // Unique constraint violation error code
-			  {
-				MessageBox.Show("Error de constraints. Ya existe un paciente con ese dni.", "Violación de Constraint", MessageBoxButton.OK, MessageBoxImage.Warning);
-			} catch (SqlException ex) when (ex.Number == 547) // Foreign key violation error code
-			  {
-				MessageBox.Show("No se puede crear el paciente debido a una violación de clave foránea.", "Violación de Clave Foránea", MessageBoxButton.OK, MessageBoxImage.Warning);
-			} catch (SqlException ex) {
-				MessageBox.Show($"SQL error: {ex.Message}", "Error de Base de Datos", MessageBoxButton.OK, MessageBoxImage.Error);
-			} catch (Exception ex) {
-				MessageBox.Show($"Error no esperado: {ex.Message}", "Error SQL", MessageBoxButton.OK, MessageBoxImage.Error);
-			}
-			return false;
-		}
-
-
 
 		//------------------------public.CREATE.Paciente2025----------------------//
 		public override bool CreatePaciente(Paciente2025 instancia) {
@@ -268,42 +226,6 @@ namespace Clinica.AppWPF {
 			}
 			return false;
 		}
-		//------------------------public.UPDATE.Paciente----------------------//
-		public bool UpdatePaciente(Paciente instancia) {
-			string query = "UPDATE Paciente SET Dni = @Dni, Name = @Name, LastName = @LastName, FechaIngreso = @FechaIngreso, Email = @Email, Telefono = @Telefono, FechaNacimiento = @FechaNacimiento, Domicilio = @Domicilio, Localidad = @Localidad, Provincia = @Provincia WHERE Id = @Id";
-			try {
-				using (var connection = new SqlConnection(connectionString)) {
-					connection.Open();
-					using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
-						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni);
-						sqlComando.Parameters.AddWithValue("@Name", instancia.Name);
-						sqlComando.Parameters.AddWithValue("@LastName", instancia.LastName);
-						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso);
-						sqlComando.Parameters.AddWithValue("@Email", instancia.Email);
-						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono);
-						sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento);
-						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio);
-						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Localidad);
-						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Provincia);
-						sqlComando.Parameters.AddWithValue("@Id", instancia.Id);
-						sqlComando.ExecuteNonQuery();
-					}
-				}
-				// MessageBox.Show($"Exito: Se han actualizado los datos de: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-				return true;
-			} catch (SqlException ex) when (ex.Number == 2627) // Unique constraint violation error code
-			  {
-				MessageBox.Show("Error de constraints. Ya existe un paciente con ese dni.", "Violación de Constraint", MessageBoxButton.OK, MessageBoxImage.Warning);
-			} catch (SqlException ex) when (ex.Number == 547) // Foreign key violation error code
-			  {
-				MessageBox.Show("No se puede crear el paciente debido a una violación de clave foránea.", "Violación de Clave Foránea", MessageBoxButton.OK, MessageBoxImage.Warning);
-			} catch (SqlException ex) {
-				MessageBox.Show($"SQL error: {ex.Message}", "Error de Base de Datos", MessageBoxButton.OK, MessageBoxImage.Error);
-			} catch (Exception ex) {
-				MessageBox.Show($"Error no esperado: {ex.Message}", "Error SQL", MessageBoxButton.OK, MessageBoxImage.Error);
-			}
-			return false;
-		}
 		//------------------------public.UPDATE.Paciente2025----------------------//
 		public override bool UpdatePaciente(Paciente2025EnDb instanciaEnDb) {
 			var instancia = instanciaEnDb.Paciente;
@@ -406,29 +328,6 @@ namespace Clinica.AppWPF {
 			return false;
 		}
 		//------------------------public.DELETE.Paciente----------------------//
-		public bool DeletePaciente(Paciente instancia) {
-			string query = "DELETE FROM Paciente WHERE Id = @Id";
-			try {
-				using (var connection = new SqlConnection(connectionString)) {
-					connection.Open();
-					using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
-						sqlComando.Parameters.AddWithValue("@Id", instancia.Id);
-						sqlComando.ExecuteNonQuery();
-					}
-				}
-				DictPacientes.Remove(instancia.Id);
-				// MessageBox.Show($"Exito: Se ha eliminado el paciente con id: {instancia.Id} de la Base de Datos SQL", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-				return true;
-			} catch (SqlException ex) when (ex.Number == 547) // SQL Server foreign key violation error code
-			  {
-				MessageBox.Show("No se puede eliminar este paciente porque tiene turnos asignados.", "Violacion de clave foranea", MessageBoxButton.OK, MessageBoxImage.Warning);
-			} catch (SqlException ex) {
-				MessageBox.Show($"SQL error: {ex.Message}", "Error de Data Base", MessageBoxButton.OK, MessageBoxImage.Error);
-			} catch (Exception ex) {
-				MessageBox.Show($"Error no esperado: {ex.Message}", "Error SQL", MessageBoxButton.OK, MessageBoxImage.Error);
-			}
-			return false;
-		}
 		public override bool DeletePaciente(Paciente2025EnDb instanciaEnDb) {
 			var instancia = instanciaEnDb.Paciente;
 			string query = "DELETE FROM Paciente WHERE Id = @Id";
@@ -523,98 +422,50 @@ namespace Clinica.AppWPF {
 			return true;
 		}
 
-		//------------------------private.LOAD.Pacientes----------------------//
-		private bool SQLCargarPacientesExitosamente() {
-			//var = SQLCargarPacientes2025Exitosamente();
-			try {
-				using (var conexion = new SqlConnection(connectionString)) {
-					conexion.Open();
-					string consulta = "SELECT * FROM Paciente";
-					using (var sqlComando = new SqlCommand(consulta, conexion))
-					using (var reader = sqlComando.ExecuteReader()) {
-						while (reader.Read()) {
-							var paciente = new Paciente {
-								Id = reader["Id"]?.ToString(),
-								Dni = reader["Dni"]?.ToString(),
-								Name = reader["Name"]?.ToString(),
-								LastName = reader["LastName"]?.ToString(),
-								FechaIngreso = reader["FechaIngreso"] != DBNull.Value ? Convert.ToDateTime(reader["FechaIngreso"]) : (DateTime?)null,
-								Email = reader["Email"]?.ToString(),
-								Telefono = reader["Telefono"]?.ToString(),
-								FechaNacimiento = reader["FechaNacimiento"] != DBNull.Value ? Convert.ToDateTime(reader["FechaNacimiento"]) : (DateTime?)null,
-								Domicilio = reader["Domicilio"]?.ToString(),
-								Localidad = reader["Localidad"]?.ToString(),
-								Provincia = reader["Provincia"]?.ToString()
-							};
-							//DISATEMPT// DictPacientes[paciente.Id] = paciente;
-						}
-					}
-				}
-			} catch (Exception ex) {
-				MessageBox.Show($"Ocurrio un error al leer la tabla SQL de Paciente: {ex.Message}", "Error de Database", MessageBoxButton.OK, MessageBoxImage.Error);
-				return CrearLasTablasExitosamente();
-			}
-			return true;
-		}
-
-
 		//------------------------private.LOAD.Pacientes2025----------------------//
 
 		private bool SQLCargarPacientes2025Exitosamente() {
 			try {
-				using var conexion = new SqlConnection(connectionString);
+				using SqlConnection conexion = new SqlConnection(connectionString);
 				conexion.Open();
 				string consulta = "SELECT * FROM Paciente";
-				using var sqlComando = new SqlCommand(consulta, conexion);
-				using var reader = sqlComando.ExecuteReader();
+				using SqlCommand sqlComando = new SqlCommand(consulta, conexion);
+				using SqlDataReader reader = sqlComando.ExecuteReader();
 
 				while (reader.Read()) {
 					// Crear cada campo como Result<>
-					var nombreResult = NombreCompleto2025.Crear(
-						reader["Name"]?.ToString() ?? "",
-						reader["LastName"]?.ToString() ?? ""
-					);
-					var dniResult = DniArgentino2025.Crear(reader["Dni"]?.ToString() ?? "");
-					var fechaNacimientoResult = reader["FechaNacimiento"] != DBNull.Value
+					Result<NombreCompleto2025> nombreResult = NombreCompleto2025.Crear(reader["Name"].ToString(), reader["LastName"].ToString());
+					Result<DniArgentino2025> dniResult = DniArgentino2025.Crear(reader["Dni"]?.ToString() ?? "");
+					Result<FechaDeNacimiento2025> fechaNacimientoResult = reader["FechaNacimiento"] != DBNull.Value
 						? FechaDeNacimiento2025.Crear(Convert.ToDateTime(reader["FechaNacimiento"]))
 						: new Result<FechaDeNacimiento2025>.Error("Fecha de nacimiento vacía");
+					Result<Contacto2025> contactoResult = Contacto2025.Crear(reader["Email"]?.ToString() ?? "",
+															 reader["Telefono"]?.ToString() ?? "");
+					Result<DomicilioArgentino2025> domicilioResult = DomicilioArgentino2025.Crear(reader["Provincia"]?.ToString() ?? "",
+																		reader["Localidad"]?.ToString() ?? "",
+																		reader["Domicilio"]?.ToString() ?? "");
 
-					// Contacto
-					var contactoResult = Contacto2025.Crear(
-						reader["Email"]?.ToString() ?? "",
-						reader["Telefono"]?.ToString() ?? ""
+					Result<Paciente2025> pacienteResult = Paciente2025.Crear();
+					// Componer Paciente2025EnDb como Result<>
+					//y como componemos el Result<Paciente2025> si alguno de sus campos viene con error desde la base de daots? Cada nueva regla de negocio va a romper la carga de datos?
+					Paciente2025.Crear(
+					//nombreResult, dniResult, fechaNacimientoResult, contactoResult, domicilioResult,
+					//okValues => {
+					//	var paciente = new Paciente2025(
+					//		okValues[0] as NombreCompleto2025,
+					//		okValues[1] as DniArgentino2025,
+					//		okValues[3] as Contacto2025,
+					//		okValues[4] as DomicilioArgentino2025,
+					//		okValues[2] as FechaDeNacimiento2025
+					//	);
+					//	var pacienteEnDB = new Paciente2025EnDb(reader["Id"]?.ToString() ?? "", paciente);
+					//	return new Result<Paciente2025EnDb>.Ok(pacienteEnDB);
+					//},
+					//errorMsg => new Result<Paciente2025EnDb>.Error(errorMsg)
 					);
 
-					// Domicilio
-					Result<DomicilioArgentino2025> domicilioResult = DomicilioArgentino2025.Crear(
-						reader["Provincia"]?.ToString() ?? "",
-						reader["Localidad"]?.ToString() ?? "",
-						reader["Domicilio"]?.ToString() ?? ""
-					);
-
-					// Componer Paciente2025 con early return de errores
-					if (nombreResult is Result<NombreCompleto2025>.Error err1 ||
-						dniResult is Result<DniArgentino2025>.Error err2 ||
-						fechaNacimientoResult is Result<FechaDeNacimiento2025>.Error err3 ||
-						contactoResult is Result<Contacto2025>.Error err4 ||
-						domicilioResult is Result<DomicilioArgentino2025>.Error err5) {
-
-						// Aquí podrías loggear los errores, por ejemplo:
-						//Console.WriteLine($"Error creando paciente: {err1?.Mensaje ?? err2?.Mensaje ?? err3?.Mensaje ?? err4?.Mensaje ?? err5?.Mensaje}");
-						continue; // Saltar este registro y seguir con el siguiente
-					}
-
-					var paciente = new Paciente2025(
-						((Result<NombreCompleto2025>.Ok)nombreResult).Value,
-						((Result<DniArgentino2025>.Ok)dniResult).Value,
-						((Result<Contacto2025>.Ok)contactoResult).Value,
-						((Result<DomicilioArgentino2025>.Ok)domicilioResult).Value,
-						((Result<FechaDeNacimiento2025>.Ok)fechaNacimientoResult).Value
-					);
-
-					var pacienteEnDB = new Paciente2025EnDb(Id: reader["Id"]?.ToString() ?? "", Paciente: paciente );
-
-					DictPacientes[((Result<DniArgentino2025>.Ok)dniResult).Value] = pacienteEnDB;
+					// Guardar el Result<>
+					DictPacientes[reader["Dni"]?.ToString() ?? Guid.NewGuid().ToString()] = pacienteResult;
 				}
 			} catch (Exception ex) {
 				MessageBox.Show($"Ocurrió un error al leer la tabla SQL de Paciente: {ex.Message}",
