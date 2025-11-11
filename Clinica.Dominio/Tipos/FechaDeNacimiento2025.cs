@@ -5,7 +5,7 @@ namespace Clinica.Dominio.Tipos;
 
 public record struct FechaDeNacimiento2025(
 	DateOnly Value
-) : IValidate<FechaDeNacimiento2025> {
+) {
 	private static readonly DateOnly Hoy = DateOnly.FromDateTime(DateTime.Now);
 
 	public static Result<FechaDeNacimiento2025> Crear(DateOnly fecha) {

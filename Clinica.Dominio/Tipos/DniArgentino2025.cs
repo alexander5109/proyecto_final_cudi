@@ -5,7 +5,7 @@ namespace Clinica.Dominio.Tipos;
 
 public record struct DniArgentino2025(
 	string Value
-) : IValidate<DniArgentino2025> {
+)  {
 	public static Result<DniArgentino2025> Crear(string? input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<DniArgentino2025>.Error("El DNI no puede estar vacío.");
@@ -14,13 +14,4 @@ public record struct DniArgentino2025(
 			return new Result<DniArgentino2025>.Error("El DNI debe contener hasta 8 dígitos numéricos.");
 		return new Result<DniArgentino2025>.Ok(new DniArgentino2025(normalized));
 	}
-	//public Result<DniArgentino2025> Validate(){ 
-	//	if (string.IsNullOrWhiteSpace(Value))
-	//		return new Result<DniArgentino2025>.Error("El DNI no puede estar vacío.");
-	//	if (!Regex.IsMatch(Value, @"^\d{1,8}$"))
-	//		return new Result<DniArgentino2025>.Error("El DNI debe contener hasta 8 dígitos numéricos.");
-	//	return new Result<DniArgentino2025>.Ok(this);
-	//}
-	// --- Conversión implícita hacia string ---
-	//public static implicit operator string?(DniArgentino2025 c) => c.Value;
 }

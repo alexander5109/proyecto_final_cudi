@@ -1,13 +1,10 @@
 ﻿using Clinica.Dominio.Comun;
-using System.IO.IsolatedStorage;
-using System.Linq;
-
 namespace Clinica.Dominio.Tipos;
 
 public record struct ProvinciaDeArgentina2025(
 	string Nombre
-) : IValidate<ProvinciaDeArgentina2025> {
-	private static readonly HashSet<string> _provinciasValidas =
+){
+	public static readonly HashSet<string> _provinciasValidas =
 		new(StringComparer.OrdinalIgnoreCase)
 		{
 			"Buenos Aires",
@@ -46,7 +43,7 @@ public record struct ProvinciaDeArgentina2025(
 		return new Result<ProvinciaDeArgentina2025>.Ok(new ProvinciaDeArgentina2025(normalizado));
 	}
 
-	public static IReadOnlyCollection<string> ListarPosibles()
+	public static IReadOnlyCollection<string> ProvinciasValidas()
 		=> _provinciasValidas.ToList().AsReadOnly();
 
 	public static string Normalize(string content) => content.Trim();

@@ -6,7 +6,7 @@ namespace Clinica.Dominio.Tipos;
 
 public record struct MedicoAgenda2025(
 	IReadOnlyList<MedicoDisponibilidadEnDia2025> DisponibilidadEnDia
-) : IValidate<Contacto2025> {
+) {
 	public static Result<MedicoAgenda2025> Crear(IEnumerable<MedicoDisponibilidadEnDia2025> disponibilidades) {
 		var list = disponibilidades.ToList();
 		if (list.Count == 0)

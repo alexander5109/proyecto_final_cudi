@@ -14,7 +14,7 @@ public record struct Medico2025(
 	DomicilioArgentino2025 Domicilio,
 	Contacto2025 Contacto,
 	MedicoAgenda2025 Agenda
-) : IValidate<Contacto2025> {
+) {
 	public static Result<Medico2025> Crear(
 		string nombre,
 		string apellido,
