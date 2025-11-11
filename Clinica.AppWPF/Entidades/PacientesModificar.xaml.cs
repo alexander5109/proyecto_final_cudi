@@ -1,7 +1,11 @@
-﻿using System.Windows;
+﻿using Clinica.Dominio;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+using Clinica.Dominio.Tipos;
+using System.Windows;
 
 namespace Clinica.AppWPF {
-    public partial class PacientesModificar : Window {
+	public partial class PacientesModificar : Window {
 		private static Paciente? SelectedPaciente;
 		//---------------------public.constructors-------------------//
 		public PacientesModificar() //Constructor vacio ==> Crear.
@@ -16,56 +20,68 @@ namespace Clinica.AppWPF {
 			SelectedPaciente = selectedPaciente;
 			SelectedPaciente.MostrarseEnVentana(this);
 		}
-		
 
-		//--------------------AsegurarInput-------------------//
-		private bool CamposCompletadosCorrectamente(){
-			if (
-				 string.IsNullOrEmpty(this.txtDni.Text) ||
-				 string.IsNullOrEmpty(this.txtName.Text) ||
-				 string.IsNullOrEmpty(this.txtLastName.Text) ||
-				 string.IsNullOrEmpty(this.txtEmail.Text) ||
-				 string.IsNullOrEmpty(this.txtTelefono.Text) ||
-				 string.IsNullOrEmpty(this.txtDomicilio.Text) ||
-				 string.IsNullOrEmpty(this.txtLocalidad.Text) ||
-				 string.IsNullOrEmpty(this.txtProvincia.Text) ||
-				 this.txtFechaIngreso.SelectedDate is null ||
-				 this.txtFechaNacimiento.SelectedDate is null
-			) {
-				MessageBox.Show($"Error: Faltan datos obligatorios por completar.", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return false;
-			 }
-					 
-			if (!Int64.TryParse(this.txtDni.Text, out _)){
-                MessageBox.Show($"Error: El dni no es un numero entero valido.", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return false;
-            }
-			return true;
-		}
-		
 
 		//---------------------botones.GuardarCambios-------------------//
 		private void ButtonGuardar(object sender, RoutedEventArgs e) {
 			App.PlayClickJewel();
-			// ---------AsegurarInput-----------//
-			if (!CamposCompletadosCorrectamente()){
-				return;
-			}
-			
 			//---------Crear-----------//
 			if (SelectedPaciente is null) {
-				var nuevpacoiente = new Paciente(this);
-				if (App.BaseDeDatos.CreatePaciente(nuevpacoiente)){
-					this.Cerrar();
-				}
+				this.ToDomain().Switch(
+					ok => {
+						SelectedPaciente = new Paciente(this);
+						if (App.BaseDeDatos.CreatePaciente(ok, SelectedPaciente)) {
+							this.Cerrar();
+						}
+					},
+					error => {
+						MessageBox.Show($"No se puede guardar el paciente: {error}", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
+						return;
+					}
+				);
+				return;
 			}
 			//---------Modificar-----------//
-			else {
-				SelectedPaciente.LeerDesdeVentana(this);
-				if (App.BaseDeDatos.UpdatePaciente(SelectedPaciente)){
-					this.Cerrar();
+			this.ToDomain().Switch(
+				ok => {
+					SelectedPaciente.LeerDesdeVentana(this);
+					if (App.BaseDeDatos.UpdatePaciente(ok, SelectedPaciente.Id)) {
+						this.Cerrar();
+					}
+				},
+				error => {
+					MessageBox.Show($"No se puede guardar el paciente: {error}", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
+					return;
 				}
-			}
+			);
+		}
+
+		private Result<Paciente2025> ToDomain() {
+			var nombreRes = NombreCompleto2025.Crear(txtName.Text, txtLastName.Text);
+			var dniRes = DniArgentino2025.Crear(txtDni.Text);
+			var telefonoRes = Contacto2025Telefono.Crear(txtTelefono.Text);
+			var correoRes = Contacto2025CorreoElectronico.Crear(txtEmail.Text);
+			var contactoRes = Contacto2025.Crear(correoRes, telefonoRes);
+			var provinciaRes = ProvinciaDeArgentina2025.Crear(txtProvincia.Text);
+			var localidadRes = LocalidadDeProvincia2025.Crear(txtLocalidad.Text, provinciaRes);
+			var domicilioRes = DomicilioArgentino2025.Crear(localidadRes, txtDomicilio.Text);
+
+			var fechaNacRes = txtFechaNacimiento.SelectedDate is DateTime fechaNac
+				? FechaDeNacimiento2025.Crear(DateOnly.FromDateTime(fechaNac))
+				: new Result<FechaDeNacimiento2025>.Error("Debe seleccionar una fecha de nacimiento válida.");
+
+			var fechaIngRes = txtFechaIngreso.SelectedDate is DateTime fechaIng
+				? FechaDeIngreso2025.Crear(DateOnly.FromDateTime(fechaIng))
+				: new Result<FechaDeIngreso2025>.Error("Debe seleccionar una fecha de ingreso válida.");
+
+			return Paciente2025.Crear(
+				nombreRes,
+				dniRes,
+				contactoRes,
+				domicilioRes,
+				fechaNacRes,
+				fechaIngRes
+			);
 		}
 
 

@@ -157,7 +157,7 @@
 				FontSize="35"
 				  FontFamily="Ringbearer"
 				  FontWeight="Bold" HorizontalAlignment="Center"/>
-				  
+
 				<ListView x:Name="turnosListView"
 				  Background="Transparent"
 				  BorderThickness="0"

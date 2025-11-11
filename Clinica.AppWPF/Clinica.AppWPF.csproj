@@ -15,6 +15,9 @@
     <Resource Include="PublishedResources\**\*" Exclude="PublishedResources\sonidos\**\*;PublishedResources\json_database\**\*" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Entidades\PacienteModelView.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Entidades\BaseDeDatosSQLSchema.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +33,10 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0-preview2.25289.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clinica.Dominio\Clinica.Dominio.csproj" />
   </ItemGroup>
 
 </Project>

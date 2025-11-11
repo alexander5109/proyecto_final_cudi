@@ -1,29 +1,31 @@
 ﻿using SystemTextJson = System.Text.Json;
 using Newtonsoft.Json;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.AppWPF {
 	//---------------------------------Tablas.Pacientes-------------------------------//
 	public class Paciente {
-		public string ?Id { get; set; }
-		public string ?Dni { get; set; }
-		public string ?Name { get; set; }
-		public string ?LastName { get; set; }
-		public DateTime ?FechaIngreso { get; set; }  // Corrige a DateTime
-		public string ?Email { get; set; }
-		public string ?Telefono { get; set; }
-		public DateTime ?FechaNacimiento { get; set; }
-		public string ?Domicilio { get; set; }
-		public string ?Localidad { get; set; }
-		public string ?Provincia { get; set; }
+		public string? Id { get; set; }
+		public string? Dni { get; set; }
+		public string? Name { get; set; }
+		public string? LastName { get; set; }
+		public DateTime? FechaIngreso { get; set; }  // Corrige a DateTime
+		public string? Email { get; set; }
+		public string? Telefono { get; set; }
+		public DateTime? FechaNacimiento { get; set; }
+		public string? Domicilio { get; set; }
+		public string? Localidad { get; set; }
+		public string? Provincia { get; set; }
 
 
 		[JsonIgnore]
 		public string Displayear => $"{Id}: {Name} {LastName}";
-			
+
 		public Paciente() { }
-		
+
 		// Constructor de PAciente para JSON
-		public Paciente(SystemTextJson.JsonElement json){
+		public Paciente(SystemTextJson.JsonElement json) {
 			Id = json.GetProperty(nameof(Id)).GetString();
 			Dni = json.GetProperty(nameof(Dni)).GetString();
 			Name = json.GetProperty(nameof(Name)).GetString();
@@ -38,11 +40,11 @@ namespace Clinica.AppWPF {
 		}
 
 		// Constructor de PAciente en base a una ventana
-		public Paciente(PacientesModificar window){
+		public Paciente(PacientesModificar window) {
 			LeerDesdeVentana(window);
 		}
-		
-		
+
+
 		// Metodo para aplicarle los cambios de una ventana a una instancia de medico existente.
 		public void LeerDesdeVentana(PacientesModificar window) {
 			this.Dni = window.txtDni.Text;
@@ -56,8 +58,8 @@ namespace Clinica.AppWPF {
 			this.Localidad = window.txtLocalidad.Text;
 			this.Provincia = window.txtProvincia.Text;
 		}
-		
-		
+
+
 		// Metodo para mostrarse en una ventana
 		public void MostrarseEnVentana(PacientesModificar ventana) {
 			ventana.txtDni.Text = this.Dni;
@@ -71,5 +73,18 @@ namespace Clinica.AppWPF {
 			ventana.txtLocalidad.Text = this.Localidad;
 			ventana.txtProvincia.Text = this.Provincia;
 		}
+
+		//public Result<Paciente2025> ToDomain(){
+		//	throw new NotImplementedException();
+
+		//	return new() {
+		//		FechaIngreso = this.FechaIngreso
+		//	};
+		//}
+
+
+
+
+
 	}
 }
