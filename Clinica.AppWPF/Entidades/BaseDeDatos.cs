@@ -6,7 +6,7 @@ namespace Clinica.AppWPF {
 	public abstract class BaseDeDatosAbstracta{
 		public Dictionary<string, Turno> DictTurnos = new();
 		public Dictionary<string, Medico> DictMedicos = new();
-		public Dictionary<string, Result<Paciente2025EnDb>> DictPacientes = new();
+		public Dictionary<string, Result<Paciente2025>> DictPacientes = new();
 		public virtual bool ConectadaExitosamente { get; protected set; } = false;
 		
 		// Read methods
