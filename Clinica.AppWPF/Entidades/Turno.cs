@@ -1,5 +1,4 @@
-﻿using Clinica.Dominio.Entidades;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Windows;
 using SystemTextJson = System.Text.Json;
 
@@ -37,9 +36,9 @@ namespace Clinica.AppWPF {
 		}
 		
 		[JsonIgnore]
-		public Paciente2025EnDb? PacienteRelacionado {
+		public Paciente PacienteRelacionado{
 			get{
-				if (App.BaseDeDatos.DictPacientes.TryGetValue(PacienteId, out Paciente2025EnDb pacienteRelacionado)){
+				if (App.BaseDeDatos.DictPacientes.TryGetValue(PacienteId, out Paciente pacienteRelacionado)){
 					return pacienteRelacionado;
 				}
 				else{

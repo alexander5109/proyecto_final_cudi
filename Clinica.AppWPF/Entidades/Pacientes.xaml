@@ -37,7 +37,7 @@
 							
 							FontWeight="Bold" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
 				<ListView Name="pacientesListView"
-							  ItemsSource="{Binding PacientesModelViewList}"
+							  ItemsSource="{Binding PacientesList}"
 							  Width="Auto"
 							  Height="167"
 							

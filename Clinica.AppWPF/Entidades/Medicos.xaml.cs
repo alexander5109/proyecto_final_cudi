@@ -18,25 +18,14 @@ namespace Clinica.AppWPF {
 			turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWhereMedicoId(SelectedMedico);
 			buttonModificarTurno.IsEnabled = SelectedTurno != null;
 		}
-		private void UpdatePacienteUI() {
-			if (SelectedTurno?.PacienteRelacionado is not null) {
-				var p = SelectedTurno.PacienteRelacionado.Value; // Paciente2025EnDb
-				txtPacienteDni.Text = p.Paciente.Dni; // implicit string
-				txtPacienteNombre.Text = p.Paciente.NombreCompleto.Nombre;
-				txtPacienteApellido.Text = p.Paciente.NombreCompleto.Apellido;
-				txtPacienteEmail.Text = p.Paciente.Contacto.Email; // implicit string
-				txtPacienteTelefono.Text = p.Paciente.Contacto.Telefono; // implicit string
-				buttonModificarPaciente.IsEnabled = true;
-			} else {
-				txtPacienteDni.Text = "";
-				txtPacienteNombre.Text = "";
-				txtPacienteApellido.Text = "";
-				txtPacienteEmail.Text = "";
-				txtPacienteTelefono.Text = "";
-				buttonModificarPaciente.IsEnabled = false;
-			}
+		private void UpdatePacienteUI(){
+			txtPacienteDni.Text = SelectedTurno?.PacienteRelacionado.Dni;
+			txtPacienteNombre.Text = SelectedTurno?.PacienteRelacionado.Name;
+			txtPacienteApellido.Text = SelectedTurno?.PacienteRelacionado.LastName;
+			txtPacienteEmail.Text = SelectedTurno?.PacienteRelacionado.Email;
+			txtPacienteTelefono.Text = SelectedTurno?.PacienteRelacionado.Telefono;
+			buttonModificarPaciente.IsEnabled = SelectedTurno?.PacienteRelacionado != null;
 		}
-
 
 
 
