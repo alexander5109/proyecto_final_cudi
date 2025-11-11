@@ -58,14 +58,17 @@ namespace Clinica.AppWPF {
 
 
 		private Result<Paciente2025> ToDomain() {
-			var nombreRes = NombreCompleto2025.Crear(txtName.Text, txtLastName.Text);
-			var dniRes = DniArgentino2025.Crear(txtDni.Text);
-			var telefonoRes = Contacto2025Telefono.Crear(txtTelefono.Text);
-			var correoRes = Contacto2025CorreoElectronico.Crear(txtEmail.Text);
-			var contactoRes = Contacto2025.Crear(correoRes, telefonoRes);
-			var provinciaRes = ProvinciaDeArgentina2025.Crear(txtProvincia.Text);
-			var localidadRes = LocalidadDeProvincia2025.Crear(txtLocalidad.Text, provinciaRes);
-			var domicilioRes = DomicilioArgentino2025.Crear(localidadRes, txtDomicilio.Text);
+			var nombreResult = NombreCompleto2025.Crear(txtName.Text, txtLastName.Text);
+			var dniResult = DniArgentino2025.Crear(txtDni.Text);
+			var telefonoResult = Contacto2025Telefono.Crear(txtTelefono.Text);
+			var correoResult = Contacto2025CorreoElectronico.Crear(txtEmail.Text);
+
+
+
+			var contactoResult = Contacto2025.Crear(correoResult, telefonoResult);
+			var provinciaResult = ProvinciaDeArgentina2025.Crear(txtProvincia.Text);
+			var localidadResult = LocalidadDeProvincia2025.Crear(txtLocalidad.Text, provinciaResult);
+			var domicilioResult = DomicilioArgentino2025.Crear(localidadResult, txtDomicilio.Text);
 
 			var fechaNacRes = txtFechaNacimiento.SelectedDate is DateTime fechaNac
 				? FechaDeNacimiento2025.Crear(DateOnly.FromDateTime(fechaNac))
@@ -76,10 +79,10 @@ namespace Clinica.AppWPF {
 				: new Result<FechaIngreso2025>.Error("Debe seleccionar una fecha de ingreso válida.");
 
 			return Paciente2025.Crear(
-				nombreRes,
-				dniRes,
-				contactoRes,
-				domicilioRes,
+				nombreResult,
+				dniResult,
+				contactoResult,
+				domicilioResult,
 				fechaNacRes,
 				fechaIngRes
 			);

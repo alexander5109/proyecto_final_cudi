@@ -1,5 +1,6 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.Tipos;
 using System.Windows;
 
 namespace Clinica.AppWPF {
@@ -94,7 +95,67 @@ namespace Clinica.AppWPF {
 		}
 
 		private Result<Medico2025> ToDomain() {
-			throw new NotImplementedException();
+			Result<NombreCompleto2025> nombreResult = NombreCompleto2025.Crear(txtName.Text, txtLastName.Text);
+			Result<DniArgentino2025> dniResult = DniArgentino2025.Crear(txtDni.Text);
+			Result<Contacto2025Telefono> telefonoResult = Contacto2025Telefono.Crear(txtTelefono.Text);
+			Result<MedicoEspecialidad2025> especialidadResult = MedicoEspecialidad2025.Crear(
+				txtEspecialidad.Text,
+				MedicoEspecialidad2025.EspecialidadesValidas.FirstOrDefault(e => e.Titulo == txtEspecialidad.Text).Rama
+			);
+
+			// Crear franjas horarias
+			Result<MedicoFranjaHoraria2025> franjaManiana = MedicoFranjaHoraria2025.Crear(new TimeOnly(8, 0), new TimeOnly(12, 0));
+			Result<MedicoFranjaHoraria2025> franjaTarde = MedicoFranjaHoraria2025.Crear(new TimeOnly(14, 0), new TimeOnly(18, 0));
+			Result<MedicoFranjaHoraria2025> franjaMiercoles = MedicoFranjaHoraria2025.Crear(new TimeOnly(10, 0), new TimeOnly(16, 0));
+
+			// Crear disponibilidades por día
+			Result<MedicoDisponibilidadEnDia2025> lunes = MedicoDisponibilidadEnDia2025.Crear(
+				new MedicoDiaDeLaSemana2025(DayOfWeek.Monday),
+				new[] { ((Result<MedicoFranjaHoraria2025>.Ok)franjaManiana).Value, ((Result<MedicoFranjaHoraria2025>.Ok)franjaTarde).Value }
+			);
+
+			Result<MedicoDisponibilidadEnDia2025> miercoles = MedicoDisponibilidadEnDia2025.Crear(
+				new MedicoDiaDeLaSemana2025(DayOfWeek.Wednesday),
+				new[] { ((Result<MedicoFranjaHoraria2025>.Ok)franjaMiercoles).Value }
+			);
+
+			// Crear la agenda
+			List<MedicoDisponibilidadEnDia2025> disponibilidades = new List<MedicoDisponibilidadEnDia2025> {
+				((Result<MedicoDisponibilidadEnDia2025>.Ok)lunes).Value,
+				((Result<MedicoDisponibilidadEnDia2025>.Ok)miercoles).Value
+			};
+
+			// Finalmente, la agenda del médico:
+			Result<MedicoAgenda2025> agendaResult = MedicoAgenda2025.Crear(
+				new Result<IReadOnlyList<MedicoDisponibilidadEnDia2025>>.Ok(disponibilidades)
+			);
+
+			//this.txtDiasDeAtencion.ItemsSource;
+
+
+			Result<ProvinciaDeArgentina2025> provinciaRes = ProvinciaDeArgentina2025.Crear(txtProvincia.Text);
+			Result<LocalidadDeProvincia2025> localidadRes = LocalidadDeProvincia2025.Crear(txtLocalidad.Text, provinciaRes);
+			Result<DomicilioArgentino2025> domicilioResult = DomicilioArgentino2025.Crear(localidadRes, txtDomicilio.Text);
+
+			Result<FechaIngreso2025> fechaIngresoResult = txtFechaIngreso.SelectedDate is DateTime fechaIng
+				? FechaIngreso2025.Crear(DateOnly.FromDateTime(fechaIng))
+				: new Result<FechaIngreso2025>.Error("Debe seleccionar una fecha de ingreso válida.");
+
+			Result<MedicoSueldoMinimoGarantizado2025> sueldoResult = MedicoSueldoMinimoGarantizado2025.Crear(txtSueldoMinimoGarantizado.Text);
+			bool haceGuardia = txtGuardia.IsChecked is true;
+
+
+			return Medico2025.Crear(
+				nombreResult,
+				especialidadResult,
+				dniResult,
+				domicilioResult,
+				telefonoResult,
+				agendaResult,
+				fechaIngresoResult,
+				sueldoResult,
+				haceGuardia
+			);
 		}
 
 

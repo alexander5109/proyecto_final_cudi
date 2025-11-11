@@ -8,7 +8,7 @@ public readonly record struct Medico2025 {
 	public MedicoEspecialidad2025 Especialidad { get; }
 	public DniArgentino2025 Dni { get; }
 	public DomicilioArgentino2025 Domicilio { get; }
-	public Contacto2025 Contacto { get; }
+	public Contacto2025Telefono Telefono { get; }
 	public MedicoAgenda2025 Agenda { get; }
 	public FechaIngreso2025 FechaIngreso { get; init; }
 	public MedicoSueldoMinimoGarantizado2025 SueldoMinimoGarantizado { get; }
@@ -20,7 +20,7 @@ public readonly record struct Medico2025 {
 		MedicoEspecialidad2025 especialidad,
 		DniArgentino2025 dni,
 		DomicilioArgentino2025 domicilio,
-		Contacto2025 contacto,
+		Contacto2025Telefono telefono,
 		MedicoAgenda2025 agenda,
 		FechaIngreso2025 fechaDeIngreso,
 		MedicoSueldoMinimoGarantizado2025 sueldo,
@@ -30,7 +30,7 @@ public readonly record struct Medico2025 {
 		Especialidad = especialidad;
 		Dni = dni;
 		Domicilio = domicilio;
-		Contacto = contacto;
+		Telefono = telefono;
 		Agenda = agenda;
 		FechaIngreso = fechaDeIngreso;
 		SueldoMinimoGarantizado = sueldo;
@@ -43,17 +43,17 @@ public readonly record struct Medico2025 {
 		Result<MedicoEspecialidad2025> especialidadResult,
 		Result<DniArgentino2025> dniResult,
 		Result<DomicilioArgentino2025> domicilioResult,
-		Result<Contacto2025> contactoResult,
+		Result<Contacto2025Telefono> telefonoResult,
 		Result<MedicoAgenda2025> agendaResult,
 		Result<FechaIngreso2025> fechaIngresoResult,
 		Result<MedicoSueldoMinimoGarantizado2025> sueldoResult,
-		bool guardias
+		bool haceGuardia
 	)
 		=> nombreResult.Bind(nombreOk =>
 		   especialidadResult.Bind(espOk =>
 		   dniResult.Bind(dniOk =>
 		   domicilioResult.Bind(domOk =>
-		   contactoResult.Bind(contOk =>
+		   telefonoResult.Bind(contOk =>
 		   fechaIngresoResult.Bind(fechaIngOk =>
 		   sueldoResult.Bind(sueldoOk =>
 		   agendaResult.Map(agendaOk =>
@@ -66,7 +66,7 @@ public readonly record struct Medico2025 {
 				   agendaOk,
 				   fechaIngOk,
 				   sueldoOk,
-				   guardias
+				   haceGuardia
 			   )
 		   ))))))));
 }

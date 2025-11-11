@@ -40,7 +40,7 @@ namespace Clinica.AppWPF {
 						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
 						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
 						sqlComando.Parameters.AddWithValue("@Especialidad", instancia.Especialidad.Titulo);
-						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Contacto.Telefono.Value);
+						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono.Value);
 						sqlComando.Parameters.AddWithValue("@Guardia", instancia.HaceGuardias);
 						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Value);
 						sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado.Value);
@@ -193,7 +193,7 @@ namespace Clinica.AppWPF {
 						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio);
 						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad);
 						sqlComando.Parameters.AddWithValue("@Especialidad", instancia.Especialidad);
-						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Contacto.Telefono);
+						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono.Value);
 						sqlComando.Parameters.AddWithValue("@Guardia", instancia.HaceGuardias);
 						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso);
 						sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado);
