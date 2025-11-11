@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Clinica.Dominio.Tipos;
 
-public record struct FechaDeNacimiento2025(
+public readonly record struct FechaDeNacimiento2025(
 	DateOnly Value
 ) {
 	private static readonly DateOnly Hoy = DateOnly.FromDateTime(DateTime.Now);

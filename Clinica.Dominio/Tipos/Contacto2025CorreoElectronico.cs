@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 namespace Clinica.Dominio.Tipos;
 
-public record struct Contacto2025CorreoElectronico(
+public readonly record struct Contacto2025CorreoElectronico(
 	string Value
 	){
 	public static Result<Contacto2025CorreoElectronico> Crear(string? input) {

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Clinica.Dominio.Tipos;
 
-public record struct DniArgentino2025(
+public readonly record struct DniArgentino2025(
 	string Value
 )  {
 	public static Result<DniArgentino2025> Crear(string? input) {

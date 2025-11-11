@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 namespace Clinica.Dominio.Tipos;
 
-public record struct DomicilioArgentino2025(
+public readonly record struct DomicilioArgentino2025(
 	LocalidadDeProvincia2025 Localidad, 
 	string Direccion
 ) {

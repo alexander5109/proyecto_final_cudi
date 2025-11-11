@@ -2,13 +2,12 @@
 
 namespace Clinica.Dominio.Tipos;
 
-public record struct MedicoDiaDeLaSemana2025(
+public readonly record struct MedicoDiaDeLaSemana2025(
 	DayOfWeek Value
-) : IValidate<MedicoDiaDeLaSemana2025> {
+) {
 	public static Result<MedicoDiaDeLaSemana2025> Crear(DayOfWeek dia) {
 		if (!Enum.IsDefined(typeof(DayOfWeek), dia))
 			return new Result<MedicoDiaDeLaSemana2025>.Error("Día de la semana inválido.");
-
 		return new Result<MedicoDiaDeLaSemana2025>.Ok(new(dia));
 	}
 

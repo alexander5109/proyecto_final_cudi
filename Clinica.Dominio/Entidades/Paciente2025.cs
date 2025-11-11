@@ -9,7 +9,8 @@ public readonly record struct Paciente2025 {
 		Contacto2025 contacto,
 		DomicilioArgentino2025 domicilio,
 		FechaDeNacimiento2025 fechaNacimiento,
-		FechaDeIngreso2025 fechaIngreso) {
+		FechaDeIngreso2025 fechaIngreso
+	) {
 		NombreCompleto = nombreCompleto;
 		Dni = dni;
 		Contacto = contacto;

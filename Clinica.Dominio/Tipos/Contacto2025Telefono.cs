@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using System.Text.RegularExpressions;
 namespace Clinica.Dominio.Tipos;
-public record struct Contacto2025Telefono(
+public readonly record struct Contacto2025Telefono(
 	string Value
 ) {
 	public static Result<Contacto2025Telefono> Crear(string? input) {

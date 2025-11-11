@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 namespace Clinica.Dominio.Tipos;
 
-public record struct ProvinciaDeArgentina2025(
+public readonly record struct ProvinciaDeArgentina2025(
 	string Nombre
 ){
 	public static readonly HashSet<string> _provinciasValidas =

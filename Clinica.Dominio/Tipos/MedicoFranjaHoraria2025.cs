@@ -2,10 +2,10 @@
 
 namespace Clinica.Dominio.Tipos;
 
-public record struct MedicoFranjaHoraria2025(
+public readonly record struct MedicoFranjaHoraria2025(
 	TimeOnly Desde,
 	TimeOnly Hasta
-) : IValidate<MedicoFranjaHoraria2025> {
+)  {
 	public static Result<MedicoFranjaHoraria2025> Crear(TimeOnly desde, TimeOnly hasta) {
 		if (desde >= hasta)
 			return new Result<MedicoFranjaHoraria2025>.Error("La hora de inicio debe ser anterior a la de fin.");

@@ -2,10 +2,10 @@
 
 namespace Clinica.Dominio.Tipos;
 
-public record struct MedicoDisponibilidadEnDia2025(
+public readonly record struct MedicoDisponibilidadEnDia2025(
 	MedicoDiaDeLaSemana2025 DiaSemana,
 	IReadOnlyList<MedicoFranjaHoraria2025> FranjasHorarias
-) : IValidate<MedicoDisponibilidadEnDia2025> {
+){
 	public static Result<MedicoDisponibilidadEnDia2025> Crear(MedicoDiaDeLaSemana2025 dia, IEnumerable<MedicoFranjaHoraria2025> franjas) {
 		var lista = franjas.OrderBy(f => f.Desde).ToList();
 
