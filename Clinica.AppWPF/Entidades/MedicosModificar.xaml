@@ -80,7 +80,17 @@
 			<TextBox x:Name="txtLocalidad" Grid.Row="6" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>
 
 			<Label Content="Especialidad" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
-			<TextBox x:Name="txtEspecialidad" Grid.Row="7" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>
+			<!-- <TextBox x:Name="txtEspecialidad" Grid.Row="7" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>-->
+			<ComboBox x:Name="txtEspecialidades"
+		HorizontalAlignment="Center"
+		Grid.Row="7"
+		Grid.Column="1"
+		VerticalAlignment="Top"
+		Margin="5"
+		Width="210"
+		Height="27" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" SelectionChanged="txtEspecialidades_SelectionChanged"
+		/>
+
 
 			<Label Content="Sueldo Mínimo Garantizado" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
 			<TextBox x:Name="txtSueldoMinimoGarantizado" Grid.Row="8" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>

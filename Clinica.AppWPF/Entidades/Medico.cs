@@ -100,7 +100,7 @@ namespace Clinica.AppWPF {
             this.Provincia = window.txtProvincia.Text;
 			this.Domicilio = window.txtDomicilio.Text;
 			this.Localidad = window.txtLocalidad.Text;
-			this.Especialidad = window.txtEspecialidad.Text;
+			this.Especialidad = window.txtEspecialidades.SelectedItem.ToString();
 			this.FechaIngreso = (DateTime)window.txtFechaIngreso.SelectedDate;
 			this.Guardia = (bool)window.txtGuardia.IsChecked;
 			this.SueldoMinimoGarantizado = double.Parse(window.txtSueldoMinimoGarantizado.Text);
@@ -117,7 +117,7 @@ namespace Clinica.AppWPF {
             ventana.txtProvincia.Text = this.Provincia;
 			ventana.txtDomicilio.Text = this.Domicilio;
 			ventana.txtLocalidad.Text = this.Localidad;
-			ventana.txtEspecialidad.Text = this.Especialidad;
+			ventana.txtEspecialidades.SelectedItem = this.Especialidad;
 			ventana.txtFechaIngreso.SelectedDate = this.FechaIngreso;
 			ventana.txtGuardia.IsChecked = this.Guardia;
 			ventana.txtSueldoMinimoGarantizado.Text = this.SueldoMinimoGarantizado.ToString();

@@ -19,22 +19,25 @@ namespace Clinica.AppWPF {
 			SelectedMedico = selectedMedico;
 			SelectedMedico.MostrarseEnVentana(this);
 
-			Result<Medico2025> resultado = this.ToDomain();
 
-			if (resultado is Result<Medico2025>.Ok ok) {
-				var agenda = ok.Value.Agenda;
+			//txtEspecialidades.SelectedValuePath = "Id";
+			//txtEspecialidades.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
+			txtEspecialidades.ItemsSource = App.BaseDeDatos.ReadDistinctEspecialidades();
+			txtEspecialidades.SelectedItem = SelectedMedico.Especialidad;
+			//Result<Medico2025> resultado = this.ToDomain();
 
-				// ✅ Bind directo al TreeView/ListView
-				txtAgendaWidget.ItemsSource = agenda.DisponibilidadEnDia;
+			//if (resultado is Result<Medico2025>.Ok ok) {
+			//	var agenda = ok.Value.Agenda;
+			//	txtAgendaWidget.ItemsSource = agenda.DisponibilidadEnDia;
 
-			} else if (resultado is Result<Medico2025>.Error error) {
-				MessageBox.Show(
-					$"No se puede cargar la agenda del médico: {error.Mensaje}",
-					"Error de ingreso",
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning
-				);
-			}
+			//} else if (resultado is Result<Medico2025>.Error error) {
+			//	MessageBox.Show(
+			//		$"No se puede cargar la agenda del médico: {error.Mensaje}",
+			//		"Error de ingreso",
+			//		MessageBoxButton.OK,
+			//		MessageBoxImage.Warning
+			//	);
+			//}
 		}
 
 
@@ -116,8 +119,9 @@ namespace Clinica.AppWPF {
 			Result<DniArgentino2025> dniResult = DniArgentino2025.Crear(txtDni.Text);
 			Result<Contacto2025Telefono> telefonoResult = Contacto2025Telefono.Crear(txtTelefono.Text);
 			Result<MedicoEspecialidad2025> especialidadResult = MedicoEspecialidad2025.Crear(
-				txtEspecialidad.Text,
-				MedicoEspecialidad2025.EspecialidadesValidas.FirstOrDefault(e => e.Titulo == txtEspecialidad.Text).Rama
+				txtEspecialidades.SelectedItem.ToString(),
+				//MedicoEspecialidad2025.EspecialidadesValidas[int.Parse(txtEspecialidades.SelectedValue.ToString())].Titulo,
+				MedicoEspecialidadRama.RamasValidas.FirstOrDefault().Titulo
 			);
 
 			// Crear franjas horarias
@@ -245,6 +249,9 @@ namespace Clinica.AppWPF {
 
 		private void BtnEliminarHorario_Click(object sender, RoutedEventArgs e) {
 
+		}
+
+		private void txtEspecialidades_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
 		}
 		//------------------------Fin---------------------------//
 	}

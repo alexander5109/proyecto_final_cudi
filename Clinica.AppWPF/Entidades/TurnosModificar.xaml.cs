@@ -36,8 +36,9 @@ namespace Clinica.AppWPF {
 			txtMedicos.DisplayMemberPath = "Displayear";	//Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 		}
 		private void txtEspecialidades_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+			txtMedicos.SelectedValuePath = "Id";
+			txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 			txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicosWhereEspecialidad(txtEspecialidades.SelectedItem.ToString());
-			txtMedicos.DisplayMemberPath = "Displayear";	//Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
         }
 
 		//--------------------AsegurarInput-------------------//
@@ -95,7 +96,7 @@ namespace Clinica.AppWPF {
 		}
 
 		private Result<Turno2025> ToDomain() {
-			
+			throw new Exception("Not implemented yet");
 		}
 		
 		
