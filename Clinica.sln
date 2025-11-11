@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Clinica.BaseDeDatos", "Clinica.BaseDeDatos\Clinica.BaseDeDatos.sqlproj", "{C9669E19-6677-4BF4-A0BF-888B9C48B8BD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.BlazorServer", "Clinica.BlazorServer\Clinica.BlazorServer.csproj", "{242E7781-214A-9ECE-A0DC-00EE5D63B389}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Dominio", "Clinica.Dominio\Clinica.Dominio.csproj", "{81DAE695-0565-9B04-BED8-8534A7E737E7}"
@@ -13,18 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.WebAPI", "Clinica.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.AppWPF", "Clinica.AppWPF\Clinica.AppWPF.csproj", "{AF250A07-7397-425B-8B10-CEA8ADED733D}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Clinica.SQLServerDB", "Clinica.SQLServerDB\Clinica.SQLServerDB.sqlproj", "{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C9669E19-6677-4BF4-A0BF-888B9C48B8BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C9669E19-6677-4BF4-A0BF-888B9C48B8BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C9669E19-6677-4BF4-A0BF-888B9C48B8BD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{C9669E19-6677-4BF4-A0BF-888B9C48B8BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C9669E19-6677-4BF4-A0BF-888B9C48B8BD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C9669E19-6677-4BF4-A0BF-888B9C48B8BD}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{242E7781-214A-9ECE-A0DC-00EE5D63B389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{242E7781-214A-9ECE-A0DC-00EE5D63B389}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{242E7781-214A-9ECE-A0DC-00EE5D63B389}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,6 +35,12 @@ Global
 		{AF250A07-7397-425B-8B10-CEA8ADED733D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF250A07-7397-425B-8B10-CEA8ADED733D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF250A07-7397-425B-8B10-CEA8ADED733D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

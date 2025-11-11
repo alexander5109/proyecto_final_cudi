@@ -3,16 +3,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>Clinica.BaseDeDatos</Name>
+    <Name>Clinica.SQLServerDB</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{c9669e19-6677-4bf4-a0bf-888b9c48b8bd}</ProjectGuid>
+    <ProjectGuid>{f5455df7-82aa-46f8-b35b-13fc441acd2d}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>Clinica.BaseDeDatos</RootNamespace>
-    <AssemblyName>Clinica.BaseDeDatos</AssemblyName>
+    <RootNamespace>Clinica.SQLServerDB</RootNamespace>
+    <AssemblyName>Clinica.SQLServerDB</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
@@ -61,29 +61,29 @@
     <Folder Include="dbo\Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\StoredProcedures\sp_InsertMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_InsertPaciente.sql" />
-    <Build Include="dbo\StoredProcedures\sp_InsertTurno.sql" />
-    <Build Include="dbo\Tables\Medico.sql" />
-    <Build Include="dbo\Tables\Paciente.sql" />
-    <Build Include="dbo\Tables\Turno.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdateMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdateTurno.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdatePaciente.sql" />
-    <Build Include="dbo\StoredProcedures\sp_DeleteTurno.sql" />
-    <Build Include="dbo\StoredProcedures\sp_DeletePaciente.sql" />
-    <Build Include="dbo\StoredProcedures\sp_DeleteMedico.sql" />
     <Build Include="dbo\StoredProcedures\sp_CreateMedico.sql" />
     <Build Include="dbo\StoredProcedures\sp_CreatePaciente.sql" />
     <Build Include="dbo\StoredProcedures\sp_CreateTurno.sql" />
+    <Build Include="dbo\StoredProcedures\sp_DeleteMedico.sql" />
+    <Build Include="dbo\StoredProcedures\sp_DeletePaciente.sql" />
+    <Build Include="dbo\StoredProcedures\sp_DeleteTurno.sql" />
+    <Build Include="dbo\StoredProcedures\sp_InsertMedico.sql" />
+    <Build Include="dbo\StoredProcedures\sp_InsertPaciente.sql" />
+    <Build Include="dbo\StoredProcedures\sp_InsertTurno.sql" />
     <Build Include="dbo\StoredProcedures\sp_ReadMedicosAll.sql" />
     <Build Include="dbo\StoredProcedures\sp_ReadPacientesAll.sql" />
     <Build Include="dbo\StoredProcedures\sp_ReadTurnosAll.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <PreDeploy Include="Script.PreDeployment.sql" />
+    <Build Include="dbo\StoredProcedures\sp_UpdateMedico.sql" />
+    <Build Include="dbo\StoredProcedures\sp_UpdatePaciente.sql" />
+    <Build Include="dbo\StoredProcedures\sp_UpdateTurno.sql" />
+    <Build Include="dbo\Tables\Medico.sql" />
+    <Build Include="dbo\Tables\Paciente.sql" />
+    <Build Include="dbo\Tables\Turno.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Script.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PreDeploy Include="Script.PreDeployment.sql" />
   </ItemGroup>
 </Project>
