@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Clinica.AppWPF {
@@ -58,29 +60,43 @@ namespace Clinica.AppWPF {
 		}
 
 		//---------------------botones.GuardarCambios-------------------//
+
 		private void ButtonGuardar(object sender, RoutedEventArgs e) {
 			App.PlayClickJewel();
-			// ---------AsegurarInput-----------//
-			if (!CamposCompletadosCorrectamente()) {
-				return;
-			}
-			//---------Crear-----------//
-			if (SelectedTurno is null) {
-				var newturno = new Turno();
-				newturno.LeerDesdeVentana(this);
-				if ( App.BaseDeDatos.CreateTurno(newturno) ) {
-					this.Cerrar();
+
+			Result<Turno2025> resultado = this.ToDomain();
+
+			resultado.Switch(
+				ok => {
+					bool exito;
+
+					if (SelectedTurno is null) {
+						// Crear nuevo turno
+						SelectedTurno = new Turno(this);
+						exito = App.BaseDeDatos.CreateTurno(ok, SelectedTurno);
+					} else {
+						// Actualizar existente
+						SelectedTurno.LeerDesdeVentana(this);
+						exito = App.BaseDeDatos.UpdateTurno(ok, SelectedTurno);
+					}
+
+					if (exito)
+						this.Cerrar();
+				},
+				error => {
+					MessageBox.Show(
+						$"No se puede guardar el turno: {error}",
+						"Error de ingreso",
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning
+					);
 				}
-			}
-			//---------Modificar-----------//
-			else {
-				SelectedTurno.LeerDesdeVentana(this);
-				if ( App.BaseDeDatos.UpdateTurno(SelectedTurno) ) {
-					this.Cerrar();
-				}
-			}
+			);
 		}
-		
+
+		private Result<Turno2025> ToDomain() {
+			
+		}
 		
 		
 		//---------------------botones.Eliminar-------------------//

@@ -19,7 +19,7 @@ namespace Clinica.AppWPF {
 			SelectedMedico = selectedMedico;
 			SelectedMedico.MostrarseEnVentana(this);
 
-			var resultado = this.ToDomain();
+			Result<Medico2025> resultado = this.ToDomain();
 
 			if (resultado is Result<Medico2025>.Ok ok) {
 				var agenda = ok.Value.Agenda;

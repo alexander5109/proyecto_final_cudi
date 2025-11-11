@@ -15,8 +15,7 @@ namespace Clinica.AppWPF {
 		
 		private void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
 			if (checkboxJSON.IsChecked == true) {
-				App.BaseDeDatos = new BaseDeDatosSQL();
-				//App.BaseDeDatos = new BaseDeDatosJSON();
+				App.BaseDeDatos = new BaseDeDatosJSON();
 			} else if ( datos_completados() ) {
 				App.BaseDeDatos = new BaseDeDatosSQL();
 			} else {

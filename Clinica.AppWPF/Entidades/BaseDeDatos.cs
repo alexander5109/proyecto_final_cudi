@@ -17,12 +17,12 @@ namespace Clinica.AppWPF {
 		// Create methods
 		public abstract bool CreateMedico(Medico2025 instance, Medico instanceDto);
 		public abstract bool CreatePaciente(Paciente2025 instance, Paciente instanceDto);
-		public abstract bool CreateTurno(Turno instance);
+		public abstract bool CreateTurno(Turno2025 instance, Turno instanceDto);
 
 		// Update methods
 		public abstract bool UpdateMedico(Medico2025 instance, string instanceId);
 		public abstract bool UpdatePaciente(Paciente2025 instance, string instanceId);
-		public abstract bool UpdateTurno(Turno instance);
+		public abstract bool UpdateTurno(Turno2025 instance, Turno instanceDto);
 
 		// Delete methods
 		public abstract bool DeleteMedico(Medico instance);

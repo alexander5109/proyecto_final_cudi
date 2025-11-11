@@ -118,7 +118,7 @@ namespace Clinica.AppWPF {
 
 
 		//------------------------public.CREATE.Turno----------------------//
-		public override bool CreateTurno(Turno instancia) {
+		public override bool CreateTurno(Turno2025 instanciaValidada, Turno instancia) {
 			string insertQuery = @"
 				INSERT INTO Turno (PacienteId, MedicoId, Fecha, Hora) 
 				VALUES (@PacienteId, @MedicoId, @Fecha, @Hora);
@@ -261,7 +261,7 @@ namespace Clinica.AppWPF {
 			return false;
 		}
 		//------------------------public.UPDATE.Turno----------------------//
-		public override bool UpdateTurno(Turno instancia) {
+		public override bool UpdateTurno(Turno2025 instanciaValidada, Turno instancia) {
 			string query = "UPDATE Turno SET PacienteId = @PacienteId, MedicoId = @MedicoId, Fecha = @Fecha, Hora = @Hora WHERE Id = @Id";
 			// string query = "UPDATE Turno SET PacienteId = @PacienteId, MedicoId = @MedicoId WHERE Id = @Id";
 			try {

@@ -26,7 +26,7 @@ namespace Clinica.AppWPF {
 		private void ButtonGuardar(object sender, RoutedEventArgs e) {
 			App.PlayClickJewel();
 
-			var resultado = this.ToDomain();
+			Result<Paciente2025> resultado = this.ToDomain();
 
 			resultado.Switch(
 				ok => {
