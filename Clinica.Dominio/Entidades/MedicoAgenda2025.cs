@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Clinica.Dominio.Tipos;
 
-public record class MedicoAgenda2025(
+public record struct MedicoAgenda2025(
 	IReadOnlyList<MedicoDisponibilidadEnDia2025> DisponibilidadEnDia
 ) : IValidate<Contacto2025> {
 	public static Result<MedicoAgenda2025> Crear(IEnumerable<MedicoDisponibilidadEnDia2025> disponibilidades) {
@@ -90,16 +90,16 @@ public record class MedicoAgenda2025(
 	}
 
 	// DTO interno solo para (de)serialización
-	private record class AgendaMedico2025DTO {
+	private record struct AgendaMedico2025DTO {
 		public List<DisponibilidadEnDiaDTO> Disponibilidades { get; set; } = new();
 	}
 
-	private record class DisponibilidadEnDiaDTO {
+	private record struct DisponibilidadEnDiaDTO {
 		public string Dia { get; set; } = string.Empty;
 		public List<FranjaHorariaDTO> Franjas { get; set; } = new();
 	}
 
-	private record class FranjaHorariaDTO {
+	private record struct FranjaHorariaDTO {
 		public string Desde { get; set; } = string.Empty;
 		public string Hasta { get; set; } = string.Empty;
 	}

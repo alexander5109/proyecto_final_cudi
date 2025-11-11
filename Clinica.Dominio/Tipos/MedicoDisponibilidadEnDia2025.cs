@@ -2,7 +2,7 @@
 
 namespace Clinica.Dominio.Tipos;
 
-public record class MedicoDisponibilidadEnDia2025(
+public record struct MedicoDisponibilidadEnDia2025(
 	MedicoDiaDeLaSemana2025 DiaSemana,
 	IReadOnlyList<MedicoFranjaHoraria2025> FranjasHorarias
 ) : IValidate<MedicoDisponibilidadEnDia2025> {

@@ -2,7 +2,7 @@
 using System.IO.IsolatedStorage;
 namespace Clinica.Dominio.Tipos;
 
-public record class LocalidadDeProvincia2025(
+public record struct LocalidadDeProvincia2025(
 	string Nombre, 
 	ProvinciaDeArgentina2025 Provincia
 ) : IValidate<LocalidadDeProvincia2025> {
@@ -18,13 +18,13 @@ public record class LocalidadDeProvincia2025(
 		return new Result<LocalidadDeProvincia2025>.Ok(new(nombreLocalidad, provincia));
 	}
 	public static string Normalize(string nombreLocalidad) => char.ToUpper(nombreLocalidad[0]) + nombreLocalidad[1..].ToLower();
-	public Result<LocalidadDeProvincia2025> Validate() {
-		if (string.IsNullOrWhiteSpace(Nombre))
-			return new Result<LocalidadDeProvincia2025>.Error("El nombre de la localidad no puede estar vacío.");
+	//public Result<LocalidadDeProvincia2025> Validate() {
+	//	if (string.IsNullOrWhiteSpace(Nombre))
+	//		return new Result<LocalidadDeProvincia2025>.Error("El nombre de la localidad no puede estar vacío.");
 
-		if (Provincia.Validate() is Result<ProvinciaDeArgentina2025>.Error err)
-			return new Result<LocalidadDeProvincia2025>.Error($"Provincia inválida: {err.Mensaje}");
+	//	if (Provincia.Validate() is Result<ProvinciaDeArgentina2025>.Error err)
+	//		return new Result<LocalidadDeProvincia2025>.Error($"Provincia inválida: {err.Mensaje}");
 
-		return new Result<LocalidadDeProvincia2025>.Ok(this);
-	}
+	//	return new Result<LocalidadDeProvincia2025>.Ok(this);
+	//}
 }

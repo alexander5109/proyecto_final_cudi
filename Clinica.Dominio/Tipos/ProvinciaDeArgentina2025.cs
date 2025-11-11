@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Clinica.Dominio.Tipos;
 
-public record class ProvinciaDeArgentina2025(
+public record struct ProvinciaDeArgentina2025(
 	string Nombre
 ) : IValidate<ProvinciaDeArgentina2025> {
 	private static readonly HashSet<string> _provinciasValidas =
@@ -51,12 +51,12 @@ public record class ProvinciaDeArgentina2025(
 
 	public static string Normalize(string content) => content.Trim();
 
-	public Result<ProvinciaDeArgentina2025> Validate() {
-		if (string.IsNullOrWhiteSpace(Nombre))
-			return new Result<ProvinciaDeArgentina2025>.Error("La provincia no puede estar vacía.");
-		if (!_provinciasValidas.Contains(Normalize(Nombre)))
-			return new Result<ProvinciaDeArgentina2025>.Error($"Provincia inválida: '{Nombre}'.");
+	//public Result<ProvinciaDeArgentina2025> Validate() {
+	//	if (string.IsNullOrWhiteSpace(Nombre))
+	//		return new Result<ProvinciaDeArgentina2025>.Error("La provincia no puede estar vacía.");
+	//	if (!_provinciasValidas.Contains(Normalize(Nombre)))
+	//		return new Result<ProvinciaDeArgentina2025>.Error($"Provincia inválida: '{Nombre}'.");
 
-		return new Result<ProvinciaDeArgentina2025>.Ok(this);
-	}
+	//	return new Result<ProvinciaDeArgentina2025>.Ok(this);
+	//}
 }

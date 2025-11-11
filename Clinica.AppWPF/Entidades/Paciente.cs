@@ -1,5 +1,7 @@
 ﻿using SystemTextJson = System.Text.Json;
 using Newtonsoft.Json;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.AppWPF {
 	//---------------------------------Tablas.Pacientes-------------------------------//
@@ -71,5 +73,18 @@ namespace Clinica.AppWPF {
 			ventana.txtLocalidad.Text = this.Localidad;
 			ventana.txtProvincia.Text = this.Provincia;
 		}
+
+		//public Result<Paciente2025> ToDomain(){
+		//	throw new NotImplementedException();
+
+		//	return new() {
+		//		FechaIngreso = this.FechaIngreso
+		//	};
+		//}
+
+
+
+
+
 	}
 }

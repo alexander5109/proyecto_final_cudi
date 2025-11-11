@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Clinica.Dominio.Comun;
 public interface IValidate<T> {
-	Result<T> Validate();
+	//Result<T> Validate();
 }

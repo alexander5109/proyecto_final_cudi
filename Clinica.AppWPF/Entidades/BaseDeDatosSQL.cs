@@ -1,7 +1,10 @@
-using System.Windows;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 using Microsoft.Data.SqlClient;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
+using System.Windows;
 
 
 namespace Clinica.AppWPF {
@@ -67,30 +70,32 @@ namespace Clinica.AppWPF {
 		
 		
 		//------------------------public.CREATE.Paciente----------------------//
-		public override bool CreatePaciente(Paciente instancia) {
+		public override bool CreatePaciente(Paciente2025 instancia, Paciente instanceDto) {
 			string insertQuery = @"
 				INSERT INTO Paciente (Dni, Name, LastName, FechaIngreso, Email, Telefono, FechaNacimiento, Domicilio, Localidad, Provincia) 
 				VALUES (@Dni, @Name, @LastName, @FechaIngreso, @Email, @Telefono, @FechaNacimiento, @Domicilio, @Localidad, @Provincia)
 				SELECT SCOPE_IDENTITY();"; // DEVOLEME RAPIDAMENTE LA ID QUE ACABAS DE GENERAR
 			
 			try {
+
 				using (SqlConnection connection = new SqlConnection(connectionString)) {
 					connection.Open();
 					using (SqlCommand sqlComando = new SqlCommand(insertQuery, connection)) {
-						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni);
-						sqlComando.Parameters.AddWithValue("@Name", instancia.Name);
-						sqlComando.Parameters.AddWithValue("@LastName", instancia.LastName);
-						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso);
-						sqlComando.Parameters.AddWithValue("@Email", instancia.Email);
-						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono);
-						sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento);
-						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio);
-						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Localidad);
-						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Provincia);
-						instancia.Id = sqlComando.ExecuteScalar().ToString();	//ahora la instancia creada desde la ventana tiene su propia Id
+						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Value);
+						sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
+						sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
+						sqlComando.Parameters.AddWithValue("@FechaIngreso", DateTime.Today.ToString());
+						sqlComando.Parameters.AddWithValue("@Email", instancia.Contacto.Email.Value);
+						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Contacto.Telefono.Value);
+						sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento.Value);
+						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
+						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
+						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
+						instanceDto.Id = sqlComando.ExecuteScalar()?.ToString();	//ahora la instancia creada desde la ventana tiene su propia Id
 					}
 				}
-				DictPacientes[instancia.Id] = instancia;
+
+				DictPacientes[instanceDto.Id] = instanceDto;
 				// MessageBox.Show($"Exito: Se ha creado la instancia de Paciente: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 				return true;
 			} 
@@ -216,23 +221,23 @@ namespace Clinica.AppWPF {
 			return false;
 		}
 		//------------------------public.UPDATE.Paciente----------------------//
-		public override bool UpdatePaciente(Paciente instancia) {
+		public override bool UpdatePaciente(Paciente2025 instancia, string instanceId) {
 			string query = "UPDATE Paciente SET Dni = @Dni, Name = @Name, LastName = @LastName, FechaIngreso = @FechaIngreso, Email = @Email, Telefono = @Telefono, FechaNacimiento = @FechaNacimiento, Domicilio = @Domicilio, Localidad = @Localidad, Provincia = @Provincia WHERE Id = @Id";
 			try {
 				using (var connection = new SqlConnection(connectionString)) {
 					connection.Open();
 					using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
-						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni);
-						sqlComando.Parameters.AddWithValue("@Name", instancia.Name);
-						sqlComando.Parameters.AddWithValue("@LastName", instancia.LastName);
-						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso);
-						sqlComando.Parameters.AddWithValue("@Email", instancia.Email);
-						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono);
-						sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento);
-						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio);
-						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Localidad);
-						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Provincia);
-						sqlComando.Parameters.AddWithValue("@Id", instancia.Id);
+						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Value);
+						sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
+						sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
+						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Value);
+						sqlComando.Parameters.AddWithValue("@Email", instancia.Contacto.Email.Value);
+						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Contacto.Telefono.Value);
+						sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento.Value);
+						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
+						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
+						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
+						sqlComando.Parameters.AddWithValue("@Id", instanceId);
 						sqlComando.ExecuteNonQuery();
 					}
 				}

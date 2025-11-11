@@ -2,7 +2,7 @@
 
 namespace Clinica.Dominio.Tipos;
 
-public record class MedicoDiaDeLaSemana2025(
+public record struct MedicoDiaDeLaSemana2025(
 	DayOfWeek Value
 ) : IValidate<MedicoDiaDeLaSemana2025> {
 	public static Result<MedicoDiaDeLaSemana2025> Crear(DayOfWeek dia) {

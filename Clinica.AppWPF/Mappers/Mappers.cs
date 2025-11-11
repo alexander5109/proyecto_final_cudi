@@ -41,10 +41,10 @@ public static class PacienteMapper {
 	var ok = pacienteResult.Paciente;
 		ventana.txtName.Text = ok.NombreCompleto.Nombre;
 		ventana.txtLastName.Text = ok.NombreCompleto.Apellido;
-		ventana.txtDni.Text = ok.Dni;
+		ventana.txtDni.Text = ok.Dni.Value;
 		ventana.txtFechaNacimiento.SelectedDate = ok.FechaNacimiento.Value.ToDateTime(TimeOnly.MinValue);
-		ventana.txtEmail.Text = ok.Contacto.Email;
-		ventana.txtTelefono.Text = ok.Contacto.Telefono;
+		ventana.txtEmail.Text = ok.Contacto.Email.Value;
+		ventana.txtTelefono.Text = ok.Contacto.Telefono.Value;
 		ventana.txtProvincia.Text = ok.Domicilio.Localidad.Provincia.Nombre;
 		ventana.txtLocalidad.Text = ok.Domicilio.Localidad.Nombre;
 		ventana.txtDomicilio.Text = ok.Domicilio.Direccion;

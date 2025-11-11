@@ -7,7 +7,7 @@ namespace Clinica.Dominio.Entidades;
 
 
 
-public record class Medico2025(
+public record struct Medico2025(
 	NombreCompleto2025 Nombre,
 	MedicoEspecialidad2025 Especialidad,
 	DniArgentino2025 Dni,

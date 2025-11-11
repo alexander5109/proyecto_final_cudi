@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Clinica.Dominio.Tipos;
 
-public record class FechaDeNacimiento2025(
+public record struct FechaDeNacimiento2025(
 	DateOnly Value
 ) : IValidate<FechaDeNacimiento2025> {
 	private static readonly DateOnly Hoy = DateOnly.FromDateTime(DateTime.Now);
@@ -52,11 +52,11 @@ public record class FechaDeNacimiento2025(
 
 	public override string ToString() => Value.ToString("dd/MM/yyyy");
 
-	public Result<FechaDeNacimiento2025> Validate() {
-		if (Value > Hoy)
-			return new Result<FechaDeNacimiento2025>.Error("La fecha de nacimiento no puede ser futura.");
-		if (Value < Hoy.AddYears(-120))
-			return new Result<FechaDeNacimiento2025>.Error("Edad no válida (más de 120 años).");
-		return new Result<FechaDeNacimiento2025>.Ok(this);
-	}
+	//public Result<FechaDeNacimiento2025> Validate() {
+	//	if (Value > Hoy)
+	//		return new Result<FechaDeNacimiento2025>.Error("La fecha de nacimiento no puede ser futura.");
+	//	if (Value < Hoy.AddYears(-120))
+	//		return new Result<FechaDeNacimiento2025>.Error("Edad no válida (más de 120 años).");
+	//	return new Result<FechaDeNacimiento2025>.Ok(this);
+	//}
 }

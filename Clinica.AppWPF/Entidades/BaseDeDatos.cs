@@ -1,3 +1,5 @@
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 using System.Windows;
 
 namespace Clinica.AppWPF {
@@ -14,12 +16,12 @@ namespace Clinica.AppWPF {
 
 		// Create methods
 		public abstract bool CreateMedico(Medico instance);
-		public abstract bool CreatePaciente(Paciente instance);
+		public abstract bool CreatePaciente(Paciente2025 instance, Paciente instanceDto);
 		public abstract bool CreateTurno(Turno instance);
 
 		// Update methods
 		public abstract bool UpdateMedico(Medico instance);
-		public abstract bool UpdatePaciente(Paciente instance);
+		public abstract bool UpdatePaciente(Paciente2025 instance, string instanceId);
 		public abstract bool UpdateTurno(Turno instance);
 
 		// Delete methods

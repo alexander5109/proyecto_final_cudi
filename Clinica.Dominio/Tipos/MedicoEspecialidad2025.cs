@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 
 namespace Clinica.Dominio.Tipos;
 
-public record class MedicoEspecialidad2025(
+public record struct MedicoEspecialidad2025(
 	string Titulo, 
 	string Rama
 ) : IValidate<MedicoEspecialidad2025> {

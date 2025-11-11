@@ -2,7 +2,7 @@
 
 namespace Clinica.Dominio.Tipos;
 
-public record class MedicoFranjaHoraria2025(
+public record struct MedicoFranjaHoraria2025(
 	TimeOnly Desde,
 	TimeOnly Hasta
 ) : IValidate<MedicoFranjaHoraria2025> {

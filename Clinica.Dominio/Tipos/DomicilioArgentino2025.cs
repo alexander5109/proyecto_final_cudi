@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 namespace Clinica.Dominio.Tipos;
 
-public record class DomicilioArgentino2025(
+public record struct DomicilioArgentino2025(
 	LocalidadDeProvincia2025 Localidad, 
 	string Direccion
 ) : IValidate<DomicilioArgentino2025> {
@@ -20,10 +20,10 @@ public record class DomicilioArgentino2025(
 	}
 	public static string Normalize(string value) => value.Trim();
 
-	public Result<DomicilioArgentino2025> Validate() {
-		throw new NotImplementedException();
+	//public Result<DomicilioArgentino2025> Validate() {
+	//	throw new NotImplementedException();
 
 
-		return new Result<DomicilioArgentino2025>.Ok(this);
-	}
+	//	return new Result<DomicilioArgentino2025>.Ok(this);
+	//}
 }
