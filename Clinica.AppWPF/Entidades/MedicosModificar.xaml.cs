@@ -11,54 +11,71 @@ namespace Clinica.AppWPF {
 		{
 			InitializeComponent();
 			SelectedMedico = null;
-			txtDiasDeAtencion.ItemsSource = HorarioMedico.GetDiasDeLaSemanaAsList();
+			//txtDiasDeAtencion.ItemsSource = HorarioMedico.GetDiasDeLaSemanaAsList();
 		}
 
-		public MedicosModificar(Medico selectedMedico) //Constructor con un objeto como parametro ==> Modificarlo.
-		{
+		public MedicosModificar(Medico selectedMedico) {
 			InitializeComponent();
 			SelectedMedico = selectedMedico;
 			SelectedMedico.MostrarseEnVentana(this);
+
+			var resultado = this.ToDomain();
+
+			if (resultado is Result<Medico2025>.Ok ok) {
+				var agenda = ok.Value.Agenda;
+
+				// ✅ Bind directo al TreeView/ListView
+				txtAgendaWidget.ItemsSource = agenda.DisponibilidadEnDia;
+
+			} else if (resultado is Result<Medico2025>.Error error) {
+				MessageBox.Show(
+					$"No se puede cargar la agenda del médico: {error.Mensaje}",
+					"Error de ingreso",
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning
+				);
+			}
 		}
-		
+
+
 
 		//--------------------AsegurarInput-------------------//
-		private bool CamposCompletadosCorrectamente(){
+		/*
+		private bool CamposCompletadosCorrectamente() {
 			if (
-				this.txtSueldoMinimoGarantizado.Text is null 
-				|| this.txtDni.Text is null 
-				|| this.txtFechaIngreso.SelectedDate is null 
+				this.txtSueldoMinimoGarantizado.Text is null
+				|| this.txtDni.Text is null
+				|| this.txtFechaIngreso.SelectedDate is null
 				|| this.txtGuardia.IsChecked is null
 			) {
 				MessageBox.Show($"Error: Faltan datos obligatorios por completar.", "Error de ingreso.", MessageBoxButton.OK, MessageBoxImage.Warning);
 				return false;
-			 }
-					 
-			if (!Int64.TryParse(this.txtDni.Text, out _)){
-                MessageBox.Show($"Error: El dni no es un numero entero valido.", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
+			}
+
+			if (!Int64.TryParse(this.txtDni.Text, out _)) {
+				MessageBox.Show($"Error: El dni no es un numero entero valido.", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
 				return false;
-            }
-					 
+			}
+
 			if (!Double.TryParse(this.txtSueldoMinimoGarantizado.Text, out _)) {
 				MessageBox.Show("Error: El sueldo minimo no es un número decimal válido. Use la coma (,) como separador decimal.", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
 				return false;
 			}
-			foreach (HorarioMedico campo in this.txtDiasDeAtencion.ItemsSource as List<HorarioMedico>){
-				if(  string.IsNullOrEmpty(campo.HoraInicio) && string.IsNullOrEmpty(campo.HoraFin) ){
+			foreach (HorarioMedico campo in this.txtDiasDeAtencion.ItemsSource as List<HorarioMedico>) {
+				if (string.IsNullOrEmpty(campo.HoraInicio) && string.IsNullOrEmpty(campo.HoraFin)) {
 					continue;
-				} 
-				if( App.TryParseHoraField(campo.HoraInicio) && App.TryParseHoraField(campo.HoraFin) ){
+				}
+				if (App.TryParseHoraField(campo.HoraInicio) && App.TryParseHoraField(campo.HoraFin)) {
 					continue;
-				} 
-				else{	
+				} else {
 					MessageBox.Show($"Error: No se reconoce el horario del día {campo.DiaSemana}. \nIngrese un string con formato valido (hh:mm)", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
 					return false;
 				}
 			}
-					 
+
 			return true;
 		}
-
+		*/
 
 
 		//---------------------botones.GuardarCambios-------------------//
@@ -169,17 +186,17 @@ namespace Clinica.AppWPF {
 				return;
 			}
 			//---------confirmacion-----------//
-			if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedMedico.Name}", "Confirmar Eliminación", MessageBoxButton.OKCancel, MessageBoxImage.Warning ) != MessageBoxResult.OK) {
+			if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedMedico.Name}", "Confirmar Eliminación", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK) {
 				return;
 			}
 			//---------Eliminar-----------//
-			if (App.BaseDeDatos.DeleteMedico(SelectedMedico)){
+			if (App.BaseDeDatos.DeleteMedico(SelectedMedico)) {
 				this.Cerrar(); // this.NavegarA<Medicos>();
 			}
 		}
-		
-		
-		
+
+
+
 		//---------------------botones.Salida-------------------//
 		private void ButtonCancelar(object sender, RoutedEventArgs e) {
 			this.Cerrar(); // this.NavegarA<Medicos>();

@@ -121,7 +121,7 @@ namespace Clinica.AppWPF {
 			ventana.txtFechaIngreso.SelectedDate = this.FechaIngreso;
 			ventana.txtGuardia.IsChecked = this.Guardia;
 			ventana.txtSueldoMinimoGarantizado.Text = this.SueldoMinimoGarantizado.ToString();
-			ventana.txtDiasDeAtencion.ItemsSource = this.DiasDeAtencion.Values.ToList();
+			//ventana.txtDiasDeAtencion.ItemsSource = this.DiasDeAtencion.Values.ToList();
 		}
 		
 		

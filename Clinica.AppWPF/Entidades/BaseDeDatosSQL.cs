@@ -35,7 +35,7 @@ namespace Clinica.AppWPF {
 					using (SqlCommand sqlComando = new SqlCommand(insertQuery, connection)) {
 						sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
 						sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
-						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni);
+						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Value);
 						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
 						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
 						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
@@ -188,15 +188,15 @@ namespace Clinica.AppWPF {
 					using (var sqlComando = new SqlCommand(query, connection)) {
 						sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
 						sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
-						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni);
-						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia);
-						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio);
-						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad);
-						sqlComando.Parameters.AddWithValue("@Especialidad", instancia.Especialidad);
+						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Value);
+						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
+						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
+						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
+						sqlComando.Parameters.AddWithValue("@Especialidad", instancia.Especialidad.Titulo);
 						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono.Value);
 						sqlComando.Parameters.AddWithValue("@Guardia", instancia.HaceGuardias);
-						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso);
-						sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado);
+						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Value);
+						sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado.Value);
 						sqlComando.Parameters.AddWithValue("@Id", instanceId);
 						sqlComando.ExecuteNonQuery();
 					}
