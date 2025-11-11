@@ -67,6 +67,12 @@
     <Build Include="dbo\Tables\Medico.sql" />
     <Build Include="dbo\Tables\Paciente.sql" />
     <Build Include="dbo\Tables\Turno.sql" />
+    <Build Include="dbo\StoredProcedures\sp_UpdateMedico.sql" />
+    <Build Include="dbo\StoredProcedures\sp_UpdateTurno.sql" />
+    <Build Include="dbo\StoredProcedures\sp_UpdatePaciente.sql" />
+    <Build Include="dbo\StoredProcedures\sp_DeleteTurno.sql" />
+    <Build Include="dbo\StoredProcedures\sp_DeletePaciente.sql" />
+    <Build Include="dbo\StoredProcedures\sp_DeleteMedico.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="Script.PreDeployment.sql" />
