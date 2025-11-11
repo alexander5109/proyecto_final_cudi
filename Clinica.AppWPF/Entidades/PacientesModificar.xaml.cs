@@ -25,36 +25,37 @@ namespace Clinica.AppWPF {
 		//---------------------botones.GuardarCambios-------------------//
 		private void ButtonGuardar(object sender, RoutedEventArgs e) {
 			App.PlayClickJewel();
-			//---------Crear-----------//
-			if (SelectedPaciente is null) {
-				this.ToDomain().Switch(
-					ok => {
-						SelectedPaciente = new Paciente(this);
-						if (App.BaseDeDatos.CreatePaciente(ok, SelectedPaciente)) {
-							this.Cerrar();
-						}
-					},
-					error => {
-						MessageBox.Show($"No se puede guardar el paciente: {error}", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
-						return;
-					}
-				);
-				return;
-			}
-			//---------Modificar-----------//
-			this.ToDomain().Switch(
+
+			var resultado = this.ToDomain();
+
+			resultado.Switch(
 				ok => {
-					SelectedPaciente.LeerDesdeVentana(this);
-					if (App.BaseDeDatos.UpdatePaciente(ok, SelectedPaciente.Id)) {
-						this.Cerrar();
+					bool exito;
+
+					if (SelectedPaciente is null) {
+						// Crear nuevo paciente
+						SelectedPaciente = new Paciente(this);
+						exito = App.BaseDeDatos.CreatePaciente(ok, SelectedPaciente);
+					} else {
+						// Actualizar existente
+						SelectedPaciente.LeerDesdeVentana(this);
+						exito = App.BaseDeDatos.UpdatePaciente(ok, SelectedPaciente.Id);
 					}
+
+					if (exito)
+						this.Cerrar();
 				},
 				error => {
-					MessageBox.Show($"No se puede guardar el paciente: {error}", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
-					return;
+					MessageBox.Show(
+						$"No se puede guardar el paciente: {error}",
+						"Error de ingreso",
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning
+					);
 				}
 			);
 		}
+
 
 		private Result<Paciente2025> ToDomain() {
 			var nombreRes = NombreCompleto2025.Crear(txtName.Text, txtLastName.Text);
@@ -71,8 +72,8 @@ namespace Clinica.AppWPF {
 				: new Result<FechaDeNacimiento2025>.Error("Debe seleccionar una fecha de nacimiento válida.");
 
 			var fechaIngRes = txtFechaIngreso.SelectedDate is DateTime fechaIng
-				? FechaDeIngreso2025.Crear(DateOnly.FromDateTime(fechaIng))
-				: new Result<FechaDeIngreso2025>.Error("Debe seleccionar una fecha de ingreso válida.");
+				? FechaIngreso2025.Crear(DateOnly.FromDateTime(fechaIng))
+				: new Result<FechaIngreso2025>.Error("Debe seleccionar una fecha de ingreso válida.");
 
 			return Paciente2025.Crear(
 				nombreRes,

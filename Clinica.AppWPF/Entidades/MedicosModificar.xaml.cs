@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+using System.Windows;
 
 namespace Clinica.AppWPF {
 	public partial class MedicosModificar : Window {
@@ -55,29 +57,46 @@ namespace Clinica.AppWPF {
 					 
 			return true;
 		}
-		
-		
-		
+
+
+
 		//---------------------botones.GuardarCambios-------------------//
 		private void ButtonGuardar(object sender, RoutedEventArgs e) {
 			App.PlayClickJewel();
-			if (!CamposCompletadosCorrectamente()) {
-				return;
-			}
-			
-			if (SelectedMedico is null) {
-				SelectedMedico = new Medico(this);
-				if ( App.BaseDeDatos.CreateMedico(SelectedMedico)){
-					this.Cerrar();
-				}						
-			}
-			else {
-				SelectedMedico.LeerDesdeVentana(this);
-				if ( App.BaseDeDatos.UpdateMedico(SelectedMedico)){
-					this.Cerrar();
-				}			
-			}
+
+			Result<Medico2025> resultado = this.ToDomain();
+
+			resultado.Switch(
+				ok => {
+					bool exito;
+
+					if (SelectedMedico is null) {
+						SelectedMedico = new Medico(this);
+						exito = App.BaseDeDatos.CreateMedico(ok, SelectedMedico);
+					} else {
+						// Actualizar existente
+						SelectedMedico.LeerDesdeVentana(this);
+						exito = App.BaseDeDatos.UpdateMedico(ok, SelectedMedico.Id);
+					}
+
+					if (exito)
+						this.Cerrar();
+				},
+				error => {
+					MessageBox.Show(
+						$"No se puede guardar el médico: {error}",
+						"Error de ingreso",
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning
+					);
+				}
+			);
 		}
+
+		private Result<Medico2025> ToDomain() {
+			throw new NotImplementedException();
+		}
+
 
 
 		//---------------------botones.Eliminar-------------------//

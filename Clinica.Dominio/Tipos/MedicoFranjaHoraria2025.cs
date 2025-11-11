@@ -1,5 +1,4 @@
 ﻿using Clinica.Dominio.Comun;
-
 namespace Clinica.Dominio.Tipos;
 
 public readonly record struct MedicoFranjaHoraria2025(

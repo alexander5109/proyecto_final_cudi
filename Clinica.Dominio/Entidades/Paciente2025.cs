@@ -9,7 +9,7 @@ public readonly record struct Paciente2025 {
 		Contacto2025 contacto,
 		DomicilioArgentino2025 domicilio,
 		FechaDeNacimiento2025 fechaNacimiento,
-		FechaDeIngreso2025 fechaIngreso
+		FechaIngreso2025 fechaIngreso
 	) {
 		NombreCompleto = nombreCompleto;
 		Dni = dni;
@@ -24,7 +24,7 @@ public readonly record struct Paciente2025 {
 	public Contacto2025 Contacto { get; }
 	public DomicilioArgentino2025 Domicilio { get; }
 	public FechaDeNacimiento2025 FechaNacimiento { get; }
-	public FechaDeIngreso2025 FechaIngreso { get; }
+	public FechaIngreso2025 FechaIngreso { get; }
 
 	// ✅ Factory controlada
 	public static Result<Paciente2025> Crear(
@@ -33,7 +33,7 @@ public readonly record struct Paciente2025 {
 		Result<Contacto2025> contactoResult,
 		Result<DomicilioArgentino2025> domicilioResult,
 		Result<FechaDeNacimiento2025> fechaNacimientoResult,
-		Result<FechaDeIngreso2025> fechaIngresoResult)
+		Result<FechaIngreso2025> fechaIngresoResult)
 		=> nombreResult.Bind(nombreOk =>
 		   dniResult.Bind(dniOk =>
 		   contactoResult.Bind(contactoOk =>

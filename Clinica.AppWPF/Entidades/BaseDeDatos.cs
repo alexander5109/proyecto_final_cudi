@@ -15,12 +15,12 @@ namespace Clinica.AppWPF {
 		public abstract List<Turno> ReadTurnos();
 
 		// Create methods
-		public abstract bool CreateMedico(Medico instance);
+		public abstract bool CreateMedico(Medico2025 instance, Medico instanceDto);
 		public abstract bool CreatePaciente(Paciente2025 instance, Paciente instanceDto);
 		public abstract bool CreateTurno(Turno instance);
 
 		// Update methods
-		public abstract bool UpdateMedico(Medico instance);
+		public abstract bool UpdateMedico(Medico2025 instance, string instanceId);
 		public abstract bool UpdatePaciente(Paciente2025 instance, string instanceId);
 		public abstract bool UpdateTurno(Turno instance);
 

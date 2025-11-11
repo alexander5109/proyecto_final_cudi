@@ -49,10 +49,10 @@ public readonly record struct ProvinciaDeArgentina2025(
 	public static string Normalize(string content) => content.Trim();
 
 	//public Result<ProvinciaDeArgentina2025> Validate() {
-	//	if (string.IsNullOrWhiteSpace(Nombre))
+	//	if (string.IsNullOrWhiteSpace(NombreCompleto))
 	//		return new Result<ProvinciaDeArgentina2025>.Error("La provincia no puede estar vacía.");
-	//	if (!_provinciasValidas.Contains(Normalize(Nombre)))
-	//		return new Result<ProvinciaDeArgentina2025>.Error($"Provincia inválida: '{Nombre}'.");
+	//	if (!_provinciasValidas.Contains(Normalize(NombreCompleto)))
+	//		return new Result<ProvinciaDeArgentina2025>.Error($"Provincia inválida: '{NombreCompleto}'.");
 
 	//	return new Result<ProvinciaDeArgentina2025>.Ok(this);
 	//}

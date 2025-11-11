@@ -25,5 +25,5 @@ public readonly record struct Turno2025(
 	}
 
 	public override string ToString() =>
-		$"Turno de {Paciente.NombreCompleto} con {Medico.Nombre} el {FechaYHora:g}";
+		$"Turno de {Paciente.NombreCompleto} con {Medico.NombreCompleto} el {FechaYHora:g}";
 }
