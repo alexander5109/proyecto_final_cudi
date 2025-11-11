@@ -7,14 +7,14 @@ namespace Clinica.Dominio.Entidades;
 
 
 
-public readonly record struct Medico2025(
+public record class Medico2025(
 	NombreCompleto2025 Nombre,
 	MedicoEspecialidad2025 Especialidad,
 	DniArgentino2025 Dni,
 	DomicilioArgentino2025 Domicilio,
 	Contacto2025 Contacto,
 	MedicoAgenda2025 Agenda
-) {
+) : IValidate<Contacto2025> {
 	public static Result<Medico2025> Crear(
 		string nombre,
 		string apellido,

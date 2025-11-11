@@ -1,19 +1,11 @@
 ﻿using Clinica.Dominio.Comun;
 namespace Clinica.Dominio.Tipos;
 
-public readonly record struct DomicilioArgentino2025(
+public record class DomicilioArgentino2025(
 	LocalidadDeProvincia2025 Localidad, 
 	string Direccion
-) {
-	public static Result<DomicilioArgentino2025> Crear(string provinciaTexto, string localidadTexto, string direccionTexto) {
-		if (string.IsNullOrWhiteSpace(direccionTexto))
-			return new Result<DomicilioArgentino2025>.Error("La dirección no puede estar vacía.");
-		if (direccionTexto.Length > 100)
-			return new Result<DomicilioArgentino2025>.Error("La dirección es demasiado larga.");
-
-		Result<ProvinciaDeArgentina2025> provinciaResult = ProvinciaDeArgentina2025.Crear(provinciaTexto);
-		Result<LocalidadDeProvincia2025> localidadResult = LocalidadDeProvincia2025.Crear(localidadTexto, provinciaResult);
-
+) : IValidate<DomicilioArgentino2025> {
+	public static Result<DomicilioArgentino2025> Crear(Result<LocalidadDeProvincia2025> localidadResult, string? direccionTexto) {
 		if (localidadResult is Result<LocalidadDeProvincia2025>.Error localidadError)
 			return new Result<DomicilioArgentino2025>.Error(localidadError.Mensaje);
 
@@ -22,8 +14,16 @@ public readonly record struct DomicilioArgentino2025(
 		return new Result<DomicilioArgentino2025>.Ok(
 			new DomicilioArgentino2025(
 				localidad,
-				direccionTexto.Trim()
+				Normalize(direccionTexto)
 			)
 		);
+	}
+	public static string Normalize(string value) => value.Trim();
+
+	public Result<DomicilioArgentino2025> Validate() {
+		throw new NotImplementedException();
+
+
+		return new Result<DomicilioArgentino2025>.Ok(this);
 	}
 }

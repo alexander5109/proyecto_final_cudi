@@ -3,12 +3,11 @@ using System.Globalization;
 
 namespace Clinica.Dominio.Tipos;
 
-public readonly record struct FechaDeNacimiento2025(
+public record class FechaDeNacimiento2025(
 	DateOnly Value
-) {
+) : IValidate<FechaDeNacimiento2025> {
 	private static readonly DateOnly Hoy = DateOnly.FromDateTime(DateTime.Now);
 
-	// --- CREAR DESDE DateOnly ---
 	public static Result<FechaDeNacimiento2025> Crear(DateOnly fecha) {
 		if (fecha > Hoy)
 			return new Result<FechaDeNacimiento2025>.Error("La fecha de nacimiento no puede ser futura.");
@@ -18,14 +17,12 @@ public readonly record struct FechaDeNacimiento2025(
 		return new Result<FechaDeNacimiento2025>.Ok(new(fecha));
 	}
 
-	// --- CREAR DESDE DateTime ---
 	public static Result<FechaDeNacimiento2025> Crear(DateTime fecha) {
 		var dateOnly = DateOnly.FromDateTime(fecha);
 		return Crear(dateOnly);
 	}
 
-	// --- CREAR DESDE STRING ---
-	public static Result<FechaDeNacimiento2025> Crear(string input) {
+	public static Result<FechaDeNacimiento2025> Crear(string? input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<FechaDeNacimiento2025>.Error("La fecha de nacimiento no puede estar vacía.");
 
@@ -54,4 +51,12 @@ public readonly record struct FechaDeNacimiento2025(
 	}
 
 	public override string ToString() => Value.ToString("dd/MM/yyyy");
+
+	public Result<FechaDeNacimiento2025> Validate() {
+		if (Value > Hoy)
+			return new Result<FechaDeNacimiento2025>.Error("La fecha de nacimiento no puede ser futura.");
+		if (Value < Hoy.AddYears(-120))
+			return new Result<FechaDeNacimiento2025>.Error("Edad no válida (más de 120 años).");
+		return new Result<FechaDeNacimiento2025>.Ok(this);
+	}
 }

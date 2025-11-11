@@ -1,10 +1,12 @@
 ﻿using Clinica.Dominio.Comun;
+using System.IO.IsolatedStorage;
+using System.Linq;
 
 namespace Clinica.Dominio.Tipos;
 
-public readonly record struct ProvinciaDeArgentina2025(
+public record class ProvinciaDeArgentina2025(
 	string Nombre
-) {
+) : IValidate<ProvinciaDeArgentina2025> {
 	private static readonly HashSet<string> _provinciasValidas =
 		new(StringComparer.OrdinalIgnoreCase)
 		{
@@ -37,9 +39,7 @@ public readonly record struct ProvinciaDeArgentina2025(
 	public static Result<ProvinciaDeArgentina2025> Crear(string input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<ProvinciaDeArgentina2025>.Error("La provincia no puede estar vacía.");
-
-		string normalizado = input.Trim();
-
+		string normalizado = Normalize(input);
 		if (!_provinciasValidas.Contains(normalizado))
 			return new Result<ProvinciaDeArgentina2025>.Error($"Provincia inválida: '{input}'.");
 
@@ -49,5 +49,14 @@ public readonly record struct ProvinciaDeArgentina2025(
 	public static IReadOnlyCollection<string> ListarPosibles()
 		=> _provinciasValidas.ToList().AsReadOnly();
 
+	public static string Normalize(string content) => content.Trim();
 
+	public Result<ProvinciaDeArgentina2025> Validate() {
+		if (string.IsNullOrWhiteSpace(Nombre))
+			return new Result<ProvinciaDeArgentina2025>.Error("La provincia no puede estar vacía.");
+		if (!_provinciasValidas.Contains(Normalize(Nombre)))
+			return new Result<ProvinciaDeArgentina2025>.Error($"Provincia inválida: '{Nombre}'.");
+
+		return new Result<ProvinciaDeArgentina2025>.Ok(this);
+	}
 }

@@ -4,9 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Clinica.Dominio.Tipos;
 
-public readonly record struct MedicoAgenda2025(
+public record class MedicoAgenda2025(
 	IReadOnlyList<MedicoDisponibilidadEnDia2025> DisponibilidadEnDia
-) {
+) : IValidate<Contacto2025> {
 	public static Result<MedicoAgenda2025> Crear(IEnumerable<MedicoDisponibilidadEnDia2025> disponibilidades) {
 		var list = disponibilidades.ToList();
 		if (list.Count == 0)

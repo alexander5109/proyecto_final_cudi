@@ -3,10 +3,10 @@ using System.Collections.Immutable;
 
 namespace Clinica.Dominio.Tipos;
 
-public readonly record struct MedicoEspecialidad2025(
+public record class MedicoEspecialidad2025(
 	string Titulo, 
 	string Rama
-) {
+) : IValidate<MedicoEspecialidad2025> {
 	// Conjunto inmutable de especialidades válidas
 	public static readonly IImmutableSet<MedicoEspecialidad2025> EspecialidadesValidas =
 		new HashSet<MedicoEspecialidad2025>

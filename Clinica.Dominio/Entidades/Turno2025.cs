@@ -3,12 +3,12 @@ using Clinica.Dominio.Tipos;
 
 namespace Clinica.Dominio.Entidades;
 
-public readonly record struct Turno2025(
+public record class Turno2025(
 	Medico2025 Medico,
 	Paciente2025 Paciente,
 	DateTime FechaYHora,
 	TimeSpan Duracion
-) {
+) : IValidate<Contacto2025> {
 	public static Result<Turno2025> Crear(Medico2025 medico, Paciente2025 paciente, DateTime fechaYHora, TimeSpan? duracion = null) {
 		if (fechaYHora < DateTime.Now)
 			return new Result<Turno2025>.Error("El turno no puede ser en el pasado.");

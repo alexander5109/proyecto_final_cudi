@@ -6,22 +6,22 @@ namespace Clinica.AppWPF {
 	public abstract class BaseDeDatosAbstracta{
 		public Dictionary<string, Turno> DictTurnos = new();
 		public Dictionary<string, Medico> DictMedicos = new();
-		public Dictionary<string, Result<Paciente2025>> DictPacientes = new();
+		public Dictionary<string, PacienteDto> DictPacientes = new();
 		public virtual bool ConectadaExitosamente { get; protected set; } = false;
 		
 		// Read methods
 		public abstract List<Medico> ReadMedicos();
-		public abstract List<Paciente2025EnDb> ReadPacientes();
+		//public abstract List<Paciente2025EnDb> ReadPacientes();
 		public abstract List<Turno> ReadTurnos();
 
 		// Create methods
 		public abstract bool CreateMedico(Medico instance);
-		public abstract bool CreatePaciente(Paciente2025 instance);
+		public abstract bool CreatePaciente(Result<Paciente2025>.Ok instance);
 		public abstract bool CreateTurno(Turno instance);
 
 		// Update methods
 		public abstract bool UpdateMedico(Medico instance);
-		public abstract bool UpdatePaciente(Paciente2025EnDb instance);
+		public abstract bool UpdatePaciente(Result<Paciente2025>.Ok instance);
 		public abstract bool UpdateTurno(Turno instance);
 
 		// Delete methods

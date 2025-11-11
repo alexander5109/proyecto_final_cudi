@@ -90,47 +90,58 @@ namespace Clinica.AppWPF {
 
 		//------------------------public.CREATE.Paciente2025----------------------//
 
-		public Result<string> CreatePaciente(
-			Result<NombreCompleto2025>.Ok paciente_nombrecompleto,
-			Result<DniArgentino2025>.Ok paciente_dni,
-			Result<Contacto2025>.Ok paciente_contacto,
-			Result<DomicilioArgentino2025>.Ok paciente_domicilio,
-			Result<FechaDeNacimiento2025>.Ok paciente_fechanac) {
-			try {
-				using var connection = new SqlConnection(connectionString);
-				connection.Open();
+		public override bool CreatePaciente(Result<Paciente2025>.Ok paciente) {
+			throw new NotImplementedException();
+			/*
+			paciente.Match()
 
-				const string insertQuery = @"
+			if (paciente is Result<Paciente2025>.Ok) {
+				return false;
+			} else if (paciente is Result<Paciente2025>.Ok) {
+				try {
+					using var connection = new SqlConnection(connectionString);
+					connection.Open();
+
+					const string insertQuery = @"
             INSERT INTO Paciente 
             (Dni, Name, LastName, FechaIngreso, Email, Telefono, FechaNacimiento, Domicilio, Localidad, Provincia) 
             VALUES (@Dni, @Name, @LastName, @FechaIngreso, @Email, @Telefono, @FechaNacimiento, @Domicilio, @Localidad, @Provincia);
             SELECT SCOPE_IDENTITY();";
 
-				using var sqlComando = new SqlCommand(insertQuery, connection);
+					using var sqlComando = new SqlCommand(insertQuery, connection);
 
-				sqlComando.Parameters.AddWithValue("@Dni", paciente_dni.Value.Value);
-				sqlComando.Parameters.AddWithValue("@Name", paciente_nombrecompleto.Value.Nombre);
-				sqlComando.Parameters.AddWithValue("@LastName", paciente.NombreCompleto.Apellido);
-				sqlComando.Parameters.AddWithValue("@FechaIngreso", DateTime.Now);
-				sqlComando.Parameters.AddWithValue("@Email", paciente.Contacto.Email);
-				sqlComando.Parameters.AddWithValue("@Telefono", paciente.Contacto.Telefono);
-				sqlComando.Parameters.AddWithValue("@FechaNacimiento", paciente.FechaNacimiento.Value.ToDateTime(TimeOnly.MinValue));
-				sqlComando.Parameters.AddWithValue("@Domicilio", paciente.Domicilio.Direccion);
-				sqlComando.Parameters.AddWithValue("@Localidad", paciente.Domicilio.Localidad.Nombre);
-				sqlComando.Parameters.AddWithValue("@Provincia", paciente.Domicilio.Localidad.Provincia.Nombre);
+					sqlComando.Parameters.AddWithValue("@Dni", paciente.Value.Dni.Value);
+					sqlComando.Parameters.AddWithValue("@Name", paciente.NombreCompleto.Nombre);
+					sqlComando.Parameters.AddWithValue("@LastName", paciente.NombreCompleto.Apellido);
+					sqlComando.Parameters.AddWithValue("@FechaIngreso", DateTime.Now);
+					sqlComando.Parameters.AddWithValue("@Email", paciente.Contacto.Email);
+					sqlComando.Parameters.AddWithValue("@Telefono", paciente.Contacto.Telefono);
+					sqlComando.Parameters.AddWithValue("@FechaNacimiento", paciente.FechaNacimiento.Value.ToDateTime(TimeOnly.MinValue));
+					sqlComando.Parameters.AddWithValue("@Domicilio", paciente.Domicilio.Direccion);
+					sqlComando.Parameters.AddWithValue("@Localidad", paciente.Domicilio.Localidad.Nombre);
+					sqlComando.Parameters.AddWithValue("@Provincia", paciente.Domicilio.Localidad.Provincia.Nombre);
 
-				string newId = sqlComando.ExecuteScalar()?.ToString() ?? "";
+					string newId = sqlComando.ExecuteScalar()?.ToString() ?? "";
 
-				DictPacientes[newId] = new Result<Paciente2025>.Ok(new Paciente2025(Paciente2025);
+					DictPacientes[newId] = new Paciente2025EnDb(newId, paciente);
 
-				return new Result<string>.Ok(newId);
-			} catch (SqlException ex) when (ex.Number == 2627) {
-				return new Result<string>.Error("Error de constraints: ya existe un paciente con ese DNI.");
-			} catch (SqlException ex) when (ex.Number == 547) {
-				return new Result<string>.Error("Error de clave foránea: revise la localidad o provincia.");
-			} catch (Exception ex) {
-				return new Result<string>.Error($"Error inesperado al crear paciente: {ex.Message}");
+					//return new Result<string>.Ok(newId);
+					return true;
+				} catch (SqlException ex) when (ex.Number == 2627) {
+					//return new Result<string>.Error("Error de constraints: ya existe un paciente con ese DNI.");
+					return false;
+				} catch (SqlException ex) when (ex.Number == 547) {
+					//return new Result<string>.Error("Error de clave foránea: revise la localidad o provincia.");
+					return false;
+				} catch (Exception ex) {
+					//return new Result<string>.Error($"Error inesperado al crear paciente: {ex.Message}");
+					return false;
+				}
+			} else {
+				return false;
 			}
+
+			*/
 		}
 
 
@@ -176,9 +187,9 @@ namespace Clinica.AppWPF {
 			return DictMedicos.Values.ToList();
 		}
 
-		public override List<Paciente2025EnDb> ReadPacientes() {
-			return DictPacientes.Values.ToList();
-		}
+		//public override List<Result<Paciente2025EnDb>> ReadPacientes() {
+		//	return DictPacientes.Values.ToList();
+		//}
 
 		public override List<Turno> ReadTurnos() {
 			return DictTurnos.Values.ToList();
@@ -447,9 +458,7 @@ namespace Clinica.AppWPF {
 					string provincia = reader["Provincia"]?.ToString() ?? "";
 					string localidad = reader["Localidad"]?.ToString() ?? "";
 					string direccion = reader["Domicilio"]?.ToString() ?? "";
-					DateOnly fechaNacimiento = reader["FechaNacimiento"] is DateTime dt
-						? DateOnly.FromDateTime(dt)
-						: default;
+					DateOnly fechaNacimiento = reader["FechaNacimiento"] is DateTime dt? DateOnly.FromDateTime(dt): default;
 
 					Result<Paciente2025> pacienteResult = Paciente2025.Crear(
 						nombre, apellido, dni, telefono, email,
