@@ -205,6 +205,47 @@ namespace Clinica.AppWPF {
 		private void ButtonSalir(object sender, RoutedEventArgs e) {
 			this.Salir();
 		}
+
+
+
+		//------------------botonesParaCrear------------------//
+		private void ButtonAgregarMedico(object sender, RoutedEventArgs e) {
+			this.AbrirComoDialogo<MedicosModificar>();
+		}
+		private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
+			this.AbrirComoDialogo<PacientesModificar>(); // this.NavegarA<PacientesModificar>();
+		}
+		private void ButtonAgregarTurno(object sender, RoutedEventArgs e) {
+			this.AbrirComoDialogo<MedicosModificar>();
+		}
+
+		private void BtnAgregarHorario_Click(object sender, RoutedEventArgs e) {
+			HorarioEditor editor = new HorarioEditor();
+			editor.Owner = this;
+			if (editor.ShowDialog() == true && editor.Confirmado) {
+				Result<MedicoDisponibilidadEnDia2025> resultado = MedicoDisponibilidadEnDia2025.Crear(
+					new MedicoDiaDeLaSemana2025(editor.Dia),
+					new[] {
+				new MedicoFranjaHoraria2025(editor.Desde, editor.Hasta)
+					}
+				);
+
+				if (resultado is Result<MedicoDisponibilidadEnDia2025>.Ok ok) {
+					List<MedicoDisponibilidadEnDia2025> lista = (List<MedicoDisponibilidadEnDia2025>)txtAgendaWidget.ItemsSource ?? new();
+					lista.Add(ok.Value);
+					txtAgendaWidget.ItemsSource = null;
+					txtAgendaWidget.ItemsSource = lista.OrderBy(x => x.DiaSemana).ToList();
+				}
+			}
+		}
+
+		private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
+
+		}
+
+		private void BtnEliminarHorario_Click(object sender, RoutedEventArgs e) {
+
+		}
 		//------------------------Fin---------------------------//
 	}
 }
