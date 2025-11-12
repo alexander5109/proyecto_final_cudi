@@ -26,7 +26,7 @@ namespace Clinica.AppWPF {
 		private void ButtonGuardar(object sender, RoutedEventArgs e) {
 			App.PlayClickJewel();
 
-			Result<Paciente2025> resultado = this.ToDomain();
+			Result<PacienteType> resultado = this.ToDomain();
 
 			resultado.Switch(
 				ok => {
@@ -57,28 +57,28 @@ namespace Clinica.AppWPF {
 		}
 
 
-		private Result<Paciente2025> ToDomain() {
-			var nombreResult = NombreCompleto2025.Crear(txtName.Text, txtLastName.Text);
-			var dniResult = DniArgentino2025.Crear(txtDni.Text);
-			var telefonoResult = Contacto2025Telefono.Crear(txtTelefono.Text);
-			var correoResult = Contacto2025CorreoElectronico.Crear(txtEmail.Text);
+		private Result<PacienteType> ToDomain() {
+			var nombreResult = NombreCompletoType.Crear(txtName.Text, txtLastName.Text);
+			var dniResult = DniArgentinoType.Crear(txtDni.Text);
+			var telefonoResult = ContactoTelefonoType.Crear(txtTelefono.Text);
+			var correoResult = ContactoEmailType.Crear(txtEmail.Text);
 
 
 
-			var contactoResult = Contacto2025.Crear(correoResult, telefonoResult);
-			var provinciaResult = ProvinciaDeArgentina2025.Crear(txtProvincia.Text);
-			var localidadResult = LocalidadDeProvincia2025.Crear(txtLocalidad.Text, provinciaResult);
-			var domicilioResult = DomicilioArgentino2025.Crear(localidadResult, txtDomicilio.Text);
+			var contactoResult = ContactoType.Crear(correoResult, telefonoResult);
+			var provinciaResult = ProvinciaDeArgentinaType.Crear(txtProvincia.Text);
+			var localidadResult = LocalidadDeProvinciaType.Crear(txtLocalidad.Text, provinciaResult);
+			var domicilioResult = DomicilioArgentinoType.Crear(localidadResult, txtDomicilio.Text);
 
 			var fechaNacRes = txtFechaNacimiento.SelectedDate is DateTime fechaNac
-				? FechaDeNacimiento2025.Crear(DateOnly.FromDateTime(fechaNac))
-				: new Result<FechaDeNacimiento2025>.Error("Debe seleccionar una fecha de nacimiento válida.");
+				? FechaDeNacimientoType.Crear(DateOnly.FromDateTime(fechaNac))
+				: new Result<FechaDeNacimientoType>.Error("Debe seleccionar una fecha de nacimiento válida.");
 
 			var fechaIngRes = txtFechaIngreso.SelectedDate is DateTime fechaIng
-				? FechaIngreso2025.Crear(DateOnly.FromDateTime(fechaIng))
-				: new Result<FechaIngreso2025>.Error("Debe seleccionar una fecha de ingreso válida.");
+				? FechaIngresoType.Crear(DateOnly.FromDateTime(fechaIng))
+				: new Result<FechaIngresoType>.Error("Debe seleccionar una fecha de ingreso válida.");
 
-			return Paciente2025.Crear(
+			return PacienteType.Crear(
 				nombreResult,
 				dniResult,
 				contactoResult,

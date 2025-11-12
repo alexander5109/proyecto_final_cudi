@@ -31,7 +31,7 @@ namespace Clinica.AppWPF {
 			return true;
 		}
 		//------------------------public.CREATE.Paciente----------------------//
-		public override bool CreatePaciente(Paciente2025 instancia, Paciente instanciaDto) {
+		public override bool CreatePaciente(PacienteType instancia, Paciente instanciaDto) {
 			if (DictPacientes.Values.Any(i => i.Dni == instanciaDto.Dni)) {
 				MessageBox.Show($"Error de integridad: Ya hay un paciente con ese Dni.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;
@@ -43,7 +43,7 @@ namespace Clinica.AppWPF {
 			return true;
 		}
 		//------------------------public.CREATE.Turno----------------------//
-		public override bool CreateTurno(Turno2025 instancia, Turno instanciaDto) {
+		public override bool CreateTurno(TurnoType instancia, Turno instanciaDto) {
 			if (DictTurnos.Values.Any(i => i.PacienteId == instanciaDto.PacienteId && i.MedicoId == instanciaDto.MedicoId && i.Fecha == instanciaDto.Fecha)) {
 				MessageBox.Show($"Error de integridad: Ya hay un turno entre ese paciente y ese medico en esa fecha.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;
@@ -103,7 +103,7 @@ namespace Clinica.AppWPF {
 			return true;
 		}
 		//------------------------public.UPDATE.Paciente----------------------//
-		public override bool UpdatePaciente(Paciente2025 instancia, string instanceId) {
+		public override bool UpdatePaciente(PacienteType instancia, string instanceId) {
 			// if (string.IsNullOrEmpty(instancia.Dni)) {
 			// MessageBox.Show($"Error: El DNI es un campo obligatorio.", "Faltan datos.", MessageBoxButton.OK, MessageBoxImage.Warning);
 			// return false;
@@ -117,7 +117,7 @@ namespace Clinica.AppWPF {
 			return true;
 		}
 		//------------------------public.UPDATE.Turno----------------------//
-		public override bool UpdateTurno(Turno2025 instanciaValidada, Turno instancia) {
+		public override bool UpdateTurno(TurnoType instanciaValidada, Turno instancia) {
 			if (DictTurnos.Values.Count(i => i.PacienteId == instancia.PacienteId && i.MedicoId == instancia.MedicoId && i.Fecha == instancia.Fecha) > 1) {
 				MessageBox.Show($"Error de integridad: Ya hay un turno entre ese paciente y ese medico en esa fecha.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;

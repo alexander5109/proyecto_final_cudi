@@ -3,12 +3,13 @@ using System.Collections.Immutable;
 
 namespace Clinica.Dominio.Tipos;
 
-public readonly record struct MedicoEspecialidad2025(
+public readonly record struct MedicoEspecialidadType(
 	string Titulo,
 	string Rama
-)  {
+);
+public static class MedicoEspecialidad2025 {
 	// Conjunto inmutable de especialidades válidas
-	public static readonly Dictionary<int, MedicoEspecialidad2025> EspecialidadesValidas = new Dictionary<int, MedicoEspecialidad2025>{
+	public static readonly Dictionary<int, MedicoEspecialidadType> EspecialidadesValidas = new Dictionary<int, MedicoEspecialidadType>{
 		{ 1, new("Clínico General", "Clínica Médica") },
 		{ 2, new("Cardiólogo", "Clínica Médica") },
 		{ 3, new("Oftalmólogo", "Clínica Médica") },
@@ -32,16 +33,16 @@ public readonly record struct MedicoEspecialidad2025(
 		{ 21, new("Dermatólogo", "Clínica Médica") },
 	};
 
-	public static Result<MedicoEspecialidad2025> Crear(string titulo, string rama) {
+	public static Result<MedicoEspecialidadType> Crear(string titulo, string rama) {
 		if (string.IsNullOrWhiteSpace(titulo))
-			return new Result<MedicoEspecialidad2025>.Error("El título no puede estar vacío.");
+			return new Result<MedicoEspecialidadType>.Error("El título no puede estar vacío.");
 		if (string.IsNullOrWhiteSpace(rama))
-			return new Result<MedicoEspecialidad2025>.Error("La rama no puede estar vacía.");
+			return new Result<MedicoEspecialidadType>.Error("La rama no puede estar vacía.");
 
-		var candidato = new MedicoEspecialidad2025(titulo.Trim(), rama.Trim());
+		var candidato = new MedicoEspecialidadType(titulo.Trim(), rama.Trim());
 		if (!EspecialidadesValidas.Values.Contains(candidato))
-			return new Result<MedicoEspecialidad2025>.Error("La especialidad médica no es válida.");
+			return new Result<MedicoEspecialidadType>.Error("La especialidad médica no es válida.");
 
-		return new Result<MedicoEspecialidad2025>.Ok(candidato);
+		return new Result<MedicoEspecialidadType>.Ok(candidato);
 	}
 }

@@ -9,11 +9,11 @@ public partial class HorarioEditor : Window {
 	public TimeOnly Hasta { get; private set; }
 	public bool Confirmado { get; private set; }
 
-	public HorarioEditor(HorarioMedico? horarioExistente = null) {
+	public HorarioEditor(HorarioMedicoType? horarioExistente = null) {
 		InitializeComponent();
 
 		//if (horarioExistente is not null) {
-		//	cmbDiaSemana.SelectedIndex = horarioExistente.Value.DiaSemana.Numero;
+		//	cmbDiaSemana.SelectedIndex = horarioExistente.Value.HorarioDiaSemana2025.Numero;
 		//	txtDesde.Text = horarioExistente.Value.FranjasHorarias.First().Desde.ToString("HH:mm");
 		//	txtHasta.Text = horarioExistente.Value.FranjasHorarias.First().Hasta.ToString("HH:mm");
 		//}
