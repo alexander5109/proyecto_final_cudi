@@ -105,11 +105,8 @@
 
 				<TreeView x:Name="txtHorariosMedicos" Height="400">
 					<TreeView.ItemTemplate>
-						<!-- Primer nivel: Día -->
 						<HierarchicalDataTemplate ItemsSource="{Binding Horarios}">
 							<TextBlock Text="{Binding Nombre}" FontWeight="Bold"/>
-
-							<!-- Nivel 2: Franja -->
 							<HierarchicalDataTemplate.ItemTemplate>
 								<DataTemplate>
 									<StackPanel Orientation="Horizontal" Margin="15,0,0,0">
@@ -122,6 +119,8 @@
 						</HierarchicalDataTemplate>
 					</TreeView.ItemTemplate>
 				</TreeView>
+
+
 
 
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">

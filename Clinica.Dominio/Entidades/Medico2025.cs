@@ -14,6 +14,9 @@ public readonly record struct Medico2025 {
 	public MedicoSueldoMinimoGarantizado2025 SueldoMinimoGarantizado { get; }
 	public bool HaceGuardias { get; }
 
+	public string HorariosToString() {
+		return string.Join(", ", Horarios.Select(h => h.ToString()));
+	}
 
 	private Medico2025(
 		NombreCompleto2025 nombre,

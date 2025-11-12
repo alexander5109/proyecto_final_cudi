@@ -10,7 +10,21 @@ namespace Clinica.AppWPF {
 
 
 
+	public class HorarioMedicoView {
+		public string Desde { get; set; } = string.Empty;
+		public string Hasta { get; set; } = string.Empty;
+	}
+	public class DiaConHorarios {
+		public string Nombre { get; set; } = string.Empty;
+		public ObservableCollection<HorarioMedicoView> Horarios { get; set; } = new();
+	}
+
+
 	public class MedicoDto {
+		public ObservableCollection<DiaConHorarios> Horarios { get; set; } = new();
+
+
+
 		public string ?Id { get; set; }
 		public string? Name { get; set; }
 		public string? LastName { get; set; }
@@ -23,13 +37,18 @@ namespace Clinica.AppWPF {
 		public bool? Guardia { get; set; }
 		public DateTime? FechaIngreso { get; set; }
 		public double? SueldoMinimoGarantizado { get; set; }
-		public ObservableCollection<DiaConHorarios> Horarios { get; set; } = new();
 
 		//usado por comboboxes para mostrar varios campos en un solo place.
 		[JsonIgnore]
 		public string Displayear => $"{Id}: {Especialidad} - {Name} {LastName}";
 
-	//---------------------------------Constructores-------------------------------//
+
+
+		public string HorariosToString() {
+			return string.Join(", ", Horarios.Select(h => h.ToString()));
+		}
+
+		//---------------------------------Constructores-------------------------------//
 		public MedicoDto() { }
 
 		// Constructor de mEDICO en base a una ventana
@@ -85,22 +104,6 @@ namespace Clinica.AppWPF {
 			
 		}
 		
-		// Metodo para mostrarse en una ventana
-		public void MostrarseEnVentana(MedicosModificar ventana) {
-			ventana.txtName.Text = this.Name;
-			ventana.txtLastName.Text = this.LastName;
-			ventana.txtDni.Text = this.Dni;
-            ventana.txtTelefono.Text = this.Telefono;
-            ventana.txtProvincia.Text = this.Provincia;
-			ventana.txtDomicilio.Text = this.Domicilio;
-			ventana.txtLocalidad.Text = this.Localidad;
-			ventana.txtEspecialidades.SelectedItem = this.Especialidad;
-			ventana.txtFechaIngreso.SelectedDate = this.FechaIngreso;
-			ventana.txtGuardia.IsChecked = this.Guardia;
-			ventana.txtSueldoMinimoGarantizado.Text = this.SueldoMinimoGarantizado.ToString();
-			ventana.txtHorariosMedicos.ItemsSource = this.Horarios;
-			//ventana.txtHorariosMedicos.ItemsSource = ????
-		}
 		
 		
 		

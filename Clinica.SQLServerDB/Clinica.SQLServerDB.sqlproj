@@ -67,7 +67,7 @@
     <Build Include="dbo\StoredProcedures\sp_DeleteMedico.sql" />
     <Build Include="dbo\StoredProcedures\sp_DeletePaciente.sql" />
     <Build Include="dbo\StoredProcedures\sp_DeleteTurno.sql" />
-    <Build Include="dbo\StoredProcedures\sp_ReadMedicosAll.sql" />
+    <Build Include="dbo\StoredProcedures\sp_ReadMedicosAllWithHorarios.sql" />
     <Build Include="dbo\StoredProcedures\sp_ReadPacientesAll.sql" />
     <Build Include="dbo\StoredProcedures\sp_ReadTurnosAll.sql" />
     <Build Include="dbo\StoredProcedures\sp_UpdateMedico.sql" />
@@ -81,6 +81,7 @@
     <Build Include="dbo\StoredProcedures\sp_DeleteHorarioMedico.sql" />
     <Build Include="dbo\StoredProcedures\sp_ReadHorariosMedicosAll.sql" />
     <Build Include="dbo\StoredProcedures\sp_UpdateHorarioMedico.sql" />
+    <Build Include="dbo\StoredProcedures\sp_ReadMedicosAll.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />

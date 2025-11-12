@@ -2,6 +2,7 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Tipos;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 
@@ -12,14 +13,6 @@ namespace Clinica.AppWPF {
 		private static MedicoDto? SelectedMedico;
 
 
-		public class HorarioMedicoView {
-			public string Desde { get; set; } = string.Empty;
-			public string Hasta { get; set; } = string.Empty;
-		}
-		public class DiaConHorarios {
-			public string Nombre { get; set; } = string.Empty;
-			public ObservableCollection<HorarioMedicoView> Horarios { get; set; } = new();
-		}
 
 		//---------------------public.constructors-------------------//
 		public MedicosModificar() {
@@ -27,16 +20,46 @@ namespace Clinica.AppWPF {
 			SelectedMedico = null;
 			//txtDiasDeAtencion.ItemsSource = HorarioMedico.GetDiasDeLaSemanaAsList();
 		}
+
+
+
+		// Metodo para mostrarse en una ventana
+		public static void MostrarseEnVentana(MedicoDto medicoDto, MedicosModificar ventana) {
+			ventana.txtName.Text = medicoDto.Name;
+			ventana.txtLastName.Text = medicoDto.LastName;
+			ventana.txtDni.Text = medicoDto.Dni;
+			ventana.txtTelefono.Text = medicoDto.Telefono;
+			ventana.txtProvincia.Text = medicoDto.Provincia;
+			ventana.txtDomicilio.Text = medicoDto.Domicilio;
+			ventana.txtLocalidad.Text = medicoDto.Localidad;
+			ventana.txtFechaIngreso.SelectedDate = medicoDto.FechaIngreso;
+			ventana.txtGuardia.IsChecked = medicoDto.Guardia;
+			ventana.txtSueldoMinimoGarantizado.Text = medicoDto.SueldoMinimoGarantizado.ToString();
+			ventana.txtHorariosMedicos.ItemsSource = medicoDto.Horarios;
+			ventana.txtEspecialidades.ItemsSource = App.BaseDeDatos.ReadDistinctEspecialidades();
+			ventana.txtEspecialidades.SelectedItem = medicoDto.Especialidad;
+			//ventana.txtHorariosMedicos.ItemsSource = ????
+			//foreach (var dia in medicoDto.Horarios) {
+			//	MessageBox.Show(dia.Nombre);
+			//	foreach (var h in dia.Horarios)
+			//		MessageBox.Show($"{h.Desde} - {h.Hasta}");
+			//}
+
+
+			//MessageBox.Show(medicoDto.Horarios[0].ToString());
+
+
+		}
+
+
 		public MedicosModificar(MedicoDto selectedMedico) {
 			InitializeComponent();
 			SelectedMedico = selectedMedico;
-			SelectedMedico.MostrarseEnVentana(this);
+			MostrarseEnVentana(SelectedMedico, this);
 
 
 			//txtEspecialidades.SelectedValuePath = "Id";
 			//txtEspecialidades.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
-			txtEspecialidades.ItemsSource = App.BaseDeDatos.ReadDistinctEspecialidades();
-			txtEspecialidades.SelectedItem = SelectedMedico.Especialidad;
 			//Result<Medico2025> resultado = this.ToDomain();
 
 			//if (resultado is Result<Medico2025>.Ok ok) {

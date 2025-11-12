@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
 using System.Windows;
 using static Clinica.AppWPF.MedicosModificar;
 
@@ -133,7 +134,7 @@ namespace Clinica.AppWPF {
 				return true;
 			} catch (SqlException ex) when (ex.Number == 2627) // Unique constraint violation error code
 			  {
-				MessageBox.Show("Error de constraints. Ya existe un turno entre este paciente y medico en esa fecha. O el medico ya tiene un turno en esa fecha con otro paciente.", "Violación de Constraint", MessageBoxButton.OK, MessageBoxImage.Warning);
+				MessageBox.Show("Error de constraints. Ya existe un turno entre este paciente y medicoDto en esa fecha. O el medicoDto ya tiene un turno en esa fecha con otro paciente.", "Violación de Constraint", MessageBoxButton.OK, MessageBoxImage.Warning);
 			} catch (SqlException ex) when (ex.Number == 547) // Foreign key violation error code
 			  {
 				MessageBox.Show("No se puede crear el turno debido a una violación de clave foránea.", "Violación de Clave Foránea", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -262,7 +263,7 @@ namespace Clinica.AppWPF {
 				return true;
 			} catch (SqlException ex) when (ex.Number == 2627) // Unique constraint violation error code
 			  {
-				MessageBox.Show("Error de constraints. Ya existe un turno entre este paciente y medico en esa fecha. O el medico ya tiene un turno en esa fecha con otro paciente.", "Violación de Constraint", MessageBoxButton.OK, MessageBoxImage.Warning);
+				MessageBox.Show("Error de constraints. Ya existe un turno entre este paciente y medicoDto en esa fecha. O el medicoDto ya tiene un turno en esa fecha con otro paciente.", "Violación de Constraint", MessageBoxButton.OK, MessageBoxImage.Warning);
 			} catch (SqlException ex) when (ex.Number == 547) // Foreign key violation error code
 			  {
 				MessageBox.Show("No se puede crear el turno debido a una violación de clave foránea.", "Violación de Clave Foránea", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -294,11 +295,11 @@ namespace Clinica.AppWPF {
 					}
 				}
 				DictMedicos.Remove(instancia.Id);
-				// MessageBox.Show($"Exito: Se ha eliminado el medico con id: {instancia.Id} de la Base de Datos SQL", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+				// MessageBox.Show($"Exito: Se ha eliminado el medicoDto con id: {instancia.Id} de la Base de Datos SQL", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 				return true;
 			} catch (SqlException ex) when (ex.Number == 547) // SQL Server foreign key violation error code
 			  {
-				MessageBox.Show("No se puede eliminar este medico porque tiene turnos asignados.", "Violacion de clave foranea", MessageBoxButton.OK, MessageBoxImage.Warning);
+				MessageBox.Show("No se puede eliminar este medicoDto porque tiene turnos asignados.", "Violacion de clave foranea", MessageBoxButton.OK, MessageBoxImage.Warning);
 			} catch (SqlException ex) {
 				MessageBox.Show($"SQL error: {ex.Message}", "Error de Data Base", MessageBoxButton.OK, MessageBoxImage.Error);
 			} catch (Exception ex) {
@@ -346,7 +347,7 @@ namespace Clinica.AppWPF {
 				return true;
 			} catch (SqlException ex) when (ex.Number == 2627) // Unique constraint violation error code
 			  {
-				MessageBox.Show("Error de constraints. Ya existe un turno entre este paciente y medico en esa fecha. O el medico ya tiene un turno en esa fecha con otro paciente.", "Violación de Constraint", MessageBoxButton.OK, MessageBoxImage.Warning);
+				MessageBox.Show("Error de constraints. Ya existe un turno entre este paciente y medicoDto en esa fecha. O el medicoDto ya tiene un turno en esa fecha con otro paciente.", "Violación de Constraint", MessageBoxButton.OK, MessageBoxImage.Warning);
 			} catch (SqlException ex) when (ex.Number == 547) // Foreign key violation error code
 			  {
 				MessageBox.Show("No se puede modificar el turno debido a una violación de clave foránea.", "Violación de Clave Foránea", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -372,9 +373,18 @@ namespace Clinica.AppWPF {
 				using var conexion = new SqlConnection(connectionString);
 				conexion.Open();
 
-				using var comando = new SqlCommand("sp_ReadMedicosAll", conexion);
-				comando.CommandType = System.Data.CommandType.StoredProcedure;
+				// Traemos todos los médicos con sus horarios en filas separadas
+				string query = @"
+            SELECT 
+                m.Id, m.Name, m.LastName, m.Dni, m.Provincia, m.Domicilio, 
+                m.Localidad, m.Especialidad, m.Telefono, m.Guardia, m.FechaIngreso, 
+                m.SueldoMinimoGarantizado,
+                hm.Id AS HorarioId, hm.DiaSemana, hm.HoraDesde, hm.HoraHasta
+            FROM Medico m
+            LEFT JOIN HorarioMedico hm ON hm.MedicoId = m.Id
+            ORDER BY m.Id, hm.DiaSemana, hm.HoraDesde";
 
+				using var comando = new SqlCommand(query, conexion);
 				using var reader = comando.ExecuteReader();
 
 				var dictMedicos = new Dictionary<string, MedicoDto>();
@@ -382,9 +392,9 @@ namespace Clinica.AppWPF {
 				while (reader.Read()) {
 					string medicoId = reader["Id"].ToString()!;
 
-					// Si no existe aún, lo creamos
-					if (!dictMedicos.TryGetValue(medicoId, out var medico)) {
-						medico = new MedicoDto {
+					// Creamos el médico si no existe aún
+					if (!dictMedicos.TryGetValue(medicoId, out var medicoDto)) {
+						medicoDto = new MedicoDto {
 							Id = medicoId,
 							Name = reader["Name"] as string ?? "",
 							LastName = reader["LastName"] as string ?? "",
@@ -400,20 +410,20 @@ namespace Clinica.AppWPF {
 							Horarios = new ObservableCollection<DiaConHorarios>()
 						};
 
-						dictMedicos[medicoId] = medico;
+						dictMedicos[medicoId] = medicoDto;
 					}
 
-					// Si la fila tiene horario
+					// Si hay horario en la fila, lo agregamos
 					if (reader["HorarioId"] != DBNull.Value) {
 						int diaSemana = Convert.ToInt32(reader["DiaSemana"]);
 
 						// Buscamos el día existente
-						var dia = medico.Horarios.FirstOrDefault(d => d.Nombre == diaSemana.ToString());
+						var dia = medicoDto.Horarios.FirstOrDefault(d => d.Nombre == diaSemana.ToString());
 						if (dia == null) {
 							dia = new DiaConHorarios {
 								Nombre = diaSemana.ToString()
 							};
-							medico.Horarios.Add(dia);
+							medicoDto.Horarios.Add(dia);
 						}
 
 						dia.Horarios.Add(new HorarioMedicoView {
@@ -423,15 +433,15 @@ namespace Clinica.AppWPF {
 					}
 				}
 
-				// Asignamos al diccionario global
 				DictMedicos = dictMedicos;
-
 				return true;
 			} catch (Exception ex) {
 				MessageBox.Show($"Ocurrió un error al leer la tabla SQL de MedicoDto: {ex.Message}", "Error de Database", MessageBoxButton.OK, MessageBoxImage.Error);
 				return CrearLasTablasExitosamente();
 			}
 		}
+
+
 		//------------------------private.LOAD.Pacientes----------------------//
 		private bool SQLCargarPacientesExitosamente() {
 			try {
