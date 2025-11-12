@@ -94,7 +94,7 @@ namespace Clinica.AppWPF {
 			// MessageBox.Show($"Error: El DNI es un campo obligatorio.", "Faltan datos.", MessageBoxButton.OK, MessageBoxImage.Warning);
 			// return false;
 			// } 
-			if (DictMedicos.Values.Count(i => i.Dni == instance.Dni.Value) > 1) {
+			if (DictMedicos.Values.Count(i => i.Dni == instance.Dni.Valor) > 1) {
 				MessageBox.Show($"Error de integridad: Ya hay un medico con ese Dni.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;
 			}
@@ -108,7 +108,7 @@ namespace Clinica.AppWPF {
 			// MessageBox.Show($"Error: El DNI es un campo obligatorio.", "Faltan datos.", MessageBoxButton.OK, MessageBoxImage.Warning);
 			// return false;
 			// } 
-			if (DictPacientes.Values.Count(i => i.Dni == instancia.Dni.Value) > 1) {
+			if (DictPacientes.Values.Count(i => i.Dni == instancia.Dni.Valor) > 1) {
 				MessageBox.Show($"Error de integridad: Ya hay un paciente con ese Dni. \n No se guardarán los cambios.", "Error de integridad", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;
 			}
@@ -207,7 +207,7 @@ namespace Clinica.AppWPF {
 					var medicos = new Dictionary<string, MedicoDto>();
 
 					foreach (var medicoEntry in rawMedicosData) {
-						var medicoJsonElement = System.Text.Json.JsonDocument.Parse(medicoEntry.Value.ToString()).RootElement;
+						var medicoJsonElement = System.Text.Json.JsonDocument.Parse(medicoEntry.Valor.ToString()).RootElement;
 						var medicoInstance = new MedicoDto(medicoEntry.Key, medicoJsonElement);
 						medicos[medicoEntry.Key] = medicoInstance;
 					}

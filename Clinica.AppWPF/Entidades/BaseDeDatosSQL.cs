@@ -38,15 +38,15 @@ namespace Clinica.AppWPF {
 					using (SqlCommand sqlComando = new SqlCommand(insertQuery, connection)) {
 						sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
 						sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
-						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Value);
+						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
 						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
 						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
 						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
 						sqlComando.Parameters.AddWithValue("@Especialidad", instancia.Especialidad.Titulo);
-						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono.Value);
+						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono.Valor);
 						sqlComando.Parameters.AddWithValue("@Guardia", instancia.HaceGuardias);
-						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Value);
-						sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado.Value);
+						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Valor);
+						sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado.Valor);
 						instanceDto.Id = sqlComando.ExecuteScalar().ToString(); //ahora la instancia creada desde la ventana tiene su propia Id
 					}
 				}
@@ -80,13 +80,13 @@ namespace Clinica.AppWPF {
 				using (SqlConnection connection = new SqlConnection(connectionString)) {
 					connection.Open();
 					using (SqlCommand sqlComando = new SqlCommand(insertQuery, connection)) {
-						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Value);
+						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
 						sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
 						sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
 						sqlComando.Parameters.AddWithValue("@FechaIngreso", DateTime.Today.ToString());
-						sqlComando.Parameters.AddWithValue("@Email", instancia.Contacto.Email.Value);
-						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Contacto.Telefono.Value);
-						sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento.Value);
+						sqlComando.Parameters.AddWithValue("@Email", instancia.Contacto.Email.Valor);
+						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Contacto.Telefono.Valor);
+						sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento.Valor);
 						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
 						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
 						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
@@ -179,15 +179,15 @@ namespace Clinica.AppWPF {
 					using (var sqlComando = new SqlCommand(query, connection)) {
 						sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
 						sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
-						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Value);
+						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
 						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
 						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
 						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
 						sqlComando.Parameters.AddWithValue("@Especialidad", instancia.Especialidad.Titulo);
-						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono.Value);
+						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono.Valor);
 						sqlComando.Parameters.AddWithValue("@Guardia", instancia.HaceGuardias);
-						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Value);
-						sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado.Value);
+						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Valor);
+						sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado.Valor);
 						sqlComando.Parameters.AddWithValue("@Id", instanceId);
 						sqlComando.ExecuteNonQuery();
 					}
@@ -214,13 +214,13 @@ namespace Clinica.AppWPF {
 				using (var connection = new SqlConnection(connectionString)) {
 					connection.Open();
 					using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
-						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Value);
+						sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
 						sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
 						sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
-						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Value);
-						sqlComando.Parameters.AddWithValue("@Email", instancia.Contacto.Email.Value);
-						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Contacto.Telefono.Value);
-						sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento.Value);
+						sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Valor);
+						sqlComando.Parameters.AddWithValue("@Email", instancia.Contacto.Email.Valor);
+						sqlComando.Parameters.AddWithValue("@Telefono", instancia.Contacto.Telefono.Valor);
+						sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento.Valor);
 						sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
 						sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
 						sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
@@ -379,10 +379,10 @@ namespace Clinica.AppWPF {
                 m.Id, m.Name, m.LastName, m.Dni, m.Provincia, m.Domicilio, 
                 m.Localidad, m.Especialidad, m.Telefono, m.Guardia, m.FechaIngreso, 
                 m.SueldoMinimoGarantizado,
-                hm.Id AS HorarioId, hm.HorarioDiaSemana2025, hm.HoraDesde, hm.HoraHasta
-            FROM Medico m
+                hm.Id AS HorarioId, hm.DiaSemana2025, hm.HoraDesde, hm.HoraHasta
+            FROM Medico2025 m
             LEFT JOIN HorarioMedico hm ON hm.MedicoId = m.Id
-            ORDER BY m.Id, hm.HorarioDiaSemana2025, hm.HoraDesde";
+            ORDER BY m.Id, hm.DiaSemana2025, hm.HoraDesde";
 
 				using var comando = new SqlCommand(query, conexion);
 				using var reader = comando.ExecuteReader();
@@ -415,7 +415,7 @@ namespace Clinica.AppWPF {
 
 					// Si hay horario en la fila, lo agregamos
 					if (reader["HorarioId"] != DBNull.Value) {
-						int diaSemana = Convert.ToInt32(reader["HorarioDiaSemana2025"]);
+						int diaSemana = Convert.ToInt32(reader["DiaSemana2025"]);
 
 						// Buscamos el día existente
 						var dia = medicoDto.Horarios.FirstOrDefault(d => d.Nombre == diaSemana.ToString());

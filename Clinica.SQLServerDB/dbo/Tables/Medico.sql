@@ -10,6 +10,7 @@
     Provincia NVARCHAR(50),
     Telefono NVARCHAR(20),
     Especialidad NVARCHAR(50) NOT NULL,
+    EspecialidadRama NVARCHAR(50) NOT NULL,
     Guardia BIT,
     SueldoMinimoGarantizado FLOAT(53)
 )

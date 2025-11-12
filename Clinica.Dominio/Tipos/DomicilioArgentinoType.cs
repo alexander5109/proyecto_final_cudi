@@ -10,7 +10,7 @@ public static class DomicilioArgentino2025 {
 		if (localidadResult is Result<LocalidadDeProvinciaType>.Error localidadError)
 			return new Result<DomicilioArgentinoType>.Error(localidadError.Mensaje);
 
-		var localidad = ((Result<LocalidadDeProvinciaType>.Ok)localidadResult).Value;
+		var localidad = ((Result<LocalidadDeProvinciaType>.Ok)localidadResult).Valor;
 
 		return new Result<DomicilioArgentinoType>.Ok(
 			new DomicilioArgentinoType(

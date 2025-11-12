@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 namespace Clinica.Dominio.Tipos;
 public readonly record struct ContactoEmailType(
-	string Value
+	string Valor
 );
 
 public static class ContactoEmail2025{

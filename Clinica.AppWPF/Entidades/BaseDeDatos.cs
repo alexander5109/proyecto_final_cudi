@@ -14,7 +14,7 @@ namespace Clinica.AppWPF {
 		public abstract List<Paciente> ReadPacientes();
 		public abstract List<Turno> ReadTurnos();
 
-		// Create methods
+		// Crear methods
 		public abstract bool CreateMedico(MedicoType instance, MedicoDto instanceDto);
 		public abstract bool CreatePaciente(PacienteType instance, Paciente instanceDto);
 		public abstract bool CreateTurno(TurnoType instance, Turno instanceDto);

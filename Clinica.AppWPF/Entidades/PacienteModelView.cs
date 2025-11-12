@@ -31,7 +31,7 @@ public class PacienteModelView : INotifyPropertyChanged {
 	}
 
 	public DateTime FechaNacimiento {
-		get => _pacienteOriginal.Paciente.FechaNacimiento.Value.ToDateTime(TimeOnly.MinValue);
+		get => _pacienteOriginal.Paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MinValue);
 		set { OnPropertyChanged(nameof(FechaNacimiento)); }
 	}
 

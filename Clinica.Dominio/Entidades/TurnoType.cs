@@ -18,19 +18,19 @@ public static class Turno2025 {
 		if (horarios is null || horarios.Count == 0)
 			return false;
 
-		var diaSemana = new HorarioDiaSemanaType(fechaYHora.DayOfWeek);
+		var diaSemana = new DiaSemanaType(fechaYHora.DayOfWeek);
 		var desde = new HorarioHoraType(TimeOnly.FromDateTime(fechaYHora));
-		var hasta = new HorarioHoraType(desde.Value.Add(duracion));
+		var hasta = new HorarioHoraType(desde.Valor.Add(duracion));
 
 		// Hay disponibilidad si existe al menos un horario que cubra ese rango
 		return horarios.Any(h =>
 			h.DiaSemana == diaSemana &&
-			h.Desde.Value <= desde.Value &&
-			h.Hasta.Value >= hasta.Value
+			h.Desde.Valor <= desde.Valor &&
+			h.Hasta.Valor >= hasta.Valor
 		);
 	}
 
-	public static Result<TurnoType> Create(
+	public static Result<TurnoType> Crear(
 		MedicoType medico,
 		PacienteType paciente,
 		DateTime fechaYHora,

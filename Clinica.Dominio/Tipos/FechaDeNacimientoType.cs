@@ -4,7 +4,7 @@ using System.Globalization;
 namespace Clinica.Dominio.Tipos;
 
 public readonly record struct FechaDeNacimientoType(
-	DateOnly Value
+	DateOnly Valor
 );
 public static class FechaDeNacimiento2025 {
 	private static readonly DateOnly Hoy = DateOnly.FromDateTime(DateTime.Now);
@@ -44,10 +44,10 @@ public static class FechaDeNacimiento2025 {
 	// --- Edad aproximada ---
 	public static int Edad(this FechaDeNacimientoType fecha) { 
 		var hoy = DateOnly.FromDateTime(DateTime.Now);
-		int edad = hoy.Year - fecha.Value.Year;
-		if (hoy < fecha.Value.AddYears(edad)) edad--;
+		int edad = hoy.Year - fecha.Valor.Year;
+		if (hoy < fecha.Valor.AddYears(edad)) edad--;
 		return edad;
 	}
 
-	public static string AString(this FechaDeNacimientoType fecha) => fecha.Value.ToString("dd/MM/yyyy");
+	public static string AString(this FechaDeNacimientoType fecha) => fecha.Valor.ToString("dd/MM/yyyy");
 }

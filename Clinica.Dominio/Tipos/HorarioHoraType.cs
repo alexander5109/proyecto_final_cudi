@@ -3,10 +3,10 @@ using System.Globalization;
 namespace Clinica.Dominio.Tipos;
 
 public readonly record struct HorarioHoraType(
-	TimeOnly Value
+	TimeOnly Valor
 );
 public static class HorarioHora2025 {
-	public static Result<HorarioHoraType> Create(string input) {
+	public static Result<HorarioHoraType> Crear(string input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<HorarioHoraType>.Error("La hora no puede estar vacía.");
 
@@ -21,9 +21,9 @@ public static class HorarioHora2025 {
 		return new Result<HorarioHoraType>.Error($"'{input}' no es una hora válida.");
 	}
 
-	public static Result<HorarioHoraType> Create(TimeOnly value)
+	public static Result<HorarioHoraType> Crear(TimeOnly value)
 		=> new Result<HorarioHoraType>.Ok(new HorarioHoraType(value));
 
 	public static string AString(this HorarioHoraType hora)
-		=> hora.Value.ToString("HH:mm");
+		=> hora.Valor.ToString("HH:mm");
 }

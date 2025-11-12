@@ -13,7 +13,7 @@ public static class LocalidadDeProvincia2025{
 		if (provinciaResult is Result<ProvinciaDeArgentinaType>.Error err)
 			return new Result<LocalidadDeProvinciaType>.Error($"Provincia inválida: {err.Mensaje}");
 
-		var provincia = ((Result<ProvinciaDeArgentinaType>.Ok)provinciaResult).Value;
+		var provincia = ((Result<ProvinciaDeArgentinaType>.Ok)provinciaResult).Valor;
 
 		return new Result<LocalidadDeProvinciaType>.Ok(new(nombreLocalidad, provincia));
 	}

@@ -16,9 +16,9 @@ public readonly record struct MedicoType(
 );
 
 
-public static class Medico {
+public static class Medico2025 {
 	public static string HorariosToString(this MedicoType medico) => string.Join(", ", medico.Horarios.Select(h => h.ToString()));
-	public static Result<MedicoType> Create(
+	public static Result<MedicoType> Crear(
 		Result<NombreCompletoType> nombreResult,
 		Result<MedicoEspecialidadType> especialidadResult,
 		Result<DniArgentinoType> dniResult,

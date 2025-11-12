@@ -75,8 +75,8 @@ namespace Clinica.AppWPF {
 			//	foreach (var dia in diasDeAtencionElement.EnumerateObject()) {
 			//		var diaKey = dia.Name;
 			//		if (
-			//			dia.Value.TryGetProperty("HoraInicio", out var startElement) 
-			//			&& dia.Value.TryGetProperty("HoraFin", out var endElement)
+			//			dia.Valor.TryGetProperty("HoraInicio", out var startElement) 
+			//			&& dia.Valor.TryGetProperty("HoraFin", out var endElement)
 			//		) {
 			//			DiasDeAtencion[diaKey].HoraInicio = startElement.ToString();
 			//			DiasDeAtencion[diaKey].HoraFin = endElement.ToString();

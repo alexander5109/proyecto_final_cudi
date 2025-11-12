@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 namespace Clinica.Dominio.Tipos;
 
 public readonly record struct DniArgentinoType(
-	string Value
+	string Valor
 );
 public static class DniArgentino2025 {
 	public static Result<DniArgentinoType> Crear(string? input) {

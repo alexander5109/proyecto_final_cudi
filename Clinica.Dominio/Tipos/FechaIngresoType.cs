@@ -4,7 +4,7 @@ using System.Globalization;
 namespace Clinica.Dominio.Tipos;
 
 public readonly record struct FechaIngresoType(
-	DateOnly Value
+	DateOnly Valor
 );
 public static class FechaIngreso2025 {
 	private static readonly DateOnly Hoy = DateOnly.FromDateTime(DateTime.Now);
@@ -41,6 +41,6 @@ public static class FechaIngreso2025 {
 		return new Result<FechaIngresoType>.Error("Formato de fecha inválido.");
 	}
 
-	public static string AString(this FechaIngresoType fecha) => fecha.Value.ToString("dd/MM/yyyy");
+	public static string AString(this FechaIngresoType fecha) => fecha.Valor.ToString("dd/MM/yyyy");
 
 }

@@ -13,9 +13,9 @@ public partial class HorarioEditor : Window {
 		InitializeComponent();
 
 		//if (horarioExistente is not null) {
-		//	cmbDiaSemana.SelectedIndex = horarioExistente.Value.HorarioDiaSemana2025.Numero;
-		//	txtDesde.Text = horarioExistente.Value.FranjasHorarias.First().Desde.ToString("HH:mm");
-		//	txtHasta.Text = horarioExistente.Value.FranjasHorarias.First().Hasta.ToString("HH:mm");
+		//	cmbDiaSemana.SelectedIndex = horarioExistente.Valor.DiaSemana2025.Numero;
+		//	txtDesde.Text = horarioExistente.Valor.FranjasHorarias.First().Desde.ToString("HH:mm");
+		//	txtHasta.Text = horarioExistente.Valor.FranjasHorarias.First().Hasta.ToString("HH:mm");
 		//}
 	}
 

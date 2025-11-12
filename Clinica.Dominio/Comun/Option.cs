@@ -2,12 +2,12 @@
 public abstract record Option<T> {
 	private Option() { }
 
-	public sealed record Some(T Value) : Option<T>;
+	public sealed record Some(T Valor) : Option<T>;
 	public sealed record None : Option<T>;
 
 	public R Match<R>(Func<T, R> onSome, Func<R> onNone) =>
 		this switch {
-			Some s => onSome(s.Value),
+			Some s => onSome(s.Valor),
 			None => onNone(),
 			_ => throw new InvalidOperationException()
 		};
@@ -20,13 +20,13 @@ public static class Option {
 	// Helpers funcionales opcionales:
 	public static Option<R> Map<T, R>(this Option<T> opt, Func<T, R> map) =>
 		opt switch {
-			Option<T>.Some s => new Option<R>.Some(map(s.Value)),
+			Option<T>.Some s => new Option<R>.Some(map(s.Valor)),
 			_ => new Option<R>.None()
 		};
 
 	public static Option<R> Bind<T, R>(this Option<T> opt, Func<T, Option<R>> bind) =>
 		opt switch {
-			Option<T>.Some s => bind(s.Value),
+			Option<T>.Some s => bind(s.Valor),
 			_ => new Option<R>.None()
 		};
 }

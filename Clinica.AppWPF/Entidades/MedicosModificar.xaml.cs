@@ -63,7 +63,7 @@ namespace Clinica.AppWPF {
 			//Result<Medico2025> resultado = this.ToDomain();
 
 			//if (resultado is Result<Medico2025>.Ok ok) {
-			//	var agenda = ok.Value.Horarios;
+			//	var agenda = ok.Valor.Horarios;
 			//	txtAgendaWidget.ItemsSource = agenda.DisponibilidadEnDia;
 
 			//} else if (resultado is Result<Medico2025>.Error error) {
@@ -82,7 +82,7 @@ namespace Clinica.AppWPF {
 
 		//public static MedicoDto FromDomain(Medico2025 medico) {
 		//	var dias = medico.Horarios
-		//		.GroupBy(h => h.HorarioDiaSemana2025)
+		//		.GroupBy(h => h.DiaSemana2025)
 		//		.Select(g => new DiaConHorarios {
 		//			Nombre = g.Key.ToString(), // "Monday", "Tuesday", etc. (puedes traducir si querés)
 		//			Horarios = new ObservableCollection<HorarioMedicoView>(
@@ -145,8 +145,8 @@ namespace Clinica.AppWPF {
 
 			// Crear la agenda
 			//List<HorarioMedico> disponibilidades = new List<HorarioMedico> {
-			//	((Result<HorarioMedico>.Ok)lunes).Value,
-			//	((Result<HorarioMedico>.Ok)miercoles).Value
+			//	((Result<HorarioMedico>.Ok)lunes).Valor,
+			//	((Result<HorarioMedico>.Ok)miercoles).Valor
 			//};
 
 			// Finalmente, la agenda del médico:
@@ -244,9 +244,9 @@ namespace Clinica.AppWPF {
 
 			//	if (resultado is Result<HorarioMedico>.Ok ok) {
 			//		List<HorarioMedico> lista = (List<HorarioMedico>)txtAgendaWidget.ItemsSource ?? new();
-			//		lista.Add(ok.Value);
+			//		lista.Add(ok.Valor);
 			//		txtAgendaWidget.ItemsSource = null;
-			//		txtAgendaWidget.ItemsSource = lista.OrderBy(x => x.HorarioDiaSemana2025).ToList();
+			//		txtAgendaWidget.ItemsSource = lista.OrderBy(x => x.DiaSemana2025).ToList();
 			//	}
 			//}
 		}

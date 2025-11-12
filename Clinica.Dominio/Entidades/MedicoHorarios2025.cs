@@ -17,7 +17,7 @@ public readonly record struct MedicoHorarios2025 {
 		{
 			if (horarioResult.IsSuccess)
 			{
-				horariosOk.Add(horarioResult.Value);
+				horariosOk.Add(horarioResult.Valor);
 			}
 			else
 			{
