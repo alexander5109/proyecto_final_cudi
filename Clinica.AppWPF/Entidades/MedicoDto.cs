@@ -2,16 +2,13 @@
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using static Clinica.AppWPF.MedicosModificar;
 using SystemTextJson = System.Text.Json;
 
 namespace Clinica.AppWPF {
 	//---------------------------------Tablas.Horarios-------------------------------//
 
 
-	public class DiaConHorarios {
-		public string Nombre { get; set; } = string.Empty;
-		public List<HorarioMedico> Horarios { get; set; } = new();
-	};
 
 	public class MedicoDto {
 		public string ?Id { get; set; }
@@ -26,8 +23,8 @@ namespace Clinica.AppWPF {
 		public bool? Guardia { get; set; }
 		public DateTime? FechaIngreso { get; set; }
 		public double? SueldoMinimoGarantizado { get; set; }
-		public ObservableCollection<DiaConHorarios> Agenda { get; } = new();
-			
+		public ObservableCollection<DiaConHorarios> Horarios { get; set; } = new();
+
 		//usado por comboboxes para mostrar varios campos en un solo place.
 		[JsonIgnore]
 		public string Displayear => $"{Id}: {Especialidad} - {Name} {LastName}";
@@ -101,7 +98,8 @@ namespace Clinica.AppWPF {
 			ventana.txtFechaIngreso.SelectedDate = this.FechaIngreso;
 			ventana.txtGuardia.IsChecked = this.Guardia;
 			ventana.txtSueldoMinimoGarantizado.Text = this.SueldoMinimoGarantizado.ToString();
-			//ventana.txtDiasDeAtencion.ItemsSource = this.DiasDeAtencion.Values.ToList();
+			ventana.txtHorariosMedicos.ItemsSource = this.Horarios;
+			//ventana.txtHorariosMedicos.ItemsSource = ????
 		}
 		
 		

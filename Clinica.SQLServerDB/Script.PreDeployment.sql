@@ -10,7 +10,6 @@
 --------------------------------------------------------------------------------------
 */
 
-/*
     PRINT 'Ejecutando Pre-Deployment... Limpiando tablas existentes';
     IF OBJECT_ID('Turno', 'U') IS NOT NULL
         DROP TABLE Turno;
@@ -18,4 +17,5 @@
         DROP TABLE Paciente;
     IF OBJECT_ID('Medico', 'U') IS NOT NULL
         DROP TABLE Medico;
-*/
+    IF OBJECT_ID('HorarioMedico', 'U') IS NOT NULL
+        DROP TABLE HorarioMedico;

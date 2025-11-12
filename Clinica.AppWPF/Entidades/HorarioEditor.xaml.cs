@@ -12,11 +12,11 @@ public partial class HorarioEditor : Window {
 	public HorarioEditor(HorarioMedico? horarioExistente = null) {
 		InitializeComponent();
 
-		if (horarioExistente is not null) {
-			cmbDiaSemana.SelectedIndex = horarioExistente.Value.DiaSemana.Numero;
-			txtDesde.Text = horarioExistente.Value.FranjasHorarias.First().Desde.ToString("HH:mm");
-			txtHasta.Text = horarioExistente.Value.FranjasHorarias.First().Hasta.ToString("HH:mm");
-		}
+		//if (horarioExistente is not null) {
+		//	cmbDiaSemana.SelectedIndex = horarioExistente.Value.DiaSemana.Numero;
+		//	txtDesde.Text = horarioExistente.Value.FranjasHorarias.First().Desde.ToString("HH:mm");
+		//	txtHasta.Text = horarioExistente.Value.FranjasHorarias.First().Hasta.ToString("HH:mm");
+		//}
 	}
 
 	private void BtnGuardar_Click(object sender, RoutedEventArgs e) {

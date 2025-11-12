@@ -7,10 +7,22 @@ using System.Windows;
 
 namespace Clinica.AppWPF {
 
+
 	public partial class MedicosModificar : Window {
 		private static MedicoDto? SelectedMedico;
+
+
+		public class HorarioMedicoView {
+			public string Desde { get; set; } = string.Empty;
+			public string Hasta { get; set; } = string.Empty;
+		}
+		public class DiaConHorarios {
+			public string Nombre { get; set; } = string.Empty;
+			public ObservableCollection<HorarioMedicoView> Horarios { get; set; } = new();
+		}
+
 		//---------------------public.constructors-------------------//
-		public MedicosModificar(){
+		public MedicosModificar() {
 			InitializeComponent();
 			SelectedMedico = null;
 			//txtDiasDeAtencion.ItemsSource = HorarioMedico.GetDiasDeLaSemanaAsList();
@@ -45,7 +57,19 @@ namespace Clinica.AppWPF {
 
 
 
-
+		//public static MedicoDto FromDomain(Medico2025 medico) {
+		//	var dias = medico.Horarios
+		//		.GroupBy(h => h.DiaSemana)
+		//		.Select(g => new DiaConHorarios {
+		//			Nombre = g.Key.ToString(), // "Monday", "Tuesday", etc. (puedes traducir si querés)
+		//			Horarios = new ObservableCollection<HorarioMedicoView>(
+		//				g.Select(h => new HorarioMedicoView {
+		//					Desde = h.Desde.ToString("HH:mm"),
+		//					Hasta = h.Hasta.ToString("HH:mm")
+		//				}))
+		//		});
+		//	return new MedicoDto {Horarios = new ObservableCollection<DiaConHorarios>(dias)};
+		//}
 
 
 
@@ -86,6 +110,7 @@ namespace Clinica.AppWPF {
 		}
 
 		private Result<Medico2025> ToDomain() {
+			throw new NotImplementedException();
 			Result<NombreCompleto2025> nombreResult = NombreCompleto2025.Crear(txtName.Text, txtLastName.Text);
 			Result<DniArgentino2025> dniResult = DniArgentino2025.Crear(txtDni.Text);
 			Result<Contacto2025Telefono> telefonoResult = Contacto2025Telefono.Crear(txtTelefono.Text);
@@ -96,19 +121,19 @@ namespace Clinica.AppWPF {
 			);
 
 			// Crear la agenda
-			List<HorarioMedico> disponibilidades = new List<HorarioMedico> {
-				((Result<HorarioMedico>.Ok)lunes).Value,
-				((Result<HorarioMedico>.Ok)miercoles).Value
-			};
+			//List<HorarioMedico> disponibilidades = new List<HorarioMedico> {
+			//	((Result<HorarioMedico>.Ok)lunes).Value,
+			//	((Result<HorarioMedico>.Ok)miercoles).Value
+			//};
 
 			// Finalmente, la agenda del médico:
-			Result<HorariosMedicos> horariosResult = HorariosMedicos.Crear(
-				new Result<IReadOnlyList<HorarioMedico>>.Ok(disponibilidades)
-			);
+			//Result<HorariosMedicos> horariosResult = HorariosMedicos.Crear(
+			//	new Result<IReadOnlyList<HorarioMedico>>.Ok(disponibilidades)
+			//);
 
 
 
-			Result<IReadOnlyList<HorarioMedico>> horariosResult = Result<>
+			//Result<IReadOnlyList<HorarioMedico>> horariosResult = Result<>
 
 
 			//this.txtDiasDeAtencion.ItemsSource;
@@ -126,17 +151,17 @@ namespace Clinica.AppWPF {
 			bool haceGuardia = txtGuardia.IsChecked is true;
 
 
-			return Medico2025.Crear(
-				nombreResult,
-				especialidadResult,
-				dniResult,
-				domicilioResult,
-				telefonoResult,
-				horariosResult,
-				fechaIngresoResult,
-				sueldoResult,
-				haceGuardia
-			);
+			//return Medico2025.Crear(
+			//	nombreResult,
+			//	especialidadResult,
+			//	dniResult,
+			//	domicilioResult,
+			//	telefonoResult,
+			//	//horariosResult,
+			//	fechaIngresoResult,
+			//	sueldoResult,
+			//	haceGuardia
+			//);
 		}
 
 
@@ -184,23 +209,23 @@ namespace Clinica.AppWPF {
 		}
 
 		private void BtnAgregarHorario_Click(object sender, RoutedEventArgs e) {
-			HorarioEditor editor = new HorarioEditor();
-			editor.Owner = this;
-			if (editor.ShowDialog() == true && editor.Confirmado) {
-				Result<HorarioMedico> resultado = HorarioMedico.Crear(
-					new MedicoDiaDeLaSemana2025(editor.Dia),
-					new[] {
-				new MedicoFranjaHoraria2025(editor.Desde, editor.Hasta)
-					}
-				);
+			//HorarioEditor editor = new HorarioEditor();
+			//editor.Owner = this;
+			//if (editor.ShowDialog() == true && editor.Confirmado) {
+			//	Result<HorarioMedico> resultado = HorarioMedico.Crear(
+			//		new MedicoDiaDeLaSemana2025(editor.Dia),
+			//		new[] {
+			//	new MedicoFranjaHoraria2025(editor.Desde, editor.Hasta)
+			//		}
+			//	);
 
-				if (resultado is Result<HorarioMedico>.Ok ok) {
-					List<HorarioMedico> lista = (List<HorarioMedico>)txtAgendaWidget.ItemsSource ?? new();
-					lista.Add(ok.Value);
-					txtAgendaWidget.ItemsSource = null;
-					txtAgendaWidget.ItemsSource = lista.OrderBy(x => x.DiaSemana).ToList();
-				}
-			}
+			//	if (resultado is Result<HorarioMedico>.Ok ok) {
+			//		List<HorarioMedico> lista = (List<HorarioMedico>)txtAgendaWidget.ItemsSource ?? new();
+			//		lista.Add(ok.Value);
+			//		txtAgendaWidget.ItemsSource = null;
+			//		txtAgendaWidget.ItemsSource = lista.OrderBy(x => x.DiaSemana).ToList();
+			//	}
+			//}
 		}
 
 		private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
