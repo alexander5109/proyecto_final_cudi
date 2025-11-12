@@ -1,39 +1,19 @@
-﻿using SystemTextJson = System.Text.Json;
+﻿using Clinica.Dominio.Entidades;
 using Newtonsoft.Json;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using SystemTextJson = System.Text.Json;
 
 namespace Clinica.AppWPF {
 	//---------------------------------Tablas.Horarios-------------------------------//
-	public class HorarioMedico {
-		public string DiaSemana { get; set; }
-		public string ?HoraInicio { get; set; }
-		public string ?HoraFin { get; set; }
-		
-		public static List<HorarioMedico> GetDiasDeLaSemanaAsList(){
-			return new List<HorarioMedico> {
-				new() { DiaSemana = "Lunes" },
-				new() { DiaSemana = "Martes" },
-				new() { DiaSemana = "Miércoles" },
-				new() { DiaSemana = "Jueves" },
-				new() { DiaSemana = "Viernes" },
-				new() { DiaSemana = "Sábado" },
-				new() { DiaSemana = "Domingo" }
-			};
-		}
-		public static Dictionary<string, HorarioMedico> GetDiasDeLaSemanaAsDict(){
-			return new Dictionary<string, HorarioMedico> {
-				{ "Lunes", new HorarioMedico { DiaSemana = "Lunes" } },
-				{ "Martes", new HorarioMedico { DiaSemana = "Martes" } },
-				{ "Miércoles", new HorarioMedico { DiaSemana = "Miércoles" } },
-				{ "Jueves", new HorarioMedico { DiaSemana = "Jueves" } },
-				{ "Viernes", new HorarioMedico { DiaSemana = "Viernes" } },
-				{ "Sábado", new HorarioMedico { DiaSemana = "Sábado" } },
-				{ "Domingo", new HorarioMedico { DiaSemana = "Domingo" } }
-			};
-		}
-	}
 
-	//---------------------------------Tablas.Medicos-------------------------------//
-	public class Medico {
+
+	public class DiaConHorarios {
+		public string Nombre { get; set; } = string.Empty;
+		public List<HorarioMedico> Horarios { get; set; } = new();
+	};
+
+	public class MedicoDto {
 		public string ?Id { get; set; }
 		public string? Name { get; set; }
 		public string? LastName { get; set; }
@@ -46,22 +26,22 @@ namespace Clinica.AppWPF {
 		public bool? Guardia { get; set; }
 		public DateTime? FechaIngreso { get; set; }
 		public double? SueldoMinimoGarantizado { get; set; }
-		public Dictionary<string, HorarioMedico> DiasDeAtencion { get; set; } = HorarioMedico.GetDiasDeLaSemanaAsDict();
+		public ObservableCollection<DiaConHorarios> Agenda { get; } = new();
 			
 		//usado por comboboxes para mostrar varios campos en un solo place.
 		[JsonIgnore]
 		public string Displayear => $"{Id}: {Especialidad} - {Name} {LastName}";
 
 	//---------------------------------Constructores-------------------------------//
-		public Medico() { }
+		public MedicoDto() { }
 
 		// Constructor de mEDICO en base a una ventana
-		public Medico(MedicosModificar window){
+		public MedicoDto(MedicosModificar window){
 			LeerDesdeVentana(window);
 		}
 
-		// Constructor de Medico para JSON
-		public Medico(string jsonElementKey, SystemTextJson.JsonElement jsonElement) {
+		// Constructor de MedicoDto para JSON
+		public MedicoDto(string jsonElementKey, SystemTextJson.JsonElement jsonElement) {
 			Id = jsonElement.GetProperty(nameof(Id)).GetString();
 			Dni = jsonElement.GetProperty(nameof(Dni)).GetString();
 			Name = jsonElement.GetProperty(nameof(Name)).GetString();
@@ -75,18 +55,18 @@ namespace Clinica.AppWPF {
 			FechaIngreso = DateTime.TryParse(jsonElement.GetProperty(nameof(FechaIngreso)).GetString(), out var fecha) ? fecha : (DateTime?)null;
 			SueldoMinimoGarantizado = jsonElement.GetProperty(nameof(SueldoMinimoGarantizado)).GetDouble();
 
-			if (jsonElement.TryGetProperty(nameof(DiasDeAtencion), out SystemTextJson.JsonElement diasDeAtencionElement)) {
-				foreach (var dia in diasDeAtencionElement.EnumerateObject()) {
-					var diaKey = dia.Name;
-					if (
-						dia.Value.TryGetProperty("HoraInicio", out var startElement) 
-						&& dia.Value.TryGetProperty("HoraFin", out var endElement)
-					) {
-						DiasDeAtencion[diaKey].HoraInicio = startElement.ToString();
-						DiasDeAtencion[diaKey].HoraFin = endElement.ToString();
-					}
-				}
-			}
+			//if (jsonElement.TryGetProperty(nameof(DiasDeAtencion), out SystemTextJson.JsonElement diasDeAtencionElement)) {
+			//	foreach (var dia in diasDeAtencionElement.EnumerateObject()) {
+			//		var diaKey = dia.Name;
+			//		if (
+			//			dia.Value.TryGetProperty("HoraInicio", out var startElement) 
+			//			&& dia.Value.TryGetProperty("HoraFin", out var endElement)
+			//		) {
+			//			DiasDeAtencion[diaKey].HoraInicio = startElement.ToString();
+			//			DiasDeAtencion[diaKey].HoraFin = endElement.ToString();
+			//		}
+			//	}
+			//}
 		}
 		
 
