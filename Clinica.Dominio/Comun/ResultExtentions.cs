@@ -9,6 +9,16 @@ public static class ResultExtensions {
 			_ => throw new InvalidOperationException()
 		};
 
+
+
+	public static Result<U> Bind<T, U>(
+		this IReadOnlyList<Result<T>> results,
+		Func<IReadOnlyList<T>, Result<U>> func) {
+		// simplemente reusa la versión IEnumerable
+		return ((IEnumerable<Result<T>>)results).Bind(func);
+	}
+
+
 	public static Result<U> Bind<T, U>(this Result<T> r, Func<T, Result<U>> f) =>
 		r switch {
 			Result<T>.Ok ok => f(ok.Value),
@@ -16,15 +26,31 @@ public static class ResultExtensions {
 			_ => throw new InvalidOperationException()
 		};
 
-	public static Result<TResult> Combine<T1, T2, TResult>(
-		Result<T1> r1, Result<T2> r2, Func<T1, T2, TResult> combine) {
-		if (r1 is Result<T1>.Error e1)
-			return new Result<TResult>.Error(e1.Mensaje);
-		if (r2 is Result<T2>.Error e2)
-			return new Result<TResult>.Error(e2.Mensaje);
 
-		var v1 = ((Result<T1>.Ok)r1).Value;
-		var v2 = ((Result<T2>.Ok)r2).Value;
-		return new Result<TResult>.Ok(combine(v1, v2));
+	public static Result<U> Bind<T, U>(
+		this IEnumerable<Result<T>> results,
+		Func<IReadOnlyList<T>, Result<U>> func) {
+		var combined = results.CombineResults();
+
+		return combined switch {
+			Result<List<T>>.Ok ok => func(ok.Value),
+			Result<List<T>>.Error err => new Result<U>.Error(err.Mensaje),
+			_ => throw new InvalidOperationException()
+		};
+	}
+
+	public static Result<List<T>> CombineResults<T>(
+		this IEnumerable<Result<T>> results) {
+		var list = new List<T>();
+		foreach (var r in results) {
+			switch (r) {
+				case Result<T>.Ok ok:
+					list.Add(ok.Value);
+					break;
+				case Result<T>.Error err:
+					return new Result<List<T>>.Error(err.Mensaje);
+			}
+		}
+		return new Result<List<T>>.Ok(list);
 	}
 }

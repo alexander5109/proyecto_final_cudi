@@ -18,8 +18,8 @@ namespace Clinica.AppWPF {
 		}
 
 
-		//------------------------public.CREATE.Medico----------------------//
-		public override bool CreateMedico(Medico2025 instancia, Medico instanciaDto) {
+		//------------------------public.CREATE.MedicoDto----------------------//
+		public override bool CreateMedico(Medico2025 instancia, MedicoDto instanciaDto) {
 			if (DictMedicos.Values.Any(i => i.Dni == instanciaDto.Dni)) {
 				MessageBox.Show($"Error de integridad: Ya hay un medico con ese Dni.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;
@@ -27,7 +27,7 @@ namespace Clinica.AppWPF {
 			instanciaDto.Id = GenerateNextId(DictMedicos);
 			DictMedicos[instanciaDto.Id] = instanciaDto;
 			this.JsonUpdateMedicos();
-			// MessageBox.Show($"Exito: Se ha creado la instancia de Medico: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+			// MessageBox.Show($"Exito: Se ha creado la instancia de MedicoDto: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 			return true;
 		}
 		//------------------------public.CREATE.Paciente----------------------//
@@ -69,8 +69,8 @@ namespace Clinica.AppWPF {
 
 
 		//------------------------public.READ----------------------//
-		public override List<Medico> ReadMedicos() {
-			return DictMedicos.Values.Cast<Medico>().ToList();
+		public override List<MedicoDto> ReadMedicos() {
+			return DictMedicos.Values.Cast<MedicoDto>().ToList();
 		}
 		public override List<Paciente> ReadPacientes() {
 			return DictPacientes.Values.Cast<Paciente>().ToList();
@@ -88,7 +88,7 @@ namespace Clinica.AppWPF {
 
 
 
-		//------------------------public.UPDATE.Medico----------------------//
+		//------------------------public.UPDATE.MedicoDto----------------------//
 		public override bool UpdateMedico(Medico2025 instance, string instanceId) {
 			// if (string.IsNullOrEmpty(instancia.Dni)) {
 			// MessageBox.Show($"Error: El DNI es un campo obligatorio.", "Faltan datos.", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -143,8 +143,8 @@ namespace Clinica.AppWPF {
 
 
 
-		//------------------------public.DELETE.Medico----------------------//
-		public override bool DeleteMedico(Medico instancia) {
+		//------------------------public.DELETE.MedicoDto----------------------//
+		public override bool DeleteMedico(MedicoDto instancia) {
 			if (DictTurnos.Values.Any(i => i.MedicoId == instancia.Id)) {
 				MessageBox.Show($"Error de integridad: El medico tiene turnos asignados.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;
@@ -204,11 +204,11 @@ namespace Clinica.AppWPF {
 				try {
 					string jsonString = File.ReadAllText(file_path);
 					var rawMedicosData = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
-					var medicos = new Dictionary<string, Medico>();
+					var medicos = new Dictionary<string, MedicoDto>();
 
 					foreach (var medicoEntry in rawMedicosData) {
 						var medicoJsonElement = System.Text.Json.JsonDocument.Parse(medicoEntry.Value.ToString()).RootElement;
-						var medicoInstance = new Medico(medicoEntry.Key, medicoJsonElement);
+						var medicoInstance = new MedicoDto(medicoEntry.Key, medicoJsonElement);
 						medicos[medicoEntry.Key] = medicoInstance;
 					}
 					DictMedicos = medicos;

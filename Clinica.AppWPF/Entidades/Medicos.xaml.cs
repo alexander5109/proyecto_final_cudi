@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace Clinica.AppWPF {
 	public partial class Medicos : Window {
-		private static Medico? SelectedMedico = null;
+		private static MedicoDto? SelectedMedico = null;
 		private static Turno? SelectedTurno = null;
 		public Medicos() {
 			InitializeComponent();
@@ -43,7 +43,7 @@ namespace Clinica.AppWPF {
 			UpdatePacienteUI();
 		}
 		private void medicosListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-			SelectedMedico = (Medico)medicosListView.SelectedItem;
+			SelectedMedico = (MedicoDto)medicosListView.SelectedItem;
 			UpdateMedicoUI();
 			UpdateTurnoUI();
 			UpdatePacienteUI();

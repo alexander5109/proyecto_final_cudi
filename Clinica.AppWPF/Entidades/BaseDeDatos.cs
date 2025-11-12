@@ -4,18 +4,18 @@ using System.Windows;
 
 namespace Clinica.AppWPF {
 	public abstract class BaseDeDatosAbstracta{
-		public Dictionary<string, Turno> DictTurnos = new();
-		public Dictionary<string, Medico> DictMedicos = new();
-		public Dictionary<string, Paciente> DictPacientes = new();
+		public Dictionary<string, Turno> DictTurnos = [];
+		public Dictionary<string, MedicoDto> DictMedicos = [];
+		public Dictionary<string, Paciente> DictPacientes = [];
 		public virtual bool ConectadaExitosamente { get; protected set; } = false;
 		
 		// Read methods
-		public abstract List<Medico> ReadMedicos();
+		public abstract List<MedicoDto> ReadMedicos();
 		public abstract List<Paciente> ReadPacientes();
 		public abstract List<Turno> ReadTurnos();
 
 		// Create methods
-		public abstract bool CreateMedico(Medico2025 instance, Medico instanceDto);
+		public abstract bool CreateMedico(Medico2025 instance, MedicoDto instanceDto);
 		public abstract bool CreatePaciente(Paciente2025 instance, Paciente instanceDto);
 		public abstract bool CreateTurno(Turno2025 instance, Turno instanceDto);
 
@@ -25,12 +25,12 @@ namespace Clinica.AppWPF {
 		public abstract bool UpdateTurno(Turno2025 instance, Turno instanceDto);
 
 		// Delete methods
-		public abstract bool DeleteMedico(Medico instance);
+		public abstract bool DeleteMedico(MedicoDto instance);
 		public abstract bool DeletePaciente(Paciente instance);
 		public abstract bool DeleteTurno(Turno instance);
 		
 		// Filtros
-		public List<Turno> ReadTurnosWhereMedicoId(Medico instance) {
+		public List<Turno> ReadTurnosWhereMedicoId(MedicoDto instance) {
 			if (instance is null){
 				return null;
 			}
@@ -43,7 +43,7 @@ namespace Clinica.AppWPF {
 			return DictTurnos.Values.Where(t => t.PacienteId == instance.Id).ToList();
 		}
 
-		public List<Medico> ReadMedicosWhereEspecialidad(string especialidad) {
+		public List<MedicoDto> ReadMedicosWhereEspecialidad(string especialidad) {
 			return DictMedicos.Values.Where(m => m.Especialidad == especialidad).ToList();
 		}
 		public List<string> ReadDistinctEspecialidades() {

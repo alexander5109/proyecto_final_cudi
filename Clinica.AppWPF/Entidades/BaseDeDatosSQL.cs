@@ -22,10 +22,10 @@ namespace Clinica.AppWPF {
 			);
 		}
 
-		//------------------------public.CREATE.Medico----------------------//
-		public override bool CreateMedico(Medico2025 instancia, Medico instanceDto) {
+		//------------------------public.CREATE.MedicoDto----------------------//
+		public override bool CreateMedico(Medico2025 instancia, MedicoDto instanceDto) {
 			string insertQuery = @"
-				INSERT INTO Medico (Name, LastName, Dni, Provincia, Domicilio, Localidad, Especialidad, Telefono, Guardia, FechaIngreso, SueldoMinimoGarantizado) 
+				INSERT INTO MedicoDto (Name, LastName, Dni, Provincia, Domicilio, Localidad, Especialidad, Telefono, Guardia, FechaIngreso, SueldoMinimoGarantizado) 
 				VALUES (@Name, @LastName, @Dni, @Provincia, @Domicilio, @Localidad, @Especialidad, @Telefono, @Guardia, @FechaIngreso, @SueldoMinimoGarantizado)
 				SELECT SCOPE_IDENTITY();"; // DEVOLEME RAPIDAMENTE LA ID QUE ACABAS DE GENERAR
 			
@@ -48,7 +48,7 @@ namespace Clinica.AppWPF {
 					}
 				}
 				DictMedicos[instanceDto.Id] = instanceDto;
-				// MessageBox.Show($"Exito: Se ha creado la instancia de Medico: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+				// MessageBox.Show($"Exito: Se ha creado la instancia de MedicoDto: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 				return true;
 			} 
 			catch (SqlException ex) when (ex.Number == 2627) // Unique constraint violation error code
@@ -157,7 +157,7 @@ namespace Clinica.AppWPF {
 
 
 		//------------------------public.READ----------------------//
-		public override List<Medico> ReadMedicos() {
+		public override List<MedicoDto> ReadMedicos() {
 			return DictMedicos.Values.ToList();
 		}
 
@@ -179,9 +179,9 @@ namespace Clinica.AppWPF {
 		
 		
 		
-		//------------------------public.UPDATE.Medico----------------------//
+		//------------------------public.UPDATE.MedicoDto----------------------//
 		public override bool UpdateMedico(Medico2025 instancia, string instanceId) {
-			string query = "UPDATE Medico SET Name = @Name, LastName = @LastName, Dni = @Dni, Provincia = @Provincia, Domicilio = @Domicilio, Localidad = @Localidad, Especialidad = @Especialidad, Telefono = @Telefono, Guardia = @Guardia, FechaIngreso = @FechaIngreso, SueldoMinimoGarantizado = @SueldoMinimoGarantizado WHERE Id = @Id";
+			string query = "UPDATE MedicoDto SET Name = @Name, LastName = @LastName, Dni = @Dni, Provincia = @Provincia, Domicilio = @Domicilio, Localidad = @Localidad, Especialidad = @Especialidad, Telefono = @Telefono, Guardia = @Guardia, FechaIngreso = @FechaIngreso, SueldoMinimoGarantizado = @SueldoMinimoGarantizado WHERE Id = @Id";
 			try {
 				using (var connection = new SqlConnection(connectionString)) {
 					connection.Open();
@@ -303,9 +303,9 @@ namespace Clinica.AppWPF {
 
 
 
-		//------------------------public.DELETE.Medico----------------------//
-		public override bool DeleteMedico(Medico instancia) {
-			string query = "DELETE FROM Medico WHERE Id = @Id";
+		//------------------------public.DELETE.MedicoDto----------------------//
+		public override bool DeleteMedico(MedicoDto instancia) {
+			string query = "DELETE FROM MedicoDto WHERE Id = @Id";
 
 			try {
 				using (var connection = new SqlConnection(connectionString)) {
@@ -403,11 +403,11 @@ namespace Clinica.AppWPF {
 			try {
 				using (var conexion = new SqlConnection(connectionString)){
 					conexion.Open();
-					string consulta = "SELECT * FROM Medico";
+					string consulta = "SELECT * FROM MedicoDto";
 					using (var sqlComando = new SqlCommand(consulta, conexion))
 					using (var reader = sqlComando.ExecuteReader()){
 						while (reader.Read()){
-							var medico = new Medico {
+							var medico = new MedicoDto {
 								Id = reader["Id"]?.ToString(),
 								Name = reader["Name"]?.ToString(),
 								LastName = reader["LastName"]?.ToString(),
@@ -426,7 +426,7 @@ namespace Clinica.AppWPF {
 					}
 				}
 			} catch (Exception ex) {
-				MessageBox.Show($"Ocurrio un error al leer la tabla SQL de Medico: {ex.Message}", "Error de Database", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show($"Ocurrio un error al leer la tabla SQL de MedicoDto: {ex.Message}", "Error de Database", MessageBoxButton.OK, MessageBoxImage.Error);
 				return CrearLasTablasExitosamente();
 			}
 			return true;

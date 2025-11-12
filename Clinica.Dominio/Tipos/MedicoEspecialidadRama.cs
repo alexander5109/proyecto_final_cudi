@@ -7,17 +7,15 @@ public readonly record struct MedicoEspecialidadRama(
 	string Titulo
 ) {
 	// Conjunto inmutable de especialidades válidas
-	public static readonly IImmutableSet<MedicoEspecialidadRama> RamasValidas =
-		new HashSet<MedicoEspecialidadRama>
-		{
-			new("Clínica Médica"),
-			new("Cirugía y Ortopedia"),
-			new("Salud Mental"),
-			new("Cirugía General"),
-			new("Rehabilitación"),
-			new("Salud General"),
-			new ("Cirugía General"),
-		}.ToImmutableHashSet();
+	public static readonly IImmutableSet<MedicoEspecialidadRama> RamasValidas = new HashSet<MedicoEspecialidadRama>{
+		new("Clínica Médica"),
+		new("Cirugía y Ortopedia"),
+		new("Salud Mental"),
+		new("Cirugía General"),
+		new("Rehabilitación"),
+		new("Salud General"),
+		new ("Cirugía General"),
+	}.ToImmutableHashSet();
 
 	public static Result<MedicoEspecialidadRama> Crear(string rama) {
 		if (string.IsNullOrWhiteSpace(rama))

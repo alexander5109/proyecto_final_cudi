@@ -1,20 +1,21 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Tipos;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows;
 
 namespace Clinica.AppWPF {
+
 	public partial class MedicosModificar : Window {
-		private static Medico? SelectedMedico;
+		private static MedicoDto? SelectedMedico;
 		//---------------------public.constructors-------------------//
-		public MedicosModificar() //Constructor con un objeto como parametro ==> Modificarlo.
-		{
+		public MedicosModificar(){
 			InitializeComponent();
 			SelectedMedico = null;
 			//txtDiasDeAtencion.ItemsSource = HorarioMedico.GetDiasDeLaSemanaAsList();
 		}
-
-		public MedicosModificar(Medico selectedMedico) {
+		public MedicosModificar(MedicoDto selectedMedico) {
 			InitializeComponent();
 			SelectedMedico = selectedMedico;
 			SelectedMedico.MostrarseEnVentana(this);
@@ -27,7 +28,7 @@ namespace Clinica.AppWPF {
 			//Result<Medico2025> resultado = this.ToDomain();
 
 			//if (resultado is Result<Medico2025>.Ok ok) {
-			//	var agenda = ok.Value.Agenda;
+			//	var agenda = ok.Value.Horarios;
 			//	txtAgendaWidget.ItemsSource = agenda.DisponibilidadEnDia;
 
 			//} else if (resultado is Result<Medico2025>.Error error) {
@@ -42,43 +43,13 @@ namespace Clinica.AppWPF {
 
 
 
-		//--------------------AsegurarInput-------------------//
-		/*
-		private bool CamposCompletadosCorrectamente() {
-			if (
-				this.txtSueldoMinimoGarantizado.Text is null
-				|| this.txtDni.Text is null
-				|| this.txtFechaIngreso.SelectedDate is null
-				|| this.txtGuardia.IsChecked is null
-			) {
-				MessageBox.Show($"Error: Faltan datos obligatorios por completar.", "Error de ingreso.", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return false;
-			}
 
-			if (!Int64.TryParse(this.txtDni.Text, out _)) {
-				MessageBox.Show($"Error: El dni no es un numero entero valido.", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return false;
-			}
 
-			if (!Double.TryParse(this.txtSueldoMinimoGarantizado.Text, out _)) {
-				MessageBox.Show("Error: El sueldo minimo no es un número decimal válido. Use la coma (,) como separador decimal.", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return false;
-			}
-			foreach (HorarioMedico campo in this.txtDiasDeAtencion.ItemsSource as List<HorarioMedico>) {
-				if (string.IsNullOrEmpty(campo.HoraInicio) && string.IsNullOrEmpty(campo.HoraFin)) {
-					continue;
-				}
-				if (App.TryParseHoraField(campo.HoraInicio) && App.TryParseHoraField(campo.HoraFin)) {
-					continue;
-				} else {
-					MessageBox.Show($"Error: No se reconoce el horario del día {campo.DiaSemana}. \nIngrese un string con formato valido (hh:mm)", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
-					return false;
-				}
-			}
 
-			return true;
-		}
-		*/
+
+
+
+
 
 
 		//---------------------botones.GuardarCambios-------------------//
@@ -92,7 +63,7 @@ namespace Clinica.AppWPF {
 					bool exito;
 
 					if (SelectedMedico is null) {
-						SelectedMedico = new Medico(this);
+						SelectedMedico = new MedicoDto(this);
 						exito = App.BaseDeDatos.CreateMedico(ok, SelectedMedico);
 					} else {
 						// Actualizar existente
@@ -124,32 +95,21 @@ namespace Clinica.AppWPF {
 				MedicoEspecialidadRama.RamasValidas.FirstOrDefault().Titulo
 			);
 
-			// Crear franjas horarias
-			Result<MedicoFranjaHoraria2025> franjaManiana = MedicoFranjaHoraria2025.Crear(new TimeOnly(8, 0), new TimeOnly(12, 0));
-			Result<MedicoFranjaHoraria2025> franjaTarde = MedicoFranjaHoraria2025.Crear(new TimeOnly(14, 0), new TimeOnly(18, 0));
-			Result<MedicoFranjaHoraria2025> franjaMiercoles = MedicoFranjaHoraria2025.Crear(new TimeOnly(10, 0), new TimeOnly(16, 0));
-
-			// Crear disponibilidades por día
-			Result<MedicoDisponibilidadEnDia2025> lunes = MedicoDisponibilidadEnDia2025.Crear(
-				new MedicoDiaDeLaSemana2025(DayOfWeek.Monday),
-				new[] { ((Result<MedicoFranjaHoraria2025>.Ok)franjaManiana).Value, ((Result<MedicoFranjaHoraria2025>.Ok)franjaTarde).Value }
-			);
-
-			Result<MedicoDisponibilidadEnDia2025> miercoles = MedicoDisponibilidadEnDia2025.Crear(
-				new MedicoDiaDeLaSemana2025(DayOfWeek.Wednesday),
-				new[] { ((Result<MedicoFranjaHoraria2025>.Ok)franjaMiercoles).Value }
-			);
-
 			// Crear la agenda
-			List<MedicoDisponibilidadEnDia2025> disponibilidades = new List<MedicoDisponibilidadEnDia2025> {
-				((Result<MedicoDisponibilidadEnDia2025>.Ok)lunes).Value,
-				((Result<MedicoDisponibilidadEnDia2025>.Ok)miercoles).Value
+			List<HorarioMedico> disponibilidades = new List<HorarioMedico> {
+				((Result<HorarioMedico>.Ok)lunes).Value,
+				((Result<HorarioMedico>.Ok)miercoles).Value
 			};
 
 			// Finalmente, la agenda del médico:
-			Result<MedicoAgenda2025> agendaResult = MedicoAgenda2025.Crear(
-				new Result<IReadOnlyList<MedicoDisponibilidadEnDia2025>>.Ok(disponibilidades)
+			Result<HorariosMedicos> horariosResult = HorariosMedicos.Crear(
+				new Result<IReadOnlyList<HorarioMedico>>.Ok(disponibilidades)
 			);
+
+
+
+			Result<IReadOnlyList<HorarioMedico>> horariosResult = Result<>
+
 
 			//this.txtDiasDeAtencion.ItemsSource;
 
@@ -172,7 +132,7 @@ namespace Clinica.AppWPF {
 				dniResult,
 				domicilioResult,
 				telefonoResult,
-				agendaResult,
+				horariosResult,
 				fechaIngresoResult,
 				sueldoResult,
 				haceGuardia
@@ -227,15 +187,15 @@ namespace Clinica.AppWPF {
 			HorarioEditor editor = new HorarioEditor();
 			editor.Owner = this;
 			if (editor.ShowDialog() == true && editor.Confirmado) {
-				Result<MedicoDisponibilidadEnDia2025> resultado = MedicoDisponibilidadEnDia2025.Crear(
+				Result<HorarioMedico> resultado = HorarioMedico.Crear(
 					new MedicoDiaDeLaSemana2025(editor.Dia),
 					new[] {
 				new MedicoFranjaHoraria2025(editor.Desde, editor.Hasta)
 					}
 				);
 
-				if (resultado is Result<MedicoDisponibilidadEnDia2025>.Ok ok) {
-					List<MedicoDisponibilidadEnDia2025> lista = (List<MedicoDisponibilidadEnDia2025>)txtAgendaWidget.ItemsSource ?? new();
+				if (resultado is Result<HorarioMedico>.Ok ok) {
+					List<HorarioMedico> lista = (List<HorarioMedico>)txtAgendaWidget.ItemsSource ?? new();
 					lista.Add(ok.Value);
 					txtAgendaWidget.ItemsSource = null;
 					txtAgendaWidget.ItemsSource = lista.OrderBy(x => x.DiaSemana).ToList();

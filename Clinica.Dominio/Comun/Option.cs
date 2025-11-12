@@ -1,4 +1,5 @@
-﻿public abstract record Option<T> {
+﻿namespace Clinica.Dominio.Comun;
+public abstract record Option<T> {
 	private Option() { }
 
 	public sealed record Some(T Value) : Option<T>;

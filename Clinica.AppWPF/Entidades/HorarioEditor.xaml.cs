@@ -1,6 +1,5 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Tipos;
 using System.Windows;
 
 namespace Clinica.AppWPF;
@@ -10,7 +9,7 @@ public partial class HorarioEditor : Window {
 	public TimeOnly Hasta { get; private set; }
 	public bool Confirmado { get; private set; }
 
-	public HorarioEditor(MedicoDisponibilidadEnDia2025? horarioExistente = null) {
+	public HorarioEditor(HorarioMedico? horarioExistente = null) {
 		InitializeComponent();
 
 		if (horarioExistente is not null) {

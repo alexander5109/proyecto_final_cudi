@@ -10,6 +10,7 @@ namespace Clinica.AppWPF {
 		public string ?MedicoId { get; set; }
 		public DateTime ?Fecha { get; set; }
 		public TimeSpan ?Hora { get; set; }
+		public int DuracionMinutos { get; set; }
 
 		public Turno() { }
 		
@@ -23,9 +24,9 @@ namespace Clinica.AppWPF {
 		}
 		
 		[JsonIgnore]
-		public Medico MedicoRelacionado{
+		public MedicoDto MedicoRelacionado{
 			get{
-				if (App.BaseDeDatos.DictMedicos.TryGetValue(MedicoId, out Medico medicoRelacionado)){
+				if (App.BaseDeDatos.DictMedicos.TryGetValue(MedicoId, out MedicoDto medicoRelacionado)){
 					return medicoRelacionado;
 				}
 				else{
