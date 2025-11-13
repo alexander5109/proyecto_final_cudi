@@ -160,8 +160,8 @@ public class MedicoView : INotifyPropertyChanged {
 		Result<ListaHorarioMedicos2025> horariosResult = ListaHorarioMedicos2025.Crear(
 			this.Horarios
 				.SelectMany(dia =>
-					dia.Horarios.Select(h => HorarioMedico2025.Crear(
-						DiaSemana2025.Crear(dia.Nombre),
+					dia.FranjasHora.Select(h => HorarioMedico2025.Crear(
+						DiaSemana2025.Crear(dia.DiaName),
 						HorarioHora2025.Crear(h.Desde),
 						HorarioHora2025.Crear(h.Hasta)
 					))

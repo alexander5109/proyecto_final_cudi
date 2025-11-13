@@ -242,13 +242,13 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 						string? horaFin = diaObj.GetProperty("HoraFin").GetString();
 
 						var diaConHorarios = new HorarioMedicoView {
-							Nombre = diaNombre,
-							Horarios = new ObservableCollection<HorarioMedicoTimeSpanView>()
+							DiaName = diaNombre,
+							FranjasHora = new ObservableCollection<HorarioMedicoTimeSpanView>()
 						};
 
 						// Agregar horario si ambos valores son válidos
 						if (!string.IsNullOrWhiteSpace(horaInicio) && !string.IsNullOrWhiteSpace(horaFin)) {
-							diaConHorarios.Horarios.Add(new HorarioMedicoTimeSpanView {
+							diaConHorarios.FranjasHora.Add(new HorarioMedicoTimeSpanView {
 								Desde = horaInicio!,
 								Hasta = horaFin!
 							});

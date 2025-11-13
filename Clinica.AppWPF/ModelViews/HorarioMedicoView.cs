@@ -8,6 +8,6 @@ public class HorarioMedicoTimeSpanView {
 }
 
 public class HorarioMedicoView {
-	public string Nombre { get; set; } = string.Empty;
-	public ObservableCollection<HorarioMedicoTimeSpanView> Horarios { get; set; } = new();
+	public string DiaName { get; set; } = string.Empty;
+	public ObservableCollection<HorarioMedicoTimeSpanView> FranjasHora { get; set; } = new();
 }

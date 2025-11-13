@@ -3,7 +3,6 @@ using Clinica.AppWPF.ModelViews;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Tipos;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,8 +11,10 @@ using System.Windows;
 namespace Clinica.AppWPF;
 
 
-public partial class MedicosModificar : Window, INotifyPropertyChanged{
+public partial class MedicosModificar : Window, INotifyPropertyChanged {
+	public event PropertyChangedEventHandler? PropertyChanged;
 	private MedicoView _selectedMedico;
+	public List<string> EspecialidadesDisponibles { get; } = MedicoEspecialidad2025.EspecialidadesDisponibles;
 
 	public MedicoView SelectedMedico {
 		get => _selectedMedico;
@@ -34,31 +35,14 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged{
 		InitializeComponent();
 		DataContext = this;
 		SelectedMedico = selectedMedico;
+		//MessageBox.Show(
+		//	$"Cargando datos del médico seleccionado: {SelectedMedico.Especialidad}\n" +
+		//	$"Disponibles: {string.Join(", ", EspecialidadesDisponibles)}",
+		//	"Editar Médico",
+		//	MessageBoxButton.OK,
+		//	MessageBoxImage.Information
+		//);
 	}
-
-
-
-
-
-	//public static MedicoView FromDomain(Medico2025 medico) {
-	//	var dias = medico.Horarios
-	//		.GroupBy(h => h.DiaSemana2025)
-	//		.Select(g => new HorarioMedicoView {
-	//			Nombre = g.Key.ToString(), // "Monday", "Tuesday", etc. (puedes traducir si querés)
-	//			Horarios = new ObservableCollection<HorarioMedicoTimeSpanView>(
-	//				g.Select(h => new HorarioMedicoTimeSpanView {
-	//					Desde = h.Desde.ToString("HH:mm"),
-	//					Hasta = h.Hasta.ToString("HH:mm")
-	//				}))
-	//		});
-	//	return new MedicoView {Horarios = new ObservableCollection<HorarioMedicoView>(dias)};
-	//}
-
-
-
-
-
-
 	//---------------------botones.GuardarCambios-------------------//
 	private void ButtonGuardar(object sender, RoutedEventArgs e) {
 		App.PlayClickJewel();
@@ -124,58 +108,23 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged{
 		this.Cerrar(); // this.NavegarA<Medicos>();
 	}
 
-	private void ButtonSalir(object sender, RoutedEventArgs e) {
-		this.Salir();
-	}
 
 
 
 	//------------------botonesParaCrear------------------//
-	private void ButtonAgregarMedico(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<MedicosModificar>();
-	}
-	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<PacientesModificar>(); // this.NavegarA<PacientesModificar>();
-	}
-	private void ButtonAgregarTurno(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<MedicosModificar>();
-	}
 
 	private void BtnAgregarHorario_Click(object sender, RoutedEventArgs e) {
-		//HorarioEditor editor = new HorarioEditor();
-		//editor.Owner = this;
-		//if (editor.ShowDialog() == true && editor.Confirmado) {
-		//	Result<HorarioMedico> resultado = HorarioMedico.Crear(
-		//		new MedicoDiaDeLaSemana2025(editor.Dia),
-		//		new[] {
-		//	new MedicoFranjaHoraria2025(editor.Desde, editor.Hasta)
-		//		}
-		//	);
-
-		//	if (resultado is Result<HorarioMedico>.Ok ok) {
-		//		List<HorarioMedico> lista = (List<HorarioMedico>)txtAgendaWidget.ItemsSource ?? new();
-		//		lista.Add(ok.Valor);
-		//		txtAgendaWidget.ItemsSource = null;
-		//		txtAgendaWidget.ItemsSource = lista.OrderBy(x => x.DiaSemana2025).ToList();
-		//	}
-		//}
+		HorarioEditor editor = new HorarioEditor();
 	}
 
-
-
-	public event PropertyChangedEventHandler? PropertyChanged;
 	protected void OnPropertyChanged(string propertyName)
 		=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 	private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
 
 	}
-
 	private void BtnEliminarHorario_Click(object sender, RoutedEventArgs e) {
 
-	}
-
-	private void txtEspecialidades_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
 	}
 	//------------------------Fin---------------------------//
 }

@@ -409,15 +409,15 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				// Si hay horarios, los agregamos
 				if (reader["HorarioId"] != DBNull.Value) {
 					string diaSemanaStr = reader["DiaSemana2025"].ToString()!;
-					var dia = medicoView.Horarios.FirstOrDefault(d => d.Nombre == diaSemanaStr);
+					var dia = medicoView.Horarios.FirstOrDefault(d => d.DiaName == diaSemanaStr);
 					if (dia == null) {
 						dia = new HorarioMedicoView {
-							Nombre = diaSemanaStr
+							DiaName = diaSemanaStr
 						};
 						medicoView.Horarios.Add(dia);
 					}
 
-					dia.Horarios.Add(new HorarioMedicoTimeSpanView {
+					dia.FranjasHora.Add(new HorarioMedicoTimeSpanView {
 						Desde = ((TimeSpan)reader["HoraDesde"]).ToString(@"hh\:mm"),
 						Hasta = ((TimeSpan)reader["HoraHasta"]).ToString(@"hh\:mm")
 					});

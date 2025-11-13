@@ -108,11 +108,10 @@
 			<!-- Agenda -->
 			<StackPanel Grid.Row="0" Grid.Column="2" Grid.RowSpan="11" Margin="20,0,0,0">
 				<Label Content="Días de atención" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-				<TreeView Height="400"
-				  ItemsSource="{Binding SelectedMedico.DiasDeAtencion}">
+				<TreeView Height="400" ItemsSource="{Binding SelectedMedico.Horarios}">
 					<TreeView.ItemTemplate>
-						<HierarchicalDataTemplate ItemsSource="{Binding Horarios}">
-							<TextBlock Text="{Binding Nombre}" FontWeight="Bold"/>
+						<HierarchicalDataTemplate ItemsSource="{Binding FranjasHora}">
+							<TextBlock Text="{Binding DiaName}" FontWeight="Bold"/>
 							<HierarchicalDataTemplate.ItemTemplate>
 								<DataTemplate>
 									<StackPanel Orientation="Horizontal" Margin="15,0,0,0">
