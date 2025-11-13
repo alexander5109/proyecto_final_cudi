@@ -25,8 +25,8 @@ public partial class MedicoView : ObservableObject {
 	public List<string> EspecialidadesDisponibles { get; } = MedicoEspecialidad2025.EspecialidadesDisponibles;
 	[JsonIgnore] public string Displayear => $"{Id}: {Especialidad} - {Name} {LastName}";
 
-	public static MedicoView NewEmpty() => new MedicoView(
-		new ObservableCollection<HorarioMedicoView>(),
+	public static MedicoView NewEmpty() => new(
+		[],
 		string.Empty,   // id
 		string.Empty,   // name
 		string.Empty,   // lastName
@@ -75,18 +75,16 @@ public partial class MedicoView : ObservableObject {
 
 
 	public Result<Medico2025> ToDomain() {
-		// --- Value Objects base ---
-		var nombreResult = NombreCompleto2025.Crear(this.Name, this.LastName);
-		var especialidadResult = MedicoEspecialidad2025.Crear(this.Especialidad, "Clinica General");
-		var dniResult = DniArgentino2025.Crear(this.Dni);
-		var domicilioResult = DomicilioArgentino2025.Crear(
+		return Medico2025.Crear(
+			NombreCompleto2025.Crear(this.Name, this.LastName),
+			MedicoEspecialidad2025.Crear(this.Especialidad, "Clinica General"),
+			DniArgentino2025.Crear(this.Dni),
+			DomicilioArgentino2025.Crear(
 			LocalidadDeProvincia2025.Crear(this.Localidad, ProvinciaArgentina2025.Crear(this.Provincia)),
 			this.Domicilio
-		);
-		var telefonoResult = ContactoTelefono2025.Crear(this.Telefono);
-		var fechaIngresoResult = FechaIngreso2025.Crear(this.FechaIngreso);
-		var sueldoResult = MedicoSueldoMinimo2025.Crear(this.SueldoMinimoGarantizado);
-		Result<ListaHorarioMedicos2025> horariosResult = ListaHorarioMedicos2025.Crear(
+		),
+			ContactoTelefono2025.Crear(this.Telefono),
+			ListaHorarioMedicos2025.Crear(
 			this.Horarios
 				.SelectMany(dia =>
 					dia.FranjasHora.Select(h => HorarioMedico2025.Crear(
@@ -96,18 +94,9 @@ public partial class MedicoView : ObservableObject {
 					))
 				)
 				.ToList()
-		);
-
-		// --- Combinamos todo en el agregado ---
-		return Medico2025.Crear(
-			nombreResult,
-			especialidadResult,
-			dniResult,
-			domicilioResult,
-			telefonoResult,
-			horariosResult,
-			fechaIngresoResult,
-			sueldoResult,
+		),
+			FechaIngreso2025.Crear(this.FechaIngreso),
+			MedicoSueldoMinimo2025.Crear(this.SueldoMinimoGarantizado),
 			this.Guardia ?? false
 		);
 	}

@@ -1,27 +1,80 @@
-﻿using SystemTextJson = System.Text.Json;
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+using Clinica.Dominio.Tipos;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 
-namespace Clinica.AppWPF.Entidades; 
+namespace Clinica.AppWPF.Entidades;
 //---------------------------------Tablas.Pacientes-------------------------------//
-public class PacienteView {
-	public string? Id { get; set; }
-	public string? Dni { get; set; }
-	public string? Name { get; set; }
-	public string? LastName { get; set; }
-	public DateTime? FechaIngreso { get; set; }  // Corrige a DateTime
-	public string? Email { get; set; }
-	public string? Telefono { get; set; }
-	public DateTime? FechaNacimiento { get; set; }
-	public string? Domicilio { get; set; }
-	public string? Localidad { get; set; }
-	public string? Provincia { get; set; }
+public partial class PacienteView : ObservableObject {
+	[ObservableProperty] private string id = string.Empty;
+	[ObservableProperty] private string dni = string.Empty;
+	[ObservableProperty] private string name = string.Empty;
+	[ObservableProperty] private string lastName = string.Empty;
+	[ObservableProperty] private DateTime? fechaIngreso;
+	[ObservableProperty] private string email = string.Empty;
+	[ObservableProperty] private string telefono = string.Empty;
+	[ObservableProperty] private DateTime? fechaNacimiento;
+	[ObservableProperty] private string domicilio = string.Empty;
+	[ObservableProperty] private string localidad = string.Empty;
+	[ObservableProperty] private string provincia = string.Empty;
+	[JsonIgnore] public string Displayear => $"{Id}: {Name} {LastName}";
 
-	[JsonIgnore]
-	public string Displayear => $"{Id}: {Name} {LastName}";
+	public static PacienteView NewEmpty() => new(
+		string.Empty,   // id
+		string.Empty,   // dni
+		string.Empty,   // name
+		string.Empty,   // lastName
+		null,           // fechaIngreso
+		string.Empty,   // email
+		string.Empty,   // telefono
+		null,           // fechaNacimiento
+		string.Empty,   // domicilio
+		string.Empty,   // localidad
+		string.Empty    // provincia
+	);
 
-	public PacienteView() { }
 
-	public PacienteView(PacientesModificar window) {
-		this.LeerDesdeVentana(window);
+	public PacienteView(
+		string? id,
+		string? dni,
+		string? name,
+		string? lastName,
+		DateTime? fechaIngreso,
+		string? email,
+		string? telefono,
+		DateTime? fechaNacimiento,
+		string? domicilio,
+		string? localidad,
+		string? provincia
+	) {
+		Id = id ?? string.Empty;
+		Dni = dni ?? string.Empty;
+		Name = name ?? string.Empty;
+		LastName = lastName ?? string.Empty;
+		FechaIngreso = fechaIngreso;
+		Email = email ?? string.Empty;
+		Telefono = telefono ?? string.Empty;
+		FechaNacimiento = fechaNacimiento;
+		Domicilio = domicilio ?? string.Empty;
+		Localidad = localidad ?? string.Empty;
+		Provincia = provincia ?? string.Empty;
+	}
+
+	public Result<Paciente2025> ToDomain() {
+		return Paciente2025.Crear(
+			NombreCompleto2025.Crear(Name, LastName),
+			DniArgentino2025.Crear(Dni),
+			Contacto2025.Crear(
+				ContactoEmail2025.Crear(Email),
+				ContactoTelefono2025.Crear(Telefono)
+			),
+			DomicilioArgentino2025.Crear(
+				LocalidadDeProvincia2025.Crear(this.Localidad, ProvinciaArgentina2025.Crear(this.Provincia)),
+				this.Domicilio
+			),
+			FechaDeNacimiento2025.Crear(FechaNacimiento),
+			FechaIngreso2025.Crear(FechaIngreso)
+		);
 	}
 }

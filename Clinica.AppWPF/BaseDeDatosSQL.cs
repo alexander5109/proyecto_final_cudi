@@ -388,7 +388,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				// Crear el médico si no existe todavía
 				if (!dictMedicos.TryGetValue(medicoId, out var medicoView)) {
 					medicoView = new MedicoView(
-						new ObservableCollection<HorarioMedicoView>(),
+						[],
 						medicoId,
 						reader["Name"] as string,
 						reader["LastName"] as string,
@@ -448,19 +448,19 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				using (var sqlComando = new SqlCommand(consulta, conexion))
 				using (var reader = sqlComando.ExecuteReader()) {
 					while (reader.Read()) {
-						var paciente = new PacienteView {
-							Id = reader["Id"]?.ToString(),
-							Dni = reader["Dni"]?.ToString(),
-							Name = reader["Name"]?.ToString(),
-							LastName = reader["LastName"]?.ToString(),
-							FechaIngreso = reader["FechaIngreso"] != DBNull.Value ? Convert.ToDateTime(reader["FechaIngreso"]) : null,
-							Email = reader["Email"]?.ToString(),
-							Telefono = reader["Telefono"]?.ToString(),
-							FechaNacimiento = reader["FechaNacimiento"] != DBNull.Value ? Convert.ToDateTime(reader["FechaNacimiento"]) : null,
-							Domicilio = reader["Domicilio"]?.ToString(),
-							Localidad = reader["Localidad"]?.ToString(),
-							Provincia = reader["Provincia"]?.ToString()
-						};
+						var paciente = new PacienteView (
+							reader["Id"] as string,
+							reader["Dni"] as string,
+							reader["Name"] as string,
+							reader["LastName"] as string,
+							reader["FechaIngreso"] != DBNull.Value ? Convert.ToDateTime(reader["FechaIngreso"]) : null,
+							reader["Email"] as string,
+							reader["Telefono"] as string,
+							reader["FechaNacimiento"] != DBNull.Value ? Convert.ToDateTime(reader["FechaNacimiento"]) : null,
+							reader["Domicilio"] as string,
+							reader["Localidad"] as string,
+							reader["Provincia"] as string
+						);
 						DictPacientes[paciente.Id] = paciente;
 					}
 				}

@@ -17,8 +17,11 @@ public readonly record struct FechaDeNacimiento2025(
 		return new Result<FechaDeNacimiento2025>.Ok(new(fecha));
 	}
 
-	public static Result<FechaDeNacimiento2025> Crear(DateTime fecha) {
-		var dateOnly = DateOnly.FromDateTime(fecha);
+	public static Result<FechaDeNacimiento2025> Crear(DateTime? fecha) {
+		if (fecha is null) {
+			return new Result<FechaDeNacimiento2025>.Error("La fecha de ingreso no puede estar vacía.");
+		}
+		DateOnly dateOnly = DateOnly.FromDateTime(fecha.Value);
 		return Crear(dateOnly);
 	}
 

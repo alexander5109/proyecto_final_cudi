@@ -13,19 +13,19 @@ namespace Clinica.AppWPF;
 
 public partial class MedicosModificar : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
-	private MedicoView _selectedMedico;
-	public MedicoView SelectedMedico {get => _selectedMedico;set {_selectedMedico = value;OnPropertyChanged(nameof(SelectedMedico));}}
+	public MedicoView _selectedMedico = MedicoView.NewEmpty();
+	public MedicoView SelectedMedico {get => _selectedMedico;set {_selectedMedico = value;OnPropertyChanged(nameof(SelectedMedico));} }
+	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 	public MedicosModificar() {
 		InitializeComponent();
 		DataContext = this;
-		SelectedMedico = MedicoView.NewEmpty(); // instancia vacía lista para bindear
 	}
 
 	public MedicosModificar(MedicoView selectedMedico) {
 		InitializeComponent();
-		DataContext = this;
 		SelectedMedico = selectedMedico;
+		DataContext = this;
 		//MessageBox.Show(
 		//	$"Cargando datos del médico seleccionado: {SelectedMedico.Especialidad}\n" +
 		//	$"Disponibles: {string.Join(", ", EspecialidadesDisponibles)}",
@@ -37,18 +37,11 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged {
 	//---------------------botones.GuardarCambios-------------------//
 	private void ButtonGuardar(object sender, RoutedEventArgs e) {
 		App.PlayClickJewel();
-
-		if (SelectedMedico is null) {
-			MessageBox.Show("No hay médico seleccionado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-			return;
-		}
-
 		Result<Medico2025> resultado = SelectedMedico.ToDomain();
 
 		resultado.Switch(
 			ok => {
 				bool exito;
-
 				if (SelectedMedico.Id is null) {
 					// Crear nuevo médico
 					exito = App.BaseDeDatos.CreateMedico(ok, SelectedMedico);
@@ -56,7 +49,6 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged {
 					// Actualizar médico existente
 					exito = App.BaseDeDatos.UpdateMedico(ok, SelectedMedico.Id);
 				}
-
 				if (exito)
 					this.Cerrar();
 			},
@@ -77,16 +69,9 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged {
 	//---------------------botones.Eliminar-------------------//
 	private void ButtonEliminar(object sender, RoutedEventArgs e) {
 		App.PlayClickJewel();
-		//---------Checknulls-----------//
-		if (SelectedMedico is null || SelectedMedico.Dni is null) {
-			MessageBox.Show($"No hay item seleccionado.");
-			return;
-		}
-		//---------confirmacion-----------//
 		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedMedico.Name}", "Confirmar Eliminación", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK) {
 			return;
 		}
-		//---------Eliminar-----------//
 		if (App.BaseDeDatos.DeleteMedico(SelectedMedico)) {
 			this.Cerrar(); // this.NavegarA<Medicos>();
 		}
@@ -99,17 +84,9 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged {
 		this.Cerrar(); // this.NavegarA<Medicos>();
 	}
 
-
-
-
-	//------------------botonesParaCrear------------------//
-
 	private void BtnAgregarHorario_Click(object sender, RoutedEventArgs e) {
 		HorarioEditor editor = new HorarioEditor();
 	}
-
-	protected void OnPropertyChanged(string propertyName)
-		=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 	private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
 
@@ -118,4 +95,5 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged {
 
 	}
 	//------------------------Fin---------------------------//
+
 }

@@ -97,15 +97,15 @@
 				   HorizontalAlignment="Right"
 				   Width="Auto"
 					VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-			<TextBox x:Name="txtName"
+			<TextBox Text="{Binding SelectedPaciente.Name, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" 
 					 Grid.Row="1"
 					 Grid.Column="1"
 					 Margin="15,5,15,5" Height="30"/>
-					 
-					 
-					 
-					 
+
+
+
+
 
 			<Label Content="Apellido"
 				   Grid.Row="2"
@@ -113,7 +113,7 @@
 				   HorizontalAlignment="Right"
 				   Width="Auto"
 					VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-			<TextBox x:Name="txtLastName"
+			<TextBox Text="{Binding SelectedPaciente.LastName, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" 
 					 Grid.Row="2"
 					 Grid.Column="1"
@@ -129,7 +129,7 @@
 				   HorizontalAlignment="Right"
 				   Width="Auto"
 					VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-			<TextBox x:Name="txtDni"
+			<TextBox Text="{Binding SelectedPaciente.Dni, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" 
 					 Grid.Row="3"
 					 Grid.Column="1"
@@ -147,7 +147,7 @@
 				   HorizontalAlignment="Right"
 				   Width="Auto"
 					VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-			<TextBox x:Name="txtTelefono"
+			<TextBox Text="{Binding SelectedPaciente.Telefono, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" 
 					 Grid.Row="4"
 					 Grid.Column="1"
@@ -165,7 +165,7 @@
 				   HorizontalAlignment="Right"
 				   Width="Auto"
 					VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-			<TextBox x:Name="txtProvincia"
+			<TextBox Text="{Binding SelectedPaciente.Provincia, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" 
 					 Grid.Row="5"
 					 Grid.Column="1"
@@ -182,7 +182,7 @@
 				   HorizontalAlignment="Right"
 				   Width="Auto"
 					VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-			<TextBox x:Name="txtDomicilio"
+			<TextBox Text="{Binding SelectedPaciente.Domicilio, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" 
 					 Grid.Row="6"
 					 Grid.Column="1"
@@ -199,7 +199,7 @@
 				   HorizontalAlignment="Right"
 				   Width="Auto"
 					VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-			<TextBox x:Name="txtLocalidad"
+			<TextBox Text="{Binding SelectedPaciente.Localidad, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" 
 					 Grid.Row="7"
 					 Grid.Column="1"
@@ -215,7 +215,7 @@
 				   HorizontalAlignment="Center"
 				   Width="130"
 					VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
-			<TextBox x:Name="txtEmail"
+			<TextBox Text="{Binding SelectedPaciente.Email, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" 
 					 Grid.Row="8"
 					 Grid.Column="1"
@@ -235,7 +235,7 @@
 					VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
 			<DatePicker Grid.Row="9"
 						Grid.Column="1"
-						x:Name="txtFechaNacimiento"
+						SelectedDate="{Binding SelectedPaciente.FechaNacimiento, UpdateSourceTrigger=PropertyChanged}"
 						Margin="15,5,15,5"
 						Grid.ColumnSpan="2" Height="30"/>
 
@@ -254,7 +254,7 @@
 					VerticalAlignment="Center" HorizontalContentAlignment="Right"/>
 			<DatePicker Grid.Row="10"
 						Grid.Column="1"
-						x:Name="txtFechaIngreso"
+						SelectedDate="{Binding SelectedPaciente.FechaIngreso, UpdateSourceTrigger=PropertyChanged}"
 						Margin="15,5,15,5" Height="30"/>
 
 
