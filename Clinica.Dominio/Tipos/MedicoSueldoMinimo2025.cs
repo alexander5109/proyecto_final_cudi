@@ -5,17 +5,17 @@ namespace Clinica.Dominio.Tipos;
 
 public readonly record struct MedicoSueldoMinimo2025(
 	decimal Valor
-){
-	public static readonly decimal MINIMO = 200_000;
-	public static readonly decimal MAXIMO = 5_000_000;
-	public static Result<MedicoSueldoMinimo2025> Crear(decimal input) {
-		if (input < 0)
-			return new Result<MedicoSueldoMinimo2025>.Error("El sueldo no puede ser negativo.");
-		if (input < MINIMO)
-			return new Result<MedicoSueldoMinimo2025>.Error($"El sueldo mínimo razonable es {MINIMO.ToString("N0")}.");
-		if (input > MAXIMO)
-			return new Result<MedicoSueldoMinimo2025>.Error($"El sueldo ingresado ({input.ToString("N0")}) es excesivamente alto.");
-		return new Result<MedicoSueldoMinimo2025>.Ok(new MedicoSueldoMinimo2025(input));
+) {
+	public const decimal MINIMO = 200_000m;
+	public const decimal MAXIMO = 5_000_000m;
+	public static Result<MedicoSueldoMinimo2025> Crear(decimal? input) {
+		return input switch {
+			null => new Result<MedicoSueldoMinimo2025>.Error("El sueldo no puede estar vacío."),
+			< 0 => new Result<MedicoSueldoMinimo2025>.Error("El sueldo no puede ser negativo."),
+			< MINIMO => new Result<MedicoSueldoMinimo2025>.Error($"El sueldo mínimo razonable es {MINIMO:N0}."),
+			> MAXIMO => new Result<MedicoSueldoMinimo2025>.Error($"El sueldo ingresado ({input}) es excesivamente alto."),
+			_ => new Result<MedicoSueldoMinimo2025>.Ok(new MedicoSueldoMinimo2025(input.Value))
+		};
 	}
 	public static Result<MedicoSueldoMinimo2025> Crear(string? input) {
 		if (string.IsNullOrWhiteSpace(input))

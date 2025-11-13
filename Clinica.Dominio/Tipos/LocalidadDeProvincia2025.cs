@@ -5,7 +5,7 @@ public readonly record struct LocalidadDeProvincia2025(
 	string Nombre, 
 	ProvinciaArgentina2025 Provincia
 ){
-	public static Result<LocalidadDeProvincia2025> Crear(string nombreLocalidad,Result<ProvinciaArgentina2025> provinciaResult) {
+	public static Result<LocalidadDeProvincia2025> Crear(string? nombreLocalidad,Result<ProvinciaArgentina2025> provinciaResult) {
 		if (string.IsNullOrWhiteSpace(nombreLocalidad))
 			return new Result<LocalidadDeProvincia2025>.Error("El nombre de la localidad no puede estar vacío.");
 

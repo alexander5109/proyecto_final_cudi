@@ -54,56 +54,62 @@
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
-
 			<!-- Labels + Inputs -->
 			<Label Content="Nombre" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-			<TextBox x:Name="txtName" Grid.Row="0" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>
+			<TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" 
+			 Margin="5" Text="{Binding SelectedMedico.Name, UpdateSourceTrigger=PropertyChanged}"/>
 
 			<Label Content="Apellido" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-			<TextBox x:Name="txtLastName" Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>
+			<TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" 
+			 Margin="5" Text="{Binding SelectedMedico.LastName, UpdateSourceTrigger=PropertyChanged}"/>
 
 			<Label Content="DNI" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-			<TextBox x:Name="txtDni" Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>
+			<TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" 
+			 Margin="5" Text="{Binding SelectedMedico.Dni, UpdateSourceTrigger=PropertyChanged}"/>
 
 			<Label Content="Teléfono" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-			<TextBox x:Name="txtTelefono" Grid.Row="3" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>
+			<TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" 
+			 Margin="5" Text="{Binding SelectedMedico.Telefono, UpdateSourceTrigger=PropertyChanged}"/>
 
 			<Label Content="Provincia" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
-			<TextBox x:Name="txtProvincia" Grid.Row="4" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>
+			<TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" 
+			 Margin="5" Text="{Binding SelectedMedico.Provincia, UpdateSourceTrigger=PropertyChanged}"/>
 
 			<Label Content="Domicilio" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
-			<TextBox x:Name="txtDomicilio" Grid.Row="5" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>
+			<TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" 
+			 Margin="5" Text="{Binding SelectedMedico.Domicilio, UpdateSourceTrigger=PropertyChanged}"/>
 
 			<Label Content="Localidad" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
-			<TextBox x:Name="txtLocalidad" Grid.Row="6" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>
+			<TextBox Grid.Row="6" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" 
+			 Margin="5" Text="{Binding SelectedMedico.Localidad, UpdateSourceTrigger=PropertyChanged}"/>
 
 			<Label Content="Especialidad" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
-			<!-- <TextBox x:Name="txtEspecialidad" Grid.Row="7" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>-->
-			<ComboBox x:Name="txtEspecialidades"
-		HorizontalAlignment="Center"
-		Grid.Row="7"
-		Grid.Column="1"
-		VerticalAlignment="Top"
-		Margin="5"
-		Width="210"
-		Height="27" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" SelectionChanged="txtEspecialidades_SelectionChanged"
-		/>
-
+			<ComboBox Grid.Row="7" Grid.Column="1"
+			  ItemsSource="{Binding EspecialidadesDisponibles}" 
+			  SelectedItem="{Binding SelectedMedico.Especialidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+			  HorizontalAlignment="Center"
+			  VerticalAlignment="Top"
+			  Margin="5"
+			  Width="210" Height="27"
+			  VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
 			<Label Content="Sueldo Mínimo Garantizado" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
-			<TextBox x:Name="txtSueldoMinimoGarantizado" Grid.Row="8" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" Margin="5"/>
+			<TextBox Grid.Row="8" Grid.Column="1" Style="{StaticResource TextBoxLindo2}" 
+			 Margin="5" Text="{Binding SelectedMedico.SueldoMinimoGarantizado, UpdateSourceTrigger=PropertyChanged}"/>
 
 			<Label Content="Fecha de Ingreso" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center"/>
-			<DatePicker x:Name="txtFechaIngreso" Grid.Row="9" Grid.Column="1" Margin="5"/>
+			<DatePicker Grid.Row="9" Grid.Column="1" Margin="5" 
+				SelectedDate="{Binding SelectedMedico.FechaIngreso, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
 			<Label Content="Realiza Guardia" Grid.Row="10" Grid.Column="0" VerticalAlignment="Center"/>
-			<CheckBox x:Name="txtGuardia" Grid.Row="10" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5"/>
+			<CheckBox Grid.Row="10" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5"
+			  IsChecked="{Binding SelectedMedico.Guardia, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-			<!-- Agenda: TreeView + botones -->
+			<!-- Agenda -->
 			<StackPanel Grid.Row="0" Grid.Column="2" Grid.RowSpan="11" Margin="20,0,0,0">
 				<Label Content="Días de atención" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-
-				<TreeView x:Name="txtHorariosMedicos" Height="400">
+				<TreeView Height="400"
+				  ItemsSource="{Binding SelectedMedico.DiasDeAtencion}">
 					<TreeView.ItemTemplate>
 						<HierarchicalDataTemplate ItemsSource="{Binding Horarios}">
 							<TextBlock Text="{Binding Nombre}" FontWeight="Bold"/>
@@ -119,8 +125,6 @@
 						</HierarchicalDataTemplate>
 					</TreeView.ItemTemplate>
 				</TreeView>
-
-
 
 
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">

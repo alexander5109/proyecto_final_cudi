@@ -5,7 +5,7 @@ namespace Clinica.Dominio.Tipos;
 
 public readonly record struct FechaIngreso2025(
 	DateOnly Valor
-){
+) {
 	public static readonly DateOnly Hoy = DateOnly.FromDateTime(DateTime.Now);
 
 	public static Result<FechaIngreso2025> Crear(DateOnly fecha) {
@@ -17,8 +17,12 @@ public readonly record struct FechaIngreso2025(
 		return new Result<FechaIngreso2025>.Ok(new(fecha));
 	}
 
-	public static Result<FechaIngreso2025> Crear(DateTime fecha) {
-		var dateOnly = DateOnly.FromDateTime(fecha);
+	public static Result<FechaIngreso2025> Crear(DateTime? fecha) {
+		if (fecha is null) {
+			return new Result<FechaIngreso2025>.Error("La fecha de ingreso no puede estar vacía.");
+		}
+
+		var dateOnly = DateOnly.FromDateTime(fecha.Value);
 		return Crear(dateOnly);
 	}
 

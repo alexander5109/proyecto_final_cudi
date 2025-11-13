@@ -1,36 +1,41 @@
-﻿CREATE PROCEDURE [dbo].sp_ReadMedicosAllWithHorarios
+﻿CREATE PROCEDURE sp_ReadMedicosAllWithHorarios
 AS
 BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        m.Id,
-        m.Dni,
-        m.Name,
-        m.LastName,
-        m.FechaIngreso,
-        m.Domicilio,
-        m.Localidad,
-        m.Provincia,
-        m.Telefono,
-        m.Especialidad,
-        m.Guardia,
-        m.SueldoMinimoGarantizado,
-        (
-            SELECT 
-                hm.DiaSemana,
-                (
-                    SELECT hm2.HoraDesde, hm2.HoraHasta
-                    FROM HorarioMedico hm2
-                    WHERE hm2.MedicoId = m.Id AND hm2.DiaSemana = hm.DiaSemana
-                    FOR JSON PATH
-                ) AS HorariosDia
-            FROM HorarioMedico hm
-            WHERE hm.MedicoId = m.Id
-            GROUP BY hm.DiaSemana
-            FOR JSON PATH
-        ) AS HorariosPorDia
-    FROM Medico m
-    ORDER BY m.Id;
+        M.Id,
+        M.Dni,
+        M.Name,
+        M.LastName,
+        M.FechaIngreso,
+        M.Domicilio,
+        M.Localidad,
+        M.Provincia,
+        M.Telefono,
+        M.Especialidad,
+        M.EspecialidadRama,
+        M.Guardia,
+        M.SueldoMinimoGarantizado,
+
+        H.Id AS HorarioId,
+        H.DiaSemana,
+        CASE H.DiaSemana
+            WHEN 1 THEN N'Lunes'
+            WHEN 2 THEN N'Martes'
+            WHEN 3 THEN N'Miércoles'
+            WHEN 4 THEN N'Jueves'
+            WHEN 5 THEN N'Viernes'
+            WHEN 6 THEN N'Sábado'
+            WHEN 7 THEN N'Domingo'
+        END AS DiaSemana2025,
+        H.HoraDesde,
+        H.HoraHasta
+    FROM 
+        dbo.Medico AS M
+        LEFT JOIN dbo.HorarioMedico AS H
+            ON M.Id = H.MedicoId
+    ORDER BY 
+        M.Id, H.DiaSemana, H.HoraDesde;
 END;
 GO

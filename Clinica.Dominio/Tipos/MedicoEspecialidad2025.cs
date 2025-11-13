@@ -32,7 +32,7 @@ public readonly record struct MedicoEspecialidad2025(
 		{ 21, new("Dermatólogo", "Clínica Médica") },
 	};
 
-	public static Result<MedicoEspecialidad2025> Crear(string titulo, string rama) {
+	public static Result<MedicoEspecialidad2025> Crear(string? titulo, string rama) {
 		if (string.IsNullOrWhiteSpace(titulo))
 			return new Result<MedicoEspecialidad2025>.Error("El título no puede estar vacío.");
 		if (string.IsNullOrWhiteSpace(rama))

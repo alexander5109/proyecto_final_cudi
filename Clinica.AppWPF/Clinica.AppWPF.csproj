@@ -15,13 +15,7 @@
     <Resource Include="PublishedResources\**\*" Exclude="PublishedResources\sonidos\**\*;PublishedResources\json_database\**\*" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Entidades\PacienteModelView.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Entidades\BaseDeDatosSQLSchema.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Entidades\BaseDeDatosSQLSchema.sql" />
+    <Compile Remove="ModelViews\PacienteModelView.cs" />
   </ItemGroup>
 
   <!-- Copy sounds and JSON to output -->

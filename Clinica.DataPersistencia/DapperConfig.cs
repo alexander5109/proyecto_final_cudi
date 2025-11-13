@@ -3,7 +3,7 @@ using Clinica.Dominio.Tipos;
 using Dapper;
 using static Dapper.SqlMapper;
 
-namespace Clinica.DataPersistencia.Config;
+namespace Clinica.DataPersistencia;
 
 public static class DapperConfig {
 	private static bool _initialized = false;

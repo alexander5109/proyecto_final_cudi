@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Microsoft.Data.SqlClient;
 
-namespace Clinica.DataPersistencia.Infrastructure;
+namespace Clinica.DataPersistencia;
 
 public class DbConnectionFactory {
 	private readonly string _connectionString;

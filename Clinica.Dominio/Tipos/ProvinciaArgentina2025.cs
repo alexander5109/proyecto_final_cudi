@@ -33,7 +33,7 @@ public readonly record struct ProvinciaArgentina2025(
 			"Tucumán"
 		};
 
-	public static Result<ProvinciaArgentina2025> Crear(string input) {
+	public static Result<ProvinciaArgentina2025> Crear(string? input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<ProvinciaArgentina2025>.Error("La provincia no puede estar vacía.");
 

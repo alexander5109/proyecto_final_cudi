@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Clinica.AppWPF.Entidades;
+using System.IO;
 using System.Media;
 using System.Windows;
 using System.Windows.Controls;

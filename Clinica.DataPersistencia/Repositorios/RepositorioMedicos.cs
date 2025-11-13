@@ -1,9 +1,8 @@
 ﻿using Dapper;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Comun;
-using Clinica.DataPersistencia.Mapeadores;
-using Clinica.DataPersistencia.Infrastructure;
 using Clinica.DataPersistencia.ModelsDto;
+using Clinica.DataPersistencia.ModelDtos;
 
 namespace Clinica.DataPersistencia.Repositorios;
 
@@ -19,7 +18,7 @@ public class MedicoRepository {
 		var dto = medico.ToDto(Guid.NewGuid().ToString());
 
 		const string sql = @"
-			INSERT INTO MedicoDto
+			INSERT INTO MedicoDtoExtentions
 			(Id, Name, LastName, Dni, Provincia, Domicilio, Localidad,
 			 Especialidad, EspecialidadRama, Telefono, Guardia,
 			 FechaIngreso, SueldoMinimoGarantizado)
@@ -48,11 +47,11 @@ public class MedicoRepository {
 
 	// ------------------- READ -------------------
 	public async Task<Result<Medico2025>> GetByIdAsync(string id) {
-		const string sqlMedico = "SELECT * FROM MedicoDto WHERE Id = @Id";
+		const string sqlMedico = "SELECT * FROM MedicoDtoExtentions WHERE Id = @Id";
 		const string sqlHorarios = "SELECT * FROM HorarioMedicoDto WHERE MedicoId = @Id";
 
 		using var conn = _connectionFactory.CreateConnection();
-		var medicoDto = await conn.QuerySingleOrDefaultAsync<MedicoDto>(sqlMedico, new { Id = id });
+		var medicoDto = await conn.QuerySingleOrDefaultAsync<DomainDtoExtentions>(sqlMedico, new { Id = id });
 
 		if (medicoDto is null)
 			return new Result<Medico2025>.Error("Médico no encontrado.");
@@ -68,7 +67,7 @@ public class MedicoRepository {
 		var dto = medico.ToDto(id);
 
 		const string sql = @"
-			UPDATE MedicoDto SET
+			UPDATE MedicoDtoExtentions SET
 				Name = @Name,
 				LastName = @LastName,
 				Dni = @Dni,
@@ -108,7 +107,7 @@ public class MedicoRepository {
 		using var tx = conn.BeginTransaction();
 		try {
 			await conn.ExecuteAsync("DELETE FROM HorarioMedicoDto WHERE MedicoId = @Id", new { Id = id }, tx);
-			await conn.ExecuteAsync("DELETE FROM MedicoDto WHERE Id = @Id", new { Id = id }, tx);
+			await conn.ExecuteAsync("DELETE FROM MedicoDtoExtentions WHERE Id = @Id", new { Id = id }, tx);
 			tx.Commit();
 			return new Result.Ok();
 		} catch (Exception ex) {
