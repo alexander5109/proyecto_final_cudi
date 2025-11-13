@@ -3,6 +3,7 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Comun;
 using Clinica.DataPersistencia.Mapeadores;
 using Clinica.DataPersistencia.Infrastructure;
+using Clinica.DataPersistencia.ModelsDto;
 
 namespace Clinica.DataPersistencia.Repositorios;
 
@@ -14,7 +15,7 @@ public class MedicoRepository {
 	}
 
 	// ------------------- CREATE -------------------
-	public async Task<Result<string>> InsertAsync(MedicoType medico) {
+	public async Task<Result<string>> InsertAsync(Medico2025 medico) {
 		var dto = medico.ToDto(Guid.NewGuid().ToString());
 
 		const string sql = @"
@@ -46,7 +47,7 @@ public class MedicoRepository {
 	}
 
 	// ------------------- READ -------------------
-	public async Task<Result<MedicoType>> GetByIdAsync(string id) {
+	public async Task<Result<Medico2025>> GetByIdAsync(string id) {
 		const string sqlMedico = "SELECT * FROM MedicoDto WHERE Id = @Id";
 		const string sqlHorarios = "SELECT * FROM HorarioMedicoDto WHERE MedicoId = @Id";
 
@@ -54,7 +55,7 @@ public class MedicoRepository {
 		var medicoDto = await conn.QuerySingleOrDefaultAsync<MedicoDto>(sqlMedico, new { Id = id });
 
 		if (medicoDto is null)
-			return new Result<MedicoType>.Error("Médico no encontrado.");
+			return new Result<Medico2025>.Error("Médico no encontrado.");
 
 		var horarios = (await conn.QueryAsync<HorarioMedicoDto>(sqlHorarios, new { Id = id })).ToList();
 		medicoDto.Horarios = horarios;
@@ -63,7 +64,7 @@ public class MedicoRepository {
 	}
 
 	// ------------------- UPDATE -------------------
-	public async Task<Result> UpdateAsync(string id, MedicoType medico) {
+	public async Task<Result> UpdateAsync(string id, Medico2025 medico) {
 		var dto = medico.ToDto(id);
 
 		const string sql = @"

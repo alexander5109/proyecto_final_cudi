@@ -1,60 +1,86 @@
 ﻿using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Tipos;
 using Clinica.Dominio.Comun;
+using Clinica.DataPersistencia.ModelsDto;
 
 namespace Clinica.DataPersistencia.Mapeadores;
+public record class HorarioMedicoDto {
+	public required string DiaSemana { get; set; }
+	public required string Desde { get; set; }
+	public required string Hasta { get; set; }
+	public required string? MedicoId { get; set; }
+}
+public record class MedicoDto {
+	public required string? Id { get; set; } = string.Empty;
+	public required string Name { get; set; } = string.Empty;
+	public required string LastName { get; set; } = string.Empty;
+	public required string Dni { get; set; } = string.Empty;
+	public required string Provincia { get; set; } = string.Empty;
+	public required string Domicilio { get; set; } = string.Empty;
+	public required string Localidad { get; set; } = string.Empty;
+	public required string Especialidad { get; set; } = string.Empty;
+	public required string EspecialidadRama { get; set; } = string.Empty;
+	public required string Telefono { get; set; } = string.Empty;
+	public required bool Guardia { get; set; }
+	public required string FechaIngreso { get; set; }
+	public required decimal SueldoMinimoGarantizado { get; set; }
+	public required List<HorarioMedicoDto> Horarios { get; set; } = [];
+}
+
 
 public static class MedicoMapper {
-	public static HorarioMedicoDto ToDto(this HorarioMedicoType horario)
+	public static List<HorarioMedicoDto> ToDto(this ListaHorarioMedicos2025 listaHorariosDomain)
+		=> listaHorariosDomain.Valores.Select(h => h.ToDto()).ToList();
+	public static HorarioMedicoDto ToDto(this HorarioMedico2025 horarioMedicoDomain)
 		=> new HorarioMedicoDto {
-			DiaSemana = (int)horario.DiaSemana.Valor,
-			Desde = horario.Desde.Valor.ToTimeSpan(),
-			Hasta = horario.Hasta.Valor.ToTimeSpan(),
+			DiaSemana = horarioMedicoDomain.DiaSemana.Valor.ToString(),
+			Desde = horarioMedicoDomain.Desde.Valor.ToString(),
+			Hasta = horarioMedicoDomain.Hasta.Valor.ToString(),
 			MedicoId = null
 		};
 
-	public static Result<HorarioMedicoType> ToDomain(this HorarioMedicoDto dto)
+	public static Result<HorarioMedico2025> ToDomain(this HorarioMedicoDto horarioMedicoDto)
 		=> HorarioMedico2025.Crear(
-			DiaSemana2025.Crear(dto.DiaSemana),
-			HorarioHora2025.Crear(TimeOnly.FromTimeSpan(dto.Desde)),
-			HorarioHora2025.Crear(TimeOnly.FromTimeSpan(dto.Hasta))
+			DiaSemana2025.Crear(horarioMedicoDto.DiaSemana),
+			HorarioHora2025.Crear(horarioMedicoDto.Desde),
+			HorarioHora2025.Crear(horarioMedicoDto.Hasta)
 		);
-	public static Result<MedicoType> ToDomain(this MedicoDto dto)
+	public static Result<Medico2025> ToDomain(this MedicoDto medicoDto)
 		=> Medico2025.Crear(
-			NombreCompleto2025.Crear(dto.Name, dto.LastName),
-			MedicoEspecialidad2025.Crear(dto.Especialidad, dto.EspecialidadRama),
-			DniArgentino2025.Crear(dto.Dni),
+			NombreCompleto2025.Crear(medicoDto.Name, medicoDto.LastName),
+			MedicoEspecialidad2025.Crear(medicoDto.Especialidad, medicoDto.EspecialidadRama),
+			DniArgentino2025.Crear(medicoDto.Dni),
 			DomicilioArgentino2025.Crear(
 				LocalidadDeProvincia2025.Crear(
-					dto.Localidad,
-					ProvinciaArgentina2025.Crear("Buenos Aires")
+					medicoDto.Localidad,
+					ProvinciaArgentina2025.Crear(medicoDto.Provincia)
 				),
-				dto.Domicilio
+				medicoDto.Domicilio
 			),
-			ContactoTelefono2025.Crear(dto.Telefono),
-			[.. dto.Horarios.Select(h => h.ToDomain())], 
-			FechaIngreso2025.Crear(DateOnly.FromDateTime(dto.FechaIngreso)),
-			MedicoSueldoMinimo2025.Crear(dto.SueldoMinimoGarantizado),
-			dto.Guardia
+			ContactoTelefono2025.Crear(medicoDto.Telefono),
+			ListaHorarioMedicos2025.Crear(medicoDto.Horarios.Select(h => h.ToDomain())),
+			FechaIngreso2025.Crear(medicoDto.FechaIngreso),
+			MedicoSueldoMinimo2025.Crear(medicoDto.SueldoMinimoGarantizado),
+			medicoDto.Guardia
 		);
 
 
-	public static MedicoDto ToDto(this MedicoType medico, string id)
+	public static MedicoDto ToDto(this Medico2025 medicoDomain)
 		=> new MedicoDto {
-			Id = id,
-			Name = medico.NombreCompleto.Nombre,
-			LastName = medico.NombreCompleto.Apellido,
-			Dni = medico.Dni.Valor,
-			Provincia = medico.Domicilio.Localidad.Provincia.Nombre,
-			Domicilio = medico.Domicilio.Direccion,
-			Localidad = medico.Domicilio.Localidad.Nombre,
-			Especialidad = medico.Especialidad.Titulo,
-			EspecialidadRama = medico.Especialidad.Rama,
-			Telefono = medico.Telefono.Valor,
-			Guardia = medico.HaceGuardias,
-			FechaIngreso = medico.FechaIngreso.Valor.ToDateTime(TimeOnly.MinValue),
-			SueldoMinimoGarantizado = medico.SueldoMinimoGarantizado.Valor,
-			Horarios = medico.Horarios.Select(h => h.ToDto()).ToList()
+			Id = null,
+			Name = medicoDomain.NombreCompleto.Nombre,
+			LastName = medicoDomain.NombreCompleto.Apellido,
+			Dni = medicoDomain.Dni.Valor,
+			Provincia = medicoDomain.Domicilio.Localidad.Provincia.Nombre,
+			Domicilio = medicoDomain.Domicilio.Direccion,
+			Localidad = medicoDomain.Domicilio.Localidad.Nombre,
+			Especialidad = medicoDomain.Especialidad.Titulo,
+			EspecialidadRama = medicoDomain.Especialidad.Rama,
+			Telefono = medicoDomain.Telefono.Valor,
+			Guardia = medicoDomain.HaceGuardias,
+			FechaIngreso = medicoDomain.FechaIngreso.Valor.ToString(),
+			SueldoMinimoGarantizado = medicoDomain.SueldoMinimoGarantizado.Valor,
+			Horarios = medicoDomain.ListaHorarios.ToDto()
 		};
 
 }

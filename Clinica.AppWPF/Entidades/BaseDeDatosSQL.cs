@@ -26,7 +26,7 @@ namespace Clinica.AppWPF {
 		}
 
 		//------------------------public.CREATE.MedicoDto----------------------//
-		public override bool CreateMedico(MedicoType instancia, MedicoDto instanceDto) {
+		public override bool CreateMedico(Medico2025 instancia, MedicoDto instanceDto) {
 			string insertQuery = @"
 				INSERT INTO MedicoDto (Name, LastName, Dni, Provincia, Domicilio, Localidad, Especialidad, Telefono, Guardia, FechaIngreso, SueldoMinimoGarantizado) 
 				VALUES (@Name, @LastName, @Dni, @Provincia, @Domicilio, @Localidad, @Especialidad, @Telefono, @Guardia, @FechaIngreso, @SueldoMinimoGarantizado)
@@ -69,7 +69,7 @@ namespace Clinica.AppWPF {
 
 
 		//------------------------public.CREATE.Paciente----------------------//
-		public override bool CreatePaciente(PacienteType instancia, Paciente instanceDto) {
+		public override bool CreatePaciente(Paciente2025 instancia, Paciente instanceDto) {
 			string insertQuery = @"
 				INSERT INTO Paciente (Dni, Name, LastName, FechaIngreso, Email, Telefono, FechaNacimiento, Domicilio, Localidad, Provincia) 
 				VALUES (@Dni, @Name, @LastName, @FechaIngreso, @Email, @Telefono, @FechaNacimiento, @Domicilio, @Localidad, @Provincia)
@@ -113,7 +113,7 @@ namespace Clinica.AppWPF {
 
 
 		//------------------------public.CREATE.Turno----------------------//
-		public override bool CreateTurno(TurnoType instanciaValidada, Turno instancia) {
+		public override bool CreateTurno(Turno2025 instanciaValidada, Turno instancia) {
 			string insertQuery = @"
 				INSERT INTO Turno (PacienteId, MedicoId, Fecha, Hora) 
 				VALUES (@PacienteId, @MedicoId, @Fecha, @Hora);
@@ -171,8 +171,8 @@ namespace Clinica.AppWPF {
 
 
 		//------------------------public.UPDATE.MedicoDto----------------------//
-		public override bool UpdateMedico(MedicoType instancia, string instanceId) {
-			string query = "UPDATE MedicoDto SET Name = @Name, LastName = @LastName, Dni = @Dni, Provincia = @Provincia, Domicilio = @Domicilio, Localidad = @Localidad, Especialidad = @Especialidad, Telefono = @Telefono, Guardia = @Guardia, FechaIngreso = @FechaIngreso, SueldoMinimoGarantizado = @SueldoMinimoGarantizado WHERE Id = @Id";
+		public override bool UpdateMedico(Medico2025 instancia, string instanceId) {
+			string query = "UPDATE Medico SET Name = @Name, LastName = @LastName, Dni = @Dni, Provincia = @Provincia, Domicilio = @Domicilio, Localidad = @Localidad, Especialidad = @Especialidad, Telefono = @Telefono, Guardia = @Guardia, FechaIngreso = @FechaIngreso, SueldoMinimoGarantizado = @SueldoMinimoGarantizado WHERE Id = @Id";
 			try {
 				using (var connection = new SqlConnection(connectionString)) {
 					connection.Open();
@@ -208,7 +208,7 @@ namespace Clinica.AppWPF {
 			return false;
 		}
 		//------------------------public.UPDATE.Paciente----------------------//
-		public override bool UpdatePaciente(PacienteType instancia, string instanceId) {
+		public override bool UpdatePaciente(Paciente2025 instancia, string instanceId) {
 			string query = "UPDATE Paciente SET Dni = @Dni, Name = @Name, LastName = @LastName, FechaIngreso = @FechaIngreso, Email = @Email, Telefono = @Telefono, FechaNacimiento = @FechaNacimiento, Domicilio = @Domicilio, Localidad = @Localidad, Provincia = @Provincia WHERE Id = @Id";
 			try {
 				using (var connection = new SqlConnection(connectionString)) {
@@ -244,7 +244,7 @@ namespace Clinica.AppWPF {
 			return false;
 		}
 		//------------------------public.UPDATE.Turno----------------------//
-		public override bool UpdateTurno(TurnoType instanciaValidada, Turno instancia) {
+		public override bool UpdateTurno(Turno2025 instanciaValidada, Turno instancia) {
 			string query = "UPDATE Turno SET PacienteId = @PacienteId, MedicoId = @MedicoId, Fecha = @Fecha, Hora = @Hora WHERE Id = @Id";
 			// string query = "UPDATE Turno SET PacienteId = @PacienteId, MedicoId = @MedicoId WHERE Id = @Id";
 			try {

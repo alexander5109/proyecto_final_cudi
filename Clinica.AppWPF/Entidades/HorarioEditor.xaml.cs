@@ -9,7 +9,7 @@ public partial class HorarioEditor : Window {
 	public TimeOnly Hasta { get; private set; }
 	public bool Confirmado { get; private set; }
 
-	public HorarioEditor(HorarioMedicoType? horarioExistente = null) {
+	public HorarioEditor(HorarioMedico2025? horarioExistente = null) {
 		InitializeComponent();
 
 		//if (horarioExistente is not null) {

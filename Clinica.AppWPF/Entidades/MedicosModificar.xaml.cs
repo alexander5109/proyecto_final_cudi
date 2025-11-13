@@ -134,13 +134,13 @@ namespace Clinica.AppWPF {
 
 		private Result<Medico2025> ToDomain() {
 			throw new NotImplementedException();
-			Result<NombreCompletoType> nombreResult = NombreCompletoType.Crear(txtName.Text, txtLastName.Text);
-			Result<DniArgentinoType> dniResult = DniArgentinoType.Crear(txtDni.Text);
-			Result<ContactoTelefonoType> telefonoResult = ContactoTelefonoType.Crear(txtTelefono.Text);
-			Result<MedicoEspecialidadType> especialidadResult = MedicoEspecialidadType.Crear(
+			Result<NombreCompleto2025> nombreResult = NombreCompleto2025.Crear(txtName.Text, txtLastName.Text);
+			Result<DniArgentino2025> dniResult = DniArgentino2025.Crear(txtDni.Text);
+			Result<ContactoTelefono2025> telefonoResult = ContactoTelefono2025.Crear(txtTelefono.Text);
+			Result<MedicoEspecialidad2025> especialidadResult = MedicoEspecialidad2025.Crear(
 				txtEspecialidades.SelectedItem.ToString(),
 				//MedicoEspecialidad2025.EspecialidadesValidas[int.Parse(txtEspecialidades.SelectedValue.ToString())].Titulo,
-				MedicoEspecialidadRamaType.RamasValidas.FirstOrDefault().Titulo
+				MedicoEspecialidadRama2025.RamasValidas.FirstOrDefault().Titulo
 			);
 
 			// Crear la agenda
@@ -162,15 +162,15 @@ namespace Clinica.AppWPF {
 			//this.txtDiasDeAtencion.ItemsSource;
 
 
-			Result<ProvinciaDeArgentinaType> provinciaRes = ProvinciaDeArgentinaType.Crear(txtProvincia.Text);
-			Result<LocalidadDeProvinciaType> localidadRes = LocalidadDeProvinciaType.Crear(txtLocalidad.Text, provinciaRes);
-			Result<DomicilioArgentinoType> domicilioResult = DomicilioArgentinoType.Crear(localidadRes, txtDomicilio.Text);
+			Result<ProvinciaArgentina2025> provinciaRes = ProvinciaArgentina2025.Crear(txtProvincia.Text);
+			Result<LocalidadDeProvincia2025> localidadRes = LocalidadDeProvincia2025.Crear(txtLocalidad.Text, provinciaRes);
+			Result<DomicilioArgentino2025> domicilioResult = DomicilioArgentino2025.Crear(localidadRes, txtDomicilio.Text);
 
-			Result<FechaIngresoType> fechaIngresoResult = txtFechaIngreso.SelectedDate is DateTime fechaIng
-				? FechaIngresoType.Crear(DateOnly.FromDateTime(fechaIng))
-				: new Result<FechaIngresoType>.Error("Debe seleccionar una fecha de ingreso válida.");
+			Result<FechaIngreso2025> fechaIngresoResult = txtFechaIngreso.SelectedDate is DateTime fechaIng
+				? FechaIngreso2025.Crear(DateOnly.FromDateTime(fechaIng))
+				: new Result<FechaIngreso2025>.Error("Debe seleccionar una fecha de ingreso válida.");
 
-			Result<MedicoSueldoMinimoType> sueldoResult = MedicoSueldoMinimoType.Crear(txtSueldoMinimoGarantizado.Text);
+			Result<MedicoSueldoMinimo2025> sueldoResult = MedicoSueldoMinimo2025.Crear(txtSueldoMinimoGarantizado.Text);
 			bool haceGuardia = txtGuardia.IsChecked is true;
 
 

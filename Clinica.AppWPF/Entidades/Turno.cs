@@ -54,7 +54,7 @@ namespace Clinica.AppWPF {
 			this.Id = window.txtId.Content?.ToString() ?? this.Id;
 			this.PacienteId = window.txtPacientes.SelectedValue.ToString();
 			this.MedicoId = window.txtMedicos.SelectedValue.ToString();
-			this.Fecha = window.txtFecha.SelectedDate.Valor.Date; // Set as DateTime, keeping only the date part
+			this.Fecha = window.txtFecha.SelectedDate.Value.Date; // Set as DateTime, keeping only the date part
 			this.Hora = TimeSpan.Parse(window.txtHora.Text);
 		}
 		

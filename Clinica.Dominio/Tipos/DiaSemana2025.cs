@@ -3,25 +3,19 @@ using System.Globalization;
 
 namespace Clinica.Dominio.Tipos;
 
-public readonly record struct DiaSemanaType(
+
+public readonly record struct DiaSemana2025(
 	DayOfWeek Valor
-);
-public static class DiaSemana2025 {
-	public static string AString(this DiaSemanaType diaSemana) => CultureInfo.GetCultureInfo("es-ES") .DateTimeFormat.GetDayName(diaSemana.Valor);
-
-	public static Result<DiaSemanaType> Crear(int input) {
+){
+	public static Result<DiaSemana2025> Crear(int input) {
 		if (input < 0 || input > 6)
-			return new Result<DiaSemanaType>.Error("El número del día de la semana debe estar entre 0 (domingo) y 6 (sábado).");
-		return new Result<DiaSemanaType>.Ok(new DiaSemanaType((DayOfWeek)input));
+			return new Result<DiaSemana2025>.Error("El número del día de la semana debe estar entre 0 (domingo) y 6 (sábado).");
+		return new Result<DiaSemana2025>.Ok(new DiaSemana2025((DayOfWeek)input));
 	}
-
-	public static Result<DiaSemanaType> Crear(string input) {
-
+	public static Result<DiaSemana2025> Crear(string input) {
 		if (string.IsNullOrWhiteSpace(input))
-			return new Result<DiaSemanaType>.Error("El nombre del día no puede estar vacío.");
-
+			return new Result<DiaSemana2025>.Error("El nombre del día no puede estar vacío.");
 		string normalized = input.Trim().ToLowerInvariant();
-
 		var mapping = new Dictionary<string, DayOfWeek>(StringComparer.OrdinalIgnoreCase) {
 			["domingo"] = DayOfWeek.Sunday,
 			["lunes"] = DayOfWeek.Monday,
@@ -43,17 +37,17 @@ public static class DiaSemana2025 {
 		};
 
 		if (mapping.TryGetValue(normalized, out var day))
-			return new Result<DiaSemanaType>.Ok(new DiaSemanaType(day));
+			return new Result<DiaSemana2025>.Ok(new DiaSemana2025(day));
 
 		// Intento adicional: cultura
 		try {
 			var culture = new CultureInfo("es-ES");
 			for (int i = 0; i < 7; i++) {
 				if (culture.DateTimeFormat.GetDayName((DayOfWeek)i).Equals(normalized, StringComparison.InvariantCultureIgnoreCase))
-					return new Result<DiaSemanaType>.Ok(new DiaSemanaType((DayOfWeek)i));
+					return new Result<DiaSemana2025>.Ok(new DiaSemana2025((DayOfWeek)i));
 			}
 		} catch { }
 
-		return new Result<DiaSemanaType>.Error($"'{input}' no corresponde a un día válido.");
+		return new Result<DiaSemana2025>.Error($"'{input}' no corresponde a un día válido.");
 	}
 }

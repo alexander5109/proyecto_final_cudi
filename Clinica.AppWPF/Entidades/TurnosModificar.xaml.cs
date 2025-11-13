@@ -65,7 +65,7 @@ namespace Clinica.AppWPF {
 		private void ButtonGuardar(object sender, RoutedEventArgs e) {
 			App.PlayClickJewel();
 
-			Result<TurnoType> resultado = this.ToDomain();
+			Result<Turno2025> resultado = this.ToDomain();
 
 			resultado.Switch(
 				ok => {
@@ -95,7 +95,7 @@ namespace Clinica.AppWPF {
 			);
 		}
 
-		private Result<TurnoType> ToDomain() {
+		private Result<Turno2025> ToDomain() {
 			throw new Exception("Not implemented yet");
 		}
 		
