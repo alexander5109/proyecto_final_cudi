@@ -14,23 +14,14 @@ namespace Clinica.AppWPF;
 public partial class MedicosModificar : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private MedicoView _selectedMedico;
-	public List<string> EspecialidadesDisponibles { get; } = MedicoEspecialidad2025.EspecialidadesDisponibles;
+	public MedicoView SelectedMedico {get => _selectedMedico;set {_selectedMedico = value;OnPropertyChanged(nameof(SelectedMedico));}}
 
-	public MedicoView SelectedMedico {
-		get => _selectedMedico;
-		set {
-			_selectedMedico = value;
-			OnPropertyChanged(nameof(SelectedMedico));
-		}
-	}
-	//---------------------public.constructors-------------------//
 	public MedicosModificar() {
 		InitializeComponent();
 		DataContext = this;
 		SelectedMedico = MedicoView.NewEmpty(); // instancia vacía lista para bindear
 	}
 
-	// Constructor para editar un médico existente
 	public MedicosModificar(MedicoView selectedMedico) {
 		InitializeComponent();
 		DataContext = this;

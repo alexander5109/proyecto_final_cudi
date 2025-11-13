@@ -1,20 +1,46 @@
-﻿using Clinica.AppWPF;
+﻿using System.Collections.ObjectModel;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Tipos;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
-using System.Xml.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Newtonsoft.Json;
 
-namespace Clinica.AppWPF.ModelViews; 
-public class MedicoView : INotifyPropertyChanged {
+namespace Clinica.AppWPF.ModelViews;
 
-	public event PropertyChangedEventHandler? PropertyChanged;
-	private void OnPropertyChanged([CallerMemberName] string? name = null)
-		=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+public partial class MedicoView : ObservableObject {
+	[ObservableProperty] private string id = string.Empty;
+	[ObservableProperty] private string name = string.Empty;
+	[ObservableProperty] private string lastName = string.Empty;
+	[ObservableProperty] private string telefono = string.Empty;
+	[ObservableProperty] private string dni = string.Empty;
+	[ObservableProperty] private string localidad = string.Empty;
+	[ObservableProperty] private string especialidad = string.Empty;
+	[ObservableProperty] private decimal sueldoMinimoGarantizado;
+	[ObservableProperty] private string provincia = string.Empty;
+	[ObservableProperty] private string domicilio = string.Empty;
+	[ObservableProperty] private DateTime? fechaIngreso = DateTime.Today;
+	[ObservableProperty] private bool? guardia = false;
+	[ObservableProperty] private ObservableCollection<HorarioMedicoView> horarios = [];
+	public List<string> EspecialidadesDisponibles { get; } = MedicoEspecialidad2025.EspecialidadesDisponibles;
+	[JsonIgnore] public string Displayear => $"{Id}: {Especialidad} - {Name} {LastName}";
+
+	public static MedicoView NewEmpty() => new MedicoView(
+		new ObservableCollection<HorarioMedicoView>(),
+		string.Empty,   // id
+		string.Empty,   // name
+		string.Empty,   // lastName
+		string.Empty,   // dni
+		string.Empty,   // provincia
+		string.Empty,   // domicilio
+		string.Empty,   // localidad
+		string.Empty,   // especialidad
+		string.Empty,   // telefono
+		false,          // guardia
+		DateTime.Today, // fechaIngreso
+		0m              // sueldoMinimoGarantizado
+	);
+
 
 	public MedicoView(
 		ObservableCollection<HorarioMedicoView> horarios,
@@ -31,118 +57,21 @@ public class MedicoView : INotifyPropertyChanged {
 		DateTime? fechaIngreso,
 		decimal? sueldoMinimoGarantizado
 	) {
-		_horarios = horarios;
-		_id = id;
-		_name = name;
-		_lastName = lastName;
-		_dni = dni;
-		_provincia = provincia;
-		_domicilio = domicilio;
-		_localidad = localidad;
-		_especialidad = especialidad;
-		_telefono = telefono;
-		_guardia = guardia;
-		_fechaIngreso = fechaIngreso;
-		_sueldoMinimoGarantizado = sueldoMinimoGarantizado;
+		Horarios = horarios;
+		Id = id ?? string.Empty;
+		Name = name ?? string.Empty;
+		LastName = lastName ?? string.Empty;
+		Dni = dni ?? string.Empty;
+		Provincia = provincia ?? string.Empty;
+		Domicilio = domicilio ?? string.Empty;
+		Localidad = localidad ?? string.Empty;
+		Especialidad = especialidad ?? string.Empty;
+		Telefono = telefono ?? string.Empty;
+		Guardia = guardia ?? false;
+		FechaIngreso = fechaIngreso ?? DateTime.Today;
+		SueldoMinimoGarantizado = sueldoMinimoGarantizado ?? 0m;
 	}
 
-	// --- Campos privados con backing field ---
-	private ObservableCollection<HorarioMedicoView> _horarios;
-	public ObservableCollection<HorarioMedicoView> Horarios {
-		get => _horarios;
-		set { _horarios = value; OnPropertyChanged(); }
-	}
-
-	private string? _id;
-	public string? Id {
-		get => _id;
-		set { _id = value; OnPropertyChanged(); }
-	}
-
-	private string? _name;
-	public string? Name {
-		get => _name;
-		set { _name = value; OnPropertyChanged(); OnPropertyChanged(nameof(Displayear)); }
-	}
-
-	private string? _lastName;
-	public string? LastName {
-		get => _lastName;
-		set { _lastName = value; OnPropertyChanged(); OnPropertyChanged(nameof(Displayear)); }
-	}
-
-	private string? _dni;
-	public string? Dni {
-		get => _dni;
-		set { _dni = value; OnPropertyChanged(); }
-	}
-
-	private string? _provincia;
-	public string? Provincia {
-		get => _provincia;
-		set { _provincia = value; OnPropertyChanged(); }
-	}
-
-	private string? _domicilio;
-	public string? Domicilio {
-		get => _domicilio;
-		set { _domicilio = value; OnPropertyChanged(); }
-	}
-
-	private string? _localidad;
-	public string? Localidad {
-		get => _localidad;
-		set { _localidad = value; OnPropertyChanged(); }
-	}
-
-	private string? _especialidad;
-	public string? Especialidad {
-		get => _especialidad;
-		set { _especialidad = value; OnPropertyChanged(); OnPropertyChanged(nameof(Displayear)); }
-	}
-
-	private string? _telefono;
-	public string? Telefono {
-		get => _telefono;
-		set { _telefono = value; OnPropertyChanged(); }
-	}
-
-	private bool? _guardia;
-	public bool? Guardia {
-		get => _guardia;
-		set { _guardia = value; OnPropertyChanged(); }
-	}
-
-	private DateTime? _fechaIngreso;
-	public DateTime? FechaIngreso {
-		get => _fechaIngreso;
-		set { _fechaIngreso = value; OnPropertyChanged(); }
-	}
-
-	private decimal? _sueldoMinimoGarantizado;
-	public decimal? SueldoMinimoGarantizado {
-		get => _sueldoMinimoGarantizado;
-		set { _sueldoMinimoGarantizado = value; OnPropertyChanged(); }
-	}
-
-	[JsonIgnore]
-	public string Displayear => $"{Id}: {Especialidad} - {Name} {LastName}";
-
-	public static MedicoView NewEmpty() => new MedicoView(
-		horarios: new ObservableCollection<HorarioMedicoView>(),
-		id: null,
-		name: null,
-		lastName: null,
-		dni: null,
-		provincia: null,
-		domicilio: null,
-		localidad: null,
-		especialidad: null,
-		telefono: null,
-		guardia: null,
-		fechaIngreso: null,
-		sueldoMinimoGarantizado: null
-	);
 
 
 	public Result<Medico2025> ToDomain() {

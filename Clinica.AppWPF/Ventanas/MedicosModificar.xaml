@@ -85,7 +85,7 @@
 
 			<Label Content="Especialidad" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
 			<ComboBox Grid.Row="7" Grid.Column="1"
-			  ItemsSource="{Binding EspecialidadesDisponibles}" 
+			  ItemsSource="{Binding SelectedMedico.EspecialidadesDisponibles}" 
 			  SelectedItem="{Binding SelectedMedico.Especialidad, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 			  HorizontalAlignment="Center"
 			  VerticalAlignment="Top"

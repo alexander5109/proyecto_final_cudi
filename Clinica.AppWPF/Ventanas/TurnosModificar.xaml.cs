@@ -31,14 +31,14 @@ public partial class TurnosModificar : Window {
 		txtEspecialidades.ItemsSource = App.BaseDeDatos.ReadDistinctEspecialidades();
 
 		txtPacientes.ItemsSource = App.BaseDeDatos.ReadPacientes();
-		txtPacientes.DisplayMemberPath = "Displayear";  //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
+		txtPacientes.DisplayMemberPath = "Displayear";  //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
 
 		txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicos();
-		txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
+		txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
 	}
 	private void txtEspecialidades_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 		txtMedicos.SelectedValuePath = "Id";
-		txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
+		txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
 		txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicosWhereEspecialidad(txtEspecialidades.SelectedItem.ToString());
 	}
 
