@@ -23,45 +23,45 @@
 				HorizontalContentAlignment="Center"
 				VerticalContentAlignment="Center"/>
 		<Label Content="Paciente"
-				HorizontalAlignment="Left"
-				Margin="148,174,0,0"
-				VerticalAlignment="Top"
-				FontSize="14"
-				Foreground="Black"
-				FontWeight="Bold"
-				VerticalContentAlignment="Center"/>
+			HorizontalAlignment="Left"
+			Margin="148,174,0,0"
+			VerticalAlignment="Top"
+			FontSize="14"
+			Foreground="Black"
+			FontWeight="Bold"
+			VerticalContentAlignment="Center"/>
 		<Label Content="Médico"
-				HorizontalAlignment="Left"
-				Margin="148,225,0,0"
-				VerticalAlignment="Top"
-				FontSize="14"
-				Foreground="Black"
-				FontWeight="Bold"
-				VerticalContentAlignment="Center"/>
+			HorizontalAlignment="Left"
+			Margin="148,225,0,0"
+			VerticalAlignment="Top"
+			FontSize="14"
+			Foreground="Black"
+			FontWeight="Bold"
+			VerticalContentAlignment="Center"/>
 		<Label Content="Fecha"
-				HorizontalAlignment="Left"
-				Margin="148,273,0,0"
+			HorizontalAlignment="Left"
+			Margin="148,273,0,0"
+			VerticalAlignment="Top"
+			FontSize="14"
+			Foreground="Black"
+			FontWeight="Bold"
+			VerticalContentAlignment="Center"/>
+		<DatePicker SelectedDate="{Binding SelectedTurno.Fecha, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+				HorizontalAlignment="Center"
+				Margin="0,273,0,0"
 				VerticalAlignment="Top"
-				FontSize="14"
-				Foreground="Black"
-				FontWeight="Bold"
-				VerticalContentAlignment="Center"/>
-		<DatePicker Text="{Binding SelectedTurno.Fecha, UpdateSourceTrigger=PropertyChanged}"
-					HorizontalAlignment="Center"
-					Margin="0,273,0,0"
-					VerticalAlignment="Top"
-					Width="284"
-					Height="32"
-				HorizontalContentAlignment="Right"
-				Background="White"/>
+				Width="284"
+				Height="32"
+			HorizontalContentAlignment="Right"
+			Background="White"/>
 		<Label Content="ID Turno"
-				HorizontalAlignment="Left"
-				Margin="148,83,0,0"
-				VerticalAlignment="Top"
-				FontSize="14"
-				Foreground="Black"
-				FontWeight="Bold"
-				VerticalContentAlignment="Center"/>
+			HorizontalAlignment="Left"
+			Margin="148,83,0,0"
+			VerticalAlignment="Top"
+			FontSize="14"
+			Foreground="Black"
+			FontWeight="Bold"
+			VerticalContentAlignment="Center"/>
 		<Button FontSize="20"
 				Content="Volver"
 				Style="{StaticResource BotonRedondeado}"
@@ -100,14 +100,14 @@
 				Background="White"
 				FontFamily="Baskerville Old Face"/>
 		<Label Content="Hora"
-				HorizontalAlignment="Left"
-				Margin="148,329,0,0"
-				VerticalAlignment="Top"
-				FontSize="14"
-				Foreground="Black"
-				FontWeight="Bold"
-				VerticalContentAlignment="Center"/>
-		<TextBox Text="{Binding SelectedTurno.Hora, UpdateSourceTrigger=PropertyChanged}"
+			HorizontalAlignment="Left"
+			Margin="148,329,0,0"
+			VerticalAlignment="Top"
+			FontSize="14"
+			Foreground="Black"
+			FontWeight="Bold"
+			VerticalContentAlignment="Center"/>
+		<TextBox Text="{Binding SelectedTurno.Hora, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 				HorizontalAlignment="Center"
 				Margin="0,329,0,0"
 				TextWrapping="Wrap"
@@ -120,7 +120,7 @@
 				
 				
 		<Label
-				Content="{Binding SelectedTurno.Id, UpdateSourceTrigger=PropertyChanged}"
+				Content="{Binding SelectedTurno.Id}"
 				HorizontalAlignment="Center"
 				Margin="0,83,0,0"
 				VerticalAlignment="Top"
@@ -131,18 +131,17 @@
 				FontWeight="Bold"
 				Background="#FFECECEC" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
 		<Label Content="Especialidad"
-				HorizontalAlignment="Left"
-				Margin="148,129,0,0"
-				VerticalAlignment="Top"
-				FontSize="14"
-				Foreground="Black"
-				FontWeight="Bold"
-				VerticalContentAlignment="Center"/>
+			HorizontalAlignment="Left"
+			Margin="148,129,0,0"
+			VerticalAlignment="Top"
+			FontSize="14"
+			Foreground="Black"
+			FontWeight="Bold"
+			VerticalContentAlignment="Center"/>
 		<ComboBox 
 				x:Name="txtEspecialidades"
 				ItemsSource="{Binding EspecialidadesDisponibles}"
-				SelectedValuePath="{Binding SelectedTurno.Id}"
-				DisplayMemberPath="{Binding SelectedTurno.Displayear}"
+				SelectedItem="{Binding SelectedTurno.Medico.Especialidad}"
 				HorizontalAlignment="Center"
 				Margin="0,128,0,0"
 				VerticalAlignment="Top"
@@ -150,15 +149,15 @@
 				Height="32" 
 				VerticalContentAlignment="Center" 
 				HorizontalContentAlignment="Right" 
-				SelectionChanged="txtEspecialidades_SelectionChanged"
 		/>
 		
 	
 	
 		<ComboBox 
 				ItemsSource="{Binding PacientesDisponibles}"
-				SelectedValuePath="{Binding SelectedTurno.PacienteId}"
-				DisplayMemberPath="{Binding SelectedTurno.Paciente.Displayear}"
+				SelectedValuePath="Id"
+				SelectedValue="{Binding SelectedTurno.PacienteId, Mode=TwoWay}"
+				DisplayMemberPath="Displayear"
 				HorizontalAlignment="Center"
 				Margin="0,174,0,0"
 				VerticalAlignment="Top"
@@ -169,15 +168,16 @@
 		/>
 		<ComboBox 
 				ItemsSource="{Binding MedicosDisponibles}"
-				SelectedValuePath="{Binding SelectedTurno.MedicoId}"
-				DisplayMemberPath="{Binding SelectedTurno.Medico.Displayear}"
+				SelectedValuePath="Id"
+				SelectedValue="{Binding SelectedTurno.MedicoId, Mode=TwoWay}"
+				DisplayMemberPath="Displayear"
 				HorizontalAlignment="Center"
 				Margin="0,225,0,0"
 				VerticalAlignment="Top"
 				Width="284"
 				Height="33" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"
 		/>
-	</Grid>
+		</Grid>
 	<Window.Background>
 		<ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/MedicosFondo.jpg"/>
 	</Window.Background>
