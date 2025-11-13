@@ -448,19 +448,21 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				using (var sqlComando = new SqlCommand(consulta, conexion))
 				using (var reader = sqlComando.ExecuteReader()) {
 					while (reader.Read()) {
-						var paciente = new PacienteView (
-							reader["Id"] as string,
-							reader["Dni"] as string,
-							reader["Name"] as string,
-							reader["LastName"] as string,
+						var paciente = new PacienteView(
+							Convert.ToString(reader["Id"]) ?? string.Empty,
+							Convert.ToString(reader["Dni"]),
+							Convert.ToString(reader["Name"]),
+							Convert.ToString(reader["LastName"]),
 							reader["FechaIngreso"] != DBNull.Value ? Convert.ToDateTime(reader["FechaIngreso"]) : null,
-							reader["Email"] as string,
-							reader["Telefono"] as string,
+							Convert.ToString(reader["Email"]),
+							Convert.ToString(reader["Telefono"]),
 							reader["FechaNacimiento"] != DBNull.Value ? Convert.ToDateTime(reader["FechaNacimiento"]) : null,
-							reader["Domicilio"] as string,
-							reader["Localidad"] as string,
-							reader["Provincia"] as string
+							Convert.ToString(reader["Domicilio"]),
+							Convert.ToString(reader["Localidad"]),
+							Convert.ToString(reader["Provincia"])
 						);
+						//MessageBox.Show($"Cargando Paciente desde SQL: ID:({paciente.Id}) - {paciente.Name} {paciente.LastName}");
+
 						DictPacientes[paciente.Id] = paciente;
 					}
 				}
@@ -480,13 +482,14 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				using (var sqlComando = new SqlCommand(consulta, conexion))
 				using (var reader = sqlComando.ExecuteReader()) {
 					while (reader.Read()) {
-						var turno = new TurnoView {
-							Id = reader["Id"]?.ToString(),
-							PacienteId = reader["PacienteId"]?.ToString(),
-							MedicoId = reader["MedicoId"]?.ToString(),
-							Fecha = reader["Fecha"] != DBNull.Value ? Convert.ToDateTime(reader["Fecha"]) : null,
-							Hora = TimeSpan.Parse(reader["Hora"].ToString()),
-						};
+						var turno = new TurnoView (
+							reader["Id"]?.ToString(),
+							reader["PacienteId"]?.ToString(),
+							reader["MedicoId"]?.ToString(),
+							reader["Fecha"] != DBNull.Value ? Convert.ToDateTime(reader["Fecha"]) : null,
+							reader["Hora"].ToString(),
+							reader["DuracionMinutos"] != DBNull.Value ? Convert.ToInt32(reader["DuracionMinutos"]) : null
+						);
 						DictTurnos[turno.Id] = turno;
 					}
 				}

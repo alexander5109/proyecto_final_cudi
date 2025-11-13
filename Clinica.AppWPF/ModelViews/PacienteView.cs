@@ -36,7 +36,7 @@ public partial class PacienteView : ObservableObject {
 
 
 	public PacienteView(
-		string? id,
+		string id,
 		string? dni,
 		string? name,
 		string? lastName,

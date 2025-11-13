@@ -12,6 +12,8 @@ public partial class PacientesModificar : Window, INotifyPropertyChanged {
 	public PacienteView _selectedView = PacienteView.NewEmpty();
 	public PacienteView SelectedPaciente { get => _selectedView; set { _selectedView = value; OnPropertyChanged(nameof(SelectedPaciente)); } }
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+
 	public PacientesModificar(){
 		InitializeComponent();
 		DataContext = this;

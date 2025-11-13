@@ -46,7 +46,7 @@
 				Foreground="Black"
 				FontWeight="Bold"
 				VerticalContentAlignment="Center"/>
-		<DatePicker x:Name="txtFecha"
+		<DatePicker Text="{Binding SelectedTurno.Fecha, UpdateSourceTrigger=PropertyChanged}"
 					HorizontalAlignment="Center"
 					Margin="0,273,0,0"
 					VerticalAlignment="Top"
@@ -107,22 +107,20 @@
 				Foreground="Black"
 				FontWeight="Bold"
 				VerticalContentAlignment="Center"/>
-		<TextBox x:Name="txtHora"
+		<TextBox Text="{Binding SelectedTurno.Hora, UpdateSourceTrigger=PropertyChanged}"
 				HorizontalAlignment="Center"
 				Margin="0,329,0,0"
 				TextWrapping="Wrap"
 				VerticalAlignment="Top"
 				Width="284"
 				Height="33" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15,0,15,0"/>
-		<ComboBox 
-				x:Name="txtPacientes"
-				HorizontalAlignment="Center"
-				Margin="0,174,0,0"
-				VerticalAlignment="Top"
-				Width="284"
-				Height="33" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"
-				/>
-		<Label x:Name="txtId"
+				
+				
+				
+				
+				
+		<Label
+				Content="{Binding SelectedTurno.Id, UpdateSourceTrigger=PropertyChanged}"
 				HorizontalAlignment="Center"
 				Margin="0,83,0,0"
 				VerticalAlignment="Top"
@@ -140,20 +138,45 @@
 				Foreground="Black"
 				FontWeight="Bold"
 				VerticalContentAlignment="Center"/>
-		<ComboBox x:Name="txtEspecialidades"
+		<ComboBox 
+				x:Name="txtEspecialidades"
+				ItemsSource="{Binding EspecialidadesDisponibles}"
+				SelectedValuePath="{Binding SelectedTurno.Id}"
+				DisplayMemberPath="{Binding SelectedTurno.Displayear}"
 				HorizontalAlignment="Center"
 				Margin="0,128,0,0"
 				VerticalAlignment="Top"
 				Width="284"
-				Height="32" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" 
+				Height="32" 
+				VerticalContentAlignment="Center" 
+				HorizontalContentAlignment="Right" 
 				SelectionChanged="txtEspecialidades_SelectionChanged"
-				/>
-		<ComboBox x:Name="txtMedicos"
+		/>
+		
+	
+	
+		<ComboBox 
+				ItemsSource="{Binding PacientesDisponibles}"
+				SelectedValuePath="{Binding SelectedTurno.PacienteId}"
+				DisplayMemberPath="{Binding SelectedTurno.Paciente.Displayear}"
+				HorizontalAlignment="Center"
+				Margin="0,174,0,0"
+				VerticalAlignment="Top"
+				Width="284"
+				Height="33" 
+				VerticalContentAlignment="Center" 
+				HorizontalContentAlignment="Right"
+		/>
+		<ComboBox 
+				ItemsSource="{Binding MedicosDisponibles}"
+				SelectedValuePath="{Binding SelectedTurno.MedicoId}"
+				DisplayMemberPath="{Binding SelectedTurno.Medico.Displayear}"
 				HorizontalAlignment="Center"
 				Margin="0,225,0,0"
 				VerticalAlignment="Top"
 				Width="284"
-				Height="33" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"/>
+				Height="33" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"
+		/>
 	</Grid>
 	<Window.Background>
 		<ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/MedicosFondo.jpg"/>

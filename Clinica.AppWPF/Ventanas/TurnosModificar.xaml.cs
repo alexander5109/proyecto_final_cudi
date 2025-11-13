@@ -1,19 +1,32 @@
 ﻿using Clinica.AppWPF.Entidades;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.Tipos;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Clinica.AppWPF;
-public partial class TurnosModificar : Window {
-	private static TurnoView? SelectedTurno;
+public partial class TurnosModificar : Window, INotifyPropertyChanged {
+
+
+
+	public event PropertyChangedEventHandler? PropertyChanged;
+	public TurnoView _selectedTurnoView = TurnoView.NewEmpty();
+	public TurnoView SelectedTurno { get => _selectedTurnoView; set { _selectedTurnoView = value; OnPropertyChanged(nameof(SelectedTurno)); } }
+	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+
+	public List<string> EspecialidadesDisponibles { get; } = App.BaseDeDatos.ReadDistinctEspecialidades();
+
+
 
 	//---------------------public.constructors-------------------//
 	public TurnosModificar() //Constructor vacio ==> Crear.
 {
 		InitializeComponent();
+		DataContext = this;
 		LLenarComboBoxes();
-		SelectedTurno = null;
 	}
 
 	public TurnosModificar(TurnoView selectedTurno) //Constructor con un objeto como parametro ==> Modificarlo.
@@ -21,64 +34,41 @@ public partial class TurnosModificar : Window {
 		InitializeComponent();
 		LLenarComboBoxes();
 		SelectedTurno = selectedTurno;
-		SelectedTurno.MostrarseEnVentana(this);
 	}
 
 
 	//---------------------Visualizacion-comboboxes-------------------//
 	private void LLenarComboBoxes()  //por defecto llenamos todos los comboboxes
 	{
-		txtEspecialidades.ItemsSource = App.BaseDeDatos.ReadDistinctEspecialidades();
+		//txtEspecialidades.ItemsSource = App.BaseDeDatos.ReadDistinctEspecialidades();
 
-		txtPacientes.ItemsSource = App.BaseDeDatos.ReadPacientes();
-		txtPacientes.DisplayMemberPath = "Displayear";  //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
+		//txtPacientes.ItemsSource = App.BaseDeDatos.ReadPacientes();
+		//txtPacientes.DisplayMemberPath = "Displayear";  //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
 
-		txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicos();
-		txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
+		//txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicos();
+		//txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
 	}
 	private void txtEspecialidades_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		txtMedicos.SelectedValuePath = "Id";
-		txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
-		txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicosWhereEspecialidad(txtEspecialidades.SelectedItem.ToString());
+		//txtMedicos.SelectedValuePath = "Id";
+		//txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
+		//txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicosWhereEspecialidad(txtEspecialidades.SelectedItem.ToString());
 	}
-
-	//--------------------AsegurarInput-------------------//
-	private bool CamposCompletadosCorrectamente() {
-		if (
-			this.txtPacientes.SelectedValue is null
-			|| this.txtMedicos.SelectedValue is null
-			|| this.txtFecha.SelectedDate is null
-			|| string.IsNullOrEmpty(this.txtHora.Text)
-		) {
-			MessageBox.Show($"Error: Faltan datos obligatorios por completar", "Faltan datos.", MessageBoxButton.OK, MessageBoxImage.Warning);
-			return false;
-		}
-
-		if (!App.TryParseHoraField(this.txtHora.Text)) {
-			MessageBox.Show($"Error: No se reconoce la hora. \n Ingrese un string con formato valido (hh:mm)");
-			return false;
-		}
-		return true;
-	}
-
 	//---------------------botones.GuardarCambios-------------------//
 
 	private void ButtonGuardar(object sender, RoutedEventArgs e) {
 		App.PlayClickJewel();
 
-		Result<Turno2025> resultado = this.ToDomain();
+		Result<Turno2025> resultado = SelectedTurno.ToDomain();
 
 		resultado.Switch(
 			ok => {
 				bool exito;
 
-				if (SelectedTurno is null) {
+				if (SelectedTurno.Id is null) {
 					// Crear nuevo turno
-					SelectedTurno = new TurnoView(this);
 					exito = App.BaseDeDatos.CreateTurno(ok, SelectedTurno);
 				} else {
 					// Actualizar existente
-					SelectedTurno.LeerDesdeVentana(this);
 					exito = App.BaseDeDatos.UpdateTurno(ok, SelectedTurno);
 				}
 
@@ -95,11 +85,6 @@ public partial class TurnosModificar : Window {
 			}
 		);
 	}
-
-	private Result<Turno2025> ToDomain() {
-		throw new Exception("Not implemented yet");
-	}
-
 
 	//---------------------botones.Eliminar-------------------//
 	private void ButtonEliminar(object sender, RoutedEventArgs e) {
@@ -127,9 +112,6 @@ public partial class TurnosModificar : Window {
 	//---------------------botones.Salida-------------------//
 	private void ButtonCancelar(object sender, RoutedEventArgs e) {
 		this.Cerrar(); // this.NavegarA<Turnos>();
-	}
-	private void ButtonSalir(object sender, RoutedEventArgs e) {
-		this.Salir();
 	}
 	//------------------------Fin---------------------------//
 }

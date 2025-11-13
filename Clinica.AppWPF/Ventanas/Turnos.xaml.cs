@@ -1,30 +1,31 @@
 ﻿using Clinica.AppWPF.Entidades;
+using Clinica.Dominio.Tipos;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Clinica.AppWPF; 
+namespace Clinica.AppWPF;
 public partial class Turnos : Window {
 	private static TurnoView? SelectedTurno = null;
-	
+
 	public Turnos() {
-            InitializeComponent();
+		InitializeComponent();
 	}
 
 	//----------------------ActualizarSecciones-------------------//
-	private void UpdateTurnoUI(){
+	private void UpdateTurnoUI() {
 		turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnos();
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 		txtCalendario.SelectedDate = SelectedTurno?.Fecha;
 		txtCalendario.DisplayDate = SelectedTurno?.Fecha ?? DateTime.Today;
 	}
-	private void UpdateMedicoUI(){
+	private void UpdateMedicoUI() {
 		txtMedicoDni.Text = SelectedTurno?.MedicoRelacionado?.Dni;
 		txtMedicoNombre.Text = SelectedTurno?.MedicoRelacionado?.Name;
 		txtMedicoApellido.Text = SelectedTurno?.MedicoRelacionado?.LastName;
 		txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado?.Especialidad;
 		buttonModificarMedico.IsEnabled = SelectedTurno?.MedicoRelacionado != null;
 	}
-	private void UpdatePacienteUI(){
+	private void UpdatePacienteUI() {
 		txtPacienteDni.Text = SelectedTurno?.PacienteRelacionado.Dni;
 		txtPacienteNombre.Text = SelectedTurno?.PacienteRelacionado.Name;
 		txtPacienteApellido.Text = SelectedTurno?.PacienteRelacionado.LastName;
@@ -37,7 +38,7 @@ public partial class Turnos : Window {
 
 
 	//----------------------EventosRefresh-------------------//
-	private void Window_Activated(object sender, EventArgs e) {	
+	private void Window_Activated(object sender, EventArgs e) {
 		App.UpdateLabelDataBaseModo(this.labelBaseDeDatosModo);
 		UpdateTurnoUI();
 		UpdateMedicoUI();
@@ -49,10 +50,10 @@ public partial class Turnos : Window {
 		UpdateMedicoUI();
 		UpdatePacienteUI();
 	}
-	
-	
-	
-	
+
+
+
+
 	//---------------------botonesDeModificar-------------------//
 	private void ButtonModificarTurno(object sender, RoutedEventArgs e) {
 		if (SelectedTurno != null) {
@@ -69,24 +70,24 @@ public partial class Turnos : Window {
 			this.AbrirComoDialogo<PacientesModificar>(SelectedTurno?.PacienteRelacionado);
 		}
 	}
-	
-	
-	
+
+
+
 	//------------------botonesParaCrear------------------//
 	private void ButtonAgregarMedico(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<MedicosModificar>(); 
+		this.AbrirComoDialogo<MedicosModificar>();
 	}
 	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
 		this.AbrirComoDialogo<PacientesModificar>(); // this.NavegarA<PacientesModificar>();
 	}
 	private void ButtonAgregarTurno(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<TurnosModificar>(); 
+		this.AbrirComoDialogo<TurnosModificar>();
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	//---------------------botonesDeVolver-------------------//
 	private void ButtonSalir(object sender, RoutedEventArgs e) {
 		this.Salir();

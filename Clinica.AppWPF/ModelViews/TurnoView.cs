@@ -1,53 +1,102 @@
 ﻿using Clinica.AppWPF.ModelViews;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+using Clinica.Dominio.Tipos;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using System.Windows;
-using SystemTextJson = System.Text.Json;
 
-namespace Clinica.AppWPF.Entidades; 
+namespace Clinica.AppWPF.Entidades;
 //---------------------------------Tablas.Turnos-------------------------------//
-public class TurnoView {
-	public string ?Id { get; set; }
-	public string ?PacienteId { get; set; }
-	public string ?MedicoId { get; set; }
-	public DateTime ?Fecha { get; set; }
-	public TimeSpan ?Hora { get; set; }
-	public int DuracionMinutos { get; set; }
-
-	public TurnoView() { }
-	
-	// Constructor de PAciente para JSON
-	public TurnoView(SystemTextJson.JsonElement json){
-	}
-
-	// Constructor de PAciente en base a una ventana
-	public TurnoView(TurnosModificar window){
-		this.LeerDesdeVentana(window);
-	}
-	
-	[JsonIgnore]
-	public MedicoView MedicoRelacionado{
-		get{
-			if (App.BaseDeDatos.DictMedicos.TryGetValue(MedicoId, out MedicoView medicoRelacionado)){
-				return medicoRelacionado;
-			}
-			else{
-				// MessageBox.Show("Error de integridad. No existe medico con esa ID", "Error de integridad", MessageBoxButton.OK, MessageBoxImage.Error);
-				return null; 
+public partial class TurnoView : ObservableObject {
+	[ObservableProperty] private string id = string.Empty;
+	[ObservableProperty] private string pacienteId = string.Empty;
+	[ObservableProperty] private string medicoId = string.Empty;
+	[ObservableProperty] private DateTime? fecha = null;
+	[ObservableProperty] private string? hora = null;
+	[ObservableProperty] private int? duracionMinutos = null;
+	public MedicoView MedicoRelacionado {
+		get {
+			try {
+				return App.BaseDeDatos.DictMedicos[MedicoId];
+			} catch (Exception ex) {
+				MessageBox.Show(
+					$"Error al obtener el médico con ID '{MedicoId}':\n{ex.Message}",
+					"Error de acceso a datos",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error
+				);
+				// Devolvemos un objeto vacío para evitar NullReference
+				return MedicoView.NewEmpty();
 			}
 		}
 	}
-	
-	[JsonIgnore]
-	public PacienteView PacienteRelacionado{
-		get{
-			if (App.BaseDeDatos.DictPacientes.TryGetValue(PacienteId, out PacienteView pacienteRelacionado)){
-				return pacienteRelacionado;
-			}
-			else{
-				// MessageBox.Show("Error de integridad. No existe paciente con esa ID", "Error de integridad", MessageBoxButton.OK, MessageBoxImage.Error);
-				return null; 
+
+	public PacienteView PacienteRelacionado {
+		get {
+			try {
+				return App.BaseDeDatos.DictPacientes[PacienteId];
+			} catch (Exception ex) {
+				MessageBox.Show(
+					$"Error al obtener el paciente con ID '{PacienteId}':\n{ex.Message}",
+					"Error de acceso a datos",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error
+				);
+				return PacienteView.NewEmpty();
 			}
 		}
 	}
-	
+
+
+
+	public static TurnoView NewEmpty() => new(
+		id: string.Empty,
+		pacienteId: string.Empty,
+		medicoId: string.Empty,
+		fecha: null,
+		hora: string.Empty,
+		duracionMinutos: null
+	);
+
+	public TurnoView(
+		string? id,
+		string? pacienteId,
+		string? medicoId,
+		DateTime? fecha,
+		string? hora,
+		int? duracionMinutos
+	) {
+		Id = id ?? string.Empty;
+		PacienteId = pacienteId ?? string.Empty;
+		MedicoId = medicoId ?? string.Empty;
+		Fecha = fecha;
+		Hora = hora ?? string.Empty;
+		DuracionMinutos = duracionMinutos;
+	}
+
+	public Result<Turno2025> ToDomain() {
+		// 🕒 Validar la fecha
+		if (Fecha is null)
+			return new Result<Turno2025>.Error("Debe seleccionar una fecha para el turno.");
+		// 🕧 Intentar parsear la hora
+		if (string.IsNullOrWhiteSpace(Hora))
+			return new Result<Turno2025>.Error("Debe especificar una hora para el turno.");
+
+		if (!TimeOnly.TryParse(Hora, out var horaParte))
+			return new Result<Turno2025>.Error($"La hora '{Hora}' no tiene un formato válido (use HH:mm).");
+
+		// ✅ Combinar fecha y hora
+		DateOnly fechaParte = DateOnly.FromDateTime(Fecha.Value);
+		DateTime fechaYHora = fechaParte.ToDateTime(horaParte);
+
+		// 🏥 Crear el turno de dominio
+		return Turno2025.Crear(
+			MedicoRelacionado.ToDomain(),
+			PacienteRelacionado.ToDomain(),
+			fechaYHora,
+			DuracionMinutos
+		);
+	}
+
 }
