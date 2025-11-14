@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace Clinica.Dominio.Tipos;
 
-public record struct DniArgentino2025(
-	string Value
-)  {
+public readonly record struct DniArgentino2025(
+	string Valor
+){
 	public static Result<DniArgentino2025> Crear(string? input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<DniArgentino2025>.Error("El DNI no puede estar vacío.");

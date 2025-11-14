@@ -7,13 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Entidades\Medico2025.cs" />
-    <Compile Remove="Entidades\MedicoAgenda2025.cs" />
-    <Compile Remove="Entidades\Turno2025.cs" />
-    <Compile Remove="Tipos\MedicoDiaDeLaSemana2025.cs" />
-    <Compile Remove="Tipos\MedicoDisponibilidadEnDia2025.cs" />
-    <Compile Remove="Tipos\MedicoEspecialidad2025.cs" />
-    <Compile Remove="Tipos\MedicoFranjaHoraria2025.cs" />
+    <Compile Remove="Entidades\MedicoHorarios2025.cs" />
   </ItemGroup>
 
 </Project>

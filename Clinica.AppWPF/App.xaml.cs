@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using Clinica.AppWPF.ModelViews;
+using System.Diagnostics;
+using System.IO;
 using System.Media;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,6 +8,17 @@ using System.Windows.Media;
 
 namespace Clinica.AppWPF;
 public partial class App : Application {
+
+
+	protected override void OnStartup(StartupEventArgs e) {
+		base.OnStartup(e);
+
+		// Captura cualquier error de binding
+		PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Error;
+		System.Diagnostics.PresentationTraceSources.Refresh();
+		System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
+	}
+
 	public static bool SoundOn = true;
 	public static BaseDeDatosAbstracta BaseDeDatos;
 	public static bool UsuarioLogueado = false;
@@ -45,8 +58,8 @@ public partial class App : Application {
 	}
 	public static void PlayClickJewel() {
 		if (SoundOn)
-		//PlaySound("uclick.wav");
-		//PlaySound("uclick_jewel.wav");
+			//PlaySound("uclick.wav");
+			//PlaySound("uclick_jewel.wav");
 			PlaySound("uclick_jewel.wav");
 
 		//PlaySystemSound("Windows Notify System Generic.wav");
@@ -78,9 +91,9 @@ public partial class App : Application {
 
 	public static void UpdateLabelDataBaseModo(Label label) {
 		if (App.BaseDeDatos is BaseDeDatosSQL) {
-		//if (App.BaseDeDatos is BaseDeDatosJSON) {
+			//if (App.BaseDeDatos is BaseDeDatosJSON) {
 			//label.Content = "Modo JSON";
-		//} else if (App.BaseDeDatos is BaseDeDatosSQL) {
+			//} else if (App.BaseDeDatos is BaseDeDatosSQL) {
 			label.Content = "Modo SQL";
 		} else {
 			label.Content = "Elegir DB Modo";

@@ -14,15 +14,6 @@
   <ItemGroup>
     <Resource Include="PublishedResources\**\*" Exclude="PublishedResources\sonidos\**\*;PublishedResources\json_database\**\*" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Entidades\PacienteModelView.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Entidades\BaseDeDatosSQLSchema.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Entidades\BaseDeDatosSQLSchema.sql" />
-  </ItemGroup>
 
   <!-- Copy sounds and JSON to output -->
   <ItemGroup>
@@ -31,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0-preview2.25289.6" />
   </ItemGroup>

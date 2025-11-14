@@ -3,55 +3,47 @@ using Clinica.Dominio.Tipos;
 
 namespace Clinica.Dominio.Entidades;
 
-
-
-
-
-public record struct Medico2025(
-	NombreCompleto2025 Nombre,
+public readonly record struct Medico2025(
+	NombreCompleto2025 NombreCompleto,
 	MedicoEspecialidad2025 Especialidad,
 	DniArgentino2025 Dni,
 	DomicilioArgentino2025 Domicilio,
-	Contacto2025 Contacto,
-	MedicoAgenda2025 Agenda
-) {
+	ContactoTelefono2025 Telefono,
+	ListaHorarioMedicos2025 ListaHorarios,
+	FechaIngreso2025 FechaIngreso,
+	MedicoSueldoMinimo2025 SueldoMinimoGarantizado,
+	bool HaceGuardias
+){
 	public static Result<Medico2025> Crear(
-		string nombre,
-		string apellido,
-		string dni,
-		string telefono,
-		string email,
-		string provincia,
-		string localidad,
-		string direccion,
-		string especialidad,
-		string rama,
-		MedicoAgenda2025 agenda
-	) {
-		var nombreRes = NombreCompleto2025.Crear(nombre, apellido);
-		if (nombreRes is Result<NombreCompleto2025>.Error e1) return new Result<Medico2025>.Error(e1.Mensaje);
+		Result<NombreCompleto2025> nombreResult,
+		Result<MedicoEspecialidad2025> especialidadResult,
+		Result<DniArgentino2025> dniResult,
+		Result<DomicilioArgentino2025> domicilioResult,
+		Result<ContactoTelefono2025> telefonoResult,
+		Result<ListaHorarioMedicos2025> horariosResult,
+		Result<FechaIngreso2025> fechaIngresoResult,
+		Result<MedicoSueldoMinimo2025> sueldoResult,
+		bool haceGuardia
+	) =>
+		nombreResult.Bind(nombreOk =>
+		especialidadResult.Bind(espOk =>
+		dniResult.Bind(dniOk =>
+		domicilioResult.Bind(domOk =>
+		telefonoResult.Bind(contOk =>
+		horariosResult.Bind(horariosOk =>
+		fechaIngresoResult.Bind(fechaIngOk =>
+		sueldoResult.Map(sueldoOk =>
+			new Medico2025(
+				nombreOk,
+				espOk,
+				dniOk,
+				domOk,
+				contOk,
+				horariosOk,
+				fechaIngOk,
+				sueldoOk,
+				haceGuardia
+			)
+		))))))));
 
-		var dniRes = DniArgentino2025.Crear(dni);
-		if (dniRes is Result<DniArgentino2025>.Error e2) return new Result<Medico2025>.Error(e2.Mensaje);
-
-		var contactoRes = Contacto2025.Crear(telefono, email);
-		if (contactoRes is Result<Contacto2025>.Error e3) return new Result<Medico2025>.Error(e3.Mensaje);
-
-		var domicilioRes = DomicilioArgentino2025.Crear(provincia, localidad, direccion);
-		if (domicilioRes is Result<DomicilioArgentino2025>.Error e4) return new Result<Medico2025>.Error(e4.Mensaje);
-
-		var especialidadRes = MedicoEspecialidad2025.Crear(especialidad, rama);
-		if (especialidadRes is Result<MedicoEspecialidad2025>.Error e5) return new Result<Medico2025>.Error(e5.Mensaje);
-
-		// (Se podría validar que la especialidad esté habilitada en esa provincia, si aplica)
-
-		return new Result<Medico2025>.Ok(new Medico2025(
-			((Result<NombreCompleto2025>.Ok)nombreRes).Value,
-			((Result<MedicoEspecialidad2025>.Ok)especialidadRes).Value,
-			((Result<DniArgentino2025>.Ok)dniRes).Value,
-			((Result<DomicilioArgentino2025>.Ok)domicilioRes).Value,
-			((Result<Contacto2025>.Ok)contactoRes).Value,
-			agenda
-		));
-	}
 }

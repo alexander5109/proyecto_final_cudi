@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0-preview2.25289.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clinica.Dominio\Clinica.Dominio.csproj" />
+  </ItemGroup>
+
+</Project>

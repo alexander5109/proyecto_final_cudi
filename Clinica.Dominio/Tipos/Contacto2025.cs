@@ -2,9 +2,9 @@
 namespace Clinica.Dominio.Tipos;
 
 public record struct Contacto2025(
-	Contacto2025CorreoElectronico Email,
-	Contacto2025Telefono Telefono
-) {
-	public static Result<Contacto2025> Crear(Result<Contacto2025CorreoElectronico> emailResult, Result<Contacto2025Telefono> telResult) 
+	ContactoEmail2025 Email,
+	ContactoTelefono2025 Telefono
+){
+	public static Result<Contacto2025> Crear(Result<ContactoEmail2025> emailResult, Result<ContactoTelefono2025> telResult) 
 		=> emailResult.Bind(emailOk => telResult.Map(telOk => new Contacto2025(emailOk, telOk)));
 }

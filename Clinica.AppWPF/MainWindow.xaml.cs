@@ -9,39 +9,39 @@ namespace Clinica.AppWPF{
 			soundCheckBox.IsChecked = App.SoundOn;
 		}
 		public void MetodoBotonLogin(object sender, RoutedEventArgs e) {
-			this.AbrirComoDialogo<Login>();
+			this.AbrirComoDialogo<WindowLogin>();
 		}
         private void MetodoBotonMedicos(object sender, RoutedEventArgs e) {
 			if (App.UsuarioLogueado) {
-				this.NavegarA<Medicos>();
+				this.NavegarA<WindowListarMedicos>();
 			} else {
-				this.AbrirComoDialogo<Login>();
+				this.AbrirComoDialogo<WindowLogin>();
 				if (App.UsuarioLogueado) {
-					this.NavegarA<Medicos>();
+					this.NavegarA<WindowListarMedicos>();
 				}
 			}
 		}
 
         private void MetodoBotonPacientes(object sender, RoutedEventArgs e) {
 			if (App.UsuarioLogueado) {
-				this.NavegarA<Pacientes>();
+				this.NavegarA<WindowListarPacientes>();
 			}
 			else {
-				this.AbrirComoDialogo<Login>();
+				this.AbrirComoDialogo<WindowLogin>();
 				if (App.UsuarioLogueado) {
-					this.NavegarA<Pacientes>();
+					this.NavegarA<WindowListarPacientes>();
 				}
 			}
 		}
 
 		private void MetodoBotonTurnos(object sender, RoutedEventArgs e) {
 			if (App.UsuarioLogueado) {
-				this.NavegarA<Turnos>();
+				this.NavegarA<WindowListarTurnos>();
 			}
 			else {
-				this.AbrirComoDialogo<Login>();
+				this.AbrirComoDialogo<WindowLogin>();
 				if (App.UsuarioLogueado) {
-					this.NavegarA<Turnos>();
+					this.NavegarA<WindowListarTurnos>();
 				}
 			}
 		}
