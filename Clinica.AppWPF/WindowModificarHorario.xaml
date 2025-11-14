@@ -27,8 +27,8 @@
 			<Label Content="Dia de la semana:" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 			<ComboBox 
 				x:Name="txtComboBox"
-				ItemsSource="{Binding Path=DiaSemanaValues}"
-				 SelectedItem="{Binding Horario.DiaSemana}"
+				ItemsSource="{Binding DiaSemanaValues}"
+				SelectedItem="{Binding Horario.DiaSemana}"
 				HorizontalAlignment="Center"
 				Margin="15,0,0,0"
 				VerticalAlignment="Center" 
