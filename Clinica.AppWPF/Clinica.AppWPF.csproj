@@ -14,9 +14,6 @@
   <ItemGroup>
     <Resource Include="PublishedResources\**\*" Exclude="PublishedResources\sonidos\**\*;PublishedResources\json_database\**\*" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="ModelViews\PacienteModelView.cs" />
-  </ItemGroup>
 
   <!-- Copy sounds and JSON to output -->
   <ItemGroup>

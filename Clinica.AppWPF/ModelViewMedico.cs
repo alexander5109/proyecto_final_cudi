@@ -8,8 +8,33 @@ using Newtonsoft.Json;
 namespace Clinica.AppWPF.ModelViews;
 
 
-public partial class MedicoModelView : ObservableObject {
-	[ObservableProperty] private ObservableCollection<ModelViewHorario> horarios = [];
+public partial class ModelViewMedico : ObservableObject {
+
+
+	[ObservableProperty]
+	private ObservableCollection<ModelViewHorario> horarios = [];
+
+	public ObservableCollection<ModelViewHorariosAgrupados> HorariosAgrupados {
+		get {
+			ObservableCollection<ModelViewHorariosAgrupados> lista = [];
+
+			// Crear los 7 días vacíos
+			foreach (DayOfWeek dia in DiaSemana2025.Los7EnumDias) {
+				lista.Add(new ModelViewHorariosAgrupados(dia));
+			}
+
+			// Mapear horarios existentes
+			foreach (ModelViewHorario horario in Horarios) {
+				var grupo = lista.First(g => g.DiaSemana == horario.DiaSemana);
+				grupo.Horarios.Add(horario);
+			}
+
+			return lista;
+		}
+	}
+
+
+
 	[ObservableProperty] private string id = string.Empty;
 	[ObservableProperty] private string name = string.Empty;
 	[ObservableProperty] private string lastName = string.Empty;
@@ -22,10 +47,13 @@ public partial class MedicoModelView : ObservableObject {
 	[ObservableProperty] private string domicilio = string.Empty;
 	[ObservableProperty] private DateTime? fechaIngreso = DateTime.Today;
 	[ObservableProperty] private bool? guardia = false;
+
+
+
 	public List<string> EspecialidadesDisponibles { get; } = MedicoEspecialidad2025.EspecialidadesDisponibles;
 	[JsonIgnore] public string Displayear => $"{Id}: {Especialidad} - {Name} {LastName}";
 
-	public static MedicoModelView NewEmpty() => new(
+	public static ModelViewMedico NewEmpty() => new(
 		[],
 		string.Empty,   // id
 		string.Empty,   // name
@@ -42,7 +70,7 @@ public partial class MedicoModelView : ObservableObject {
 	);
 
 
-	public MedicoModelView(
+	public ModelViewMedico(
 		ObservableCollection<ModelViewHorario> horarios,
 		string? id,
 		string? name,
@@ -70,6 +98,8 @@ public partial class MedicoModelView : ObservableObject {
 		Guardia = guardia ?? false;
 		FechaIngreso = fechaIngreso ?? DateTime.Today;
 		SueldoMinimoGarantizado = sueldoMinimoGarantizado ?? 0m;
+
+		//Horarios.CollectionChanged += (_, __) => OnPropertyChanged(nameof(HorariosAgrupados));
 	}
 
 

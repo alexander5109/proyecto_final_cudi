@@ -1,8 +1,10 @@
-﻿using Clinica.AppWPF.Entidades;
-using Clinica.AppWPF.ModelViews;
+﻿using Clinica.AppWPF.ModelViews;
+using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.Tipos;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 
@@ -21,8 +23,8 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 	}
 
 
-	//------------------------public.CREATE.MedicoView----------------------//
-	public override bool CreateMedico(Medico2025 instancia, MedicoView instanciaDto) {
+	//------------------------public.CREATE.ModelViewMedico----------------------//
+	public override bool CreateMedico(Medico2025 instancia, ModelViewMedico instanciaDto) {
 		if (DictMedicos.Values.Any(i => i.Dni == instanciaDto.Dni)) {
 			MessageBox.Show($"Error de integridad: Ya hay un medico con ese Dni.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			return false;
@@ -30,11 +32,11 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 		instanciaDto.Id = GenerateNextId(DictMedicos);
 		DictMedicos[instanciaDto.Id] = instanciaDto;
 		JsonUpdateMedicos();
-		// MessageBox.Show($"Exito: Se ha creado la instancia de MedicoView: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+		// MessageBox.Show($"Exito: Se ha creado la instancia de ModelViewMedico: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 		return true;
 	}
-	//------------------------public.CREATE.PacienteView----------------------//
-	public override bool CreatePaciente(Paciente2025 instancia, PacienteView instanciaDto) {
+	//------------------------public.CREATE.ModelViewPaciente----------------------//
+	public override bool CreatePaciente(Paciente2025 instancia, ModelViewPaciente instanciaDto) {
 		if (DictPacientes.Values.Any(i => i.Dni == instanciaDto.Dni)) {
 			MessageBox.Show($"Error de integridad: Ya hay un paciente con ese Dni.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			return false;
@@ -42,11 +44,11 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 		instanciaDto.Id = GenerateNextId(DictPacientes);
 		DictPacientes[instanciaDto.Id] = instanciaDto;
 		JsonUpdatePacientes();
-		// MessageBox.Show($"Exito: Se ha creado la instancia de PacienteView: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+		// MessageBox.Show($"Exito: Se ha creado la instancia de ModelViewPaciente: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 		return true;
 	}
-	//------------------------public.CREATE.TurnoView----------------------//
-	public override bool CreateTurno(Turno2025 instancia, TurnoView instanciaDto) {
+	//------------------------public.CREATE.ModelViewTurno----------------------//
+	public override bool CreateTurno(Turno2025 instancia, ModelViewTurno instanciaDto) {
 		if (DictTurnos.Values.Any(i => i.PacienteId == instanciaDto.PacienteId && i.MedicoId == instanciaDto.MedicoId && i.Fecha == instanciaDto.Fecha)) {
 			MessageBox.Show($"Error de integridad: Ya hay un turno entre ese paciente y ese medico en esa fecha.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			return false;
@@ -60,13 +62,13 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 		instanciaDto.Id = GenerateNextId(DictTurnos);
 		DictTurnos[instanciaDto.Id] = instanciaDto;
 		JsonUpdateTurnos();
-		// MessageBox.Show($"Exito: Se ha creado la instancia de TurnoView con Id: {instancia.Id}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+		// MessageBox.Show($"Exito: Se ha creado la instancia de ModelViewTurno con Id: {instancia.Id}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 		return true;
 	}
 
 
 
-	//public PacienteView(SystemTextJson.JsonElement json) {
+	//public ModelViewPaciente(SystemTextJson.JsonElement json) {
 	//	Id = json.GetProperty(nameof(Id)).GetString();
 	//	Dni = json.GetProperty(nameof(Dni)).GetString();
 	//	Name = json.GetProperty(nameof(Name)).GetString();
@@ -85,14 +87,14 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 
 
 	//------------------------public.READ----------------------//
-	public override List<MedicoView> ReadMedicos() {
-		return DictMedicos.Values.Cast<MedicoView>().ToList();
+	public override List<ModelViewMedico> ReadMedicos() {
+		return DictMedicos.Values.Cast<ModelViewMedico>().ToList();
 	}
-	public override List<PacienteView> ReadPacientes() {
-		return DictPacientes.Values.Cast<PacienteView>().ToList();
+	public override List<ModelViewPaciente> ReadPacientes() {
+		return DictPacientes.Values.Cast<ModelViewPaciente>().ToList();
 	}
-	public override List<TurnoView> ReadTurnos() {
-		return DictTurnos.Values.Cast<TurnoView>().ToList();
+	public override List<ModelViewTurno> ReadTurnos() {
+		return DictTurnos.Values.Cast<ModelViewTurno>().ToList();
 	}
 
 
@@ -104,7 +106,7 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 
 
 
-	//------------------------public.UPDATE.MedicoView----------------------//
+	//------------------------public.UPDATE.ModelViewMedico----------------------//
 	public override bool UpdateMedico(Medico2025 instance, string instanceId) {
 		// if (string.IsNullOrEmpty(instancia.Dni)) {
 		// MessageBox.Show($"Error: El DNI es un campo obligatorio.", "Faltan datos.", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -118,7 +120,7 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 							 // MessageBox.Show($"Exito: Se han actualizado los datos de: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 		return true;
 	}
-	//------------------------public.UPDATE.PacienteView----------------------//
+	//------------------------public.UPDATE.ModelViewPaciente----------------------//
 	public override bool UpdatePaciente(Paciente2025 instancia, string instanceId) {
 		// if (string.IsNullOrEmpty(instancia.Dni)) {
 		// MessageBox.Show($"Error: El DNI es un campo obligatorio.", "Faltan datos.", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -132,8 +134,8 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 							   // MessageBox.Show($"Exito: Se han actualizado los datos de: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 		return true;
 	}
-	//------------------------public.UPDATE.TurnoView----------------------//
-	public override bool UpdateTurno(Turno2025 instanciaValidada, TurnoView instancia) {
+	//------------------------public.UPDATE.ModelViewTurno----------------------//
+	public override bool UpdateTurno(Turno2025 instanciaValidada, ModelViewTurno instancia) {
 		if (DictTurnos.Values.Count(i => i.PacienteId == instancia.PacienteId && i.MedicoId == instancia.MedicoId && i.Fecha == instancia.Fecha) > 1) {
 			MessageBox.Show($"Error de integridad: Ya hay un turno entre ese paciente y ese medico en esa fecha.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			return false;
@@ -159,8 +161,8 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 
 
 
-	//------------------------public.DELETE.MedicoView----------------------//
-	public override bool DeleteMedico(MedicoView instancia) {
+	//------------------------public.DELETE.ModelViewMedico----------------------//
+	public override bool DeleteMedico(ModelViewMedico instancia) {
 		if (DictTurnos.Values.Any(i => i.MedicoId == instancia.Id)) {
 			MessageBox.Show($"Error de integridad: El medico tiene turnos asignados.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			return false;
@@ -177,8 +179,8 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 
 		}
 	}
-	//------------------------public.DELETE.PacienteView----------------------//
-	public override bool DeletePaciente(PacienteView instancia) {
+	//------------------------public.DELETE.ModelViewPaciente----------------------//
+	public override bool DeletePaciente(ModelViewPaciente instancia) {
 		if (DictTurnos.Values.Any(i => i.PacienteId == instancia.Id)) {
 			MessageBox.Show($"Error de integridad: El paciente tiene turnos asignados.\n No se guardarán los cambios.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			return false;
@@ -194,8 +196,8 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 			return false;
 		}
 	}
-	//------------------------public.DELETE.TurnoView----------------------//
-	public override bool DeleteTurno(TurnoView instancia) {
+	//------------------------public.DELETE.ModelViewTurno----------------------//
+	public override bool DeleteTurno(ModelViewTurno instancia) {
 		try {
 			DictTurnos.Remove(instancia.Id);
 			JsonUpdateTurnos(); // Save changes to the database
@@ -214,7 +216,7 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 
 
 
-	//------------------------private.LOAD.Medicos----------------------//
+	//------------------------private.LOAD.WindowListarMedicos----------------------//
 	private bool JsonCargarMedicosExitosamente(string file_path) {
 		if (!File.Exists(file_path)) {
 			MessageBox.Show($"Error: {file_path} no se encontró.", "Error JSON", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -225,13 +227,13 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 			string jsonString = File.ReadAllText(file_path);
 			var rawMedicosData = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
 
-			var medicos = new Dictionary<string, MedicoView>();
+			var medicos = new Dictionary<string, ModelViewMedico>();
 
 			foreach (var medicoEntry in rawMedicosData) {
 				var jsonElement = System.Text.Json.JsonDocument.Parse(medicoEntry.Value.ToString()).RootElement;
 
 				// --- Parsear días de atención ---
-				var horariosCollection = new ObservableCollection<HorarioMedicoView>();
+				var horariosCollection = new ObservableCollection<ModelViewHorario>();
 
 				if (jsonElement.TryGetProperty("DiasDeAtencion", out var diasJson)) {
 					foreach (var diaProp in diasJson.EnumerateObject()) {
@@ -241,42 +243,61 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 						string? horaInicio = diaObj.GetProperty("HoraInicio").GetString();
 						string? horaFin = diaObj.GetProperty("HoraFin").GetString();
 
-						var diaConHorarios = new HorarioMedicoView {
-							DiaName = diaNombre,
-							FranjasHora = new ObservableCollection<HorarioMedicoTimeSpanView>()
-						};
+						DiaSemana2025 diaSemanaConvertido = default;
+						// 1) Validamos el día
+						Result<DiaSemana2025> diaSemanaResult = DiaSemana2025.Crear(diaNombre);
 
-						// Agregar horario si ambos valores son válidos
-						if (!string.IsNullOrWhiteSpace(horaInicio) && !string.IsNullOrWhiteSpace(horaFin)) {
-							diaConHorarios.FranjasHora.Add(new HorarioMedicoTimeSpanView {
-								Desde = TimeOnly.Parse(horaInicio),
-								Hasta = TimeOnly.Parse(horaFin)
-							});
-						}
+						// 1) Validamos el día usando Match
+						diaSemanaResult.Switch(
+							ok: diaSemanaValido => {
+								// asumimos que DiaSemana2025 tiene algo como .ToDayOfWeek()
+								diaSemanaConvertido = diaSemanaValido;
+							},
+							error: mensaje => {
+								MessageBox.Show(
+									$"Error: Día de la semana inválido '{diaNombre}' para el médico ID {medicoEntry.Key}. Se omitirá este día.",
+									"Error de carga JSON",
+									MessageBoxButton.OK,
+									MessageBoxImage.Warning
+								);
+							}
+						);
+
+						// 2) Si hubo error, cortamos
+						if (diaSemanaResult.IsError)
+							throw new InvalidDataException();
+
+
+						// 3) Construimos el objeto final
+						var diaConHorarios = new ModelViewHorario {
+							DiaSemana = diaSemanaConvertido.Valor,
+							Desde = TimeOnly.Parse(horaInicio),
+							Hasta = TimeOnly.Parse(horaFin),
+						};
 
 						horariosCollection.Add(diaConHorarios);
 					}
 				}
 
 				// --- Crear instancia usando el constructor ---
-				var medicoInstance = new MedicoView(
+				var medicoInstance = new ModelViewMedico(
 					horariosCollection,
-					jsonElement.GetProperty(nameof(MedicoView.Id)).GetString() ?? medicoEntry.Key,
-					jsonElement.GetProperty(nameof(MedicoView.Name)).GetString() ?? string.Empty,
-					jsonElement.GetProperty(nameof(MedicoView.LastName)).GetString() ?? string.Empty,
-					jsonElement.GetProperty(nameof(MedicoView.Dni)).GetString() ?? string.Empty,
-					jsonElement.GetProperty(nameof(MedicoView.Provincia)).GetString() ?? string.Empty,
-					jsonElement.GetProperty(nameof(MedicoView.Domicilio)).GetString() ?? string.Empty,
-					jsonElement.GetProperty(nameof(MedicoView.Localidad)).GetString() ?? string.Empty,
-					jsonElement.GetProperty(nameof(MedicoView.Especialidad)).GetString() ?? string.Empty,
-					jsonElement.GetProperty(nameof(MedicoView.Telefono)).GetString() ?? string.Empty,
-					jsonElement.TryGetProperty(nameof(MedicoView.Guardia), out var guardiaProp) && guardiaProp.ValueKind == System.Text.Json.JsonValueKind.True,
+					jsonElement.GetProperty(nameof(ModelViewMedico.Id)).GetString() ?? medicoEntry.Key,
+					jsonElement.GetProperty(nameof(ModelViewMedico.Name)).GetString() ?? string.Empty,
+					jsonElement.GetProperty(nameof(ModelViewMedico.LastName)).GetString() ?? string.Empty,
+					jsonElement.GetProperty(nameof(ModelViewMedico.Dni)).GetString() ?? string.Empty,
+					jsonElement.GetProperty(nameof(ModelViewMedico.Provincia)).GetString() ?? string.Empty,
+					jsonElement.GetProperty(nameof(ModelViewMedico.Domicilio)).GetString() ?? string.Empty,
+					jsonElement.GetProperty(nameof(ModelViewMedico.Localidad)).GetString() ?? string.Empty,
+					jsonElement.GetProperty(nameof(ModelViewMedico.Especialidad)).GetString() ?? string.Empty,
+					jsonElement.GetProperty(nameof(ModelViewMedico.Telefono)).GetString() ?? string.Empty,
+					jsonElement.TryGetProperty(nameof(ModelViewMedico.Guardia), out var guardiaProp) && guardiaProp.ValueKind == System.Text.Json.JsonValueKind.True,
 					DateTime.TryParse(
-						jsonElement.GetProperty(nameof(MedicoView.FechaIngreso)).GetString(),
+						jsonElement.GetProperty(nameof(ModelViewMedico.FechaIngreso)).GetString(),
 						out var fecha)
 						? fecha
 						: DateTime.MinValue,
-					jsonElement.TryGetProperty(nameof(MedicoView.SueldoMinimoGarantizado), out var sueldoProp) && sueldoProp.ValueKind == System.Text.Json.JsonValueKind.Number
+					jsonElement.TryGetProperty(nameof(ModelViewMedico.SueldoMinimoGarantizado), out var sueldoProp) && sueldoProp.ValueKind == System.Text.Json.JsonValueKind.Number
 						? sueldoProp.GetDecimal()
 						: 0
 				);
@@ -293,12 +314,12 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 		return true;
 	}
 
-	//------------------------private.LOAD.Pacientes----------------------//
+	//------------------------private.LOAD.WindowListarPacientes----------------------//
 	private bool JsonCargarPacientesExitosamente(string file_path) {
 		if (File.Exists(pacientesPath)) {
 			try {
 				string jsonString = File.ReadAllText(pacientesPath);
-				DictPacientes = JsonConvert.DeserializeObject<Dictionary<string, PacienteView>>(jsonString);
+				DictPacientes = JsonConvert.DeserializeObject<Dictionary<string, ModelViewPaciente>>(jsonString);
 			} catch (JsonException ex) {
 				MessageBox.Show($"Error parseando el archivo Json {file_path}: {ex.Message}", "Error JSON", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;
@@ -309,12 +330,12 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 		}
 		return true;
 	}
-	//------------------------private.LOAD.Turnos----------------------//
+	//------------------------private.LOAD.WindowListarTurnos----------------------//
 	private bool JsonCargarTurnosExitosamente(string file_path) {
 		if (File.Exists(turnosPath)) {
 			try {
 				string jsonString = File.ReadAllText(turnosPath);
-				DictTurnos = JsonConvert.DeserializeObject<Dictionary<string, TurnoView>>(jsonString);
+				DictTurnos = JsonConvert.DeserializeObject<Dictionary<string, ModelViewTurno>>(jsonString);
 			} catch (JsonException ex) {
 				MessageBox.Show($"Error parseando el archivo Json {file_path}: {ex.Message}", "Error JSON", MessageBoxButton.OK, MessageBoxImage.Error);
 				return false;

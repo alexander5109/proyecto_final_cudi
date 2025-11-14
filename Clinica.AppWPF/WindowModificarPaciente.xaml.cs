@@ -1,5 +1,4 @@
-﻿using Clinica.AppWPF.Entidades;
-using Clinica.AppWPF.ModelViews;
+﻿using Clinica.AppWPF.ModelViews;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Tipos;
@@ -7,19 +6,19 @@ using System.ComponentModel;
 using System.Windows;
 
 namespace Clinica.AppWPF; 
-public partial class PacientesModificar : Window, INotifyPropertyChanged {
+public partial class WindowModificarPaciente : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public PacienteView _selectedView = PacienteView.NewEmpty();
-	public PacienteView SelectedPaciente { get => _selectedView; set { _selectedView = value; OnPropertyChanged(nameof(SelectedPaciente)); } }
+	public ModelViewPaciente _selectedView = ModelViewPaciente.NewEmpty();
+	public ModelViewPaciente SelectedPaciente { get => _selectedView; set { _selectedView = value; OnPropertyChanged(nameof(SelectedPaciente)); } }
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 
-	public PacientesModificar(){
+	public WindowModificarPaciente(){
 		InitializeComponent();
 		DataContext = this;
 	}
 
-	public PacientesModificar(PacienteView selectedPaciente){
+	public WindowModificarPaciente(ModelViewPaciente selectedPaciente){
 		InitializeComponent();
 		SelectedPaciente = selectedPaciente;
 		DataContext = this;
@@ -66,12 +65,12 @@ public partial class PacientesModificar : Window, INotifyPropertyChanged {
 			return;
 		}
 		if (App.BaseDeDatos.DeletePaciente(SelectedPaciente)) {
-			this.Cerrar(); // this.NavegarA<Medicos>();
+			this.Cerrar(); // this.NavegarA<WindowListarMedicos>();
 		}
 	}
 	//---------------------botones.Salida-------------------//
 	private void ButtonCancelar(object sender, RoutedEventArgs e) {
-		this.Cerrar(); // this.NavegarA<Pacientes>();
+		this.Cerrar(); // this.NavegarA<WindowListarPacientes>();
 	}
 
 	//------------------------Fin----------------------//

@@ -4,9 +4,9 @@ using Clinica.Dominio.Tipos;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 
-namespace Clinica.AppWPF.Entidades;
-//---------------------------------Tablas.Pacientes-------------------------------//
-public partial class PacienteView : ObservableObject {
+namespace Clinica.AppWPF.ModelViews;
+//---------------------------------Tablas.WindowListarPacientes-------------------------------//
+public partial class ModelViewPaciente : ObservableObject {
 	[ObservableProperty] private string id = string.Empty;
 	[ObservableProperty] private string dni = string.Empty;
 	[ObservableProperty] private string name = string.Empty;
@@ -20,7 +20,7 @@ public partial class PacienteView : ObservableObject {
 	[ObservableProperty] private string provincia = string.Empty;
 	[JsonIgnore] public string Displayear => $"{Id}: {Name} {LastName}";
 
-	public static PacienteView NewEmpty() => new(
+	public static ModelViewPaciente NewEmpty() => new(
 		string.Empty,   // id
 		string.Empty,   // dni
 		string.Empty,   // name
@@ -35,7 +35,7 @@ public partial class PacienteView : ObservableObject {
 	);
 
 
-	public PacienteView(
+	public ModelViewPaciente(
 		string id,
 		string? dni,
 		string? name,

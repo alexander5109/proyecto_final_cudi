@@ -1,4 +1,4 @@
-﻿using Clinica.AppWPF.Entidades;
+﻿using Clinica.AppWPF.ModelViews;
 using System.Diagnostics;
 using System.IO;
 using System.Media;

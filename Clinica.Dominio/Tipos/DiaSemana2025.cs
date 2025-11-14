@@ -8,6 +8,14 @@ namespace Clinica.Dominio.Tipos;
 public readonly record struct DiaSemana2025(
 	DayOfWeek Valor
 ){
+
+	public static Result<DiaSemana2025> Crear(DayOfWeek input) {
+		return new Result<DiaSemana2025>.Ok(new DiaSemana2025(input));
+	}
+
+	public static Result<DiaSemana2025> Crear(DiaSemana2025 input) {
+		return new Result<DiaSemana2025>.Ok(input);
+	}
 	public static Result<DiaSemana2025> Crear(int input) {
 		if (input < 0 || input > 6)
 			return new Result<DiaSemana2025>.Error("El número del día de la semana debe estar entre 0 (domingo) y 6 (sábado).");
@@ -33,7 +41,7 @@ public readonly record struct DiaSemana2025(
 		return new Result<DiaSemana2025>.Error($"'{input}' no corresponde a un día válido.");
 	}
 
-	public static readonly string[] Los7DiasDeLaSemana = [
+	public static readonly string[] Los7StringDias = [
 		DayOfWeek.Monday.AEspañol(), //Value 1
 		DayOfWeek.Tuesday.AEspañol(), //Value 2
 		DayOfWeek.Wednesday.AEspañol(),//Value 3
@@ -41,6 +49,16 @@ public readonly record struct DiaSemana2025(
 		DayOfWeek.Friday.AEspañol(),//Value 5
 		DayOfWeek.Saturday.AEspañol(), //Value 6
 		DayOfWeek.Sunday.AEspañol(), //Value 0
+	];
+
+	public static readonly DayOfWeek[] Los7EnumDias = [
+		DayOfWeek.Monday, //Value 1
+		DayOfWeek.Tuesday, //Value 2
+		DayOfWeek.Wednesday,//Value 3
+		DayOfWeek.Thursday,//Value 4
+		DayOfWeek.Friday,//Value 5
+		DayOfWeek.Saturday, //Value 6
+		DayOfWeek.Sunday, //Value 0
 	];
 }
 public static class DayOfWeekExtentions {

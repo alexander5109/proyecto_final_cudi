@@ -1,12 +1,12 @@
-﻿using Clinica.AppWPF.Entidades;
+﻿using Clinica.AppWPF.ModelViews;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Clinica.AppWPF;
-    public partial class Pacientes : Window {
-	private static TurnoView? SelectedTurno;
-	private static PacienteView? SelectedPaciente;
-	public Pacientes(){
+    public partial class WindowListarPacientes : Window {
+	private static ModelViewTurno? SelectedTurno;
+	private static ModelViewPaciente? SelectedPaciente;
+	public WindowListarPacientes(){
             InitializeComponent();
 	}
 	
@@ -38,13 +38,13 @@ namespace Clinica.AppWPF;
 		UpdateMedicoUI();
 	}
 	private void listViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedTurno = (TurnoView)turnosListView.SelectedItem;
+		SelectedTurno = (ModelViewTurno)turnosListView.SelectedItem;
 		UpdatePacienteUI();
 		UpdateTurnoUI();
 		UpdateMedicoUI();
 	}
 	private void pacientesListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedPaciente = (PacienteView)pacientesListView.SelectedItem;
+		SelectedPaciente = (ModelViewPaciente)pacientesListView.SelectedItem;
 		UpdateMedicoUI();
 		UpdateTurnoUI();
 		UpdatePacienteUI();
@@ -56,17 +56,17 @@ namespace Clinica.AppWPF;
 	//---------------------botonesDeModificar-------------------//
 	private void ButtonModificarTurno(object sender, RoutedEventArgs e) {
 		if (SelectedTurno != null) {
-			this.AbrirComoDialogo<TurnosModificar>(SelectedTurno);
+			this.AbrirComoDialogo<WindowModificarTurnos>(SelectedTurno);
 		}
 	}
 	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
 		if (SelectedTurno?.MedicoRelacionado != null) {
-			this.AbrirComoDialogo<MedicosModificar>(SelectedTurno?.MedicoRelacionado!);
+			this.AbrirComoDialogo<WindowModificarMedico>(SelectedTurno?.MedicoRelacionado!);
 		}
 	}
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
 		if (SelectedPaciente != null) {
-			this.AbrirComoDialogo<PacientesModificar>(SelectedPaciente);
+			this.AbrirComoDialogo<WindowModificarPaciente>(SelectedPaciente);
 		}
 	}
 	
@@ -76,13 +76,13 @@ namespace Clinica.AppWPF;
 	
 	//------------------botonesParaCrear------------------//
 	private void ButtonAgregarMedico(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<MedicosModificar>(); 
+		this.AbrirComoDialogo<WindowModificarMedico>(); 
 	}
 	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<PacientesModificar>(); // this.NavegarA<PacientesModificar>();
+		this.AbrirComoDialogo<WindowModificarPaciente>(); // this.NavegarA<WindowModificarPaciente>();
 	}
 	private void ButtonAgregarTurno(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<MedicosModificar>(); 
+		this.AbrirComoDialogo<WindowModificarMedico>(); 
 	}
 	
 	
@@ -96,5 +96,5 @@ namespace Clinica.AppWPF;
 	private void ButtonHome(object sender, RoutedEventArgs e) {
 		this.VolverAHome();
 	}
-	//------------------------Fin.Medicos----------------------//
+	//------------------------Fin.WindowListarMedicos----------------------//
 }

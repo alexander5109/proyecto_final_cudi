@@ -1,11 +1,11 @@
-﻿using Clinica.AppWPF.Entidades;
+﻿using Clinica.AppWPF.ModelViews;
 using System.Windows;
 using System.Windows.Controls;
 			
 		
 namespace Clinica.AppWPF; 
-public partial class Login : Window {
-	public Login() {
+public partial class WindowLogin : Window {
+	public WindowLogin() {
 		InitializeComponent();
 		soundCheckBox.IsChecked = App.SoundOn;
 	}

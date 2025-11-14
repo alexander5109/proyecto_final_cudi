@@ -1,21 +1,18 @@
-﻿using Clinica.AppWPF.ModelViews;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Tipos;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Newtonsoft.Json;
 using System.Windows;
 
-namespace Clinica.AppWPF.Entidades;
-//---------------------------------Tablas.Turnos-------------------------------//
-public partial class TurnoView : ObservableObject {
+namespace Clinica.AppWPF.ModelViews;
+//---------------------------------Tablas.WindowListarTurnos-------------------------------//
+public partial class ModelViewTurno : ObservableObject {
 	[ObservableProperty] private string id = string.Empty;
 	[ObservableProperty] private string pacienteId = string.Empty;
 	[ObservableProperty] private string medicoId = string.Empty;
 	[ObservableProperty] private DateTime? fecha = null;
 	[ObservableProperty] private string? hora = null;
 	[ObservableProperty] private int? duracionMinutos = null;
-	public MedicoView MedicoRelacionado {
+	public ModelViewMedico MedicoRelacionado {
 		get {
 			try {
 				return App.BaseDeDatos.DictMedicos[MedicoId];
@@ -27,12 +24,12 @@ public partial class TurnoView : ObservableObject {
 					MessageBoxImage.Error
 				);
 				// Devolvemos un objeto vacío para evitar NullReference
-				return MedicoView.NewEmpty();
+				return ModelViewMedico.NewEmpty();
 			}
 		}
 	}
 
-	public PacienteView PacienteRelacionado {
+	public ModelViewPaciente PacienteRelacionado {
 		get {
 			try {
 				return App.BaseDeDatos.DictPacientes[PacienteId];
@@ -43,14 +40,14 @@ public partial class TurnoView : ObservableObject {
 					MessageBoxButton.OK,
 					MessageBoxImage.Error
 				);
-				return PacienteView.NewEmpty();
+				return ModelViewPaciente.NewEmpty();
 			}
 		}
 	}
 
 
 
-	public static TurnoView NewEmpty() => new(
+	public static ModelViewTurno NewEmpty() => new(
 		id: string.Empty,
 		pacienteId: string.Empty,
 		medicoId: string.Empty,
@@ -59,7 +56,7 @@ public partial class TurnoView : ObservableObject {
 		duracionMinutos: null
 	);
 
-	public TurnoView(
+	public ModelViewTurno(
 		string? id,
 		string? pacienteId,
 		string? medicoId,

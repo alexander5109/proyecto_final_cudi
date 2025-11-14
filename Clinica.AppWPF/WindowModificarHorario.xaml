@@ -1,0 +1,62 @@
+﻿<Window x:Class="Clinica.AppWPF.Ventanas.WindowModificarHorario"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Clinica.AppWPF.Ventanas"
+        mc:Ignorable="d"
+		Height="235"
+		Width="350"
+        Title="EditarFranjaHorarioDialog">
+
+
+	<Window.Background>
+		<ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/MedicosFondo.jpg"
+				Stretch="UniformToFill"/>
+	</Window.Background>
+
+	<Grid Margin="25,25,25,25" VerticalAlignment="Center" HorizontalAlignment="Center">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Orientation="Horizontal" Height="30">
+			<Label Content="Dia de la semana:" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+			<ComboBox 
+				x:Name="txtComboBox"
+				ItemsSource="{Binding Path=DiaSemanaValues}"
+				 SelectedItem="{Binding Horario.DiaSemana}"
+				HorizontalAlignment="Center"
+				Margin="15,0,0,0"
+				VerticalAlignment="Center" 
+				VerticalContentAlignment="Center" 
+				HorizontalContentAlignment="Center" 
+				Width="100" 
+				Height="20" 
+			/>
+
+
+		</StackPanel>
+
+		<StackPanel Orientation="Horizontal" Grid.Row="1" Height="30">
+			<Label Content="Hora Inicio:" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+			<TextBox Text="{Binding Horario.Desde}" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="15,0,0,0" Margin="15,0,0,0" Height="20"/>
+		</StackPanel>
+
+		<StackPanel Orientation="Horizontal" Grid.Row="2" Height="30">
+			<Label Content="Hora Fin:" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+			<TextBox Text="{Binding Horario.Hasta}" Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="15,0,0,0" Height="20"/>
+		</StackPanel>
+
+		<StackPanel Grid.Row="3" Orientation="Horizontal"
+			HorizontalAlignment="Center" VerticalAlignment="Center" Height="40">
+			<Button Content="Aceptar" Width="100" Margin="5"
+				Click="Aceptar_Click"/>
+			<Button Content="Cancelar" Width="100" Margin="5"
+				Click="Cancelar_Click"/>
+		</StackPanel>
+	</Grid>
+</Window>

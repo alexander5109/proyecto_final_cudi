@@ -1,5 +1,4 @@
 ﻿using Clinica.AppWPF.ModelViews;
-using Clinica.AppWPF.Entidades;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Tipos;
@@ -9,32 +8,32 @@ using System.Windows;
 using System.Windows.Controls;
 
 namespace Clinica.AppWPF;
-public partial class TurnosModificar : Window, INotifyPropertyChanged {
+public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {
 
 
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public TurnoView _selectedTurnoView = TurnoView.NewEmpty();
-	public TurnoView SelectedTurno { get => _selectedTurnoView; set { _selectedTurnoView = value; OnPropertyChanged(nameof(SelectedTurno)); } }
+	public ModelViewTurno _selectedTurnoView = ModelViewTurno.NewEmpty();
+	public ModelViewTurno SelectedTurno { get => _selectedTurnoView; set { _selectedTurnoView = value; OnPropertyChanged(nameof(SelectedTurno)); } }
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 	// Colecciones para los ComboBoxes
-	public IEnumerable<PacienteView> PacientesDisponibles { get; private set; } = System.Linq.Enumerable.Empty<PacienteView>();
-	public IEnumerable<MedicoView> MedicosDisponibles { get; private set; } = System.Linq.Enumerable.Empty<MedicoView>();
+	public IEnumerable<ModelViewPaciente> PacientesDisponibles { get; private set; } = System.Linq.Enumerable.Empty<ModelViewPaciente>();
+	public IEnumerable<ModelViewMedico> MedicosDisponibles { get; private set; } = System.Linq.Enumerable.Empty<ModelViewMedico>();
 
 	public List<string> EspecialidadesDisponibles { get; } = App.BaseDeDatos.ReadDistinctEspecialidades();
 
 
 
 	//---------------------public.constructors-------------------//
-	public TurnosModificar() //Constructor vacio ==> Crear.
+	public WindowModificarTurnos() //Constructor vacio ==> Crear.
 {
 		InitializeComponent();
 		DataContext = this;
 		LLenarComboBoxes();
 	}
 
-	public TurnosModificar(TurnoView selectedTurno) //Constructor con un objeto como parametro ==> Modificarlo.
+	public WindowModificarTurnos(ModelViewTurno selectedTurno) //Constructor con un objeto como parametro ==> Modificarlo.
 	{
 		InitializeComponent();
 		DataContext = this;
@@ -50,8 +49,8 @@ public partial class TurnosModificar : Window, INotifyPropertyChanged {
 			PacientesDisponibles = App.BaseDeDatos.ReadPacientes();
 			MedicosDisponibles = App.BaseDeDatos.ReadMedicos();
 		} catch {
-			PacientesDisponibles = System.Linq.Enumerable.Empty<PacienteView>();
-			MedicosDisponibles = System.Linq.Enumerable.Empty<MedicoView>();
+			PacientesDisponibles = System.Linq.Enumerable.Empty<ModelViewPaciente>();
+			MedicosDisponibles = System.Linq.Enumerable.Empty<ModelViewMedico>();
 		}
 		OnPropertyChanged(nameof(PacientesDisponibles));
 		OnPropertyChanged(nameof(MedicosDisponibles));
@@ -127,7 +126,7 @@ public partial class TurnosModificar : Window, INotifyPropertyChanged {
 
 	//---------------------botones.Salida-------------------//
 	private void ButtonCancelar(object sender, RoutedEventArgs e) {
-		this.Cerrar(); // this.NavegarA<Turnos>();
+		this.Cerrar(); // this.NavegarA<WindowListarTurnos>();
 	}
 	//------------------------Fin---------------------------//
 }
