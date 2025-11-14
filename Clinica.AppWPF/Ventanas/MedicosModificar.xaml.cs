@@ -4,6 +4,7 @@ using Clinica.AppWPF.Ventanas;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Tipos;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -13,8 +14,44 @@ using System.Windows.Controls;
 namespace Clinica.AppWPF;
 
 
+
 public partial class MedicosModificar : Window, INotifyPropertyChanged {
+
+	private ObservableCollection<HorarioMedicoView> _horariosSemanaCompleta = new ObservableCollection<HorarioMedicoView>();
+
+	public ObservableCollection<HorarioMedicoView> HorariosSemanaCompleta {
+		get => _horariosSemanaCompleta;
+		set {
+			_horariosSemanaCompleta = value;
+			OnPropertyChanged(nameof(HorariosSemanaCompleta));
+		}
+	}
+
+	public void ActualizarHorariosSemana() {
+		// 1. Crear los 7 días vacíos
+		var dias = DiaSemana2025.Los7DiasDeLaSemana; // Domingo → Sábado
+		var lista = dias.Select(d => new HorarioMedicoView {
+			DiaName = d,
+			FranjasHora = new ObservableCollection<HorarioMedicoTimeSpanView>()
+		}).ToList();
+
+		// 2. Si hay un médico seleccionado, llenar sus horarios reales
+		if (SelectedMedico?.Horarios != null) {
+			foreach (var horarioReal in SelectedMedico.Horarios) {
+				var nodo = lista.First(x => x.DiaName == horarioReal.DiaName);
+
+				foreach (var franja in horarioReal.FranjasHora)
+					nodo.FranjasHora.Add(franja);
+			}
+		}
+
+		HorariosSemanaCompleta = new ObservableCollection<HorarioMedicoView>(lista);
+	}
+
+	private string[] Los7DiasDeLaSemana = DiaSemana2025.Los7DiasDeLaSemana;
+	//public ObservableCollection<DiaConHorarios> HorariosCompleto { get; set; }
 	public event PropertyChangedEventHandler? PropertyChanged;
+
 	public MedicoView _selectedMedico = MedicoView.NewEmpty();
 	public MedicoView SelectedMedico { get => _selectedMedico; set { _selectedMedico = value; OnPropertyChanged(nameof(SelectedMedico)); } }
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -22,12 +59,14 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged {
 	public MedicosModificar() {
 		InitializeComponent();
 		DataContext = this;
+		ActualizarHorariosSemana();
 	}
 
 	public MedicosModificar(MedicoView selectedMedico) {
 		InitializeComponent();
 		SelectedMedico = selectedMedico;
 		DataContext = this;
+		ActualizarHorariosSemana();
 		//MessageBox.Show(
 		//	$"Cargando datos del médico seleccionado: {SelectedMedico.Especialidad}\n" +
 		//	$"Disponibles: {string.Join(", ", EspecialidadesDisponibles)}",
@@ -89,26 +128,6 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged {
 		this.Cerrar(); // this.NavegarA<Medicos>();
 	}
 
-	private void BtnAgregarHorario_Click(object sender, RoutedEventArgs e) {
-		var selected = GetSelectedTreeItem();
-
-		if (selected is not HorarioMedicoView dia) {
-			MessageBox.Show("Seleccioná un día para agregar una franja.",
-				"Info", MessageBoxButton.OK, MessageBoxImage.Information);
-			return;
-		}
-
-		var dialog = new EditarFranjaHorarioDialog();
-		dialog.Owner = this;
-
-		if (dialog.ShowDialog() == true) {
-			dia.FranjasHora.Add(new HorarioMedicoTimeSpanView {
-				Desde = dialog.Desde,
-				Hasta = dialog.Hasta
-			});
-		}
-	}
-
 
 	private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
 		var selected = GetSelectedTreeItem();
@@ -128,6 +147,27 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged {
 		}
 	}
 	private void BtnEliminarHorario_Click(object sender, RoutedEventArgs e) {
+	}
+
+	private void BtnAgregarHorarioFranja_Click(object sender, RoutedEventArgs e) {
+		var selected = GetSelectedTreeItem();
+
+		if (selected is not HorarioMedicoView dia) {
+			MessageBox.Show("Seleccioná un día para agregar una franja.",
+				"Info", MessageBoxButton.OK, MessageBoxImage.Information);
+			return;
+		}
+
+		var dialog = new EditarFranjaHorarioDialog();
+		dialog.Owner = this;
+
+		if (dialog.ShowDialog() == true) {
+			dia.FranjasHora.Add(new HorarioMedicoTimeSpanView {
+				Desde = dialog.Desde,
+				Hasta = dialog.Hasta
+			});
+		}
+
 	}
 
 	//------------------------Fin---------------------------//

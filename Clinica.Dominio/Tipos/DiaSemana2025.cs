@@ -1,5 +1,6 @@
 ﻿using Clinica.Dominio.Comun;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Clinica.Dominio.Tipos;
 
@@ -16,27 +17,8 @@ public readonly record struct DiaSemana2025(
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<DiaSemana2025>.Error("El nombre del día no puede estar vacío.");
 		string normalized = input.Trim().ToLowerInvariant();
-		var mapping = new Dictionary<string, DayOfWeek>(StringComparer.OrdinalIgnoreCase) {
-			["domingo"] = DayOfWeek.Sunday,
-			["lunes"] = DayOfWeek.Monday,
-			["martes"] = DayOfWeek.Tuesday,
-			["miercoles"] = DayOfWeek.Wednesday,
-			["miércoles"] = DayOfWeek.Wednesday,
-			["jueves"] = DayOfWeek.Thursday,
-			["viernes"] = DayOfWeek.Friday,
-			["sabado"] = DayOfWeek.Saturday,
-			["sábado"] = DayOfWeek.Saturday,
-			// Inglés
-			["sunday"] = DayOfWeek.Sunday,
-			["monday"] = DayOfWeek.Monday,
-			["tuesday"] = DayOfWeek.Tuesday,
-			["wednesday"] = DayOfWeek.Wednesday,
-			["thursday"] = DayOfWeek.Thursday,
-			["friday"] = DayOfWeek.Friday,
-			["saturday"] = DayOfWeek.Saturday
-		};
 
-		if (mapping.TryGetValue(normalized, out var day))
+		if (DayOfWeekExtentions.DiasDeLaSemanaToEnum.TryGetValue(normalized, out var day))
 			return new Result<DiaSemana2025>.Ok(new DiaSemana2025(day));
 
 		// Intento adicional: cultura
@@ -50,4 +32,47 @@ public readonly record struct DiaSemana2025(
 
 		return new Result<DiaSemana2025>.Error($"'{input}' no corresponde a un día válido.");
 	}
+
+	public static readonly string[] Los7DiasDeLaSemana = [
+		DayOfWeek.Monday.AEspañol(), //Value 1
+		DayOfWeek.Tuesday.AEspañol(), //Value 2
+		DayOfWeek.Wednesday.AEspañol(),//Value 3
+		DayOfWeek.Thursday.AEspañol(),//Value 4
+		DayOfWeek.Friday.AEspañol(),//Value 5
+		DayOfWeek.Saturday.AEspañol(), //Value 6
+		DayOfWeek.Sunday.AEspañol(), //Value 0
+	];
+}
+public static class DayOfWeekExtentions {
+	public static Dictionary<string, DayOfWeek> DiasDeLaSemanaToEnum = new(StringComparer.OrdinalIgnoreCase) {
+		["domingo"] = DayOfWeek.Sunday,
+		["lunes"] = DayOfWeek.Monday,
+		["martes"] = DayOfWeek.Tuesday,
+		["miercoles"] = DayOfWeek.Wednesday,
+		["miércoles"] = DayOfWeek.Wednesday,
+		["jueves"] = DayOfWeek.Thursday,
+		["viernes"] = DayOfWeek.Friday,
+		["sabado"] = DayOfWeek.Saturday,
+		["sábado"] = DayOfWeek.Saturday,
+		// Inglés
+		["sunday"] = DayOfWeek.Sunday,
+		["monday"] = DayOfWeek.Monday,
+		["tuesday"] = DayOfWeek.Tuesday,
+		["wednesday"] = DayOfWeek.Wednesday,
+		["thursday"] = DayOfWeek.Thursday,
+		["friday"] = DayOfWeek.Friday,
+		["saturday"] = DayOfWeek.Saturday
+	};
+	public static string AEspañol(this DayOfWeek dia) => dia switch {
+		DayOfWeek.Monday => "Lunes",
+		DayOfWeek.Tuesday => "Martes",
+		DayOfWeek.Wednesday => "Miércoles",
+		DayOfWeek.Thursday => "Jueves",
+		DayOfWeek.Friday => "Viernes",
+		DayOfWeek.Saturday => "Sábado",
+		DayOfWeek.Sunday => "Domingo",
+		_ => throw new ArgumentOutOfRangeException(nameof(dia), dia, null)
+	};
+
+
 }

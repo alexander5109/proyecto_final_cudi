@@ -9,6 +9,7 @@ namespace Clinica.AppWPF.ModelViews;
 
 
 public partial class MedicoView : ObservableObject {
+	[ObservableProperty] private ObservableCollection<HorarioMedicoView> horarios = [];
 	[ObservableProperty] private string id = string.Empty;
 	[ObservableProperty] private string name = string.Empty;
 	[ObservableProperty] private string lastName = string.Empty;
@@ -21,7 +22,6 @@ public partial class MedicoView : ObservableObject {
 	[ObservableProperty] private string domicilio = string.Empty;
 	[ObservableProperty] private DateTime? fechaIngreso = DateTime.Today;
 	[ObservableProperty] private bool? guardia = false;
-	[ObservableProperty] private ObservableCollection<HorarioMedicoView> horarios = [];
 	public List<string> EspecialidadesDisponibles { get; } = MedicoEspecialidad2025.EspecialidadesDisponibles;
 	[JsonIgnore] public string Displayear => $"{Id}: {Especialidad} - {Name} {LastName}";
 
