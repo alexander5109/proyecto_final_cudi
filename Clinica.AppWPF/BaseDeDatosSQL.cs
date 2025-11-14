@@ -418,8 +418,8 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 					}
 
 					dia.FranjasHora.Add(new HorarioMedicoTimeSpanView {
-						Desde = ((TimeSpan)reader["HoraDesde"]).ToString(@"hh\:mm"),
-						Hasta = ((TimeSpan)reader["HoraHasta"]).ToString(@"hh\:mm")
+						Desde = TimeOnly.Parse(reader["HoraDesde"].ToString()),
+						Hasta = TimeOnly.Parse(reader["HoraHasta"].ToString())
 					});
 				}
 			}

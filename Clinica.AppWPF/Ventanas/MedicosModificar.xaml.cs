@@ -1,5 +1,6 @@
 ﻿using Clinica.AppWPF.Entidades;
 using Clinica.AppWPF.ModelViews;
+using Clinica.AppWPF.Ventanas;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Tipos;
@@ -7,6 +8,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Clinica.AppWPF;
 
@@ -14,7 +16,7 @@ namespace Clinica.AppWPF;
 public partial class MedicosModificar : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	public MedicoView _selectedMedico = MedicoView.NewEmpty();
-	public MedicoView SelectedMedico {get => _selectedMedico;set {_selectedMedico = value;OnPropertyChanged(nameof(SelectedMedico));} }
+	public MedicoView SelectedMedico { get => _selectedMedico; set { _selectedMedico = value; OnPropertyChanged(nameof(SelectedMedico)); } }
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 	public MedicosModificar() {
@@ -77,7 +79,10 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged {
 		}
 	}
 
-
+	private object? GetSelectedTreeItem() {
+		return (treeViewHorarios.SelectedItem ??
+				(this.FindName("treeViewHorarios") as TreeView)?.SelectedItem);
+	}
 
 	//---------------------botones.Salida-------------------//
 	private void ButtonCancelar(object sender, RoutedEventArgs e) {
@@ -85,15 +90,46 @@ public partial class MedicosModificar : Window, INotifyPropertyChanged {
 	}
 
 	private void BtnAgregarHorario_Click(object sender, RoutedEventArgs e) {
-		HorarioEditor editor = new HorarioEditor();
+		var selected = GetSelectedTreeItem();
+
+		if (selected is not HorarioMedicoView dia) {
+			MessageBox.Show("Seleccioná un día para agregar una franja.",
+				"Info", MessageBoxButton.OK, MessageBoxImage.Information);
+			return;
+		}
+
+		var dialog = new EditarFranjaHorarioDialog();
+		dialog.Owner = this;
+
+		if (dialog.ShowDialog() == true) {
+			dia.FranjasHora.Add(new HorarioMedicoTimeSpanView {
+				Desde = dialog.Desde,
+				Hasta = dialog.Hasta
+			});
+		}
 	}
+
 
 	private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
+		var selected = GetSelectedTreeItem();
 
+		if (selected is not HorarioMedicoTimeSpanView franja) {
+			MessageBox.Show("Seleccioná una franja para editar.",
+				"Info", MessageBoxButton.OK, MessageBoxImage.Information);
+			return;
+		}
+
+		var dialog = new EditarFranjaHorarioDialog(franja);
+		dialog.Owner = this;
+
+		if (dialog.ShowDialog() == true) {
+			franja.Desde = dialog.Desde;
+			franja.Hasta = dialog.Hasta;
+		}
 	}
 	private void BtnEliminarHorario_Click(object sender, RoutedEventArgs e) {
-
 	}
+
 	//------------------------Fin---------------------------//
 
 }

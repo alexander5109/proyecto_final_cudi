@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Clinica Medica - Médicos Modificar"
-        Height="700" Width="1010"
+      Height="635" Width="770"
         WindowStartupLocation="CenterScreen">
 
 	<Window.Background>
@@ -13,24 +13,22 @@
                     Stretch="UniformToFill"/>
 	</Window.Background>
 
-	<Grid Margin="30">
+	<Grid Margin="30,30,30,0">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
 		<!-- Título -->
 		<Label Content="Médico"
-               Grid.Row="0"
                FontSize="32"
                FontFamily="Ringbearer"
                HorizontalAlignment="Left"
-               VerticalAlignment="Center"
-               Margin="0,0,0,10"/>
+               VerticalAlignment="Center" Height="53" Width="131"/>
 
 		<!-- Formulario principal -->
-		<Grid Grid.Row="1">
+		<Grid Grid.Row="1" Margin="0,9,0,25">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="200"/>
 				<!-- Columna Labels -->
@@ -107,8 +105,9 @@
 
 			<!-- Agenda -->
 			<StackPanel Grid.Row="0" Grid.Column="2" Grid.RowSpan="11" Margin="20,0,0,0">
+
 				<Label Content="Días de atención" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-				<TreeView Height="400" ItemsSource="{Binding SelectedMedico.Horarios}">
+				<TreeView x:Name="treeViewHorarios" ItemsSource="{Binding SelectedMedico.Horarios}" Height="295">
 					<TreeView.ItemTemplate>
 						<HierarchicalDataTemplate ItemsSource="{Binding FranjasHora}">
 							<TextBlock Text="{Binding DiaName}" FontWeight="Bold"/>
@@ -124,18 +123,20 @@
 						</HierarchicalDataTemplate>
 					</TreeView.ItemTemplate>
 				</TreeView>
-
-
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
 					<Button x:Name="btnAgregarHorario" Content="➕ Agregar" Margin="5" Click="BtnAgregarHorario_Click"/>
 					<Button x:Name="btnEditarHorario" Content="✏️ Editar" Margin="5" Click="BtnEditarHorario_Click"/>
 					<Button x:Name="btnEliminarHorario" Content="🗑 Eliminar" Margin="5" Click="BtnEliminarHorario_Click"/>
 				</StackPanel>
 			</StackPanel>
+			<!-- Agenda END -->
+
+
+
 		</Grid>
 
 		<!-- Botones inferiores -->
-		<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,20,0,0">
+		<StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="590">
 			<Button Content="Guardar cambios" Width="190" Height="40" Margin="0,0,10,0" Click="ButtonGuardar" Style="{StaticResource BotonRedondeado}"/>
 			<Button Content="Eliminar médico" Width="190" Height="40" Margin="0,0,10,0" Click="ButtonEliminar" Style="{StaticResource BotonRedondeado}"/>
 			<Button Content="Volver" Width="190" Height="40" Click="ButtonCancelar" Style="{StaticResource BotonRedondeado}"/>

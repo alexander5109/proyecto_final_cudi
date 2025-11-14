@@ -249,8 +249,8 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 						// Agregar horario si ambos valores son válidos
 						if (!string.IsNullOrWhiteSpace(horaInicio) && !string.IsNullOrWhiteSpace(horaFin)) {
 							diaConHorarios.FranjasHora.Add(new HorarioMedicoTimeSpanView {
-								Desde = horaInicio!,
-								Hasta = horaFin!
+								Desde = TimeOnly.Parse(horaInicio),
+								Hasta = TimeOnly.Parse(horaFin)
 							});
 						}
 
