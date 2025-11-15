@@ -2,7 +2,7 @@ using Clinica.AppWPF.ModelViews;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 
-namespace Clinica.AppWPF.ModelViews; 
+namespace Clinica.AppWPF; 
 public abstract class BaseDeDatosAbstracta{
 	public Dictionary<string, ModelViewTurno> DictTurnos = [];
 	public Dictionary<string, ModelViewMedico> DictMedicos = [];
@@ -31,15 +31,9 @@ public abstract class BaseDeDatosAbstracta{
 	
 	// Filtros
 	public List<ModelViewTurno> ReadTurnosWhereMedicoId(ModelViewMedico instance) {
-		if (instance is null){
-			return null;
-		}
 		return DictTurnos.Values.Where(t => t.MedicoId == instance.Id).ToList();
 	}
 	public List<ModelViewTurno> ReadTurnosWherePacienteId(ModelViewPaciente instance) {
-		if (instance is null){
-			return null;
-		}
 		return DictTurnos.Values.Where(t => t.PacienteId == instance.Id).ToList();
 	}
 

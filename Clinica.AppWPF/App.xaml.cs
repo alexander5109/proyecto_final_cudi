@@ -1,5 +1,4 @@
-﻿using Clinica.AppWPF.ModelViews;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Media;
 using System.Windows;

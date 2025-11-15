@@ -25,7 +25,7 @@ public readonly record struct ListaHorarioMedicos2025(
 			return new Result<ListaHorarioMedicos2025>.Error("La lista de resultados no puede ser nula.");
 
 		var errores = resultados.OfType<Result<HorarioMedico2025>.Error>().ToList();
-		if (errores.Any()) {
+		if (errores.Count != 0) {
 			var mensaje = string.Join(" | ", errores.Select(e => e.Mensaje));
 			return new Result<ListaHorarioMedicos2025>.Error($"Errores en horarios: {mensaje}");
 		}
