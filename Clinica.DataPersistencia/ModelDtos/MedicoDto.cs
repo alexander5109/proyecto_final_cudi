@@ -89,7 +89,7 @@ public record class MedicoDto {
 	public static Result<Medico2025> ToDomain(MedicoDto medicoDto)
 		=> Medico2025.Crear(
 			NombreCompleto2025.Crear(medicoDto.Name, medicoDto.LastName),
-			MedicoEspecialidad2025.Crear(medicoDto.Especialidad),
+			EspecialidadMedica2025.Crear(medicoDto.Especialidad),
 			DniArgentino2025.Crear(medicoDto.Dni),
 			DomicilioArgentino2025.Crear(
 				LocalidadDeProvincia2025.Crear(

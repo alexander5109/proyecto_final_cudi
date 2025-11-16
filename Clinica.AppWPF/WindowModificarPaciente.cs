@@ -33,7 +33,7 @@ public partial class WindowModificarPaciente : Window, INotifyPropertyChanged {
 			ok => {
 				bool exito;
 				if (SelectedPaciente.Id is null) {
-					// Crear nuevo paciente
+					// Programar nuevo paciente
 					exito = App.BaseDeDatos.CreatePaciente(ok, SelectedPaciente);
 				} else {
 					// Actualizar existente

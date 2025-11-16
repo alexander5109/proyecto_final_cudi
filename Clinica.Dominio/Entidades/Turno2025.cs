@@ -1,6 +1,5 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Extentions;
-using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
 
@@ -16,11 +15,11 @@ public readonly record struct Turno2025(
 	Medico2025? MedicoAsignado,
 	Paciente2025 Paciente,
 	DateTime FechaYHora,
-	MedicoEspecialidad2025 Especialidad,
+	EspecialidadMedica2025 Especialidad,
 	TurnoEstado2025 Estado
 ) {
 
-	public static Result<Turno2025> Crear(Result<Medico2025> medicoResult, Result<Paciente2025> pacienteResult, Result<MedicoEspecialidad2025> especialidadResult, DateTime? fechaYHora) {
+	public static Result<Turno2025> Programar(Result<Medico2025> medicoResult, Result<Paciente2025> pacienteResult, Result<EspecialidadMedica2025> especialidadResult, DateTime? fechaYHora) {
 		// Validar entradas
 		if (medicoResult is Result<Medico2025>.Error medicoError)
 			return new Result<Turno2025>.Error($"Error en médico: {medicoError.Mensaje}");
@@ -28,12 +27,12 @@ public readonly record struct Turno2025(
 		if (pacienteResult is Result<Paciente2025>.Error pacienteError)
 			return new Result<Turno2025>.Error($"Error en paciente: {pacienteError.Mensaje}");
 
-		if (especialidadResult is Result<MedicoEspecialidad2025>.Error espError)
+		if (especialidadResult is Result<EspecialidadMedica2025>.Error espError)
 			return new Result<Turno2025>.Error($"Error en especialidad: {espError.Mensaje}");
 
 		var medico = ((Result<Medico2025>.Ok)medicoResult).Valor;
 		var paciente = ((Result<Paciente2025>.Ok)pacienteResult).Valor;
-		var especialidad = ((Result<MedicoEspecialidad2025>.Ok)especialidadResult).Valor;
+		var especialidad = ((Result<EspecialidadMedica2025>.Ok)especialidadResult).Valor;
 
 		if (fechaYHora is null)
 			return new Result<Turno2025>.Error("La fecha y hora del turno es obligatoria.");

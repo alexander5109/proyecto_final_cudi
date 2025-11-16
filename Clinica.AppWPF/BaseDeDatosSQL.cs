@@ -387,7 +387,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				string medicoId = reader["Id"].ToString()!;
 
 				// -----------------------------------------
-				// 1) Crear médico si no existe aún
+				// 1) Programar médico si no existe aún
 				// -----------------------------------------
 				if (!dictMedicos.TryGetValue(medicoId, out var medicoView)) {
 					medicoView = new ModelViewMedico(

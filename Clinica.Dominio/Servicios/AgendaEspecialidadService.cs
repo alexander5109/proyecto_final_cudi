@@ -14,7 +14,7 @@ public static class AgendaEspecialidadService
     public static Result<DisponibilidadEspecialidad2025> CalcularDisponibilidad(
         IRepositorioMedicos repoMedicos,
         IRepositorioTurnos repoTurnos,
-        MedicoEspecialidad2025 especialidad,
+        EspecialidadMedica2025 especialidad,
         DateTime desde,
         DateTime hasta
     )

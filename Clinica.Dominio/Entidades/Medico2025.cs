@@ -13,7 +13,7 @@ public readonly record struct Medico2025WithId(
 
 public readonly record struct Medico2025(
 	NombreCompleto2025 NombreCompleto,
-	MedicoEspecialidad2025 Especialidad,
+	EspecialidadMedica2025 Especialidad,
 	DniArgentino2025 Dni,
 	DomicilioArgentino2025 Domicilio,
 	ContactoTelefono2025 Telefono,
@@ -34,28 +34,28 @@ public readonly record struct Medico2025(
 	//		TimeOnly desde, 
 	//		TimeOnly hasta
 	//) {
-	//	var nombreRes = NombreCompleto2025.Crear(nombre, apellido);
-	//	var espRes = MedicoEspecialidad2025.Crear(especialidadTitulo, MedicoEspecialidad2025.RamasDisponibles.First());
-	//	var dniRes = DniArgentino2025.Crear(dni);
-	//	var domRes = DomicilioArgentino2025.Crear(LocalidadDeProvincia2025.Crear("Localidad", ProvinciaArgentina2025.Crear("Buenos Aires")), "Calle 1");
-	//	var telRes = ContactoTelefono2025.Crear("+5491123456789");
-	//	var horariosRes = ListaHorarioMedicos2025.Crear([
-	//			HorarioMedico2025.Crear(DiaSemana2025.Crear(dia),
-	//			HorarioHora2025.Crear(desde),
-	//			HorarioHora2025.Crear(hasta))
+	//	var nombreRes = NombreCompleto2025.Programar(nombre, apellido);
+	//	var espRes = EspecialidadMedica2025.Programar(especialidadTitulo, EspecialidadMedica2025.RamasDisponibles.First());
+	//	var dniRes = DniArgentino2025.Programar(dni);
+	//	var domRes = DomicilioArgentino2025.Programar(LocalidadDeProvincia2025.Programar("Localidad", ProvinciaArgentina2025.Programar("Buenos Aires")), "Calle 1");
+	//	var telRes = ContactoTelefono2025.Programar("+5491123456789");
+	//	var horariosRes = ListaHorarioMedicos2025.Programar([
+	//			HorarioMedico2025.Programar(DiaSemana2025.Programar(dia),
+	//			HorarioHora2025.Programar(desde),
+	//			HorarioHora2025.Programar(hasta))
 	//			.Match(ok => ok, err => throw new Exception(err)) ]
 	//	);
-	//	var fechaIng = FechaIngreso2025.Crear(DateTime.Today);
-	//	var sueldo = MedicoSueldoMinimo2025.Crear(250000m);
+	//	var fechaIng = FechaIngreso2025.Programar(DateTime.Today);
+	//	var sueldo = MedicoSueldoMinimo2025.Programar(250000m);
 
-	//	var medRes = Medico2025.Crear(nombreRes, espRes, dniRes, domRes, telRes, horariosRes, fechaIng, sueldo, false);
+	//	var medRes = Medico2025.Programar(nombreRes, espRes, dniRes, domRes, telRes, horariosRes, fechaIng, sueldo, false);
 	//	return medRes.Match(m => m, e => throw new Exception(e));
 	//}
 
 
 	public static Result<Medico2025> Crear(
 		Result<NombreCompleto2025> nombreResult,
-		Result<MedicoEspecialidad2025> especialidadResult,
+		Result<EspecialidadMedica2025> especialidadResult,
 		Result<DniArgentino2025> dniResult,
 		Result<DomicilioArgentino2025> domicilioResult,
 		Result<ContactoTelefono2025> telefonoResult,

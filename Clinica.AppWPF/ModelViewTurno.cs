@@ -101,12 +101,12 @@ public partial class ModelViewTurno : ObservableObject {
 		var pacienteDomain = ((Result<Paciente2025>.Ok)pacienteDomainR).Valor;
 
 		// Construir especialidad a partir del médico (usamos rama por defecto si se requiere)
-		var especialidadResult = MedicoEspecialidad2025.Crear(medicoDomain.NombreCompleto.Nombre, MedicoEspecialidad2025.RamasDisponibles.First());
+		var especialidadResult = EspecialidadMedica2025.Crear(medicoDomain.NombreCompleto.Nombre, EspecialidadMedica2025.RamasDisponibles.First());
 
-		if (especialidadResult is Result<MedicoEspecialidad2025>.Error espErr)
+		if (especialidadResult is Result<EspecialidadMedica2025>.Error espErr)
 			return new Result<Turno2025>.Error($"Error al crear especialidad: {espErr.Mensaje}");
 
-		return Turno2025.Crear(
+		return Turno2025.Programar(
 			new Result<Medico2025>.Ok(medicoDomain),
 			new Result<Paciente2025>.Ok(pacienteDomain),
 			especialidadResult,

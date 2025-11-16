@@ -279,7 +279,7 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 					}
 				}
 
-				// --- Crear instancia usando el constructor ---
+				// --- Programar instancia usando el constructor ---
 				var medicoInstance = new ModelViewMedico(
 					horariosCollection,
 					jsonElement.GetProperty(nameof(ModelViewMedico.Id)).GetString() ?? medicoEntry.Key,

@@ -4,7 +4,8 @@ using System.Linq;
 
 namespace Clinica.Dominio.TiposDeValor;
 
-public readonly record struct MedicoEspecialidad2025(
+public readonly record struct EspecialidadMedica2025(
+	int UId,
 	string Titulo,
 	//string Rama,
 	int DuracionConsultaMinutos
@@ -58,22 +59,22 @@ public readonly record struct MedicoEspecialidad2025(
 		["Dermatólogo"] = 20
 	};
 
-	public static Result<MedicoEspecialidad2025> Crear(string? titulo, int? duracionMinutos = null) {
-	//public static Result<MedicoEspecialidad2025> Crear(string? titulo, string? rama, int? duracionMinutos = null) {
+	public static Result<EspecialidadMedica2025> Crear(string? titulo, int? duracionMinutos = null) {
+	//public static Result<EspecialidadMedica2025> Programar(string? titulo, string? rama, int? duracionMinutos = null) {
 		if (string.IsNullOrWhiteSpace(titulo))
-			return new Result<MedicoEspecialidad2025>.Error("El título no puede estar vacío.");
+			return new Result<EspecialidadMedica2025>.Error("El título no puede estar vacío.");
 		//if (string.IsNullOrWhiteSpace(rama))
-			//return new Result<MedicoEspecialidad2025>.Error("La rama no puede estar vacía.");
+			//return new Result<EspecialidadMedica2025>.Error("La rama no puede estar vacía.");
 		string candidadoTitulo = titulo.Trim();
 		//string candidadoRama = rama.Trim();
 
 		if (EspecialidadesDisponibles.Contains(candidadoTitulo)) {
 		//if (EspecialidadesDisponibles.Contains(candidadoTitulo) && RamasDisponibles.Contains(candidadoRama)) {
 			int dur = duracionMinutos ?? (DuracionesPorEspecialidad.ContainsKey(candidadoTitulo) ? DuracionesPorEspecialidad[candidadoTitulo] : 30);
-			return new Result<MedicoEspecialidad2025>.Ok(new MedicoEspecialidad2025(candidadoTitulo, dur));
-			//return new Result<MedicoEspecialidad2025>.Ok(new MedicoEspecialidad2025(candidadoTitulo, candidadoRama, dur));
+			return new Result<EspecialidadMedica2025>.Ok(new EspecialidadMedica2025(candidadoTitulo, dur));
+			//return new Result<EspecialidadMedica2025>.Ok(new EspecialidadMedica2025(candidadoTitulo, candidadoRama, dur));
 		} else {
-			return new Result<MedicoEspecialidad2025>.Error("La especialidad médica no es válida.");
+			return new Result<EspecialidadMedica2025>.Error("La especialidad médica no es válida.");
 		}
 	}
 }

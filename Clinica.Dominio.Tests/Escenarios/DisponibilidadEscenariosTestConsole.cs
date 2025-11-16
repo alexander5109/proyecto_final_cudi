@@ -35,10 +35,10 @@ public class DisponibilidadEscenariosTestConsole {
 		var rosalia = Common.CrearPaciente("Rosalia", "Martinez", "66666666");
 		Console.WriteLine("Pacientes cargados: Juan, Pedro y Rosalia.\n");
 
-		var especialGastro = MedicoEspecialidad2025.Crear("Gastroenterólogo")
+		var especialGastro = EspecialidadMedica2025.Crear("Gastroenterólogo")
 							   .Match(ok => ok, err => throw new Exception(err));
 
-		var especialPsico = MedicoEspecialidad2025.Crear("Psicólogo")
+		var especialPsico = EspecialidadMedica2025.Crear("Psicólogo")
 							   .Match(ok => ok, err => throw new Exception(err));
 
 
@@ -49,7 +49,7 @@ public class DisponibilidadEscenariosTestConsole {
 
 		var solicitudJuan = SolicitudConsulta2025.Crear(
 			new Result<Paciente2025>.Ok(juan),
-			new Result<MedicoEspecialidad2025>.Ok(especialGastro),
+			new Result<EspecialidadMedica2025>.Ok(especialGastro),
 			DateTime.Now
 		).Match(ok => ok, err => throw new Exception(err));
 
@@ -64,10 +64,10 @@ public class DisponibilidadEscenariosTestConsole {
 		var primeraDispJuan = dispJuan.First();
 		Console.WriteLine($"Primer turno asignable a Juan: {primeraDispJuan.Medico.NombreCompleto.Apellido} - {primeraDispJuan.Inicio}");
 
-		var turnoJuanRes = Turno2025.Crear(
+		var turnoJuanRes = Turno2025.Programar(
 			new Result<Medico2025>.Ok(primeraDispJuan.Medico),
 			new Result<Paciente2025>.Ok(juan),
-			new Result<MedicoEspecialidad2025>.Ok(especialGastro),
+			new Result<EspecialidadMedica2025>.Ok(especialGastro),
 			primeraDispJuan.Inicio
 		);
 
@@ -84,7 +84,7 @@ public class DisponibilidadEscenariosTestConsole {
 
 		var solicitudPedro = SolicitudConsulta2025.Crear(
 			new Result<Paciente2025>.Ok(pedro),
-			new Result<MedicoEspecialidad2025>.Ok(especialGastro),
+			new Result<EspecialidadMedica2025>.Ok(especialGastro),
 			DateTime.Now
 		).Match(ok => ok, err => throw new Exception(err));
 
@@ -99,10 +99,10 @@ public class DisponibilidadEscenariosTestConsole {
 		var primeraDispPedro = dispPedro.First();
 		Console.WriteLine($"Primer turno asignable a Pedro: {primeraDispPedro.Medico.NombreCompleto.Apellido} - {primeraDispPedro.Inicio}");
 
-		var turnoPedroRes = Turno2025.Crear(
+		var turnoPedroRes = Turno2025.Programar(
 			new Result<Medico2025>.Ok(primeraDispPedro.Medico),
 			new Result<Paciente2025>.Ok(pedro),
-			new Result<MedicoEspecialidad2025>.Ok(especialGastro),
+			new Result<EspecialidadMedica2025>.Ok(especialGastro),
 			primeraDispPedro.Inicio
 		);
 
@@ -119,7 +119,7 @@ public class DisponibilidadEscenariosTestConsole {
 
 		var solicitudRosalia = SolicitudConsulta2025.Crear(
 			new Result<Paciente2025>.Ok(rosalia),
-			new Result<MedicoEspecialidad2025>.Ok(especialPsico),
+			new Result<EspecialidadMedica2025>.Ok(especialPsico),
 			DateTime.Now.AddDays(7)
 		).Match(ok => ok, err => throw new Exception(err));
 
@@ -134,10 +134,10 @@ public class DisponibilidadEscenariosTestConsole {
 		var primeraDispRosalia = dispRosalia.First();
 		Console.WriteLine($"Primer turno asignable a Rosalia: {primeraDispRosalia.Medico.NombreCompleto.Apellido} - {primeraDispRosalia.Inicio}");
 
-		var turnoRosaliaRes = Turno2025.Crear(
+		var turnoRosaliaRes = Turno2025.Programar(
 			new Result<Medico2025>.Ok(primeraDispRosalia.Medico),
 			new Result<Paciente2025>.Ok(rosalia),
-			new Result<MedicoEspecialidad2025>.Ok(especialPsico),
+			new Result<EspecialidadMedica2025>.Ok(especialPsico),
 			primeraDispRosalia.Inicio
 		);
 

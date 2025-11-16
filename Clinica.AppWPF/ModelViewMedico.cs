@@ -18,7 +18,7 @@ public partial class ModelViewMedico : ObservableObject {
 		get {
 			ObservableCollection<ModelViewHorariosAgrupados> lista = [];
 
-			// Crear los 7 días vacíos
+			// Programar los 7 días vacíos
 			foreach (DayOfWeek dia in DiaSemana2025.Los7EnumDias) {
 				lista.Add(new ModelViewHorariosAgrupados(dia));
 			}
@@ -50,7 +50,7 @@ public partial class ModelViewMedico : ObservableObject {
 
 
 
-	public List<string> EspecialidadesDisponibles { get; } = MedicoEspecialidad2025.EspecialidadesDisponibles;
+	public List<string> EspecialidadesDisponibles { get; } = EspecialidadMedica2025.EspecialidadesDisponibles;
 	[JsonIgnore] public string Displayear => $"{Id}: {Especialidad} - {Name} {LastName}";
 
 	public static ModelViewMedico NewEmpty() => new(
@@ -109,9 +109,9 @@ public partial class ModelViewMedico : ObservableObject {
 
 		return Medico2025.Crear(
 			NombreCompleto2025.Crear(this.Name, this.LastName),
-			MedicoEspecialidad2025.Crear(
+			EspecialidadMedica2025.Crear(
 				this.Especialidad,
-				MedicoEspecialidad2025.RamasDisponibles.First()
+				EspecialidadMedica2025.RamasDisponibles.First()
 			),
 			DniArgentino2025.Crear(this.Dni),
 			DomicilioArgentino2025.Crear(

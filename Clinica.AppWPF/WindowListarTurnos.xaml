@@ -61,15 +61,8 @@
 							SelectionChanged="listViewTurnos_SelectionChanged" Height="196" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center">
 					<ListView.View>
 						<GridView>
-							<GridViewColumn Header="Id" Width="35">
-								<GridViewColumn.CellTemplate>
-									<DataTemplate>
-										<TextBlock Text="{Binding Id}" TextAlignment="Center"/>
-									</DataTemplate>
-								</GridViewColumn.CellTemplate>
-							</GridViewColumn>
 
-							<GridViewColumn Header="Fecha" Width="60">
+							<GridViewColumn Header="Fecha" Width="50">
 								<GridViewColumn.CellTemplate>
 									<DataTemplate>
 										<TextBlock Text="{Binding Fecha, StringFormat={}{0:dd/MM/yyyy}}" TextAlignment="Center"/>
@@ -81,6 +74,13 @@
 								<GridViewColumn.CellTemplate>
 									<DataTemplate>
 										<TextBlock Text="{Binding Hora, StringFormat={}{0:hh\\:mm}}" TextAlignment="Center"/>
+									</DataTemplate>
+								</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+							<GridViewColumn Header="Especialidad" Width="85">
+								<GridViewColumn.CellTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding Medico.Especialidad}" TextAlignment="Center"/>
 									</DataTemplate>
 								</GridViewColumn.CellTemplate>
 							</GridViewColumn>

@@ -31,17 +31,17 @@ public class DisponibilidadEscenariosTests {
 		var pedro = Common.CrearPaciente("Pedro", "Lopez", "55555555");
 		var rosalia = Common.CrearPaciente("Rosalia", "Martinez", "66666666");
 
-		var especialGastro = MedicoEspecialidad2025
+		var especialGastro = EspecialidadMedica2025
 			.Crear("Gastroenterólogo")
 			.Match(ok => ok, err => throw new Exception(err));
 
-		var especialPsico = MedicoEspecialidad2025
+		var especialPsico = EspecialidadMedica2025
 			.Crear("Psicólogo")
 			.Match(ok => ok, err => throw new Exception(err));
 
 		// Juan solicita gastro
 		var solicitudJuan = SolicitudConsulta2025
-			.Crear(new Result<Paciente2025>.Ok(juan), new Result<MedicoEspecialidad2025>.Ok(especialGastro), DateTime.Now)
+			.Crear(new Result<Paciente2025>.Ok(juan), new Result<EspecialidadMedica2025>.Ok(especialGastro), DateTime.Now)
 			.Match(ok => ok, err => throw new Exception(err));
 
 		// Act
@@ -50,9 +50,9 @@ public class DisponibilidadEscenariosTests {
 			.First();
 
 		var turnoJuan = Turno2025
-			.Crear(new Result<Medico2025>.Ok(dispJuan.Medico),
+			.Programar(new Result<Medico2025>.Ok(dispJuan.Medico),
 					new Result<Paciente2025>.Ok(juan),
-					new Result<MedicoEspecialidad2025>.Ok(especialGastro),
+					new Result<EspecialidadMedica2025>.Ok(especialGastro),
 					dispJuan.Inicio)
 			.Match(ok => ok, err => throw new Exception(err));
 
@@ -60,7 +60,7 @@ public class DisponibilidadEscenariosTests {
 
 		// Pedro solicita gastro -> toma siguiente turno disponible
 		var solicitudPedro = SolicitudConsulta2025
-			.Crear(new Result<Paciente2025>.Ok(pedro), new Result<MedicoEspecialidad2025>.Ok(especialGastro), DateTime.Now)
+			.Crear(new Result<Paciente2025>.Ok(pedro), new Result<EspecialidadMedica2025>.Ok(especialGastro), DateTime.Now)
 			.Match(ok => ok, err => throw new Exception(err));
 
 		var dispPedro = solicitudPedro.BuscarDisponibilidades(repoMedicos, repoTurnos)
@@ -68,9 +68,9 @@ public class DisponibilidadEscenariosTests {
 			.First();
 
 		var turnoPedro = Turno2025
-			.Crear(new Result<Medico2025>.Ok(dispPedro.Medico),
+			.Programar(new Result<Medico2025>.Ok(dispPedro.Medico),
 					new Result<Paciente2025>.Ok(pedro),
-					new Result<MedicoEspecialidad2025>.Ok(especialGastro),
+					new Result<EspecialidadMedica2025>.Ok(especialGastro),
 					dispPedro.Inicio)
 			.Match(ok => ok, err => throw new Exception(err));
 
@@ -78,7 +78,7 @@ public class DisponibilidadEscenariosTests {
 
 		// Rosalia solicita psicólogo
 		var solicitudRosalia = SolicitudConsulta2025
-			.Crear(new Result<Paciente2025>.Ok(rosalia), new Result<MedicoEspecialidad2025>.Ok(especialPsico), DateTime.Now.AddDays(7))
+			.Crear(new Result<Paciente2025>.Ok(rosalia), new Result<EspecialidadMedica2025>.Ok(especialPsico), DateTime.Now.AddDays(7))
 			.Match(ok => ok, err => throw new Exception(err));
 
 		var dispRosalia = solicitudRosalia.BuscarDisponibilidades(repoMedicos, repoTurnos)
@@ -86,9 +86,9 @@ public class DisponibilidadEscenariosTests {
 			.First();
 
 		var turnoRosalia = Turno2025
-			.Crear(new Result<Medico2025>.Ok(dispRosalia.Medico),
+			.Programar(new Result<Medico2025>.Ok(dispRosalia.Medico),
 					new Result<Paciente2025>.Ok(rosalia),
-					new Result<MedicoEspecialidad2025>.Ok(especialPsico),
+					new Result<EspecialidadMedica2025>.Ok(especialPsico),
 					dispRosalia.Inicio)
 			.Match(ok => ok, err => throw new Exception(err));
 

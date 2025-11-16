@@ -79,7 +79,7 @@ public class MedicosRepositoriosOld {
 		Medico2025 medico = instanciaWithId.Medico;
 		MedicoId2025 medicoId = instanciaWithId.Id;
 
-		// 1. Crear DataTable con los horarios del médico
+		// 1. Programar DataTable con los horarios del médico
 		DataTable horariosTable = new();
 		horariosTable.Columns.Add("Id", typeof(int));
 		horariosTable.Columns.Add("DiaSemana", typeof(int));
