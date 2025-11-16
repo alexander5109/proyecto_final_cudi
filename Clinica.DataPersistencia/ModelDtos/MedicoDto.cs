@@ -1,6 +1,8 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Tipos;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Clinica.DataPersistencia.ModelDtos;
 public record class MedicoDto {
@@ -17,13 +19,13 @@ public record class MedicoDto {
 	public required bool Guardia { get; set; }
 	public required string FechaIngreso { get; set; }
 	public required decimal SueldoMinimoGarantizado { get; set; }
-	public required List<HorarioMedicoDto> Horarios { get; set; } = [];
+	public required List<HorarioMedicoDto> Horarios { get; set; } = new List<HorarioMedicoDto>();
 
 
 
 	public static MedicoDto FromDomain(Medico2025 medicoDomain)
 		=> new MedicoDto {
-			Id = null,
+			Id = string.Empty,
 			Name = medicoDomain.NombreCompleto.Nombre,
 			LastName = medicoDomain.NombreCompleto.Apellido,
 			Dni = medicoDomain.Dni.Valor,
@@ -36,7 +38,7 @@ public record class MedicoDto {
 			Guardia = medicoDomain.HaceGuardias,
 			FechaIngreso = medicoDomain.FechaIngreso.Valor.ToString(),
 			SueldoMinimoGarantizado = medicoDomain.SueldoMinimoGarantizado.Valor,
-			Horarios = medicoDomain.ListaHorarios.Valores.Select(h => HorarioMedicoDto.FromDomain(h)).ToList();
+			Horarios = medicoDomain.ListaHorarios.Valores.Select(h => HorarioMedicoDto.FromDomain(h)).ToList()
 		};
 	public static Result<Medico2025> ToDomain(MedicoDto medicoDto)
 		=> Medico2025.Crear(
@@ -51,7 +53,7 @@ public record class MedicoDto {
 				medicoDto.Domicilio
 			),
 			ContactoTelefono2025.Crear(medicoDto.Telefono),
-			ListaHorarioMedicos2025.Crear(medicoDto.Horarios.Select(h => h.ToDomain())),
+			ListaHorarioMedicos2025.Crear(medicoDto.Horarios.Select(h => HorarioMedicoDto.ToDomain(h))),
 			FechaIngreso2025.Crear(medicoDto.FechaIngreso),
 			MedicoSueldoMinimo2025.Crear(medicoDto.SueldoMinimoGarantizado),
 			medicoDto.Guardia

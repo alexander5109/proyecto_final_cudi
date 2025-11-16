@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Comun;
-using Clinica.DataPersistencia.ModelsDto;
 using Clinica.DataPersistencia.ModelDtos;
 
 namespace Clinica.DataPersistencia.Repositorios;
@@ -15,7 +14,8 @@ public class MedicoRepository {
 
 	// ------------------- CREATE -------------------
 	public async Task<Result<string>> InsertAsync(Medico2025 medico) {
-		var dto = medico.ToDto(Guid.NewGuid().ToString());
+		var dto = MedicoDto.FromDomain(medico);
+		dto.Id = Guid.NewGuid().ToString();
 
 		const string sql = @"
 			INSERT INTO MedicoDtoExtentions
@@ -51,7 +51,7 @@ public class MedicoRepository {
 		const string sqlHorarios = "SELECT * FROM HorarioMedicoDto WHERE MedicoId = @Id";
 
 		using var conn = _connectionFactory.CreateConnection();
-		var medicoDto = await conn.QuerySingleOrDefaultAsync<DomainDtoExtentions>(sqlMedico, new { Id = id });
+		var medicoDto = await conn.QuerySingleOrDefaultAsync<MedicoDto>(sqlMedico, new { Id = id });
 
 		if (medicoDto is null)
 			return new Result<Medico2025>.Error("Médico no encontrado.");
@@ -59,12 +59,13 @@ public class MedicoRepository {
 		var horarios = (await conn.QueryAsync<HorarioMedicoDto>(sqlHorarios, new { Id = id })).ToList();
 		medicoDto.Horarios = horarios;
 
-		return medicoDto.ToDomain();
+		return MedicoDto.ToDomain(medicoDto);
 	}
 
 	// ------------------- UPDATE -------------------
 	public async Task<Result> UpdateAsync(string id, Medico2025 medico) {
-		var dto = medico.ToDto(id);
+		var dto = MedicoDto.FromDomain(medico);
+		dto.Id = id;
 
 		const string sql = @"
 			UPDATE MedicoDtoExtentions SET

@@ -10,7 +10,10 @@ public static class TypeExtentionsMethods {
 	public static string AString(this FechaIngreso2025 fecha) => fecha.Valor.ToString("dd/MM/yyyy");
 	public static string AString(this ProvinciaArgentina2025 provincia) => provincia.Nombre;
 	public static string AString(this DiaSemana2025 diaSemana) => CultureInfo.GetCultureInfo("es-ES").DateTimeFormat.GetDayName(diaSemana.Valor);
-	public static string AString(this Turno2025 turno) => $"Turno de {turno.Paciente.NombreCompleto} con {turno.Medico.NombreCompleto} el {turno.FechaYHora:g}";
+	public static string AString(this Turno2025 turno) {
+		var medicoTexto = turno.MedicoAsignado is null ? $"Especialidad {turno.Especialidad.Titulo}" : turno.MedicoAsignado.Value.NombreCompleto.ToString();
+		return $"Turno de {turno.Paciente.NombreCompleto} con {medicoTexto} el {turno.FechaYHora:g}";
+	}
 
 	public static string AString(this HorarioHora2025 hora) => hora.Valor.ToString("HH:mm");
 	public static string AString(this ListaHorarioMedicos2025 horarios) => string.Join(", ", horarios.Valores.Select(h => h.ToString()));
@@ -39,7 +42,6 @@ public static class TypeExtentionsMethods {
 			h.Hasta.Valor >= hasta.Valor
 		);
 	}
-
 
 
 

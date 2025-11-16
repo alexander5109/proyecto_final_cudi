@@ -1,5 +1,6 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.Tipos;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows;
 
@@ -87,12 +88,29 @@ public partial class ModelViewTurno : ObservableObject {
 		DateOnly fechaParte = DateOnly.FromDateTime(Fecha.Value);
 		DateTime fechaYHora = fechaParte.ToDateTime(horaParte);
 
-		// 🏥 Crear el turno de dominio
+		// Obtener resultados de dominio de modelos relacionados
+		var medicoDomainR = MedicoRelacionado.ToDomain();
+		var pacienteDomainR = PacienteRelacionado.ToDomain();
+
+		if (medicoDomainR is Result<Medico2025>.Error medErr)
+			return new Result<Turno2025>.Error($"Error al crear médico de dominio: {medErr.Mensaje}");
+		if (pacienteDomainR is Result<Paciente2025>.Error pacErr)
+			return new Result<Turno2025>.Error($"Error al crear paciente de dominio: {pacErr.Mensaje}");
+
+		var medicoDomain = ((Result<Medico2025>.Ok)medicoDomainR).Valor;
+		var pacienteDomain = ((Result<Paciente2025>.Ok)pacienteDomainR).Valor;
+
+		// Construir especialidad a partir del médico (usamos rama por defecto si se requiere)
+		var especialidadResult = MedicoEspecialidad2025.Crear(medicoDomain.NombreCompleto.Nombre, MedicoEspecialidad2025.RamasDisponibles.First());
+
+		if (especialidadResult is Result<MedicoEspecialidad2025>.Error espErr)
+			return new Result<Turno2025>.Error($"Error al crear especialidad: {espErr.Mensaje}");
+
 		return Turno2025.Crear(
-			MedicoRelacionado.ToDomain(),
-			PacienteRelacionado.ToDomain(),
-			fechaYHora,
-			DuracionMinutos
+			new Result<Medico2025>.Ok(medicoDomain),
+			new Result<Paciente2025>.Ok(pacienteDomain),
+			especialidadResult,
+			fechaYHora
 		);
 	}
 
