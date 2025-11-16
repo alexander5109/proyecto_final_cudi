@@ -105,13 +105,11 @@ public partial class ModelViewMedico : ObservableObject {
 
 
 	public Result<Medico2025> ToDomain() {
-
-
 		return Medico2025.Crear(
 			NombreCompleto2025.Crear(this.Name, this.LastName),
 			EspecialidadMedica2025.Crear(
-				this.Especialidad,
-				EspecialidadMedica2025.RamasDisponibles.First()
+				this.Especialidad
+			//EspecialidadMedica2025.RamasDisponibles.First()
 			),
 			DniArgentino2025.Crear(this.Dni),
 			DomicilioArgentino2025.Crear(

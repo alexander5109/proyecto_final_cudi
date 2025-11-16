@@ -5,7 +5,7 @@ using System.Linq;
 namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct EspecialidadMedica2025(
-	int UId,
+	//int UId,
 	string Titulo,
 	//string Rama,
 	int DuracionConsultaMinutos
@@ -59,7 +59,7 @@ public readonly record struct EspecialidadMedica2025(
 		["Dermatólogo"] = 20
 	};
 
-	public static Result<EspecialidadMedica2025> Crear(string? titulo, int? duracionMinutos = null) {
+	public static Result<EspecialidadMedica2025> Crear(string? titulo) {
 	//public static Result<EspecialidadMedica2025> Programar(string? titulo, string? rama, int? duracionMinutos = null) {
 		if (string.IsNullOrWhiteSpace(titulo))
 			return new Result<EspecialidadMedica2025>.Error("El título no puede estar vacío.");
@@ -70,7 +70,7 @@ public readonly record struct EspecialidadMedica2025(
 
 		if (EspecialidadesDisponibles.Contains(candidadoTitulo)) {
 		//if (EspecialidadesDisponibles.Contains(candidadoTitulo) && RamasDisponibles.Contains(candidadoRama)) {
-			int dur = duracionMinutos ?? (DuracionesPorEspecialidad.ContainsKey(candidadoTitulo) ? DuracionesPorEspecialidad[candidadoTitulo] : 30);
+			int dur = (DuracionesPorEspecialidad.ContainsKey(candidadoTitulo) ? DuracionesPorEspecialidad[candidadoTitulo] : 30);
 			return new Result<EspecialidadMedica2025>.Ok(new EspecialidadMedica2025(candidadoTitulo, dur));
 			//return new Result<EspecialidadMedica2025>.Ok(new EspecialidadMedica2025(candidadoTitulo, candidadoRama, dur));
 		} else {

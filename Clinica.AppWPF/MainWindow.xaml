@@ -65,6 +65,16 @@
 			  BorderBrush="#FF0E0D0D"
 			  FontFamily="Baskerville Old Face" Margin="0,7,0,7">
 			</Button>
+			<Button x:Name="buttonVerTurnos_Copiar"
+	   Content="Gestor de Turnos 2025"
+	   Height="37"
+	   Width="254"
+	   Click="MetodoBotonTurnos2025"
+	   FontSize="20"
+	   Style="{StaticResource BotonRedondeado}"
+	   FontWeight="Bold"
+	   BorderBrush="#FF0E0D0D"
+	   FontFamily="Baskerville Old Face"/>
 
 			<Button x:Name="buttonVerTurnos"
 			  Content="Ver Turnos"

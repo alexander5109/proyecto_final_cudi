@@ -63,10 +63,17 @@ namespace Clinica.AppWPF{
 				App.SoundOn = false;
 			}
 		}
-		
-		
-		
-		
-		
+
+        private void MetodoBotonTurnos2025(object sender, RoutedEventArgs e) {
+			if (App.UsuarioLogueado) {
+				this.NavegarA<WindowGestionTurno>();
+			} else {
+				this.AbrirComoDialogo<WindowLogin>();
+				if (App.UsuarioLogueado) {
+					this.NavegarA<WindowGestionTurno>();
+				}
+			}
+
+		}
 	}
 }
