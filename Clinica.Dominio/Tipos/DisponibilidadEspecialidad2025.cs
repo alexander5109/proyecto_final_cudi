@@ -1,8 +1,7 @@
 using Clinica.Dominio.Comun;
-using Clinica.Dominio.Tipos;
 using System.Collections.Generic;
 
-namespace Clinica.Dominio.Entidades;
+namespace Clinica.Dominio.Tipos;
 
 public readonly record struct FranjaDisponible2025(
     TimeOnly Desde,
