@@ -7,10 +7,9 @@
 public abstract class Result {
 	public sealed class Ok : Result { }
 
-	public sealed class Error : Result {
-		public string Mensaje { get; }
-		public Error(string mensaje) => Mensaje = mensaje;
-	}
+	public sealed class Error(string mensaje) : Result {
+        public string Mensaje { get; } = mensaje;
+    }
 
 	public bool IsOk => this is Ok;
 	public bool IsError => this is Error;
@@ -46,15 +45,13 @@ public abstract class Result {
 //  VERSION GENÉRICA (Result<T>)
 // ==========================================
 public abstract class Result<T> {
-	public sealed class Ok : Result<T> {
-		public T Valor { get; }
-		public Ok(T valor) => Valor = valor;
-	}
+	public sealed class Ok(T valor) : Result<T> {
+        public T Valor { get; } = valor;
+    }
 
-	public sealed class Error : Result<T> {
-		public string Mensaje { get; }
-		public Error(string mensaje) => Mensaje = mensaje;
-	}
+	public sealed class Error(string mensaje) : Result<T> {
+        public string Mensaje { get; } = mensaje;
+    }
 
 	public bool IsOk => this is Ok;
 	public bool IsError => this is Error;
@@ -137,4 +134,23 @@ public static class ResultExtensions {
 			Result<T>.Error e => new Result.Error(e.Mensaje),
 			_ => throw new InvalidOperationException()
 		};
+}
+public static class ResultLinqExtensions {
+	// SELECT  (equivalente a Map)
+	public static Result<U> Select<T, U>(
+		this Result<T> r,
+		Func<T, U> f
+	) => r.Map(f);
+
+	// SELECT MANY (equivalente a Bind)
+	public static Result<V> SelectMany<T, U, V>(
+		this Result<T> r,
+		Func<T, Result<U>> bind,
+		Func<T, U, V> project
+	) {
+		// r.Bind(t => bind(t).Map(u => project(t, u)))
+		return r.Bind(t =>
+			bind(t).Map(u => project(t, u))
+		);
+	}
 }

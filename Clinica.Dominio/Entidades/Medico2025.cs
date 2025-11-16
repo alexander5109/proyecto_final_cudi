@@ -13,7 +13,7 @@ public readonly record struct Medico2025(
 	FechaIngreso2025 FechaIngreso,
 	MedicoSueldoMinimo2025 SueldoMinimoGarantizado,
 	bool HaceGuardias
-){
+) {
 	public static Result<Medico2025> Crear(
 		Result<NombreCompleto2025> nombreResult,
 		Result<MedicoEspecialidad2025> especialidadResult,
@@ -25,25 +25,24 @@ public readonly record struct Medico2025(
 		Result<MedicoSueldoMinimo2025> sueldoResult,
 		bool haceGuardia
 	) =>
-		nombreResult.Bind(nombreOk =>
-		especialidadResult.Bind(espOk =>
-		dniResult.Bind(dniOk =>
-		domicilioResult.Bind(domOk =>
-		telefonoResult.Bind(contOk =>
-		horariosResult.Bind(horariosOk =>
-		fechaIngresoResult.Bind(fechaIngOk =>
-		sueldoResult.Map(sueldoOk =>
-			new Medico2025(
-				nombreOk,
-				espOk,
-				dniOk,
-				domOk,
-				contOk,
-				horariosOk,
-				fechaIngOk,
-				sueldoOk,
-				haceGuardia
-			)
-		))))))));
+		from nombre in nombreResult
+		from esp in especialidadResult
+		from dni in dniResult
+		from dom in domicilioResult
+		from tel in telefonoResult
+		from horarios in horariosResult
+		from fechaIng in fechaIngresoResult
+		from sueldo in sueldoResult
+		select new Medico2025(
+			nombre,
+			esp,
+			dni,
+			dom,
+			tel,
+			horarios,
+			fechaIng,
+			sueldo,
+			haceGuardia
+		);
 
 }

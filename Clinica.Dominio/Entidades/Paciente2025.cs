@@ -1,5 +1,6 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Tipos;
+
 namespace Clinica.Dominio.Entidades;
 
 public readonly record struct Paciente2025(
@@ -9,7 +10,7 @@ public readonly record struct Paciente2025(
 	DomicilioArgentino2025 Domicilio,
 	FechaDeNacimiento2025 FechaNacimiento,
 	FechaIngreso2025 FechaIngreso
-){
+) {
 	public static Result<Paciente2025> Crear(
 		Result<NombreCompleto2025> nombreResult,
 		Result<DniArgentino2025> dniResult,
@@ -18,19 +19,19 @@ public readonly record struct Paciente2025(
 		Result<FechaDeNacimiento2025> fechaNacimientoResult,
 		Result<FechaIngreso2025> fechaIngresoResult
 	)
-	=> nombreResult.Bind(nombreOk =>
-		dniResult.Bind(dniOk =>
-		contactoResult.Bind(contactoOk =>
-		domicilioResult.Bind(domicilioOk =>
-		fechaNacimientoResult.Bind(fechaNacOk =>
-		fechaIngresoResult.Map(fechaIngOk =>
-			new Paciente2025(
-				nombreOk,
-				dniOk,
-				contactoOk,
-				domicilioOk,
-				fechaNacOk,
-				fechaIngOk
-			)
-		))))));
+	=>
+		from nombre in nombreResult
+		from dni in dniResult
+		from contacto in contactoResult
+		from domicilio in domicilioResult
+		from fechaNac in fechaNacimientoResult
+		from fechaIng in fechaIngresoResult
+		select new Paciente2025(
+			nombre,
+			dni,
+			contacto,
+			domicilio,
+			fechaNac,
+			fechaIng
+		);
 }

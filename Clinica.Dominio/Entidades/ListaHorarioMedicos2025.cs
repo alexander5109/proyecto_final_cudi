@@ -54,6 +54,6 @@ public readonly record struct ListaHorarioMedicos2025(
 	// ✅ 4. Versión vacía explícita
 	public static Result<ListaHorarioMedicos2025> CrearVacia()
 		=> new Result<ListaHorarioMedicos2025>.Ok(
-			new ListaHorarioMedicos2025(Array.Empty<HorarioMedico2025>())
+			new ListaHorarioMedicos2025([])
 		);
 }
