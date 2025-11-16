@@ -16,7 +16,9 @@ namespace Clinica.AppWPF;
 		buttonModificarPaciente.IsEnabled = SelectedPaciente != null;
 	}
 	private void UpdateTurnoUI(){
-		turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWherePacienteId(SelectedPaciente);
+		if (SelectedPaciente != null) {
+			turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWherePacienteId(SelectedPaciente.Id);
+		}
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 	private void UpdateMedicoUI() {

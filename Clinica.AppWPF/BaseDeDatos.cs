@@ -30,11 +30,11 @@ public abstract class BaseDeDatosAbstracta{
 	public abstract bool DeleteTurno(ModelViewTurno instance);
 	
 	// Filtros
-	public List<ModelViewTurno> ReadTurnosWhereMedicoId(ModelViewMedico instance) {
-		return DictTurnos.Values.Where(t => t.MedicoId == instance.Id).ToList();
+	public List<ModelViewTurno> ReadTurnosWhereMedicoId(string medicoId) {
+		return DictTurnos.Values.Where(t => t.MedicoId == medicoId).ToList();
 	}
-	public List<ModelViewTurno> ReadTurnosWherePacienteId(ModelViewPaciente instance) {
-		return DictTurnos.Values.Where(t => t.PacienteId == instance.Id).ToList();
+	public List<ModelViewTurno> ReadTurnosWherePacienteId(string pacienteId) {
+		return DictTurnos.Values.Where(t => t.PacienteId == pacienteId).ToList();
 	}
 
 	public List<ModelViewMedico> ReadMedicosWhereEspecialidad(string especialidad) {
