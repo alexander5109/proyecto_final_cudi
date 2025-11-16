@@ -4,7 +4,8 @@ namespace Clinica.Dominio.TiposDeValor;
 public readonly record struct NombreCompleto2025(
 	string Nombre,
 	string Apellido
-){
+)
+	{
 	static readonly int MaxLongitud = 100; // razonable, pero configurable
 	public static Result<NombreCompleto2025> Crear(string? nombre, string? apellido) {
 		if (string.IsNullOrWhiteSpace(nombre))

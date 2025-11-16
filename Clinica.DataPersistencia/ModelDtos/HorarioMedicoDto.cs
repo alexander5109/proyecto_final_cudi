@@ -12,7 +12,7 @@ public record class HorarioMedicoDto {
 
 
 	public static HorarioMedicoDto FromDomain(HorarioMedico2025 horarioMedicoDomain)
-		=> new HorarioMedicoDto {
+		=> new() {
 			DiaSemana = horarioMedicoDomain.DiaSemana.Valor.ToString(),
 			Desde = horarioMedicoDomain.Desde.Valor.ToString(),
 			Hasta = horarioMedicoDomain.Hasta.Valor.ToString(),

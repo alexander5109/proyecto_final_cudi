@@ -1,12 +1,16 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
+using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Linq;
 
 namespace Clinica.DataPersistencia.ModelDtos;
+
 public record class MedicoDto {
-	public required string? Id { get; set; } = string.Empty;
+	public required string Id { get; set; } = string.Empty;
 	public required string Name { get; set; } = string.Empty;
 	public required string LastName { get; set; } = string.Empty;
 	public required string Dni { get; set; } = string.Empty;
@@ -14,7 +18,6 @@ public record class MedicoDto {
 	public required string Domicilio { get; set; } = string.Empty;
 	public required string Localidad { get; set; } = string.Empty;
 	public required string Especialidad { get; set; } = string.Empty;
-	public required string EspecialidadRama { get; set; } = string.Empty;
 	public required string Telefono { get; set; } = string.Empty;
 	public required bool Guardia { get; set; }
 	public required string FechaIngreso { get; set; }
@@ -22,10 +25,54 @@ public record class MedicoDto {
 	public required List<HorarioMedicoDto> Horarios { get; set; } = new List<HorarioMedicoDto>();
 
 
+	public static MedicoDto FromSQLReader(SqlDataReader reader) {
+		// 1. Leer JSON de horarios
+		var horariosJson = reader["Horarios"] as string;
 
-	public static MedicoDto FromDomain(Medico2025 medicoDomain)
+		var horarios = new List<HorarioMedicoDto>();
+
+		if (!string.IsNullOrWhiteSpace(horariosJson)) {
+			try {
+				var array = JArray.Parse(horariosJson);
+
+				foreach (var token in array) {
+					horarios.Add(new HorarioMedicoDto {
+						DiaSemana = token["DiaSemana"]?.ToString() ?? "",
+						Desde = token["HoraDesde"]?.ToString() ?? "",
+						Hasta = token["HoraHasta"]?.ToString() ?? "",
+						MedicoId = token["MedicoId"]?.ToString() // puede ser null
+					});
+				}
+			} catch (Exception) {
+				// Si el JSON está corrupto, no cortamos la lectura del médico
+				// pero dejamos lista vacía.
+			}
+		}
+
+		// 2. Construir DTO principal
+		return new MedicoDto {
+			Id = reader["Id"]?.ToString() ?? "",
+			Name = reader["Name"]?.ToString() ?? "",
+			LastName = reader["LastName"]?.ToString() ?? "",
+			Dni = reader["Dni"]?.ToString() ?? "",
+			Provincia = reader["Provincia"]?.ToString() ?? "",
+			Domicilio = reader["Domicilio"]?.ToString() ?? "",
+			Localidad = reader["Localidad"]?.ToString() ?? "",
+			Especialidad = reader["Especialidad"]?.ToString() ?? "",
+			Telefono = reader["Telefono"]?.ToString() ?? "",
+			Guardia = reader["Guardia"] != DBNull.Value && Convert.ToBoolean(reader["Guardia"]),
+			FechaIngreso = reader["FechaIngreso"]?.ToString() ?? "",
+			SueldoMinimoGarantizado = reader["SueldoMinimoGarantizado"] == DBNull.Value
+										 ? 0
+										 : Convert.ToDecimal(reader["SueldoMinimoGarantizado"]),
+			Horarios = horarios
+		};
+	}
+
+
+	public static MedicoDto FromDomain(Medico2025 medicoDomain, string medicoId)
 		=> new MedicoDto {
-			Id = string.Empty,
+			Id = medicoId,
 			Name = medicoDomain.NombreCompleto.Nombre,
 			LastName = medicoDomain.NombreCompleto.Apellido,
 			Dni = medicoDomain.Dni.Valor,
@@ -33,7 +80,6 @@ public record class MedicoDto {
 			Domicilio = medicoDomain.Domicilio.Direccion,
 			Localidad = medicoDomain.Domicilio.Localidad.Nombre,
 			Especialidad = medicoDomain.Especialidad.Titulo,
-			EspecialidadRama = medicoDomain.Especialidad.Rama,
 			Telefono = medicoDomain.Telefono.Valor,
 			Guardia = medicoDomain.HaceGuardias,
 			FechaIngreso = medicoDomain.FechaIngreso.Valor.ToString(),
@@ -43,7 +89,7 @@ public record class MedicoDto {
 	public static Result<Medico2025> ToDomain(MedicoDto medicoDto)
 		=> Medico2025.Crear(
 			NombreCompleto2025.Crear(medicoDto.Name, medicoDto.LastName),
-			MedicoEspecialidad2025.Crear(medicoDto.Especialidad, medicoDto.EspecialidadRama),
+			MedicoEspecialidad2025.Crear(medicoDto.Especialidad),
 			DniArgentino2025.Crear(medicoDto.Dni),
 			DomicilioArgentino2025.Crear(
 				LocalidadDeProvincia2025.Crear(

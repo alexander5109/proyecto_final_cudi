@@ -6,7 +6,7 @@ namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct MedicoEspecialidad2025(
 	string Titulo,
-	string Rama,
+	//string Rama,
 	int DuracionConsultaMinutos
 ) {
 	public static readonly List<string> EspecialidadesDisponibles = [
@@ -58,17 +58,20 @@ public readonly record struct MedicoEspecialidad2025(
 		["Dermatólogo"] = 20
 	};
 
-	public static Result<MedicoEspecialidad2025> Crear(string? titulo, string? rama, int? duracionMinutos = null) {
+	public static Result<MedicoEspecialidad2025> Crear(string? titulo, int? duracionMinutos = null) {
+	//public static Result<MedicoEspecialidad2025> Crear(string? titulo, string? rama, int? duracionMinutos = null) {
 		if (string.IsNullOrWhiteSpace(titulo))
 			return new Result<MedicoEspecialidad2025>.Error("El título no puede estar vacío.");
-		if (string.IsNullOrWhiteSpace(rama))
-			return new Result<MedicoEspecialidad2025>.Error("La rama no puede estar vacía.");
+		//if (string.IsNullOrWhiteSpace(rama))
+			//return new Result<MedicoEspecialidad2025>.Error("La rama no puede estar vacía.");
 		string candidadoTitulo = titulo.Trim();
-		string candidadoRama = rama.Trim();
+		//string candidadoRama = rama.Trim();
 
-		if (EspecialidadesDisponibles.Contains(candidadoTitulo) && RamasDisponibles.Contains(candidadoRama)) {
+		if (EspecialidadesDisponibles.Contains(candidadoTitulo)) {
+		//if (EspecialidadesDisponibles.Contains(candidadoTitulo) && RamasDisponibles.Contains(candidadoRama)) {
 			int dur = duracionMinutos ?? (DuracionesPorEspecialidad.ContainsKey(candidadoTitulo) ? DuracionesPorEspecialidad[candidadoTitulo] : 30);
-			return new Result<MedicoEspecialidad2025>.Ok(new MedicoEspecialidad2025(candidadoTitulo, candidadoRama, dur));
+			return new Result<MedicoEspecialidad2025>.Ok(new MedicoEspecialidad2025(candidadoTitulo, dur));
+			//return new Result<MedicoEspecialidad2025>.Ok(new MedicoEspecialidad2025(candidadoTitulo, candidadoRama, dur));
 		} else {
 			return new Result<MedicoEspecialidad2025>.Error("La especialidad médica no es válida.");
 		}

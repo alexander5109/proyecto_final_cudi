@@ -60,6 +60,7 @@
     <Folder Include="dbo" />
     <Folder Include="dbo\StoredProcedures" />
     <Folder Include="dbo\Tables" />
+    <Folder Include="dbo\UserDefinedTableTypes" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\StoredProcedures\sp_CreateMedico.sql" />
@@ -83,6 +84,9 @@
     <Build Include="dbo\StoredProcedures\sp_ReadHorariosMedicosAll.sql" />
     <Build Include="dbo\StoredProcedures\sp_UpdateHorarioMedico.sql" />
     <Build Include="dbo\StoredProcedures\sp_ReadMedicosAll.sql" />
+    <Build Include="dbo\UserDefinedTableTypes\HorarioMedicoTableType.sql" />
+    <Build Include="dbo\StoredProcedures\sp_UpdateMedicoWithHorarios.sql" />
+    <Build Include="dbo\StoredProcedures\sp_CreateMedicoWithHorarios.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
