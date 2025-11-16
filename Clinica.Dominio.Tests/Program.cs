@@ -8,9 +8,8 @@ using Clinica.Dominio.Tests.Escenarios;
 namespace Clinica.Dominio.Tests;
 
 internal class Program {
-	static void Main(string[] args) {
-		var test1 = new DisponibilidadEscenariosTests();
-		test1.Escenario_Asignar_turnos_por_orden_de_solicitud();
+	static void Main() {
+        DisponibilidadEscenariosTests.Escenario_Asignar_turnos_por_orden_de_solicitud();
 
 	}
 }

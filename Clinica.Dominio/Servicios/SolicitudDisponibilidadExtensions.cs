@@ -35,7 +35,7 @@ public static class SolicitudDisponibilidadExtensions {
 
 			// Obtener turnos de la especialidad en el rango
 			var turnosR = repoTurnos.ObtenerTurnosPorEspecialidad(especialidad.Titulo, start, start.AddDays(diasHaciaAdelante));
-			var turnos = turnosR is Result<IReadOnlyList<Turno2025>>.Ok ok ? ok.Valor : new List<Turno2025>();
+			var turnos = turnosR is Result<IReadOnlyList<Turno2025>>.Ok ok ? ok.Valor : [];
 
 			var duracion = TimeSpan.FromMinutes(especialidad.DuracionConsultaMinutos);
 
@@ -63,17 +63,16 @@ public static class SolicitudDisponibilidadExtensions {
 
 		}
 
-		// Probar si hay al menos un elemento disponible
-		using (var enumerator = Generator().GetEnumerator()) {
-			if (!enumerator.MoveNext()) return new Result<IEnumerable<EspecialidadDisponibilidadHoraria>>.Error("No hay disponibilidades encontradas."); // Mensaje de error dummy
+        // Probar si hay al menos un elemento disponible
+        using var enumerator = Generator().GetEnumerator();
+        if (!enumerator.MoveNext()) return new Result<IEnumerable<EspecialidadDisponibilidadHoraria>>.Error("No hay disponibilidades encontradas."); // Mensaje de error dummy
 
-			// Si hay al menos un elemento, envolver en un IEnumerable que emite primero el elemento actual
-			IEnumerable<EspecialidadDisponibilidadHoraria> Wrapper() {
-				yield return enumerator.Current;
-				while (enumerator.MoveNext()) yield return enumerator.Current;
-			}
+        // Si hay al menos un elemento, envolver en un IEnumerable que emite primero el elemento actual
+        IEnumerable<EspecialidadDisponibilidadHoraria> Wrapper() {
+            yield return enumerator.Current;
+            while (enumerator.MoveNext()) yield return enumerator.Current;
+        }
 
-			return new Result<IEnumerable<EspecialidadDisponibilidadHoraria>>.Ok(Wrapper());
-		}
-	}
+        return new Result<IEnumerable<EspecialidadDisponibilidadHoraria>>.Ok(Wrapper());
+    }
 }
