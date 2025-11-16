@@ -1,8 +1,7 @@
 ﻿using System.Globalization;
 using Clinica.Dominio.Comun;
-using Clinica.Dominio.Tipos;
 
-namespace Clinica.Dominio.Entidades;
+namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct HorarioMedico2025(
 	DiaSemana2025 DiaSemana,

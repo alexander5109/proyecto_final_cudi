@@ -2,13 +2,16 @@
 using System.Linq;
 using System.Collections.Generic;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Tipos;
+using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Repositorios;
-using System.Net.Http.Headers;
 using Clinica.Dominio.Servicios;
+using Xunit;
+using FluentAssertions;
 
 namespace Clinica.Dominio.Tests.Escenarios;
+
+
 
 public class FakeRepositorioMedicos(List<Medico2025> medicos) : IRepositorioMedicos {
     public Result<IReadOnlyList<Medico2025>> ObtenerMedicosPorEspecialidad(string especialidadTitulo) => new Result<IReadOnlyList<Medico2025>>.Ok(medicos.Where(m => m.Especialidad.Titulo == especialidadTitulo).ToList());
@@ -29,6 +32,112 @@ public class FakeRepositorioTurnos : IRepositorioTurnos {
 }
 
 public class DisponibilidadEscenariosTests {
+
+
+
+	[Fact]
+	public void Escenario_Asignar_turnos_por_orden_de_solicitud_unit_test() {
+		// Arrange
+		var medico1 = CrearMedico("Ana", "Perez", "11111111", "Gastroenterólogo",
+			DayOfWeek.Monday, TimeOnly.Parse("09:00"), TimeOnly.Parse("12:00"));
+
+		var medico2 = CrearMedico("Luis", "Gomez", "22222222", "Gastroenterólogo",
+			DayOfWeek.Monday, TimeOnly.Parse("09:00"), TimeOnly.Parse("12:00"));
+
+		var psicologo = CrearMedico("Marta", "Lopez", "33333333", "Psicólogo",
+			DayOfWeek.Tuesday, TimeOnly.Parse("10:00"), TimeOnly.Parse("14:00"));
+
+		var repoMedicos = new FakeRepositorioMedicos(new List<Medico2025> { medico1, medico2, psicologo });
+		var repoTurnos = new FakeRepositorioTurnos();
+
+		var juan = CrearPaciente("Juan", "Diaz", "44444444");
+		var pedro = CrearPaciente("Pedro", "Lopez", "55555555");
+		var rosalia = CrearPaciente("Rosalia", "Martinez", "66666666");
+
+		var especialGastro = MedicoEspecialidad2025
+			.Crear("Gastroenterólogo", MedicoEspecialidad2025.RamasDisponibles.First())
+			.Match(ok => ok, err => throw new Exception(err));
+
+		var especialPsico = MedicoEspecialidad2025
+			.Crear("Psicólogo", MedicoEspecialidad2025.RamasDisponibles.First())
+			.Match(ok => ok, err => throw new Exception(err));
+
+		// Juan solicita gastro
+		var solicitudJuan = SolicitudConsulta2025
+			.Crear(new Result<Paciente2025>.Ok(juan), new Result<MedicoEspecialidad2025>.Ok(especialGastro), DateTime.Now)
+			.Match(ok => ok, err => throw new Exception(err));
+
+		// Act
+		var dispJuan = solicitudJuan.BuscarDisponibilidades(repoMedicos, repoTurnos)
+			.Match(ok => ok, err => throw new Exception(err))
+			.First();
+
+		var turnoJuan = Turno2025
+			.Crear(new Result<Medico2025>.Ok(dispJuan.Medico),
+					new Result<Paciente2025>.Ok(juan),
+					new Result<MedicoEspecialidad2025>.Ok(especialGastro),
+					dispJuan.Inicio)
+			.Match(ok => ok, err => throw new Exception(err));
+
+		repoTurnos.Guardar(turnoJuan);
+
+		// Pedro solicita gastro -> toma siguiente turno disponible
+		var solicitudPedro = SolicitudConsulta2025
+			.Crear(new Result<Paciente2025>.Ok(pedro), new Result<MedicoEspecialidad2025>.Ok(especialGastro), DateTime.Now)
+			.Match(ok => ok, err => throw new Exception(err));
+
+		var dispPedro = solicitudPedro.BuscarDisponibilidades(repoMedicos, repoTurnos)
+			.Match(ok => ok, err => throw new Exception(err))
+			.First();
+
+		var turnoPedro = Turno2025
+			.Crear(new Result<Medico2025>.Ok(dispPedro.Medico),
+					new Result<Paciente2025>.Ok(pedro),
+					new Result<MedicoEspecialidad2025>.Ok(especialGastro),
+					dispPedro.Inicio)
+			.Match(ok => ok, err => throw new Exception(err));
+
+		repoTurnos.Guardar(turnoPedro);
+
+		// Rosalia solicita psicólogo
+		var solicitudRosalia = SolicitudConsulta2025
+			.Crear(new Result<Paciente2025>.Ok(rosalia), new Result<MedicoEspecialidad2025>.Ok(especialPsico), DateTime.Now.AddDays(7))
+			.Match(ok => ok, err => throw new Exception(err));
+
+		var dispRosalia = solicitudRosalia.BuscarDisponibilidades(repoMedicos, repoTurnos)
+			.Match(ok => ok, err => throw new Exception(err))
+			.First();
+
+		var turnoRosalia = Turno2025
+			.Crear(new Result<Medico2025>.Ok(dispRosalia.Medico),
+					new Result<Paciente2025>.Ok(rosalia),
+					new Result<MedicoEspecialidad2025>.Ok(especialPsico),
+					dispRosalia.Inicio)
+			.Match(ok => ok, err => throw new Exception(err));
+
+		// Assert
+
+		turnoJuan.Paciente.NombreCompleto.Apellido.Should().Be("Diaz");
+		//turnoJuan.Paciente.NombreCompleto.Apellido.Should().Be("Diaz_ERROR");
+		turnoPedro.Paciente.NombreCompleto.Apellido.Should().Be("Lopez");
+		turnoRosalia.Paciente.NombreCompleto.Apellido.Should().Be("Martinez");
+
+		turnoJuan.Especialidad.Should().Be(especialGastro);
+		turnoPedro.Especialidad.Should().Be(especialGastro);
+		turnoRosalia.Especialidad.Should().Be(especialPsico);
+
+		turnoPedro.FechaYHora.Should().BeAfter(turnoJuan.FechaYHora);
+
+		turnoJuan.MedicoAsignado.Should().BeOneOf(medico1, medico2);
+		turnoPedro.MedicoAsignado.Should().BeOneOf(medico1, medico2);
+
+		turnoRosalia.MedicoAsignado.Should().Be(psicologo);
+
+
+	}
+
+
+
 	private static Medico2025 CrearMedico(string nombre, string apellido, string dni, string especialidadTitulo, DayOfWeek dia, TimeOnly desde, TimeOnly hasta) {
 		var nombreRes = NombreCompleto2025.Crear(nombre, apellido);
 		var espRes = MedicoEspecialidad2025.Crear(especialidadTitulo, MedicoEspecialidad2025.RamasDisponibles.First());
@@ -73,7 +182,7 @@ public class DisponibilidadEscenariosTests {
 		var psicologo = CrearMedico("Marta", "Lopez", "33333333", "Psicólogo",
 									DayOfWeek.Tuesday, TimeOnly.Parse("10:00"), TimeOnly.Parse("14:00"));
 
-		var repoMedicos = new FakeRepositorioMedicos(new List<Medico2025> { medico1, medico2, psicologo });
+		var repoMedicos = new FakeRepositorioMedicos([medico1, medico2, psicologo]);
 		var repoTurnos = new FakeRepositorioTurnos();
 
 		Console.WriteLine("Médicos cargados: Ana, Luis y Marta.\n");

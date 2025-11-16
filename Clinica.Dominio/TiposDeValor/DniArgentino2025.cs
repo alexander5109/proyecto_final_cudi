@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using System.Text.RegularExpressions;
 
-namespace Clinica.Dominio.Tipos;
+namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct DniArgentino2025(
 	string Valor

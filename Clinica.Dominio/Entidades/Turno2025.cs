@@ -1,6 +1,6 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Extentions;
-using Clinica.Dominio.Tipos;
+using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
 

@@ -1,5 +1,5 @@
 ﻿//using Clinica.DataPersistencia.Mapeadores.TypeHandlers;
-using Clinica.Dominio.Tipos;
+using Clinica.Dominio.TiposDeValor;
 using Dapper;
 using static Dapper.SqlMapper;
 

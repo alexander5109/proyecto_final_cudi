@@ -1,7 +1,7 @@
 using Clinica.Dominio.Comun;
-using Clinica.Dominio.Tipos;
+using Clinica.Dominio.Entidades;
 
-namespace Clinica.Dominio.Entidades;
+namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct SolicitudConsulta2025(
     Paciente2025 Paciente,

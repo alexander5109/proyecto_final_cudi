@@ -1,5 +1,5 @@
 ﻿using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Tipos;
+using Clinica.Dominio.TiposDeValor;
 using System.Globalization;
 
 namespace Clinica.Dominio.Extentions;

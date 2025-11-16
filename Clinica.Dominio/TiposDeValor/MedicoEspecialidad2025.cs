@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace Clinica.Dominio.Tipos;
+namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct MedicoEspecialidad2025(
 	string Titulo,

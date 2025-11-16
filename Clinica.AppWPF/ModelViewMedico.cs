@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Tipos;
+using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 

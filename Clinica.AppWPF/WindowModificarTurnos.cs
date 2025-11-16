@@ -1,11 +1,10 @@
 ﻿using Clinica.AppWPF.ModelViews;
 using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Tipos;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.AppWPF;
 public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {

@@ -1,6 +1,6 @@
 ﻿using Clinica.Dominio.Comun;
 using System.Globalization;
-namespace Clinica.Dominio.Tipos;
+namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct HorarioHora2025(
 	TimeOnly Valor

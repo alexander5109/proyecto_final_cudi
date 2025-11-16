@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
-namespace Clinica.Dominio.Tipos;
+namespace Clinica.Dominio.TiposDeValor;
 
 
 public readonly record struct DiaSemana2025(

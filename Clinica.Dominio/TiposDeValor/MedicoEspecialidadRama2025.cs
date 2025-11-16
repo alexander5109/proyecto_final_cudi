@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using System.Collections.Immutable;
 
-namespace Clinica.Dominio.Tipos;
+namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct MedicoEspecialidadRama2025(
 	string Titulo

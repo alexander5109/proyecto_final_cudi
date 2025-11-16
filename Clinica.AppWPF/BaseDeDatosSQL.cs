@@ -1,7 +1,7 @@
 using Clinica.AppWPF.ModelViews;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Tipos;
+using Clinica.Dominio.TiposDeValor;
 using Microsoft.Data.SqlClient;
 using System.Collections.ObjectModel;
 using System.Configuration;

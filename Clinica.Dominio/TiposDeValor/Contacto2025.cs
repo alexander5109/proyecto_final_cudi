@@ -1,5 +1,5 @@
 ﻿using Clinica.Dominio.Comun;
-namespace Clinica.Dominio.Tipos;
+namespace Clinica.Dominio.TiposDeValor;
 
 public record struct Contacto2025(
 	ContactoEmail2025 Email,

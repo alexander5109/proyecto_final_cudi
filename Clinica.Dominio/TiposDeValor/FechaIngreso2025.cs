@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using System.Globalization;
 
-namespace Clinica.Dominio.Tipos;
+namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct FechaIngreso2025(
 	DateOnly Valor

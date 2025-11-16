@@ -1,7 +1,7 @@
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Repositorios;
-using Clinica.Dominio.Tipos;
+using Clinica.Dominio.TiposDeValor;
 using System;
 using System.Collections.Generic;
 using System.Linq;

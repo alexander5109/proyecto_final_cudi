@@ -1,4 +1,4 @@
-﻿using Clinica.Dominio.Tipos;
+﻿using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 
