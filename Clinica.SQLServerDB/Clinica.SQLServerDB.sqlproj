@@ -87,6 +87,7 @@
     <Build Include="dbo\UserDefinedTableTypes\HorarioMedicoTableType.sql" />
     <Build Include="dbo\StoredProcedures\sp_UpdateMedicoWithHorarios.sql" />
     <Build Include="dbo\StoredProcedures\sp_CreateMedicoWithHorarios.sql" />
+    <Build Include="dbo\Tables\EspecialidadMedica.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />

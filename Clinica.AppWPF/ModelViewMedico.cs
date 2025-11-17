@@ -8,6 +8,24 @@ using Newtonsoft.Json;
 namespace Clinica.AppWPF.ModelViews;
 
 
+
+public partial class ModelViewHorario : ObservableObject {
+	[ObservableProperty] private DayOfWeek diaSemana;
+	[ObservableProperty] private TimeOnly desde;
+	[ObservableProperty] private TimeOnly hasta;
+}
+
+public partial class ModelViewHorariosAgrupados : ObservableObject {
+	public DayOfWeek DiaSemana { get; }
+	public string DiaSemanaNombre => DiaSemana.AEspañol();
+	[ObservableProperty] private ObservableCollection<ModelViewHorario> horarios = new();
+
+	public ModelViewHorariosAgrupados(DayOfWeek dia) {
+		DiaSemana = dia;
+	}
+}
+
+
 public partial class ModelViewMedico : ObservableObject {
 
 

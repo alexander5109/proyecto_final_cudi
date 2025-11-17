@@ -1,10 +1,6 @@
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
-using Clinica.Dominio.Entidades;
-using System.Collections.Generic;
 
 namespace Clinica.AppWPF;
 
@@ -18,12 +14,13 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 	public record ModelViewDiaSemana(int Value, string NombreDia);
 	public record DisponibilidadEspecialidadModelView(DateTime Fecha, string Hora, string Medico);
 
+
 	// Bindables
-	public ObservableCollection<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = new();
-	public ObservableCollection<MedicoSimpleViewModel> MedicosEspecialistas { get; } = new();
-	public ObservableCollection<ModelViewDiaSemana> DiasSemana { get; } = new();
-	public ObservableCollection<int> Horas { get; } = new();
-	public ObservableCollection<DisponibilidadEspecialidadModelView> Disponibilidades { get; } = new();
+	public ObservableCollection<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = [];
+    public ObservableCollection<MedicoSimpleViewModel> MedicosEspecialistas { get; } = [];
+    public ObservableCollection<ModelViewDiaSemana> DiasSemana { get; } = [];
+	public ObservableCollection<int> Horas { get; } = [];
+	public ObservableCollection<DisponibilidadEspecialidadModelView> Disponibilidades { get; } = [];
 
 	// Selecteds / filtros
 	private string? _selectedEspecialidadUId;
@@ -134,7 +131,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 		Disponibilidades.Clear();
 	}
 
-	private List<MedicoSimpleViewModel> _medicosHard = new();
+	private List<MedicoSimpleViewModel> _medicosHard = [];
 
 	// Cargar médicos por especialidad (demo)
 	private void LoadMedicosPorEspecialidad(string? especialidadUId) {

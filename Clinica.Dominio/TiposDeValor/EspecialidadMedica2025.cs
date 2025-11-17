@@ -5,7 +5,6 @@ using System.Linq;
 namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct EspecialidadMedica2025(
-	//int UId,
 	string Titulo,
 	//string Rama,
 	int DuracionConsultaMinutos
@@ -30,13 +29,13 @@ public readonly record struct EspecialidadMedica2025(
 		"Dermatólogo"
 	];
 
-	public static readonly List<string> RamasDisponibles = [
-		"Clínica Médica",
-		"Salud Mental",
-		"Cirugía General",
-		"Rehabilitación",
-		"Cirugía y Ortopedia"
-	];
+	//public static readonly List<string> RamasDisponibles = [
+	//	"Clínica Médica",
+	//	"Salud Mental",
+	//	"Cirugía General",
+	//	"Rehabilitación",
+	//	"Cirugía y Ortopedia"
+	//];
 
 	// Duraciones por defecto por especialidad (minutos)
 	private static readonly Dictionary<string, int> DuracionesPorEspecialidad = new(StringComparer.OrdinalIgnoreCase) {

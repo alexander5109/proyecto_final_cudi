@@ -8,31 +8,63 @@
 --------------------------------------------------------------------------------------
 */
 
+----------------------------------------------------
+IF NOT EXISTS (SELECT 1 FROM dbo.EspecialidadMedica)
+BEGIN
+    SET IDENTITY_INSERT dbo.EspecialidadMedica ON;
+    INSERT INTO dbo.EspecialidadMedica 
+        (Id, Titulo, MinutosConsulta)
+    VALUES 
+		(1, 'Clínico General', 30),
+		(2, 'Cardiólogo', 40),
+		(3, 'Oftalmólogo', 20),
+		(4, 'Otorrinolaringólogo', 25),
+		(5, 'Psiquiatra', 50),
+		(6, 'Psicólogo', 50),
+		(7, 'Cirujano', 60),
+		(8, 'Kinesiólogo', 30),
+		(9, 'Nutricionista', 30),
+		(10, 'Gastroenterólogo', 30),
+		(11, 'Osteópata', 30),
+		(12, 'Proctólogo', 40),
+		(13, 'Pediatra', 40),
+		(14, 'Ginecólogo', 40),
+		(15, 'Traumatólogo', 30),
+		(16, 'Neurólogo', 30),
+		(17, 'Dermatólogo', 30);
+    SET IDENTITY_INSERT dbo.EspecialidadMedica OFF;
+END;
+GO
+
 
 ----------------------------------------------------
 -- Cargar datos de ejemplo en Medico
 ----------------------------------------------------
 IF NOT EXISTS (SELECT 1 FROM dbo.Medico)
 BEGIN
+    SET IDENTITY_INSERT dbo.Medico ON;
     INSERT INTO dbo.Medico 
-        (Name, LastName, Provincia, Domicilio, Localidad, Especialidad, EspecialidadRama, Telefono, Guardia, FechaIngreso, SueldoMinimoGarantizado, Dni)
+        (Id, Name, LastName, Provincia, Domicilio, Localidad, EspecialidadId, Telefono, Guardia, FechaIngreso, SueldoMinimoGarantizado, Dni)
     VALUES 
-        ('Dr. Ricardo', 'Arjona', 'Buenos Aires', 'Av. Siempre Viva 123', 'Capital Federal', 'Cardiólogo', 'ClinicaGeneral', '1234567890', 1, '20220115', 285000.50, '12345678'),
-        ('Dr. Tocando', 'Shells', 'Córdoba', 'Calle Falsa 456', 'Villa Carlos Paz', 'Ginecólogo', 'ClinicaGeneral', '2345678901', 0, '20210520', 392000.00, '87654321'),
-        ('Dr. Mario', 'Socolinsky', 'Mendoza', 'Ruta 40 Km 12', 'Godoy Cruz', 'Pediatra', 'ClinicaGeneral', '3456789012', 1, '20200910', 378000.75, '11223344'),
-        ('Dra. Roxana', 'Toledo', 'Salta', 'Calle San Martin 100', 'Salta', 'Masajista', 'ClinicaGeneral', '4567890123', 0, '20230205', 399000.25, '55667788'),
-        ('Dra. Tete', 'Falopa', 'Santa Fe', 'Boulevard Galvez 2000', 'Rosario', 'Curadora', 'ClinicaGeneral', '5678901234', 1, '20191225', 486000.00, '99887766'),
-        ('Dra. Debora', 'Meltrozo', 'Buenos Aires', 'Ruta 40 Km 10', 'Uruguay', 'Traumatóloga', 'ClinicaGeneral', '1238909252', 1, '20241005', 500000.00, '40350997'),
-        ('Dr. Miguel', 'DedoGordo', 'Buenos Aires', 'Ruta 40 Km 13', 'Italia', 'Proctólogo', 'ClinicaGeneral', '2348905216', 0, '20211003', 543555.00, '54355292'),
-        ('Dr. Felipe', 'Estomagón', 'Chaco', 'Av. Curva Peligrosa 78', 'Resistencia', 'ClinicaGeneral', 'Gastroenterólogo', '6781234567', 1, '20230714', 655000.00, '65432198'),
-        ('Dr. Paco', 'Lespiedras', 'Misiones', 'Ruta de Tierra 99', 'Posadas', 'Osteópata', 'ClinicaGeneral', '7892345678', 0, '20221101', 835000.75, '45678901'),
-        ('Dra. Clara', 'Mentoni', 'La Pampa', 'Calle Polvorienta 101', 'Santa Rosa', 'Cardióloga', 'ClinicaGeneral', '8903456789', 1, '20200420', 700500.25, '11225588');
+        (1, 'Dr. Ricardo', 'Arjona', 'Buenos Aires', 'Av. Siempre Viva 123', 'Capital Federal', 1, '1234567890', 1, '20220115', 285000.50, '12345678'),
+        (2, 'Dr. Tocando', 'Shells', 'Córdoba', 'Calle Falsa 456', 'Villa Carlos Paz', 9, '2345678901', 0, '20210520', 392000.00, '87654321'),
+        (3, 'Dr. Mario', 'Socolinsky', 'Mendoza', 'Ruta 40 Km 12', 'Godoy Cruz', 7, '3456789012', 1, '20200910', 378000.75, '11223344'),
+        (4, 'Dra. Roxana', 'Toledo', 'Salta', 'Calle San Martin 100', 'Salta', 5, '4567890123', 0, '20230205', 399000.25, '55667788'),
+        (5, 'Dra. Tete', 'Falopa', 'Santa Fe', 'Boulevard Galvez 2000', 'Rosario',  3, '5678901234', 1, '20191225', 486000.00, '99887766'),
+        (6, 'Dra. Debora', 'Meltrozo', 'Buenos Aires', 'Ruta 40 Km 10', 'Uruguay', 2, '1238909252', 1, '20241005', 500000.00, '40350997'),
+        (7, 'Dr. Miguel', 'DedoGordo', 'Buenos Aires', 'Ruta 40 Km 13', 'Italia', 4, '2348905216', 0, '20211003', 543555.00, '54355292'),
+        (8, 'Dr. Felipe', 'Estomagón', 'Chaco', 'Av. Curva Peligrosa 78', 'Resistencia', 6, '6781234567', 1, '20230714', 655000.00, '65432198'),
+        (9, 'Dr. Paco', 'Lespiedras', 'Misiones', 'Ruta de Tierra 99', 'Posadas', 8, '7892345678', 0, '20221101', 835000.75, '45678901'),
+        (10, 'Dra. Clara', 'Mentoni', 'La Pampa', 'Calle Polvorienta 101', 'Santa Rosa', 10, '8903456789', 1, '20200420', 700500.25, '11225588');
+    SET IDENTITY_INSERT dbo.Medico OFF;
 END;
 GO
 
 ----------------------------------------------------
 -- Cargar datos de ejemplo en HorarioMedico
 ----------------------------------------------------
+
+
 IF NOT EXISTS (SELECT 1 FROM dbo.HorarioMedico)
 BEGIN
     INSERT INTO dbo.HorarioMedico (MedicoId, DiaSemana, HoraDesde, HoraHasta)
