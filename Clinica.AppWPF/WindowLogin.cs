@@ -1,4 +1,4 @@
-﻿using Clinica.AppWPF.ModelViews;
+﻿using Clinica.AppWPF.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 			
@@ -15,9 +15,10 @@ public partial class WindowLogin : Window {
 	}
 	
 	private void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
-		if (checkboxJSON.IsChecked == true) {
-			App.BaseDeDatos = new BaseDeDatosJSON();
-		} else if ( datos_completados() ) {
+		//if (checkboxJSON.IsChecked == true) {
+			//App.BaseDeDatos = new BaseDeDatosJSON();
+		//} else if ( datos_completados() ) {
+		if (datos_completados() ) {
 			App.BaseDeDatos = new BaseDeDatosSQL();
 		} else {
 			App.BaseDeDatos = new BaseDeDatosSQL($"Server={labelServidor.Text};Database=ClinicaMedica;User ID={labelUsuario.Text};Password={labelPassword.Text};");

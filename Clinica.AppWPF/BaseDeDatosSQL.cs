@@ -1,4 +1,6 @@
-using Clinica.AppWPF.ModelViews;
+using Clinica.AppWPF.ViewModels;
+using Clinica.DataPersistencia.ModelDtos;
+using Clinica.DataPersistencia.Repositorios;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
@@ -27,8 +29,8 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		;
 	}
 
-	//------------------------public.CREATE.ModelViewMedico----------------------//
-	public override bool CreateMedico(Medico2025 instancia, ModelViewMedico instanceDto) {
+	//------------------------public.CREATE.ViewModelMedico----------------------//
+	public override bool CreateMedico(Medico2025 instancia, ViewModelMedico instanceDto) {
 		string insertQuery = @"
 				INSERT INTO Medico (Name, LastName, Dni, Provincia, Domicilio, Localidad, Especialidad, Telefono, Guardia, FechaIngreso, SueldoMinimoGarantizado) 
 				VALUES (@Name, @LastName, @Dni, @Provincia, @Domicilio, @Localidad, @Especialidad, @Telefono, @Guardia, @FechaIngreso, @SueldoMinimoGarantizado)
@@ -49,11 +51,15 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 					sqlComando.Parameters.AddWithValue("@Guardia", instancia.HaceGuardias);
 					sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Valor);
 					sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado.Valor);
-					instanceDto.Id = sqlComando.ExecuteScalar().ToString(); //ahora la instancia creada desde la ventana tiene su propia Id
+					instanceDto.Id = int.Parse(sqlComando.ExecuteScalar().ToString()); //ahora la instancia creada desde la ventana tiene su propia CodigoInterno
 				}
 			}
-			DictMedicos[instanceDto.Id] = instanceDto;
-			// MessageBox.Show($"Exito: Se ha creado la instancia de ModelViewMedico: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+			if (instanceDto.Id == null) {
+				throw new Exception("Error al obtener la ID generada para el médico.");
+			} else {
+				DictMedicos[(int)instanceDto.Id] = instanceDto;
+			}
+			// MessageBox.Show($"Exito: Se ha creado la instancia de ViewModelMedico: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 			return true;
 		} catch (SqlException ex) when (ex.Number == 2627) // Unique constraint violation error code
 		  {
@@ -71,7 +77,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 
 
 	//------------------------public.CREATE.ModelViewPaciente----------------------//
-	public override bool CreatePaciente(Paciente2025 instancia, ModelViewPaciente instanceDto) {
+	public override bool CreatePaciente(Paciente2025 instancia, ViewModelPaciente instanceDto) {
 		string insertQuery = @"
 				INSERT INTO Paciente (Dni, Name, LastName, FechaIngreso, Email, Telefono, FechaNacimiento, Domicilio, Localidad, Provincia) 
 				VALUES (@Dni, @Name, @LastName, @FechaIngreso, @Email, @Telefono, @FechaNacimiento, @Domicilio, @Localidad, @Provincia)
@@ -92,11 +98,13 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 					sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
 					sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
 					sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
-					instanceDto.Id = sqlComando.ExecuteScalar()?.ToString();    //ahora la instancia creada desde la ventana tiene su propia Id
+					instanceDto.Id = int.Parse(sqlComando.ExecuteScalar()?.ToString());    //ahora la instancia creada desde la ventana tiene su propia CodigoInterno
 				}
 			}
-
-			DictPacientes[instanceDto.Id] = instanceDto;
+			if (instanceDto.Id == null) {
+				throw new Exception("Error al obtener la ID generada para el paciente.");
+			}
+			DictPacientes[(int) instanceDto.Id] = instanceDto;
 			// MessageBox.Show($"Exito: Se ha creado la instancia de ModelViewPaciente: {instancia.Name} {instancia.LastName}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 			return true;
 		} catch (SqlException ex) when (ex.Number == 2627) // Unique constraint violation error code
@@ -115,7 +123,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 
 
 	//------------------------public.CREATE.ModelViewTurno----------------------//
-	public override bool CreateTurno(Turno2025 instanciaValidada, ModelViewTurno instancia) {
+	public override bool CreateTurno(Turno2025 instanciaValidada, ViewModelTurno instancia) {
 		string insertQuery = @"
 				INSERT INTO Turno (PacienteId, MedicoId, Fecha, Hora) 
 				VALUES (@PacienteId, @MedicoId, @Fecha, @Hora);
@@ -128,11 +136,14 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 					sqlComando.Parameters.AddWithValue("@MedicoId", instancia.MedicoId);
 					sqlComando.Parameters.AddWithValue("@Fecha", instancia.Fecha);
 					sqlComando.Parameters.AddWithValue("@Hora", instancia.Hora);
-					instancia.Id = sqlComando.ExecuteScalar().ToString();   //ahora la instancia creada desde la ventana tiene su propia Id
+					instancia.Id = int.Parse(sqlComando.ExecuteScalar().ToString());   //ahora la instancia creada desde la ventana tiene su propia CodigoInterno
 				}
 			}
-			DictTurnos[instancia.Id] = instancia;
-			//MessageBox.Show($"Exito: Se ha creado la instancia de ModelViewTurno con id: {instancia.Id} entre {instancia.PacienteId} {instancia.MedicoId} el dia {instancia.Fecha} a las {instancia.Hora}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+			if (instancia.Id is null) {
+				throw new Exception("Error al obtener la ID generada para el turno.");
+			}
+			DictTurnos[(int)instancia.Id] = instancia;
+			//MessageBox.Show($"Exito: Se ha creado la instancia de ModelViewTurno con id: {instancia.CodigoInterno} entre {instancia.PacienteId} {instancia.MedicoId} el dia {instancia.Fecha} a las {instancia.Hora}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 			return true;
 		} catch (SqlException ex) when (ex.Number == 2627) // Unique constraint violation error code
 		  {
@@ -150,15 +161,15 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 
 
 	//------------------------public.READ----------------------//
-	public override List<ModelViewMedico> ReadMedicos() {
+	public override List<ViewModelMedico> ReadMedicos() {
 		return DictMedicos.Values.ToList();
 	}
 
-	public override List<ModelViewPaciente> ReadPacientes() {
+	public override List<ViewModelPaciente> ReadPacientes() {
 		return DictPacientes.Values.ToList();
 	}
 
-	public override List<ModelViewTurno> ReadTurnos() {
+	public override List<ViewModelTurno> ReadTurnos() {
 		return DictTurnos.Values.ToList();
 	}
 
@@ -172,9 +183,12 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 
 
 
-	//------------------------public.UPDATE.ModelViewMedico----------------------//
-	public override bool UpdateMedico(Medico2025 instancia, string instanceId) {
-		string query = "UPDATE Medico SET Name = @Name, LastName = @LastName, Dni = @Dni, Provincia = @Provincia, Domicilio = @Domicilio, Localidad = @Localidad, Especialidad = @Especialidad, Telefono = @Telefono, Guardia = @Guardia, FechaIngreso = @FechaIngreso, SueldoMinimoGarantizado = @SueldoMinimoGarantizado WHERE Id = @Id";
+	//------------------------public.UPDATE.ViewModelMedico----------------------//
+	public override bool UpdateMedico(Medico2025 instancia, int? instanceId) {
+		if (instanceId == null) {
+			return false;
+		}
+		string query = "UPDATE Medico SET Name = @Name, LastName = @LastName, Dni = @Dni, Provincia = @Provincia, Domicilio = @Domicilio, Localidad = @Localidad, Especialidad = @Especialidad, Telefono = @Telefono, Guardia = @Guardia, FechaIngreso = @FechaIngreso, SueldoMinimoGarantizado = @SueldoMinimoGarantizado WHERE CodigoInterno = @CodigoInterno";
 		try {
 			using (var connection = new SqlConnection(connectionString)) {
 				connection.Open();
@@ -190,7 +204,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 					sqlComando.Parameters.AddWithValue("@Guardia", instancia.HaceGuardias);
 					sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Valor);
 					sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado.Valor);
-					sqlComando.Parameters.AddWithValue("@Id", instanceId);
+					sqlComando.Parameters.AddWithValue("@CodigoInterno", instanceId);
 					sqlComando.ExecuteNonQuery();
 				}
 			}
@@ -210,8 +224,9 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		return false;
 	}
 	//------------------------public.UPDATE.ModelViewPaciente----------------------//
-	public override bool UpdatePaciente(Paciente2025 instancia, string instanceId) {
-		string query = "UPDATE Paciente SET Dni = @Dni, Name = @Name, LastName = @LastName, FechaIngreso = @FechaIngreso, Email = @Email, Telefono = @Telefono, FechaNacimiento = @FechaNacimiento, Domicilio = @Domicilio, Localidad = @Localidad, Provincia = @Provincia WHERE Id = @Id";
+	public override bool UpdatePaciente(Paciente2025 instancia, int? instanceId) {
+		if (instanceId == null) { return false; }
+		string query = "UPDATE Paciente SET Dni = @Dni, Name = @Name, LastName = @LastName, FechaIngreso = @FechaIngreso, Email = @Email, Telefono = @Telefono, FechaNacimiento = @FechaNacimiento, Domicilio = @Domicilio, Localidad = @Localidad, Provincia = @Provincia WHERE CodigoInterno = @CodigoInterno";
 		try {
 			using (var connection = new SqlConnection(connectionString)) {
 				connection.Open();
@@ -226,7 +241,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 					sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
 					sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
 					sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
-					sqlComando.Parameters.AddWithValue("@Id", instanceId);
+					sqlComando.Parameters.AddWithValue("@CodigoInterno", instanceId);
 					sqlComando.ExecuteNonQuery();
 				}
 			}
@@ -246,9 +261,9 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		return false;
 	}
 	//------------------------public.UPDATE.ModelViewTurno----------------------//
-	public override bool UpdateTurno(Turno2025 instanciaValidada, ModelViewTurno instancia) {
-		string query = "UPDATE Turno SET PacienteId = @PacienteId, MedicoId = @MedicoId, Fecha = @Fecha, Hora = @Hora WHERE Id = @Id";
-		// string query = "UPDATE ModelViewTurno SET PacienteId = @PacienteId, MedicoId = @MedicoId WHERE Id = @Id";
+	public override bool UpdateTurno(Turno2025 instanciaValidada, ViewModelTurno instancia) {
+		string query = "UPDATE Turno SET PacienteId = @PacienteId, MedicoId = @MedicoId, Fecha = @Fecha, Hora = @Hora WHERE CodigoInterno = @CodigoInterno";
+		// string query = "UPDATE ModelViewTurno SET PacienteId = @PacienteId, MedicoId = @MedicoId WHERE CodigoInterno = @CodigoInterno";
 		try {
 			using (var connection = new SqlConnection(connectionString)) {
 				connection.Open();
@@ -257,11 +272,11 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 					sqlComando.Parameters.AddWithValue("@MedicoId", instancia.MedicoId);
 					sqlComando.Parameters.AddWithValue("@Fecha", instancia.Fecha);
 					sqlComando.Parameters.AddWithValue("@Hora", instancia.Hora);
-					sqlComando.Parameters.AddWithValue("@Id", instancia.Id);
+					sqlComando.Parameters.AddWithValue("@CodigoInterno", instancia.Id);
 					sqlComando.ExecuteNonQuery();
 				}
 			}
-			//MessageBox.Show($"Exito: Se han actualizado los datos del turno con id: {instancia.Id}. Ahora entre {instancia.PacienteId} {instancia.MedicoId} el dia {instancia.Fecha} a las {instancia.Hora}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+			//MessageBox.Show($"Exito: Se han actualizado los datos del turno con id: {instancia.CodigoInterno}. Ahora entre {instancia.PacienteId} {instancia.MedicoId} el dia {instancia.Fecha} a las {instancia.Hora}", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 			return true;
 		} catch (SqlException ex) when (ex.Number == 2627) // Unique constraint violation error code
 		  {
@@ -284,20 +299,23 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 
 
 
-	//------------------------public.DELETE.ModelViewMedico----------------------//
-	public override bool DeleteMedico(ModelViewMedico instancia) {
-		string query = "DELETE FROM Medico WHERE Id = @Id";
+	//------------------------public.DELETE.ViewModelMedico----------------------//
+	public override bool DeleteMedico(ViewModelMedico instancia) {
+		string query = "DELETE FROM Medico WHERE CodigoInterno = @CodigoInterno";
 
 		try {
 			using (var connection = new SqlConnection(connectionString)) {
 				connection.Open();
 				using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
-					sqlComando.Parameters.AddWithValue("@Id", instancia.Id);
+					sqlComando.Parameters.AddWithValue("@CodigoInterno", instancia.Id);
 					sqlComando.ExecuteNonQuery();
 				}
 			}
-			DictMedicos.Remove(instancia.Id);
-			// MessageBox.Show($"Exito: Se ha eliminado el medicoView con id: {instancia.Id} de la Base de Datos SQL", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+			if (instancia.Id == null) {
+				throw new Exception("Error al obtener la ID del médico para eliminar.");
+			}
+			DictMedicos.Remove((int) instancia.Id);
+			// MessageBox.Show($"Exito: Se ha eliminado el medicoView con id: {instancia.CodigoInterno} de la Base de Datos SQL", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 			return true;
 		} catch (SqlException ex) when (ex.Number == 547) // SQL Server foreign key violation error code
 		  {
@@ -310,18 +328,21 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		return false;
 	}
 	//------------------------public.DELETE.ModelViewPaciente----------------------//
-	public override bool DeletePaciente(ModelViewPaciente instancia) {
-		string query = "DELETE FROM Paciente WHERE Id = @Id";
+	public override bool DeletePaciente(ViewModelPaciente instancia) {
+		if (instancia.Id == null) {
+			throw new Exception("Error al obtener la ID del paciente para eliminar.");
+		}
+		string query = "DELETE FROM Paciente WHERE CodigoInterno = @CodigoInterno";
 		try {
 			using (var connection = new SqlConnection(connectionString)) {
 				connection.Open();
 				using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
-					sqlComando.Parameters.AddWithValue("@Id", instancia.Id);
+					sqlComando.Parameters.AddWithValue("@CodigoInterno", instancia.Id);
 					sqlComando.ExecuteNonQuery();
 				}
 			}
-			DictPacientes.Remove(instancia.Id);
-			// MessageBox.Show($"Exito: Se ha eliminado el paciente con id: {instancia.Id} de la Base de Datos SQL", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+			DictPacientes.Remove((int) instancia.Id);
+			// MessageBox.Show($"Exito: Se ha eliminado el paciente con id: {instancia.CodigoInterno} de la Base de Datos SQL", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 			return true;
 		} catch (SqlException ex) when (ex.Number == 547) // SQL Server foreign key violation error code
 		  {
@@ -334,18 +355,21 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		return false;
 	}
 	//------------------------public.DELETE.ModelViewTurno----------------------//
-	public override bool DeleteTurno(ModelViewTurno instancia) {
-		string query = "DELETE FROM Turno WHERE Id = @Id";
+	public override bool DeleteTurno(ViewModelTurno instancia) {
+		if (instancia.Id == null) {
+			throw new Exception("Error al obtener la ID del turno para eliminar.");
+		}
+		string query = "DELETE FROM Turno WHERE CodigoInterno = @CodigoInterno";
 		try {
 			using (var connection = new SqlConnection(connectionString)) {
 				connection.Open();
 				using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
-					sqlComando.Parameters.AddWithValue("@Id", instancia.Id);
+					sqlComando.Parameters.AddWithValue("@CodigoInterno", instancia.Id);
 					sqlComando.ExecuteNonQuery();
 				}
 			}
-			DictTurnos.Remove(instancia.Id);
-			// MessageBox.Show($"Exito: Se ha eliminado el turno con id: {instancia.Id} de la Base de Datos SQL", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+			DictTurnos.Remove((int)instancia.Id);
+			// MessageBox.Show($"Exito: Se ha eliminado el turno con id: {instancia.CodigoInterno} de la Base de Datos SQL", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
 			return true;
 		} catch (SqlException ex) when (ex.Number == 2627) // Unique constraint violation error code
 		  {
@@ -371,81 +395,13 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 
 	//------------------------private.LOAD.WindowListarMedicos----------------------//
 	private bool SQLCargarMedicosExitosamente() {
-		try {
-			using var conexion = new SqlConnection(connectionString);
-			conexion.Open();
+		//var dictMedicos = new Dictionary<int, ViewModelMedico>();
+		foreach (MedicoDto medico in MedicosRepositoriosOld.ReadTodos(connectionString)) {
+			DictMedicos[medico.Id] = medico.ToViewModel();
+			// MessageBox.Show($"Cargando Medico desde SQL: ID:({medico.Id}) - {medico.Name} {medico.LastName} {medico.Horarios.ToString()}");
 
-			using var comando = new SqlCommand("sp_ReadMedicosAllWithHorarios", conexion);
-			comando.CommandType = CommandType.StoredProcedure;
-
-			using var reader = comando.ExecuteReader();
-
-			var dictMedicos = new Dictionary<string, ModelViewMedico>();
-
-			while (reader.Read()) {
-
-				string medicoId = reader["Id"].ToString()!;
-
-				// -----------------------------------------
-				// 1) Programar médico si no existe aún
-				// -----------------------------------------
-				if (!dictMedicos.TryGetValue(medicoId, out var medicoView)) {
-					medicoView = new ModelViewMedico(
-						[],                              // Horarios vacío
-						medicoId,
-						reader["Name"] as string,
-						reader["LastName"] as string,
-						reader["Dni"] as string,
-						reader["Provincia"] as string,
-						reader["Domicilio"] as string,
-						reader["Localidad"] as string,
-						reader["Especialidad"] as string,
-						reader["Telefono"] as string,
-						reader["Guardia"] != DBNull.Value ? Convert.ToBoolean(reader["Guardia"]) : null,
-						reader["FechaIngreso"] != DBNull.Value ? Convert.ToDateTime(reader["FechaIngreso"]) : null,
-						reader["SueldoMinimoGarantizado"] != DBNull.Value ? Convert.ToDecimal(reader["SueldoMinimoGarantizado"]) : null
-					);
-
-					dictMedicos[medicoId] = medicoView;
-				}
-
-				// -----------------------------------------
-				// 2) Procesar horarios (si existen)
-				// -----------------------------------------
-				if (reader["HorarioId"] != DBNull.Value) {
-
-					// DiaSemana es INT 0..6 → convertir a DayOfWeek
-					int diaInt = Convert.ToInt32(reader["DiaSemana"]);
-					DayOfWeek diaEnum = (DayOfWeek)diaInt;
-
-					// Construir tu tipo fuerte DiaSemana2025
-					var diaSemana = new DiaSemana2025(diaEnum);
-
-					// Leer horas
-					var desde = TimeOnly.Parse(reader["HoraDesde"].ToString()!);
-					var hasta = TimeOnly.Parse(reader["HoraHasta"].ToString()!);
-
-					// Agregar horario directamente
-					medicoView.Horarios.Add(new ModelViewHorario {
-						DiaSemana = diaSemana.Valor,
-						Desde = desde,
-						Hasta = hasta
-					});
-				}
-			}
-
-			DictMedicos = dictMedicos;
-			return true;
-		} catch (Exception ex) {
-			MessageBox.Show(
-				$"Ocurrió un error al leer los médicos desde SQL: {ex.Message}",
-				"Error de Database",
-				MessageBoxButton.OK,
-				MessageBoxImage.Error
-			);
-
-			return CrearLasTablasExitosamente();
 		}
+		return true;
 	}
 
 
@@ -460,8 +416,8 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				using (var sqlComando = new SqlCommand(consulta, conexion))
 				using (var reader = sqlComando.ExecuteReader()) {
 					while (reader.Read()) {
-						var paciente = new ModelViewPaciente(
-							Convert.ToString(reader["Id"]) ?? string.Empty,
+                        ViewModelPaciente paciente = new ViewModelPaciente(
+							Convert.ToInt32(reader["Id"]),
 							Convert.ToString(reader["Dni"]),
 							Convert.ToString(reader["Name"]),
 							Convert.ToString(reader["LastName"]),
@@ -473,9 +429,12 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 							Convert.ToString(reader["Localidad"]),
 							Convert.ToString(reader["Provincia"])
 						);
-						//MessageBox.Show($"Cargando Paciente desde SQL: ID:({paciente.Id}) - {paciente.Name} {paciente.LastName}");
-
-						DictPacientes[paciente.Id] = paciente;
+						//MessageBox.Show($"Cargando Paciente desde SQL: ID:({paciente.CodigoInterno}) - {paciente.Name} {paciente.LastName}");
+						if (paciente.Id == null) {
+							throw new Exception("Error al obtener la ID del paciente desde la base de datos.");
+						} else {
+							DictPacientes[(int) paciente.Id] = paciente;
+						}
 					}
 				}
 			}
@@ -494,15 +453,17 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				using (var sqlComando = new SqlCommand(consulta, conexion))
 				using (var reader = sqlComando.ExecuteReader()) {
 					while (reader.Read()) {
-						var turno = new ModelViewTurno(
-							reader["Id"]?.ToString(),
-							reader["PacienteId"]?.ToString(),
-							reader["MedicoId"]?.ToString(),
+                        ViewModelTurno turno = new(
+							int.Parse(reader["Id"].ToString()),
+							int.Parse(reader["PacienteId"].ToString()),
+							int.Parse(reader["MedicoId"].ToString()),
 							reader["Fecha"] != DBNull.Value ? Convert.ToDateTime(reader["Fecha"]) : null,
 							reader["Hora"].ToString(),
 							reader["DuracionMinutos"] != DBNull.Value ? Convert.ToInt32(reader["DuracionMinutos"]) : null
 						);
-						DictTurnos[turno.Id] = turno;
+						if (turno != null) {
+							DictTurnos[(int) turno.Id] = turno;
+						}
 					}
 				}
 			}

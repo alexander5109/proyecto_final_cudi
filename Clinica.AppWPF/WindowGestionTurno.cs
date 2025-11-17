@@ -1,6 +1,9 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using Clinica.AppWPF.ViewModels;
+using Clinica.DataPersistencia.Repositorios;
+using Clinica.Dominio.Repositorios;
 
 namespace Clinica.AppWPF;
 
@@ -8,36 +11,31 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-	// View-model simple types (internos, auto-contenidos para demo)
-	public record EspecialidadMedicaViewModel(string UId, string Titulo);
-	public record MedicoSimpleViewModel(string Id, string Displayear);
-	public record ModelViewDiaSemana(int Value, string NombreDia);
-	public record DisponibilidadEspecialidadModelView(DateTime Fecha, string Hora, string Medico);
 
 
 	// Bindables
-	public ObservableCollection<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = [];
-    public ObservableCollection<MedicoSimpleViewModel> MedicosEspecialistas { get; } = [];
-    public ObservableCollection<ModelViewDiaSemana> DiasSemana { get; } = [];
+	public ObservableCollection<ViewModelEspecialidadMedica> EspecialidadesDisponibles { get; } = [];
+	public ObservableCollection<ViewModelMedico> MedicosEspecialistas { get; } = [];
+	public ObservableCollection<ViewModelDiaSemana> DiasSemana { get; } = [];
 	public ObservableCollection<int> Horas { get; } = [];
-	public ObservableCollection<DisponibilidadEspecialidadModelView> Disponibilidades { get; } = [];
+	public ObservableCollection<ViewModelDisponibilidadEspecialidad> Disponibilidades { get; } = [];
 
 	// Selecteds / filtros
-	private string? _selectedEspecialidadUId;
-	public string? SelectedEspecialidadUId {
-		get => _selectedEspecialidadUId;
+	private int? _selectedEspecialidadCodigoInterno;
+	public int? SelectedEspecialidadCodigoInterno {
+		get => _selectedEspecialidadCodigoInterno;
 		set {
-			if (_selectedEspecialidadUId == value) return;
-			_selectedEspecialidadUId = value;
-			OnPropertyChanged(nameof(SelectedEspecialidadUId));
-			Console.WriteLine($"[UI] Especialidad seleccionada: {_selectedEspecialidadUId}");
+			if (_selectedEspecialidadCodigoInterno == value) return;
+			_selectedEspecialidadCodigoInterno = value;
+			OnPropertyChanged(nameof(SelectedEspecialidadCodigoInterno));
+			Console.WriteLine($"[UI] Especialidad seleccionada: {_selectedEspecialidadCodigoInterno}");
 			LoadMedicosPorEspecialidad(value);
 			RefreshDisponibilidades();
 		}
 	}
 
-	private string? _selectedMedicoId;
-	public string? SelectedMedicoId {
+	private int? _selectedMedicoId;
+	public int? SelectedMedicoId {
 		get => _selectedMedicoId;
 		set {
 			if (_selectedMedicoId == value) return;
@@ -95,21 +93,21 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 	private void SeedData() {
 		// Especialidades demo
 		var espList = new[] {
-			new EspecialidadMedicaViewModel("esp-gastro", "Gastroenterólogo"),
-			new EspecialidadMedicaViewModel("esp-psico", "Psicólogo"),
-			new EspecialidadMedicaViewModel("esp-derma", "Dermatólogo")
+			new ViewModelEspecialidadMedica("esp-gastro", "Gastroenterólogo"),
+			new ViewModelEspecialidadMedica("esp-psico", "Psicólogo"),
+			new ViewModelEspecialidadMedica("esp-derma", "Dermatólogo")
 		};
 		foreach (var e in espList) EspecialidadesDisponibles.Add(e);
 
-		// Dias de la semana (ModelViewDiaSemana)
+		// Dias de la semana (ViewModelDiaSemana)
 		var dias = new[] {
-			new ModelViewDiaSemana(0, "Domingo"),
-			new ModelViewDiaSemana(1, "Lunes"),
-			new ModelViewDiaSemana(2, "Martes"),
-			new ModelViewDiaSemana(3, "Miércoles"),
-			new ModelViewDiaSemana(4, "Jueves"),
-			new ModelViewDiaSemana(5, "Viernes"),
-			new ModelViewDiaSemana(6, "Sábado")
+			new ViewModelDiaSemana(0, "Domingo"),
+			new ViewModelDiaSemana(1, "Lunes"),
+			new ViewModelDiaSemana(2, "Martes"),
+			new ViewModelDiaSemana(3, "Miércoles"),
+			new ViewModelDiaSemana(4, "Jueves"),
+			new ViewModelDiaSemana(5, "Viernes"),
+			new ViewModelDiaSemana(6, "Sábado")
 		};
 		foreach (var d in dias) DiasSemana.Add(d);
 
@@ -117,12 +115,14 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 		for (int h = 8; h <= 19; h++) Horas.Add(h);
 
 		// Medicos ejemplo (no asociados aun)
-		_medicosHard = new List<MedicoSimpleViewModel> {
-			new MedicoSimpleViewModel("m1","Ana Perez (Gastro)"),
-			new MedicoSimpleViewModel("m2","Luis Gomez (Gastro)"),
-			new MedicoSimpleViewModel("m3","Marta Lopez (Psico)"),
-			new MedicoSimpleViewModel("m4","Carla Ruiz (Derma)")
-		};
+		//List<ViewModelMedico> _medicosHard = 
+
+		//new() {
+		//	new ViewModelMedico("m1","Ana Perez (Gastro)"),
+		//	new ViewModelMedico("m2","Luis Gomez (Gastro)"),
+		//	new ViewModelMedico("m3","Marta Lopez (Psico)"),
+		//	new ViewModelMedico("m4","Carla Ruiz (Derma)")
+		//};
 
 		// initial empty medicos list
 		MedicosEspecialistas.Clear();
@@ -131,24 +131,33 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 		Disponibilidades.Clear();
 	}
 
-	private List<MedicoSimpleViewModel> _medicosHard = [];
+	//private List<ViewModelMedico> _medicosHard = App.BaseDeDatos.DictMedicos.Values.ToList();
 
 	// Cargar médicos por especialidad (demo)
-	private void LoadMedicosPorEspecialidad(string? especialidadUId) {
+	private void LoadMedicosPorEspecialidad(int? especialidadCodigoInterno) {
+
+
 		MedicosEspecialistas.Clear();
-		if (string.IsNullOrEmpty(especialidadUId)) return;
 
-		// En producción: Medico2025.SelectWhereEspecialidadId(especialidadUId)
-		// Demo mapping por UId
-		IEnumerable<MedicoSimpleViewModel> found = Enumerable.Empty<MedicoSimpleViewModel>();
-		if (especialidadUId == "esp-gastro")
-			found = _medicosHard.Where(m => m.Displayear.Contains("Gastro"));
-		else if (especialidadUId == "esp-psico")
-			found = _medicosHard.Where(m => m.Displayear.Contains("Psico"));
-		else if (especialidadUId == "esp-derma")
-			found = _medicosHard.Where(m => m.Displayear.Contains("Derma"));
 
-		foreach (var m in found) MedicosEspecialistas.Add(m);
+		if (especialidadCodigoInterno is null) return;
+
+		// En producción: Medico2025.SelectWhereEspecialidadCodigoInterno(especialidadCodigoInterno)
+		// Demo mapping por CodigoInterno
+		//IEnumerable<ViewModelMedico> found = Enumerable.Empty<ViewModelMedico>();
+
+
+
+
+        //if (especialidadCodigoInterno == "esp-gastro")
+        //	found = _medicosHard.Where(m => m.Displayear.Contains("Gastro"));
+        //else if (especialidadCodigoInterno == "esp-psico")
+        //	found = _medicosHard.Where(m => m.Displayear.Contains("Psico"));
+        //else if (especialidadCodigoInterno == "esp-derma")
+        //	found = _medicosHard.Where(m => m.Displayear.Contains("Derma"));
+        List<ViewModelMedico> found = App.BaseDeDatos.ReadMedicosWhereEspecialidad((int)especialidadCodigoInterno);
+
+		foreach (ViewModelMedico medico in found) MedicosEspecialistas.Add(medico);
 
 		// seleccionar primer medico si existe
 		if (MedicosEspecialistas.Any()) {
@@ -163,10 +172,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 		Disponibilidades.Clear();
 
 		// Si no hay especialidad no hay disponibilidad
-		if (string.IsNullOrEmpty(SelectedEspecialidadUId)) {
-			Console.WriteLine("[UI] No hay especialidad seleccionada -> no disponibilidades");
-			return;
-		}
+		if (SelectedEspecialidadCodigoInterno  == null) return;
 
 		// Generar mock: para la especialidad elegida generamos slots próximos 5 días según filtros
 		var hoy = DateTime.Today;
@@ -179,7 +185,8 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 			if (FiltroDiaEnabled && SelectedDiaValue.HasValue && SelectedDiaValue.Value != dayOfWeek) continue;
 
 			// para cada médico disponible (si hay) generar slots
-			var medicos = MedicosEspecialistas.Any() ? MedicosEspecialistas : _medicosHard.Where(m => m.Displayear.Contains(SelectedEspecialidadUId?.Split('-').Last() ?? ""));
+			var medicos = MedicosEspecialistas.Any() ? MedicosEspecialistas : App.BaseDeDatos.DictMedicos.Values.Where(m => m.EspecialidadCodigoInterno == SelectedEspecialidadCodigoInterno);
+
 			foreach (var med in medicos) {
 				// horas candidates 9..16 step duracion
 				for (int hora = 9; hora <= 16; hora += Math.Max(1, duracionMinutos / 60)) {
@@ -187,7 +194,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 					if (FiltroHoraEnabled && SelectedHora.HasValue && SelectedHora.Value != hora) continue;
 
 					var horaStr = TimeSpan.FromHours(hora).ToString(@"hh\:mm");
-					Disponibilidades.Add(new DisponibilidadEspecialidadModelView(fecha, horaStr, med.Displayear));
+					Disponibilidades.Add(new ViewModelDisponibilidadEspecialidad(fecha, horaStr, med.Displayear));
 				}
 			}
 		}
@@ -202,7 +209,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 
 	private void ButtonReservar(object sender, RoutedEventArgs e) {
 		// Para demo: tomar primer item seleccionado y mostrar info
-		var seleccionado = txtDisponibilidades.SelectedItem as DisponibilidadEspecialidadModelView ?? Disponibilidades.FirstOrDefault();
+		var seleccionado = txtDisponibilidades.SelectedItem as ViewModelDisponibilidadEspecialidad ?? Disponibilidades.FirstOrDefault();
 		if (seleccionado is null) {
 			MessageBox.Show("No hay una disponibilidad seleccionada.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
 			return;

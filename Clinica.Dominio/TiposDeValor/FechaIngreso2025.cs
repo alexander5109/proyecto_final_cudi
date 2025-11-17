@@ -3,46 +3,86 @@ using System.Globalization;
 
 namespace Clinica.Dominio.TiposDeValor;
 
-public readonly record struct FechaIngreso2025(
-	DateOnly Valor
-) {
-	public static readonly DateOnly Hoy = DateOnly.FromDateTime(DateTime.Now);
+public readonly record struct FechaIngreso2025(DateTime Valor) {
+	public static readonly DateTime Ahora = DateTime.Now;
 
-	public static Result<FechaIngreso2025> Crear(DateOnly fecha) {
-		if (fecha > Hoy)
+	// ==============================
+	// -------- Factories ----------
+	// ==============================
+
+	public static Result<FechaIngreso2025> Crear(DateTime fecha) {
+		// VALIDACIONES DE DOMINIO
+		if (fecha > Ahora)
 			return new Result<FechaIngreso2025>.Error("La fecha de ingreso no puede ser futura.");
-		if (fecha < Hoy.AddYears(-30))
-			return new Result<FechaIngreso2025>.Error("Hace 30 años no existia la clínica.");
 
-		return new Result<FechaIngreso2025>.Ok(new(fecha));
+		if (fecha < Ahora.AddYears(-30))
+			return new Result<FechaIngreso2025>.Error("Hace 30 años no existía la clínica.");
+
+		return new Result<FechaIngreso2025>.Ok(new FechaIngreso2025(fecha));
 	}
 
 	public static Result<FechaIngreso2025> Crear(DateTime? fecha) {
-		if (fecha is null) {
+		if (fecha is null)
 			return new Result<FechaIngreso2025>.Error("La fecha de ingreso no puede estar vacía.");
-		}
 
-		var dateOnly = DateOnly.FromDateTime(fecha.Value);
-		return Crear(dateOnly);
+		return Crear(fecha.Value);
 	}
+
+	// Compatibilidad: DateOnly → DateTime
+	public static Result<FechaIngreso2025> Crear(DateOnly fecha)
+		=> Crear(fecha.ToDateTime(TimeOnly.MinValue));
 
 	public static Result<FechaIngreso2025> Crear(string? input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<FechaIngreso2025>.Error("La fecha de ingreso no puede estar vacía.");
 
-		// Soportar varios formatos razonables
-		string[] formatos = [
-			"dd/MM/yyyy", "yyyy-MM-dd", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy"
-		];
+		input = input.Trim();
 
-		if (DateTime.TryParseExact(input.Trim(), formatos, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt))
-			return Crear(dt);
+		// Formatos razonables de fecha y fecha+hora
+		string[] formatos =
+		{
+			"dd/MM/yyyy",
+			"dd/MM/yyyy HH:mm",
+			"dd/MM/yyyy HH:mm:ss",
 
-		if (DateTime.TryParse(input.Trim(), CultureInfo.CurrentCulture, DateTimeStyles.None, out var dt2))
-			return Crear(dt2);
+			"yyyy-MM-dd",
+			"yyyy-MM-dd HH:mm",
+			"yyyy-MM-dd HH:mm:ss",
+			"yyyy-MM-ddTHH:mm",
+			"yyyy-MM-ddTHH:mm:ss",
+
+			"d/M/yyyy",
+			"d/M/yyyy HH:mm",
+			"M/d/yyyy",
+			"M/d/yyyy HH:mm"
+		};
+
+		// Intento 1: parseo exacto
+		if (DateTime.TryParseExact(
+				input,
+				formatos,
+				CultureInfo.InvariantCulture,
+				DateTimeStyles.None,
+				out var dtExact)) {
+			return Crear(dtExact);
+		}
+
+		// Intento 2: parseo flexible según cultura del usuario
+		if (DateTime.TryParse(
+				input,
+				CultureInfo.CurrentCulture,
+				DateTimeStyles.AssumeLocal,
+				out var dtCulture)) {
+			return Crear(dtCulture);
+		}
 
 		return new Result<FechaIngreso2025>.Error("Formato de fecha inválido.");
 	}
 
+	// ==============================
+	// -------- Helpers ------------
+	// ==============================
 
+	public override string ToString()
+		=> Valor.ToString("yyyy-MM-dd HH:mm:ss");
 }

@@ -1,16 +1,33 @@
 ﻿using Clinica.Dominio.Comun;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace Clinica.Dominio.TiposDeValor;
 
-public readonly record struct EspecialidadMedica2025(
-	string Titulo,
-	//string Rama,
-	int DuracionConsultaMinutos
-) {
-	public static readonly List<string> EspecialidadesDisponibles = [
-		"Clínico General",
+public readonly record struct EspecialidadCodigoInterno(int Valor);
+
+public sealed class EspecialidadMedica2025 {
+	// ============================
+	//  Fields / Properties
+	// ============================
+	public EspecialidadCodigoInterno CodigoInterno { get; }
+	public string Titulo { get; }
+	public int DuracionConsultaMinutos { get; }
+
+	private EspecialidadMedica2025(
+		EspecialidadCodigoInterno codigoInterno,
+		string titulo,
+		int duracionMin) {
+		CodigoInterno = codigoInterno;
+		Titulo = titulo;
+		DuracionConsultaMinutos = duracionMin;
+	}
+
+	// ============================
+	//  Static Data (Domain Truth)
+	// ============================
+
+	public static readonly string[] Titulos = [
+        "Clínico General",
 		"Cardiólogo",
 		"Oftalmólogo",
 		"Otorrinolaringólogo",
@@ -29,51 +46,91 @@ public readonly record struct EspecialidadMedica2025(
 		"Dermatólogo"
 	];
 
-	//public static readonly List<string> RamasDisponibles = [
-	//	"Clínica Médica",
-	//	"Salud Mental",
-	//	"Cirugía General",
-	//	"Rehabilitación",
-	//	"Cirugía y Ortopedia"
-	//];
+	private static readonly Dictionary<string, int> DuracionesPorEspecialidad =
+		new(StringComparer.OrdinalIgnoreCase) {
+			["Clínico General"] = 30,
+			["Cardiólogo"] = 40,
+			["Oftalmólogo"] = 20,
+			["Otorrinolaringólogo"] = 25,
+			["Psiquiatra"] = 50,
+			["Psicólogo"] = 50,
+			["Cirujano"] = 60,
+			["Kinesiólogo"] = 30,
+			["Nutricionista"] = 30,
+			["Gastroenterólogo"] = 40,
+			["Osteópata"] = 30,
+			["Proctólogo"] = 30,
+			["Pediatra"] = 25,
+			["Ginecólogo"] = 35,
+			["Traumatólogo"] = 40,
+			["Neurólogo"] = 45,
+			["Dermatólogo"] = 20
+		};
 
-	// Duraciones por defecto por especialidad (minutos)
-	private static readonly Dictionary<string, int> DuracionesPorEspecialidad = new(StringComparer.OrdinalIgnoreCase) {
-		["Clínico General"] = 30,
-		["Cardiólogo"] = 40,
-		["Oftalmólogo"] = 20,
-		["Otorrinolaringólogo"] = 25,
-		["Psiquiatra"] = 50,
-		["Psicólogo"] = 50,
-		["Cirujano"] = 60,
-		["Kinesiólogo"] = 30,
-		["Nutricionista"] = 30,
-		["Gastroenterólogo"] = 40,
-		["Osteópata"] = 30,
-		["Proctólogo"] = 30,
-		["Pediatra"] = 25,
-		["Ginecólogo"] = 35,
-		["Traumatólogo"] = 40,
-		["Neurólogo"] = 45,
-		["Dermatólogo"] = 20
-	};
 
-	public static Result<EspecialidadMedica2025> Crear(string? titulo) {
-	//public static Result<EspecialidadMedica2025> Programar(string? titulo, string? rama, int? duracionMinutos = null) {
+	// ============================================
+	//  Bidirectional Dictionary (ID <-> Especialidad)
+	// ============================================
+
+	// Domain ID starts from 1…N, fixed permanently.
+	private static readonly ImmutableDictionary<EspecialidadCodigoInterno, EspecialidadMedica2025> _fromId;
+	private static readonly ImmutableDictionary<string, EspecialidadMedica2025> _fromTitulo;
+
+	public static IReadOnlyDictionary<EspecialidadCodigoInterno, EspecialidadMedica2025> PorId => _fromId;
+	public static IReadOnlyDictionary<string, EspecialidadMedica2025> PorTitulo => _fromTitulo;
+
+	static EspecialidadMedica2025() {
+		var byIdBuilder = ImmutableDictionary.CreateBuilder<EspecialidadCodigoInterno, EspecialidadMedica2025>();
+		var byTituloBuilder = ImmutableDictionary.CreateBuilder<string, EspecialidadMedica2025>(StringComparer.OrdinalIgnoreCase);
+
+		int idCounter = 1;
+		foreach (var titulo in Titulos) {
+			int dur = DuracionesPorEspecialidad.TryGetValue(titulo, out var x) ? x : 30;
+
+			var esp = new EspecialidadMedica2025(
+				new EspecialidadCodigoInterno(idCounter),
+				titulo,
+				dur
+			);
+
+			byIdBuilder.Add(esp.CodigoInterno, esp);
+			byTituloBuilder.Add(esp.Titulo, esp);
+
+			idCounter++;
+		}
+
+		_fromId = byIdBuilder.ToImmutable();
+		_fromTitulo = byTituloBuilder.ToImmutable();
+	}
+
+	// ======================================================
+	// Public API: Creation (Lookup only, no dynamic creation)
+	// ======================================================
+
+	public static Result<EspecialidadMedica2025> CrearPorTitulo(string? titulo) {
 		if (string.IsNullOrWhiteSpace(titulo))
 			return new Result<EspecialidadMedica2025>.Error("El título no puede estar vacío.");
-		//if (string.IsNullOrWhiteSpace(rama))
-			//return new Result<EspecialidadMedica2025>.Error("La rama no puede estar vacía.");
-		string candidadoTitulo = titulo.Trim();
-		//string candidadoRama = rama.Trim();
 
-		if (EspecialidadesDisponibles.Contains(candidadoTitulo)) {
-		//if (EspecialidadesDisponibles.Contains(candidadoTitulo) && RamasDisponibles.Contains(candidadoRama)) {
-			int dur = (DuracionesPorEspecialidad.ContainsKey(candidadoTitulo) ? DuracionesPorEspecialidad[candidadoTitulo] : 30);
-			return new Result<EspecialidadMedica2025>.Ok(new EspecialidadMedica2025(candidadoTitulo, dur));
-			//return new Result<EspecialidadMedica2025>.Ok(new EspecialidadMedica2025(candidadoTitulo, candidadoRama, dur));
-		} else {
-			return new Result<EspecialidadMedica2025>.Error("La especialidad médica no es válida.");
-		}
+		if (_fromTitulo.TryGetValue(titulo.Trim(), out var esp))
+			return new Result<EspecialidadMedica2025>.Ok(esp);
+
+		return new Result<EspecialidadMedica2025>.Error($"La especialidad '{titulo}' no está soportada por el dominio.");
 	}
+
+	public static Result<EspecialidadMedica2025> CrearPorCodigoInterno(int? id) {
+		if (id is null)
+			return new Result<EspecialidadMedica2025>.Error("El CodigoInterno no puede ser nulo.");
+		var key = new EspecialidadCodigoInterno((int)id);
+
+		if (_fromId.TryGetValue(key, out var esp))
+			return new Result<EspecialidadMedica2025>.Ok(esp);
+
+		return new Result<EspecialidadMedica2025>.Error($"No existe la especialidad con CodigoInterno = {id}.");
+	}
+
+	// ======================================================
+	// Utility
+	// ======================================================
+
+	public override string ToString() => $"{Titulo} ({DuracionConsultaMinutos} min)";
 }

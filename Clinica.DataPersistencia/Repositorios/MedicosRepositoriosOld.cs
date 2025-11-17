@@ -4,10 +4,11 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Text.Json;
 
 namespace Clinica.DataPersistencia.Repositorios;
 
-public class MedicosRepositoriosOld {
+public static class MedicosRepositoriosOld {
 
 	public static Result<MedicoDto> Create(Medico2025 instancia, string connectionString) {
 		using SqlConnection connection = new(connectionString);
@@ -51,11 +52,20 @@ public class MedicosRepositoriosOld {
 		paramHorarios.SqlDbType = SqlDbType.Structured;
 		paramHorarios.TypeName = "dbo.HorarioMedicoUDTT";
 
-		string newIdObj = comando.ExecuteScalar()?.ToString() ?? throw new Exception("El stored procedure no devolvió un Id.");
+		int newIdObj = int.Parse(comando.ExecuteScalar().ToString());
 		return new Result<MedicoDto>.Ok(MedicoDto.FromDomain(instancia, newIdObj));
 	}
 
-	public static Dictionary<string, MedicoDto> ReadTodos(string connectionString) {
+
+
+
+
+
+
+
+	public static List<MedicoDto> ReadTodos(string connectionString) {
+		var lista = new List<MedicoDto>();
+
 		using SqlConnection conexion = new(connectionString);
 		conexion.Open();
 
@@ -64,14 +74,20 @@ public class MedicosRepositoriosOld {
 
 		using SqlDataReader reader = comando.ExecuteReader();
 
-		Dictionary<string, MedicoDto> dictMedicos = [];
-
 		while (reader.Read()) {
-			MedicoDto medicoDto = MedicoDto.FromSQLReader(reader);
-			dictMedicos[medicoDto.Id] = medicoDto;
+			lista.Add(MedicoDto.FromSQLReader(reader));
 		}
-		return dictMedicos;
+
+		return lista;
 	}
+
+
+
+
+
+
+
+
 	public static bool Update(Medico2025WithId instanciaWithId, string connectionString) {
 		using SqlConnection conexion = new(connectionString);
 		conexion.Open();
@@ -81,7 +97,7 @@ public class MedicosRepositoriosOld {
 
 		// 1. Programar DataTable con los horarios del médico
 		DataTable horariosTable = new();
-		horariosTable.Columns.Add("Id", typeof(int));
+		horariosTable.Columns.Add("CodigoInterno", typeof(int));
 		horariosTable.Columns.Add("DiaSemana", typeof(int));
 		horariosTable.Columns.Add("HoraDesde", typeof(TimeSpan));
 		horariosTable.Columns.Add("HoraHasta", typeof(TimeSpan));
@@ -98,7 +114,7 @@ public class MedicosRepositoriosOld {
 		comando.CommandType = CommandType.StoredProcedure;
 
 		// 2. Agregar parámetros del médico
-		comando.Parameters.AddWithValue("@Id", medicoId);
+		comando.Parameters.AddWithValue("@CodigoInterno", medicoId);
 		comando.Parameters.AddWithValue("@Name", medico.NombreCompleto.Nombre);
 		comando.Parameters.AddWithValue("@LastName", medico.NombreCompleto.Apellido);
 		comando.Parameters.AddWithValue("@Dni", medico.Dni.Valor);
@@ -122,11 +138,11 @@ public class MedicosRepositoriosOld {
 		return true;
 	}
 	public static bool Delete(Dictionary<string, MedicoDto> dictMedicos, string instanciaId, string connectionString) {
-		string query = "DELETE FROM Medico WHERE Id = @Id";
+		string query = "DELETE FROM Medico WHERE CodigoInterno = @CodigoInterno";
 		using (SqlConnection connection = new(connectionString)) {
 			connection.Open();
 			using SqlCommand sqlComando = new(query, connection);
-			sqlComando.Parameters.AddWithValue("@Id", instanciaId);
+			sqlComando.Parameters.AddWithValue("@CodigoInterno", instanciaId);
 			sqlComando.ExecuteNonQuery();
 		}
 		dictMedicos.Remove(instanciaId);

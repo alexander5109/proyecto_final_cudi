@@ -8,34 +8,6 @@
 --------------------------------------------------------------------------------------
 */
 
-----------------------------------------------------
-IF NOT EXISTS (SELECT 1 FROM dbo.EspecialidadMedica)
-BEGIN
-    SET IDENTITY_INSERT dbo.EspecialidadMedica ON;
-    INSERT INTO dbo.EspecialidadMedica 
-        (Id, Titulo, MinutosConsulta)
-    VALUES 
-		(1, 'Clínico General', 30),
-		(2, 'Cardiólogo', 40),
-		(3, 'Oftalmólogo', 20),
-		(4, 'Otorrinolaringólogo', 25),
-		(5, 'Psiquiatra', 50),
-		(6, 'Psicólogo', 50),
-		(7, 'Cirujano', 60),
-		(8, 'Kinesiólogo', 30),
-		(9, 'Nutricionista', 30),
-		(10, 'Gastroenterólogo', 30),
-		(11, 'Osteópata', 30),
-		(12, 'Proctólogo', 40),
-		(13, 'Pediatra', 40),
-		(14, 'Ginecólogo', 40),
-		(15, 'Traumatólogo', 30),
-		(16, 'Neurólogo', 30),
-		(17, 'Dermatólogo', 30);
-    SET IDENTITY_INSERT dbo.EspecialidadMedica OFF;
-END;
-GO
-
 
 ----------------------------------------------------
 -- Cargar datos de ejemplo en Medico
@@ -44,7 +16,7 @@ IF NOT EXISTS (SELECT 1 FROM dbo.Medico)
 BEGIN
     SET IDENTITY_INSERT dbo.Medico ON;
     INSERT INTO dbo.Medico 
-        (Id, Name, LastName, Provincia, Domicilio, Localidad, EspecialidadId, Telefono, Guardia, FechaIngreso, SueldoMinimoGarantizado, Dni)
+        (Id, Name, LastName, Provincia, Domicilio, Localidad, EspecialidadCodigoInterno, Telefono, Guardia, FechaIngreso, SueldoMinimoGarantizado, Dni)
     VALUES 
         (1, 'Dr. Ricardo', 'Arjona', 'Buenos Aires', 'Av. Siempre Viva 123', 'Capital Federal', 1, '1234567890', 1, '20220115', 285000.50, '12345678'),
         (2, 'Dr. Tocando', 'Shells', 'Córdoba', 'Calle Falsa 456', 'Villa Carlos Paz', 9, '2345678901', 0, '20210520', 392000.00, '87654321'),

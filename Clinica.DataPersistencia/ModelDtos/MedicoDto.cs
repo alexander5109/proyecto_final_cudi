@@ -9,68 +9,69 @@ using System.Linq;
 
 namespace Clinica.DataPersistencia.ModelDtos;
 
-public record class MedicoDto {
-	public required string Id { get; set; } = string.Empty;
-	public required string Name { get; set; } = string.Empty;
-	public required string LastName { get; set; } = string.Empty;
-	public required string Dni { get; set; } = string.Empty;
-	public required string Provincia { get; set; } = string.Empty;
-	public required string Domicilio { get; set; } = string.Empty;
-	public required string Localidad { get; set; } = string.Empty;
-	public required string Especialidad { get; set; } = string.Empty;
-	public required string Telefono { get; set; } = string.Empty;
-	public required bool Guardia { get; set; }
-	public required string FechaIngreso { get; set; }
-	public required decimal SueldoMinimoGarantizado { get; set; }
-	public required List<HorarioMedicoDto> Horarios { get; set; } = new List<HorarioMedicoDto>();
+public class MedicoDto {
+	public int Id { get; init; }              // INT → int
+	public string Name { get; init; } = "";
+	public string LastName { get; init; } = "";
+	public string Dni { get; init; } = "";    // NCHAR(8) → string
+	public string Provincia { get; init; } = "";
+	public string Domicilio { get; init; } = "";
+	public string Localidad { get; init; } = "";
+	public int EspecialidadCodigoInterno { get; init; }  // INT in Medico table // (You used "Especialidad" string, but DB returns an INT)
+	public string Telefono { get; init; } = "";
+	public bool Guardia { get; init; }        // BIT → bool
+	public DateTime FechaIngreso { get; init; } // DATETIME → DateTime
+	public double SueldoMinimoGarantizado { get; init; } // FLOAT(53) = SQL double precision → C# double // (NOT decimal)
+
+	public List<HorarioMedicoDto> Horarios { get; init; } = new();
 
 
 	public static MedicoDto FromSQLReader(SqlDataReader reader) {
-		// 1. Leer JSON de horarios
-		var horariosJson = reader["Horarios"] as string;
-
+		// --- 1) Parsear horarios JSON ---
 		var horarios = new List<HorarioMedicoDto>();
 
-		if (!string.IsNullOrWhiteSpace(horariosJson)) {
+		if (reader["Horarios"] is string horariosJson &&
+			!string.IsNullOrWhiteSpace(horariosJson)) {
 			try {
 				var array = JArray.Parse(horariosJson);
 
 				foreach (var token in array) {
 					horarios.Add(new HorarioMedicoDto {
-						DiaSemana = token["DiaSemana"]?.ToString() ?? "",
-						Desde = token["HoraDesde"]?.ToString() ?? "",
-						Hasta = token["HoraHasta"]?.ToString() ?? "",
-						MedicoId = token["MedicoId"]?.ToString() // puede ser null
+						Id = int.Parse(token["Id"].ToString()),
+						MedicoId = int.Parse(token["MedicoId"].ToString()),
+						DiaSemana = token["DiaSemana"].ToString(),
+						Desde = token["HoraDesde"].ToString(),
+						Hasta = token["HoraHasta"].ToString(),
 					});
 				}
-			} catch (Exception) {
-				// Si el JSON está corrupto, no cortamos la lectura del médico
-				// pero dejamos lista vacía.
+			} catch {
+				// JSON corrupto → dejar lista vacía
 			}
 		}
 
-		// 2. Construir DTO principal
+		// --- 2) Construir DTO principal ---
 		return new MedicoDto {
-			Id = reader["Id"]?.ToString() ?? "",
+			Id = reader.GetInt32(reader.GetOrdinal("Id")),
 			Name = reader["Name"]?.ToString() ?? "",
 			LastName = reader["LastName"]?.ToString() ?? "",
 			Dni = reader["Dni"]?.ToString() ?? "",
 			Provincia = reader["Provincia"]?.ToString() ?? "",
 			Domicilio = reader["Domicilio"]?.ToString() ?? "",
 			Localidad = reader["Localidad"]?.ToString() ?? "",
-			Especialidad = reader["Especialidad"]?.ToString() ?? "",
+			EspecialidadCodigoInterno = reader.GetInt32(reader.GetOrdinal("EspecialidadCodigoInterno")),
 			Telefono = reader["Telefono"]?.ToString() ?? "",
-			Guardia = reader["Guardia"] != DBNull.Value && Convert.ToBoolean(reader["Guardia"]),
-			FechaIngreso = reader["FechaIngreso"]?.ToString() ?? "",
-			SueldoMinimoGarantizado = reader["SueldoMinimoGarantizado"] == DBNull.Value
-										 ? 0
-										 : Convert.ToDecimal(reader["SueldoMinimoGarantizado"]),
+			Guardia = reader["Guardia"] != DBNull.Value && reader.GetBoolean(reader.GetOrdinal("Guardia")),
+			FechaIngreso = reader.GetDateTime(reader.GetOrdinal("FechaIngreso")),
+			SueldoMinimoGarantizado = reader["SueldoMinimoGarantizado"] != DBNull.Value
+				? Convert.ToDouble(reader["SueldoMinimoGarantizado"])
+				: 0.0,
 			Horarios = horarios
 		};
 	}
 
 
-	public static MedicoDto FromDomain(Medico2025 medicoDomain, string medicoId)
+
+	public static MedicoDto FromDomain(Medico2025 medicoDomain, int medicoId)
 		=> new MedicoDto {
 			Id = medicoId,
 			Name = medicoDomain.NombreCompleto.Nombre,
@@ -79,17 +80,17 @@ public record class MedicoDto {
 			Provincia = medicoDomain.Domicilio.Localidad.Provincia.Nombre,
 			Domicilio = medicoDomain.Domicilio.Direccion,
 			Localidad = medicoDomain.Domicilio.Localidad.Nombre,
-			Especialidad = medicoDomain.Especialidad.Titulo,
+			EspecialidadCodigoInterno = medicoDomain.Especialidad.CodigoInterno.Valor,
 			Telefono = medicoDomain.Telefono.Valor,
 			Guardia = medicoDomain.HaceGuardias,
-			FechaIngreso = medicoDomain.FechaIngreso.Valor.ToString(),
+			FechaIngreso = medicoDomain.FechaIngreso.Valor,
 			SueldoMinimoGarantizado = medicoDomain.SueldoMinimoGarantizado.Valor,
 			Horarios = medicoDomain.ListaHorarios.Valores.Select(h => HorarioMedicoDto.FromDomain(h)).ToList()
 		};
 	public static Result<Medico2025> ToDomain(MedicoDto medicoDto)
 		=> Medico2025.Crear(
 			NombreCompleto2025.Crear(medicoDto.Name, medicoDto.LastName),
-			EspecialidadMedica2025.Crear(medicoDto.Especialidad),
+			EspecialidadMedica2025.CrearPorCodigoInterno(medicoDto.EspecialidadCodigoInterno),
 			DniArgentino2025.Crear(medicoDto.Dni),
 			DomicilioArgentino2025.Crear(
 				LocalidadDeProvincia2025.Crear(

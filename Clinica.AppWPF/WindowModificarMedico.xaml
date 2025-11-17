@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:local="clr-namespace:Clinica.AppWPF.ModelViews"
+		xmlns:local="clr-namespace:Clinica.AppWPF.ViewModels"
         mc:Ignorable="d"
         Title="Clinica Medica - Médicos Modificar"
       Height="700" Width="855"
@@ -115,13 +115,13 @@
 
 						<!-- Grupo (día) -->
 						<HierarchicalDataTemplate 
-            DataType="{x:Type local:ModelViewHorariosAgrupados}"
+            DataType="{x:Type local:ViewModelHorariosAgrupados}"
             ItemsSource="{Binding Horarios}">
 							<TextBlock Text="{Binding DiaSemanaNombre}" FontWeight="Bold"/>
 						</HierarchicalDataTemplate>
 
 						<!-- Ítem (horario) -->
-						<DataTemplate DataType="{x:Type local:ModelViewHorario}">
+						<DataTemplate DataType="{x:Type local:ViewModelHorario}">
 							<StackPanel Orientation="Horizontal" Margin="15,0,0,0">
 								<TextBlock Text="{Binding Desde}" Width="50"/>
 								<TextBlock Text=" - "/>

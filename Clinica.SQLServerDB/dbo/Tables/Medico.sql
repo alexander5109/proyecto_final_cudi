@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Medico]
 (
     Id INT IDENTITY(1,1) PRIMARY KEY,
-    EspecialidadId INT NOT NULL,
+    [EspecialidadCodigoInterno] INT NOT NULL,
     Dni NCHAR(8) NOT NULL UNIQUE,
     Name NVARCHAR(50),
     LastName NVARCHAR(50),

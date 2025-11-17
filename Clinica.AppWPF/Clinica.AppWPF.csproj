@@ -14,6 +14,9 @@
   <ItemGroup>
     <Resource Include="PublishedResources\**\*" Exclude="PublishedResources\sonidos\**\*;PublishedResources\json_database\**\*" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="BaseDeDatosJSON.cs" />
+  </ItemGroup>
 
   <!-- Copy sounds and JSON to output -->
   <ItemGroup>
@@ -28,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Clinica.DataPersistencia\Clinica.DataPersistencia.csproj" />
     <ProjectReference Include="..\Clinica.Dominio\Clinica.Dominio.csproj" />
   </ItemGroup>
 

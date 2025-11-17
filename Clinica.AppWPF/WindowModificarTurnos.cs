@@ -1,4 +1,4 @@
-﻿using Clinica.AppWPF.ModelViews;
+﻿using Clinica.AppWPF.ViewModels;
 using Clinica.Dominio.Comun;
 using System.ComponentModel;
 using System.Collections.Generic;
@@ -12,15 +12,15 @@ public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {
 
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public ModelViewTurno _selectedTurnoView = ModelViewTurno.NewEmpty();
-	public ModelViewTurno SelectedTurno { get => _selectedTurnoView; set { _selectedTurnoView = value; OnPropertyChanged(nameof(SelectedTurno)); } }
+	public ViewModelTurno _selectedTurnoView = ViewModelTurno.NewEmpty();
+	public ViewModelTurno SelectedTurno { get => _selectedTurnoView; set { _selectedTurnoView = value; OnPropertyChanged(nameof(SelectedTurno)); } }
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 	// Colecciones para los ComboBoxes
-	public IEnumerable<ModelViewPaciente> PacientesDisponibles { get; private set; } = System.Linq.Enumerable.Empty<ModelViewPaciente>();
-	public IEnumerable<ModelViewMedico> MedicosDisponibles { get; private set; } = System.Linq.Enumerable.Empty<ModelViewMedico>();
+	public IEnumerable<ViewModelPaciente> PacientesDisponibles { get; private set; } = System.Linq.Enumerable.Empty<ViewModelPaciente>();
+	public IEnumerable<ViewModelMedico> MedicosDisponibles { get; private set; } = System.Linq.Enumerable.Empty<ViewModelMedico>();
 
-	public List<string> EspecialidadesDisponibles { get; } = App.BaseDeDatos.ReadDistinctEspecialidades();
+	public string[] EspecialidadesDisponibles { get; } = App.BaseDeDatos.ReadDistinctEspecialidades();
 
 
 
@@ -32,7 +32,7 @@ public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {
 		LLenarComboBoxes();
 	}
 
-	public WindowModificarTurnos(ModelViewTurno selectedTurno) //Constructor con un objeto como parametro ==> Modificarlo.
+	public WindowModificarTurnos(ViewModelTurno selectedTurno) //Constructor con un objeto como parametro ==> Modificarlo.
 	{
 		InitializeComponent();
 		DataContext = this;
@@ -48,8 +48,8 @@ public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {
 			PacientesDisponibles = App.BaseDeDatos.ReadPacientes();
 			MedicosDisponibles = App.BaseDeDatos.ReadMedicos();
 		} catch {
-			PacientesDisponibles = System.Linq.Enumerable.Empty<ModelViewPaciente>();
-			MedicosDisponibles = System.Linq.Enumerable.Empty<ModelViewMedico>();
+			PacientesDisponibles = System.Linq.Enumerable.Empty<ViewModelPaciente>();
+			MedicosDisponibles = System.Linq.Enumerable.Empty<ViewModelMedico>();
 		}
 		OnPropertyChanged(nameof(PacientesDisponibles));
 		OnPropertyChanged(nameof(MedicosDisponibles));
@@ -63,7 +63,7 @@ public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {
 		//txtMedicos.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
 	}
 	//private void txtEspecialidades_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		//txtMedicos.SelectedValuePath = "Id";
+		//txtMedicos.SelectedValuePath = "CodigoInterno";
 		//txtMedicos.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
 		//txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicosWhereEspecialidad(txtEspecialidades.SelectedItem.ToString());
 	//}
@@ -78,7 +78,7 @@ public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {
 			ok => {
 				bool exito;
 
-				if (string.IsNullOrEmpty(SelectedTurno.Id)) {
+				if (SelectedTurno.Id is null) {
 					// Programar nuevo turno
 					exito = App.BaseDeDatos.CreateTurno(ok, SelectedTurno);
 				} else {

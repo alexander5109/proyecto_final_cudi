@@ -7,7 +7,8 @@ public record class HorarioMedicoDto {
 	public required string DiaSemana { get; set; }
 	public required string Desde { get; set; }
 	public required string Hasta { get; set; }
-	public required string? MedicoId { get; set; }
+	public required int? MedicoId { get; set; }
+	public required int? Id { get; set; }
 
 
 
@@ -16,7 +17,8 @@ public record class HorarioMedicoDto {
 			DiaSemana = horarioMedicoDomain.DiaSemana.Valor.ToString(),
 			Desde = horarioMedicoDomain.Desde.Valor.ToString(),
 			Hasta = horarioMedicoDomain.Hasta.Valor.ToString(),
-			MedicoId = null
+			MedicoId = null,
+			Id = null,
 		};
 	public static Result<HorarioMedico2025> ToDomain(HorarioMedicoDto horarioMedicoDto)
 		=> HorarioMedico2025.Crear(

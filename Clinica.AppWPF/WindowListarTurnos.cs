@@ -1,11 +1,11 @@
-﻿using Clinica.AppWPF.ModelViews;
+﻿using Clinica.AppWPF.ViewModels;
 using Clinica.Dominio.TiposDeValor;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Clinica.AppWPF;
 public partial class WindowListarTurnos : Window {
-	private static ModelViewTurno? SelectedTurno = null;
+	private static ViewModelTurno? SelectedTurno = null;
 
 	public WindowListarTurnos() {
 		InitializeComponent();
@@ -22,7 +22,7 @@ public partial class WindowListarTurnos : Window {
 		txtMedicoDni.Text = SelectedTurno?.MedicoRelacionado?.Dni;
 		txtMedicoNombre.Text = SelectedTurno?.MedicoRelacionado?.Name;
 		txtMedicoApellido.Text = SelectedTurno?.MedicoRelacionado?.LastName;
-		txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado?.Especialidad;
+		txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado?.EspecialidadCodigoInterno.ToString();
 		buttonModificarMedico.IsEnabled = SelectedTurno?.MedicoRelacionado != null;
 	}
 	private void UpdatePacienteUI() {
@@ -45,7 +45,7 @@ public partial class WindowListarTurnos : Window {
 		UpdatePacienteUI();
 	}
 	private void listViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedTurno = (ModelViewTurno)turnosListView.SelectedItem;
+		SelectedTurno = (ViewModelTurno)turnosListView.SelectedItem;
 		UpdateTurnoUI();
 		UpdateMedicoUI();
 		UpdatePacienteUI();

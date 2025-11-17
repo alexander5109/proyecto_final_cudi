@@ -4,19 +4,21 @@ using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows;
 
-namespace Clinica.AppWPF.ModelViews;
+namespace Clinica.AppWPF.ViewModels;
 //---------------------------------Tablas.WindowListarTurnos-------------------------------//
-public partial class ModelViewTurno : ObservableObject {
-	[ObservableProperty] private string id = string.Empty;
-	[ObservableProperty] private string pacienteId = string.Empty;
-	[ObservableProperty] private string medicoId = string.Empty;
+public partial class ViewModelTurno : ObservableObject {
+	[ObservableProperty] private int? id = default;
+	[ObservableProperty] private int? pacienteId = default;
+	[ObservableProperty] private int? medicoId = default;
 	[ObservableProperty] private DateTime? fecha = null;
 	[ObservableProperty] private string? hora = null;
 	[ObservableProperty] private int? duracionMinutos = null;
-	public ModelViewMedico MedicoRelacionado {
+	public ViewModelMedico MedicoRelacionado {
 		get {
 			try {
-				return App.BaseDeDatos.DictMedicos[MedicoId];
+				if (MedicoId is null)
+					throw new Exception("El ID del médico es nulo.");
+				return App.BaseDeDatos.DictMedicos[(int) MedicoId];
 			} catch (Exception ex) {
 				MessageBox.Show(
 					$"Error al obtener el médico con ID '{MedicoId}':\n{ex.Message}",
@@ -25,15 +27,17 @@ public partial class ModelViewTurno : ObservableObject {
 					MessageBoxImage.Error
 				);
 				// Devolvemos un objeto vacío para evitar NullReference
-				return ModelViewMedico.NewEmpty();
+				return ViewModelMedico.NewEmpty();
 			}
 		}
 	}
 
-	public ModelViewPaciente PacienteRelacionado {
+	public ViewModelPaciente PacienteRelacionado {
 		get {
 			try {
-				return App.BaseDeDatos.DictPacientes[PacienteId];
+				if (PacienteId is null)
+					throw new Exception("El ID del paciente es nulo.");
+				return App.BaseDeDatos.DictPacientes[(int)PacienteId];
 			} catch (Exception ex) {
 				MessageBox.Show(
 					$"Error al obtener el paciente con ID '{PacienteId}':\n{ex.Message}",
@@ -41,56 +45,60 @@ public partial class ModelViewTurno : ObservableObject {
 					MessageBoxButton.OK,
 					MessageBoxImage.Error
 				);
-				return ModelViewPaciente.NewEmpty();
+				return ViewModelPaciente.NewEmpty();
 			}
 		}
 	}
 
 
 
-	public static ModelViewTurno NewEmpty() => new(
-		id: string.Empty,
-		pacienteId: string.Empty,
-		medicoId: string.Empty,
+	public static ViewModelTurno NewEmpty() => new(
+		id: default,
+		pacienteId: default,
+		medicoId: default,
 		fecha: null,
 		hora: string.Empty,
 		duracionMinutos: null
 	);
 
-	public ModelViewTurno(
-		string? id,
-		string? pacienteId,
-		string? medicoId,
+	public ViewModelTurno(
+		int? id,
+		int? pacienteId,
+		int? medicoId,
 		DateTime? fecha,
 		string? hora,
 		int? duracionMinutos
 	) {
-		Id = id ?? string.Empty;
-		PacienteId = pacienteId ?? string.Empty;
-		MedicoId = medicoId ?? string.Empty;
+		Id = id;
+		PacienteId = pacienteId;
+		MedicoId = medicoId;
 		Fecha = fecha;
 		Hora = hora ?? string.Empty;
 		DuracionMinutos = duracionMinutos;
 	}
 
-	public Result<Turno2025> ToDomain() {
+}
+
+public static class ViewModelTurnoExtensions {
+
+	static public Result<Turno2025> ToDomain(this ViewModelTurno viewModelTurno) {
 		// 🕒 Validar la fecha
-		if (Fecha is null)
+		if (viewModelTurno.Fecha is null)
 			return new Result<Turno2025>.Error("Debe seleccionar una fecha para el turno.");
 		// 🕧 Intentar parsear la hora
-		if (string.IsNullOrWhiteSpace(Hora))
+		if (string.IsNullOrWhiteSpace(viewModelTurno.Hora))
 			return new Result<Turno2025>.Error("Debe especificar una hora para el turno.");
 
-		if (!TimeOnly.TryParse(Hora, out var horaParte))
-			return new Result<Turno2025>.Error($"La hora '{Hora}' no tiene un formato válido (use HH:mm).");
+		if (!TimeOnly.TryParse(viewModelTurno.Hora, out var horaParte))
+			return new Result<Turno2025>.Error($"La hora '{viewModelTurno.Hora}' no tiene un formato válido (use HH:mm).");
 
 		// ✅ Combinar fecha y hora
-		DateOnly fechaParte = DateOnly.FromDateTime(Fecha.Value);
+		DateOnly fechaParte = DateOnly.FromDateTime(viewModelTurno.Fecha.Value);
 		DateTime fechaYHora = fechaParte.ToDateTime(horaParte);
 
 		// Obtener resultados de dominio de modelos relacionados
-		var medicoDomainR = MedicoRelacionado.ToDomain();
-		var pacienteDomainR = PacienteRelacionado.ToDomain();
+		var medicoDomainR = viewModelTurno.MedicoRelacionado.ToDomain();
+		var pacienteDomainR = viewModelTurno.PacienteRelacionado.ToDomain();
 
 		if (medicoDomainR is Result<Medico2025>.Error medErr)
 			return new Result<Turno2025>.Error($"Error al crear médico de dominio: {medErr.Mensaje}");
@@ -101,7 +109,7 @@ public partial class ModelViewTurno : ObservableObject {
 		var pacienteDomain = ((Result<Paciente2025>.Ok)pacienteDomainR).Valor;
 
 		// Construir especialidad a partir del médico (usamos rama por defecto si se requiere)
-		var especialidadResult = EspecialidadMedica2025.Crear(medicoDomain.NombreCompleto.Nombre);
+		var especialidadResult = EspecialidadMedica2025.CrearPorCodigoInterno(viewModelTurno.MedicoRelacionado.EspecialidadCodigoInterno);
 
 		if (especialidadResult is Result<EspecialidadMedica2025>.Error espErr)
 			return new Result<Turno2025>.Error($"Error al crear especialidad: {espErr.Mensaje}");
@@ -113,5 +121,4 @@ public partial class ModelViewTurno : ObservableObject {
 			fechaYHora
 		);
 	}
-
 }

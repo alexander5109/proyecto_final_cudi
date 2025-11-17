@@ -13,7 +13,7 @@ BEGIN
         m.Localidad,
         m.Provincia,
         m.Telefono,
-        m.EspecialidadId,
+        m.EspecialidadCodigoInterno,
         m.Guardia,
         m.SueldoMinimoGarantizado,
         hm.Id AS HorarioId,

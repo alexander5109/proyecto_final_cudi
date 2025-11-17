@@ -4,10 +4,10 @@ using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 
-namespace Clinica.AppWPF.ModelViews;
+namespace Clinica.AppWPF.ViewModels;
 //---------------------------------Tablas.WindowListarPacientes-------------------------------//
-public partial class ModelViewPaciente : ObservableObject {
-	[ObservableProperty] private string id = string.Empty;
+public partial class ViewModelPaciente : ObservableObject {
+	[ObservableProperty] private int? id = default;
 	[ObservableProperty] private string dni = string.Empty;
 	[ObservableProperty] private string name = string.Empty;
 	[ObservableProperty] private string lastName = string.Empty;
@@ -20,8 +20,8 @@ public partial class ModelViewPaciente : ObservableObject {
 	[ObservableProperty] private string provincia = string.Empty;
 	[JsonIgnore] public string Displayear => $"{Id}: {Name} {LastName}";
 
-	public static ModelViewPaciente NewEmpty() => new(
-		string.Empty,   // id
+	public static ViewModelPaciente NewEmpty() => new(
+		default,   // id
 		string.Empty,   // dni
 		string.Empty,   // name
 		string.Empty,   // lastName
@@ -35,8 +35,8 @@ public partial class ModelViewPaciente : ObservableObject {
 	);
 
 
-	public ModelViewPaciente(
-		string id,
+	public ViewModelPaciente(
+		int? id,
 		string? dni,
 		string? name,
 		string? lastName,
@@ -48,7 +48,7 @@ public partial class ModelViewPaciente : ObservableObject {
 		string? localidad,
 		string? provincia
 	) {
-		Id = id ?? string.Empty;
+		Id = id;
 		Dni = dni ?? string.Empty;
 		Name = name ?? string.Empty;
 		LastName = lastName ?? string.Empty;

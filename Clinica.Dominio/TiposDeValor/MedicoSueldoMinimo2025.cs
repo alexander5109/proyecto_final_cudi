@@ -4,11 +4,11 @@ using System.Runtime.CompilerServices;
 namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct MedicoSueldoMinimo2025(
-	decimal Valor
+	double Valor
 ) {
-	public const decimal MINIMO = 200_000m;
-	public const decimal MAXIMO = 5_000_000m;
-	public static Result<MedicoSueldoMinimo2025> Crear(decimal? input) {
+	public const double MINIMO = 200_000;
+	public const double MAXIMO = 5_000_000;
+	public static Result<MedicoSueldoMinimo2025> Crear(double? input) {
 		return input switch {
 			null => new Result<MedicoSueldoMinimo2025>.Error("El sueldo no puede estar vacío."),
 			< 0 => new Result<MedicoSueldoMinimo2025>.Error("El sueldo no puede ser negativo."),
@@ -23,8 +23,8 @@ public readonly record struct MedicoSueldoMinimo2025(
 
 		var normalized = input.Trim();
 
-		if (!decimal.TryParse(normalized, NumberStyles.Float, CultureInfo.InvariantCulture, out var valor) &&
-			!decimal.TryParse(normalized, NumberStyles.Float, CultureInfo.CurrentCulture, out valor)) {
+		if (!double.TryParse(normalized, NumberStyles.Float, CultureInfo.InvariantCulture, out var valor) &&
+			!double.TryParse(normalized, NumberStyles.Float, CultureInfo.CurrentCulture, out valor)) {
 			return new Result<MedicoSueldoMinimo2025>.Error($"Valor inválido: '{input}'. Debe ser un número.");
 		}
 
