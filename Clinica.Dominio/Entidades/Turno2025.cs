@@ -4,8 +4,7 @@ using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
 
-public enum TurnoEstado2025
-{
+public enum TurnoEstado2025{
 	Programado,
 	Reprogramado,
 	Cancelado,

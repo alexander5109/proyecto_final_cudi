@@ -1,15 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 
-
 namespace Clinica.Dominio.Entidades;
-public record MedicoId2025(string Valor);
-
-public record Medico2025WithId(
-	Medico2025 Medico,
-	MedicoId2025 Id
-);
-
 
 public record Medico2025(
 	NombreCompleto2025 NombreCompleto,
@@ -22,9 +14,6 @@ public record Medico2025(
 	MedicoSueldoMinimo2025 SueldoMinimoGarantizado,
 	bool HaceGuardias
 ) {
-
-
-
 	public static Result<Medico2025> Crear(
 		Result<NombreCompleto2025> nombreResult,
 		Result<EspecialidadMedica2025> especialidadResult,
@@ -55,5 +44,4 @@ public record Medico2025(
 			sueldo,
 			haceGuardia
 		);
-
 }
