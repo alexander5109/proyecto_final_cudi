@@ -12,7 +12,7 @@
 		Margin="4">
 		<Label
 			Content="Alta de turno"
-			HorizontalAlignment="Center"
+			HorizontalAlignment="Left"
 			Margin="20,6,0,0"
 			VerticalAlignment="Top"
 			FontSize="28"
@@ -28,14 +28,14 @@
 			x:Name="txtEspecialidades"
 			ItemsSource="{Binding EspecialidadesDisponibles}"
 			DisplayMemberPath="Titulo"
-			SelectedValuePath="CodigoInterno"
-			SelectedValue="{Binding SelectedEspecialidadCodigoInterno, Mode=TwoWay}"
+			SelectedValuePath="UId"
+			SelectedValue="{Binding SelectedEspecialidadUId, Mode=TwoWay}"
 			HorizontalAlignment="Left"
 			Margin="150,60,0,0"
 			VerticalAlignment="Top"
 			Width="300" />
 		<Label
-			Content="Medicos especialistas"
+			Content="Médicos especialistas"
 			HorizontalAlignment="Left"
 			Margin="20,110,0,0"
 			VerticalAlignment="Top"
@@ -51,13 +51,13 @@
 			VerticalAlignment="Top"
 			Width="300" />
 		<Label
-			Content="Dia semana"
+			Content="Día semana"
 			HorizontalAlignment="Left"
 			Margin="20,158,0,0"
 			VerticalAlignment="Top"
 			FontWeight="Bold" />
 		<CheckBox
-			Content="Usar filtro dia"
+			Content="Usar filtro día"
 			IsChecked="{Binding FiltroDiaEnabled, Mode=TwoWay}"
 			HorizontalAlignment="Left"
 			Margin="460,156,0,0"
@@ -107,7 +107,7 @@
 			Margin="20,280,0,0"
 			VerticalAlignment="Top"
 			Width="760"
-			Height="168"
+			Height="200"
 			SelectionMode="Single">
 			<ListView.View>
 				<GridView>
@@ -120,7 +120,7 @@
 						Width="120"
 						DisplayMemberBinding="{Binding Hora}" />
 					<GridViewColumn
-						Header="Medico"
+						Header="Médico"
 						Width="300"
 						DisplayMemberBinding="{Binding Medico}" />
 				</GridView>
@@ -130,19 +130,17 @@
 			Content="Cancelar"
 			Style="{StaticResource BotonRedondeado}"
 			HorizontalAlignment="Left"
-			Margin="20,451,0,0"
+			Margin="20,490,0,0"
 			VerticalAlignment="Top"
-			Width="104"
-			Click="ButtonCancelar"
-			Height="33" />
+			Width="120"
+			Click="ButtonCancelar" />
 		<Button
 			Content="Reservar"
 			Style="{StaticResource BotonRedondeado}"
 			HorizontalAlignment="Right"
-			Margin="0,456,32,0"
+			Margin="0,490,20,0"
 			VerticalAlignment="Top"
 			Width="120"
-			Click="ButtonReservar"
-			Height="32" />
+			Click="ButtonReservar" />
 	</Grid>
 </Window>

@@ -11,7 +11,7 @@ public static class TypeExtentionsMethods {
 	public static string AString(this ProvinciaArgentina2025 provincia) => provincia.Nombre;
 	public static string AString(this DiaSemana2025 diaSemana) => CultureInfo.GetCultureInfo("es-ES").DateTimeFormat.GetDayName(diaSemana.Valor);
 	public static string AString(this Turno2025 turno) {
-		var medicoTexto = turno.MedicoAsignado is null ? $"Especialidad {turno.Especialidad.Titulo}" : turno.MedicoAsignado.Value.NombreCompleto.ToString();
+		var medicoTexto = turno.MedicoAsignado is null ? $"Especialidad {turno.Especialidad.Titulo}" : turno.MedicoAsignado.ToString();
 		return $"Turno de {turno.Paciente.NombreCompleto} con {medicoTexto} el {turno.FechaYHora:g}";
 	}
 

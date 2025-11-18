@@ -3,7 +3,7 @@ using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
 
-public readonly record struct Paciente2025(
+public record Paciente2025(
 	NombreCompleto2025 NombreCompleto,
 	DniArgentino2025 Dni,
 	Contacto2025 Contacto,

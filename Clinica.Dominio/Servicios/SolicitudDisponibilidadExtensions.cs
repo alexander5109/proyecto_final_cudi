@@ -50,7 +50,7 @@ public static class SolicitudDisponibilidadExtensions {
 							var slotEnd = slotStart.Add(duracion);
 
 							// verificar solapamiento con turnos existentes del médico
-							var ocupado = turnos.Any(t => t.MedicoAsignado is not null && t.MedicoAsignado.Value.Dni == medico.Dni && t.FechaYHora < slotEnd && t.FechaYHora.Add(TimeSpan.FromMinutes(t.Especialidad.DuracionConsultaMinutos)) > slotStart);
+							var ocupado = turnos.Any(t => t.MedicoAsignado is not null && t.MedicoAsignado.Dni == medico.Dni && t.FechaYHora < slotEnd && t.FechaYHora.Add(TimeSpan.FromMinutes(t.Especialidad.DuracionConsultaMinutos)) > slotStart);
 							if (!ocupado) {
 								yield return new EspecialidadDisponibilidadHoraria(medico, slotStart, slotEnd);
 							}

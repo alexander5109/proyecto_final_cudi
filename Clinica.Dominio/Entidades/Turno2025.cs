@@ -12,7 +12,7 @@ public enum TurnoEstado2025
 	Atendido
 }
 
-public readonly record struct Turno2025(
+public record Turno2025(
 	Medico2025? MedicoAsignado,
 	Paciente2025 Paciente,
 	DateTime FechaYHora,
@@ -88,7 +88,7 @@ public readonly record struct Turno2025(
 		if (MedicoAsignado is null)
 			return new Result<Turno2025>.Error("No hay médico asignado al turno para verificar disponibilidad.");
 
-		if (!MedicoAsignado.Value.ListaHorarios.TienenDisponibilidad(nuevaFechaYHora, duracion))
+		if (!MedicoAsignado.ListaHorarios.TienenDisponibilidad(nuevaFechaYHora, duracion))
 			return new Result<Turno2025>.Error("El médico no atiende en el nuevo horario.");
 
 		// Verificar solapamiento con otros turnos del mismo médico
@@ -97,10 +97,10 @@ public readonly record struct Turno2025(
 			var fin = nuevaFechaYHora.Add(duracion);
 			foreach (var ot in otrosTurnosDelMedico) {
 				if (ot.MedicoAsignado is null) continue;
-				if (ot.MedicoAsignado.Value.Dni == this.MedicoAsignado.Value.Dni && ot.FechaYHora == this.FechaYHora)
+				if (ot.MedicoAsignado.Dni == this.MedicoAsignado.Dni && ot.FechaYHora == this.FechaYHora)
 					continue; // ignorar propio
 
-				if (ot.MedicoAsignado.Value.Dni == this.MedicoAsignado.Value.Dni) {
+				if (ot.MedicoAsignado.Dni == this.MedicoAsignado.Dni) {
 					var otherStart = ot.FechaYHora;
 					var otherEnd = ot.FechaYHora.Add(TimeSpan.FromMinutes(ot.Especialidad.DuracionConsultaMinutos));
 					if (comienzo < otherEnd && otherStart < fin)
