@@ -13,10 +13,13 @@ public sealed class EspecialidadMedica2025 {
 	public string Titulo { get; }
 	public int DuracionConsultaMinutos { get; }
 
+	public static List<EspecialidadMedica2025> TodasLasSoportadas => [.. PorId.Values];
+
 	private EspecialidadMedica2025(
 		EspecialidadCodigoInterno codigoInterno,
 		string titulo,
-		int duracionMin) {
+		int duracionMin
+	) {
 		CodigoInterno = codigoInterno;
 		Titulo = titulo;
 		DuracionConsultaMinutos = duracionMin;

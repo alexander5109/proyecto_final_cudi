@@ -7,7 +7,8 @@ namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct DiaSemana2025(
 	DayOfWeek Valor
-){
+	//, string NombreDia
+) {
 
 	public static Result<DiaSemana2025> Crear(DayOfWeek input) {
 		return new Result<DiaSemana2025>.Ok(new DiaSemana2025(input));
@@ -40,6 +41,16 @@ public readonly record struct DiaSemana2025(
 
 		return new Result<DiaSemana2025>.Error($"'{input}' no corresponde a un día válido.");
 	}
+
+	public static readonly DiaSemana2025[] Los7DiaSemana2025 = [
+		new(DayOfWeek.Monday), //Value 1
+		new(DayOfWeek.Tuesday), //Value 2
+		new(DayOfWeek.Wednesday),//Value 3
+		new(DayOfWeek.Thursday),//Value 4
+		new(DayOfWeek.Friday),//Value 5
+		new(DayOfWeek.Saturday), //Value 6
+		new(DayOfWeek.Sunday), //Value 0
+	];
 
 	public static readonly string[] Los7StringDias = [
 		DayOfWeek.Monday.AEspañol(), //Value 1

@@ -12,7 +12,7 @@ namespace Clinica.AppWPF.ViewModels;
 
 
 // View-model simple types (internos, auto-contenidos para demo)
-public record ViewModelEspecialidadMedica(string Id, string Titulo);
+public record ViewModelEspecialidadMedica(int CodigoInterno, string Titulo);
 public record ViewModelDiaSemana(int Value, string NombreDia);
 public record ViewModelDisponibilidadEspecialidad(DateTime Fecha, string Hora, string Medico);
 
