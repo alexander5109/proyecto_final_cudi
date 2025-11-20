@@ -103,8 +103,6 @@ public static class DisponibilidadesExtensions {
 					return new Result<DisponibilidadEspecialidad2025>.Error(
 						"No hay disponibilidades para seleccionar."
 					);
-
-				Console.WriteLine($"Tomando primer disponibilidad");
 				return new Result<DisponibilidadEspecialidad2025>.Ok(ok.Valores[0]);
 			},
 
@@ -121,14 +119,12 @@ public static class DisponibilidadesExtensions {
 			return new Result<ListaDisponibilidades2025>.Error(err.Mensaje);
 
 		ListaDisponibilidades2025 lista = ((Result<ListaDisponibilidades2025>.Ok)disponibilidadesResult).Valor;
-		Console.WriteLine($"Aplicando filtros opcionales: {preferencias.ATexto()}");
 		IEnumerable<DisponibilidadEspecialidad2025> filtradas = lista.Valores;
 		if (preferencias.DiaPreferido is DiaSemana2025 dia)
 			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia.Valor);
 
 		if (preferencias.MomentoPreferido is TardeOMañana momento)
 			filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));
-		//Console.WriteLine($"{filtradas.Count()}");
 
 
 		return ListaDisponibilidades2025.Crear(filtradas.ToImmutableList());

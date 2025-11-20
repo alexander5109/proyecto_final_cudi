@@ -11,7 +11,6 @@ public class ScenarioTesting {
 	//[Fact]
 	public static void Escenario_Asignar_turnos_por_orden_de_solicitud() {
 		// Arrange
-		Console.WriteLine("\n--- Creando médicos ---");
 
 		ListaTurnosHistorial2025 TURNOS = ListaTurnosHistorial2025.Crear();
 
@@ -119,7 +118,7 @@ public class ScenarioTesting {
 
 
 
-		List<Paciente2025> PACIENTES = [
+		List<Result<Paciente2025>> PACIENTES = [
 			Paciente2025.Crear(
 				NombreCompleto2025.Crear("Juan", "Diaz"),
 				DniArgentino2025.Crear("44444444"),
@@ -136,7 +135,7 @@ public class ScenarioTesting {
 				),
 				FechaDeNacimiento2025.Crear(DateTime.Parse("1990/05/15")),
 				FechaIngreso2025.Crear(DateTime.Parse("2022/01/10"))
-			).GetOrRaise(),
+			).PrintAndContinue("Creando a Juan: "),
 
 			Paciente2025.Crear(
 				NombreCompleto2025.Crear("Pedro", "Fernandez"),
@@ -154,7 +153,7 @@ public class ScenarioTesting {
 				),
 				FechaDeNacimiento2025.Crear(DateTime.Parse("1996/05/15")),
 				FechaIngreso2025.Crear(DateTime.Parse("2024/01/10"))
-			).GetOrRaise(),
+			).PrintAndContinue("Creando a Pedro: "),
 
 			Paciente2025.Crear(
 				NombreCompleto2025.Crear("Herminda", "Gutierrez Lopez"),
@@ -172,7 +171,7 @@ public class ScenarioTesting {
 				),
 				FechaDeNacimiento2025.Crear(DateTime.Parse("1994/05/15")),
 				FechaIngreso2025.Crear(DateTime.Parse("2023/01/10"))
-			).GetOrRaise(),
+			).PrintAndContinue("Creando a Herminda: "),
 
 		];
 
@@ -182,12 +181,12 @@ public class ScenarioTesting {
 		// ================================================================
 
 
-		Paciente2025 pacienteJuan = PACIENTES[0];
+		Paciente2025 pacienteJuan = PACIENTES[0].PrintAndContinue("Tratando de seleccionar paciente").GetOrRaise();
 		Result<SolicitudDeTurno> solicitudJuan = SolicitudDeTurno.Crear(
 			pacienteJuan,
 			EspecialidadMedica2025.ClinicoGeneral,
 			DateTime.Now
-		).PrintAndContinue("Creando paciente: ");
+		).PrintAndContinue("Juan intenta solicitar turno: ");
 
 
 
@@ -196,53 +195,14 @@ public class ScenarioTesting {
 			.AplicarFiltrosOpcionales(new(
 				DiaSemana2025.Lunes,
 				new TardeOMañana(true)
-			));
-		Result<DisponibilidadEspecialidad2025> primeraDispJuan = resultDisponibilidadesParaJuan.TomarPrimera();
+			)).PrintAndContinue("Buscando disponibilidades: ");
+		Result<DisponibilidadEspecialidad2025> primeraDispJuan = resultDisponibilidadesParaJuan.TomarPrimera().PrintAndContinue("Tomando la primera: ");
 
-		TURNOS.AgendarTurno(Turno2025.Programar(solicitudJuan, primeraDispJuan));
-
-
-		// ================================================================
-		// ⭐ 2. Pedro tambien solicita  ClinicoGeneral
-		// ================================================================
+		TURNOS.AgendarTurno(Turno2025.Programar(solicitudJuan, primeraDispJuan)).PrintAndContinue("Agendando turno: ");
 
 
 
 
-		// ================================================================
-		// ⭐ 3. Rosalia solicita psicología para la próxima semana
-		// ================================================================
-		//Console.WriteLine("\n=== ROSALIA solicita Psicología (semana próxima) ===");
-
-		//var solicitudRosalia = SolicitudDeTurno2.Crear(
-		//	new Result<Paciente2025>.Ok(rosalia),
-		//	new Result<EspecialidadMedica2025>.Ok(especialPsico),
-		//	DateTime.Now.AddDays(7)
-		//).Match(ok => ok, err => throw new Exception(err));
-
-		//var dispRosalia = solicitudRosalia.BuscarDisponibilidades(repoMedicos, repoTurnos)
-		//								 .Match(ok => ok, err => throw new Exception(err))
-		//								 .ToList();
-
-		//Console.WriteLine($"Disponibilidades encontradas para Rosalia ({dispRosalia.Count}):");
-		//foreach (var d in dispRosalia)
-		//	Console.WriteLine($" → Medico {d.Medico.NombreCompleto.Apellido} {d.Medico.NombreCompleto.Nombre}, a las {d.Inicio}");
-
-		//var primeraDispRosalia = dispRosalia.First();
-		//Console.WriteLine($"Primer turno asignable a Rosalia: {primeraDispRosalia.Medico.NombreCompleto.Apellido} - {primeraDispRosalia.Inicio}");
-
-		//var turnoRosaliaRes = Turno2025.Programar(
-		//	new Result<Medico2025>.Ok(primeraDispRosalia.Medico),
-		//	new Result<Paciente2025>.Ok(rosalia),
-		//	new Result<EspecialidadMedica2025>.Ok(especialPsico),
-		//	primeraDispRosalia.Inicio
-		//);
-
-		//var turnoRosalia = ((Result<Turno2025>.Ok)turnoRosaliaRes).Valor;
-
-		//Console.WriteLine($"✔ Turno de ROSALIA asignado a {primeraDispRosalia.Medico.NombreCompleto.Apellido} el {primeraDispRosalia.Inicio}\n");
-
-		//Console.WriteLine("\n=== ESCENARIO COMPLETADO ===\n");
 	}
 
 }

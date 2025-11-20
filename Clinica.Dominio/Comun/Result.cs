@@ -52,7 +52,7 @@ public static class ResultExtensions {
 		string prefix = label is null ? "" : $"{label}: ";
 
 		result.Match(
-			ok => Console.WriteLine($"{prefix}OK → {ok}"),
+			ok => Console.WriteLine($"{prefix}OK → {typeof(T).Name} succeded"),
 			err => Console.WriteLine($"{prefix}ERROR → {err}")
 		);
 

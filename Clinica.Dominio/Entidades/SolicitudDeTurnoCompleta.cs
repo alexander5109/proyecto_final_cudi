@@ -23,11 +23,6 @@ public readonly record struct SolicitudDeTurno(
 		EspecialidadMedica2025 especialidad,
 		DateTime fechaSolicitada
 	) {
-		if (fechaSolicitada < DateTime.Now)
-			return new Result<SolicitudDeTurno>.Error("La fecha solicitada no puede ser en el pasado.");
-
-
-		Console.WriteLine($"\n {paciente.NombreCompleto} solicita {especialidad.Titulo}");
 		return new Result<SolicitudDeTurno>.Ok(
 			new SolicitudDeTurno(paciente, especialidad, fechaSolicitada)
 		);
