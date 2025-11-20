@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Clinica.Aplicacion;
 using Clinica.Dominio.Dtos;
+using Clinica.Dominio.Servicios;
 
 namespace Clinica.AppWPF.Services;
 

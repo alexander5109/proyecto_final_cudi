@@ -1,7 +1,5 @@
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Repositorios;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.FunctionalProgramingTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +16,7 @@ public static class SolicitudDisponibilidadExtensions {
     // Generador on-demand: devuelve, de manera perezosa, disponibles desde la fecha solicitada hacia adelante.
     // Cada vez que se itera, se calcula para el siguiente día con posibles slots según disponibilidad y turnos ya ocupados.
     public static Result<IEnumerable<EspecialidadDisponibilidadHoraria>> BuscarDisponibilidades(
-        this SolicitudConsulta2025 solicitud,
+        this Entidades solicitud,
         IRepositorioMedicos repoMedicos,
         IRepositorioTurnos repoTurnos,
         DateTime? desde = null,

@@ -15,10 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.DataPersistencia", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.WebAPI", "Clinica.WebAPI\Clinica.WebAPI.csproj", "{7A7F2C4B-8210-4C00-92A3-905C80A6EA8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Dominio.Tests", "Clinica.Dominio.Tests\Clinica.Dominio.Tests.csproj", "{647708A5-BA14-B56A-6EFB-5E718E9BBA5F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Aplicacion", "Clinica.Aplicacion\Clinica.Aplicacion.csproj", "{91CC6A42-0371-435A-9DC3-1DD9863B3553}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,14 +47,6 @@ Global
 		{7A7F2C4B-8210-4C00-92A3-905C80A6EA8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A7F2C4B-8210-4C00-92A3-905C80A6EA8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A7F2C4B-8210-4C00-92A3-905C80A6EA8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{647708A5-BA14-B56A-6EFB-5E718E9BBA5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{647708A5-BA14-B56A-6EFB-5E718E9BBA5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{647708A5-BA14-B56A-6EFB-5E718E9BBA5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{647708A5-BA14-B56A-6EFB-5E718E9BBA5F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91CC6A42-0371-435A-9DC3-1DD9863B3553}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91CC6A42-0371-435A-9DC3-1DD9863B3553}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91CC6A42-0371-435A-9DC3-1DD9863B3553}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91CC6A42-0371-435A-9DC3-1DD9863B3553}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

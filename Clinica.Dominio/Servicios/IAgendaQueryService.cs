@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Clinica.Dominio.Entidades;
 
-namespace Clinica.Aplicacion;
+namespace Clinica.Dominio.Servicios;
 
 public interface IAgendaQueryService{
     IAsyncEnumerable<DisponibilidadSlot> StreamDisponibilidades(

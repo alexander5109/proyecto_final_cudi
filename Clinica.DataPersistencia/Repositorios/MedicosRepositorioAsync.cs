@@ -1,8 +1,8 @@
 ﻿using Dapper;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Comun;
 using Clinica.DataPersistencia.ModelDtos;
 using System.ComponentModel;
+using Clinica.Dominio.FunctionalProgramingTools;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.DataPersistencia.Repositorios;
 

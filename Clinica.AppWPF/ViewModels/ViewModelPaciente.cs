@@ -1,6 +1,5 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.TiposDeValor;
+﻿using Clinica.Dominio.Entidades;
+using Clinica.Dominio.FunctionalProgramingTools;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 

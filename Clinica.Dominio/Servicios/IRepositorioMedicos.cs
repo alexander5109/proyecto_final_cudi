@@ -1,9 +1,9 @@
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.FunctionalProgramingTools;
 using Clinica.Dominio.TiposDeValor;
 using System.Collections.Generic;
 
-namespace Clinica.Dominio.Repositorios;
+namespace Clinica.Dominio.Servicios;
 
 public interface IRepositorioMedicos
 {

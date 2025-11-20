@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Repositorios;
 
-namespace Clinica.Aplicacion.Services;
+namespace Clinica.Dominio.Servicios;
 
 // Application-level adapter that uses domain repositories to stream availability slots
 public class DisponibilidadService : IAgendaQueryService {

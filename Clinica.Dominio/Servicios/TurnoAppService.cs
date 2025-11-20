@@ -1,17 +1,15 @@
 using System.Threading.Tasks;
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Repositorios;
+using Clinica.Dominio.FunctionalProgramingTools;
 
-namespace Clinica.Aplicacion.Services;
+namespace Clinica.Dominio.Servicios;
 
 public class TurnoAppService : ITurnoAppService
 {
     private readonly IRepositorioTurnos _repoTurnos;
     private readonly IRepositorioMedicos _repoMedicos;
 
-    public TurnoAppService(IRepositorioTurnos repoTurnos, IRepositorioMedicos repoMedicos)
-    {
+    public TurnoAppService(IRepositorioTurnos repoTurnos, IRepositorioMedicos repoMedicos){
         _repoTurnos = repoTurnos;
         _repoMedicos = repoMedicos;
     }

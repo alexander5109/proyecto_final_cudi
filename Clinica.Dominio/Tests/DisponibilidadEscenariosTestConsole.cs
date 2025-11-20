@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Linq;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.TiposDeValor;
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Servicios;
+using Clinica.Dominio.FunctionalProgramingTools;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.Dominio.Tests.Escenarios;
 
 public class DisponibilidadEscenariosTestConsole {
-
-
-
 	//[Fact]
 	public static void Escenario_Asignar_turnos_por_orden_de_solicitud() {
 		Console.WriteLine("=== ESCENARIO: Asignación por orden de solicitud ===");
@@ -35,10 +31,10 @@ public class DisponibilidadEscenariosTestConsole {
 		var rosalia = Common.CrearPaciente("Rosalia", "Martinez", "66666666");
 		Console.WriteLine("Pacientes cargados: Juan, Pedro y Rosalia.\n");
 
-		var especialGastro = EspecialidadMedica2025.Crear("Gastroenterólogo")
+		var especialGastro = EspecialidadMedica2025.CrearPorTitulo("Gastroenterólogo")
 							   .Match(ok => ok, err => throw new Exception(err));
 
-		var especialPsico = EspecialidadMedica2025.Crear("Psicólogo")
+		var especialPsico = EspecialidadMedica2025.CrearPorTitulo("Psicólogo")
 							   .Match(ok => ok, err => throw new Exception(err));
 
 
@@ -47,10 +43,10 @@ public class DisponibilidadEscenariosTestConsole {
 		// ================================================================
 		Console.WriteLine("\n=== JUAN solicita Gastroenterología ===");
 
-		var solicitudJuan = SolicitudConsulta2025.Crear(
+		var solicitudJuan = Entidades.Crear(
 			new Result<Paciente2025>.Ok(juan),
 			new Result<EspecialidadMedica2025>.Ok(especialGastro),
-			DateTime.Now
+            DateTime.Now
 		).Match(ok => ok, err => throw new Exception(err));
 
 		var dispJuan = solicitudJuan.BuscarDisponibilidades(repoMedicos, repoTurnos)
@@ -82,10 +78,10 @@ public class DisponibilidadEscenariosTestConsole {
 		// ================================================================
 		Console.WriteLine("\n=== PEDRO solicita Gastroenterología ===");
 
-		var solicitudPedro = SolicitudConsulta2025.Crear(
+		var solicitudPedro = Entidades.Crear(
 			new Result<Paciente2025>.Ok(pedro),
 			new Result<EspecialidadMedica2025>.Ok(especialGastro),
-			DateTime.Now
+            DateTime.Now
 		).Match(ok => ok, err => throw new Exception(err));
 
 		var dispPedro = solicitudPedro.BuscarDisponibilidades(repoMedicos, repoTurnos)
@@ -117,10 +113,10 @@ public class DisponibilidadEscenariosTestConsole {
 		// ================================================================
 		Console.WriteLine("\n=== ROSALIA solicita Psicología (semana próxima) ===");
 
-		var solicitudRosalia = SolicitudConsulta2025.Crear(
+		var solicitudRosalia = Entidades.Crear(
 			new Result<Paciente2025>.Ok(rosalia),
 			new Result<EspecialidadMedica2025>.Ok(especialPsico),
-			DateTime.Now.AddDays(7)
+            DateTime.Now.AddDays(7)
 		).Match(ok => ok, err => throw new Exception(err));
 
 		var dispRosalia = solicitudRosalia.BuscarDisponibilidades(repoMedicos, repoTurnos)

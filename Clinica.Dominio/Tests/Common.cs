@@ -1,6 +1,5 @@
 ﻿using System;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Tests.Escenarios;
 

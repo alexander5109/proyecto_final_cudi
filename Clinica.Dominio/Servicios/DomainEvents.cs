@@ -1,6 +1,6 @@
 using Clinica.Dominio.Entidades;
 
-namespace Clinica.Dominio.Eventos;
+namespace Clinica.Dominio.Servicios;
 
 public record TurnoCreadoEvent(Turno2025 Turno);
 public record TurnoCanceladoEvent(Turno2025 Turno, string? Motivo);

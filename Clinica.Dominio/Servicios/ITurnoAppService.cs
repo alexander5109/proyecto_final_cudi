@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.FunctionalProgramingTools;
 
-namespace Clinica.Aplicacion;
+namespace Clinica.Dominio.Servicios;
 
 public interface ITurnoAppService{
     Task<Result<Turno2025>> ProgramarTurnoAsync(int pacienteId, int? medicoId, string especialidadUId, System.DateTime fechaYHora);

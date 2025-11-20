@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Comun;
-using Clinica.Dominio.Repositorios;
 using FluentAssertions;
+using Clinica.Dominio.FunctionalProgramingTools;
+using Clinica.Dominio.Servicios;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.Dominio.Tests.Escenarios;
 

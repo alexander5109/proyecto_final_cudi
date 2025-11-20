@@ -1,10 +1,40 @@
-﻿using Clinica.Dominio.Entidades;
-using Clinica.Dominio.TiposDeValor;
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace Clinica.Dominio.Extentions;
+namespace Clinica.Dominio.Entidades;
 
-public static class TypeExtentionsMethods {
+public static class Extensiones {
+
+	public static Dictionary<string, DayOfWeek> DiasDeLaSemanaToEnum = new(StringComparer.OrdinalIgnoreCase) {
+		["domingo"] = DayOfWeek.Sunday,
+		["lunes"] = DayOfWeek.Monday,
+		["martes"] = DayOfWeek.Tuesday,
+		["miercoles"] = DayOfWeek.Wednesday,
+		["miércoles"] = DayOfWeek.Wednesday,
+		["jueves"] = DayOfWeek.Thursday,
+		["viernes"] = DayOfWeek.Friday,
+		["sabado"] = DayOfWeek.Saturday,
+		["sábado"] = DayOfWeek.Saturday,
+		// Inglés
+		["sunday"] = DayOfWeek.Sunday,
+		["monday"] = DayOfWeek.Monday,
+		["tuesday"] = DayOfWeek.Tuesday,
+		["wednesday"] = DayOfWeek.Wednesday,
+		["thursday"] = DayOfWeek.Thursday,
+		["friday"] = DayOfWeek.Friday,
+		["saturday"] = DayOfWeek.Saturday
+	};
+	public static string AEspañol(this DayOfWeek dia) => dia switch {
+		DayOfWeek.Monday => "Lunes",
+		DayOfWeek.Tuesday => "Martes",
+		DayOfWeek.Wednesday => "Miércoles",
+		DayOfWeek.Thursday => "Jueves",
+		DayOfWeek.Friday => "Viernes",
+		DayOfWeek.Saturday => "Sábado",
+		DayOfWeek.Sunday => "Domingo",
+		_ => throw new ArgumentOutOfRangeException(nameof(dia), dia, null)
+	};
+
+
 
 	public static string AString(this FechaDeNacimiento2025 fecha) => fecha.Valor.ToString("dd/MM/yyyy");
 	public static string AString(this FechaIngreso2025 fecha) => fecha.Valor.ToString("dd/MM/yyyy");

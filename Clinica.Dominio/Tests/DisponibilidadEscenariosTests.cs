@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.TiposDeValor;
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Servicios;
 using Xunit;
 using FluentAssertions;
+using Clinica.Dominio.FunctionalProgramingTools;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.Dominio.Tests.Escenarios;
 
@@ -32,15 +31,15 @@ public class DisponibilidadEscenariosTests {
 		var rosalia = Common.CrearPaciente("Rosalia", "Martinez", "66666666");
 
 		var especialGastro = EspecialidadMedica2025
-			.Crear("Gastroenterólogo")
+			.CrearPorTitulo("Gastroenterólogo")
 			.Match(ok => ok, err => throw new Exception(err));
 
 		var especialPsico = EspecialidadMedica2025
-			.Crear("Psicólogo")
+			.CrearPorTitulo("Psicólogo")
 			.Match(ok => ok, err => throw new Exception(err));
 
 		// Juan solicita gastro
-		var solicitudJuan = SolicitudConsulta2025
+		var solicitudJuan = Entidades
 			.Crear(new Result<Paciente2025>.Ok(juan), new Result<EspecialidadMedica2025>.Ok(especialGastro), DateTime.Now)
 			.Match(ok => ok, err => throw new Exception(err));
 
@@ -59,7 +58,7 @@ public class DisponibilidadEscenariosTests {
 		repoTurnos.Guardar(turnoJuan);
 
 		// Pedro solicita gastro -> toma siguiente turno disponible
-		var solicitudPedro = SolicitudConsulta2025
+		var solicitudPedro = Entidades
 			.Crear(new Result<Paciente2025>.Ok(pedro), new Result<EspecialidadMedica2025>.Ok(especialGastro), DateTime.Now)
 			.Match(ok => ok, err => throw new Exception(err));
 
@@ -77,7 +76,7 @@ public class DisponibilidadEscenariosTests {
 		repoTurnos.Guardar(turnoPedro);
 
 		// Rosalia solicita psicólogo
-		var solicitudRosalia = SolicitudConsulta2025
+		var solicitudRosalia = Entidades
 			.Crear(new Result<Paciente2025>.Ok(rosalia), new Result<EspecialidadMedica2025>.Ok(especialPsico), DateTime.Now.AddDays(7))
 			.Match(ok => ok, err => throw new Exception(err));
 

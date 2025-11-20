@@ -1,5 +1,5 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.TiposDeValor;
+﻿using Clinica.Dominio.Entidades;
+using Clinica.Dominio.FunctionalProgramingTools;
 
 namespace Clinica.DataPersistencia.ModelDtos;
 
