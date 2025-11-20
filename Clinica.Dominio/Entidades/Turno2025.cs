@@ -34,17 +34,17 @@ public record Turno2025 (
 
 
 	public static Result<Turno2025> Programar(
-		SolicitudDeTurno solicitud,
+		SolicitudDeTurnoBasica solicitud,
 		DisponibilidadEspecialidad2025 disp
 	) {
 		// --- Validación de los Result ----
-		//if (solicitudResult is Result<SolicitudDeTurno>.Error solError)
+		//if (solicitudResult is Result<SolicitudDeTurnoCompleta>.Error solError)
 		//	return new Result<Turno2025>.Error($"Error en solicitud: {solError.Mensaje}");
 
 		//if (dispResult is Result<DisponibilidadEspecialidad2025>.Error dispError)
 		//	return new Result<Turno2025>.Error($"Error en disponibilidad: {dispError.Mensaje}");
 
-		//var solicitud = ((Result<SolicitudDeTurno>.Ok)solicitudResult).Valor;
+		//var solicitud = ((Result<SolicitudDeTurnoCompleta>.Ok)solicitudResult).Valor;
 		//var disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
 
 		// --- Coherencias de dominio ---

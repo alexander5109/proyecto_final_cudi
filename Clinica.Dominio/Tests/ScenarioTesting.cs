@@ -184,25 +184,20 @@ public class ScenarioTesting {
 		Console.WriteLine("\n=== Juan solicita ClinicoGeneral ===");
 
 		Paciente2025 pacienteJuan = PACIENTES[0];
-		SolicitudDeTurno solicitudJuan = new(
+		SolicitudDeTurnoBasica solicitudJuan = new(
 			pacienteJuan,
 			EspecialidadMedica2025.ClinicoGeneral,
-			DiaSemana2025.Lunes,
-			new TardeOMañana(true),
 			DateTime.Now
 		);
+		SolicitudDeTurnoPreferencias preferencias = new(
+			DiaSemana2025.Lunes,
+			new TardeOMañana(true)
+		);
+
 		Console.WriteLine(solicitudJuan.ATexto());
 
-		ListaDisponibilidades2025 disponibilidadesParaJuan =
-			ListaDisponibilidades2025
-				.Buscar(MEDICOS, solicitudJuan.SolicitudEn)
-				.Bind(seq => seq
-					.Where(s => s.Especialidad == solicitudJuan.Especialidad)
-					.Where(s => s.FechaHoraDesde.DayOfWeek == solicitudJuan.DiaPreferido.Valor)
-					.Where(s => solicitudJuan.PrefiereTardeOMañana.AplicaA(s.FechaHoraDesde))
-					.Take(3)
-					.ToListaDisponibilidades2025()
-				).GetOrRaise();
+		ListaDisponibilidades2025 disponibilidadesParaJuan = ListaDisponibilidades2025.Buscar(solicitudJuan,MEDICOS,TURNOS,3).GetOrRaise();
+
 
 		Console.WriteLine(disponibilidadesParaJuan.ATexto());
 
@@ -222,25 +217,20 @@ public class ScenarioTesting {
 		Console.WriteLine("\n=== PEDRO solicita ClinicoGeneral ===");
 
 		Paciente2025 pacientePedro = PACIENTES[0];
-		SolicitudDeTurno solicitudPedro = new(
+		SolicitudDeTurnoBasica solicitudPedro = new(
 			pacientePedro,
 			EspecialidadMedica2025.ClinicoGeneral,
-			DiaSemana2025.Lunes,
-			new TardeOMañana(true),
 			DateTime.Now
 		);
+		SolicitudDeTurnoPreferencias preferenciasPedro = new(
+			DiaSemana2025.Lunes,
+			new TardeOMañana(true)
+		);
+
 		Console.WriteLine(solicitudPedro.ATexto());
 
-		ListaDisponibilidades2025 disponibilidadesParaPedro =
-			ListaDisponibilidades2025
-				.Buscar(MEDICOS, solicitudPedro.SolicitudEn)
-				.Bind(seq => seq
-					.Where(s => s.Especialidad == solicitudPedro.Especialidad)
-					.Where(s => s.FechaHoraDesde.DayOfWeek == solicitudPedro.DiaPreferido.Valor)
-					.Where(s => solicitudPedro.PrefiereTardeOMañana.AplicaA(s.FechaHoraDesde))
-					.Take(3)
-					.ToListaDisponibilidades2025()
-				).GetOrRaise();
+		ListaDisponibilidades2025 disponibilidadesParaPedro = ListaDisponibilidades2025.Buscar(solicitudPedro, MEDICOS, TURNOS, 3).GetOrRaise();
+
 
 		Console.WriteLine(disponibilidadesParaPedro.ATexto());
 
