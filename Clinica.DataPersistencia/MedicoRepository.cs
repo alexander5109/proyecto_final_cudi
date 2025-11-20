@@ -1,13 +1,11 @@
-﻿using Clinica.DataPersistencia.ModelDtos;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Comun;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text.Json;
 
-namespace Clinica.DataPersistencia.Repositorios;
 
-public static class MedicosRepositoriosOld {
+public static class MedicoRepository {
 
 	public static Result<MedicoDto> Create(Medico2025 instancia, string connectionString) {
 		using SqlConnection connection = new(connectionString);
@@ -62,7 +60,7 @@ public static class MedicosRepositoriosOld {
 
 
 
-	public static List<MedicoDto> ReadTodos(string connectionString) {
+	public static List<MedicoDto> GetAll(string connectionString) {
 		var lista = new List<MedicoDto>();
 
 		using SqlConnection conexion = new(connectionString);

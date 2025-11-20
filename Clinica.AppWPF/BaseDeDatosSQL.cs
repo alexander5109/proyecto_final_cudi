@@ -1,6 +1,5 @@
 using Clinica.AppWPF.ViewModels;
-using Clinica.DataPersistencia.ModelDtos;
-using Clinica.DataPersistencia.Repositorios;
+using Clinica.DataPersistencia;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
@@ -396,7 +395,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 	//------------------------private.LOAD.WindowListarMedicos----------------------//
 	private bool SQLCargarMedicosExitosamente() {
 		//var dictMedicos = new Dictionary<int, ViewModelMedico>();
-		foreach (MedicoDto medico in MedicosRepositoriosOld.ReadTodos(connectionString)) {
+		foreach (MedicoDto medico in MedicoRepository.GetAll(connectionString)) {
 			DictMedicos[medico.Id] = medico.ToViewModel();
 			// MessageBox.Show($"Cargando Medico desde SQL: ID:({medico.Id}) - {medico.Name} {medico.LastName} {medico.Horarios.ToString()}");
 
