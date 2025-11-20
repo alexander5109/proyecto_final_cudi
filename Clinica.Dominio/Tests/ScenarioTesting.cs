@@ -137,6 +137,25 @@ public class ScenarioTesting {
 				FechaDeNacimiento2025.Crear(DateTime.Parse("1990/05/15")),
 				FechaIngreso2025.Crear(DateTime.Parse("2022/01/10"))
 			).GetOrRaise(),
+
+			Paciente2025.Crear(
+				NombreCompleto2025.Crear("Pedro", "Fernandez"),
+				DniArgentino2025.Crear("30350123"),
+				Contacto2025.Crear(
+					ContactoEmail2025.Crear("pedroFalopa@gmail.com"),
+					ContactoTelefono2025.Crear("11655414253")
+				),
+				DomicilioArgentino2025.Crear(
+					LocalidadDeProvincia2025.Crear(
+						"Castillo",
+						ProvinciaArgentina2025.Crear("Buenos Aires")
+					),
+					"Palmerita 12223"
+				),
+				FechaDeNacimiento2025.Crear(DateTime.Parse("1996/05/15")),
+				FechaIngreso2025.Crear(DateTime.Parse("2024/01/10"))
+			).GetOrRaise(),
+
 			Paciente2025.Crear(
 				NombreCompleto2025.Crear("Herminda", "Gutierrez Lopez"),
 				DniArgentino2025.Crear("44444444"),
@@ -154,18 +173,20 @@ public class ScenarioTesting {
 				FechaDeNacimiento2025.Crear(DateTime.Parse("1994/05/15")),
 				FechaIngreso2025.Crear(DateTime.Parse("2023/01/10"))
 			).GetOrRaise(),
+
 		];
 
 
 		// ================================================================
-		// ⭐ 1. Juan solicita TURNO
+		// ⭐ 1. Juan solicita ClinicoGeneral
 		// ================================================================
+
+		Console.WriteLine("\n=== Juan solicita ClinicoGeneral ===");
 
 		Paciente2025 pacienteJuan = PACIENTES[0];
 		SolicitudDeTurno solicitudJuan = new(
 			pacienteJuan,
 			EspecialidadMedica2025.ClinicoGeneral,
-			//EspecialidadMedica2025.Gastroenterologo,
 			DiaSemana2025.Lunes,
 			new TardeOMañana(true),
 			DateTime.Now
@@ -194,44 +215,44 @@ public class ScenarioTesting {
 		Console.WriteLine($"Turno guardado: {turnoJuan.ATexto()}");
 
 
-		//var turnoJuan = ((Result<Turno2025>.Ok)turnoJuanRes).Valor;
-		//repoTurnos.Guardar(turnoJuan);
-
-
-
 		// ================================================================
-		// ⭐ 2. Pedro solicita gastroenterólogo
+		// ⭐ 2. Pedro tambien solicita  ClinicoGeneral
 		// ================================================================
-		//Console.WriteLine("\n=== PEDRO solicita Gastroenterología ===");
 
-		//var solicitudPedro = SolicitudDeTurno2.Crear(
-		//	new Result<Paciente2025>.Ok(pedro),
-		//	new Result<EspecialidadMedica2025>.Ok(especialGastro),
-		//	DateTime.Now
-		//).Match(ok => ok, err => throw new Exception(err));
+		Console.WriteLine("\n=== PEDRO solicita ClinicoGeneral ===");
 
-		//var dispPedro = solicitudPedro.BuscarDisponibilidades(repoMedicos, repoTurnos)
-		//							.Match(ok => ok, err => throw new Exception(err))
-		//							.ToList();
+		Paciente2025 pacientePedro = PACIENTES[0];
+		SolicitudDeTurno solicitudPedro = new(
+			pacientePedro,
+			EspecialidadMedica2025.ClinicoGeneral,
+			DiaSemana2025.Lunes,
+			new TardeOMañana(true),
+			DateTime.Now
+		);
+		Console.WriteLine(solicitudPedro.ATexto());
 
-		//Console.WriteLine($"Disponibilidades encontradas para Pedro ({dispPedro.Count}):");
-		//foreach (var d in dispPedro)
-		//	Console.WriteLine($" → {d.Medico.NombreCompleto.Apellido}, {d.Medico.NombreCompleto.Nombre} a las {d.Inicio}");
+		ListaDisponibilidades2025 disponibilidadesParaPedro =
+			ListaDisponibilidades2025
+				.Buscar(MEDICOS, solicitudPedro.SolicitudEn)
+				.Bind(seq => seq
+					.Where(s => s.Especialidad == solicitudPedro.Especialidad)
+					.Where(s => s.FechaHoraDesde.DayOfWeek == solicitudPedro.DiaPreferido.Valor)
+					.Where(s => solicitudPedro.PrefiereTardeOMañana.AplicaA(s.FechaHoraDesde))
+					.Take(3)
+					.ToListaDisponibilidades2025()
+				).GetOrRaise();
 
-		//var primeraDispPedro = dispPedro.First();
-		//Console.WriteLine($"Primer turno asignable a Pedro: {primeraDispPedro.Medico.NombreCompleto.Apellido} - {primeraDispPedro.Inicio}");
+		Console.WriteLine(disponibilidadesParaPedro.ATexto());
 
-		//var turnoPedroRes = Turno2025.Programar(
-		//	new Result<Medico2025>.Ok(primeraDispPedro.Medico),
-		//	new Result<Paciente2025>.Ok(pedro),
-		//	new Result<EspecialidadMedica2025>.Ok(especialGastro),
-		//	primeraDispPedro.Inicio
-		//);
+		DisponibilidadEspecialidad2025 primeraDispPedro = disponibilidadesParaPedro.Valores.First();
 
-		//var turnoPedro = ((Result<Turno2025>.Ok)turnoPedroRes).Valor;
-		//repoTurnos.Guardar(turnoPedro);
+		Console.WriteLine($"Disponibilidad elegida: {primeraDispPedro.ATexto()}");
 
-		//Console.WriteLine($"✔ Turno de PEDRO guardado: {primeraDispPedro.Medico.NombreCompleto.Apellido} {primeraDispPedro.Inicio}\n");
+		Turno2025 turnoPedro = Turno2025.Programar(solicitudPedro, primeraDispPedro).GetOrRaise();
+		TURNOS.Add(turnoPedro);
+		Console.WriteLine($"Turno guardado: {turnoPedro.ATexto()}");
+
+
 
 
 		// ================================================================
