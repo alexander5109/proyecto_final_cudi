@@ -34,40 +34,39 @@ public record Turno2025 (
 
 
 	public static Result<Turno2025> Programar(
-		SolicitudDeTurnoBasica solicitud,
-		DisponibilidadEspecialidad2025 disp
+		Result<SolicitudDeTurno> solicitudResult,
+		Result<DisponibilidadEspecialidad2025> dispResult
 	) {
 		// --- Validación de los Result ----
-		//if (solicitudResult is Result<SolicitudDeTurnoCompleta>.Error solError)
-		//	return new Result<Turno2025>.Error($"Error en solicitud: {solError.Mensaje}");
+		if (solicitudResult is Result<SolicitudDeTurno>.Error solError)
+			return new Result<Turno2025>.Error($"Error en solicitud: {solError.Mensaje}");
 
-		//if (dispResult is Result<DisponibilidadEspecialidad2025>.Error dispError)
-		//	return new Result<Turno2025>.Error($"Error en disponibilidad: {dispError.Mensaje}");
+		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error dispError)
+			return new Result<Turno2025>.Error($"Error en disponibilidad: {dispError.Mensaje}");
 
-		//var solicitud = ((Result<SolicitudDeTurnoCompleta>.Ok)solicitudResult).Valor;
-		//var disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
+		var solicitud = ((Result<SolicitudDeTurno>.Ok)solicitudResult).Valor;
+		var disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
 
 		// --- Coherencias de dominio ---
-		if (solicitud.Paciente is null)
-			return new Result<Turno2025>.Error("La solicitud no tiene paciente.");
+		//if (solicitud.Paciente is null)
+			//return new Result<Turno2025>.Error("La solicitud no tiene paciente.");
 
-		if (solicitud.Especialidad.CodigoInterno != disp.Especialidad.CodigoInterno)
-			return new Result<Turno2025>.Error("La disponibilidad no corresponde a la especialidad solicitada.");
+		//if (solicitud.Especialidad.CodigoInterno != disp.Especialidad.CodigoInterno)
+			//return new Result<Turno2025>.Error("La disponibilidad no corresponde a la especialidad solicitada.");
 
 		// El turno NO tiene por qué ser validado contra DateTime.Now.
 		// Asumimos que la disponibilidad ya fue generada correctamente por el dominio.
 
 		// --- Construcción del Turno ---
-		var turno = new Turno2025(
+
+		return new Result<Turno2025>.Ok(new Turno2025(
 			MedicoAsignado: disp.Medico,
 			Paciente: solicitud.Paciente,
 			Especialidad: disp.Especialidad,
 			FechaHoraDesde: disp.FechaHoraDesde,
 			FechaHoraHasta: disp.FechaHoraHasta,
 			Estado: TurnoEstado2025.Programado
-		);
-
-		return new Result<Turno2025>.Ok(turno);
+		));
 	}
 
 

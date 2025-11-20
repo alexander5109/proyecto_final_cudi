@@ -1,8 +1,8 @@
-﻿using Clinica.Dominio.Comun;
+﻿using System.Reflection.Metadata.Ecma335;
+using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
-
 
 public readonly record struct ListaHorarioMedicos2025(
 	IReadOnlyList<HorarioMedico2025> Valores
@@ -15,13 +15,18 @@ public readonly record struct ListaHorarioMedicos2025(
 		return "Lista de horarios:\n" + string.Join("\n", lineas);
 	}
 
-	public static Result<ListaHorarioMedicos2025> Crear(IReadOnlyList<Result<HorarioMedico2025>> horariosResult)
+	public static Result<ListaHorarioMedicos2025> Crear(
+		IReadOnlyList<Result<HorarioMedico2025>> horariosResult)
 		=> horariosResult.Bind(horariosOk =>
 			new Result<ListaHorarioMedicos2025>.Ok(new ListaHorarioMedicos2025(horariosOk))
 		);
+
+
+
+	/*
 	// ✅ 1. Factory desde lista de HorarioMedico2025 ya válidos
 	public static Result<ListaHorarioMedicos2025> Crear(
-		IEnumerable<HorarioMedico2025> valores) {
+		IReadOnlyList<HorarioMedico2025> valores) {
 		if (valores is null)
 			return new Result<ListaHorarioMedicos2025>.Error("La lista de horarios no puede ser nula.");
 
@@ -30,7 +35,7 @@ public readonly record struct ListaHorarioMedicos2025(
 
 	// ✅ 2. Factory desde lista de Result<HorarioMedico2025>
 	public static Result<ListaHorarioMedicos2025> Crear(
-		IEnumerable<Result<HorarioMedico2025>> resultados) {
+		IReadOnlyList<Result<HorarioMedico2025>> resultados) {
 		if (resultados is null)
 			return new Result<ListaHorarioMedicos2025>.Error("La lista de resultados no puede ser nula.");
 
@@ -47,10 +52,9 @@ public readonly record struct ListaHorarioMedicos2025(
 
 		return new Result<ListaHorarioMedicos2025>.Ok(new ListaHorarioMedicos2025(valoresOk));
 	}
-
 	// ✅ 3. Factory “desde strings” (útil para CSV, test o carga directa)
 	public static Result<ListaHorarioMedicos2025> Crear(
-		IEnumerable<(string Dia, string Desde, string Hasta)> entradas) {
+		IReadOnlyList<(string Dia, string Desde, string Hasta)> entradas) {
 		if (entradas is null)
 			return new Result<ListaHorarioMedicos2025>.Error("La lista de entradas no puede ser nula.");
 
@@ -60,7 +64,7 @@ public readonly record struct ListaHorarioMedicos2025(
 
 		return Crear(resultados); // Reutiliza la factory #2
 	}
-
+	*/
 	// ✅ 4. Versión vacía explícita
 	public static Result<ListaHorarioMedicos2025> CrearVacia()
 		=> new Result<ListaHorarioMedicos2025>.Ok(

@@ -12,11 +12,27 @@ public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 	private static bool EsMañana(DateTime dt) => dt.Hour < 13;
 }
 
-public readonly record struct SolicitudDeTurnoBasica(
+public readonly record struct SolicitudDeTurno(
 	Paciente2025 Paciente,
 	EspecialidadMedica2025 Especialidad,
 	DateTime Fecha
 ) : IComoTexto {
+
+	public static Result<SolicitudDeTurno> Crear(
+		Paciente2025 paciente,
+		EspecialidadMedica2025 especialidad,
+		DateTime fechaSolicitada
+	) {
+		if (fechaSolicitada < DateTime.Now)
+			return new Result<SolicitudDeTurno>.Error("La fecha solicitada no puede ser en el pasado.");
+
+
+		Console.WriteLine($"\n {paciente.NombreCompleto} solicita {especialidad.Titulo}");
+		return new Result<SolicitudDeTurno>.Ok(
+			new SolicitudDeTurno(paciente, especialidad, fechaSolicitada)
+		);
+	}
+
 	public string ATexto() =>
 		$"Solicitud básica:\n" +
 		$"  • Paciente: {Paciente.NombreCompleto.ATexto()}\n" +
@@ -44,7 +60,7 @@ public readonly record struct SolicitudDeTurnoPreferencias(
 }
 
 //public readonly record struct SolicitudDeTurnoCompleta(
-//	SolicitudDeTurnoBasica Basica,
+//	SolicitudDeTurno Basica,
 //	SolicitudDeTurnoPreferencias Preferencias
 //) : IComoTexto {
 //	public Paciente2025 Paciente => Basica.Paciente;

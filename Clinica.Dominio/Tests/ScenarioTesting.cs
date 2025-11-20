@@ -13,7 +13,7 @@ public class ScenarioTesting {
 		// Arrange
 		Console.WriteLine("\n--- Creando médicos ---");
 
-		List<Turno2025> TURNOS = [];
+		ListaTurnosHistorial2025 TURNOS = ListaTurnosHistorial2025.Crear();
 
 		List<Medico2025> MEDICOS = [
 			Medico2025.Crear(
@@ -181,66 +181,30 @@ public class ScenarioTesting {
 		// ⭐ 1. Juan solicita ClinicoGeneral
 		// ================================================================
 
-		Console.WriteLine("\n=== Juan solicita ClinicoGeneral ===");
 
 		Paciente2025 pacienteJuan = PACIENTES[0];
-		SolicitudDeTurnoBasica solicitudJuan = new(
+		Result<SolicitudDeTurno> solicitudJuan = SolicitudDeTurno.Crear(
 			pacienteJuan,
 			EspecialidadMedica2025.ClinicoGeneral,
 			DateTime.Now
-		);
-		SolicitudDeTurnoPreferencias preferencias = new(
-			DiaSemana2025.Lunes,
-			new TardeOMañana(true)
-		);
-
-		Console.WriteLine(solicitudJuan.ATexto());
-
-		ListaDisponibilidades2025 disponibilidadesParaJuan = ListaDisponibilidades2025.Buscar(solicitudJuan,MEDICOS,TURNOS,3).GetOrRaise();
+		).PrintAndContinue("Creando paciente: ");
 
 
-		Console.WriteLine(disponibilidadesParaJuan.ATexto());
 
-		DisponibilidadEspecialidad2025 primeraDispJuan = disponibilidadesParaJuan.Valores.First();
+		Result<ListaDisponibilidades2025> resultDisponibilidadesParaJuan =
+			ListaDisponibilidades2025.Buscar(solicitudJuan, MEDICOS, TURNOS, 3)
+			.AplicarFiltrosOpcionales(new(
+				DiaSemana2025.Lunes,
+				new TardeOMañana(true)
+			));
+		Result<DisponibilidadEspecialidad2025> primeraDispJuan = resultDisponibilidadesParaJuan.TomarPrimera();
 
-		Console.WriteLine($"Disponibilidad elegida: {primeraDispJuan.ATexto()}");
-
-		Turno2025 turnoJuan = Turno2025.Programar(solicitudJuan, primeraDispJuan).GetOrRaise();
-		TURNOS.Add(turnoJuan);
-		Console.WriteLine($"Turno guardado: {turnoJuan.ATexto()}");
+		TURNOS.AgendarTurno(Turno2025.Programar(solicitudJuan, primeraDispJuan));
 
 
 		// ================================================================
 		// ⭐ 2. Pedro tambien solicita  ClinicoGeneral
 		// ================================================================
-
-		Console.WriteLine("\n=== PEDRO solicita ClinicoGeneral ===");
-
-		Paciente2025 pacientePedro = PACIENTES[0];
-		SolicitudDeTurnoBasica solicitudPedro = new(
-			pacientePedro,
-			EspecialidadMedica2025.ClinicoGeneral,
-			DateTime.Now
-		);
-		SolicitudDeTurnoPreferencias preferenciasPedro = new(
-			DiaSemana2025.Lunes,
-			new TardeOMañana(true)
-		);
-
-		Console.WriteLine(solicitudPedro.ATexto());
-
-		ListaDisponibilidades2025 disponibilidadesParaPedro = ListaDisponibilidades2025.Buscar(solicitudPedro, MEDICOS, TURNOS, 3).GetOrRaise();
-
-
-		Console.WriteLine(disponibilidadesParaPedro.ATexto());
-
-		DisponibilidadEspecialidad2025 primeraDispPedro = disponibilidadesParaPedro.Valores.First();
-
-		Console.WriteLine($"Disponibilidad elegida: {primeraDispPedro.ATexto()}");
-
-		Turno2025 turnoPedro = Turno2025.Programar(solicitudPedro, primeraDispPedro).GetOrRaise();
-		TURNOS.Add(turnoPedro);
-		Console.WriteLine($"Turno guardado: {turnoPedro.ATexto()}");
 
 
 

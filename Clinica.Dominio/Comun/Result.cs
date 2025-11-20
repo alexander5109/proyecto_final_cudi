@@ -1,61 +1,14 @@
-﻿using static Clinica.Dominio.Comun.Result;
-
+﻿
 namespace Clinica.Dominio.Comun;
 
-//
-// ==========================================
-//  BASE (sin genéricos)
-// ==========================================
-public abstract class Result {
-	public sealed class Ok : Result { }
-
-	public sealed class Error(string mensaje) : Result {
-        public string Mensaje { get; } = mensaje;
-    }
-
-	public bool IsOk => this is Ok;
-	public bool IsError => this is Error;
-
-	// ✅ Métodos estáticos sin colisiones
-	public static Result Success() => new Ok();
-	public static Result Failure(string mensaje) => new Error(mensaje);
-
-	public void Switch(Action ok, Action<string> error) {
-		switch (this) {
-			case Ok: ok(); break;
-			case Error e: error(e.Mensaje); break;
-			default: throw new InvalidOperationException();
-		}
-	}
-
-	public TOut Match<TOut>(Func<TOut> ok, Func<string, TOut> error)
-		=> this switch {
-			Ok => ok(),
-			Error e => error(e.Mensaje),
-			_ => throw new InvalidOperationException()
-		};
-
-
-
-	// ✅ Métodos auxiliares para versión genérica
-	public static Result<T> Success<T>(T value) => new Result<T>.Ok(value);
-	public static Result<T> Failure<T>(string message) => new Result<T>.Error(message);
-}
-
-
-
-//
-// ==========================================
-//  VERSION GENÉRICA (Result<T>)
-// ==========================================
 public abstract class Result<T> {
 	public sealed class Ok(T valor) : Result<T> {
-        public T Valor { get; } = valor;
-    }
+		public T Valor { get; } = valor;
+	}
 
 	public sealed class Error(string mensaje) : Result<T> {
-        public string Mensaje { get; } = mensaje;
-    }
+		public string Mensaje { get; } = mensaje;
+	}
 
 	public bool IsOk => this is Ok;
 	public bool IsError => this is Error;
@@ -66,6 +19,20 @@ public abstract class Result<T> {
 			Error e => error(e.Mensaje),
 			_ => throw new InvalidOperationException()
 		};
+	public void Match(Action<T> ok, Action<string> error) {
+		switch (this) {
+			case Ok o:
+				ok(o.Valor);
+				break;
+
+			case Error e:
+				error(e.Mensaje);
+				break;
+
+			default:
+				throw new InvalidOperationException();
+		}
+	}
 
 	public void Switch(Action<T> ok, Action<string> error) {
 		switch (this) {
@@ -75,20 +42,27 @@ public abstract class Result<T> {
 		}
 	}
 }
-
-
 //
 // ==========================================
 //  EXTENSIONES FUNCIONALES
 // ==========================================
 public static class ResultExtensions {
 
+	public static Result<T> PrintAndContinue<T>(this Result<T> result, string? label = null) {
+		string prefix = label is null ? "" : $"{label}: ";
 
+		result.Match(
+			ok => Console.WriteLine($"{prefix}OK → {ok}"),
+			err => Console.WriteLine($"{prefix}ERROR → {err}")
+		);
+
+		return result; // ← mantiene la pipeline
+	}
 
 	public static T GetOrRaise<T>(this Result<T> result) =>
 		result.Match(
-			ok => ok, // this "ok" IS the T value
-			err => throw new InvalidOperationException(err)
+			ok => ok,
+			mensaje => throw new InvalidOperationException(mensaje)
 		);
 
 
@@ -141,20 +115,6 @@ public static class ResultExtensions {
 		return new Result<List<T>>.Ok(list);
 	}
 
-	// MapToNonGeneric: permite degradar Result<T> → Result
-	public static Result MapToNonGeneric<T>(this Result<T> r) =>
-		r switch {
-			Result<T>.Ok => new Result.Ok(),
-			Result<T>.Error e => new Result.Error(e.Mensaje),
-			_ => throw new InvalidOperationException()
-		};
-}
-public static class ResultLinqExtensions {
-	// SELECT  (equivalente a Map)
-	public static Result<U> Select<T, U>(
-		this Result<T> r,
-		Func<T, U> f
-	) => r.Map(f);
 
 	// SELECT MANY (equivalente a Bind)
 	public static Result<V> SelectMany<T, U, V>(

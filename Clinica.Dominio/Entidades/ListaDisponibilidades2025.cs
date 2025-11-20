@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 
@@ -11,33 +12,10 @@ public sealed record ListaDisponibilidades2025(
 		"Lista de disponibilidades:\n" +
 		string.Join("\n", Valores.Select(d => "- " + d.ATexto()));
 
-
-
-	// --- Tu generador original ---
-
-
-	private static bool NoColisionaConTurnos(
-		DisponibilidadEspecialidad2025 disp,
-		IEnumerable<Turno2025> turnos) {
-		foreach (var turno in turnos) {
-			if (turno.MedicoAsignado != disp.Medico) continue;
-			if (turno.Especialidad != disp.Especialidad) continue;
-
-			bool solapa =
-				turno.FechaHoraDesde < disp.FechaHoraHasta &&
-				disp.FechaHoraDesde < turno.FechaHoraHasta;
-
-			if (solapa)
-				return false;
-		}
-
-		return true;
-	}
-
 	public static IEnumerable<DisponibilidadEspecialidad2025> GenerarDisponibilidades(
-		SolicitudDeTurnoBasica solicitud,
-		IEnumerable<Medico2025> medicos,
-		IEnumerable<Turno2025> turnosActuales
+		SolicitudDeTurno solicitud,
+		IReadOnlyList<Medico2025> medicos,
+		ListaTurnosHistorial2025 turnosActuales
 	) {
 		foreach (var medico in medicos)
 			foreach (var especialidad in medico.Especialidades.Valores) {
@@ -70,7 +48,7 @@ public sealed record ListaDisponibilidades2025(
 							);
 
 							// chequeo de colisión inline
-							if (!NoColisionaConTurnos(disp, turnosActuales))
+							if (turnosActuales.DisponibilidadNoColisiona(disp))
 								continue;
 
 							yield return disp;
@@ -80,59 +58,79 @@ public sealed record ListaDisponibilidades2025(
 			}
 	}
 
-
+	public static Result<ListaDisponibilidades2025> Crear(
+		IReadOnlyList<DisponibilidadEspecialidad2025> disponibilidades
+	) {
+		//var lista = disponibilidades.ToList();
+		if (disponibilidades.Count() == 0)
+			return new Result<ListaDisponibilidades2025>.Error("No se encontraron disponibilidades.");
+		return new Result<ListaDisponibilidades2025>.Ok(
+			new ListaDisponibilidades2025(disponibilidades)
+		);
+	}
 
 	public static Result<ListaDisponibilidades2025> Buscar(
-		SolicitudDeTurnoBasica solicitud,
-		IEnumerable<Medico2025> medicos,
-		IEnumerable<Turno2025> turnos,
+		Result<SolicitudDeTurno> solicitudResult,
+		IReadOnlyList<Medico2025> medicos,
+		ListaTurnosHistorial2025 turnos,
 		int cuantos
 	) {
-        List<DisponibilidadEspecialidad2025> disponibles = GenerarDisponibilidades(solicitud, medicos, turnos)
+		if (solicitudResult is Result<SolicitudDeTurno>.Error err)
+			return new Result<ListaDisponibilidades2025>.Error(err.Mensaje);
+		SolicitudDeTurno solicitud = ((Result<SolicitudDeTurno>.Ok)solicitudResult).Valor;
+		List<DisponibilidadEspecialidad2025> disponibles = GenerarDisponibilidades(solicitud, medicos, turnos)
 			.OrderBy(d => d.FechaHoraDesde)
 			.Take(cuantos)
 			.ToList();
 
-		if (disponibles.Count == 0)
-			return new Result<ListaDisponibilidades2025>.Error(
-				"No hay disponibilidades para la fecha solicitada o posterior."
-			);
-
-		return new Result<ListaDisponibilidades2025>.Ok(new(disponibles));
+		return ListaDisponibilidades2025.Crear(disponibles);
 	}
-
-	public Result<ListaDisponibilidades2025> AplicarFiltrosOpcionales(
-		SolicitudDeTurnoPreferencias preferencias
-	) {
-		var filtradas = this.Valores.AsEnumerable();
-
-		if (preferencias.DiaPreferido is DiaSemana2025 dia)
-			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia.Valor);
-
-		if (preferencias.MomentoPreferido is TardeOMañana momento)
-			filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));
-
-		return filtradas.ToListaDisponibilidades2025();
-	}
-
-
-
-
 
 }
 
 
 
 public static class DisponibilidadesExtensions {
-	public static Result<ListaDisponibilidades2025> ToListaDisponibilidades2025(
-		this IEnumerable<DisponibilidadEspecialidad2025> secuencia) {
-		var lista = secuencia.ToList();
 
-		if (lista.Count == 0)
-			return new Result<ListaDisponibilidades2025>.Error("No se encontraron disponibilidades.");
+	public static Result<DisponibilidadEspecialidad2025> TomarPrimera(
+		this Result<ListaDisponibilidades2025> listadoResult
+	) {
 
-		return new Result<ListaDisponibilidades2025>.Ok(
-			new ListaDisponibilidades2025(lista)
+		return listadoResult.Match<Result<DisponibilidadEspecialidad2025>>(
+			ok => {
+				// la lista existe, ahora chequeamos si tiene elementos
+				if (ok.Valores.Count == 0)
+					return new Result<DisponibilidadEspecialidad2025>.Error(
+						"No hay disponibilidades para seleccionar."
+					);
+
+				Console.WriteLine($"Tomando primer disponibilidad");
+				return new Result<DisponibilidadEspecialidad2025>.Ok(ok.Valores[0]);
+			},
+
+			mensajeError =>
+				new Result<DisponibilidadEspecialidad2025>.Error(mensajeError)
 		);
+	}
+
+	public static Result<ListaDisponibilidades2025> AplicarFiltrosOpcionales(
+		this Result<ListaDisponibilidades2025> disponibilidadesResult,
+		SolicitudDeTurnoPreferencias preferencias
+	) {
+		if (disponibilidadesResult is Result<ListaDisponibilidades2025>.Error err)
+			return new Result<ListaDisponibilidades2025>.Error(err.Mensaje);
+
+		ListaDisponibilidades2025 lista = ((Result<ListaDisponibilidades2025>.Ok)disponibilidadesResult).Valor;
+		Console.WriteLine($"Aplicando filtros opcionales: {preferencias.ATexto()}");
+		IEnumerable<DisponibilidadEspecialidad2025> filtradas = lista.Valores;
+		if (preferencias.DiaPreferido is DiaSemana2025 dia)
+			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia.Valor);
+
+		if (preferencias.MomentoPreferido is TardeOMañana momento)
+			filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));
+		//Console.WriteLine($"{filtradas.Count()}");
+
+
+		return ListaDisponibilidades2025.Crear(filtradas.ToImmutableList());
 	}
 }
