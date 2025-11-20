@@ -11,14 +11,11 @@ public class Common {
 		var dniRes = DniArgentino2025.Crear(dni);
 		var domRes = DomicilioArgentino2025.Crear(LocalidadDeProvincia2025.Crear("Localidad", ProvinciaArgentina2025.Crear("Buenos Aires")), "Calle 1");
 		var telRes = ContactoTelefono2025.Crear("+5491123456789");
-		var horariosRes = ListaHorarioMedicos2025.Crear([
-				HorarioMedico2025.Crear(DiaSemana2025.Crear(dia),
-				HorarioHora2025.Crear(desde),
-				HorarioHora2025.Crear(hasta))
-				.Match(ok => ok, err => throw new Exception(err)) ]
-		);
+		var horariosRes = ListaHorarioMedicos2025.Crear(new[] {
+			HorarioMedico2025.Crear(DiaSemana2025.Crear(dia), HorarioHora2025.Crear(desde), HorarioHora2025.Crear(hasta)).Match(ok => ok, err => throw new Exception(err))
+		});
 		var fechaIng = FechaIngreso2025.Crear(DateTime.Today);
-		var sueldo = MedicoSueldoMinimo2025.Crear(250000m);
+		var sueldo = MedicoSueldoMinimo2025.Crear((double?)250000);
 
 		var medRes = Medico2025.Crear(nombreRes, espRes, dniRes, domRes, telRes, horariosRes, fechaIng, sueldo, false);
 		return medRes.Match(m => m, e => throw new Exception(e));

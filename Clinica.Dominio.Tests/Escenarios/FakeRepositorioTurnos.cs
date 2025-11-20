@@ -9,9 +9,9 @@ using FluentAssertions;
 namespace Clinica.Dominio.Tests.Escenarios;
 
 public class FakeRepositorioTurnos : IRepositorioTurnos {
-	private readonly List<Turno2025> _turnos = [];
+	private readonly List<Turno2025> _turnos = new();
 
-	public Result<IReadOnlyList<Turno2025>> ObtenerTurnosPorMedicoDni(string medicoDni, DateTime desde, DateTime hasta) => new Result<IReadOnlyList<Turno2025>>.Ok(_turnos.Where(t => t.MedicoAsignado is not null && t.MedicoAsignado.Value.Dni.Valor == medicoDni && t.FechaYHora >= desde && t.FechaYHora <= hasta).ToList());
+	public Result<IReadOnlyList<Turno2025>> ObtenerTurnosPorMedicoDni(string medicoDni, DateTime desde, DateTime hasta) => new Result<IReadOnlyList<Turno2025>>.Ok(_turnos.Where(t => t.MedicoAsignado is not null && t.MedicoAsignado.Dni.Valor == medicoDni && t.FechaYHora >= desde && t.FechaYHora <= hasta).ToList());
 
 	public Result<IReadOnlyList<Turno2025>> ObtenerTurnosPorEspecialidad(string especialidadTitulo, DateTime desde, DateTime hasta) => new Result<IReadOnlyList<Turno2025>>.Ok(_turnos.Where(t => t.Especialidad.Titulo == especialidadTitulo && t.FechaYHora >= desde && t.FechaYHora <= hasta).ToList());
 

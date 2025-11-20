@@ -1,6 +1,6 @@
 using System;
 
-namespace Clinica.Dominio.Servicios;
+namespace Clinica.Dominio.Dtos;
 
 public record EspecialidadDto(string UId, string Titulo);
 public record MedicoSimpleDto(int Id, string Displayear);

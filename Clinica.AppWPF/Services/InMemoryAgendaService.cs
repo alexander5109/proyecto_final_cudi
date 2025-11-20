@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Clinica.AppWPF.ViewModels;
-using Clinica.Dominio.Servicios;
+using Clinica.Aplicacion;
+using Clinica.Dominio.Dtos;
 
 namespace Clinica.AppWPF.Services;
 
-public class InMemoryAgendaService : IAgendaService
+public class InMemoryAgendaService : IAgendaQueryService
 {
     private readonly List<EspecialidadDto> _especialidades = new() {
         new EspecialidadDto("esp-gastro","Gastroenterólogo"),

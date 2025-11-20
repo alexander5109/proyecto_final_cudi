@@ -4,9 +4,9 @@ namespace Clinica.Dominio.Servicios;
 
 public interface IAgendaService
 {
-    IEnumerable<EspecialidadDto> GetEspecialidades();
-    IEnumerable<MedicoSimpleDto> GetMedicosByEspecialidad(string especialidadUId);
-    IEnumerable<DiaSemanaDto> GetDiasSemana();
+    IEnumerable<Clinica.Dominio.Dtos.EspecialidadDto> GetEspecialidades();
+    IEnumerable<Clinica.Dominio.Dtos.MedicoSimpleDto> GetMedicosByEspecialidad(string especialidadUId);
+    IEnumerable<Clinica.Dominio.Dtos.DiaSemanaDto> GetDiasSemana();
     IEnumerable<int> GetHoras();
-    IEnumerable<DisponibilidadDto> GetDisponibilidades(string especialidadUId, int? medicoId, int? diaValue, int? hora);
+    IEnumerable<Clinica.Dominio.Dtos.DisponibilidadDto> GetDisponibilidades(string especialidadUId, int? medicoId, int? diaValue, int? hora);
 }

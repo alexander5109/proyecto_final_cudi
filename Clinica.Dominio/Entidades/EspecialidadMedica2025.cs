@@ -131,6 +131,9 @@ public sealed class EspecialidadMedica2025 {
 		return new Result<EspecialidadMedica2025>.Error($"No existe la especialidad con CodigoInterno = {id}.");
 	}
 
+	// Convenience factory to keep older tests/usage working
+	public static Result<EspecialidadMedica2025> Crear(string? titulo) => CrearPorTitulo(titulo);
+
 	// ======================================================
 	// Utility
 	// ======================================================
