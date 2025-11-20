@@ -1,4 +1,6 @@
-﻿namespace Clinica.Dominio.FunctionalProgramingTools;
+﻿using static Clinica.Dominio.FunctionalProgramingTools.Result;
+
+namespace Clinica.Dominio.FunctionalProgramingTools;
 
 //
 // ==========================================
@@ -32,6 +34,8 @@ public abstract class Result {
 			Error e => error(e.Mensaje),
 			_ => throw new InvalidOperationException()
 		};
+
+
 
 	// ✅ Métodos auxiliares para versión genérica
 	public static Result<T> Success<T>(T value) => new Result<T>.Ok(value);
@@ -78,6 +82,16 @@ public abstract class Result<T> {
 //  EXTENSIONES FUNCIONALES
 // ==========================================
 public static class ResultExtensions {
+
+
+
+	public static T GetOrRaise<T>(this Result<T> result) =>
+		result.Match(
+			ok => ok, // this "ok" IS the T value
+			err => throw new InvalidOperationException(err)
+		);
+
+
 	// Map: Result<T> → Result<U>
 	public static Result<U> Map<T, U>(this Result<T> r, Func<T, U> f) =>
 		r switch {
