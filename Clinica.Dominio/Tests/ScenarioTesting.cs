@@ -43,7 +43,10 @@ public class ScenarioTesting {
 				FechaIngreso2025.Crear(DateTime.Parse("2014/12/12")),
 				MedicoSueldoMinimo2025.Crear(800_000),
 				false
-			).GetOrRaise(),
+			)
+			.PrintAndContinue("Creando a clinico general-gastroenterologo Carlos Merkier: ")
+			.GetOrRaise()
+			,
 
 			Medico2025.Crear(
 				NombreCompleto2025.Crear("Jorge", "Pereyra"),
@@ -75,7 +78,11 @@ public class ScenarioTesting {
 				FechaIngreso2025.Crear(DateTime.Parse("2014/12/12")),
 				MedicoSueldoMinimo2025.Crear(800_000),
 				false
-			).GetOrRaise(),
+			)
+			.PrintAndContinue("Creando a pediatra-ginecologo Jorge Pereyra: ")
+			.GetOrRaise()
+			,
+
 			Medico2025.Crear(
 				NombreCompleto2025.Crear("Marta", "Algerich"),
 				ListaEspecialidadesMedicas2025.Crear([
@@ -111,7 +118,9 @@ public class ScenarioTesting {
 				FechaIngreso2025.Crear(DateTime.Parse("2013/12/12")),
 				MedicoSueldoMinimo2025.Crear(1300_000),
 				false
-			).GetOrRaise()
+			)
+			.PrintAndContinue("Creando a neurologa-osteopata Marta Algerich: ")
+			.GetOrRaise()
 		];
 
 
