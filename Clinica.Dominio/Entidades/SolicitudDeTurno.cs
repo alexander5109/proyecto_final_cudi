@@ -6,7 +6,11 @@ namespace Clinica.Dominio.Entidades;
 
 public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 	public string ATexto() => Tarde ? "Tarde" : "Mañana";
+	public bool AplicaA(DateTime fecha) => Tarde ? EsTarde(fecha) : EsMañana(fecha);
+	private static bool EsTarde(DateTime dt) => dt.Hour >= 13;
+	private static bool EsMañana(DateTime dt) => dt.Hour < 13;
 }
+
 
 public readonly record struct SolicitudDeTurno(
 	Paciente2025 Paciente,

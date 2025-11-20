@@ -28,3 +28,15 @@ public sealed record DiaSemana2025(
 		return new Result<DiaSemana2025>.Ok(new(dia));
 	}
 }
+public static class DayOfWeekExtensiones {
+	public static string ATexto(this DayOfWeek dia) => dia switch {
+		DayOfWeek.Monday => "Lunes",
+		DayOfWeek.Tuesday => "Martes",
+		DayOfWeek.Wednesday => "Miércoles",
+		DayOfWeek.Thursday => "Jueves",
+		DayOfWeek.Friday => "Viernes",
+		DayOfWeek.Saturday => "Sábado",
+		DayOfWeek.Sunday => "Domingo",
+		_ => throw new ArgumentOutOfRangeException(nameof(dia), dia, null)
+	};
+}

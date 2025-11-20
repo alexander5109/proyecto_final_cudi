@@ -1,0 +1,1 @@
+﻿namespace Clinica.Dominio.Comun;

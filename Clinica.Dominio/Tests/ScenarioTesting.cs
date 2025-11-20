@@ -3,7 +3,6 @@ using System.Linq;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
-using static Clinica.Dominio.Entidades.Entidades;
 
 namespace Clinica.Dominio.Tests.Escenarios;
 
@@ -162,51 +161,37 @@ public class ScenarioTesting {
 		// ⭐ 1. Juan solicita TURNO
 		// ================================================================
 
-		Paciente2025 pcaiente1 = PACIENTES[0];
+		Paciente2025 pacienteJuan = PACIENTES[0];
 		SolicitudDeTurno solicitudJuan = new(
-			pcaiente1,
+			pacienteJuan,
 			EspecialidadMedica2025.ClinicoGeneral,
 			//EspecialidadMedica2025.Gastroenterologo,
 			DiaSemana2025.Lunes,
 			new TardeOMañana(true),
 			DateTime.Now
 		);
-		Console.WriteLine(solicitudJuan);
+		Console.WriteLine(solicitudJuan.ATexto());
 
-		static bool EsMañana(DateTime hora) =>
-			hora.TimeOfDay >= TimeSpan.FromHours(8) &&
-			hora.TimeOfDay < TimeSpan.FromHours(13);
+		ListaDisponibilidades2025 disponibilidadesParaJuan =
+			ListaDisponibilidades2025
+				.Buscar(MEDICOS, solicitudJuan.SolicitudEn)
+				.Bind(seq => seq
+					.Where(s => s.Especialidad == solicitudJuan.Especialidad)
+					.Where(s => s.FechaHoraDesde.DayOfWeek == solicitudJuan.DiaPreferido.Valor)
+					.Where(s => solicitudJuan.PrefiereTardeOMañana.AplicaA(s.FechaHoraDesde))
+					.Take(3)
+					.ToListaDisponibilidades2025()
+				).GetOrRaise();
 
-		static bool EsTarde(DateTime hora) =>
-			hora.TimeOfDay >= TimeSpan.FromHours(13) &&
-			hora.TimeOfDay < TimeSpan.FromHours(18);
+		Console.WriteLine(disponibilidadesParaJuan.ATexto());
 
-		List<DisponibilidadEspecialidad2025> disponibilidades =
-			Servicios.GenerarDisponibilidades(MEDICOS, solicitudJuan.SolicitudEn)
-			.Where(s => s.Especialidad == solicitudJuan.Especialidad)
-			.Where(s => s.FechaHoraDesde.DayOfWeek == solicitudJuan.DiaPreferido.Valor)
-			.Where(s => solicitudJuan.PrefiereTardeOMañana.Tarde
-						  ? EsTarde(s.FechaHoraDesde)
-						  : EsMañana(s.FechaHoraDesde))
-			.Take(5)
-			.ToList();
+		DisponibilidadEspecialidad2025 primeraDispJuan = disponibilidadesParaJuan.Valores.First();
 
-		if (disponibilidades.Count == 0) {
-			Console.WriteLine("No se encontraron disponibilidades para Juan.");
-			return;
-		} else {
-			foreach (DisponibilidadEspecialidad2025 disp in disponibilidades) {
-				Console.WriteLine($"Disponibilidad para {disp.Especialidad.Titulo}: {disp.Medico.NombreCompleto}{disp.Medico.NombreCompleto} puede atender a {pcaiente1.NombreCompleto} el dia {disp.FechaHoraDesde.DayOfWeek.ATexto()} /hs <<{disp.FechaHoraDesde}>>");
-			}
-		}
+		Console.WriteLine($"Disponibilidad elegida: {primeraDispJuan.ATexto()}");
 
-
-        DisponibilidadEspecialidad2025 primeraDispJuan = disponibilidades.First();
-		Console.WriteLine($"Creando turno en la primer disponibilidad...");
-
-        Turno2025 turnoJuan = Turno2025.Programar(solicitudJuan, primeraDispJuan).GetOrRaise();
+		Turno2025 turnoJuan = Turno2025.Programar(solicitudJuan, primeraDispJuan).GetOrRaise();
 		TURNOS.Add(turnoJuan);
-		Console.WriteLine($"✔ Turno guardado: {turnoJuan.Especialidad.Titulo} {turnoJuan.FechaHoraDesde} {turnoJuan.MedicoAsignado.NombreCompleto}\n");
+		Console.WriteLine($"Turno guardado: {turnoJuan.ATexto()}");
 
 
 		//var turnoJuan = ((Result<Turno2025>.Ok)turnoJuanRes).Valor;
