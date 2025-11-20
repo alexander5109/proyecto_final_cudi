@@ -7,6 +7,25 @@ public readonly record struct EspecialidadCodigoInterno(int Valor);
 
 public static partial class Entidades {
 
+	public sealed record ListaEspecialidadesMedicas2025(
+		IReadOnlyList<EspecialidadMedica2025> Valores
+	) {
+		// Factory 1: desde una lista de Result<Especialidad>
+		public static Result<ListaEspecialidadesMedicas2025> Crear(IReadOnlyList<Result<EspecialidadMedica2025>> results)
+			=> results.Bind(list =>
+				new Result<ListaEspecialidadesMedicas2025>.Ok(
+					new ListaEspecialidadesMedicas2025(list)
+				)
+			);
+
+		// Factory 2: desde una lista ya validada de EspecialidadMedica2025
+		public static Result<ListaEspecialidadesMedicas2025> Crear(IReadOnlyList<EspecialidadMedica2025> okList)
+			=> new Result<ListaEspecialidadesMedicas2025>.Ok(
+				new ListaEspecialidadesMedicas2025(okList)
+			);
+	}
+
+
 	public sealed class EspecialidadMedica2025 {
 		public EspecialidadCodigoInterno CodigoInterno { get; }
 		public string Titulo { get; }

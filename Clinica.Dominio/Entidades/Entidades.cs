@@ -108,7 +108,7 @@ public static partial class Entidades {
 	}
 
 	public record Turno2025(
-		Medico2025? MedicoAsignado,
+		Medico2025 MedicoAsignado,
 		Paciente2025 Paciente,
 		DateTime FechaYHora,
 		EspecialidadMedica2025 Especialidad,
@@ -213,6 +213,7 @@ public static partial class Entidades {
 
 
 	public readonly record struct DisponibilidadEspecialidad2025(
+		EspecialidadMedica2025 Especialidad,
 		Medico2025 Medico,
 		DateTime FechaHoraDesde,
 		DateTime FechaHoraHasta
@@ -221,7 +222,7 @@ public static partial class Entidades {
 
 	public record Medico2025(
 		NombreCompleto2025 NombreCompleto,
-		EspecialidadMedica2025 Especialidad,
+		ListaEspecialidadesMedicas2025 Especialidades,
 		DniArgentino2025 Dni,
 		DomicilioArgentino2025 Domicilio,
 		ContactoTelefono2025 Telefono,
@@ -232,7 +233,7 @@ public static partial class Entidades {
 	) {
 		public static Result<Medico2025> Crear(
 			Result<NombreCompleto2025> nombreResult,
-			Result<EspecialidadMedica2025> especialidadResult,
+			Result<ListaEspecialidadesMedicas2025> especialidadResult,
 			Result<DniArgentino2025> dniResult,
 			Result<DomicilioArgentino2025> domicilioResult,
 			Result<ContactoTelefono2025> telefonoResult,

@@ -17,7 +17,10 @@ public class ScenarioTesting {
 		List<Medico2025> MEDICOS = [
 			Medico2025.Crear(
 				NombreCompleto2025.Crear("Carlos Alfredo", "Markier"),
-				new Result<EspecialidadMedica2025>.Ok(EspecialidadMedica2025.Gastroenterologo),
+				ListaEspecialidadesMedicas2025.Crear([
+					EspecialidadMedica2025.Gastroenterologo,
+					EspecialidadMedica2025.ClinicoGeneral
+				]),
 				DniArgentino2025.Crear("15350996"),
 				DomicilioArgentino2025.Crear(
 					LocalidadDeProvincia2025.Crear(
@@ -46,7 +49,10 @@ public class ScenarioTesting {
 
 			Medico2025.Crear(
 				NombreCompleto2025.Crear("Jorge", "Pereyra"),
-				new Result<EspecialidadMedica2025>.Ok(EspecialidadMedica2025.Pediatra),
+				ListaEspecialidadesMedicas2025.Crear([
+					EspecialidadMedica2025.Pediatra,
+					EspecialidadMedica2025.Ginecologo
+				]),
 				DniArgentino2025.Crear("20350996"),
 				DomicilioArgentino2025.Crear(
 					LocalidadDeProvincia2025.Crear(
@@ -74,7 +80,10 @@ public class ScenarioTesting {
 			).GetOrRaise(),
 			Medico2025.Crear(
 				NombreCompleto2025.Crear("Marta", "Algerich"),
-				new Result<EspecialidadMedica2025>.Ok(EspecialidadMedica2025.Cirujano),
+				ListaEspecialidadesMedicas2025.Crear([
+					EspecialidadMedica2025.Neurologo,
+					EspecialidadMedica2025.Osteopata
+				]),
 				DniArgentino2025.Crear("10350996"),
 				DomicilioArgentino2025.Crear(
 					LocalidadDeProvincia2025.Crear(
@@ -154,12 +163,17 @@ public class ScenarioTesting {
 		Paciente2025 pcaiente1 = PACIENTES[0];
 		SolicitudDeTurno solicitudJuan = new(
 			pcaiente1,
-			EspecialidadMedica2025.Gastroenterologo,
+			EspecialidadMedica2025.ClinicoGeneral,
+			//EspecialidadMedica2025.Gastroenterologo,
 			DiaSemana2025.Lunes,
 			new TardeOMañana(true),
 			DateTime.Now
 		);
-		Console.WriteLine($"\n=== JUAN solicita turno para {solicitudJuan.Especialidad} {solicitudJuan.}");
+		Console.WriteLine(
+			$"\n=== JUAN solicita turno para {solicitudJuan.Especialidad} " +
+			$"con preferencia el día {solicitudJuan.DiaPreferido.Nombre} " +
+			$"a la {(solicitudJuan.PrefiereTardeOMañana.Tarde ? "tarde" : "mañana")}"
+		);
 
 		static bool EsMañana(DateTime hora) =>
 			hora.TimeOfDay >= TimeSpan.FromHours(8) &&
@@ -169,33 +183,30 @@ public class ScenarioTesting {
 			hora.TimeOfDay >= TimeSpan.FromHours(13) &&
 			hora.TimeOfDay < TimeSpan.FromHours(18);
 
-        List<DisponibilidadEspecialidad2025> disponibilidades = Servicios.GenerarDisponibilidades(MEDICOS, solicitudJuan.SolicitudEn)
-			.Where(s => s.Medico.Especialidad == solicitudJuan.Especialidad)
-			.Where(s => s.FechaHoraDesde.DayOfWeek == solicitudJuan.DiaPreferido.Valor)
-			.Where(s => solicitudJuan.PrefiereTardeOMañana.Tarde ? EsTarde(s.FechaHoraDesde) : EsMañana(s.FechaHoraDesde))
-			.Take(10)
-			.ToList();
+		List<DisponibilidadEspecialidad2025> disponibilidades =
+			Servicios.GenerarDisponibilidades(MEDICOS, solicitudJuan.SolicitudEn)
 
+			// Ahora que corregimos el constructor, esto sí funciona
+			.Where(s => s.Especialidad == solicitudJuan.Especialidad)
+
+			.Where(s => s.FechaHoraDesde.DayOfWeek == solicitudJuan.DiaPreferido.Valor)
+			.Where(s => solicitudJuan.PrefiereTardeOMañana.Tarde
+						  ? EsTarde(s.FechaHoraDesde)
+						  : EsMañana(s.FechaHoraDesde))
+			.Take(5)
+			.ToList();
 
 		if (disponibilidades.Count == 0) {
 			Console.WriteLine("No se encontraron disponibilidades para Juan.");
 			return;
 		} else {
 			foreach (DisponibilidadEspecialidad2025 disp in disponibilidades) {
-				Console.WriteLine($"Disponibilidad para {disp.Medico.Especialidad.Titulo}: {disp.Medico.NombreCompleto.Nombre}{disp.Medico.NombreCompleto.Apellido} puede atender a {pcaiente1.NombreCompleto.Nombre} el dia {disp.FechaHoraDesde.DayOfWeek.AEspañol()} /hs <<{disp.FechaHoraDesde}>>");
+				Console.WriteLine($"Disponibilidad para {disp.Especialidad.Titulo}: {disp.Medico.NombreCompleto.Nombre}{disp.Medico.NombreCompleto.Apellido} puede atender a {pcaiente1.NombreCompleto.Nombre} el dia {disp.FechaHoraDesde.DayOfWeek.AEspañol()} /hs <<{disp.FechaHoraDesde}>>");
 			}
 		}
 
 
-		//var dispJuan = solicitudJuan.BuscarDisponibilidades(repoMedicos, repoTurnos)
-		//							.Match(ok => ok, err => throw new Exception(err))
-		//							.ToList();
-
-		//Console.WriteLine($"Disponibilidades encontradas para Juan ({dispJuan.Count}):");
-		//foreach (var d in dispJuan)
-		//	Console.WriteLine($" → {d.Medico.NombreCompleto.Apellido}, {d.Medico.NombreCompleto.Nombre} a las {d.Inicio}");
-
-		//var primeraDispJuan = dispJuan.First();
+		//var primeraDispJuan = disponibilidades.First();
 		//Console.WriteLine($"Primer turno asignable a Juan: {primeraDispJuan.Medico.NombreCompleto.Apellido} - {primeraDispJuan.Inicio}");
 
 		//var turnoJuanRes = Turno2025.Programar(
