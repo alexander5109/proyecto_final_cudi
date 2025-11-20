@@ -1,16 +1,27 @@
-﻿using Clinica.Dominio.FunctionalProgramingTools;
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
 
 
-public readonly record struct TardeOMañana(bool Tarde);
+public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
+	public string ATexto() => Tarde ? "Tarde" : "Mañana";
+}
 
-public static partial class Entidades {
-	public readonly record struct SolicitudDeTurno(
-		Paciente2025 Paciente,
-		EspecialidadMedica2025 Especialidad,
-		DiaSemana2025 DiaPreferido,
-		TardeOMañana PrefiereTardeOMañana,
-		DateTime SolicitudEn
-	);
+public readonly record struct SolicitudDeTurno(
+	Paciente2025 Paciente,
+	EspecialidadMedica2025 Especialidad,
+	DiaSemana2025 DiaPreferido,
+	TardeOMañana PrefiereTardeOMañana,
+	DateTime SolicitudEn
+) : IComoTexto {
+	public string ATexto() {
+		return
+			$"Solicitud de turno:\n" +
+			$"  • Paciente: {Paciente.NombreCompleto.ATexto()}\n" +
+			$"  • Especialidad: {Especialidad.ATexto()}\n" +
+			$"  • Día preferido: {DiaPreferido.ATexto()}\n" +
+			$"  • Prefiere: {PrefiereTardeOMañana.ATexto()}\n" +
+			$"  • Solicitado en: {SolicitudEn:G}";
+	}
 }

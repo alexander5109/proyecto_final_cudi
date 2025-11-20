@@ -1,4 +1,4 @@
-﻿namespace Clinica.Dominio.FunctionalProgramingTools;
+﻿namespace Clinica.Dominio.Comun;
 public abstract record Option<T> {
 	private Option() { }
 

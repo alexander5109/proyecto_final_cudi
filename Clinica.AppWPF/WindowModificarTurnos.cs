@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using Clinica.Dominio.FunctionalProgramingTools;
+using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 
 namespace Clinica.AppWPF;

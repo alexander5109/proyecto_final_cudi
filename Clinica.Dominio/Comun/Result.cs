@@ -1,6 +1,6 @@
-﻿using static Clinica.Dominio.FunctionalProgramingTools.Result;
+﻿using static Clinica.Dominio.Comun.Result;
 
-namespace Clinica.Dominio.FunctionalProgramingTools;
+namespace Clinica.Dominio.Comun;
 
 //
 // ==========================================

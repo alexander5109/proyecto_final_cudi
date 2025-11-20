@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.FunctionalProgramingTools;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.TiposDeValor;
 using static Clinica.Dominio.Entidades.Entidades;
 
 namespace Clinica.Dominio.Tests.Escenarios;
@@ -170,11 +171,7 @@ public class ScenarioTesting {
 			new TardeOMañana(true),
 			DateTime.Now
 		);
-		Console.WriteLine(
-			$"\n=== JUAN solicita turno para {solicitudJuan.Especialidad} " +
-			$"con preferencia el día {solicitudJuan.DiaPreferido.Nombre} " +
-			$"a la {(solicitudJuan.PrefiereTardeOMañana.Tarde ? "tarde" : "mañana")}"
-		);
+		Console.WriteLine(solicitudJuan);
 
 		static bool EsMañana(DateTime hora) =>
 			hora.TimeOfDay >= TimeSpan.FromHours(8) &&
@@ -199,7 +196,7 @@ public class ScenarioTesting {
 			return;
 		} else {
 			foreach (DisponibilidadEspecialidad2025 disp in disponibilidades) {
-				Console.WriteLine($"Disponibilidad para {disp.Especialidad.Titulo}: {disp.Medico.NombreCompleto.Nombre}{disp.Medico.NombreCompleto.Apellido} puede atender a {pcaiente1.NombreCompleto.Nombre} el dia {disp.FechaHoraDesde.DayOfWeek.AEspañol()} /hs <<{disp.FechaHoraDesde}>>");
+				Console.WriteLine($"Disponibilidad para {disp.Especialidad.Titulo}: {disp.Medico.NombreCompleto}{disp.Medico.NombreCompleto} puede atender a {pcaiente1.NombreCompleto} el dia {disp.FechaHoraDesde.DayOfWeek.ATexto()} /hs <<{disp.FechaHoraDesde}>>");
 			}
 		}
 
@@ -207,14 +204,14 @@ public class ScenarioTesting {
         DisponibilidadEspecialidad2025 primeraDispJuan = disponibilidades.First();
 		Console.WriteLine($"Creando turno en la primer disponibilidad...");
 
-        Turno2025 turnoJuanRes = Turno2025.Programar(solicitudJuan, primeraDispJuan).GetOrRaise();
-		TURNOS.Add(turnoJuanRes);
+        Turno2025 turnoJuan = Turno2025.Programar(solicitudJuan, primeraDispJuan).GetOrRaise();
+		TURNOS.Add(turnoJuan);
+		Console.WriteLine($"✔ Turno guardado: {turnoJuan.Especialidad.Titulo} {turnoJuan.FechaHoraDesde} {turnoJuan.MedicoAsignado.NombreCompleto}\n");
 
 
 		//var turnoJuan = ((Result<Turno2025>.Ok)turnoJuanRes).Valor;
 		//repoTurnos.Guardar(turnoJuan);
 
-		//Console.WriteLine($"✔ Turno de JUAN guardado: {primeraDispJuan.Medico.NombreCompleto.Apellido} {primeraDispJuan.Inicio}\n");
 
 
 		// ================================================================

@@ -2,7 +2,7 @@
 using Clinica.AppWPF.Ventanas;
 using System.ComponentModel;
 using System.Windows;
-using Clinica.Dominio.FunctionalProgramingTools;
+using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 
 namespace Clinica.AppWPF;

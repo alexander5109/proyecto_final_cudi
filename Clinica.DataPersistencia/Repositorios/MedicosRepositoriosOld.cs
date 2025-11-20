@@ -1,6 +1,6 @@
 ﻿using Clinica.DataPersistencia.ModelDtos;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.FunctionalProgramingTools;
+using Clinica.Dominio.Comun;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text.Json;

@@ -1,5 +1,4 @@
-﻿using Clinica.Dominio.FunctionalProgramingTools;
-using static Clinica.Dominio.Entidades.Entidades;
+﻿using Clinica.Dominio.Comun;
 
 namespace Clinica.Dominio.Entidades;
 
@@ -10,14 +9,29 @@ public enum TurnoEstado2025 {
 	Cancelado,
 	Atendido
 }
-public record Turno2025(
+public record Turno2025 (
 	Medico2025 MedicoAsignado,
 	Paciente2025 Paciente,
 	EspecialidadMedica2025 Especialidad,
 	DateTime FechaHoraDesde,
 	DateTime FechaHoraHasta,
 	TurnoEstado2025 Estado
-) {
+): IComoTexto {
+	public string ATexto() {
+		var fecha = FechaHoraDesde.ToString("dddd dd/MM/yyyy");
+		var desde = FechaHoraDesde.ToString("HH:mm");
+		var hasta = FechaHoraHasta.ToString("HH:mm");
+		var duracion = (FechaHoraHasta - FechaHoraDesde).TotalMinutes;
+
+		return
+			$"Turno de {Especialidad.ATexto()}\n" +
+			$"  • Paciente: {Paciente.NombreCompleto.ATexto()}\n" +
+			$"  • Médico asignado: {MedicoAsignado.NombreCompleto.ATexto()}\n" +
+			$"  • Fecha: {fecha}\n" +
+			$"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
+			$"  • Estado: {Estado}";
+	}
+
 
 	public static Result<Turno2025> Programar(
 		SolicitudDeTurno solicitud,

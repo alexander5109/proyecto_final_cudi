@@ -1,5 +1,5 @@
 ﻿using Clinica.AppWPF.ViewModels;
-using Clinica.Dominio.Entidades;
+using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows;
 

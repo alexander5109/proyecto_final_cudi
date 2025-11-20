@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Linq;
-using Clinica.Dominio.FunctionalProgramingTools;
+using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 
 namespace Clinica.DataPersistencia.ModelDtos;

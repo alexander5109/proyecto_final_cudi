@@ -2,7 +2,7 @@
 using System.Windows;
 using Clinica.DataPersistencia.ModelDtos;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.FunctionalProgramingTools;
+using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
@@ -28,7 +28,7 @@ public partial class ViewModelHorario : ObservableObject {
 
 public partial class ViewModelHorariosAgrupados : ObservableObject {
 	public DayOfWeek DiaSemana { get; }
-	public string DiaSemanaNombre => DiaSemana.AEspañol();
+	public string DiaSemanaNombre => DiaSemana.ATexto();
 	[ObservableProperty] private ObservableCollection<ViewModelHorario> horarios = [];
 
 	public ViewModelHorariosAgrupados(DayOfWeek dia) {
