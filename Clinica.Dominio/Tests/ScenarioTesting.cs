@@ -12,8 +12,6 @@ public class ScenarioTesting {
 	public static void Escenario_Asignar_turnos_por_orden_de_solicitud() {
 		// Arrange
 
-		ListaTurnosHistorial2025 TURNOS = ListaTurnosHistorial2025.Crear();
-
 		List<Medico2025> MEDICOS = [
 			Medico2025.Crear(
 				NombreCompleto2025.Crear("Carlos Alfredo", "Markier"),
@@ -176,19 +174,21 @@ public class ScenarioTesting {
 		];
 
 
-		// ================================================================
+		ListaTurnosHistorial2025 TURNOS = ListaTurnosHistorial2025.Crear();
+
+
 		// ⭐ 1. Juan solicita ClinicoGeneral
-		// ================================================================
 
-
-		Paciente2025 pacienteJuan = PACIENTES[0].PrintAndContinue("Tratando de seleccionar paciente").GetOrRaise();
+		Result<Paciente2025> pacienteJuan = PACIENTES[0]
+			.PrintAndContinue("Tratando de seleccionar paciente")
+		;
 		Result<SolicitudDeTurno> solicitudJuan = SolicitudDeTurno.Crear(
-			pacienteJuan,
-			EspecialidadMedica2025.ClinicoGeneral,
-			DateTime.Now
-		).PrintAndContinue("Juan intenta solicitar turno: ");
-
-
+				pacienteJuan,
+				EspecialidadMedica2025.ClinicoGeneral,
+				DateTime.Now
+			)
+			.PrintAndContinue("Juan intenta solicitar turno: ")
+		;
 
 		Result<ListaDisponibilidades2025> resultDisponibilidadesParaJuan =
 			ListaDisponibilidades2025.Buscar(solicitudJuan, MEDICOS, TURNOS, 3)
@@ -199,13 +199,16 @@ public class ScenarioTesting {
 			))
 			.PrintAndContinue("AplicarFiltrosOpcionales: ")
 		;
-		Result<DisponibilidadEspecialidad2025> primeraDispJuan = resultDisponibilidadesParaJuan.TomarPrimera().PrintAndContinue("Tomando la primera: ");
 
-		TURNOS.AgendarTurno(Turno2025.Programar(solicitudJuan, primeraDispJuan)).PrintAndContinue("Agendando turno: ");
+		Result<DisponibilidadEspecialidad2025> primeraDispJuan = resultDisponibilidadesParaJuan
+			.TomarPrimera()
+			.PrintAndContinue("Tomando la primera: ")
+		;
 
-
-
-
+		TURNOS.AgendarTurno(Turno2025
+			.Programar(solicitudJuan, primeraDispJuan))
+			.PrintAndContinue("Agendando turno: ")
+		;
 	}
 
 }

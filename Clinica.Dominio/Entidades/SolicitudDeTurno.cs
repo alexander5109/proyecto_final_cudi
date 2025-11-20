@@ -19,12 +19,14 @@ public readonly record struct SolicitudDeTurno(
 ) : IComoTexto {
 
 	public static Result<SolicitudDeTurno> Crear(
-		Paciente2025 paciente,
+		Result<Paciente2025> pacienteResult,
 		EspecialidadMedica2025 especialidad,
 		DateTime fechaSolicitada
 	) {
-		return new Result<SolicitudDeTurno>.Ok(
-			new SolicitudDeTurno(paciente, especialidad, fechaSolicitada)
+		return pacienteResult.Bind(paciente =>
+			new Result<SolicitudDeTurno>.Ok(
+				new SolicitudDeTurno(paciente, especialidad, fechaSolicitada)
+			)
 		);
 	}
 
