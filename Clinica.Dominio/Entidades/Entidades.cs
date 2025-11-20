@@ -82,7 +82,7 @@ public static partial class Entidades {
 		&& uno.Desde.Valor < otro.Hasta.Valor
 		&& otro.Desde.Valor < uno.Hasta.Valor;
 
-	public static bool TienenDisponibilidad(this ListaHorarioMedicos2025 listaHorarios,DateTime fechaYHora,TimeSpan duracion) {
+	public static bool TienenDisponibilidad(this ListaHorarioMedicos2025 listaHorarios, DateTime fechaYHora, TimeSpan duracion) {
 		if (listaHorarios.Valores is null || listaHorarios.Valores.Count == 0)
 			return false;
 
@@ -110,43 +110,49 @@ public static partial class Entidades {
 	public record Turno2025(
 		Medico2025 MedicoAsignado,
 		Paciente2025 Paciente,
-		DateTime FechaYHora,
 		EspecialidadMedica2025 Especialidad,
+		DateTime FechaHoraDesde,
+		DateTime FechaHoraHasta,
 		TurnoEstado2025 Estado
 	) {
 
-		public static Result<Turno2025> Programar(Result<Medico2025> medicoResult, Result<Paciente2025> pacienteResult, Result<EspecialidadMedica2025> especialidadResult, DateTime? fechaYHora) {
-			// Validar entradas
-			if (medicoResult is Result<Medico2025>.Error medicoError)
-				return new Result<Turno2025>.Error($"Error en médico: {medicoError.Mensaje}");
+		public static Result<Turno2025> Programar(
+			SolicitudDeTurno solicitud,
+			DisponibilidadEspecialidad2025 disp
+		) {
+			// --- Validación de los Result ----
+			//if (solicitudResult is Result<SolicitudDeTurno>.Error solError)
+			//	return new Result<Turno2025>.Error($"Error en solicitud: {solError.Mensaje}");
 
-			if (pacienteResult is Result<Paciente2025>.Error pacienteError)
-				return new Result<Turno2025>.Error($"Error en paciente: {pacienteError.Mensaje}");
+			//if (dispResult is Result<DisponibilidadEspecialidad2025>.Error dispError)
+			//	return new Result<Turno2025>.Error($"Error en disponibilidad: {dispError.Mensaje}");
 
-			if (especialidadResult is Result<EspecialidadMedica2025>.Error espError)
-				return new Result<Turno2025>.Error($"Error en especialidad: {espError.Mensaje}");
+			//var solicitud = ((Result<SolicitudDeTurno>.Ok)solicitudResult).Valor;
+			//var disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
 
-			var medico = ((Result<Medico2025>.Ok)medicoResult).Valor;
-			var paciente = ((Result<Paciente2025>.Ok)pacienteResult).Valor;
-			var especialidad = ((Result<EspecialidadMedica2025>.Ok)especialidadResult).Valor;
+			// --- Coherencias de dominio ---
+			if (solicitud.Paciente is null)
+				return new Result<Turno2025>.Error("La solicitud no tiene paciente.");
 
-			if (fechaYHora is null)
-				return new Result<Turno2025>.Error("La fecha y hora del turno es obligatoria.");
+			if (solicitud.Especialidad.CodigoInterno != disp.Especialidad.CodigoInterno)
+				return new Result<Turno2025>.Error("La disponibilidad no corresponde a la especialidad solicitada.");
 
-			if (fechaYHora < DateTime.Now)
-				return new Result<Turno2025>.Error("El turno no puede ser en el pasado.");
+			// El turno NO tiene por qué ser validado contra DateTime.Now.
+			// Asumimos que la disponibilidad ya fue generada correctamente por el dominio.
 
-			var duracion = TimeSpan.FromMinutes(especialidad.DuracionConsultaMinutos);
-			if (duracion.TotalMinutes is < 5 or > 240)
-				return new Result<Turno2025>.Error("La duración derivada de la especialidad no es razonable.");
+			// --- Construcción del Turno ---
+			var turno = new Turno2025(
+				MedicoAsignado: disp.Medico,
+				Paciente: solicitud.Paciente,
+				Especialidad: disp.Especialidad,
+				FechaHoraDesde: disp.FechaHoraDesde,
+				FechaHoraHasta: disp.FechaHoraHasta,
+				Estado: TurnoEstado2025.Programado
+			);
 
-			// Validar disponibilidad del médico asignado según sus horarios
-			bool disponible = medico.ListaHorarios.TienenDisponibilidad(fechaYHora.Value, duracion);
-			if (!disponible)
-				return new Result<Turno2025>.Error("El médico no atiende en ese horario.");
-
-			return new Result<Turno2025>.Ok(new Turno2025(medico, paciente, fechaYHora.Value, especialidad, TurnoEstado2025.Programado));
+			return new Result<Turno2025>.Ok(turno);
 		}
+
 
 		public Result<Turno2025> Cancelar(string? motivo = null) {
 			if (Estado == TurnoEstado2025.Cancelado)

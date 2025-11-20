@@ -185,10 +185,7 @@ public class ScenarioTesting {
 
 		List<DisponibilidadEspecialidad2025> disponibilidades =
 			Servicios.GenerarDisponibilidades(MEDICOS, solicitudJuan.SolicitudEn)
-
-			// Ahora que corregimos el constructor, esto sí funciona
 			.Where(s => s.Especialidad == solicitudJuan.Especialidad)
-
 			.Where(s => s.FechaHoraDesde.DayOfWeek == solicitudJuan.DiaPreferido.Valor)
 			.Where(s => solicitudJuan.PrefiereTardeOMañana.Tarde
 						  ? EsTarde(s.FechaHoraDesde)
@@ -206,15 +203,12 @@ public class ScenarioTesting {
 		}
 
 
-		//var primeraDispJuan = disponibilidades.First();
-		//Console.WriteLine($"Primer turno asignable a Juan: {primeraDispJuan.Medico.NombreCompleto.Apellido} - {primeraDispJuan.Inicio}");
+        DisponibilidadEspecialidad2025 primeraDispJuan = disponibilidades.First();
+		Console.WriteLine($"Creando turno en la primer disponibilidad...");
 
-		//var turnoJuanRes = Turno2025.Programar(
-		//	new Result<Medico2025>.Ok(primeraDispJuan.Medico),
-		//	new Result<Paciente2025>.Ok(juan),
-		//	new Result<EspecialidadMedica2025>.Ok(especialGastro),
-		//	primeraDispJuan.Inicio
-		//);
+		var turnoJuanRes = Turno2025.Programar(solicitudJuan, primeraDispJuan);
+
+
 
 		//var turnoJuan = ((Result<Turno2025>.Ok)turnoJuanRes).Valor;
 		//repoTurnos.Guardar(turnoJuan);
