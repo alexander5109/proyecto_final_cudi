@@ -192,10 +192,13 @@ public class ScenarioTesting {
 
 		Result<ListaDisponibilidades2025> resultDisponibilidadesParaJuan =
 			ListaDisponibilidades2025.Buscar(solicitudJuan, MEDICOS, TURNOS, 3)
+			.PrintAndContinue("Buscando disponibilidades: ")
 			.AplicarFiltrosOpcionales(new(
 				DiaSemana2025.Lunes,
-				new TardeOMañana(true)
-			)).PrintAndContinue("Buscando disponibilidades: ");
+				new TardeOMañana(false)
+			))
+			.PrintAndContinue("AplicarFiltrosOpcionales: ")
+		;
 		Result<DisponibilidadEspecialidad2025> primeraDispJuan = resultDisponibilidadesParaJuan.TomarPrimera().PrintAndContinue("Tomando la primera: ");
 
 		TURNOS.AgendarTurno(Turno2025.Programar(solicitudJuan, primeraDispJuan)).PrintAndContinue("Agendando turno: ");

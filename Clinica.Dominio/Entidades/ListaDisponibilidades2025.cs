@@ -48,7 +48,7 @@ public sealed record ListaDisponibilidades2025(
 							);
 
 							// chequeo de colisión inline
-							if (turnosActuales.DisponibilidadNoColisiona(disp))
+							if (!turnosActuales.DisponibilidadNoColisiona(disp))
 								continue;
 
 							yield return disp;

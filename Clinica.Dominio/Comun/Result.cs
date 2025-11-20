@@ -12,27 +12,32 @@ public abstract class Result<T> {
 
 	public bool IsOk => this is Ok;
 	public bool IsError => this is Error;
-
+	public void Match(Action<T> ok, Action<string> error) {
+		switch (this) {
+			case Ok o: ok(o.Valor); break;
+			case Error e: error(e.Mensaje); break;
+		}
+	}
 	public TOut Match<TOut>(Func<T, TOut> ok, Func<string, TOut> error)
 		=> this switch {
 			Ok o => ok(o.Valor),
 			Error e => error(e.Mensaje),
 			_ => throw new InvalidOperationException()
 		};
-	public void Match(Action<T> ok, Action<string> error) {
-		switch (this) {
-			case Ok o:
-				ok(o.Valor);
-				break;
+	//public void Match(Action<T> ok, Action<string> error) {
+	//	switch (this) {
+	//		case Ok o:
+	//			ok(o.Valor);
+	//			break;
 
-			case Error e:
-				error(e.Mensaje);
-				break;
+	//		case Error e:
+	//			error(e.Mensaje);
+	//			break;
 
-			default:
-				throw new InvalidOperationException();
-		}
-	}
+	//		default:
+	//			throw new InvalidOperationException();
+	//	}
+	//}
 
 	public void Switch(Action<T> ok, Action<string> error) {
 		switch (this) {
@@ -52,11 +57,19 @@ public static class ResultExtensions {
 		string prefix = label is null ? "" : $"{label}: ";
 
 		result.Match(
-			ok => Console.WriteLine($"{prefix}OK → {typeof(T).Name} succeded"),
-			err => Console.WriteLine($"{prefix}ERROR → {err}")
+			ok => {
+				Console.ForegroundColor = ConsoleColor.Green;
+				Console.WriteLine($"{prefix}OK → {typeof(T).Name} succeded");
+				Console.ResetColor();
+			},
+			err => {
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.WriteLine($"{prefix}ERROR → {err}");
+				Console.ResetColor();
+			}
 		);
 
-		return result; // ← mantiene la pipeline
+		return result;
 	}
 
 	public static T GetOrRaise<T>(this Result<T> result) =>
