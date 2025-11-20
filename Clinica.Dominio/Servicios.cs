@@ -1,4 +1,5 @@
-﻿using static Clinica.Dominio.Entidades.Entidades;
+﻿using Clinica.Dominio.Entidades;
+using static Clinica.Dominio.Entidades.Entidades;
 
 namespace Clinica.Dominio;
 

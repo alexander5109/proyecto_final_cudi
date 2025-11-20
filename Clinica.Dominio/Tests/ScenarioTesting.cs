@@ -13,6 +13,7 @@ public class ScenarioTesting {
 		// Arrange
 		Console.WriteLine("\n--- Creando médicos ---");
 
+		List<Turno2025> TURNOS = [];
 
 		List<Medico2025> MEDICOS = [
 			Medico2025.Crear(
@@ -206,8 +207,8 @@ public class ScenarioTesting {
         DisponibilidadEspecialidad2025 primeraDispJuan = disponibilidades.First();
 		Console.WriteLine($"Creando turno en la primer disponibilidad...");
 
-		var turnoJuanRes = Turno2025.Programar(solicitudJuan, primeraDispJuan);
-
+        Turno2025 turnoJuanRes = Turno2025.Programar(solicitudJuan, primeraDispJuan).GetOrRaise();
+		TURNOS.Add(turnoJuanRes);
 
 
 		//var turnoJuan = ((Result<Turno2025>.Ok)turnoJuanRes).Valor;
