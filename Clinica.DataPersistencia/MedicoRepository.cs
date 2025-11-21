@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text.Json;
 
+namespace Clinica.DataPersistencia;
 
 public static class MedicoRepository {
 

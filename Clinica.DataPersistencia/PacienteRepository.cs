@@ -1,5 +1,8 @@
 ﻿using System.Data;
+using Clinica.DataPersistencia;
 using Dapper;
+
+namespace Clinica.DataPersistencia;
 
 
 public class PacienteRepository {
@@ -9,9 +12,22 @@ public class PacienteRepository {
 		_factory = factory;
 	}
 
-	public IEnumerable<PacienteDto> GetAll() {
+	public async Task<IEnumerable<PacienteDto>> GetAllPacientes() {
 		using var conn = _factory.CreateConnection();
-		return conn.Query<PacienteDto>("sp_Pacientes_GetAll",
-			commandType: CommandType.StoredProcedure);
+
+		return await conn.QueryAsync<PacienteDto>(
+			"sp_ReadPacientesAll",
+			commandType: CommandType.StoredProcedure
+		);
+	}
+
+	public async Task<PacienteDto?> GetById(int id) {
+		using var conn = _factory.CreateConnection();
+
+		return await conn.QueryFirstOrDefaultAsync<PacienteDto>(
+			"sp_ReadPacienteById",
+			new { Id = id },
+			commandType: CommandType.StoredProcedure
+		);
 	}
 }

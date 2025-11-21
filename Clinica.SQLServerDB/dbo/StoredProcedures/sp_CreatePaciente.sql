@@ -8,17 +8,17 @@
     @FechaNacimiento DATE,
     @Domicilio NVARCHAR(200),
     @Localidad NVARCHAR(100),
-    @Provincia NVARCHAR(100)
+    @ProvinciaCodigo INT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     INSERT INTO [dbo].[Paciente]
         ([Dni], [Name], [LastName], [FechaIngreso], [Email],
-         [Telefono], [FechaNacimiento], [Domicilio], [Localidad], [Provincia])
+         [Telefono], [FechaNacimiento], [Domicilio], [Localidad], [ProvinciaCodigo])
     VALUES
         (@Dni, @Name, @LastName, @FechaIngreso, @Email,
-         @Telefono, @FechaNacimiento, @Domicilio, @Localidad, @Provincia);
+         @Telefono, @FechaNacimiento, @Domicilio, @Localidad, @ProvinciaCodigo);
 
     SELECT SCOPE_IDENTITY() AS NuevoId;
 END;

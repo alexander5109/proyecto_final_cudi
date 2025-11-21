@@ -59,6 +59,7 @@
     <Folder Include="dbo\StoredProcedures" />
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\UserDefinedTableTypes" />
+    <Folder Include="dbo\PostDeployInserts" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\StoredProcedures\sp_CreateMedico.sql" />
@@ -87,8 +88,8 @@
     <Build Include="dbo\StoredProcedures\sp_CreateMedicoWithHorarios.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PostDeploy Include="Script.PostDeployment.sql" />
     <None Include="Clinica.SQLServerDB.publish.xml" />
+    <PostDeploy Include="dbo\PostDeployInserts\Script.PostDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="Script.PreDeployment.sql" />

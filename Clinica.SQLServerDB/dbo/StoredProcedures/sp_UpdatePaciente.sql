@@ -9,7 +9,7 @@
     @FechaNacimiento DATE,
     @Domicilio NVARCHAR(200),
     @Localidad NVARCHAR(100),
-    @Provincia NVARCHAR(100)
+    @ProvinciaCodigo INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -25,7 +25,7 @@ BEGIN
         [FechaNacimiento] = @FechaNacimiento,
         [Domicilio] = @Domicilio,
         [Localidad] = @Localidad,
-        [Provincia] = @Provincia
+        [ProvinciaCodigo] = @ProvinciaCodigo
     WHERE [Id] = @Id;
 END;
 GO

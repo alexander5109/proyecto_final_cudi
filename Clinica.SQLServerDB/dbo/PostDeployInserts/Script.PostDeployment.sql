@@ -61,7 +61,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM dbo.Paciente)
 BEGIN
     INSERT INTO dbo.Paciente 
-        (Dni, Name, LastName, FechaIngreso, Domicilio, Localidad, Provincia, Telefono, Email, FechaNacimiento)
+        (Dni, Name, LastName, FechaIngreso, Domicilio, Localidad, ProvinciaCodigo, Telefono, Email, FechaNacimiento)
     VALUES 
         ('87654321', 'Ana', 'Gonzalez', '2023-04-15 09:30', 'Calle Flores 123', 1, 'Buenos Aires', '1234567890', 'ana.gonzalez@example.com', '1990-06-10'),
         ('12345678', 'Carlos', 'Pereira', '2022-11-30 14:45', 'Av. Libertad 456', 2, 'Santa Fe', '2345678901', 'carlos.pereira@example.com', '1985-02-18'),

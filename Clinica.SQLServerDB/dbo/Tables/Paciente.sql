@@ -7,7 +7,7 @@
     FechaIngreso DATETIME NOT NULL,
     Domicilio NVARCHAR(50),
     Localidad NVARCHAR(50),
-    Provincia INT,
+    [ProvinciaCodigo] INT,
     Telefono NVARCHAR(20),
     Email NVARCHAR(50),
     FechaNacimiento DATETIME

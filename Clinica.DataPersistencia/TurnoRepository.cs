@@ -1,6 +1,7 @@
 ﻿using System.Data;
-using Clinica.DataPersistencia;
 using Dapper;
+
+namespace Clinica.DataPersistencia;
 
 public class TurnoRepository {
 	private readonly IDbConnectionFactory _factory;

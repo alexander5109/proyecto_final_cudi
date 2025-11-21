@@ -6,6 +6,10 @@ using Newtonsoft.Json.Linq;
 using System.Linq;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+
+
+namespace Clinica.DataPersistencia;
+
 public record MedicoDto(
 	int Id,
 	string Nombre,

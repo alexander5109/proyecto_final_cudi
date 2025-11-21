@@ -1,6 +1,10 @@
 ﻿using System.Data;
 using Microsoft.Data.SqlClient;
 
+
+namespace Clinica.DataPersistencia;
+
+
 public interface IDbConnectionFactory {
 	IDbConnection CreateConnection();
 }

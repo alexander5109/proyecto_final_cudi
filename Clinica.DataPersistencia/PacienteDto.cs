@@ -3,7 +3,7 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using Microsoft.Data.SqlClient;
 
-namespace Clinica.DataPersistencia; 
+namespace Clinica.DataPersistencia;
 
 public record PacienteDto(
     int Id,

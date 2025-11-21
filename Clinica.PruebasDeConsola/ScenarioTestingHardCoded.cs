@@ -1,16 +1,13 @@
-﻿using System;
-using System.Linq;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Dominio.Tests.Escenarios;
-
-
-public class ScenarioTesting {
-	//[Fact]
+namespace Clinica.PruebasDeConsola;
+public class ScenarioTestingHardCoded {
 	public static void Escenario_Asignar_turnos_por_orden_de_solicitud() {
 		// Arrange
+
+		//List<Result<Medico>
 
 		List<Medico2025> MEDICOS = [
 			Medico2025.Crear(
