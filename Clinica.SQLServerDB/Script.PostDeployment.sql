@@ -63,12 +63,12 @@ BEGIN
     INSERT INTO dbo.Paciente 
         (Dni, Name, LastName, FechaIngreso, Domicilio, Localidad, Provincia, Telefono, Email, FechaNacimiento)
     VALUES 
-        ('87654321', 'Ana', 'Gonzalez', '2023-04-15 09:30', 'Calle Flores 123', 'Buenos Aires', 'Buenos Aires', '1234567890', 'ana.gonzalez@example.com', '1990-06-10'),
-        ('12345678', 'Carlos', 'Pereira', '2022-11-30 14:45', 'Av. Libertad 456', 'Rosario', 'Santa Fe', '2345678901', 'carlos.pereira@example.com', '1985-02-18'),
-        ('23456789', 'Maria', 'Lopez', '2024-01-05 08:00', 'San Martin 789', 'Córdoba', 'Córdoba', '3456789012', 'maria.lopez@example.com', '1992-09-25'),
-        ('34567890', 'Juan', 'Martinez', '2021-08-20 10:15', 'Ruta 9 Km 15', 'Mendoza', 'Mendoza', '4567890123', 'juan.martinez@example.com', '1978-12-05'),
-        ('45678901', 'Sofia', 'Ramirez', '2023-03-10 12:30', 'Boulevard Galvez 200', 'Salta', 'Salta', '5678901234', 'sofia.ramirez@example.com', '1988-04-22'),
-        ('56789012', 'Lucia', 'Fernandez', '2023-05-18 16:30', 'Calle Belgrano 450', 'La Plata', 'Buenos Aires', '6789012345', 'lucia.fernandez@example.com', '1995-07-13');
+        ('87654321', 'Ana', 'Gonzalez', '2023-04-15 09:30', 'Calle Flores 123', 1, 'Buenos Aires', '1234567890', 'ana.gonzalez@example.com', '1990-06-10'),
+        ('12345678', 'Carlos', 'Pereira', '2022-11-30 14:45', 'Av. Libertad 456', 2, 'Santa Fe', '2345678901', 'carlos.pereira@example.com', '1985-02-18'),
+        ('23456789', 'Maria', 'Lopez', '2024-01-05 08:00', 'San Martin 789',3, 'Córdoba', '3456789012', 'maria.lopez@example.com', '1992-09-25'),
+        ('34567890', 'Juan', 'Martinez', '2021-08-20 10:15', 'Ruta 9 Km 15', 4, 'Mendoza', '4567890123', 'juan.martinez@example.com', '1978-12-05'),
+        ('45678901', 'Sofia', 'Ramirez', '2023-03-10 12:30', 'Boulevard Galvez 200', 5, 'Salta', '5678901234', 'sofia.ramirez@example.com', '1988-04-22'),
+        ('56789012', 'Lucia', 'Fernandez', '2023-05-18 16:30', 'Calle Belgrano 450', 6, 'Buenos Aires', '6789012345', 'lucia.fernandez@example.com', '1995-07-13');
 END;
 GO
 

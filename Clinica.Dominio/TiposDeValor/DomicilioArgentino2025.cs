@@ -50,7 +50,7 @@ public readonly record struct LocalidadDeProvincia2025(
 
 
 public readonly record struct ProvinciaArgentina2025(
-	int CodigoProvincia,
+	int CodigoInterno,
 	string Nombre
 ) : IComoTexto {
 	public string ATexto() => Nombre;
