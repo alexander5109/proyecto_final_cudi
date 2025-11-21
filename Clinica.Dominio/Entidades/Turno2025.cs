@@ -6,24 +6,29 @@ namespace Clinica.Dominio.Entidades;
 
 
 public enum TurnoEstado2025 {
-	Programado,
-	Reprogramado,
-	Cancelado,
-	Atendido
+	Programado = 1,
+	Ausente = 2,
+	Cancelado = 3,
+	Concretado = 4,
+	//Reprogramado = 5
 }
-public record Turno2025 (
-	Medico2025 MedicoAsignado,
+public record Turno2025(
+	Guid Guid,
+	DateTime FechaDeCreacion,
 	Paciente2025 Paciente,
+	Medico2025 MedicoAsignado,
 	EspecialidadMedica2025 Especialidad,
-	DateTime FechaHoraDesde,
-	DateTime FechaHoraHasta,
-	TurnoEstado2025 Estado
-): IComoTexto {
+	DateTime FechaHoraAsignadaDesde,
+	DateTime FechaHoraAsignadaHasta,
+	TurnoEstado2025 OutcomeEstado,
+	Option<DateTime> OutcomeFecha,
+	Option<string> OutcomeComentario
+) : IComoTexto {
 	public string ATexto() {
-		var fecha = FechaHoraDesde.ToString("dddd dd/MM/yyyy");
-		var desde = FechaHoraDesde.ToString("HH:mm");
-		var hasta = FechaHoraHasta.ToString("HH:mm");
-		var duracion = (FechaHoraHasta - FechaHoraDesde).TotalMinutes;
+		var fecha = FechaHoraAsignadaDesde.ToString("dddd dd/MM/yyyy");
+		var desde = FechaHoraAsignadaDesde.ToString("HH:mm");
+		var hasta = FechaHoraAsignadaHasta.ToString("HH:mm");
+		var duracion = (FechaHoraAsignadaHasta - FechaHoraAsignadaDesde).TotalMinutes;
 
 		return
 			$"Turno de {Especialidad.ATexto()}\n" +
@@ -31,11 +36,28 @@ public record Turno2025 (
 			$"  • Médico asignado: {MedicoAsignado.NombreCompleto.ATexto()}\n" +
 			$"  • Fecha: {fecha}\n" +
 			$"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
-			$"  • Estado: {Estado}";
+			$"  • OutcomeEstado: {OutcomeEstado}";
 	}
 
+	//public static Result<Turno2025> ReprogramarDesde(
+	//	Turno2025 turnoOriginal,
+	//	DisponibilidadEspecialidad2025 nuevaDisp
+	//) {
+	//	return new Result<Turno2025>.Ok(new Turno2025(
+	//		Guid: Guid.NewGuid(),
+	//		FechaDeCreacion: DateTime.Now,
+	//		Paciente: turnoOriginal.Paciente,
+	//		MedicoAsignado: nuevaDisp.Medico,
+	//		Especialidad: nuevaDisp.Especialidad,
+	//		FechaHoraAsignadaDesde: nuevaDisp.FechaHoraDesde,
+	//		FechaHoraAsignadaHasta: nuevaDisp.FechaHoraHasta,
+	//		OutcomeEstado: TurnoEstado2025.Programado,
+	//		OutcomeFecha: Option<DateTime>.None,
+	//		OutcomeComentario: Option<string>.None
+	//	));
+	//}
 
-	public static Result<Turno2025> Programar(
+	public static Result<Turno2025> Crear(
 		Result<SolicitudDeTurno> solicitudResult,
 		Result<DisponibilidadEspecialidad2025> dispResult
 	) {
@@ -46,90 +68,27 @@ public record Turno2025 (
 		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error dispError)
 			return new Result<Turno2025>.Error($"Error en disponibilidad: {dispError.Mensaje}");
 
-		var solicitud = ((Result<SolicitudDeTurno>.Ok)solicitudResult).Valor;
-		var disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
-
-		// --- Coherencias de dominio ---
-		//if (solicitud.Paciente is null)
-			//return new Result<Turno2025>.Error("La solicitud no tiene paciente.");
-
-		//if (solicitud.Especialidad.CodigoInterno != disp.Especialidad.CodigoInterno)
-			//return new Result<Turno2025>.Error("La disponibilidad no corresponde a la especialidad solicitada.");
-
-		// El turno NO tiene por qué ser validado contra DateTime.Now.
-		// Asumimos que la disponibilidad ya fue generada correctamente por el dominio.
-
-		// --- Construcción del Turno ---
+		SolicitudDeTurno solicitud = ((Result<SolicitudDeTurno>.Ok)solicitudResult).Valor;
+		DisponibilidadEspecialidad2025 disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
 
 		return new Result<Turno2025>.Ok(new Turno2025(
-			MedicoAsignado: disp.Medico,
+			Guid: Guid.NewGuid(),
+			FechaDeCreacion: solicitud.FechaCreacion,
 			Paciente: solicitud.Paciente,
+			MedicoAsignado: disp.Medico,
 			Especialidad: disp.Especialidad,
-			FechaHoraDesde: disp.FechaHoraDesde,
-			FechaHoraHasta: disp.FechaHoraHasta,
-			Estado: TurnoEstado2025.Programado
+			FechaHoraAsignadaDesde: disp.FechaHoraDesde,
+			FechaHoraAsignadaHasta: disp.FechaHoraHasta,
+			OutcomeEstado: TurnoEstado2025.Programado,
+			OutcomeFecha: Option<DateTime>.None,
+			OutcomeComentario: Option<string>.None
 		));
 	}
 
-
-	public Result<Turno2025> Cancelar(string? motivo = null) {
-		if (Estado == TurnoEstado2025.Cancelado)
-			return new Result<Turno2025>.Error("El turno ya está cancelado.");
-		if (Estado == TurnoEstado2025.Atendido)
-			return new Result<Turno2025>.Error("No se puede cancelar un turno ya atendido.");
-		return new Result<Turno2025>.Ok(this with { Estado = TurnoEstado2025.Cancelado });
-	}
-
-	//public Result<Turno2025> MarcarComoAtendido() {
-	//	if (Estado == TurnoEstado2025.Cancelado)
-	//		return new Result<Turno2025>.Error("No se puede marcar como atendido un turno cancelado.");
-	//	if (Estado == TurnoEstado2025.Atendido)
-	//		return new Result<Turno2025>.Error("El turno ya está marcado como atendido.");
-	//	if (FechaYHora > DateTime.Now.AddMinutes(15))
-	//		return new Result<Turno2025>.Error("No se puede marcar como atendido antes de la hora programada (falta más de 15 minutos).");
-	//	return new Result<Turno2025>.Ok(this with { Estado = TurnoEstado2025.Atendido });
-	//}
-	/*
-	public Result<Turno2025> Reprogramar(DateTime nuevaFechaYHora, IEnumerable<Turno2025>? otrosTurnosDelMedico = null) {
-		if (Estado == TurnoEstado2025.Cancelado)
-			return new Result<Turno2025>.Error("No se puede reprogramar un turno cancelado.");
-		if (Estado == TurnoEstado2025.Atendido)
-			return new Result<Turno2025>.Error("No se puede reprogramar un turno ya atendido.");
-
-		if (nuevaFechaYHora < DateTime.Now)
-			return new Result<Turno2025>.Error("La nueva fecha no puede ser en el pasado.");
-
-		var duracion = TimeSpan.FromMinutes(Especialidad.DuracionConsultaMinutos);
-		if (duracion.TotalMinutes is < 5 or > 240)
-			return new Result<Turno2025>.Error("La duración derivada de la especialidad no es razonable.");
-
-		// Disponibilidad del médico asignado según sus horarios
-		if (MedicoAsignado is null)
-			return new Result<Turno2025>.Error("No hay médico asignado al turno para verificar disponibilidad.");
-
-		if (!MedicoAsignado.ListaHorarios.TienenDisponibilidad(nuevaFechaYHora, duracion))
-			return new Result<Turno2025>.Error("El médico no atiende en el nuevo horario.");
-
-		// Verificar solapamiento con otros turnos del mismo médico
-		if (otrosTurnosDelMedico is not null) {
-			var comienzo = nuevaFechaYHora;
-			var fin = nuevaFechaYHora.Add(duracion);
-			foreach (var ot in otrosTurnosDelMedico) {
-				if (ot.MedicoAsignado is null) continue;
-				if (ot.MedicoAsignado.Dni == this.MedicoAsignado.Dni && ot.FechaYHora == this.FechaYHora)
-					continue; // ignorar propio
-
-				if (ot.MedicoAsignado.Dni == this.MedicoAsignado.Dni) {
-					var otherStart = ot.FechaYHora;
-					var otherEnd = ot.FechaYHora.Add(TimeSpan.FromMinutes(ot.Especialidad.DuracionConsultaMinutos));
-					if (comienzo < otherEnd && otherStart < fin)
-						return new Result<Turno2025>.Error("El nuevo horario se solapa con otro turno del médico.");
-				}
-			}
+	public Result<Turno2025> CambiarEstado(TurnoEstado2025 outcomeEstado, Option<DateTime> outcomeFecha, Option<string> outcomeComentario) {
+		if (OutcomeEstado != TurnoEstado2025.Programado) {
+			return new Result<Turno2025>.Error("No se puede volver a cambiar el estado del turno.");
 		}
-
-		return new Result<Turno2025>.Ok(this with { FechaYHora = nuevaFechaYHora, Estado = TurnoEstado2025.Reprogramado });
+		return new Result<Turno2025>.Ok(this with { OutcomeEstado = outcomeEstado, OutcomeComentario = outcomeComentario, OutcomeFecha = outcomeFecha });
 	}
-	*/
-	public record DisponibilidadSlot(DateTime FechaHora, int? MedicoId, string MedicoDisplay);
 }

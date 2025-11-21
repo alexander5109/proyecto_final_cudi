@@ -17,7 +17,7 @@ public abstract class BaseDeDatosAbstracta{
 	public abstract List<ViewModelPaciente> ReadPacientes();
 	public abstract List<ViewModelTurno> ReadTurnos();
 
-	// Programar methods
+	// Crear methods
 	public abstract bool CreateMedico(Medico2025 instance, ViewModelMedico instanceDto);
 	public abstract bool CreatePaciente(Paciente2025 instance, ViewModelPaciente instanceDto);
 	public abstract bool CreateTurno(Turno2025 instance, ViewModelTurno instanceDto);

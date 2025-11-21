@@ -17,7 +17,7 @@ public sealed record ListaDisponibilidades2025(
 	public static IEnumerable<DisponibilidadEspecialidad2025> GenerarDisponibilidades(
 		SolicitudDeTurno solicitud,
 		IReadOnlyList<Medico2025> medicos,
-		ListaTurnosHistorial2025 turnosActuales
+		ListaTurnos2025 turnosActuales
 	) {
 		foreach (var medico in medicos)
 			foreach (var especialidad in medico.Especialidades.Valores) {
@@ -27,7 +27,7 @@ public sealed record ListaDisponibilidades2025(
 				int duracion = especialidad.DuracionConsultaMinutos;
 
 				foreach (var franja in medico.ListaHorarios.Valores) {
-					DateTime fecha = solicitud.Fecha.Date;
+					DateTime fecha = solicitud.FechaCreacion.Date;
 
 					// Ajustar al próximo día válido
 					while (fecha.DayOfWeek != franja.DiaSemana.Valor)
@@ -50,7 +50,7 @@ public sealed record ListaDisponibilidades2025(
 							);
 
 							// chequeo de colisión inline
-							if (!turnosActuales.DisponibilidadNoColisiona(disp))
+							if (!turnosActuales.DisponibilidadNoColisiona(disp.Medico, disp.Especialidad, disp.FechaHoraDesde, disp.FechaHoraHasta))
 								continue;
 
 							yield return disp;
@@ -64,7 +64,7 @@ public sealed record ListaDisponibilidades2025(
 		IReadOnlyList<DisponibilidadEspecialidad2025> disponibilidades
 	) {
 		//var lista = disponibilidades.ToList();
-		if (disponibilidades.Count() == 0)
+		if (disponibilidades.Count == 0)
 			return new Result<ListaDisponibilidades2025>.Error("No se encontraron disponibilidades.");
 		return new Result<ListaDisponibilidades2025>.Ok(
 			new ListaDisponibilidades2025(disponibilidades)
@@ -74,16 +74,15 @@ public sealed record ListaDisponibilidades2025(
 	public static Result<ListaDisponibilidades2025> Buscar(
 		Result<SolicitudDeTurno> solicitudResult,
 		IReadOnlyList<Medico2025> medicos,
-		ListaTurnosHistorial2025 turnos,
+		ListaTurnos2025 turnos,
 		int cuantos
 	) {
 		if (solicitudResult is Result<SolicitudDeTurno>.Error err)
 			return new Result<ListaDisponibilidades2025>.Error(err.Mensaje);
 		SolicitudDeTurno solicitud = ((Result<SolicitudDeTurno>.Ok)solicitudResult).Valor;
-		List<DisponibilidadEspecialidad2025> disponibles = GenerarDisponibilidades(solicitud, medicos, turnos)
+		List<DisponibilidadEspecialidad2025> disponibles = [.. GenerarDisponibilidades(solicitud, medicos, turnos)
 			.OrderBy(d => d.FechaHoraDesde)
-			.Take(cuantos)
-			.ToList();
+			.Take(cuantos)];
 
 		return ListaDisponibilidades2025.Crear(disponibles);
 	}
@@ -129,6 +128,6 @@ public static class DisponibilidadesExtensions {
 			filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));
 
 
-		return ListaDisponibilidades2025.Crear(filtradas.ToImmutableList());
+		return ListaDisponibilidades2025.Crear([.. filtradas]);
 	}
 }

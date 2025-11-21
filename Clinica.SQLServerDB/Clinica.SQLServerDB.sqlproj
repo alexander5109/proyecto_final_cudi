@@ -79,7 +79,7 @@
     <Build Include="StoredProcedures\sp_UpdateMedico.sql" />
     <Build Include="StoredProcedures\sp_UpdateMedicoWithHorarios.sql" />
     <Build Include="StoredProcedures\sp_UpdatePaciente.sql" />
-    <Build Include="StoredProcedures\sp_UpdateTurno.sql" />
+    <Build Include="StoredProcedures\sp_CambiarEstadoTurno.sql" />
     <Build Include="Tables\HorarioMedico.sql" />
     <Build Include="Tables\Medico.sql" />
     <Build Include="Tables\Paciente.sql" />

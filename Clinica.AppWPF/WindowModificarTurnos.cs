@@ -25,7 +25,7 @@ public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {
 
 
 	//---------------------public.constructors-------------------//
-	public WindowModificarTurnos() //Constructor vacio ==> Programar.
+	public WindowModificarTurnos() //Constructor vacio ==> Crear.
 {
 		InitializeComponent();
 		DataContext = this;
@@ -79,7 +79,7 @@ public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {
 				bool exito;
 
 				if (SelectedTurno.Id is null) {
-					// Programar nuevo turno
+					// Crear nuevo turno
 					exito = App.BaseDeDatos.CreateTurno(ok, SelectedTurno);
 				} else {
 					// Actualizar existente

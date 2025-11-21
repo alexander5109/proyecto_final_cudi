@@ -1,6 +1,7 @@
 ﻿using Clinica.DataPersistencia;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.ListasOrganizadoras;
 using Clinica.Dominio.TiposDeValor;
 using Microsoft.Extensions.Configuration;
 
@@ -45,7 +46,7 @@ public class AsyncRepositorioDapper {
 		).ToList();
 		//);
 	}
-	public static async Task<ListaTurnosHistorial2025> GetTurnos() {
+	public static async Task<ListaTurnos2025> GetTurnos() {
 		throw new NotImplementedException();
 
 		//IConfiguration config = new ConfigurationBuilder()

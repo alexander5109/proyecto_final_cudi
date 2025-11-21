@@ -5,6 +5,9 @@ using Clinica.Dominio.ListasOrganizadoras;
 
 namespace Clinica.Dominio.TiposDeValor;
 
+//THIS IS JUST FOR UI'S
+//NOT NEEDED SAVING
+
 
 public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 	public string ATexto() => Tarde ? "Tarde" : "Mañana";
@@ -16,7 +19,7 @@ public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 public readonly record struct SolicitudDeTurno(
 	Paciente2025 Paciente,
 	EspecialidadMedica2025 Especialidad,
-	DateTime Fecha
+	DateTime FechaCreacion
 ) : IComoTexto {
 
 	public static Result<SolicitudDeTurno> Crear(
@@ -35,7 +38,7 @@ public readonly record struct SolicitudDeTurno(
 		$"Solicitud básica:\n" +
 		$"  • Paciente: {Paciente.NombreCompleto.ATexto()}\n" +
 		$"  • Especialidad: {Especialidad.ATexto()}\n" +
-		$"  • Solicitado en: {Fecha:G}";
+		$"  • Solicitado en: {FechaCreacion:G}";
 }
 
 public readonly record struct SolicitudDeTurnoPreferencias(
@@ -63,7 +66,7 @@ public readonly record struct SolicitudDeTurnoPreferencias(
 //) : IComoTexto {
 //	public Paciente2025 Paciente => Basica.Paciente;
 //	public EspecialidadMedica2025 Especialidad => Basica.Especialidad;
-//	public DateTime Fecha => Basica.Fecha;
+//	public DateTime FechaCreacion => Basica.FechaCreacion;
 
 //	public string ATexto() {
 //		return

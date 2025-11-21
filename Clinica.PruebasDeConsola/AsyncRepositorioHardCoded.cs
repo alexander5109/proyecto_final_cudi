@@ -179,7 +179,7 @@ public static class AsyncRepositorioHardCoded  {
 		});
 
 
-	public static Task<ListaTurnosHistorial2025> GetTurnos() {
-		return Task.FromResult(ListaTurnosHistorial2025.Crear());
+	public static Task<ListaTurnos2025> GetTurnos() {
+		return Task.FromResult(ListaTurnos2025.Crear());
 	}
 }

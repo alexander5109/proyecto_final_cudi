@@ -13,19 +13,17 @@ public static class MainProgram {
 		Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 
-        //IReadOnlyList<Paciente2025> PACIENTES = (await AsyncRepositorioHardCoded.GetPacientes())
-        List<Result<Paciente2025>> PACIENTES_RESULT = await AsyncRepositorioDapper.GetPacientes();
-		IReadOnlyList<Paciente2025> PACIENTES = PACIENTES_RESULT
+		//IReadOnlyList<Paciente2025> PACIENTES = (await AsyncRepositorioHardCoded.GetPacientes())
+		List<Result<Paciente2025>> PACIENTES_RESULT = await AsyncRepositorioDapper.GetPacientes();
+		IReadOnlyList<Paciente2025> PACIENTES = [.. PACIENTES_RESULT
 			.Select(r => r.PrintAndContinue("Paciente domainizado")
-						  .GetOrRaise())
-			.ToList();
+						  .GetOrRaise())];
 
-		IReadOnlyList<Medico2025> MEDICOS = (await AsyncRepositorioDapper.GetMedicos())
+		IReadOnlyList<Medico2025> MEDICOS = [.. (await AsyncRepositorioDapper.GetMedicos())
 			.Select(r => r.PrintAndContinue("Medico domainizado")
-						  .GetOrRaise())
-			.ToList();
+						  .GetOrRaise())];
 
-		ListaTurnosHistorial2025 TURNOS = await AsyncRepositorioHardCoded.GetTurnos();
+		ListaTurnos2025 TURNOS = await AsyncRepositorioHardCoded.GetTurnos();
 
 		Result<SolicitudDeTurno> solicitudPaciente1 = SolicitudDeTurno.Crear(
 				PACIENTES_RESULT[0],
@@ -36,24 +34,58 @@ public static class MainProgram {
 		;
 		//IReadOnlyList<Medico2025> MEDICOS = await AsyncRepositorioHardCoded.GetMedicos();
 
-		Result<ListaDisponibilidades2025> resultDisponibilidadesPaciente1 =
-			ListaDisponibilidades2025.Buscar(solicitudPaciente1, MEDICOS, TURNOS, 3)
+		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1 = ListaDisponibilidades2025
+			.Buscar(solicitudPaciente1, MEDICOS, TURNOS, 3)
 			.PrintAndContinue("Buscando disponibilidades: ")
-			.AplicarFiltrosOpcionales(new(
-				DiaSemana2025.Lunes,
-				new TardeOMañana(false)
-			))
-			.PrintAndContinue("AplicarFiltrosOpcionales: ")
-		;
-
-		Result<DisponibilidadEspecialidad2025> primeraDispPaciente1 = resultDisponibilidadesPaciente1
+			//.AplicarFiltrosOpcionales(new(DiaSemana2025.Lunes, new TardeOMañana(false)))
+			//.PrintAndContinue("AplicarFiltrosOpcionales: ")
 			.TomarPrimera()
 			.PrintAndContinue("Tomando la primera: ")
 		;
 
-		TURNOS.AgendarTurno(Turno2025
-			.Programar(solicitudPaciente1, primeraDispPaciente1))
+		Result<Turno2025> turno = Turno2025.Crear(solicitudPaciente1, disponibilidadParaPaciente1)
+			.PrintAndContinue("Creando turno: ")
+		;
+
+		TURNOS.AgendarTurno(turno)
 			.PrintAndContinue("Agendando turno: ")
+		;
+
+
+		TURNOS.CancelarTurno(
+			turno,
+			Option<DateTime>.Some(turno.GetOrRaise().FechaDeCreacion.AddDays(1)),
+			Option<string>.Some("Paciente solicita reprogramacion. No dio explicaciones.")
+			)
+			.PrintAndContinue("paciente1 pide cancelar turno: ")
+		;
+
+
+		// Paciente quiere reprogramar.
+		Result<SolicitudDeTurno> solicitudPaciente1_reprogramacion = SolicitudDeTurno.Crear(
+				PACIENTES_RESULT[0],
+				EspecialidadMedica2025.ClinicoGeneral,
+				DateTime.Now.AddDays(1)
+			)
+			.PrintAndContinue("paciente1 intenta solicitar un nuevo turno: ")
+		;
+
+		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1_reprogramado = ListaDisponibilidades2025
+			.Buscar(solicitudPaciente1_reprogramacion, MEDICOS, TURNOS, 3)
+			.PrintAndContinue("Buscando disponibilidades: ")
+			//.AplicarFiltrosOpcionales(new(DiaSemana2025.Lunes, new TardeOMañana(false)))
+			//.PrintAndContinue("AplicarFiltrosOpcionales: ")
+			.TomarPrimera()
+			.PrintAndContinue("Tomando la primera: ")
+		;
+
+
+		Result<Turno2025> nuevoTurno = Turno2025.Crear(solicitudPaciente1_reprogramacion, disponibilidadParaPaciente1_reprogramado)
+			.PrintAndContinue("Creando nuevo turno: ")
+		;
+
+		TURNOS.AgendarTurno(nuevoTurno)
+			.PrintAndContinue("Agendando nuevo turno: ")
 		;
 
 

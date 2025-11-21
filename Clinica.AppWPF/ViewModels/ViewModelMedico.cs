@@ -75,7 +75,7 @@ public partial class ViewModelMedico : ObservableObject {
 		get {
 			ObservableCollection<ViewModelHorariosAgrupados> lista = [];
 
-			// Programar los 7 días vacíos
+			// Crear los 7 días vacíos
 			foreach (DayOfWeek dia in DiaSemana2025.Los7EnumDias) {
 				lista.Add(new ViewModelHorariosAgrupados(dia));
 			}
