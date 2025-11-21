@@ -55,46 +55,44 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="dbo" />
-    <Folder Include="dbo\StoredProcedures" />
-    <Folder Include="dbo\Tables" />
-    <Folder Include="dbo\UserDefinedTableTypes" />
-    <Folder Include="dbo\PostDeployInserts" />
+    <Folder Include="PostDeployInserts" />
+    <Folder Include="StoredProcedures" />
+    <Folder Include="Tables" />
+    <Folder Include="UserDefinedTableTypes" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\StoredProcedures\sp_CreateMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_CreatePaciente.sql" />
-    <Build Include="dbo\StoredProcedures\sp_CreateTurno.sql" />
-    <Build Include="dbo\StoredProcedures\sp_DeleteMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_DeletePaciente.sql" />
-    <Build Include="dbo\StoredProcedures\sp_DeleteTurno.sql" />
-    <Build Include="dbo\StoredProcedures\sp_ReadMedicosAllWithHorarios.sql" />
-    <Build Include="dbo\StoredProcedures\sp_ReadPacientesAll.sql" />
-    <Build Include="dbo\StoredProcedures\sp_ReadTurnosAll.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdateMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdatePaciente.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdateTurno.sql" />
-    <Build Include="dbo\Tables\Medico.sql" />
-    <Build Include="dbo\Tables\Paciente.sql" />
-    <Build Include="dbo\Tables\Turno.sql" />
-    <Build Include="dbo\Tables\HorarioMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_CreateHorarioMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_DeleteHorarioMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_ReadHorariosMedicosAll.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdateHorarioMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_ReadMedicosAll.sql" />
-    <Build Include="dbo\UserDefinedTableTypes\HorarioMedicoTableType.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdateMedicoWithHorarios.sql" />
-    <Build Include="dbo\StoredProcedures\sp_CreateMedicoWithHorarios.sql" />
+    <Build Include="StoredProcedures\sp_CreateHorarioMedico.sql" />
+    <Build Include="StoredProcedures\sp_CreateMedico.sql" />
+    <Build Include="StoredProcedures\sp_CreateMedicoWithHorarios.sql" />
+    <Build Include="StoredProcedures\sp_CreatePaciente.sql" />
+    <Build Include="StoredProcedures\sp_CreateTurno.sql" />
+    <Build Include="StoredProcedures\sp_DeleteHorarioMedico.sql" />
+    <Build Include="StoredProcedures\sp_DeleteMedico.sql" />
+    <Build Include="StoredProcedures\sp_DeletePaciente.sql" />
+    <Build Include="StoredProcedures\sp_DeleteTurno.sql" />
+    <Build Include="StoredProcedures\sp_ReadHorariosMedicosAll.sql" />
+    <Build Include="StoredProcedures\sp_ReadMedicosAll.sql" />
+    <Build Include="StoredProcedures\sp_ReadMedicosAllWithHorarios.sql" />
+    <Build Include="StoredProcedures\sp_ReadPacientesAll.sql" />
+    <Build Include="StoredProcedures\sp_ReadTurnosAll.sql" />
+    <Build Include="StoredProcedures\sp_UpdateHorarioMedico.sql" />
+    <Build Include="StoredProcedures\sp_UpdateMedico.sql" />
+    <Build Include="StoredProcedures\sp_UpdateMedicoWithHorarios.sql" />
+    <Build Include="StoredProcedures\sp_UpdatePaciente.sql" />
+    <Build Include="StoredProcedures\sp_UpdateTurno.sql" />
+    <Build Include="Tables\HorarioMedico.sql" />
+    <Build Include="Tables\Medico.sql" />
+    <Build Include="Tables\Paciente.sql" />
+    <Build Include="Tables\Turno.sql" />
+    <Build Include="UserDefinedTableTypes\HorarioMedicoTableType.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Clinica.SQLServerDB.publish.xml" />
-    <PostDeploy Include="dbo\PostDeployInserts\Script.PostDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="Script.PreDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
-    <RefactorLog Include="Clinica.SQLServerDB.refactorlog" />
+    <PostDeploy Include="PostDeployInserts\Script.PostDeployment.sql" />
   </ItemGroup>
 </Project>

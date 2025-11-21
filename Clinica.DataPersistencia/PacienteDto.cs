@@ -8,8 +8,8 @@ namespace Clinica.DataPersistencia;
 public record PacienteDto(
     int Id,
     string Dni,
-    string Nombre,
-    string Apellido,
+    string Name,
+    string LastName,
     DateTime FechaIngreso,
     string Domicilio,
     string Localidad,
@@ -23,7 +23,7 @@ public record PacienteDto(
 
 
     public Result<Paciente2025> ToDomain() {
-        var nombre = NombreCompleto2025.Crear(Nombre, Apellido);
+        var nombre = NombreCompleto2025.Crear(Name, LastName);
         var dni = DniArgentino2025.Crear(Dni);
         var contacto = Contacto2025.Crear(ContactoEmail2025.Crear(Email), ContactoTelefono2025.Crear(Telefono));
         var domicilio = DomicilioArgentino2025.Crear(LocalidadDeProvincia2025.Crear(Localidad, ProvinciaArgentina2025.Crear(ProvinciaCodigo)), Domicilio);
@@ -45,8 +45,8 @@ public record PacienteDto(
         return new PacienteDto(
             Id: id,
             Dni: p.Dni.Valor,
-            Nombre: p.NombreCompleto.Nombre,
-            Apellido: p.NombreCompleto.Apellido,
+            Name: p.NombreCompleto.Nombre,
+            LastName: p.NombreCompleto.Apellido,
             FechaIngreso: p.FechaIngreso.Valor,
             Domicilio: p.Domicilio.Direccion,
             Localidad: p.Domicilio.Localidad.Nombre,
@@ -62,8 +62,8 @@ public record PacienteDto(
         return new PacienteDto(
             Id: reader.GetInt32(reader.GetOrdinal("Id")),
             Dni: reader.GetString(reader.GetOrdinal("Dni")).Trim(),
-            Nombre: reader.GetString(reader.GetOrdinal("Name")),
-            Apellido: reader.GetString(reader.GetOrdinal("LastName")),
+            Name: reader.GetString(reader.GetOrdinal("Name")),
+            LastName: reader.GetString(reader.GetOrdinal("LastName")),
             FechaIngreso: reader.GetDateTime(reader.GetOrdinal("FechaIngreso")),
             Domicilio: reader.GetString(reader.GetOrdinal("Domicilio")),
             Localidad: reader.GetString(reader.GetOrdinal("Localidad")),

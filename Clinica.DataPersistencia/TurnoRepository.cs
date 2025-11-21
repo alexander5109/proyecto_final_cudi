@@ -4,6 +4,7 @@ using Dapper;
 namespace Clinica.DataPersistencia;
 
 public class TurnoRepository {
+	/*
 	private readonly IDbConnectionFactory _factory;
 
 	public TurnoRepository(IDbConnectionFactory factory) {
@@ -23,4 +24,6 @@ public class TurnoRepository {
 			new { PacienteId = pacienteId, MedicoId = medicoId, Fecha = fecha },
 			commandType: CommandType.StoredProcedure);
 	}
+
+	*/
 }

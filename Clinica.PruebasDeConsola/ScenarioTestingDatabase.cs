@@ -1,23 +1,27 @@
-﻿using System.Configuration;
-using Clinica.DataPersistencia;
+﻿using Clinica.DataPersistencia;
+using Microsoft.Extensions.Configuration;
 
 namespace Clinica.PruebasDeConsola;
 
-public class ScenarioTestingDatabase {
+public static class ScenarioTestingDatabase {
 	//[Fact]
-	public static void ProbarDataPersistencia() {
-
-		string connectionString =
-		ConfigurationManager.ConnectionStrings["ClinicaDB"].ConnectionString;
-
-		IDbConnectionFactory factory = new SqlConnectionFactory(connectionString);
-
-        PacienteRepository repo = new PacienteRepository(factory);
-
-		// ejemplo: leer pacientes
-		var pacientes = await repo.GetAllPacientes();
+	public static async Task ProbarDataPersistenciaAsync() {
+		IConfiguration config = new ConfigurationBuilder()
+			.SetBasePath(AppContext.BaseDirectory)
+			.AddJsonFile("appsettings.Development.json", optional: false)
+			.Build();
 
 
+		IDbConnectionFactory factory = new SqlConnectionFactory(config.GetConnectionString("ClinicaMedica"));
+
+        PacienteRepository repo = new(factory);
+
+        // ejemplo: leer pacientes
+        IEnumerable<PacienteDto> pacientes = await repo.GetAllPacientes();
+
+		foreach (PacienteDto paciente in pacientes) {
+			Console.WriteLine(paciente);
+		}
 
 	}
 }

@@ -3,8 +3,8 @@ using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.PruebasDeConsola;
-public class ScenarioTestingHardCoded {
-	public static void Escenario_Asignar_turnos_por_orden_de_solicitud() {
+public static class ScenarioTestingHardCoded {
+	public static void TestDominio() {
 		// Arrange
 
 		//List<Result<Medico>

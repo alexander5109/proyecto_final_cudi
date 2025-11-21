@@ -19,6 +19,7 @@ public record MedicoDto(
 	bool HaceGuardias,
 	double SueldoMinimo
 ) {
+	/*
 	public static MedicoDto FromDomain(Medico2025 medicoDomain, int medicoId) => new MedicoDto(
 		medicoId,
 		medicoDomain.NombreCompleto.Nombre,
@@ -127,3 +128,6 @@ public record MedicoDomicilioDto(
 );
 
 
+	*/
+
+}

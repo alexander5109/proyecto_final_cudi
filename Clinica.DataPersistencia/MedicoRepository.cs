@@ -7,7 +7,7 @@ using System.Text.Json;
 namespace Clinica.DataPersistencia;
 
 public static class MedicoRepository {
-
+	/*
 	public static Result<MedicoDto> Create(Medico2025 instancia, string connectionString) {
 		using SqlConnection connection = new(connectionString);
 		connection.Open();
@@ -85,7 +85,6 @@ public static class MedicoRepository {
 
 
 
-
 	public static bool Update(Medico2025WithId instanciaWithId, string connectionString) {
 		using SqlConnection conexion = new(connectionString);
 		conexion.Open();
@@ -146,4 +145,7 @@ public static class MedicoRepository {
 		dictMedicos.Remove(instanciaId);
 		return true;
 	}
+
+
+	*/
 }
