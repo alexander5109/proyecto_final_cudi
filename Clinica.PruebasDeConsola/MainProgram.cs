@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.ListasOrganizadoras;
@@ -11,24 +13,28 @@ public static class MainProgram {
 		Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 
-		IReadOnlyList<Result<Paciente2025>> PACIENTES = await AsyncRepositorioDapper.GetPacientes();
-		//List<Result<Paciente2025>> PACIENTES = await AsyncRepositorioHardCoded.GetPacientes();
-		IReadOnlyList<Result<Medico2025>> MEDICOS_RESULT = await AsyncRepositorioDapper.GetMedicos();
+        //IReadOnlyList<Paciente2025> PACIENTES = (await AsyncRepositorioHardCoded.GetPacientes())
+        List<Result<Paciente2025>> PACIENTES_RESULT = await AsyncRepositorioDapper.GetPacientes();
+		IReadOnlyList<Paciente2025> PACIENTES = PACIENTES_RESULT
+			.Select(r => r.PrintAndContinue("Paciente domainizado")
+						  .GetOrRaise())
+			.ToList();
+
+		IReadOnlyList<Medico2025> MEDICOS = (await AsyncRepositorioDapper.GetMedicos())
+			.Select(r => r.PrintAndContinue("Medico domainizado")
+						  .GetOrRaise())
+			.ToList();
+
 		ListaTurnosHistorial2025 TURNOS = await AsyncRepositorioHardCoded.GetTurnos();
 
-		Result<Paciente2025> paciente1 = PACIENTES[0]
-			.PrintAndContinue("Tratando de seleccionar paciente1")
-		;
 		Result<SolicitudDeTurno> solicitudPaciente1 = SolicitudDeTurno.Crear(
-				paciente1,
+				PACIENTES_RESULT[0],
 				EspecialidadMedica2025.ClinicoGeneral,
 				DateTime.Now
 			)
 			.PrintAndContinue("paciente1 intenta solicitar turno: ")
 		;
-
-		//IReadOnlyList<Result<Medico2025>> MEDICOS = ;
-		List<Medico2025> MEDICOS = await AsyncRepositorioHardCoded.GetMedicos();
+		//IReadOnlyList<Medico2025> MEDICOS = await AsyncRepositorioHardCoded.GetMedicos();
 
 		Result<ListaDisponibilidades2025> resultDisponibilidadesPaciente1 =
 			ListaDisponibilidades2025.Buscar(solicitudPaciente1, MEDICOS, TURNOS, 3)

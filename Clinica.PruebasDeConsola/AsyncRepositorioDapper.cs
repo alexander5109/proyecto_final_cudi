@@ -23,7 +23,6 @@ public class AsyncRepositorioDapper {
 		return pacientes
 			.Select(
 			x => x.ToDomain()
-			.PrintAndContinue("Paciente domainizado")
 		).ToList();
 	}
 	public static async Task<List<Result<Medico2025>>> GetMedicos() {
@@ -41,7 +40,7 @@ public class AsyncRepositorioDapper {
 		return medicos
 			.Select(
 			x => x.ToDomain()
-			.PrintAndContinue("Medico domainizado")
+			// .PrintAndContinue("Medico domainizado")
 			//.GetOrRaise()
 		).ToList();
 		//);
