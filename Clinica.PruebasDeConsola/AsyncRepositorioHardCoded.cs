@@ -1,16 +1,13 @@
-﻿using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.PruebasDeConsola;
-public static class ScenarioTestingHardCoded {
-	public static void TestDominio() {
-		// Arrange
 
-		//List<Result<Medico>
-
-		List<Medico2025> MEDICOS = [
-			Medico2025.Crear(
+public static class AsyncRepositorioHardCoded  {
+	public static Task<List<Medico2025>> GetMedicos()
+		=> Task.FromResult(new List<Medico2025> {
+		Medico2025.Crear(
 				NombreCompleto2025.Crear("Carlos Alfredo", "Markier"),
 				ListaEspecialidadesMedicas2025.Crear([
 					EspecialidadMedica2025.Gastroenterologo,
@@ -118,12 +115,13 @@ public static class ScenarioTestingHardCoded {
 			)
 			.PrintAndContinue("Creando a neurologa-osteopata Marta Algerich: ")
 			.GetOrRaise()
-		];
+		});
 
 
 
-		List<Result<Paciente2025>> PACIENTES = [
-			Paciente2025.Crear(
+	public static Task<List<Result<Paciente2025>>> GetPacientes()
+		=> Task.FromResult(new List<Result<Paciente2025>> {
+		Paciente2025.Crear(
 				NombreCompleto2025.Crear("Juan", "Diaz"),
 				DniArgentino2025.Crear("44444444"),
 				Contacto2025.Crear(
@@ -177,44 +175,10 @@ public static class ScenarioTestingHardCoded {
 				FechaIngreso2025.Crear(DateTime.Parse("2023/01/10"))
 			).PrintAndContinue("Creando a Herminda: "),
 
-		];
+		});
 
 
-		ListaTurnosHistorial2025 TURNOS = ListaTurnosHistorial2025.Crear();
-
-
-		// ⭐ 1. Juan solicita ClinicoGeneral
-
-		Result<Paciente2025> pacienteJuan = PACIENTES[0]
-			.PrintAndContinue("Tratando de seleccionar paciente")
-		;
-		Result<SolicitudDeTurno> solicitudJuan = SolicitudDeTurno.Crear(
-				pacienteJuan,
-				EspecialidadMedica2025.ClinicoGeneral,
-				DateTime.Now
-			)
-			.PrintAndContinue("Juan intenta solicitar turno: ")
-		;
-
-		Result<ListaDisponibilidades2025> resultDisponibilidadesParaJuan =
-			ListaDisponibilidades2025.Buscar(solicitudJuan, MEDICOS, TURNOS, 3)
-			.PrintAndContinue("Buscando disponibilidades: ")
-			.AplicarFiltrosOpcionales(new(
-				DiaSemana2025.Lunes,
-				new TardeOMañana(false)
-			))
-			.PrintAndContinue("AplicarFiltrosOpcionales: ")
-		;
-
-		Result<DisponibilidadEspecialidad2025> primeraDispJuan = resultDisponibilidadesParaJuan
-			.TomarPrimera()
-			.PrintAndContinue("Tomando la primera: ")
-		;
-
-		TURNOS.AgendarTurno(Turno2025
-			.Programar(solicitudJuan, primeraDispJuan))
-			.PrintAndContinue("Agendando turno: ")
-		;
+	public static Task<ListaTurnosHistorial2025> GetTurnos() {
+		return Task.FromResult(ListaTurnosHistorial2025.Crear());
 	}
-
 }
