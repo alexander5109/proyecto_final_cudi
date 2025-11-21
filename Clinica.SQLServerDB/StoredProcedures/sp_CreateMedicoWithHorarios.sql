@@ -2,7 +2,7 @@
     @Name NVARCHAR(100),
     @LastName NVARCHAR(100),
     @Dni NVARCHAR(20),
-    @Provincia NVARCHAR(100),
+    @ProvinciaCodigo NVARCHAR(100),
     @Domicilio NVARCHAR(200),
     @Localidad NVARCHAR(100),
     @EspecialidadCodigoInterno INT,
@@ -22,10 +22,10 @@ BEGIN
         -- 1. INSERT DEL MÉDICO
         ---------------------------------------------------
         INSERT INTO [dbo].[Medico]
-            ([Name], [LastName], [Dni], [Provincia], [Domicilio], [Localidad],
+            ([Name], [LastName], [Dni], [ProvinciaCodigo], [Domicilio], [Localidad],
              EspecialidadCodigoInterno, [Telefono], [Guardia], [FechaIngreso], [SueldoMinimoGarantizado])
         VALUES
-            (@Name, @LastName, @Dni, @Provincia, @Domicilio, @Localidad,
+            (@Name, @LastName, @Dni, @ProvinciaCodigo, @Domicilio, @Localidad,
              @EspecialidadCodigoInterno, @Telefono, @Guardia, @FechaIngreso, @SueldoMinimoGarantizado);
 
         DECLARE @NuevoMedicoId INT = SCOPE_IDENTITY();

@@ -26,7 +26,7 @@ public record PacienteDto(
         var nombre = NombreCompleto2025.Crear(Name, LastName);
         var dni = DniArgentino2025.Crear(Dni);
         var contacto = Contacto2025.Crear(ContactoEmail2025.Crear(Email), ContactoTelefono2025.Crear(Telefono));
-        var domicilio = DomicilioArgentino2025.Crear(LocalidadDeProvincia2025.Crear(Localidad, ProvinciaArgentina2025.Crear(ProvinciaCodigo)), Domicilio);
+        var domicilio = DomicilioArgentino2025.Crear(LocalidadDeProvincia2025.Crear(Localidad, ProvinciaArgentina2025.CrearPorCodigo(ProvinciaCodigo)), Domicilio);
         var fechaNacimiento = FechaDeNacimiento2025.Crear(DateOnly.FromDateTime(FechaNacimiento));
         var ingreso = FechaIngreso2025.Crear(FechaIngreso);
 

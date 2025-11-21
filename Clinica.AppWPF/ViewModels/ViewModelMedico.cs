@@ -6,6 +6,7 @@ using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using Clinica.DataPersistencia;
+using Clinica.Dominio.ListasOrganizadoras;
 
 namespace Clinica.AppWPF.ViewModels;
 
@@ -48,8 +49,8 @@ public static class ModelDtoExtensions {
 				})
 			),
 			medicoDto.Id,
-			medicoDto.Name,
-			medicoDto.LastName,
+			medicoDto.Nombre,
+			medicoDto.Apellido,
 			medicoDto.Dni,
 			medicoDto.Provincia,
 			medicoDto.Domicilio,

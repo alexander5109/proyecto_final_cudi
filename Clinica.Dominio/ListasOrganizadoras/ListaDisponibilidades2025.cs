@@ -1,9 +1,11 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Dominio.Entidades;
+namespace Clinica.Dominio.ListasOrganizadoras;
 
 public sealed record ListaDisponibilidades2025(
 	IReadOnlyList<DisponibilidadEspecialidad2025> Valores

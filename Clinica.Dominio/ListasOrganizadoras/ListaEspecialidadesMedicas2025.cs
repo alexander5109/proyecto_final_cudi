@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using System.Collections.Immutable;
 
-namespace Clinica.Dominio.Entidades;
+namespace Clinica.Dominio.ListasOrganizadoras;
 
 public sealed record ListaEspecialidadesMedicas2025(
 	IReadOnlyList<EspecialidadMedica2025> Valores
@@ -30,6 +30,16 @@ public sealed record ListaEspecialidadesMedicas2025(
 	public static Result<ListaEspecialidadesMedicas2025> Crear(IReadOnlyList<EspecialidadMedica2025> okList)
 		=> new Result<ListaEspecialidadesMedicas2025>.Ok(
 			new ListaEspecialidadesMedicas2025(okList)
+		);
+
+	// Factory 3: desde una sola especialidad
+	public static Result<ListaEspecialidadesMedicas2025> CrearConUnicaEspecialidad(EspecialidadMedica2025 unaSola)
+		=> new Result<ListaEspecialidadesMedicas2025>
+		.Ok(new ListaEspecialidadesMedicas2025([unaSola])
+	);
+	public static Result<ListaEspecialidadesMedicas2025> CrearConUnicaEspecialidad(Result<EspecialidadMedica2025> unaSolaResult) 
+		=> unaSolaResult.Bind(unaSola => new
+			Result<ListaEspecialidadesMedicas2025>.Ok(new ListaEspecialidadesMedicas2025([unaSola]))
 		);
 }
 
@@ -64,17 +74,21 @@ public sealed record EspecialidadMedica2025(EspecialidadCodigoInterno CodigoInte
 
 
 	// Diccionarios lookup auto-generados
-	private static readonly ImmutableDictionary<EspecialidadCodigoInterno, EspecialidadMedica2025> _porId;
-	private static readonly ImmutableDictionary<string, EspecialidadMedica2025> _porTitulo;
 
 	public static Result<EspecialidadMedica2025> CrearPorCodigoInterno(int? id) {
 		if (id is null)
 			return new Result<EspecialidadMedica2025>.Error("El CodigoInterno no puede ser nulo.");
 
-		var key = new EspecialidadCodigoInterno(id.Value);
+		// Buscamos la especialidad exacta por su código
+		var esp = Todas.FirstOrDefault(e => e.CodigoInterno.Valor == id.Value);
 
-		return _porId.TryGetValue(key, out var esp)
+		return esp is not null
 			? new Result<EspecialidadMedica2025>.Ok(esp)
-			: new Result<EspecialidadMedica2025>.Error($"No existe la especialidad con CodigoInterno = {id}.");
+			: new Result<EspecialidadMedica2025>.Error(
+				$"No existe la especialidad con CodigoInterno = {id}."
+			);
 	}
+
+
+
 }

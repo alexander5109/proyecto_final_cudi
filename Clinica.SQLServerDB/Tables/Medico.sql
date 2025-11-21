@@ -8,8 +8,9 @@
     FechaIngreso DATETIME NOT NULL,
     Domicilio NVARCHAR(50),
     Localidad NVARCHAR(50),
-    Provincia NVARCHAR(50),
+    ProvinciaCodigo INT,
     Telefono NVARCHAR(20),
+    Email NVARCHAR(50),
     Guardia BIT,
     SueldoMinimoGarantizado FLOAT(53)
 )

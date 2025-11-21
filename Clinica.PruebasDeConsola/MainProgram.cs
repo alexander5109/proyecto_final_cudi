@@ -1,6 +1,7 @@
 ﻿
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.ListasOrganizadoras;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.PruebasDeConsola;
@@ -10,9 +11,9 @@ public static class MainProgram {
 		Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 
-		List<Result<Paciente2025>> PACIENTES = await AsyncRepositorioDapper.GetPacientes();
+		IReadOnlyList<Result<Paciente2025>> PACIENTES = await AsyncRepositorioDapper.GetPacientes();
 		//List<Result<Paciente2025>> PACIENTES = await AsyncRepositorioHardCoded.GetPacientes();
-		List<Medico2025> MEDICOS = await AsyncRepositorioHardCoded.GetMedicos();
+		IReadOnlyList<Result<Medico2025>> MEDICOS_RESULT = await AsyncRepositorioDapper.GetMedicos();
 		ListaTurnosHistorial2025 TURNOS = await AsyncRepositorioHardCoded.GetTurnos();
 
 		Result<Paciente2025> paciente1 = PACIENTES[0]
@@ -25,6 +26,9 @@ public static class MainProgram {
 			)
 			.PrintAndContinue("paciente1 intenta solicitar turno: ")
 		;
+
+		//IReadOnlyList<Result<Medico2025>> MEDICOS = ;
+		List<Medico2025> MEDICOS = await AsyncRepositorioHardCoded.GetMedicos();
 
 		Result<ListaDisponibilidades2025> resultDisponibilidadesPaciente1 =
 			ListaDisponibilidades2025.Buscar(solicitudPaciente1, MEDICOS, TURNOS, 3)

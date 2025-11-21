@@ -1,6 +1,8 @@
 ﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+using Clinica.Dominio.ListasOrganizadoras;
 
-namespace Clinica.Dominio.Entidades;
+namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct DisponibilidadEspecialidad2025(
 	EspecialidadMedica2025 Especialidad,

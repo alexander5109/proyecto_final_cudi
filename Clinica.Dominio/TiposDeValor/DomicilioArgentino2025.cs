@@ -92,7 +92,7 @@ public readonly record struct ProvinciaArgentina2025(
 		_provinciasPorCodigo.Values;
 
 	// ---------------- FACTORY POR CÓDIGO ----------------
-	public static Result<ProvinciaArgentina2025> Crear(int codigo) {
+	public static Result<ProvinciaArgentina2025> CrearPorCodigo(int codigo) {
 		if (_provinciasPorCodigo.TryGetValue(codigo, out var nombre))
 			return new Result<ProvinciaArgentina2025>.Ok(
 				new ProvinciaArgentina2025(codigo, nombre)
@@ -113,7 +113,7 @@ public readonly record struct ProvinciaArgentina2025(
 		string normalizado = input.Trim().ToLowerInvariant();
 
 		if (_codigoPorNombre.TryGetValue(normalizado, out int codigo))
-			return Crear(codigo);
+			return CrearPorCodigo(codigo);
 
 		return new Result<ProvinciaArgentina2025>.Error(
 			$"Provincia inválida: '{input}'."

@@ -1,8 +1,9 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using Clinica.Dominio.Comun;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.Entidades;
+using Clinica.Dominio.ListasOrganizadoras;
 
-namespace Clinica.Dominio.Entidades;
+namespace Clinica.Dominio.TiposDeValor;
 
 
 public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {

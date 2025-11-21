@@ -11,7 +11,7 @@ BEGIN
         m.FechaIngreso,
         m.Domicilio,
         m.Localidad,
-        m.Provincia,
+        m.ProvinciaCodigo,
         m.Telefono,
         m.EspecialidadCodigoInterno,
         m.Guardia,

@@ -11,7 +11,7 @@ public class PacienteRepository {
 		_factory = factory;
 	}
 
-	public async Task<IEnumerable<PacienteDto>> GetAllPacientes() {
+	public async Task<IEnumerable<PacienteDto>> GetAll() {
 		using var conn = _factory.CreateConnection();
 
 		return await conn.QueryAsync<PacienteDto>(

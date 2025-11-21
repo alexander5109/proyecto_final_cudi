@@ -1,5 +1,6 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.TiposDeValor;
 
 public record class ListaTurnosHistorial2025(
 	List<Turno2025> Valores

@@ -2,17 +2,16 @@
 AS
 BEGIN
     SET NOCOUNT ON;
-
     SELECT 
         M.Id,
         M.EspecialidadCodigoInterno,
         M.Dni,
-        M.Name,
-        M.LastName,
+        M.Name AS Nombre,
+        M.LastName AS Apellido,
         M.FechaIngreso,
         M.Domicilio,
         M.Localidad,
-        M.Provincia,
+        M.ProvinciaCodigo,
         M.Telefono,
         M.Guardia,
         M.SueldoMinimoGarantizado,
@@ -27,7 +26,7 @@ BEGIN
             FROM HorarioMedico H
             WHERE H.MedicoId = M.Id
             FOR JSON PATH
-        ) AS Horarios
-    FROM Medico M;  -- NOTICE: NO "FOR JSON PATH" HERE
+        ) AS HorariosJson    -- <--- cambiar nombre del alias
+    FROM Medico M;
 END;
 GO
