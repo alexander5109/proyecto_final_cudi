@@ -27,7 +27,7 @@ public class ListaTurnos2025(
 	) {
 		return CambiarEstadoInterno(
 			turnoResult,
-			TurnoEstado2025.Cancelado,
+			TurnoOutcomeEstado2025.Cancelado,
 			fecha,
 			comentario
 		);
@@ -39,7 +39,7 @@ public class ListaTurnos2025(
 	) {
 		return CambiarEstadoInterno(
 			turnoResult,
-			TurnoEstado2025.Ausente,
+			TurnoOutcomeEstado2025.Ausente,
 			fecha,
 			comentario
 		);
@@ -54,7 +54,7 @@ public class ListaTurnos2025(
 	//) {
 	//	var cambio = CambiarEstadoInterno(
 	//		turnoResult,
-	//		TurnoEstado2025.Reprogramado,
+	//		TurnoOutcomeEstado2025.Reprogramado,
 	//		fecha,
 	//		comentario
 	//	);
@@ -85,7 +85,7 @@ public class ListaTurnos2025(
 	) {
 		return CambiarEstadoInterno(
 			turnoResult,
-			TurnoEstado2025.Concretado,
+			TurnoOutcomeEstado2025.Concretado,
 			fecha,
 			comentario
 		);
@@ -93,14 +93,14 @@ public class ListaTurnos2025(
 
 	private Result<ListaTurnos2025> CambiarEstadoInterno(
 		Result<Turno2025> turnoResult,
-		TurnoEstado2025 outcomeEstado,
+		TurnoOutcomeEstado2025 outcomeEstado,
 		Option<DateTime> outcomeFecha,
 		Option<string> outcomeComentario
 	) {
 		return turnoResult.Match<Result<ListaTurnos2025>>(
 			turnoOriginal => {
 				// 1) Encontrar el turno en la lista
-				int idx = Valores.FindIndex(t => t.Guid == turnoOriginal.Guid);
+				int idx = Valores.FindIndex(t => t.Id == turnoOriginal.Id);
 				if (idx == -1)
 					return new Result<ListaTurnos2025>.Error("El turno no existe en esta ListaTurnos.");
 				// 2) Intentar cambiar estado
@@ -121,15 +121,15 @@ public class ListaTurnos2025(
 		);
 	}
 
-	public bool DisponibilidadNoColisiona(Medico2025 medico, EspecialidadMedica2025 especialidad, DateTime fechaHoraDesde, DateTime fechaHoraHasta) {
+	public bool DisponibilidadNoColisiona(MedicoId medicoId, EspecialidadMedica2025 especialidad, DateTime fechaHoraDesde, DateTime fechaHoraHasta) {
 		foreach (var turno in Valores) {
 
 			// 1) Debe ser del mismo médico y especialidad
-			if (turno.MedicoAsignado != medico) continue;
+			if (turno.MedicoId != medicoId) continue;
 			if (turno.Especialidad != especialidad) continue;
 
 			// 2) Solo los turnos programados bloquean agenda
-			if (turno.OutcomeEstado != TurnoEstado2025.Programado) continue;
+			if (turno.OutcomeEstado != TurnoOutcomeEstado2025.Programado) continue;
 
 			// 3) Chequeo de solapamiento clásico
 			bool solapa =

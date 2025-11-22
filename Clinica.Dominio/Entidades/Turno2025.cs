@@ -5,22 +5,23 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Dominio.Entidades;
 
 
-public enum TurnoEstado2025 {
+public enum TurnoOutcomeEstado2025 {
 	Programado = 1,
 	Ausente = 2,
 	Cancelado = 3,
 	Concretado = 4,
 	//Reprogramado = 5
 }
+public record struct TurnoId(int Value);
 public record Turno2025(
-	Guid Guid,
+	TurnoId Id,
 	DateTime FechaDeCreacion,
-	Paciente2025 Paciente,
-	Medico2025 MedicoAsignado,
+	PacienteId PacienteId,
+	MedicoId MedicoId,
 	EspecialidadMedica2025 Especialidad,
 	DateTime FechaHoraAsignadaDesde,
 	DateTime FechaHoraAsignadaHasta,
-	TurnoEstado2025 OutcomeEstado,
+	TurnoOutcomeEstado2025 OutcomeEstado,
 	Option<DateTime> OutcomeFecha,
 	Option<string> OutcomeComentario
 ) : IComoTexto {
@@ -32,13 +33,17 @@ public record Turno2025(
 
 		return
 			$"Turno de {Especialidad.ATexto()}\n" +
-			$"  • Paciente: {Paciente.NombreCompleto.ATexto()}\n" +
-			$"  • Médico asignado: {MedicoAsignado.NombreCompleto.ATexto()}\n" +
+			$"  • PacienteId: {PacienteId}\n" +
+			$"  • Médico asignado: {MedicoId}\n" +
 			$"  • Fecha: {fecha}\n" +
 			$"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
 			$"  • OutcomeEstado: {OutcomeEstado}";
 	}
+
+
+
 	public static Result<Turno2025> Crear(
+		TurnoId turnoId,
 		Result<SolicitudDeTurno> solicitudResult,
 		Result<DisponibilidadEspecialidad2025> dispResult
 	) {
@@ -53,21 +58,21 @@ public record Turno2025(
 		DisponibilidadEspecialidad2025 disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
 
 		return new Result<Turno2025>.Ok(new Turno2025(
-			Guid: Guid.NewGuid(),
+			Id: turnoId,
 			FechaDeCreacion: solicitud.FechaCreacion,
-			Paciente: solicitud.Paciente,
-			MedicoAsignado: disp.Medico,
+			PacienteId: solicitud.PacienteId,
+			MedicoId: disp.MedicoId,
 			Especialidad: disp.Especialidad,
 			FechaHoraAsignadaDesde: disp.FechaHoraDesde,
 			FechaHoraAsignadaHasta: disp.FechaHoraHasta,
-			OutcomeEstado: TurnoEstado2025.Programado,
+			OutcomeEstado: TurnoOutcomeEstado2025.Programado,
 			OutcomeFecha: Option<DateTime>.None,
 			OutcomeComentario: Option<string>.None
 		));
 	}
 
-	public Result<Turno2025> CambiarEstado(TurnoEstado2025 outcomeEstado, Option<DateTime> outcomeFecha, Option<string> outcomeComentario) {
-		if (OutcomeEstado != TurnoEstado2025.Programado) {
+	public Result<Turno2025> CambiarEstado(TurnoOutcomeEstado2025 outcomeEstado, Option<DateTime> outcomeFecha, Option<string> outcomeComentario) {
+		if (OutcomeEstado != TurnoOutcomeEstado2025.Programado) {
 			return new Result<Turno2025>.Error("No se puede volver a cambiar el estado del turno.");
 		}
 		return new Result<Turno2025>.Ok(this with { OutcomeEstado = outcomeEstado, OutcomeComentario = outcomeComentario, OutcomeFecha = outcomeFecha });
@@ -82,12 +87,12 @@ public record Turno2025(
 	//	return new Result<Turno2025>.Ok(new Turno2025(
 	//		Guid: Guid.NewGuid(),
 	//		FechaDeCreacion: DateTime.Now,
-	//		Paciente: turnoOriginal.Paciente,
-	//		MedicoAsignado: nuevaDisp.Medico,
+	//		PacienteId: turnoOriginal.PacienteId,
+	//		MedicoId: nuevaDisp.Medico,
 	//		Especialidad: nuevaDisp.Especialidad,
 	//		FechaHoraAsignadaDesde: nuevaDisp.FechaHoraDesde,
 	//		FechaHoraAsignadaHasta: nuevaDisp.FechaHoraHasta,
-	//		OutcomeEstado: TurnoEstado2025.Programado,
+	//		OutcomeEstado: TurnoOutcomeEstado2025.Programado,
 	//		OutcomeFecha: Option<DateTime>.None,
 	//		OutcomeComentario: Option<string>.None
 	//	));

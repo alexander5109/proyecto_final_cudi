@@ -17,26 +17,22 @@ public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 }
 
 public readonly record struct SolicitudDeTurno(
-	Paciente2025 Paciente,
+	PacienteId PacienteId,
 	EspecialidadMedica2025 Especialidad,
 	DateTime FechaCreacion
 ) : IComoTexto {
 
 	public static Result<SolicitudDeTurno> Crear(
-		Result<Paciente2025> pacienteResult,
+		PacienteId pacienteId,
 		EspecialidadMedica2025 especialidad,
 		DateTime fechaSolicitada
 	) {
-		return pacienteResult.Bind(paciente =>
-			new Result<SolicitudDeTurno>.Ok(
-				new SolicitudDeTurno(paciente, especialidad, fechaSolicitada)
-			)
-		);
+		return new Result<SolicitudDeTurno>.Ok(new SolicitudDeTurno(pacienteId, especialidad, fechaSolicitada));
 	}
 
 	public string ATexto() =>
 		$"Solicitud básica:\n" +
-		$"  • Paciente: {Paciente.NombreCompleto.ATexto()}\n" +
+		$"  • Paciente: {PacienteId}\n" +
 		$"  • Especialidad: {Especialidad.ATexto()}\n" +
 		$"  • Solicitado en: {FechaCreacion:G}";
 }

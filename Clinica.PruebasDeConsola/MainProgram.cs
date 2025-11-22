@@ -28,7 +28,7 @@ public static class MainProgram {
 		ListaTurnos2025 TURNOS = await AsyncRepositorioHardCoded.GetTurnos(); //hello?
 
 		Result<SolicitudDeTurno> solicitudPaciente1 = SolicitudDeTurno.Crear(
-				PACIENTES_RESULT[0],
+				PACIENTES_RESULT[0].GetOrRaise().Id,
 				EspecialidadMedica2025.ClinicoGeneral,
 				DateTime.Now
 			)
@@ -45,7 +45,7 @@ public static class MainProgram {
 			.PrintAndContinue("Tomando la primera: ")
 		;
 
-		Result<Turno2025> turno = Turno2025.Crear(solicitudPaciente1, disponibilidadParaPaciente1)
+		Result<Turno2025> turno = Turno2025.Crear(new TurnoId(1), solicitudPaciente1, disponibilidadParaPaciente1)
 			.PrintAndContinue("Creando turno: ")
 		;
 
@@ -65,7 +65,7 @@ public static class MainProgram {
 
 		// Paciente quiere reprogramar.
 		Result<SolicitudDeTurno> solicitudPaciente1_reprogramacion = SolicitudDeTurno.Crear(
-				PACIENTES_RESULT[0],
+				PACIENTES_RESULT[0].GetOrRaise().Id,
 				EspecialidadMedica2025.ClinicoGeneral,
 				DateTime.Now.AddDays(1)
 			)
@@ -82,7 +82,7 @@ public static class MainProgram {
 		;
 
 
-		Result<Turno2025> nuevoTurno = Turno2025.Crear(solicitudPaciente1_reprogramacion, disponibilidadParaPaciente1_reprogramado)
+		Result<Turno2025> nuevoTurno = Turno2025.Crear(new TurnoId(2), solicitudPaciente1_reprogramacion, disponibilidadParaPaciente1_reprogramado)
 			.PrintAndContinue("Creando nuevo turno: ")
 		;
 

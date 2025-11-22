@@ -6,7 +6,7 @@ namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct DisponibilidadEspecialidad2025(
 	EspecialidadMedica2025 Especialidad,
-	Medico2025 Medico,
+	MedicoId MedicoId,
 	DateTime FechaHoraDesde,
 	DateTime FechaHoraHasta
 ) : IComoTexto {
@@ -16,7 +16,7 @@ public readonly record struct DisponibilidadEspecialidad2025(
 		var hasta = FechaHoraHasta.ToString("HH:mm");
 		return
 			$"Disponibilidad de {Especialidad.ATexto()}\n" +
-			$"  • Médico: {Medico.NombreCompleto.ATexto()}\n" +
+			$"  • Médico: {MedicoId}\n" +
 			$"  • Fecha: {fecha}\n" +
 			$"  • Horario: {desde}–{hasta}";
 	}

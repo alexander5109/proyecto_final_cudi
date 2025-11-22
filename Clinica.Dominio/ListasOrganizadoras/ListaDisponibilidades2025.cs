@@ -44,13 +44,13 @@ public sealed record ListaDisponibilidades2025(
 						for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
 							var disp = new DisponibilidadEspecialidad2025(
 								especialidad,
-								medico,
+								medico.Id,
 								slot,
 								slot.AddMinutes(duracion)
 							);
 
 							// chequeo de colisión inline
-							if (!turnosActuales.DisponibilidadNoColisiona(disp.Medico, disp.Especialidad, disp.FechaHoraDesde, disp.FechaHoraHasta))
+							if (!turnosActuales.DisponibilidadNoColisiona(disp.MedicoId, disp.Especialidad, disp.FechaHoraDesde, disp.FechaHoraHasta))
 								continue;
 
 							yield return disp;

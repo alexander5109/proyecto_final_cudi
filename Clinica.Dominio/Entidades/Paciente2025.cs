@@ -4,7 +4,7 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Dominio.Entidades;
 
 
-public record struct PacienteId(int Id);
+public record struct PacienteId(int Value);
 
 public record Paciente2025(
 	PacienteId Id,
