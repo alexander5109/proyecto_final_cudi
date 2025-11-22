@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using Clinica.AppWPF.ViewModels;
-using Clinica.Dominio.Servicios;
 
 namespace Clinica.AppWPF;
 

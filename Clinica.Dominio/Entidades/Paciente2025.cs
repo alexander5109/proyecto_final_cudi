@@ -3,7 +3,11 @@ using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
 
+
+public record struct PacienteId(int Id);
+
 public record Paciente2025(
+	PacienteId Id,
 	NombreCompleto2025 NombreCompleto,
 	DniArgentino2025 Dni,
 	Contacto2025 Contacto,
@@ -12,6 +16,7 @@ public record Paciente2025(
 	FechaIngreso2025 FechaIngreso
 ) {
 	public static Result<Paciente2025> Crear(
+		PacienteId id,
 		Result<NombreCompleto2025> nombreResult,
 		Result<DniArgentino2025> dniResult,
 		Result<Contacto2025> contactoResult,
@@ -27,6 +32,7 @@ public record Paciente2025(
 		from fechaNac in fechaNacimientoResult
 		from fechaIng in fechaIngresoResult
 		select new Paciente2025(
+			id,
 			nombre,
 			dni,
 			contacto,

@@ -50,13 +50,13 @@ public readonly record struct LocalidadDeProvincia2025(
 
 
 public readonly record struct ProvinciaArgentina2025(
-	int CodigoInterno,
+	byte CodigoInterno,
 	string Nombre
 ) : IComoTexto {
 	public string ATexto() => Nombre;
 
 	// --- Diccionario canónico ---
-	private static readonly Dictionary<int, string> _provinciasPorCodigo = new()
+	private static readonly Dictionary<byte, string> _provinciasPorCodigo = new()
 	{
 		{ 1, "Buenos Aires" },
 		{ 2, "Ciudad Autónoma de Buenos Aires" },
@@ -84,7 +84,7 @@ public readonly record struct ProvinciaArgentina2025(
 		{ 24, "Tucumán" }
 	};
 
-	private static readonly Dictionary<string, int> _codigoPorNombre =
+	private static readonly Dictionary<string, byte> _codigoPorNombre =
 		_provinciasPorCodigo
 			.ToDictionary(kvp => kvp.Value.ToLowerInvariant(), kvp => kvp.Key);
 
@@ -92,11 +92,34 @@ public readonly record struct ProvinciaArgentina2025(
 		_provinciasPorCodigo.Values;
 
 	// ---------------- FACTORY POR CÓDIGO ----------------
-	public static Result<ProvinciaArgentina2025> CrearPorCodigo(int codigo) {
-		if (_provinciasPorCodigo.TryGetValue(codigo, out var nombre))
-			return new Result<ProvinciaArgentina2025>.Ok(
-				new ProvinciaArgentina2025(codigo, nombre)
+	//public static Result<ProvinciaArgentina2025> CrearPorCodigo(byte? codigo) {
+	//	if (codigo == null) {
+	//		return new Result<ProvinciaArgentina2025>.Error(
+	//			$"Código de provincia missing: {codigo}."
+	//		);
+	//	}
+
+	//	if (_provinciasPorCodigo.TryGetValue(codigo, out var nombre))
+	//		return new Result<ProvinciaArgentina2025>.Ok(
+	//			new ProvinciaArgentina2025(codigo, nombre)
+	//		);
+
+	//	return new Result<ProvinciaArgentina2025>.Error(
+	//		$"Código de provincia inválido: {codigo}."
+	//	);
+	//}
+	public static Result<ProvinciaArgentina2025> CrearPorCodigo(byte? codigo) {
+		if (codigo is not byte key) {
+			return new Result<ProvinciaArgentina2025>.Error(
+				$"Código de provincia missing: {codigo}."
 			);
+		}
+
+		if (_provinciasPorCodigo.TryGetValue(key, out string? nombre)) {
+			return new Result<ProvinciaArgentina2025>.Ok(
+				new ProvinciaArgentina2025(key, nombre)
+			);
+		}
 
 		return new Result<ProvinciaArgentina2025>.Error(
 			$"Código de provincia inválido: {codigo}."
@@ -112,7 +135,7 @@ public readonly record struct ProvinciaArgentina2025(
 
 		string normalizado = input.Trim().ToLowerInvariant();
 
-		if (_codigoPorNombre.TryGetValue(normalizado, out int codigo))
+		if (_codigoPorNombre.TryGetValue(normalizado, out byte codigo))
 			return CrearPorCodigo(codigo);
 
 		return new Result<ProvinciaArgentina2025>.Error(

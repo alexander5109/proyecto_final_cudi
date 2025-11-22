@@ -93,9 +93,7 @@ public sealed record ListaDisponibilidades2025(
 
 public static class DisponibilidadesExtensions {
 
-	public static Result<DisponibilidadEspecialidad2025> TomarPrimera(
-		this Result<ListaDisponibilidades2025> listadoResult
-	) {
+	public static Result<DisponibilidadEspecialidad2025> TomarPrimera(this Result<ListaDisponibilidades2025> listadoResult) {
 
 		return listadoResult.Match<Result<DisponibilidadEspecialidad2025>>(
 			ok => {
@@ -112,10 +110,7 @@ public static class DisponibilidadesExtensions {
 		);
 	}
 
-	public static Result<ListaDisponibilidades2025> AplicarFiltrosOpcionales(
-		this Result<ListaDisponibilidades2025> disponibilidadesResult,
-		SolicitudDeTurnoPreferencias preferencias
-	) {
+	public static Result<ListaDisponibilidades2025> AplicarFiltrosOpcionales(this Result<ListaDisponibilidades2025> disponibilidadesResult,SolicitudDeTurnoPreferencias preferencias) {
 		if (disponibilidadesResult is Result<ListaDisponibilidades2025>.Error err)
 			return new Result<ListaDisponibilidades2025>.Error(err.Mensaje);
 

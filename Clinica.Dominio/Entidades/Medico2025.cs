@@ -5,7 +5,9 @@ using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
 
+public record struct MedicoId(int Id);
 public record Medico2025(
+		MedicoId Id,
 		NombreCompleto2025 NombreCompleto,
 		ListaEspecialidadesMedicas2025 Especialidades,
 		DniArgentino2025 Dni,
@@ -16,6 +18,7 @@ public record Medico2025(
 		bool HaceGuardias
 	) {
 	public static Result<Medico2025> Crear(
+		MedicoId id,
 		Result<NombreCompleto2025> nombreResult,
 		Result<ListaEspecialidadesMedicas2025> especialidadResult,
 		Result<DniArgentino2025> dniResult,
@@ -33,6 +36,7 @@ public record Medico2025(
 		from horarios in horariosResult
 		from fechaIng in fechaIngresoResult
 		select new Medico2025(
+			id,
 			nombre,
 			esp,
 			dni,

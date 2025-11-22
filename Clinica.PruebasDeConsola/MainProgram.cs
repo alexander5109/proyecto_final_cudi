@@ -14,6 +14,8 @@ public static class MainProgram {
 
 
 		List<Result<Paciente2025>> PACIENTES_RESULT = await AsyncRepositorioDapper.GetPacientes();
+		Console.WriteLine(PACIENTES_RESULT.Count);
+
 		IReadOnlyList<Paciente2025> PACIENTES = [.. PACIENTES_RESULT
 			.Select(r => r.PrintAndContinue("Paciente domainizado")
 						  .GetOrRaise())];
@@ -22,7 +24,8 @@ public static class MainProgram {
 			.Select(r => r.PrintAndContinue("Medico domainizado")
 						  .GetOrRaise())];
 
-		ListaTurnos2025 TURNOS = await AsyncRepositorioDapper.GetTurnos(); //hello?
+		//ListaTurnos2025 TURNOS = await AsyncRepositorioDapper.GetTurnos(); //hello?
+		ListaTurnos2025 TURNOS = await AsyncRepositorioHardCoded.GetTurnos(); //hello?
 
 		Result<SolicitudDeTurno> solicitudPaciente1 = SolicitudDeTurno.Crear(
 				PACIENTES_RESULT[0],

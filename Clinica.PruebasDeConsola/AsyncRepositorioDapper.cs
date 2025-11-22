@@ -20,11 +20,9 @@ public class AsyncRepositorioDapper {
 
 		IEnumerable<PacienteDto> pacientes = await repo.GetAll();
 
+
 		// Convertimos cada DTO a dominio
-		return [.. pacientes
-			.Select(
-			x => x.ToDomain()
-		)];
+		return [.. pacientes.Select(x => x.ToDomain())];
 	}
 	public static async Task<List<Result<Medico2025>>> GetMedicos() {
 		IConfiguration config = new ConfigurationBuilder()
@@ -45,7 +43,7 @@ public class AsyncRepositorioDapper {
 			//.GetOrRaise()
 		)];
 	}
-	public static async Task<ListaTurnos2025> GetTurnos() {
+	public static async Task<List<Result<Turno2025>>> GetTurnos() {
 		throw new NotImplementedException();
 		//IConfiguration config = new ConfigurationBuilder()
 		//	.SetBasePath(AppContext.BaseDirectory)

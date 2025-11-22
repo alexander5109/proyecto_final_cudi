@@ -9,6 +9,7 @@ public static class AsyncRepositorioHardCoded  {
 	public static Task<List<Medico2025>> GetMedicos()
 		=> Task.FromResult(new List<Medico2025> {
 		Medico2025.Crear(
+				new MedicoId(1),
 				NombreCompleto2025.Crear("Carlos Alfredo", "Markier"),
 				ListaEspecialidadesMedicas2025.Crear([
 					EspecialidadMedica2025.Gastroenterologo,
@@ -36,7 +37,6 @@ public static class AsyncRepositorioHardCoded  {
 					)
 				]),
 				FechaIngreso2025.Crear(DateTime.Parse("2014/12/12")),
-				MedicoSueldoMinimo2025.Crear(800_000),
 				false
 			)
 			.PrintAndContinue("Creando a clinico general-gastroenterologo Carlos Merkier: ")
@@ -44,6 +44,7 @@ public static class AsyncRepositorioHardCoded  {
 			,
 
 			Medico2025.Crear(
+				new MedicoId(2),
 				NombreCompleto2025.Crear("Jorge", "Pereyra"),
 				ListaEspecialidadesMedicas2025.Crear([
 					EspecialidadMedica2025.Pediatra,
@@ -71,7 +72,6 @@ public static class AsyncRepositorioHardCoded  {
 					)
 				]),
 				FechaIngreso2025.Crear(DateTime.Parse("2014/12/12")),
-				MedicoSueldoMinimo2025.Crear(800_000),
 				false
 			)
 			.PrintAndContinue("Creando a pediatra-ginecologo Jorge Pereyra: ")
@@ -79,6 +79,7 @@ public static class AsyncRepositorioHardCoded  {
 			,
 
 			Medico2025.Crear(
+				new MedicoId(3),
 				NombreCompleto2025.Crear("Marta", "Algerich"),
 				ListaEspecialidadesMedicas2025.Crear([
 					EspecialidadMedica2025.Neurologo,
@@ -111,7 +112,6 @@ public static class AsyncRepositorioHardCoded  {
 					)
 				]),
 				FechaIngreso2025.Crear(DateTime.Parse("2013/12/12")),
-				MedicoSueldoMinimo2025.Crear(1300_000),
 				false
 			)
 			.PrintAndContinue("Creando a neurologa-osteopata Marta Algerich: ")
@@ -123,6 +123,7 @@ public static class AsyncRepositorioHardCoded  {
 	public static Task<List<Result<Paciente2025>>> GetPacientes()
 		=> Task.FromResult(new List<Result<Paciente2025>> {
 		Paciente2025.Crear(
+				new PacienteId(1),
 				NombreCompleto2025.Crear("Juan", "Diaz"),
 				DniArgentino2025.Crear("44444444"),
 				Contacto2025.Crear(
@@ -141,6 +142,7 @@ public static class AsyncRepositorioHardCoded  {
 			).PrintAndContinue("Creando a Juan: "),
 
 			Paciente2025.Crear(
+				new PacienteId(2),
 				NombreCompleto2025.Crear("Pedro", "Fernandez"),
 				DniArgentino2025.Crear("30350123"),
 				Contacto2025.Crear(
@@ -159,6 +161,7 @@ public static class AsyncRepositorioHardCoded  {
 			).PrintAndContinue("Creando a Pedro: "),
 
 			Paciente2025.Crear(
+				new PacienteId(3),
 				NombreCompleto2025.Crear("Herminda", "Gutierrez Lopez"),
 				DniArgentino2025.Crear("44444444"),
 				Contacto2025.Crear(

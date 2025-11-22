@@ -16,18 +16,18 @@ IF NOT EXISTS (SELECT 1 FROM dbo.Medico)
 BEGIN
     SET IDENTITY_INSERT dbo.Medico ON;
     INSERT INTO dbo.Medico 
-        (Id, Nombre, Apellido, ProvinciaCodigo, Domicilio, Localidad, EspecialidadCodigoInterno, Telefono, Guardia, FechaIngreso, Dni)
+        (Id, Email, Nombre, Apellido, ProvinciaCodigo, Domicilio, Localidad, EspecialidadCodigoInterno, Telefono, Guardia, FechaIngreso, Dni)
     VALUES 
-        (1, 'Dr. Ricardo', 'Arjona', 1, 'Av. Siempre Viva 123', 'Capital Federal', 1, '1234567890', 1, '20220115', '12345678'),
-        (2, 'Dr. Tocando', 'Shells', 2, 'Calle Falsa 456', 'Villa Carlos Paz', 9, '2345678901', 0, '20210520', '87654321'),
-        (3, 'Dr. Mario', 'Socolinsky', 3, 'Ruta 40 Km 12', 'Godoy Cruz', 7, '3456789012', 1, '20200910', '11223344'),
-        (4, 'Dra. Roxana', 'Toledo', 4, 'Calle San Martin 100', 'Salta', 5, '4567890123', 0, '20230205', '55667788'),
-        (5, 'Dra. Tete', 'Falopa', 5, 'Boulevard Galvez 2000', 'Rosario',  3, '5678901234', 1, '20191225', '99887766'),
-        (6, 'Dra. Debora', 'Meltrozo', 6, 'Ruta 40 Km 10', 'Uruguay', 2, '1238909252', 1, '20241005', '40350997'),
-        (7, 'Dr. Miguel', 'DedoGordo', 7, 'Ruta 40 Km 13', 'Italia', 4, '2348905216', 0, '20211003', '54355292'),
-        (8, 'Dr. Felipe', 'Estomagón', 8, 'Av. Curva Peligrosa 78', 'Resistencia', 6, '6781234567', 1, '20230714', '65432198'),
-        (9, 'Dr. Paco', 'Lespiedras', 9, 'Ruta de Tierra 99', 'Posadas', 8, '7892345678', 0, '20221101', '45678901'),
-        (10, 'Dra. Clara', 'Mentoni', 10, 'Calle Polvorienta 101', 'Santa Rosa', 10, '8903456789', 1, '20200420', '11225588');
+        (1, 'Ricardo@gmail.com', 'Dr. Ricardo', 'Arjona', 1, 'Av. Siempre Viva 123', 'Capital Federal', 1, '1234567890', 1, '20220115', '12345678'),
+        (2, 'TocandoShells@gmail.com', 'Dr. Tocando', 'Shells', 2, 'Calle Falsa 456', 'Villa Carlos Paz', 9, '2345678901', 0, '20210520', '87654321'),
+        (3, 'MarioPergo123@gmail.com', 'Dr. Mario', 'Socolinsky', 3, 'Ruta 40 Km 12', 'Godoy Cruz', 7, '3456789012', 1, '20200910', '11223344'),
+        (4, 'Roxana123@gmail.com', 'Dra. Roxana', 'Toledo', 4, 'Calle San Martin 100', 'Salta', 5, '4567890123', 0, '20230205', '55667788'),
+        (5, 'TeteFalopa@gmail.com', 'Dra. Tete', 'Falopa', 5, 'Boulevard Galvez 2000', 'Rosario',  3, '5678901234', 1, '20191225', '99887766'),
+        (6, 'Debora123@gmail.com', 'Dra. Debora', 'Meltrozo', 6, 'Ruta 40 Km 10', 'Uruguay', 2, '1238909252', 1, '20241005', '40350997'),
+        (7, 'Miguelito12@gmail.com', 'Dr. Miguel', 'DedoGordo', 7, 'Ruta 40 Km 13', 'Italia', 4, '2348905216', 0, '20211003', '54355292'),
+        (8, 'Felipe123@gmail.com', 'Dr. Felipe', 'Estomagón', 8, 'Av. Curva Peligrosa 78', 'Resistencia', 6, '6781234567', 1, '20230714', '65432198'),
+        (9, 'Paco123@gmail.com', 'Dr. Paco', 'Lespiedras', 9, 'Ruta de Tierra 99', 'Posadas', 8, '7892345678', 0, '20221101', '45678901'),
+        (10, 'Clara123@gmail.com', 'Dra. Clara', 'Mentoni', 10, 'Calle Polvorienta 101', 'Santa Rosa', 10, '8903456789', 1, '20200420', '11225588');
     SET IDENTITY_INSERT dbo.Medico OFF;
 END;
 GO
