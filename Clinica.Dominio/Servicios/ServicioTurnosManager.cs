@@ -1,26 +1,27 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.ListasOrganizadoras;
 using Clinica.Dominio.TiposDeValor;
 
 
-namespace Clinica.Dominio.ListasOrganizadoras;
+namespace Clinica.Dominio.Servicios;
 
-public class ListaTurnos2025(
+public class ServicioTurnosManager(
 	List<Turno2025> Valores
 ) {
-	public static ListaTurnos2025 Crear() => new([]);
+	public static ServicioTurnosManager Crear() => new([]);
 
-	public Result<ListaTurnos2025> AgendarTurno(Result<Turno2025> turnoResult) {
-		return turnoResult.Match<Result<ListaTurnos2025>>(
+	public Result<ServicioTurnosManager> AgendarTurno(Result<Turno2025> turnoResult) {
+		return turnoResult.Match<Result<ServicioTurnosManager>>(
 			ok => {
 				Valores.Add(ok);
-				return new Result<ListaTurnos2025>.Ok(this);
+				return new Result<ServicioTurnosManager>.Ok(this);
 			},
-			mensaje => new Result<ListaTurnos2025>.Error(mensaje)
+			mensaje => new Result<ServicioTurnosManager>.Error(mensaje)
 		);
 	}
 
-	public Result<ListaTurnos2025> CancelarTurno(
+	public Result<ServicioTurnosManager> CancelarTurno(
 		Result<Turno2025> turnoResult,
 		Option<DateTime> fecha,
 		Option<string> comentario
@@ -32,7 +33,7 @@ public class ListaTurnos2025(
 			comentario
 		);
 	}
-	public Result<ListaTurnos2025> MarcarTurnoComoAusente(
+	public Result<ServicioTurnosManager> MarcarTurnoComoAusente(
 		Result<Turno2025> turnoResult,
 		Option<DateTime> fecha,
 		Option<string> comentario
@@ -46,7 +47,7 @@ public class ListaTurnos2025(
 	}
 
 
-	//public Result<(ListaTurnos2025 Lista, Turno2025 NuevoTurno)> ReprogramarTurno(
+	//public Result<(ServicioTurnosManager Lista, Turno2025 NuevoTurno)> ReprogramarTurno(
 	//	Result<Turno2025> turnoResult,
 	//	Result<DisponibilidadEspecialidad2025> dispResult,
 	//	Option<DateTime> fecha,
@@ -59,8 +60,8 @@ public class ListaTurnos2025(
 	//		comentario
 	//	);
 
-	//	if (cambio is Result<ListaTurnos2025>.Error err)
-	//		return new Result<(ListaTurnos2025, Turno2025)>.Error(err.Mensaje);
+	//	if (cambio is Result<ServicioTurnosManager>.Error err)
+	//		return new Result<(ServicioTurnosManager, Turno2025)>.Error(err.Mensaje);
 
 	//	var turnoViejo = turnoResult.GetOrRaise();
 	//	var disp = dispResult.GetOrRaise();
@@ -68,17 +69,17 @@ public class ListaTurnos2025(
 		//var nuevoTurnoResult = Turno2025.ReprogramarDesde(turnoViejo, disp);
 
 	//	if (nuevoTurnoResult is Result<Turno2025>.Error err2)
-	//		return new Result<(ListaTurnos2025, Turno2025)>.Error(err2.Mensaje);
+	//		return new Result<(ServicioTurnosManager, Turno2025)>.Error(err2.Mensaje);
 
 	//	var nuevoTurno = ((Result<Turno2025>.Ok)nuevoTurnoResult).Valor;
 
 	//	Valores.Add(nuevoTurno);
 
-	//	return new Result<(ListaTurnos2025 Lista, Turno2025 NuevoTurno)>.Ok((this, nuevoTurno));
+	//	return new Result<(ServicioTurnosManager Lista, Turno2025 NuevoTurno)>.Ok((this, nuevoTurno));
 	//}
 
 
-	public Result<ListaTurnos2025> MarcarTurnoComoConcretado(
+	public Result<ServicioTurnosManager> MarcarTurnoComoConcretado(
 		Result<Turno2025> turnoResult,
 		Option<DateTime> fecha,
 		Option<string> comentario
@@ -91,33 +92,33 @@ public class ListaTurnos2025(
 		);
 	}
 
-	private Result<ListaTurnos2025> CambiarEstadoInterno(
+	private Result<ServicioTurnosManager> CambiarEstadoInterno(
 		Result<Turno2025> turnoResult,
 		TurnoOutcomeEstado2025 outcomeEstado,
 		Option<DateTime> outcomeFecha,
 		Option<string> outcomeComentario
 	) {
-		return turnoResult.Match<Result<ListaTurnos2025>>(
+		return turnoResult.Match<Result<ServicioTurnosManager>>(
 			turnoOriginal => {
 				// 1) Encontrar el turno en la lista
 				int idx = Valores.FindIndex(t => t.Id == turnoOriginal.Id);
 				if (idx == -1)
-					return new Result<ListaTurnos2025>.Error("El turno no existe en esta ListaTurnos.");
+					return new Result<ServicioTurnosManager>.Error("El turno no existe en esta ListaTurnos.");
 				// 2) Intentar cambiar estado
 				Result<Turno2025> nuevoTurnoResult = turnoOriginal.CambiarEstado(outcomeEstado, outcomeFecha, outcomeComentario);
-				return nuevoTurnoResult.Match<Result<ListaTurnos2025>>(
+				return nuevoTurnoResult.Match<Result<ServicioTurnosManager>>(
 					nuevoTurno => {
 						// 3) Remover el turno viejo
 						Valores.RemoveAt(idx);
 						// 4) Insertar el turno actualizado
 						Valores.Add(nuevoTurno);
-						return new Result<ListaTurnos2025>.Ok(this);
+						return new Result<ServicioTurnosManager>.Ok(this);
 					},
 					mensajeError =>
-						new Result<ListaTurnos2025>.Error(mensajeError)
+						new Result<ServicioTurnosManager>.Error(mensajeError)
 				);
 			},
-			mensaje => new Result<ListaTurnos2025>.Error(mensaje)
+			mensaje => new Result<ServicioTurnosManager>.Error(mensaje)
 		);
 	}
 

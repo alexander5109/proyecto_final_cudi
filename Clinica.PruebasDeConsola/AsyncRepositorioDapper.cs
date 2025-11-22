@@ -44,19 +44,21 @@ public class AsyncRepositorioDapper {
 		)];
 	}
 	public static async Task<List<Result<Turno2025>>> GetTurnos() {
-		throw new NotImplementedException();
-		//IConfiguration config = new ConfigurationBuilder()
-		//	.SetBasePath(AppContext.BaseDirectory)
-		//	.AddJsonFile("appsettings.Development.json", optional: false)
-		//	.Build();
+		IConfiguration config = new ConfigurationBuilder()
+			.SetBasePath(AppContext.BaseDirectory)
+			.AddJsonFile("appsettings.Development.json", optional: false)
+			.Build();
 
-		//IDbConnectionFactory factory = new SqlConnectionFactory(config.GetConnectionString("ClinicaMedica"));
+		IDbConnectionFactory factory = new SqlConnectionFactory(config.GetConnectionString("ClinicaMedica"));
 
-		//TurnoRepository repo = new(factory);
+		TurnoRepository repo = new(factory);
 
-		//IEnumerable<TurnoDto> medicos = await repo.GetAll();
+		IEnumerable<TurnoDto> medicos = await repo.GetAll();
 
-		//return resultados = medicos.Select(x => x.ToDomain().PrintAndContinue("Turno domainizado")).ToList();
+		return [.. medicos
+			.Select(
+			x => x.ToDomain()
+		)];
 	}
 
 

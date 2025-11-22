@@ -1,8 +1,7 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 using Clinica.Dominio.Comun;
-using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Dominio.ListasOrganizadoras;
+namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct ListaHorarioMedicos2025(
 	IReadOnlyList<HorarioMedico2025> Valores

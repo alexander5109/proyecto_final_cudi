@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.ListasOrganizadoras;
+using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.PruebasDeConsola;
@@ -24,8 +25,12 @@ public static class MainProgram {
 			.Select(r => r.PrintAndContinue("Medico domainizado")
 						  .GetOrRaise())];
 
-		//ListaTurnos2025 TURNOS = await AsyncRepositorioDapper.GetTurnos(); //hello?
-		ListaTurnos2025 TURNOS = await AsyncRepositorioHardCoded.GetTurnos(); //hello?
+        List<Result<Turno2025>> TURNOS_RESULT = await AsyncRepositorioDapper.GetTurnos(); //hello?
+		List<Turno2025> TURNOS = [.. TURNOS_RESULT
+			.Select(r => r.PrintAndContinue("Turno domainizado")
+						  .GetOrRaise())];
+
+		ServicioTurnosManager TURNOS_MANAGER = new(TURNOS);
 
 		Result<SolicitudDeTurno> solicitudPaciente1 = SolicitudDeTurno.Crear(
 				PACIENTES_RESULT[0].GetOrRaise().Id,
@@ -36,8 +41,8 @@ public static class MainProgram {
 		;
 		//IReadOnlyList<Medico2025> MEDICOS = await AsyncRepositorioHardCoded.GetMedicos();
 
-		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1 = ListaDisponibilidades2025
-			.Buscar(solicitudPaciente1, MEDICOS, TURNOS, 3)
+		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1 = ServicioDisponibilidadesSearcher
+			.Buscar(solicitudPaciente1, MEDICOS, TURNOS_MANAGER, 3)
 			.PrintAndContinue("Buscando disponibilidades: ")
 			//.AplicarFiltrosOpcionales(new(DiaSemana2025.Lunes, new TardeOMañana(false)))
 			//.PrintAndContinue("AplicarFiltrosOpcionales: ")
@@ -49,12 +54,12 @@ public static class MainProgram {
 			.PrintAndContinue("Creando turno: ")
 		;
 
-		TURNOS.AgendarTurno(turno)
+		TURNOS_MANAGER.AgendarTurno(turno)
 			.PrintAndContinue("Agendando turno: ")
 		;
 
 
-		TURNOS.CancelarTurno(
+		TURNOS_MANAGER.CancelarTurno(
 			turno,
 			Option<DateTime>.Some(turno.GetOrRaise().FechaDeCreacion.AddDays(1)),
 			Option<string>.Some("Paciente solicita reprogramacion. No dio explicaciones.")
@@ -72,8 +77,8 @@ public static class MainProgram {
 			.PrintAndContinue("paciente1 intenta solicitar un nuevo turno: ")
 		;
 
-		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1_reprogramado = ListaDisponibilidades2025
-			.Buscar(solicitudPaciente1_reprogramacion, MEDICOS, TURNOS, 3)
+		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1_reprogramado = ServicioDisponibilidadesSearcher
+			.Buscar(solicitudPaciente1_reprogramacion, MEDICOS, TURNOS_MANAGER, 3)
 			.PrintAndContinue("Buscando disponibilidades: ")
 			//.AplicarFiltrosOpcionales(new(DiaSemana2025.Lunes, new TardeOMañana(false)))
 			//.PrintAndContinue("AplicarFiltrosOpcionales: ")
@@ -86,7 +91,7 @@ public static class MainProgram {
 			.PrintAndContinue("Creando nuevo turno: ")
 		;
 
-		TURNOS.AgendarTurno(nuevoTurno)
+		TURNOS_MANAGER.AgendarTurno(nuevoTurno)
 			.PrintAndContinue("Agendando nuevo turno: ")
 		;
 

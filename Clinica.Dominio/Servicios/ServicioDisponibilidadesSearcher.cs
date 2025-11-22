@@ -5,9 +5,9 @@ using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Dominio.ListasOrganizadoras;
+namespace Clinica.Dominio.Servicios;
 
-public sealed record ListaDisponibilidades2025(
+public sealed record ServicioDisponibilidadesSearcher(
 	IReadOnlyList<DisponibilidadEspecialidad2025> Valores
 ) : IComoTexto {
 	public string ATexto() =>
@@ -17,7 +17,7 @@ public sealed record ListaDisponibilidades2025(
 	public static IEnumerable<DisponibilidadEspecialidad2025> GenerarDisponibilidades(
 		SolicitudDeTurno solicitud,
 		IReadOnlyList<Medico2025> medicos,
-		ListaTurnos2025 turnosActuales
+		ServicioTurnosManager turnosActuales
 	) {
 		foreach (var medico in medicos)
 			foreach (var especialidad in medico.Especialidades.Valores) {
@@ -60,31 +60,31 @@ public sealed record ListaDisponibilidades2025(
 			}
 	}
 
-	public static Result<ListaDisponibilidades2025> Crear(
+	public static Result<ServicioDisponibilidadesSearcher> Crear(
 		IReadOnlyList<DisponibilidadEspecialidad2025> disponibilidades
 	) {
 		//var lista = disponibilidades.ToList();
 		if (disponibilidades.Count == 0)
-			return new Result<ListaDisponibilidades2025>.Error("No se encontraron disponibilidades.");
-		return new Result<ListaDisponibilidades2025>.Ok(
-			new ListaDisponibilidades2025(disponibilidades)
+			return new Result<ServicioDisponibilidadesSearcher>.Error("No se encontraron disponibilidades.");
+		return new Result<ServicioDisponibilidadesSearcher>.Ok(
+			new ServicioDisponibilidadesSearcher(disponibilidades)
 		);
 	}
 
-	public static Result<ListaDisponibilidades2025> Buscar(
+	public static Result<ServicioDisponibilidadesSearcher> Buscar(
 		Result<SolicitudDeTurno> solicitudResult,
 		IReadOnlyList<Medico2025> medicos,
-		ListaTurnos2025 turnos,
+		ServicioTurnosManager turnos,
 		int cuantos
 	) {
 		if (solicitudResult is Result<SolicitudDeTurno>.Error err)
-			return new Result<ListaDisponibilidades2025>.Error(err.Mensaje);
+			return new Result<ServicioDisponibilidadesSearcher>.Error(err.Mensaje);
 		SolicitudDeTurno solicitud = ((Result<SolicitudDeTurno>.Ok)solicitudResult).Valor;
 		List<DisponibilidadEspecialidad2025> disponibles = [.. GenerarDisponibilidades(solicitud, medicos, turnos)
 			.OrderBy(d => d.FechaHoraDesde)
 			.Take(cuantos)];
 
-		return ListaDisponibilidades2025.Crear(disponibles);
+		return ServicioDisponibilidadesSearcher.Crear(disponibles);
 	}
 
 }
@@ -93,7 +93,7 @@ public sealed record ListaDisponibilidades2025(
 
 public static class DisponibilidadesExtensions {
 
-	public static Result<DisponibilidadEspecialidad2025> TomarPrimera(this Result<ListaDisponibilidades2025> listadoResult) {
+	public static Result<DisponibilidadEspecialidad2025> TomarPrimera(this Result<ServicioDisponibilidadesSearcher> listadoResult) {
 
 		return listadoResult.Match<Result<DisponibilidadEspecialidad2025>>(
 			ok => {
@@ -110,11 +110,11 @@ public static class DisponibilidadesExtensions {
 		);
 	}
 
-	public static Result<ListaDisponibilidades2025> AplicarFiltrosOpcionales(this Result<ListaDisponibilidades2025> disponibilidadesResult,SolicitudDeTurnoPreferencias preferencias) {
-		if (disponibilidadesResult is Result<ListaDisponibilidades2025>.Error err)
-			return new Result<ListaDisponibilidades2025>.Error(err.Mensaje);
+	public static Result<ServicioDisponibilidadesSearcher> AplicarFiltrosOpcionales(this Result<ServicioDisponibilidadesSearcher> disponibilidadesResult,SolicitudDeTurnoPreferencias preferencias) {
+		if (disponibilidadesResult is Result<ServicioDisponibilidadesSearcher>.Error err)
+			return new Result<ServicioDisponibilidadesSearcher>.Error(err.Mensaje);
 
-		ListaDisponibilidades2025 lista = ((Result<ListaDisponibilidades2025>.Ok)disponibilidadesResult).Valor;
+		ServicioDisponibilidadesSearcher lista = ((Result<ServicioDisponibilidadesSearcher>.Ok)disponibilidadesResult).Valor;
 		IEnumerable<DisponibilidadEspecialidad2025> filtradas = lista.Valores;
 		if (preferencias.DiaPreferido is DiaSemana2025 dia)
 			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia.Valor);
@@ -123,6 +123,6 @@ public static class DisponibilidadesExtensions {
 			filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));
 
 
-		return ListaDisponibilidades2025.Crear([.. filtradas]);
+		return ServicioDisponibilidadesSearcher.Crear([.. filtradas]);
 	}
 }
