@@ -90,24 +90,6 @@ public readonly record struct ProvinciaArgentina2025(
 
 	public static IReadOnlyCollection<string> ProvinciasValidas =>
 		_provinciasPorCodigo.Values;
-
-	// ---------------- FACTORY POR CÓDIGO ----------------
-	//public static Result<ProvinciaArgentina2025> CrearPorCodigo(byte? codigo) {
-	//	if (codigo == null) {
-	//		return new Result<ProvinciaArgentina2025>.Error(
-	//			$"Código de provincia missing: {codigo}."
-	//		);
-	//	}
-
-	//	if (_provinciasPorCodigo.TryGetValue(codigo, out var nombre))
-	//		return new Result<ProvinciaArgentina2025>.Ok(
-	//			new ProvinciaArgentina2025(codigo, nombre)
-	//		);
-
-	//	return new Result<ProvinciaArgentina2025>.Error(
-	//		$"Código de provincia inválido: {codigo}."
-	//	);
-	//}
 	public static Result<ProvinciaArgentina2025> CrearPorCodigo(byte? codigo) {
 		if (codigo is not byte key) {
 			return new Result<ProvinciaArgentina2025>.Error(
