@@ -6,8 +6,8 @@ BEGIN
     SELECT 
         m.Id,
         m.Dni,
-        m.Name,
-        m.LastName,
+        m.Nombre,
+        m.Apellido,
         m.FechaIngreso,
         m.Domicilio,
         m.Localidad,
@@ -15,7 +15,6 @@ BEGIN
         m.Telefono,
         m.EspecialidadCodigoInterno,
         m.Guardia,
-        m.SueldoMinimoGarantizado,
         hm.Id AS HorarioId,
         hm.DiaSemana,
         hm.HoraDesde,

@@ -13,7 +13,6 @@ public record Medico2025(
 		ContactoTelefono2025 Telefono,
 		ListaHorarioMedicos2025 ListaHorarios,
 		FechaIngreso2025 FechaIngreso,
-		MedicoSueldoMinimo2025 SueldoMinimoGarantizado,
 		bool HaceGuardias
 	) {
 	public static Result<Medico2025> Crear(
@@ -24,7 +23,6 @@ public record Medico2025(
 		Result<ContactoTelefono2025> telefonoResult,
 		Result<ListaHorarioMedicos2025> horariosResult,
 		Result<FechaIngreso2025> fechaIngresoResult,
-		Result<MedicoSueldoMinimo2025> sueldoResult,
 		bool haceGuardia
 	) =>
 		from nombre in nombreResult
@@ -34,7 +32,6 @@ public record Medico2025(
 		from tel in telefonoResult
 		from horarios in horariosResult
 		from fechaIng in fechaIngresoResult
-		from sueldo in sueldoResult
 		select new Medico2025(
 			nombre,
 			esp,
@@ -43,12 +40,11 @@ public record Medico2025(
 			tel,
 			horarios,
 			fechaIng,
-			sueldo,
 			haceGuardia
 		);
 }
 
-
+/*
 public readonly record struct MedicoSueldoMinimo2025(
 	double Valor
 ) : IComoTexto {
@@ -88,3 +84,4 @@ public readonly record struct MedicoSueldoMinimo2025(
 	}
 
 }
+*/

@@ -21,10 +21,10 @@ public class AsyncRepositorioDapper {
 		IEnumerable<PacienteDto> pacientes = await repo.GetAll();
 
 		// Convertimos cada DTO a dominio
-		return pacientes
+		return [.. pacientes
 			.Select(
 			x => x.ToDomain()
-		).ToList();
+		)];
 	}
 	public static async Task<List<Result<Medico2025>>> GetMedicos() {
 		IConfiguration config = new ConfigurationBuilder()
@@ -38,26 +38,27 @@ public class AsyncRepositorioDapper {
 
 		IEnumerable<MedicoDto> medicos = await repo.GetAll();
 
-		return medicos
+		return [.. medicos
 			.Select(
 			x => x.ToDomain()
 			// .PrintAndContinue("Medico domainizado")
 			//.GetOrRaise()
-		).ToList();
+		)];
 	}
 	public static async Task<ListaTurnos2025> GetTurnos() {
-		IConfiguration config = new ConfigurationBuilder()
-			.SetBasePath(AppContext.BaseDirectory)
-			.AddJsonFile("appsettings.Development.json", optional: false)
-			.Build();
+		throw new NotImplementedException();
+		//IConfiguration config = new ConfigurationBuilder()
+		//	.SetBasePath(AppContext.BaseDirectory)
+		//	.AddJsonFile("appsettings.Development.json", optional: false)
+		//	.Build();
 
-		IDbConnectionFactory factory = new SqlConnectionFactory(config.GetConnectionString("ClinicaMedica"));
+		//IDbConnectionFactory factory = new SqlConnectionFactory(config.GetConnectionString("ClinicaMedica"));
 
-		TurnoRepository repo = new(factory);
+		//TurnoRepository repo = new(factory);
 
-		IEnumerable<TurnoDto> medicos = await repo.GetAll();
+		//IEnumerable<TurnoDto> medicos = await repo.GetAll();
 
-		return resultados = medicos.Select(x => x.ToDomain().PrintAndContinue("Turno domainizado")).ToList();
+		//return resultados = medicos.Select(x => x.ToDomain().PrintAndContinue("Turno domainizado")).ToList();
 	}
 
 

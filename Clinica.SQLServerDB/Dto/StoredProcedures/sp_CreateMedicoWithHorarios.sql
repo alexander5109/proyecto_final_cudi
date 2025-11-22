@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[sp_CreateMedicoWithHorarios]
-    @Name NVARCHAR(100),
-    @LastName NVARCHAR(100),
+    @Nombre NVARCHAR(100),
+    @Apellido NVARCHAR(100),
     @Dni NVARCHAR(20),
     @ProvinciaCodigo NVARCHAR(100),
     @Domicilio NVARCHAR(200),
@@ -9,7 +9,6 @@
     @Telefono NVARCHAR(50),
     @Guardia BIT,
     @FechaIngreso DATE,
-    @SueldoMinimoGarantizado DECIMAL(18,2),
     @Horarios dbo.HorarioMedicoTableType READONLY   -- <--- tabla de horarios
 AS
 BEGIN
@@ -22,11 +21,11 @@ BEGIN
         -- 1. INSERT DEL MÉDICO
         ---------------------------------------------------
         INSERT INTO [dbo].[Medico]
-            ([Name], [LastName], [Dni], [ProvinciaCodigo], [Domicilio], [Localidad],
-             EspecialidadCodigoInterno, [Telefono], [Guardia], [FechaIngreso], [SueldoMinimoGarantizado])
+            ([Nombre], [Apellido], [Dni], [ProvinciaCodigo], [Domicilio], [Localidad],
+             EspecialidadCodigoInterno, [Telefono], [Guardia], [FechaIngreso])
         VALUES
-            (@Name, @LastName, @Dni, @ProvinciaCodigo, @Domicilio, @Localidad,
-             @EspecialidadCodigoInterno, @Telefono, @Guardia, @FechaIngreso, @SueldoMinimoGarantizado);
+            (@Nombre, @Apellido, @Dni, @ProvinciaCodigo, @Domicilio, @Localidad,
+             @EspecialidadCodigoInterno, @Telefono, @Guardia, @FechaIngreso);
 
         DECLARE @NuevoMedicoId INT = SCOPE_IDENTITY();
 

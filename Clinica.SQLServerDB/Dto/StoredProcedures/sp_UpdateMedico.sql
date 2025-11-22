@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[sp_UpdateMedico]
     @Id INT,
-    @Name NVARCHAR(100),
-    @LastName NVARCHAR(100),
+    @Nombre NVARCHAR(100),
+    @Apellido NVARCHAR(100),
     @Dni NVARCHAR(20),
     @ProvinciaCodigo NVARCHAR(100),
     @Domicilio NVARCHAR(200),
@@ -9,16 +9,15 @@
     @EspecialidadCodigoInterno INT,
     @Telefono NVARCHAR(50),
     @Guardia BIT,
-    @FechaIngreso DATE,
-    @SueldoMinimoGarantizado DECIMAL(18,2)
+    @FechaIngreso DATE
 AS
 BEGIN
     SET NOCOUNT ON;
 
     UPDATE [dbo].[Medico]
     SET 
-        [Name] = @Name,
-        [LastName] = @LastName,
+        [Nombre] = @Nombre,
+        [Apellido] = @Apellido,
         [Dni] = @Dni,
         [ProvinciaCodigo] = @ProvinciaCodigo,
         [Domicilio] = @Domicilio,
@@ -26,8 +25,7 @@ BEGIN
         EspecialidadCodigoInterno = @EspecialidadCodigoInterno,
         [Telefono] = @Telefono,
         [Guardia] = @Guardia,
-        [FechaIngreso] = @FechaIngreso,
-        [SueldoMinimoGarantizado] = @SueldoMinimoGarantizado
+        [FechaIngreso] = @FechaIngreso
     WHERE [Id] = @Id;
 END;
 GO

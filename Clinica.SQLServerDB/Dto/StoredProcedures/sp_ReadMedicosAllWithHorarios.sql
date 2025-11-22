@@ -6,16 +6,14 @@ BEGIN
         M.Id,
         M.EspecialidadCodigoInterno,
         M.Dni,
-        M.Name AS Nombre,
-        M.LastName AS Apellido,
+        M.Nombre AS Nombre,
+        M.Apellido AS Apellido,
         M.FechaIngreso,
         M.Domicilio,
         M.Localidad,
         M.ProvinciaCodigo,
         M.Telefono,
         M.Guardia,
-        M.SueldoMinimoGarantizado,
-
         (
             SELECT 
                 H.Id,
