@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.ListasOrganizadoras;
-using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.PruebasDeConsola;
@@ -14,27 +13,31 @@ public static class MainProgram {
 		Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 
-		List<Result<Paciente2025>> PACIENTES_RESULT = await AsyncRepositorioDapper.GetPacientes();
-
-		IReadOnlyList<Paciente2025> PACIENTES = [.. PACIENTES_RESULT
-			.Select(r => r.PrintAndContinue("Paciente domainizado")
-						  .GetOrRaise())];
-
-		IReadOnlyList<Medico2025> MEDICOS = [.. (await AsyncRepositorioDapper.GetMedicos())
-			.Select(r => r.PrintAndContinue("Medico domainizado")
-						  .GetOrRaise())];
-
-        List<Result<Turno2025>> TURNOS_RESULT = await AsyncRepositorioDapper.GetTurnos(); //hello?
-		List<Turno2025> TURNOS = [.. TURNOS_RESULT
-			.Select(r => r.PrintAndContinue("Turno domainizado")
-						  .GetOrRaise())];
+		IReadOnlyList<Paciente2025> PACIENTES = [.. 
+			(await AsyncRepositorioDapper.GetPacientes())
+			.Select(r => r
+			.PrintAndContinue("Paciente domainizado")
+			.GetOrRaise())
+		];
+		IReadOnlyList<Medico2025> MEDICOS = [.. 
+			(await AsyncRepositorioDapper.GetMedicos())
+			.Select(r => r
+			.PrintAndContinue("Medico domainizado")
+			.GetOrRaise())
+		];
+		List<Turno2025> TURNOS = [.. 
+			(await AsyncRepositorioDapper.GetTurnos())
+			.Select(r => r
+			.PrintAndContinue("Turno domainizado")
+			 .GetOrRaise())
+		];
 
 
 
 		ServicioTurnosManager TURNOS_MANAGER = new(TURNOS);
 
 		Result<SolicitudDeTurno> solicitudPaciente1 = SolicitudDeTurno.Crear(
-				PACIENTES_RESULT[0].GetOrRaise().Id,
+				PACIENTES[0].Id,
 				EspecialidadMedica2025.ClinicoGeneral,
 				DateTime.Now
 			)
@@ -65,7 +68,7 @@ public static class MainProgram {
 
 		// Paciente quiere reprogramar.
 		Result<SolicitudDeTurno> solicitudPaciente1_reprogramacion = SolicitudDeTurno.Crear(
-			PACIENTES_RESULT[0].GetOrRaise().Id,
+			PACIENTES[0].Id,
 			EspecialidadMedica2025.ClinicoGeneral,
 			DateTime.Now.AddDays(1)
 		).PrintAndContinue("paciente1 intenta solicitar un nuevo turno: ");

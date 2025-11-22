@@ -5,7 +5,7 @@ using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Dominio.Servicios;
+namespace Clinica.Dominio.ListasOrganizadoras;
 
 public sealed record ServicioDisponibilidadesSearcher(
 	IReadOnlyList<DisponibilidadEspecialidad2025> Valores

@@ -3,7 +3,6 @@ using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows;
-using Clinica.Dominio.ListasOrganizadoras;
 
 namespace Clinica.AppWPF.ViewModels;
 //---------------------------------Tablas.WindowListarTurnos-------------------------------//

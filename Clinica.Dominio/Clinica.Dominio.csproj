@@ -8,4 +8,8 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Servicios\" />
+  </ItemGroup>
+
 </Project>

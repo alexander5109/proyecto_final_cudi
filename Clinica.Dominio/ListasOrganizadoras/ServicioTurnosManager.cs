@@ -4,7 +4,7 @@ using Clinica.Dominio.ListasOrganizadoras;
 using Clinica.Dominio.TiposDeValor;
 
 
-namespace Clinica.Dominio.Servicios;
+namespace Clinica.Dominio.ListasOrganizadoras;
 
 public class ServicioTurnosManager(
 	List<Turno2025> Valores
@@ -20,6 +20,19 @@ public class ServicioTurnosManager(
 			mensaje => new Result<ServicioTurnosManager>.Error(mensaje)
 		);
 	}
+
+	public Result<Turno2025> SolicitarYAgendarTurno(
+		Result<SolicitudDeTurno> solicitud, int cantidadDias) {
+		var disp = ListaDisponibilidades2025
+			.Buscar(solicitud, _medicos, this, cantidadDias)
+			.TomarPrimera();
+
+		return disp.Then(d => Turno2025.Crear(solicitud, d))
+				   .Then(t => AgendarTurno(t));
+	}
+
+
+
 
 	public Result<ServicioTurnosManager> CancelarTurno(
 		Result<Turno2025> turnoResult,
