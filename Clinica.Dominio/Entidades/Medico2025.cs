@@ -7,16 +7,16 @@ namespace Clinica.Dominio.Entidades;
 
 public record struct MedicoId(int Id);
 public record Medico2025(
-		MedicoId Id,
-		NombreCompleto2025 NombreCompleto,
-		ListaEspecialidadesMedicas2025 Especialidades,
-		DniArgentino2025 Dni,
-		DomicilioArgentino2025 Domicilio,
-		ContactoTelefono2025 Telefono,
-		ListaHorarioMedicos2025 ListaHorarios,
-		FechaIngreso2025 FechaIngreso,
-		bool HaceGuardias
-	) {
+	MedicoId Id,
+	NombreCompleto2025 NombreCompleto,
+	ListaEspecialidadesMedicas2025 Especialidades,
+	DniArgentino2025 Dni,
+	DomicilioArgentino2025 Domicilio,
+	ContactoTelefono2025 Telefono,
+	ListaHorarioMedicos2025 ListaHorarios,
+	FechaIngreso2025 FechaIngreso,
+	bool HaceGuardias
+) {
 	public static Result<Medico2025> Crear(
 		MedicoId id,
 		Result<NombreCompleto2025> nombreResult,

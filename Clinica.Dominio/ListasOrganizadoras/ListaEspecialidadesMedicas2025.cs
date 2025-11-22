@@ -43,12 +43,12 @@ public sealed record ListaEspecialidadesMedicas2025(
 		);
 }
 
-public readonly record struct EspecialidadCodigoInterno(int Valor);
+public readonly record struct EspecialidadCodigoInterno(byte Valor);
 
 public sealed record EspecialidadMedica2025(EspecialidadCodigoInterno CodigoInterno, string Titulo, int DuracionConsultaMinutos) : IComoTexto {
 	public string ATexto() => $"{Titulo} (Duración de consulta: {DuracionConsultaMinutos} min)";
 
-	private EspecialidadMedica2025(int id, string titulo, int duracion) : this(new EspecialidadCodigoInterno(id), titulo, duracion) {
+	private EspecialidadMedica2025(byte id, string titulo, int duracion) : this(new EspecialidadCodigoInterno(id), titulo, duracion) {
 	}
 
 	public static readonly EspecialidadMedica2025 ClinicoGeneral = new(1, "Clínico General", 30);
