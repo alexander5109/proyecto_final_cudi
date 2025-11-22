@@ -19,14 +19,4 @@ public class PacienteRepository {
 			commandType: CommandType.StoredProcedure
 		);
 	}
-
-	public async Task<PacienteDto?> GetById(int id) {
-		using var conn = _factory.CreateConnection();
-
-		return await conn.QueryFirstOrDefaultAsync<PacienteDto>(
-			"sp_ReadPacienteById",
-			new { Id = id },
-			commandType: CommandType.StoredProcedure
-		);
-	}
 }

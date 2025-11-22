@@ -38,25 +38,6 @@ public record Turno2025(
 			$"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
 			$"  • OutcomeEstado: {OutcomeEstado}";
 	}
-
-	//public static Result<Turno2025> ReprogramarDesde(
-	//	Turno2025 turnoOriginal,
-	//	DisponibilidadEspecialidad2025 nuevaDisp
-	//) {
-	//	return new Result<Turno2025>.Ok(new Turno2025(
-	//		Guid: Guid.NewGuid(),
-	//		FechaDeCreacion: DateTime.Now,
-	//		Paciente: turnoOriginal.Paciente,
-	//		MedicoAsignado: nuevaDisp.Medico,
-	//		Especialidad: nuevaDisp.Especialidad,
-	//		FechaHoraAsignadaDesde: nuevaDisp.FechaHoraDesde,
-	//		FechaHoraAsignadaHasta: nuevaDisp.FechaHoraHasta,
-	//		OutcomeEstado: TurnoEstado2025.Programado,
-	//		OutcomeFecha: Option<DateTime>.None,
-	//		OutcomeComentario: Option<string>.None
-	//	));
-	//}
-
 	public static Result<Turno2025> Crear(
 		Result<SolicitudDeTurno> solicitudResult,
 		Result<DisponibilidadEspecialidad2025> dispResult
@@ -91,4 +72,25 @@ public record Turno2025(
 		}
 		return new Result<Turno2025>.Ok(this with { OutcomeEstado = outcomeEstado, OutcomeComentario = outcomeComentario, OutcomeFecha = outcomeFecha });
 	}
+
+
+
+	//public static Result<Turno2025> ReprogramarDesde(
+	//	Turno2025 turnoOriginal,
+	//	DisponibilidadEspecialidad2025 nuevaDisp
+	//) {
+	//	return new Result<Turno2025>.Ok(new Turno2025(
+	//		Guid: Guid.NewGuid(),
+	//		FechaDeCreacion: DateTime.Now,
+	//		Paciente: turnoOriginal.Paciente,
+	//		MedicoAsignado: nuevaDisp.Medico,
+	//		Especialidad: nuevaDisp.Especialidad,
+	//		FechaHoraAsignadaDesde: nuevaDisp.FechaHoraDesde,
+	//		FechaHoraAsignadaHasta: nuevaDisp.FechaHoraHasta,
+	//		OutcomeEstado: TurnoEstado2025.Programado,
+	//		OutcomeFecha: Option<DateTime>.None,
+	//		OutcomeComentario: Option<string>.None
+	//	));
+	//}
+
 }

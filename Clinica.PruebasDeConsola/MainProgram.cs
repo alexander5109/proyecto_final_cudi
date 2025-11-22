@@ -13,7 +13,6 @@ public static class MainProgram {
 		Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 
-		//IReadOnlyList<Paciente2025> PACIENTES = (await AsyncRepositorioHardCoded.GetPacientes())
 		List<Result<Paciente2025>> PACIENTES_RESULT = await AsyncRepositorioDapper.GetPacientes();
 		IReadOnlyList<Paciente2025> PACIENTES = [.. PACIENTES_RESULT
 			.Select(r => r.PrintAndContinue("Paciente domainizado")
@@ -23,7 +22,7 @@ public static class MainProgram {
 			.Select(r => r.PrintAndContinue("Medico domainizado")
 						  .GetOrRaise())];
 
-		ListaTurnos2025 TURNOS = await AsyncRepositorioHardCoded.GetTurnos();
+		ListaTurnos2025 TURNOS = await AsyncRepositorioDapper.GetTurnos(); //hello?
 
 		Result<SolicitudDeTurno> solicitudPaciente1 = SolicitudDeTurno.Crear(
 				PACIENTES_RESULT[0],

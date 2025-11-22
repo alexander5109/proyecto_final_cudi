@@ -4,14 +4,14 @@
     Id INT IDENTITY(1,1) PRIMARY KEY,
 
     -- Relaciones con entidades del dominio
-    FechaDeCreacion DATETIME NOT NULL,
+    FechaDeCreacion DATETIME2(1) NOT NULL,
     PacienteId INT NOT NULL,
     MedicoId   INT NOT NULL,
     EspecialidadCodigo INT NOT NULL,
 
     -- Datos de programación del turno
-    FechaHoraAsignadaDesde DATETIME NOT NULL,
-    FechaHoraAsignadaHasta DATETIME NOT NULL,
+    FechaHoraAsignadaDesde DATETIME2(0) NOT NULL,
+    FechaHoraAsignadaHasta DATETIME2(0) NOT NULL,
 
     -- ---------------------------
     -- Resultado final del turno
@@ -21,7 +21,7 @@
     -- 3 = Ausente
     -- 4 = Concretado
     OutcomeEstado TINYINT NOT NULL DEFAULT 1,
-    OutcomeFecha DATETIME NULL,
+    OutcomeFecha DATETIME2(1) NULL,
     OutcomeComentario NVARCHAR(280) NULL,
 
     -- ---------------------------
