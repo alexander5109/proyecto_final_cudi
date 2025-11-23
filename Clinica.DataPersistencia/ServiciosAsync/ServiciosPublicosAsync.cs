@@ -8,7 +8,7 @@ using Clinica.Infrastructure.Persistencia;
 
 namespace Clinica.Infrastructure.ServiciosAsync;
 
-public class ServicioCasosDeUsoAsync(
+public class ServiciosPublicosAsync(
 	MedicoRepository medicos,
 	TurnoRepository turnos
 ) {
@@ -20,7 +20,7 @@ public class ServicioCasosDeUsoAsync(
 		EspecialidadMedica2025 especialidad,
 		DateTime fechaSolicitud
 	) {
-		IEnumerable<MedicoDto> medicosDtos = await _medicosDapper.GetPorEspecialidad(especialidad);
+		IEnumerable<MedicoDto> medicosDtos = await _medicosDapper.ReadMedicosFullWhereEspecialidad(especialidad);
 		IEnumerable<TurnoDto> turnosDtos = await _turnosDapper.GetTurnosPorMedicos(
 			medicosDtos.Select(medicoDto => medicoDto.Id)
 		);
@@ -48,7 +48,7 @@ public class ServicioCasosDeUsoAsync(
 				return new Result<Turno2025>.Error($"SolicitarReprogramacionALaPrimeraDisponibilidad fallido porque turno ya traia error: \n{turnoError.Mensaje}");
 			}
 			case Result<Turno2025>.Ok turnoOk: {
-				IEnumerable<MedicoDto> medicosDtos = await _medicosDapper.GetPorEspecialidad(turnoOk.Valor.Especialidad);
+				IEnumerable<MedicoDto> medicosDtos = await _medicosDapper.ReadMedicosFullWhereEspecialidad(turnoOk.Valor.Especialidad);
 				IEnumerable<TurnoDto> turnosDtos = await _turnosDapper.GetTurnosPorMedicos(
 					medicosDtos.Select(medicoDto => medicoDto.Id)
 				);
@@ -80,7 +80,7 @@ public class ServicioCasosDeUsoAsync(
 					medicos,
 					turnos,
 					funcUpdateTurno: _turnosDapper.UpdateTurno,
-					funcInsertTurno: _turnosDapper.InsertTurno
+					funcInsertTurno: _turnosDapper.CreateTurno
 				);
 			}
 			default: throw new InvalidOperationException(); //impossible to occur
@@ -93,7 +93,7 @@ public class ServicioCasosDeUsoAsync(
 				return new Result<Turno2025>.Error($"SolicitarCancelacion fallido porque turno ya traia error: \n{turnoError.Mensaje}");
 			}
 			case Result<Turno2025>.Ok turnoOk: {
-				IEnumerable<MedicoDto> medicosDtos = await _medicosDapper.GetPorEspecialidad(turnoOk.Valor.Especialidad);
+				IEnumerable<MedicoDto> medicosDtos = await _medicosDapper.ReadMedicosFullWhereEspecialidad(turnoOk.Valor.Especialidad);
 				IEnumerable<TurnoDto> turnosDtos = await _turnosDapper.GetTurnosPorMedicos(
 					medicosDtos.Select(medicoDto => medicoDto.Id)
 				);

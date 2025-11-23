@@ -34,7 +34,7 @@ public class AsyncRepositorioDapper {
 
 		MedicoRepository repo = new(factory);
 
-		IEnumerable<MedicoDto> medicos = await repo.ReadMedicosAllWithHorarios();
+		IEnumerable<MedicoDto> medicos = await repo.ReadMedicosFull();
 
 		return [.. medicos
 			.Select(

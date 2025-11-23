@@ -3,7 +3,6 @@ using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Newtonsoft.Json.Linq;
 
 namespace Clinica.Infrastructure.Persistencia;
 
@@ -28,7 +27,7 @@ public class TurnoRepository(IDbConnectionFactory factory) {
 		);
 	}
 
-	public async Task<Result<TurnoId>> InsertTurno(Turno2025 turno) {
+	public async Task<Result<TurnoId>> CreateTurno(Turno2025 turno) {
 		try {
 			using IDbConnection conn = _factory.CreateConnection();
 			var parameters = new DynamicParameters();

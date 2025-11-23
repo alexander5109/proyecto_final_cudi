@@ -67,7 +67,6 @@
     <Build Include="Dto\Tables\Medico.sql" />
     <Build Include="Dto\Tables\Paciente.sql" />
     <Build Include="Dto\Tables\Turno.sql" />
-    <Build Include="Dto\StoredProcedures\sp_CambiarEstadoTurno.sql" />
     <Build Include="Dto\StoredProcedures\sp_CreateHorarioMedico.sql" />
     <Build Include="Dto\StoredProcedures\sp_CreateMedico.sql" />
     <Build Include="Dto\StoredProcedures\sp_CreateMedicoWithHorarios.sql" />
@@ -87,6 +86,7 @@
     <Build Include="Dto\StoredProcedures\sp_UpdateMedicoWithHorarios.sql" />
     <Build Include="Dto\StoredProcedures\sp_UpdatePaciente.sql" />
     <Build Include="Dto\UserDefinedTableTypes\HorarioMedicoTableType.sql" />
+    <Build Include="Dto\StoredProcedures\sp_UpdateTurno.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publications\Clinica.SQLServerDB.publish.xml" />

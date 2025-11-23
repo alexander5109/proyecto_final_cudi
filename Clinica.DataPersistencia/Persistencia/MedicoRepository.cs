@@ -12,20 +12,20 @@ public class MedicoRepository {
 		_factory = factory;
 	}
 
-	public async Task<IEnumerable<MedicoDto>> ReadMedicosAllWithHorarios() {
+	public async Task<IEnumerable<MedicoDto>> ReadMedicosFull() {
 		using IDbConnection conn = _factory.CreateConnection();
 
 		return await conn.QueryAsync<MedicoDto>(
-			"sp_ReadMedicosAllWithHorarios",
+			"sp_ReadMedicosFull",
 			commandType: CommandType.StoredProcedure
 		);
 	}
 
-	public async Task<IEnumerable<MedicoDto>> GetPorEspecialidad(EspecialidadMedica2025 especialidad) {
+	public async Task<IEnumerable<MedicoDto>> ReadMedicosFullWhereEspecialidad(EspecialidadMedica2025 especialidad) {
 		using IDbConnection conn = _factory.CreateConnection();
 
 		return await conn.QueryAsync<MedicoDto>(
-			"sp_ReadMedicosPorEspecialidad",
+			"sp_ReadMedicosFullWhereEspecialidad",
 			commandType: CommandType.StoredProcedure
 		);
 	}
