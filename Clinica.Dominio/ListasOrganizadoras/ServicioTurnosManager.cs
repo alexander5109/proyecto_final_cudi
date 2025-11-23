@@ -1,101 +1,37 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
-using System.Reflection.Metadata.Ecma335;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.ListasOrganizadoras;
 using Clinica.Dominio.TiposDeValor;
 
 
 namespace Clinica.Dominio.ListasOrganizadoras;
 
-public class ServicioTurnosManager(
-	List<Turno2025> Turnos,
-	IReadOnlyList<Medico2025> Medicos
-//,IReadOnlyList<Paciente2025> Pacientes
-) {
-	public static Result<ServicioTurnosManager> CrearServicio(
-		List<Result<Turno2025>> turnos
-		, IReadOnlyList<Result<Medico2025>> medicos
-	//,IReadOnlyList<Result<Paciente2025>> pacientes
-	) {
-		List<string> errores = [];
-
-		// --- recopilar errores de turnos ---
-		foreach (Result<Turno2025> turno in turnos) {
-			if (turno is Result<Turno2025>.Error err)
-				errores.Add(err.Mensaje);
-			turno.PrintAndContinue("Turno domainizado");
-		}
-
-		// --- recopilar errores de medicos ---
-		foreach (Result<Medico2025> medico in medicos) {
-			if (medico is Result<Medico2025>.Error err)
-				errores.Add(err.Mensaje);
-			medico.PrintAndContinue("Medico domainizado");
-		}
-
-		// --- recopilar errores de pacientes ---
-		//foreach (Result<Paciente2025> paciente in pacientes) {
-		//	if (paciente is Result<Paciente2025>.Error err)
-		//		errores.Add(err.Mensaje);
-		//	paciente.PrintAndContinue("Paciente domainizado");
-		//}
-
-		// --- si hubo errores, devolverlos todos juntos ---
-		if (errores.Count > 0)
-			return new Result<ServicioTurnosManager>.Error(string.Join("; ", errores));
-
-		// --- desempaquetar valores OK ---
-		List<Turno2025> turnosOk = [.. turnos
-			.Cast<Result<Turno2025>.Ok>()
-			.Select(ok => ok.Valor)];
-
-		ReadOnlyCollection<Medico2025> medicosOk = medicos
-			.Cast<Result<Medico2025>.Ok>()
-			.Select(ok => ok.Valor)
-			.ToList()
-			.AsReadOnly();
-
-		//ReadOnlyCollection<Paciente2025> pacientesOk = pacientes
-		//	.Cast<Result<Paciente2025>.Ok>()
-		//	.Select(ok => ok.Valor)
-		//	.ToList()
-		//	.AsReadOnly();
-
-		// --- crear instancia ---
-		return new Result<ServicioTurnosManager>.Ok(
-			new ServicioTurnosManager(
-				turnosOk,
-				medicosOk
-			//,pacientesOk
-			)
-		);
-	}
+public static class ServicioTurnosManager {
 
 
-
-
-
-
-	private Result<ServicioTurnosManager> _AgendarTurno(Result<Turno2025> turnoResult) {
-		return turnoResult.Match<Result<ServicioTurnosManager>>(
-			ok => {
-				Turnos.Add(ok);
-				return new Result<ServicioTurnosManager>.Ok(this);
-			},
-			mensaje => new Result<ServicioTurnosManager>.Error(mensaje)
-		);
-	}
-
-
-	public Result<IReadOnlyList<DisponibilidadEspecialidad2025>> SolicitarDisponibilidadesPara(
+	public static Result<IReadOnlyList<DisponibilidadEspecialidad2025>> SolicitarDisponibilidadesPara(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
-		int cuantos
+		int cuantos,
+		IReadOnlyList<Result<Medico2025>> medicosResults,
+		IReadOnlyList<Result<Turno2025>> turnosResults
 	) {
-		IReadOnlyList<DisponibilidadEspecialidad2025> disponibles = [.. _GenerarDisponibilidades(solicitudEspecialidad, solicitudFechaCreacion)
+		Result<IReadOnlyList<Medico2025>> medicosVerificados = ServicioTurnosManager._ValidarMedicos(medicosResults);
+		if (medicosVerificados.IsError) {
+			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Medico2025>>.Error)medicosVerificados).Mensaje}");
+		}
+		IReadOnlyList<Medico2025> medicos = ((Result<IReadOnlyList<Medico2025>>.Ok)medicosVerificados).Valor;
+
+
+
+		Result<IReadOnlyList<Turno2025>> turnosVerificados = ServicioTurnosManager._ValidarTurnos(turnosResults);
+		if (turnosVerificados.IsError) {
+			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Turno2025>>.Error)turnosVerificados).Mensaje}");
+		}
+		IReadOnlyList<Turno2025> turnos = ((Result<IReadOnlyList<Turno2025>>.Ok)turnosVerificados).Valor;
+
+
+
+		IReadOnlyList<DisponibilidadEspecialidad2025> disponibles = [.. _GenerarDisponibilidades(solicitudEspecialidad, solicitudFechaCreacion, medicos, turnos)
 			.OrderBy(d => d.FechaHoraDesde)
 			.Take(cuantos)];
 		if (disponibles.Count > 0) {
@@ -106,9 +42,253 @@ public class ServicioTurnosManager(
 	}
 
 
+	public static Result<Turno2025> SolicitarTurnoEnLaPrimeraDisponibilidad(
+		PacienteId pacienteId,
+		EspecialidadMedica2025 especialidadMedica,
+		DateTime when,
+		IReadOnlyList<Result<Medico2025>> medicosResults,
+		IReadOnlyList<Result<Turno2025>> turnosResults
+	) {
+		//Faltaria validacion pacienteId in Pacientes.
 
-	private IEnumerable<DisponibilidadEspecialidad2025> _GenerarDisponibilidades(EspecialidadMedica2025 solicitudEspecialidad, DateTime solicitudFechaCreacion) {
-		foreach (Medico2025 medico in Medicos)
+		Result<IReadOnlyList<Medico2025>> medicosVerificados = _ValidarMedicos(medicosResults);
+		if (medicosVerificados.IsError) {
+			return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Medico2025>>.Error)medicosVerificados).Mensaje}");
+		}
+		IReadOnlyList<Medico2025> medicos = ((Result<IReadOnlyList<Medico2025>>.Ok)medicosVerificados).Valor;
+
+
+
+
+
+		Result<IReadOnlyList<Turno2025>> turnosVerificados = _ValidarTurnos(turnosResults);
+		if (turnosVerificados.IsError) {
+			return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Turno2025>>.Error)turnosVerificados).Mensaje}");
+		}
+		IReadOnlyList<Turno2025> turnos = ((Result<IReadOnlyList<Turno2025>>.Ok)turnosVerificados).Valor;
+
+
+
+
+
+		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1 = _EncontrarProximaDisponibilidad(especialidadMedica, when, medicos, turnos);
+
+		Result<Turno2025> turno = Turno2025.Crear(new TurnoId(1), pacienteId, when, disponibilidadParaPaciente1);
+
+		//TO-DO POST
+		//_AgendarTurno(turno, turnos).PrintAndContinue("Agendando medico: ");
+
+		return turno;
+	}
+
+	public static Result<Turno2025> SolicitarReprogramacionALaPrimeraDisponibilidad(
+		Result<Turno2025> turnoOriginalResult,
+		DateTime when,
+		string why,
+		IReadOnlyList<Result<Medico2025>> medicosResults,
+		IReadOnlyList<Result<Turno2025>> turnosResults
+	) {
+		Result<IReadOnlyList<Turno2025>> turnosVerificados = _ValidarTurnos(turnosResults);
+		if (turnosVerificados.IsError) {
+			return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Turno2025>>.Error)turnosVerificados).Mensaje}");
+		}
+		IReadOnlyList<Turno2025> turnos = ((Result<IReadOnlyList<Turno2025>>.Ok)turnosVerificados).Valor;
+
+
+		//Faltaria validacion pacienteId in Pacientes.
+
+
+
+		Result<IReadOnlyList<Medico2025>> medicosVerificados = _ValidarMedicos(medicosResults);
+		if (medicosVerificados.IsError) {
+			return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Medico2025>>.Error)medicosVerificados).Mensaje}");
+		}
+		IReadOnlyList<Medico2025> medicos = ((Result<IReadOnlyList<Medico2025>>.Ok)medicosVerificados).Valor;
+
+
+
+
+		if (turnoOriginalResult.IsError) {
+			return new Result<Turno2025>.Error($"No se puede reprogramar un medico con errores previos: {((Result<Turno2025>.Error)turnoOriginalResult).Mensaje}");
+		}
+		Turno2025 turnoOriginal = ((Result<Turno2025>.Ok)turnoOriginalResult).Valor;
+
+
+		Result<Turno2025> turnoCanceladoResult = _CambiarEstadoInterno(turnoOriginal, TurnoOutcomeEstado2025.Reprogramado, when, why, turnos);
+		if (turnoCanceladoResult.IsError) return turnoCanceladoResult;
+		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)turnoCanceladoResult).Valor;
+
+		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1_reprogramado = _EncontrarProximaDisponibilidad(turnoCancelado.Especialidad, when, medicos, turnos);
+
+
+		Result<Turno2025> nuevoTurno = Turno2025.Crear(new TurnoId(2), turnoCancelado.PacienteId, when, disponibilidadParaPaciente1_reprogramado)
+			.PrintAndContinue("Creando nuevo medico: ");
+
+		//TO-DO POST
+		//_AgendarTurno(nuevoTurno, turnos).PrintAndContinue("Agendando nuevo medico: ");
+
+		return nuevoTurno;
+	}
+
+	public static Result<Turno2025> SolicitarCancelacion(
+		Result<Turno2025> turnoOriginalResult,
+		DateTime solicitudFecha,
+		string solicitudReason,
+		IReadOnlyList<Result<Turno2025>> turnosResults
+
+	) {
+		if (turnoOriginalResult.IsError) {
+			return new Result<Turno2025>.Error($"No se puede reprogramar un medico con errores previos: {((Result<Turno2025>.Error)turnoOriginalResult).Mensaje}");
+		}
+		Turno2025 turnoOriginal = ((Result<Turno2025>.Ok)turnoOriginalResult).Valor;
+
+
+
+
+		Result<IReadOnlyList<Turno2025>> turnosVerificados = _ValidarTurnos(turnosResults);
+		if (turnosVerificados.IsError) {
+			return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Turno2025>>.Error)turnosVerificados).Mensaje}");
+		}
+		IReadOnlyList<Turno2025> turnos = ((Result<IReadOnlyList<Turno2025>>.Ok)turnosVerificados).Valor;
+
+
+
+		return _CambiarEstadoInterno(turnoOriginal, TurnoOutcomeEstado2025.Cancelado, solicitudFecha, solicitudReason, turnos);
+	}
+
+
+
+
+	//------------------------------------------------PRIVATE-------------------------------------------------------//
+	private static Result<IReadOnlyList<Turno2025>> _ValidarTurnos(IReadOnlyList<Result<Turno2025>> turnosResults) {
+		List<string> errores = [];
+		foreach (Result<Turno2025> turno in turnosResults) {
+			if (turno is Result<Turno2025>.Error err)
+				errores.Add(err.Mensaje);
+			turno.PrintAndContinue("Turno domainizado");
+		}
+		if (errores.Count > 0)
+			return new Result<IReadOnlyList<Turno2025>>.Error(string.Join("; ", errores));
+		IReadOnlyList<Turno2025> turnosOk = [.. turnosResults
+			.Cast<Result<Turno2025>.Ok>()
+			.Select(ok => ok.Valor)];
+		return new Result<IReadOnlyList<Turno2025>>.Ok(turnosOk);
+	}
+
+	private static Result<IReadOnlyList<Paciente2025>> _ValidaPacientes(IReadOnlyList<Result<Paciente2025>> pacientesResults) {
+		List<string> errores = [];
+		foreach (Result<Paciente2025> paciente in pacientesResults) {
+			if (paciente is Result<Paciente2025>.Error err)
+				errores.Add(err.Mensaje);
+			paciente.PrintAndContinue("Paciente domainizado");
+		}
+		if (errores.Count > 0)
+			return new Result<IReadOnlyList<Paciente2025>>.Error(string.Join("; ", errores));
+		IReadOnlyList<Paciente2025> pacientesOk = [.. pacientesResults
+			.Cast<Result<Paciente2025>.Ok>()
+			.Select(ok => ok.Valor)];
+		return new Result<IReadOnlyList<Paciente2025>>.Ok(pacientesOk);
+	}
+
+
+	private static Result<IReadOnlyList<Medico2025>> _ValidarMedicos(IReadOnlyList<Result<Medico2025>> medicosResults) {
+		List<string> errores = [];
+		foreach (Result<Medico2025> medico in medicosResults) {
+			if (medico is Result<Medico2025>.Error err)
+				errores.Add(err.Mensaje);
+			medico.PrintAndContinue("Medico domainizado");
+		}
+		if (errores.Count > 0)
+			return new Result<IReadOnlyList<Medico2025>>.Error(string.Join("; ", errores));
+		IReadOnlyList<Medico2025> medicosOk = [.. medicosResults
+			.Cast<Result<Medico2025>.Ok>()
+			.Select(ok => ok.Valor)];
+		return new Result<IReadOnlyList<Medico2025>>.Ok(medicosOk);
+	}
+
+
+	private static Result<Turno2025> _AgendarTurno(Result<Turno2025> turnoResult, List<Turno2025> turnos) {
+		return turnoResult.Match<Result<Turno2025>>(
+			ok => {
+				turnos.Add(ok);
+				return turnoResult;
+			},
+			mensaje => turnoResult
+		);
+	}
+
+	private static Result<DisponibilidadEspecialidad2025> _EncontrarProximaDisponibilidad(
+		EspecialidadMedica2025 solicitudEspecialidad,
+		DateTime solicitudFechaCreacion,
+		IReadOnlyList<Medico2025> medicos,
+		IReadOnlyList<Turno2025> turnos
+	) {
+		DisponibilidadEspecialidad2025? proxima = _GenerarDisponibilidades(solicitudEspecialidad, solicitudFechaCreacion, medicos, turnos).FirstOrDefault();
+		if (proxima is null)
+			return new Result<DisponibilidadEspecialidad2025>.Error("No se encontraron disponibilidades");
+		return new Result<DisponibilidadEspecialidad2025>.Ok((DisponibilidadEspecialidad2025)proxima);
+	}
+
+
+
+	private static Result<Turno2025> _CambiarEstadoInterno(
+		Turno2025 turnoOriginal,
+		TurnoOutcomeEstado2025 outcomeEstado,
+		DateTime outcomeFecha,
+		string outcomeComentario,
+		IReadOnlyList<Turno2025> turnos
+	) {
+
+		//Why can't we use .FindIndex over IReadOnlyList?
+		int idx = turnos.ToList().FindIndex(t => t.Id == turnoOriginal.Id);
+		if (idx == -1)
+			return new Result<Turno2025>.Error("El medico no existe en esta ListaTurnos.");
+
+		Result<Turno2025> nuevoTurnoResult = turnoOriginal.CambiarEstado(outcomeEstado, outcomeFecha, outcomeComentario);
+		//if (nuevoTurnoResult.IsOk) {
+		//	turnos.RemoveAt(idx);
+		//	turnos.Add(((Result<Turno2025>.Ok)nuevoTurnoResult).Valor);
+		//}
+		//IRRELEVANT IF INMUTABLE
+		return nuevoTurnoResult;
+	}
+
+	private static bool _DisponibilidadNoColisiona(
+		MedicoId medicoId,
+		EspecialidadMedica2025 especialidad,
+		DateTime fechaHoraDesde,
+		DateTime fechaHoraHasta,
+		IReadOnlyList<Turno2025> turnos
+	) {
+		//Faltaria validacion medicoId in Medicos
+
+		foreach (Turno2025 turno in turnos) {
+
+			// 1) Debe ser del mismo médico y especialidad
+			if (turno.MedicoId != medicoId) continue;
+			if (turno.Especialidad != especialidad) continue;
+
+			// 2) Solo los medicosResults programados bloquean agenda
+			if (turno.OutcomeEstado != TurnoOutcomeEstado2025.Programado) continue;
+
+			// 3) Chequeo de solapamiento clásico
+			bool solapa =
+				turno.FechaHoraAsignadaDesde < fechaHoraHasta &&
+				fechaHoraDesde < turno.FechaHoraAsignadaHasta;
+
+			if (solapa)
+				return false;
+		}
+
+		return true;
+	}
+	private static IEnumerable<DisponibilidadEspecialidad2025> _GenerarDisponibilidades(
+		EspecialidadMedica2025 solicitudEspecialidad,
+		DateTime solicitudFechaCreacion,
+		IReadOnlyList<Medico2025> medicos,
+		IReadOnlyList<Turno2025> turnos
+	) {
+		foreach (Medico2025 medico in medicos)
 			foreach (EspecialidadMedica2025 especialidad in medico.Especialidades.Valores) {
 				if (especialidad != solicitudEspecialidad)
 					continue;
@@ -139,7 +319,7 @@ public class ServicioTurnosManager(
 							);
 
 							// chequeo de colisión inline
-							if (!_DisponibilidadNoColisiona(disp.MedicoId, disp.Especialidad, disp.FechaHoraDesde, disp.FechaHoraHasta))
+							if (!_DisponibilidadNoColisiona(disp.MedicoId, disp.Especialidad, disp.FechaHoraDesde, disp.FechaHoraHasta, turnos))
 								continue;
 
 							yield return disp;
@@ -150,141 +330,11 @@ public class ServicioTurnosManager(
 	}
 
 
-	private Result<DisponibilidadEspecialidad2025> _EncontrarProximaDisponibilidad(
-		EspecialidadMedica2025 solicitudEspecialidad,
-		DateTime solicitudFechaCreacion
-	) {
-		DisponibilidadEspecialidad2025? proxima = _GenerarDisponibilidades(solicitudEspecialidad, solicitudFechaCreacion).FirstOrDefault();
-		if (proxima is null)
-			return new Result<DisponibilidadEspecialidad2025>.Error("No se encontraron disponibilidades");
-		return new Result<DisponibilidadEspecialidad2025>.Ok((DisponibilidadEspecialidad2025)proxima);
-	}
 
 
 
-	private Result<Turno2025> _CambiarEstadoInterno(
-		Turno2025 turnoOriginal,
-		TurnoOutcomeEstado2025 outcomeEstado,
-		DateTime outcomeFecha,
-		string outcomeComentario
-	) {
-		int idx = Turnos.FindIndex(t => t.Id == turnoOriginal.Id);
-		if (idx == -1)
-			return new Result<Turno2025>.Error("El turno no existe en esta ListaTurnos.");
-
-		Result<Turno2025> nuevoTurnoResult = turnoOriginal.CambiarEstado(outcomeEstado, outcomeFecha, outcomeComentario);
-		if (nuevoTurnoResult.IsOk) {
-			Turnos.RemoveAt(idx);
-			Turnos.Add(((Result<Turno2025>.Ok)nuevoTurnoResult).Valor);
-		}
-		return nuevoTurnoResult;
-	}
-
-	private bool _DisponibilidadNoColisiona(MedicoId medicoId, EspecialidadMedica2025 especialidad, DateTime fechaHoraDesde, DateTime fechaHoraHasta) {
-		//Faltaria validacion medicoId in Medicos
-
-		foreach (Turno2025 turno in Turnos) {
-
-			// 1) Debe ser del mismo médico y especialidad
-			if (turno.MedicoId != medicoId) continue;
-			if (turno.Especialidad != especialidad) continue;
-
-			// 2) Solo los turnos programados bloquean agenda
-			if (turno.OutcomeEstado != TurnoOutcomeEstado2025.Programado) continue;
-
-			// 3) Chequeo de solapamiento clásico
-			bool solapa =
-				turno.FechaHoraAsignadaDesde < fechaHoraHasta &&
-				fechaHoraDesde < turno.FechaHoraAsignadaHasta;
-
-			if (solapa)
-				return false;
-		}
-
-		return true;
-	}
-
-	public Result<Turno2025> SolicitarTurnoEnLaPrimeraDisponibilidad(PacienteId pacienteId, EspecialidadMedica2025 especialidadMedica, DateTime when) {
-		//Faltaria validacion pacienteId in Pacientes
-
-		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1 = _EncontrarProximaDisponibilidad(especialidadMedica, when);
-
-		Result<Turno2025> turno = Turno2025.Crear(new TurnoId(1), pacienteId, when, disponibilidadParaPaciente1);
-
-		_AgendarTurno(turno).PrintAndContinue("Agendando turno: ");
-
-		return turno;
-	}
-
-	public Result<Turno2025> SolicitarReprogramacionALaPrimeraDisponibilidad(Result<Turno2025> turnoOriginalResult, DateTime when, string why) {
-
-		if (turnoOriginalResult.IsError) {
-			return new Result<Turno2025>.Error($"No se puede reprogramar un turno con errores previos: {((Result<Turno2025>.Error)turnoOriginalResult).Mensaje}");
-		}
-		Turno2025 turnoOriginal = ((Result<Turno2025>.Ok)turnoOriginalResult).Valor;
 
 
-		Result<Turno2025> turnoCanceladoResult = _CambiarEstadoInterno(turnoOriginal, TurnoOutcomeEstado2025.Reprogramado, when, why);
-		if (turnoCanceladoResult.IsError) return turnoCanceladoResult;
-		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)turnoCanceladoResult).Valor;
-
-		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1_reprogramado = _EncontrarProximaDisponibilidad(turnoCancelado.Especialidad, when);
 
 
-		Result<Turno2025> nuevoTurno = Turno2025.Crear(new TurnoId(2), turnoCancelado.PacienteId, when, disponibilidadParaPaciente1_reprogramado)
-			.PrintAndContinue("Creando nuevo turno: ");
-
-		this._AgendarTurno(nuevoTurno)
-			.PrintAndContinue("Agendando nuevo turno: ");
-
-		return nuevoTurno;
-	}
-
-	public Result<Turno2025> SolicitarCancelacion(Result<Turno2025> turnoOriginalResult, DateTime solicitudFecha, string solicitudReason) {
-		if (turnoOriginalResult.IsError) {
-			return new Result<Turno2025>.Error($"No se puede reprogramar un turno con errores previos: {((Result<Turno2025>.Error)turnoOriginalResult).Mensaje}");
-		}
-		Turno2025 turnoOriginal = ((Result<Turno2025>.Ok)turnoOriginalResult).Valor;
-
-
-		return _CambiarEstadoInterno(turnoOriginal, TurnoOutcomeEstado2025.Cancelado, solicitudFecha, solicitudReason);
-	}
-}
-
-
-public static class DisponibilidadesExtensions {
-
-	public static Result<DisponibilidadEspecialidad2025> TomarPrimera(this Result<IReadOnlyList<DisponibilidadEspecialidad2025>> listadoResult) {
-		return listadoResult.Match<Result<DisponibilidadEspecialidad2025>>(
-			ok => {
-				// la lista existe, ahora chequeamos si tiene elementos
-				if (ok.Count == 0)
-					return new Result<DisponibilidadEspecialidad2025>.Error(
-						"No hay disponibilidades para seleccionar."
-					);
-				return new Result<DisponibilidadEspecialidad2025>.Ok(ok[0]);
-			},
-			mensajeError =>
-				new Result<DisponibilidadEspecialidad2025>.Error(mensajeError)
-		);
-	}
-
-	public static Result<IReadOnlyList<DisponibilidadEspecialidad2025>> AplicarFiltrosOpcionales(this Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidadesResult, SolicitudDeTurnoPreferencias preferencias) {
-		if (disponibilidadesResult is Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error err)
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error(err.Mensaje);
-
-		IReadOnlyList<DisponibilidadEspecialidad2025> lista = ((Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok)disponibilidadesResult).Valor;
-		IEnumerable<DisponibilidadEspecialidad2025> filtradas = lista;
-		if (preferencias.DiaPreferido is DiaSemana2025 dia)
-			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia.Valor);
-
-		if (preferencias.MomentoPreferido is TardeOMañana momento)
-			filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));
-
-		if (filtradas.Any()) {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok([.. filtradas]);
-		} else {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error("No se encontraron disponibilidades");
-		}
-	}
 }

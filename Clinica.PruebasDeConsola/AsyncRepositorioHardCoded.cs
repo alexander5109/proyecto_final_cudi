@@ -183,6 +183,6 @@ public static class AsyncRepositorioHardCoded  {
 
 
 	//public static Task<ServicioTurnosManager> GetTurnos() {
-		//return Task.FromResult(ServicioTurnosManager.CrearServicio());
+		//return Task.FromResult(ServicioTurnosManager._ValidarRepositorios());
 	//}
 }
