@@ -12,9 +12,9 @@ public enum TurnoOutcomeEstado2025 {
 	Concretado = 4,
 	Reprogramado = 5
 }
-//public record struct TurnoId(int Value);
+public record struct TurnoId(int Value);
 public record Turno2025(
-	//TurnoId Id,
+	TurnoId Id,
 	DateTime FechaDeCreacion,
 	PacienteId PacienteId,
 	MedicoId MedicoId,
@@ -43,7 +43,7 @@ public record Turno2025(
 
 
 	public static Result<Turno2025> Crear(
-		//TurnoId turnoId,
+		TurnoId turnoId,
 		PacienteId pacienteId,
 		DateTime solicitadoEn,
 		Result<DisponibilidadEspecialidad2025> dispResult
@@ -59,7 +59,7 @@ public record Turno2025(
 		DisponibilidadEspecialidad2025 disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
 
 		return new Result<Turno2025>.Ok(new Turno2025(
-			//Id: turnoId,
+			Id: turnoId,
 			FechaDeCreacion: solicitadoEn,
 			PacienteId: pacienteId,
 			MedicoId: disp.MedicoId,
@@ -79,14 +79,14 @@ public record Turno2025(
 		return new Result<Turno2025>.Ok(this with { OutcomeEstado = outcomeEstado, OutcomeComentario = Option<string>.Some(outcomeComentario), OutcomeFecha = Option<DateTime>.Some(outcomeFecha) });
 	}
 
-	public Result<Turno2025> Reprogramar(Result<DisponibilidadEspecialidad2025> dispResult) {
+	public Result<Turno2025> Reprogramar(Result<DisponibilidadEspecialidad2025> dispResult, TurnoId turnoId) {
 		if (OutcomeEstado == TurnoOutcomeEstado2025.Programado || !OutcomeFecha.HasValue) {
 			return new Result<Turno2025>.Error("No se puede reprogramar un turno que todavia esta programado.");
 		}
 		switch (dispResult) {
 			case Result<DisponibilidadEspecialidad2025>.Ok dispOk: {
 				return new Result<Turno2025>.Ok(new Turno2025(
-					//TurnoId Id,
+					turnoId,
 					OutcomeFecha.Value,
 					PacienteId,
 					MedicoId,

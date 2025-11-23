@@ -74,7 +74,7 @@ public static class ServicioCasosDeUso {
 
 		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1 = _EncontrarProximaDisponibilidad(especialidadMedica, when, medicos, turnos);
 
-		Result<Turno2025> turno = Turno2025.Crear(pacienteId, when, disponibilidadParaPaciente1);
+		Result<Turno2025> turno = Turno2025.Crear(new TurnoId(534534), pacienteId, when, disponibilidadParaPaciente1);
 
 		//TO-DO POST
 		//_AgendarTurno(turno, turnos).PrintAndContinue("Agendando medico: ");
@@ -119,7 +119,7 @@ public static class ServicioCasosDeUso {
 				Result<DisponibilidadEspecialidad2025> proximaDisponibilidad = _EncontrarProximaDisponibilidad(turnoOriginal.Especialidad, outcomeFecha, medicos, turnos);
 				//BUSCAR DISPONIBILIDADES NO ES IO PORQUE BUSCAMOS DADOS LOS TURNOS Y MEDICOS RECIBIDOS
 
-				Result<Turno2025> nuevoTurno = cancelacionOk.Valor.Reprogramar(proximaDisponibilidad);
+				Result<Turno2025> nuevoTurno = cancelacionOk.Valor.Reprogramar(proximaDisponibilidad, new TurnoId(12312321));
 				//IO: 2. ENVIAR A PERSISTIR nuevoTurno, Y AWAITEAR LA ID
 				return nuevoTurno;
 			}

@@ -18,7 +18,7 @@ public record TurnoDto(
 ) {
 	public Result<Turno2025> ToDomain() {
 		return new Result<Turno2025>.Ok(new Turno2025(
-			//new TurnoId(Id),
+			new TurnoId(Id),
 			FechaDeCreacion,
 			new PacienteId(PacienteId),
 			new MedicoId(MedicoId),
