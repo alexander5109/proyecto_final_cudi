@@ -15,26 +15,26 @@ public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 	private static bool EsMañana(DateTime dt) => dt.Hour < 13;
 }
 
-public readonly record struct SolicitudDeTurno(
-	PacienteId PacienteId,
-	EspecialidadMedica2025 Especialidad,
-	DateTime FechaCreacion
-) : IComoTexto {
+//public readonly record struct SolicitudDeTurno(
+//	PacienteId PacienteId,
+//	EspecialidadMedica2025 Especialidad,
+//	DateTime FechaCreacion
+//) : IComoTexto {
 
-	public static Result<SolicitudDeTurno> Crear(
-		PacienteId pacienteId,
-		EspecialidadMedica2025 especialidad,
-		DateTime fechaSolicitada
-	) {
-		return new Result<SolicitudDeTurno>.Ok(new SolicitudDeTurno(pacienteId, especialidad, fechaSolicitada));
-	}
+//	public static Result<SolicitudDeTurno> Crear(
+//		PacienteId pacienteId,
+//		EspecialidadMedica2025 especialidad,
+//		DateTime fechaSolicitada
+//	) {
+//		return new Result<SolicitudDeTurno>.Ok(new SolicitudDeTurno(pacienteId, especialidad, fechaSolicitada));
+//	}
 
-	public string ATexto() =>
-		$"Solicitud básica:\n" +
-		$"  • Paciente: {PacienteId}\n" +
-		$"  • Especialidad: {Especialidad.ATexto()}\n" +
-		$"  • Solicitado en: {FechaCreacion:G}";
-}
+//	public string ATexto() =>
+//		$"Solicitud básica:\n" +
+//		$"  • Paciente: {PacienteId}\n" +
+//		$"  • Especialidad: {Especialidad.ATexto()}\n" +
+//		$"  • Solicitado en: {FechaCreacion:G}";
+//}
 
 public readonly record struct SolicitudDeTurnoPreferencias(
 	DiaSemana2025? DiaPreferido,

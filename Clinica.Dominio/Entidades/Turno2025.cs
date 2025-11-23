@@ -9,7 +9,7 @@ public enum TurnoOutcomeEstado2025 {
 	Ausente = 2,
 	Cancelado = 3,
 	Concretado = 4,
-	//Reprogramado = 5
+	Reprogramado = 5
 }
 public record struct TurnoId(int Value);
 public record Turno2025(
@@ -43,23 +43,24 @@ public record Turno2025(
 
 	public static Result<Turno2025> Crear(
 		TurnoId turnoId,
-		Result<SolicitudDeTurno> solicitudResult,
+		PacienteId pacienteId,
+		DateTime solicitadoEn,
 		Result<DisponibilidadEspecialidad2025> dispResult
 	) {
 		// --- Validación de los Result ----
-		if (solicitudResult is Result<SolicitudDeTurno>.Error solError)
-			return new Result<Turno2025>.Error($"Error en solicitud: {solError.Mensaje}");
+		//if (solicitudResult is Result<SolicitudDeTurno>.Error solError)
+			//return new Result<Turno2025>.Error($"Error en solicitud: {solError.Mensaje}");
 
 		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error dispError)
 			return new Result<Turno2025>.Error($"Error en disponibilidad: {dispError.Mensaje}");
 
-		SolicitudDeTurno solicitud = ((Result<SolicitudDeTurno>.Ok)solicitudResult).Valor;
+		//SolicitudDeTurno solicitud = ((Result<SolicitudDeTurno>.Ok)solicitudResult).Valor;
 		DisponibilidadEspecialidad2025 disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
 
 		return new Result<Turno2025>.Ok(new Turno2025(
 			Id: turnoId,
-			FechaDeCreacion: solicitud.FechaCreacion,
-			PacienteId: solicitud.PacienteId,
+			FechaDeCreacion: solicitadoEn,
+			PacienteId: pacienteId,
 			MedicoId: disp.MedicoId,
 			Especialidad: disp.Especialidad,
 			FechaHoraAsignadaDesde: disp.FechaHoraDesde,
@@ -70,11 +71,11 @@ public record Turno2025(
 		));
 	}
 
-	public Result<Turno2025> CambiarEstado(TurnoOutcomeEstado2025 outcomeEstado, Option<DateTime> outcomeFecha, Option<string> outcomeComentario) {
+	public Result<Turno2025> CambiarEstado(TurnoOutcomeEstado2025 outcomeEstado, DateTime outcomeFecha, string outcomeComentario) {
 		if (OutcomeEstado != TurnoOutcomeEstado2025.Programado) {
 			return new Result<Turno2025>.Error("No se puede volver a cambiar el estado del turno.");
 		}
-		return new Result<Turno2025>.Ok(this with { OutcomeEstado = outcomeEstado, OutcomeComentario = outcomeComentario, OutcomeFecha = outcomeFecha });
+		return new Result<Turno2025>.Ok(this with { OutcomeEstado = outcomeEstado, OutcomeComentario = Option<string>.Some(outcomeComentario), OutcomeFecha = Option<DateTime>.Some(outcomeFecha) });
 	}
 
 

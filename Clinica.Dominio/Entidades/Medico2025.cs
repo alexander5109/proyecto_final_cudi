@@ -55,7 +55,7 @@ public readonly record struct MedicoSueldoMinimo2025(
 	public string ATexto() => Valor.ToString("C", CultureInfo.CurrentCulture);
 	public const double MINIMO = 200_000;
 	public const double MAXIMO = 5_000_000;
-	public static Result<MedicoSueldoMinimo2025> Crear(double? input) {
+	public static Result<MedicoSueldoMinimo2025> CrearServicio(double? input) {
 		return input switch {
 			null => new Result<MedicoSueldoMinimo2025>.Error("El sueldo no puede estar vacío."),
 			< 0 => new Result<MedicoSueldoMinimo2025>.Error("El sueldo no puede ser negativo."),
@@ -64,7 +64,7 @@ public readonly record struct MedicoSueldoMinimo2025(
 			_ => new Result<MedicoSueldoMinimo2025>.Ok(new MedicoSueldoMinimo2025(input.Value))
 		};
 	}
-	public static Result<MedicoSueldoMinimo2025> Crear(string? input) {
+	public static Result<MedicoSueldoMinimo2025> CrearServicio(string? input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<MedicoSueldoMinimo2025>.Error("El sueldo no puede estar vacío.");
 
