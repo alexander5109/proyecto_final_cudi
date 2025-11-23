@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.AppWPF", "Clinica.A
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Clinica.SQLServerDB", "Clinica.SQLServerDB\Clinica.SQLServerDB.sqlproj", "{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.DataPersistencia", "Clinica.DataPersistencia\Clinica.DataPersistencia.csproj", "{6D50E785-D079-4784-BB36-04AB83221D88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Infrastructure", "Clinica.DataPersistencia\Clinica.Infrastructure.csproj", "{6D50E785-D079-4784-BB36-04AB83221D88}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.WebAPI", "Clinica.WebAPI\Clinica.WebAPI.csproj", "{7A7F2C4B-8210-4C00-92A3-905C80A6EA8F}"
 EndProject

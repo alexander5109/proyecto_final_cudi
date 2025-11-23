@@ -1,8 +1,8 @@
-﻿using Clinica.DataPersistencia;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.ListasOrganizadoras;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Infrastructure.Persistencia;
 using Microsoft.Extensions.Configuration;
 
 namespace Clinica.PruebasDeConsola;
@@ -34,7 +34,7 @@ public class AsyncRepositorioDapper {
 
 		MedicoRepository repo = new(factory);
 
-		IEnumerable<MedicoDto> medicos = await repo.GetAll();
+		IEnumerable<MedicoDto> medicos = await repo.ReadMedicosAllWithHorarios();
 
 		return [.. medicos
 			.Select(

@@ -1,8 +1,8 @@
 using Clinica.AppWPF.ViewModels;
-using Clinica.DataPersistencia;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Infrastructure.Persistencia;
 using Microsoft.Data.SqlClient;
 using System.Collections.ObjectModel;
 using System.Configuration;
@@ -36,9 +36,9 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				SELECT SCOPE_IDENTITY();"; // DEVOLEME RAPIDAMENTE LA ID QUE ACABAS DE GENERAR
 
 		try {
-			using (SqlConnection connection = new SqlConnection(connectionString)) {
+			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
-				using (SqlCommand sqlComando = new SqlCommand(insertQuery, connection)) {
+				using (SqlCommand sqlComando = new(insertQuery, connection)) {
 					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
 					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
 					sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
@@ -84,9 +84,9 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 
 		try {
 
-			using (SqlConnection connection = new SqlConnection(connectionString)) {
+			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
-				using (SqlCommand sqlComando = new SqlCommand(insertQuery, connection)) {
+				using (SqlCommand sqlComando = new(insertQuery, connection)) {
 					sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
 					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
 					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
@@ -229,7 +229,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		try {
 			using (var connection = new SqlConnection(connectionString)) {
 				connection.Open();
-				using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
+				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
 					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
 					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
@@ -266,7 +266,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		try {
 			using (var connection = new SqlConnection(connectionString)) {
 				connection.Open();
-				using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
+				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@PacienteId", instancia.PacienteId);
 					sqlComando.Parameters.AddWithValue("@MedicoId", instancia.MedicoId);
 					sqlComando.Parameters.AddWithValue("@Fecha", instancia.Fecha);
@@ -305,7 +305,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		try {
 			using (var connection = new SqlConnection(connectionString)) {
 				connection.Open();
-				using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
+				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@CodigoInterno", instancia.Id);
 					sqlComando.ExecuteNonQuery();
 				}
@@ -335,7 +335,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		try {
 			using (var connection = new SqlConnection(connectionString)) {
 				connection.Open();
-				using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
+				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@CodigoInterno", instancia.Id);
 					sqlComando.ExecuteNonQuery();
 				}
@@ -362,7 +362,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		try {
 			using (var connection = new SqlConnection(connectionString)) {
 				connection.Open();
-				using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
+				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@CodigoInterno", instancia.Id);
 					sqlComando.ExecuteNonQuery();
 				}
@@ -415,7 +415,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				using (var sqlComando = new SqlCommand(consulta, conexion))
 				using (SqlDataReader reader = sqlComando.ExecuteReader()) {
 					while (reader.Read()) {
-                        ViewModelPaciente paciente = new ViewModelPaciente(
+                        ViewModelPaciente paciente = new(
 							Convert.ToInt32(reader["Id"]),
 							Convert.ToString(reader["Dni"]),
 							Convert.ToString(reader["Name"]),
@@ -528,10 +528,10 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 
 	private bool EjecutarScriptExitosamente(string cadena, string script) {
 		try {
-			using (SqlConnection connection = new SqlConnection(cadena)) {
+			using (SqlConnection connection = new(cadena)) {
 				connection.Open();
 				// MessageBox.Show($"Conexion establecida: {cadena}", "Confirmar acción");
-				using (SqlCommand command = new SqlCommand(script, connection)) {
+				using (SqlCommand command = new(script, connection)) {
 					command.ExecuteNonQuery();
 				}
 			}

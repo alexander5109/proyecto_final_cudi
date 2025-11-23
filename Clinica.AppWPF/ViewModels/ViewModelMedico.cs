@@ -5,8 +5,8 @@ using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
-using Clinica.DataPersistencia;
 using Clinica.Dominio.ListasOrganizadoras;
+using Clinica.Infrastructure.Persistencia;
 
 namespace Clinica.AppWPF.ViewModels;
 

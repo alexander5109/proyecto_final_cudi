@@ -9,8 +9,8 @@ public readonly struct Option<T> {
 		Value = value;
 	}
 
-	public static Option<T> None => new Option<T>();    // Sin valor
-	public static Option<T> Some(T value) => new Option<T>(value);
+	public static Option<T> None => new();    // Sin valor
+	public static Option<T> Some(T value) => new(value);
 }
 
 public static class OptionExtensions {
