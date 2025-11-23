@@ -1,6 +1,10 @@
 ﻿
 namespace Clinica.Dominio.Comun;
 
+public readonly struct Unit {
+	public static readonly Unit Valor = default;
+}
+
 public abstract class Result<T> {
 	public sealed class Ok(T valor) : Result<T> {
 		public T Valor { get; } = valor;
@@ -112,7 +116,7 @@ public static class ResultExtensions {
 	public static Result<U> Bind<T, U>(
 		this IEnumerable<Result<T>> results,
 		Func<IReadOnlyList<T>, Result<U>> func) {
-        Result<List<T>> combined = results.CombineResults();
+		Result<List<T>> combined = results.CombineResults();
 		return combined switch {
 			Result<List<T>>.Ok ok => func(ok.Valor),
 			Result<List<T>>.Error err => new Result<U>.Error(err.Mensaje),

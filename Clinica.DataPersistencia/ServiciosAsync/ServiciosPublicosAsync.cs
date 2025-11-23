@@ -12,16 +12,16 @@ public class ServicioCasosDeUsoAsync(
 	MedicoRepository medicos,
 	TurnoRepository turnos
 ) {
-	private readonly MedicoRepository _medicos = medicos;
-	private readonly TurnoRepository _turnos = turnos;
+	private readonly MedicoRepository _medicosDapper = medicos;
+	private readonly TurnoRepository _turnosDapper = turnos;
 
 	public async Task<Result<Turno2025>> SolicitarTurnoEnLaPrimeraDisponibilidad(
 		PacienteId pacienteId,
 		EspecialidadMedica2025 especialidad,
 		DateTime fechaSolicitud
 	) {
-		IEnumerable<MedicoDto> medicosDtos = await _medicos.GetPorEspecialidad(especialidad);
-		IEnumerable<TurnoDto> turnosDtos = await _turnos.GetTurnosPorMedicos(
+		IEnumerable<MedicoDto> medicosDtos = await _medicosDapper.GetPorEspecialidad(especialidad);
+		IEnumerable<TurnoDto> turnosDtos = await _turnosDapper.GetTurnosPorMedicos(
 			medicosDtos.Select(medicoDto => medicoDto.Id)
 		);
 
@@ -29,7 +29,7 @@ public class ServicioCasosDeUsoAsync(
 		IReadOnlyList<Result<Turno2025>> turnos = [.. turnosDtos.Select(turnoDto => turnoDto.ToDomain())];
 
 		// 3. Ejecuta el dominio
-		return ServicioCasosDeUso.SolicitarTurnoEnLaPrimeraDisponibilidad(
+		return ServiciosPublicos.SolicitarTurnoEnLaPrimeraDisponibilidad(
 			pacienteId,
 			especialidad,
 			fechaSolicitud,
@@ -48,18 +48,39 @@ public class ServicioCasosDeUsoAsync(
 				return new Result<Turno2025>.Error($"SolicitarReprogramacionALaPrimeraDisponibilidad fallido porque turno ya traia error: \n{turnoError.Mensaje}");
 			}
 			case Result<Turno2025>.Ok turnoOk: {
-				IEnumerable<MedicoDto> medicosDtos = await _medicos.GetPorEspecialidad(turnoOk.Valor.Especialidad);
-				IEnumerable<TurnoDto> turnosDtos = await _turnos.GetTurnosPorMedicos(
+				IEnumerable<MedicoDto> medicosDtos = await _medicosDapper.GetPorEspecialidad(turnoOk.Valor.Especialidad);
+				IEnumerable<TurnoDto> turnosDtos = await _turnosDapper.GetTurnosPorMedicos(
 					medicosDtos.Select(medicoDto => medicoDto.Id)
 				);
 				IReadOnlyList<Result<Medico2025>> medicosResults = [.. medicosDtos.Select(medicoDto => medicoDto.ToDomain())];
 				IReadOnlyList<Result<Turno2025>> turnosResults = [.. turnosDtos.Select(turnoDto => turnoDto.ToDomain())];
-				return ServicioCasosDeUso.SolicitarReprogramacionALaPrimeraDisponibilidad(
-					turnoOriginalResult,
+
+
+				Result<IReadOnlyList<Medico2025>> medicosVerificados = ServiciosPrivados._ValidarMedicos(medicosResults);
+				if (medicosVerificados.IsError) {
+					return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Medico2025>>.Error)medicosVerificados).Mensaje}");
+				}
+				IReadOnlyList<Medico2025> medicos = ((Result<IReadOnlyList<Medico2025>>.Ok)medicosVerificados).Valor;
+
+
+
+
+
+				Result<IReadOnlyList<Turno2025>> turnosVerificados = ServiciosPrivados._ValidarTurnos(turnosResults);
+				if (turnosVerificados.IsError) {
+					return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Turno2025>>.Error)turnosVerificados).Mensaje}");
+				}
+				IReadOnlyList<Turno2025> turnos = ((Result<IReadOnlyList<Turno2025>>.Ok)turnosVerificados).Valor;
+
+
+				return await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
+					turnoOk.Valor,
 					when,
 					why,
-					medicosResults,
-					turnosResults
+					medicos,
+					turnos,
+					funcUpdateTurno: _turnosDapper.UpdateTurno,
+					funcInsertTurno: _turnosDapper.InsertTurno
 				);
 			}
 			default: throw new InvalidOperationException(); //impossible to occur
@@ -72,12 +93,12 @@ public class ServicioCasosDeUsoAsync(
 				return new Result<Turno2025>.Error($"SolicitarCancelacion fallido porque turno ya traia error: \n{turnoError.Mensaje}");
 			}
 			case Result<Turno2025>.Ok turnoOk: {
-				IEnumerable<MedicoDto> medicosDtos = await _medicos.GetPorEspecialidad(turnoOk.Valor.Especialidad);
-				IEnumerable<TurnoDto> turnosDtos = await _turnos.GetTurnosPorMedicos(
+				IEnumerable<MedicoDto> medicosDtos = await _medicosDapper.GetPorEspecialidad(turnoOk.Valor.Especialidad);
+				IEnumerable<TurnoDto> turnosDtos = await _turnosDapper.GetTurnosPorMedicos(
 					medicosDtos.Select(medicoDto => medicoDto.Id)
 				);
 				IReadOnlyList<Result<Turno2025>> turnosResults = [.. turnosDtos.Select(turnoDto => turnoDto.ToDomain())];
-				return ServicioCasosDeUso.SolicitarCancelacion(
+				return ServiciosPublicos.SolicitarCancelacion(
 					turnoOriginalResult,
 					solicitudFecha,
 					solicitudReason,

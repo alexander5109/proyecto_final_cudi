@@ -182,7 +182,7 @@ public static class AsyncRepositorioHardCoded  {
 		});
 
 
-	//public static Task<ServicioCasosDeUso> GetTurnos() {
-		//return Task.FromResult(ServicioCasosDeUso._ValidarRepositorios());
+	//public static Task<ServiciosPublicos> GetTurnos() {
+		//return Task.FromResult(ServiciosPublicos._ValidarRepositorios());
 	//}
 }

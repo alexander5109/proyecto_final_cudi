@@ -12,7 +12,7 @@ public enum TurnoOutcomeEstado2025 {
 	Concretado = 4,
 	Reprogramado = 5
 }
-public record struct TurnoId(int Value);
+public record struct TurnoId(int Valor);
 public record Turno2025(
 	TurnoId Id,
 	DateTime FechaDeCreacion,

@@ -1,40 +1,34 @@
-﻿CREATE PROCEDURE [dbo].[sp_CreateTurno]
+﻿CREATE PROCEDURE sp_CreateTurno
+(
+    @FechaDeCreacion DATETIME2(1),
     @PacienteId INT,
     @MedicoId INT,
     @EspecialidadCodigo INT,
-    @Fecha DATE,
-    @Hora TIME(0),
-    @DuracionMinutos INT
+    @FechaHoraAsignadaDesde DATETIME2(0),
+    @FechaHoraAsignadaHasta DATETIME2(0),
+    @NewId INT OUTPUT
+)
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @FechaHoraDesde DATETIME = DATEADD(SECOND, 0, CAST(@Fecha AS DATETIME) + CAST(@Hora AS DATETIME));
-    DECLARE @FechaHoraHasta DATETIME = DATEADD(MINUTE, @DuracionMinutos, @FechaHoraDesde);
-
-    INSERT INTO [dbo].[Turno] (
+    INSERT INTO Turno (
         FechaDeCreacion,
         PacienteId,
         MedicoId,
         EspecialidadCodigo,
         FechaHoraAsignadaDesde,
-        FechaHoraAsignadaHasta,
-        OutcomeEstado,
-        OutcomeFecha,
-        OutcomeComentario
+        FechaHoraAsignadaHasta
     )
     VALUES (
-        GETDATE(),               -- FechaDeCreacion
+        @FechaDeCreacion,
         @PacienteId,
         @MedicoId,
         @EspecialidadCodigo,
-        @FechaHoraDesde,
-        @FechaHoraHasta,
-        1,                       -- Programado
-        NULL,                    -- OutcomeFecha
-        NULL                     -- OutcomeComentario
+        @FechaHoraAsignadaDesde,
+        @FechaHoraAsignadaHasta
     );
 
-    SELECT SCOPE_IDENTITY() AS NuevoId;
+    SET @NewId = SCOPE_IDENTITY();
 END;
 GO
