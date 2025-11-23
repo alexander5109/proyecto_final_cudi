@@ -16,7 +16,7 @@ public readonly record struct HorarioHora2025(
 				new[] { "HH:mm", "H:mm" },
 				CultureInfo.InvariantCulture,
 				DateTimeStyles.None,
-				out var time))
+				out TimeOnly time))
 			return new Result<HorarioHora2025>.Ok(new HorarioHora2025(time));
 
 		return new Result<HorarioHora2025>.Error($"'{input}' no es una hora válida.");

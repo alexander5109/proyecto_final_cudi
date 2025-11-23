@@ -11,7 +11,7 @@ public class TurnoRepository {
 	}
 
 	public async Task<IEnumerable<TurnoDto>> GetAll() {
-		using var conn = _factory.CreateConnection();
+		using IDbConnection conn = _factory.CreateConnection();
 
 		return await conn.QueryAsync<TurnoDto>(
 			"sp_ReadTurnosAll",

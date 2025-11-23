@@ -34,16 +34,16 @@ public abstract class BaseDeDatosAbstracta{
 	// Filtros
 	public List<ViewModelTurno> ReadTurnosWhereMedicoId(int? medicoId) {
 		if (medicoId == null) return new List<ViewModelTurno>();
-		return DictTurnos.Values.Where(t => t.MedicoId == medicoId).ToList();
+		return [.. DictTurnos.Values.Where(t => t.MedicoId == medicoId)];
 	}
 	public List<ViewModelTurno> ReadTurnosWherePacienteId(int? pacienteId) {
 		if (pacienteId == null) return new List<ViewModelTurno>();
-		return DictTurnos.Values.Where(t => t.PacienteId == pacienteId).ToList();
+		return [.. DictTurnos.Values.Where(t => t.PacienteId == pacienteId)];
 	}
 
 	public List<ViewModelMedico> ReadMedicosWhereEspecialidad(int? especialidadCodigoInterno) {
 		if (especialidadCodigoInterno == null) return new List<ViewModelMedico>();
-		return DictMedicos.Values.Where(m => m.EspecialidadCodigoInterno == especialidadCodigoInterno).ToList();
+		return [.. DictMedicos.Values.Where(m => m.EspecialidadCodigoInterno == especialidadCodigoInterno)];
 	}
 	public string[] ReadDistinctEspecialidades() {
 		return EspecialidadMedica2025.Titulos;

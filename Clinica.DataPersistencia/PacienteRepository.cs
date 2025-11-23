@@ -12,7 +12,7 @@ public class PacienteRepository {
 	}
 
 	public async Task<IEnumerable<PacienteDto>> GetAll() {
-		using var conn = _factory.CreateConnection();
+		using IDbConnection conn = _factory.CreateConnection();
 
 		return await conn.QueryAsync<PacienteDto>(
 			"sp_ReadPacientesAll",

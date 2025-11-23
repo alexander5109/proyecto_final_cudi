@@ -14,7 +14,7 @@ public sealed record ListaEspecialidadesMedicas2025(
 		var sb = new System.Text.StringBuilder();
 		sb.AppendLine("Listado de especialidades:");
 
-		foreach (var esp in Valores)
+		foreach (EspecialidadMedica2025 esp in Valores)
 			sb.AppendLine($"  • {esp.ATexto()}");
 
 		return sb.ToString();

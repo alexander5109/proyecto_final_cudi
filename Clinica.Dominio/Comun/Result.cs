@@ -74,8 +74,16 @@ public static class ResultExtensions {
 
 	public static T GetOrRaise<T>(this Result<T> result) =>
 		result.Match(
-			ok => ok,
-			mensaje => throw new InvalidOperationException(mensaje)
+			ok => {
+				Console.WriteLine($"Succesfully asserting {typeof(T)}");
+				return ok;
+			},
+			mensaje => {
+				Console.WriteLine(mensaje);
+				Console.Write("Presione enter para lanzar la excepcion: ");
+				Console.ReadLine();
+				throw new InvalidOperationException(mensaje);
+			}
 		);
 
 
@@ -104,7 +112,7 @@ public static class ResultExtensions {
 	public static Result<U> Bind<T, U>(
 		this IEnumerable<Result<T>> results,
 		Func<IReadOnlyList<T>, Result<U>> func) {
-		var combined = results.CombineResults();
+        Result<List<T>> combined = results.CombineResults();
 		return combined switch {
 			Result<List<T>>.Ok ok => func(ok.Valor),
 			Result<List<T>>.Error err => new Result<U>.Error(err.Mensaje),
@@ -116,7 +124,7 @@ public static class ResultExtensions {
 	public static Result<List<T>> CombineResults<T>(
 		this IEnumerable<Result<T>> results) {
 		var list = new List<T>();
-		foreach (var r in results) {
+		foreach (Result<T> r in results) {
 			switch (r) {
 				case Result<T>.Ok ok:
 					list.Add(ok.Valor);

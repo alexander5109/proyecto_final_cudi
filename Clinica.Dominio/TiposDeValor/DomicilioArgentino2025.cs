@@ -16,7 +16,7 @@ public readonly record struct DomicilioArgentino2025(
 		if (localidadResult is Result<LocalidadDeProvincia2025>.Error localidadError)
 			return new Result<DomicilioArgentino2025>.Error(localidadError.Mensaje);
 
-		var localidad = ((Result<LocalidadDeProvincia2025>.Ok)localidadResult).Valor;
+        LocalidadDeProvincia2025 localidad = ((Result<LocalidadDeProvincia2025>.Ok)localidadResult).Valor;
 
 		return new Result<DomicilioArgentino2025>.Ok(
 			new DomicilioArgentino2025(
@@ -41,7 +41,7 @@ public readonly record struct LocalidadDeProvincia2025(
 		if (provinciaResult is Result<ProvinciaArgentina2025>.Error err)
 			return new Result<LocalidadDeProvincia2025>.Error($"Provincia inválida: {err.Mensaje}");
 
-		var provincia = ((Result<ProvinciaArgentina2025>.Ok)provinciaResult).Valor;
+        ProvinciaArgentina2025 provincia = ((Result<ProvinciaArgentina2025>.Ok)provinciaResult).Valor;
 
 		return new Result<LocalidadDeProvincia2025>.Ok(new(nombreLocalidad, provincia));
 	}

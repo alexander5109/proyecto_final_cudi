@@ -12,7 +12,7 @@ public class MedicoRepository {
 	}
 
 	public async Task<IEnumerable<MedicoDto>> GetAll() {
-		using var conn = _factory.CreateConnection();
+		using IDbConnection conn = _factory.CreateConnection();
 
 		return await conn.QueryAsync<MedicoDto>(
 			"sp_ReadMedicosAllWithHorarios",

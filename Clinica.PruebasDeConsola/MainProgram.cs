@@ -13,80 +13,27 @@ public static class MainProgram {
 		Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 
-		IReadOnlyList<Paciente2025> PACIENTES = [.. 
+		ServicioTurnosManager TURNOS_MANAGER = ServicioTurnosManager.Crear(
+			(await AsyncRepositorioDapper.GetTurnos()),
+			(await AsyncRepositorioDapper.GetMedicos()),
 			(await AsyncRepositorioDapper.GetPacientes())
-			.Select(r => r
-			.PrintAndContinue("Paciente domainizado")
-			.GetOrRaise())
-		];
-		IReadOnlyList<Medico2025> MEDICOS = [.. 
-			(await AsyncRepositorioDapper.GetMedicos())
-			.Select(r => r
-			.PrintAndContinue("Medico domainizado")
-			.GetOrRaise())
-		];
-		List<Turno2025> TURNOS = [.. 
-			(await AsyncRepositorioDapper.GetTurnos())
-			.Select(r => r
-			.PrintAndContinue("Turno domainizado")
-			 .GetOrRaise())
-		];
+		).GetOrRaise();
+
+        Result<Turno2025> turnoResult = TURNOS_MANAGER.SolicitarTurnoEnLaPrimeraDisponibilidad(
+			new PacienteId(1), //este paciente
+			EspecialidadMedica2025.ClinicoGeneral, //pide esta especialidad
+			new DateTime(2025, 12, 25) //la solicitud ocurre este dia. generalmente se usaria Datetime.Now
+		).PrintAndContinue("paciente1 pide turno.");
+		Turno2025 turno = turnoResult.GetOrRaise();
 
 
-
-		ServicioTurnosManager TURNOS_MANAGER = new(TURNOS);
-
-		Result<SolicitudDeTurno> solicitudPaciente1 = SolicitudDeTurno.Crear(
-				PACIENTES[0].Id,
-				EspecialidadMedica2025.ClinicoGeneral,
-				DateTime.Now
-			)
-			.PrintAndContinue("paciente1 intenta solicitar turno: ");
+		Result<Turno2025> turnoReprogramadoResult = TURNOS_MANAGER.SolicitarReprogramacionALaPrimeraDisponibilidad(
+			turno, //este es el turno base
+			turno.FechaHoraAsignadaHasta.AddDays(-2) //la solicitud ocurre dos dias antes de la cita.
+		).PrintAndContinue("paciente1 pide turno. Se lo damos?: ");
+		Turno2025 turnoReprogramado = turnoResult.GetOrRaise();
 
 
-		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1 = ServicioDisponibilidadesSearcher
-			.Buscar(solicitudPaciente1, MEDICOS, TURNOS_MANAGER, 3)
-			.PrintAndContinue("Buscando disponibilidades: ")
-			//.AplicarFiltrosOpcionales(new(DiaSemana2025.Lunes, new TardeOMañana(false)))
-			//.PrintAndContinue("AplicarFiltrosOpcionales: ")
-			.TomarPrimera()
-			.PrintAndContinue("Tomando la primera: ");
-
-		Result<Turno2025> turno = Turno2025.Crear(new TurnoId(1), solicitudPaciente1, disponibilidadParaPaciente1)
-			.PrintAndContinue("Creando turno: ");
-
-		TURNOS_MANAGER.AgendarTurno(turno)
-			.PrintAndContinue("Agendando turno: ");
-
-
-		TURNOS_MANAGER.CancelarTurno(
-			turno,
-			Option<DateTime>.Some(turno.GetOrRaise().FechaDeCreacion.AddDays(1)),
-			Option<string>.Some("Paciente solicita reprogramacion. No dio explicaciones.")
-		).PrintAndContinue("paciente1 pide cancelar turno: ");
-
-
-		// Paciente quiere reprogramar.
-		Result<SolicitudDeTurno> solicitudPaciente1_reprogramacion = SolicitudDeTurno.Crear(
-			PACIENTES[0].Id,
-			EspecialidadMedica2025.ClinicoGeneral,
-			DateTime.Now.AddDays(1)
-		).PrintAndContinue("paciente1 intenta solicitar un nuevo turno: ");
-
-		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1_reprogramado = ServicioDisponibilidadesSearcher
-			.Buscar(solicitudPaciente1_reprogramacion, MEDICOS, TURNOS_MANAGER, 3)
-			.PrintAndContinue("Buscando disponibilidades: ")
-			//.AplicarFiltrosOpcionales(new(DiaSemana2025.Lunes, new TardeOMañana(false)))
-			//.PrintAndContinue("AplicarFiltrosOpcionales: ")
-			.TomarPrimera()
-			.PrintAndContinue("Tomando la primera: ");
-
-
-		Result<Turno2025> nuevoTurno = Turno2025.Crear(new TurnoId(2), solicitudPaciente1_reprogramacion, disponibilidadParaPaciente1_reprogramado)
-			.PrintAndContinue("Creando nuevo turno: ");
-
-		TURNOS_MANAGER.AgendarTurno(nuevoTurno)
-			.PrintAndContinue("Agendando nuevo turno: ");
 
 
 	}

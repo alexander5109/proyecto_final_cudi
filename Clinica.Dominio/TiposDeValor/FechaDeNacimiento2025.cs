@@ -36,10 +36,10 @@ public readonly record struct FechaDeNacimiento2025(DateOnly Valor) : IComoTexto
 			"dd/MM/yyyy", "yyyy-MM-dd", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy"
 		];
 
-		if (DateTime.TryParseExact(input.Trim(), formatos, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt))
+		if (DateTime.TryParseExact(input.Trim(), formatos, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
 			return Crear(dt);
 
-		if (DateTime.TryParse(input.Trim(), CultureInfo.CurrentCulture, DateTimeStyles.None, out var dt2))
+		if (DateTime.TryParse(input.Trim(), CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime dt2))
 			return Crear(dt2);
 
 		return new Result<FechaDeNacimiento2025>.Error("Formato de fecha inválido.");

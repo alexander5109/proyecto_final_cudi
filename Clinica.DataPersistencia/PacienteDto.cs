@@ -20,15 +20,15 @@ public record class PacienteDto {
 	public PacienteDto() { }
 
 	public Result<Paciente2025> ToDomain() {
-		var nombre = NombreCompleto2025.Crear(Nombre ?? "", Apellido ?? "");
-		var dni = DniArgentino2025.Crear(Dni);
+        Result<NombreCompleto2025> nombre = NombreCompleto2025.Crear(Nombre ?? "", Apellido ?? "");
+        Result<DniArgentino2025> dni = DniArgentino2025.Crear(Dni);
 
-		var contacto = Contacto2025.Crear(
+        Result<Contacto2025> contacto = Contacto2025.Crear(
 			ContactoEmail2025.Crear(Email ?? ""),
 			ContactoTelefono2025.Crear(Telefono)
 		);
 
-		var domicilio = DomicilioArgentino2025.Crear(
+        Result<DomicilioArgentino2025> domicilio = DomicilioArgentino2025.Crear(
 			LocalidadDeProvincia2025.Crear(
 				Localidad ?? "",
 				ProvinciaArgentina2025.CrearPorCodigo(ProvinciaCodigo)
@@ -36,12 +36,12 @@ public record class PacienteDto {
 			Domicilio ?? ""
 		);
 
-		var fechaNacimiento =
+        Result<FechaDeNacimiento2025> fechaNacimiento =
 			FechaNacimiento is null
 				? FechaDeNacimiento2025.Crear(DateOnly.FromDateTime(DateTime.UnixEpoch))
 				: FechaDeNacimiento2025.Crear(DateOnly.FromDateTime(FechaNacimiento.Value));
 
-		var ingreso = FechaIngreso2025.Crear(FechaIngreso);
+        Result<FechaIngreso2025> ingreso = FechaIngreso2025.Crear(FechaIngreso);
 
 		return Paciente2025.Crear(
 			new PacienteId(Id),

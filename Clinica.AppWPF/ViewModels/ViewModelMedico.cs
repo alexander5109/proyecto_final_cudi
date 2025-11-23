@@ -82,7 +82,7 @@ public partial class ViewModelMedico : ObservableObject {
 
 			// Mapear horarios existentes
 			foreach (ViewModelHorario horario in Horarios) {
-				var grupo = lista.First(g => g.DiaSemana == horario.DiaSemana);
+                ViewModelHorariosAgrupados grupo = lista.First(g => g.DiaSemana == horario.DiaSemana);
 				grupo.Horarios.Add(horario);
 			}
 

@@ -37,8 +37,8 @@ public sealed record EspecialidadMedica2025(EspecialidadCodigoInterno CodigoInte
 		if (id is null)
 			return new Result<EspecialidadMedica2025>.Error("El CodigoInterno no puede ser nulo.");
 
-		// Buscamos la especialidad exacta por su código
-		var esp = Todas.FirstOrDefault(e => e.CodigoInterno.Valor == id.Value);
+        // Buscamos la especialidad exacta por su código
+        EspecialidadMedica2025? esp = Todas.FirstOrDefault(e => e.CodigoInterno.Valor == id.Value);
 
 		return esp is not null
 			? new Result<EspecialidadMedica2025>.Ok(esp)

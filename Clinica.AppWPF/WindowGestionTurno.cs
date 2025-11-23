@@ -84,7 +84,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 
 	private void ButtonCancelar(object sender, RoutedEventArgs e) => Close();
 	private void ButtonReservar(object sender, RoutedEventArgs e) {
-		var seleccionado = (DisponibilidadDto?)txtDisponibilidades.SelectedItem ?? Disponibilidades.FirstOrDefault();
+        DisponibilidadDto? seleccionado = (DisponibilidadDto?)txtDisponibilidades.SelectedItem ?? Disponibilidades.FirstOrDefault();
 		if (seleccionado is null) { MessageBox.Show("No hay una disponibilidad seleccionada."); return; }
 		MessageBox.Show($"Reservando: {seleccionado.Fecha:d} {seleccionado.Hora} - {seleccionado.Medico}");
 		Close();

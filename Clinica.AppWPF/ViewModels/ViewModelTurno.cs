@@ -89,27 +89,27 @@ public static class ViewModelTurnoExtensions {
 		if (string.IsNullOrWhiteSpace(viewModelTurno.Hora))
 			return new Result<Turno2025>.Error("Debe especificar una hora para el turno.");
 
-		if (!TimeOnly.TryParse(viewModelTurno.Hora, out var horaParte))
+		if (!TimeOnly.TryParse(viewModelTurno.Hora, out TimeOnly horaParte))
 			return new Result<Turno2025>.Error($"La hora '{viewModelTurno.Hora}' no tiene un formato válido (use HH:mm).");
 
 		// ✅ Combinar fecha y hora
 		DateOnly fechaParte = DateOnly.FromDateTime(viewModelTurno.Fecha.Value);
 		DateTime fechaYHora = fechaParte.ToDateTime(horaParte);
 
-		// Obtener resultados de dominio de modelos relacionados
-		var medicoDomainR = viewModelTurno.MedicoRelacionado.ToDomain();
-		var pacienteDomainR = viewModelTurno.PacienteRelacionado.ToDomain();
+        // Obtener resultados de dominio de modelos relacionados
+        Result<Medico2025> medicoDomainR = viewModelTurno.MedicoRelacionado.ToDomain();
+        Result<Paciente2025> pacienteDomainR = viewModelTurno.PacienteRelacionado.ToDomain();
 
 		if (medicoDomainR is Result<Medico2025>.Error medErr)
 			return new Result<Turno2025>.Error($"Error al crear médico de dominio: {medErr.Mensaje}");
 		if (pacienteDomainR is Result<Paciente2025>.Error pacErr)
 			return new Result<Turno2025>.Error($"Error al crear paciente de dominio: {pacErr.Mensaje}");
 
-		var medicoDomain = ((Result<Medico2025>.Ok)medicoDomainR).Valor;
-		var pacienteDomain = ((Result<Paciente2025>.Ok)pacienteDomainR).Valor;
+        Medico2025 medicoDomain = ((Result<Medico2025>.Ok)medicoDomainR).Valor;
+        Paciente2025 pacienteDomain = ((Result<Paciente2025>.Ok)pacienteDomainR).Valor;
 
-		// Construir especialidad a partir del médico (usamos rama por defecto si se requiere)
-		var especialidadResult = EspecialidadMedica2025.CrearPorCodigoInterno(viewModelTurno.MedicoRelacionado.EspecialidadCodigoInterno);
+        // Construir especialidad a partir del médico (usamos rama por defecto si se requiere)
+        Result<EspecialidadMedica2025> especialidadResult = EspecialidadMedica2025.CrearPorCodigoInterno(viewModelTurno.MedicoRelacionado.EspecialidadCodigoInterno);
 
 		if (especialidadResult is Result<EspecialidadMedica2025>.Error espErr)
 			return new Result<Turno2025>.Error($"Error al crear especialidad: {espErr.Mensaje}");

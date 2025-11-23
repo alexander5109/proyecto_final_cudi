@@ -161,15 +161,15 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 
 	//------------------------public.READ----------------------//
 	public override List<ViewModelMedico> ReadMedicos() {
-		return DictMedicos.Values.ToList();
+		return [.. DictMedicos.Values];
 	}
 
 	public override List<ViewModelPaciente> ReadPacientes() {
-		return DictPacientes.Values.ToList();
+		return [.. DictPacientes.Values];
 	}
 
 	public override List<ViewModelTurno> ReadTurnos() {
-		return DictTurnos.Values.ToList();
+		return [.. DictTurnos.Values];
 	}
 
 
@@ -413,7 +413,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				conexion.Open();
 				string consulta = "SELECT * FROM Paciente";
 				using (var sqlComando = new SqlCommand(consulta, conexion))
-				using (var reader = sqlComando.ExecuteReader()) {
+				using (SqlDataReader reader = sqlComando.ExecuteReader()) {
 					while (reader.Read()) {
                         ViewModelPaciente paciente = new ViewModelPaciente(
 							Convert.ToInt32(reader["Id"]),
@@ -450,7 +450,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				conexion.Open();
 				string consulta = "SELECT * FROM Turno";
 				using (var sqlComando = new SqlCommand(consulta, conexion))
-				using (var reader = sqlComando.ExecuteReader()) {
+				using (SqlDataReader reader = sqlComando.ExecuteReader()) {
 					while (reader.Read()) {
                         ViewModelTurno turno = new(
 							int.Parse(reader["Id"].ToString()),

@@ -66,7 +66,7 @@ public readonly record struct FechaIngreso2025(DateTime Valor): IComoTexto {
 				formatos,
 				CultureInfo.InvariantCulture,
 				DateTimeStyles.None,
-				out var dtExact)) {
+				out DateTime dtExact)) {
 			return Crear(dtExact);
 		}
 
@@ -75,7 +75,7 @@ public readonly record struct FechaIngreso2025(DateTime Valor): IComoTexto {
 				input,
 				CultureInfo.CurrentCulture,
 				DateTimeStyles.AssumeLocal,
-				out var dtCulture)) {
+				out DateTime dtCulture)) {
 			return Crear(dtCulture);
 		}
 

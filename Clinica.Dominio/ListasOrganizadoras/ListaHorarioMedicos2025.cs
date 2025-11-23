@@ -10,7 +10,7 @@ public readonly record struct ListaHorarioMedicos2025(
 	public string ATexto() {
 		if (Valores.Count == 0)
 			return "Lista de horarios: (vacía)";
-		var lineas = Valores
+        IEnumerable<string> lineas = Valores
 			.Select(v => "- " + v.ATexto());
 		return "Lista de horarios:\n" + string.Join("\n", lineas);
 	}

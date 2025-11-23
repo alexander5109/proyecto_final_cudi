@@ -19,14 +19,14 @@ public sealed record ServicioDisponibilidadesSearcher(
 		IReadOnlyList<Medico2025> medicos,
 		ServicioTurnosManager turnosActuales
 	) {
-		foreach (var medico in medicos)
-			foreach (var especialidad in medico.Especialidades.Valores) {
+		foreach (Medico2025 medico in medicos)
+			foreach (EspecialidadMedica2025 especialidad in medico.Especialidades.Valores) {
 				if (especialidad != solicitud.Especialidad)
 					continue;
 
 				int duracion = especialidad.DuracionConsultaMinutos;
 
-				foreach (var franja in medico.ListaHorarios.Valores) {
+				foreach (HorarioMedico2025 franja in medico.ListaHorarios.Valores) {
 					DateTime fecha = solicitud.FechaCreacion.Date;
 
 					// Ajustar al próximo día válido
