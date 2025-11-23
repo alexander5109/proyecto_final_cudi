@@ -24,7 +24,7 @@ public static class MainProgram {
 
 
         // 2. Crear el servicio de casos de uso
-        ServicioTurnosManagerAsync servicio = new(medicoRepo, turnoRepo);
+        ServicioCasosDeUsoAsync servicio = new(medicoRepo, turnoRepo);
 
         // 3. Ejecutar casos de uso, NO cargar colecciones
         Result<Turno2025> turno = (await servicio.SolicitarTurnoEnLaPrimeraDisponibilidad(
