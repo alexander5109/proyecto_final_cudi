@@ -154,7 +154,7 @@ public class ServicioTurnosManager(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion
 	) {
-        DisponibilidadEspecialidad2025? proxima = _GenerarDisponibilidades(solicitudEspecialidad, solicitudFechaCreacion).FirstOrDefault();
+		DisponibilidadEspecialidad2025? proxima = _GenerarDisponibilidades(solicitudEspecialidad, solicitudFechaCreacion).FirstOrDefault();
 		if (proxima is null)
 			return new Result<DisponibilidadEspecialidad2025>.Error("No se encontraron disponibilidades");
 		return new Result<DisponibilidadEspecialidad2025>.Ok((DisponibilidadEspecialidad2025)proxima);
@@ -172,7 +172,7 @@ public class ServicioTurnosManager(
 		if (idx == -1)
 			return new Result<Turno2025>.Error("El turno no existe en esta ListaTurnos.");
 
-        Result<Turno2025> nuevoTurnoResult = turnoOriginal.CambiarEstado(outcomeEstado, outcomeFecha, outcomeComentario);
+		Result<Turno2025> nuevoTurnoResult = turnoOriginal.CambiarEstado(outcomeEstado, outcomeFecha, outcomeComentario);
 		if (nuevoTurnoResult.IsOk) {
 			Turnos.RemoveAt(idx);
 			Turnos.Add(((Result<Turno2025>.Ok)nuevoTurnoResult).Valor);
@@ -216,8 +216,15 @@ public class ServicioTurnosManager(
 		return turno;
 	}
 
-	public Result<Turno2025> SolicitarReprogramacionALaPrimeraDisponibilidad(Turno2025 turnoOriginal, DateTime when, string why) {
-        Result<Turno2025> turnoCanceladoResult = _CambiarEstadoInterno(turnoOriginal, TurnoOutcomeEstado2025.Reprogramado, when,why);
+	public Result<Turno2025> SolicitarReprogramacionALaPrimeraDisponibilidad(Result<Turno2025> turnoOriginalResult, DateTime when, string why) {
+
+		if (turnoOriginalResult.IsError) {
+			return new Result<Turno2025>.Error($"No se puede reprogramar un turno con errores previos: {((Result<Turno2025>.Error)turnoOriginalResult).Mensaje}");
+		}
+		Turno2025 turnoOriginal = ((Result<Turno2025>.Ok)turnoOriginalResult).Valor;
+
+
+		Result<Turno2025> turnoCanceladoResult = _CambiarEstadoInterno(turnoOriginal, TurnoOutcomeEstado2025.Reprogramado, when, why);
 		if (turnoCanceladoResult.IsError) return turnoCanceladoResult;
 		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)turnoCanceladoResult).Valor;
 
@@ -233,7 +240,13 @@ public class ServicioTurnosManager(
 		return nuevoTurno;
 	}
 
-	public Result<Turno2025> SolicitarCancelacion(Turno2025 turnoOriginal, DateTime solicitudFecha, string solicitudReason) {
+	public Result<Turno2025> SolicitarCancelacion(Result<Turno2025> turnoOriginalResult, DateTime solicitudFecha, string solicitudReason) {
+		if (turnoOriginalResult.IsError) {
+			return new Result<Turno2025>.Error($"No se puede reprogramar un turno con errores previos: {((Result<Turno2025>.Error)turnoOriginalResult).Mensaje}");
+		}
+		Turno2025 turnoOriginal = ((Result<Turno2025>.Ok)turnoOriginalResult).Valor;
+
+
 		return _CambiarEstadoInterno(turnoOriginal, TurnoOutcomeEstado2025.Cancelado, solicitudFecha, solicitudReason);
 	}
 }
