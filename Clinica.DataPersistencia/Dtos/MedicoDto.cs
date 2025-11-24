@@ -6,21 +6,6 @@ using Clinica.Dominio.TiposDeValor;
 
 
 namespace Clinica.Infrastructure.Dtos;
-
-public record HorarioMedicoDto(
-	int Id,
-	int MedicoId,
-	int DiaSemana,
-	TimeOnly HoraDesde,
-	TimeOnly HoraHasta
-) {
-	public Result<HorarioMedico2025> ToDomain() =>
-		HorarioMedico2025.Crear(
-			new DiaSemana2025((DayOfWeek)DiaSemana),
-			new HorarioHora2025(HoraDesde),
-			new HorarioHora2025(HoraHasta)
-		);
-}
 public record class MedicoDto {
 	public int Id { get; set; }
 	public byte EspecialidadCodigoInterno { get; set; }
