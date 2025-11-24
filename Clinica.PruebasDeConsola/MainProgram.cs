@@ -1,4 +1,5 @@
-﻿using Clinica.Dominio.Comun;
+﻿using System.Collections.Generic;
+using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.Persistencia;
@@ -25,19 +26,32 @@ public static class MainProgram {
 			)
 		);
 
-		// 3. Ejecutar casos de uso, NO cargar colecciones
+
+		// Caso de uso 1
+		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidades = (await servicio.SolicitarDisponibilidadesPara(
+			EspecialidadMedica2025.ClinicoGeneral,
+			DateTime.Now,
+			15
+		)).PrintAndContinue("Disponbiildiades encontradas::");
+		//var lista = disponibilidades.GetOrRaise();
+		//foreach (var d in lista)
+		//	Console.WriteLine(d.ATexto());
+
+		// Caso de uso 2
 		Result<Turno2025> turno = (await servicio.SolicitarTurnoEnLaPrimeraDisponibilidad(
 			new PacienteId(1),
 			EspecialidadMedica2025.ClinicoGeneral,
 			DateTime.Now
 		)).PrintAndContinue("Turno asignado:");
 
+		// Caso de uso 3
 		Result<Turno2025> reprogramado = (await servicio.SolicitarReprogramacionALaPrimeraDisponibilidad(
 			turno,
 			DateTime.Now.AddDays(1),
 			"Reprogramación"
 		)).PrintAndContinue("Turno reprogramado:");
 
+		// Caso de uso 4
 		Result<Turno2025> cancelado = (await servicio.SolicitarCancelacion(
 			reprogramado,
 			DateTime.Now.AddDays(2),

@@ -10,7 +10,7 @@ namespace Clinica.Dominio.Servicios;
 public static class ServiciosPublicos {
 
 
-	public static Result<IReadOnlyList<DisponibilidadEspecialidad2025>> SolicitarDisponibilidadesPara(
+	public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> SolicitarDisponibilidadesPara(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		int cuantos,
@@ -18,7 +18,7 @@ public static class ServiciosPublicos {
 		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoIdInVigencia,
 		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas
 	) {
-		IReadOnlyList<DisponibilidadEspecialidad2025> disponibles = [.. ServiciosPrivados._GenerarDisponibilidades(
+		IReadOnlyList<DisponibilidadEspecialidad2025> disponibles = [.. ServiciosPrivados.GenerarDisponibilidades(
 			solicitudEspecialidad,
 			solicitudFechaCreacion,
 			funcSelectMedicosWhereEspecialidad,
@@ -34,7 +34,6 @@ public static class ServiciosPublicos {
 		}
 	}
 
-
 	public static async Task<Result<Turno2025>> SolicitarTurnoEnLaPrimeraDisponibilidad(
 		PacienteId pacienteId,
 		EspecialidadMedica2025 solicitudEspecialidad,
@@ -44,44 +43,41 @@ public static class ServiciosPublicos {
 		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas,
 		Func<Turno2025, Task<Result<TurnoId>>> funcInsertTurnoReturnId
 	) {
-		//Faltaria validacion pacienteId in Pacientes.
-		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1 = ServiciosPrivados._EncontrarProximaDisponibilidad(
+		Result<DisponibilidadEspecialidad2025> dispResult = ServiciosPrivados.EncontrarProximaDisponibilidad(
 			solicitudEspecialidad,
 			solicitudFechaCreacion,
 			funcSelectMedicosWhereEspecialidad,
 			funcSelectHorariosWhereMedicoIdInVigencia,
 			funcSelectTurnosWhereMedicoIdBetweenFechas
-		).PrintAndContinue();
-		Result<Turno2025> turnoProvisorioResult = Turno2025.Crear(new TurnoId(-1), pacienteId, solicitudFechaCreacion, disponibilidadParaPaciente1).PrintAndContinue();
+		);
 
-		if (turnoProvisorioResult is Result<Turno2025>.Error err3)
-			return err3;
-		Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)turnoProvisorioResult).Valor;
+		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error e1)
+			return new Result<Turno2025>.Error(e1.Mensaje);
 
-		// ---------------------------------------------------------
-		// 5. IO: Insertar nuevo turno y obtener ID
-		// ---------------------------------------------------------
+		Result<Turno2025> turnoResult = Turno2025.Crear(
+			new TurnoId(-1),
+			pacienteId,
+			solicitudFechaCreacion,
+			dispResult
+		);
+
+		if (turnoResult is Result<Turno2025>.Error e2)
+			return new Result<Turno2025>.Error(e2.Mensaje);
+
+		Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)turnoResult).Valor;
+
 		Result<TurnoId> insertResult = await funcInsertTurnoReturnId(turnoProvisorio);
 
-		switch (insertResult.PrintAndContinue()) {
-			case Result<TurnoId>.Error errInsert:
-				return new Result<Turno2025>.Error(
-					$"Error al persistir el nuevo turno: {errInsert.Mensaje}"
-				);
+		if (insertResult is Result<TurnoId>.Error e3)
+			return new Result<Turno2025>.Error(
+				$"Error al persistir el nuevo turno: {e3.Mensaje}"
+			);
 
-			case Result<TurnoId>.Ok okInsert: {
-				TurnoId idReal = okInsert.Valor;
+		TurnoId idReal = ((Result<TurnoId>.Ok)insertResult).Valor;
 
-				// -------------------------------------------------
-				// 6. Adjuntar Id real (PURO)
-				// -------------------------------------------------
-				Turno2025 turnoFinal = turnoProvisorio with { Id = idReal };
-
-				return new Result<Turno2025>.Ok(turnoFinal);
-			}
-			default:
-				throw new Exception("Inalcanzable"); // por exhaustividad
-		}
+		return new Result<Turno2025>.Ok(
+			turnoProvisorio with { Id = idReal }
+		);
 	}
 
 
@@ -96,41 +92,27 @@ public static class ServiciosPublicos {
 		Func<Turno2025, Task<Result<Unit>>> funcUpdateTurnoWhereId,
 		Func<Turno2025, Task<Result<TurnoId>>> funcInsertTurnoReturnId
 	) {
-		// ---------------------------------------------------------
-		// 1. Cambiar estado del turno original (PURO)
-		// ---------------------------------------------------------
-		Result<Turno2025> turnoCanceladoResult = turnoOriginal.SetOutcome(
+		Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
 			TurnoOutcomeEstado2025.Reprogramado,
 			outcomeFecha,
 			outcomeComentario
 		);
 
-		if (turnoCanceladoResult is Result<Turno2025>.Error err1)
-			return new Result<Turno2025>.Error(err1.Mensaje);
+		if (canceladoResult is Result<Turno2025>.Error e1)
+			return new Result<Turno2025>.Error(e1.Mensaje);
 
-		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)turnoCanceladoResult).Valor;
+		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
 
 
-		// ---------------------------------------------------------
-		// 2. IO: Persistir cambios del turno cancelado
-		// ---------------------------------------------------------
 		Result<Unit> updateResult = await funcUpdateTurnoWhereId(turnoCancelado);
 
-		switch (updateResult) {
-			case Result<Unit>.Error errUpdate:
-				return new Result<Turno2025>.Error(
-					$"Error al persistir la cancelación del turno: {errUpdate.Mensaje}"
-				);
-
-			case Result<Unit>.Ok:
-				break; // OK, continuamos
-		}
+		if (updateResult is Result<Unit>.Error e2)
+			return new Result<Turno2025>.Error(
+				$"Error al persistir la cancelación del turno: {e2.Mensaje}"
+			);
 
 
-		// ---------------------------------------------------------
-		// 3. Encontrar próxima disponibilidad (PURO)
-		// ---------------------------------------------------------
-		Result<DisponibilidadEspecialidad2025> dispResult = ServiciosPrivados._EncontrarProximaDisponibilidad(
+		Result<DisponibilidadEspecialidad2025> dispResult = ServiciosPrivados.EncontrarProximaDisponibilidad(
 			turnoOriginal.Especialidad,
 			outcomeFecha,
 			funcSelectMedicosWhereEspecialidad,
@@ -138,101 +120,69 @@ public static class ServiciosPublicos {
 			funcSelectTurnosWhereMedicoIdBetweenFechas
 		);
 
-		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error errDisp)
-			return new Result<Turno2025>.Error(errDisp.Mensaje);
+		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error e3)
+			return new Result<Turno2025>.Error(e3.Mensaje);
+
+		DisponibilidadEspecialidad2025 disponibilidad = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
 
 
-		// ---------------------------------------------------------
-		// 4. Crear nuevo turno (PURO)
-		//    El ID aún no lo sabemos → se pone dummy
-		// ---------------------------------------------------------
-		Result<Turno2025> turnoProvisorioResult = turnoCancelado.Reprogramar(
-			dispResult,
-			new TurnoId(-1) // placeholder
+		Result<Turno2025> provResult = turnoCancelado.Reprogramar(
+			disponibilidad,
+			new TurnoId(-1) // placeholder hasta persistencia
 		);
 
-		if (turnoProvisorioResult is Result<Turno2025>.Error err3)
-			return err3;
+		if (provResult is Result<Turno2025>.Error e4)
+			return new Result<Turno2025>.Error(e4.Mensaje);
 
-		Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)turnoProvisorioResult).Valor;
+		Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)provResult).Valor;
 
 
-		// ---------------------------------------------------------
-		// 5. IO: Insertar nuevo turno y obtener ID
-		// ---------------------------------------------------------
 		Result<TurnoId> insertResult = await funcInsertTurnoReturnId(turnoProvisorio);
 
-		switch (insertResult) {
-			case Result<TurnoId>.Error errInsert:
-				return new Result<Turno2025>.Error(
-					$"Error al persistir el nuevo turno reprogramado: {errInsert.Mensaje}"
-				);
+		if (insertResult is Result<TurnoId>.Error e5)
+			return new Result<Turno2025>.Error(
+				$"Error al persistir el nuevo turno reprogramado: {e5.Mensaje}"
+			);
 
-			case Result<TurnoId>.Ok okInsert: {
-				TurnoId idReal = okInsert.Valor;
+		TurnoId idReal = ((Result<TurnoId>.Ok)insertResult).Valor;
 
-				// -------------------------------------------------
-				// 6. Adjuntar Id real (PURO)
-				// -------------------------------------------------
-				Turno2025 turnoFinal = turnoProvisorio with { Id = idReal };
 
-				return new Result<Turno2025>.Ok(turnoFinal);
-			}
-
-			default:
-				throw new Exception("Inalcanzable"); // por exhaustividad
-		}
+		return new Result<Turno2025>.Ok(
+			turnoProvisorio with { Id = idReal }
+		);
 	}
 
 
 
 	public static async Task<Result<Turno2025>> SolicitarCancelacion(
-		Result<Turno2025> turnoOriginalResult,
+		Turno2025 turnoOriginal,
 		DateTime outcomeFecha,
 		string outcomeComentario,
 		Func<Turno2025, Task<Result<Unit>>> funcUpdateTurnoWhereId
 	) {
-		if (turnoOriginalResult.IsError) {
-			return new Result<Turno2025>.Error($"No se puede reprogramar un turno con errores previos: {((Result<Turno2025>.Error)turnoOriginalResult).Mensaje}");
-		}
-		Turno2025 turnoOriginal = ((Result<Turno2025>.Ok)turnoOriginalResult).Valor;
+		// 1. Aplicar regla de dominio para cancelar
+		Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
+			TurnoOutcomeEstado2025.Cancelado,
+			outcomeFecha,
+			outcomeComentario
+		);
 
+		if (canceladoResult is Result<Turno2025>.Error e1)
+			return new Result<Turno2025>.Error(e1.Mensaje);
 
-		Result<Turno2025> turnoCanceladoResult = turnoOriginal.SetOutcome(TurnoOutcomeEstado2025.Cancelado, outcomeFecha, outcomeComentario);
+		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
 
-		if (turnoCanceladoResult is Result<Turno2025>.Error err1)
-			return new Result<Turno2025>.Error(err1.Mensaje);
-
-		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)turnoCanceladoResult).Valor;
-
-
-
-		//Result<IReadOnlyList<Turno2025>> turnosVerificados = ServiciosPrivados._ValidarTurnos(turnosResults);
-		//if (turnosVerificados.IsError) {
-		//	return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Turno2025>>.Error)turnosVerificados).Mensaje}");
-		//}
-		//IReadOnlyList<Turno2025> turnos = ((Result<IReadOnlyList<Turno2025>>.Ok)turnosVerificados).Valor;
-
-
-
-		// ---------------------------------------------------------
-		// 2. IO: Persistir cambios del turno cancelado
-		// ---------------------------------------------------------
+		// 2. Guardar cambios (IO)
 		Result<Unit> updateResult = await funcUpdateTurnoWhereId(turnoCancelado);
 
-		switch (updateResult) {
-			case Result<Unit>.Error errUpdate:
-				return new Result<Turno2025>.Error(
-					$"Error al persistir la cancelación del turno: {errUpdate.Mensaje}"
-				);
+		if (updateResult is Result<Unit>.Error e2)
+			return new Result<Turno2025>.Error(
+				$"Error al persistir la cancelación del turno: {e2.Mensaje}"
+			);
 
-			case Result<Unit>.Ok:
-				return new Result<Turno2025>.Ok(turnoCancelado);
-
-			default:
-				throw new Exception("Inalcanzable"); // por exhaustividad
-		}
+		return new Result<Turno2025>.Ok(turnoCancelado);
 	}
+
 
 
 

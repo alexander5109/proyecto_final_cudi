@@ -49,12 +49,12 @@ public partial class ServiciosPublicosAsync {
 			return Enumerar();
 
 			IEnumerable<HorarioMedico2025> Enumerar() {
-				var dtos = BaseDeDatos
+                IEnumerable<HorarioMedicoDto> dtos = BaseDeDatos
 					.SelectHorariosWhereMedicoIdInVigencia(medicoId, fechaDesde, fechaHasta)
 					.Result;
 
-				foreach (var dto in dtos) {
-					var dom = dto.ToDomain();
+				foreach (HorarioMedicoDto dto in dtos) {
+                    Result<HorarioMedico2025> dom = dto.ToDomain();
 					if (dom is Result<HorarioMedico2025>.Ok ok)
 						yield return ok.Valor;
 				}

@@ -79,7 +79,6 @@
     <Build Include="Dto\StoredProcedures\sp_UpdateMedicoWithHorarios.sql" />
     <Build Include="Dto\StoredProcedures\sp_UpdatePaciente.sql" />
     <Build Include="Dto\UserDefinedTableTypes\HorarioMedicoTableType.sql" />
-    <Build Include="Dto\StoredProcedures\sp_ReadTurnosAllWhereMedico.sql" />
     <Build Include="Dto\StoredProcedures2025\sp_InsertTurnoReturnId.sql" />
     <Build Include="Dto\StoredProcedures2025\sp_SelectMedicos.sql" />
     <Build Include="Dto\StoredProcedures2025\sp_SelectMedicosWhereEspecialidad.sql" />

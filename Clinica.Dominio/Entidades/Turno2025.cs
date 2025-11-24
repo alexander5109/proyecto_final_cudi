@@ -79,29 +79,21 @@ public record Turno2025(
 		return new Result<Turno2025>.Ok(this with { OutcomeEstado = outcomeEstado, OutcomeComentario = Option<string>.Some(outcomeComentario), OutcomeFecha = Option<DateTime>.Some(outcomeFecha) });
 	}
 
-	public Result<Turno2025> Reprogramar(Result<DisponibilidadEspecialidad2025> dispResult, TurnoId turnoId) {
+	public Result<Turno2025> Reprogramar(DisponibilidadEspecialidad2025 disponibilidad, TurnoId turnoId) {
 		if (OutcomeEstado == TurnoOutcomeEstado2025.Programado || !OutcomeFecha.HasValue) {
 			return new Result<Turno2025>.Error("No se puede reprogramar un turno que todavia esta programado.");
 		}
-		switch (dispResult) {
-			case Result<DisponibilidadEspecialidad2025>.Ok dispOk: {
-				return new Result<Turno2025>.Ok(new Turno2025(
-					turnoId,
-					OutcomeFecha.Value,
-					PacienteId,
-					MedicoId,
-					Especialidad,
-					FechaHoraAsignadaDesde: dispOk.Valor.FechaHoraDesde,
-					FechaHoraAsignadaHasta: dispOk.Valor.FechaHoraHasta,
-					OutcomeEstado: TurnoOutcomeEstado2025.Programado,
-					OutcomeFecha: Option<DateTime>.None,
-					OutcomeComentario: Option<string>.None
-				));
-			}
-			case Result<DisponibilidadEspecialidad2025>.Error: {
-				return new Result<Turno2025>.Error("No se encontaron disponibilidades.");
-			}
-			default: throw new Exception();
-		}
+		return new Result<Turno2025>.Ok(new Turno2025(
+			turnoId,
+			OutcomeFecha.Value,
+			PacienteId,
+			MedicoId,
+			Especialidad,
+			FechaHoraAsignadaDesde: disponibilidad.FechaHoraDesde,
+			FechaHoraAsignadaHasta: disponibilidad.FechaHoraHasta,
+			OutcomeEstado: TurnoOutcomeEstado2025.Programado,
+			OutcomeFecha: Option<DateTime>.None,
+			OutcomeComentario: Option<string>.None
+		));
 	}
 }

@@ -1,68 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Servicios;
 
-public static class ServiciosPrivados {
-	//------------------------------------------------PRIVATE-------------------------------------------------------//
-	public static Result<IReadOnlyList<Turno2025>> _ValidarTurnos(IReadOnlyList<Result<Turno2025>> turnosResults) {
-		List<string> errores = [];
-		foreach (Result<Turno2025> turno in turnosResults) {
-			if (turno is Result<Turno2025>.Error err)
-				errores.Add(err.Mensaje);
-			turno.PrintAndContinue("Turno domainizado");
-		}
-		if (errores.Count > 0)
-			return new Result<IReadOnlyList<Turno2025>>.Error(string.Join("; ", errores));
-		IReadOnlyList<Turno2025> turnosOk = [.. turnosResults
-			.Cast<Result<Turno2025>.Ok>()
-			.Select(ok => ok.Valor)];
-		return new Result<IReadOnlyList<Turno2025>>.Ok(turnosOk);
-	}
-
-	public static Result<IReadOnlyList<Paciente2025>> _ValidaPacientes(IReadOnlyList<Result<Paciente2025>> pacientesResults) {
-		List<string> errores = [];
-		foreach (Result<Paciente2025> paciente in pacientesResults) {
-			if (paciente is Result<Paciente2025>.Error err)
-				errores.Add(err.Mensaje);
-			paciente.PrintAndContinue("Paciente domainizado");
-		}
-		if (errores.Count > 0)
-			return new Result<IReadOnlyList<Paciente2025>>.Error(string.Join("; ", errores));
-		IReadOnlyList<Paciente2025> pacientesOk = [.. pacientesResults
-			.Cast<Result<Paciente2025>.Ok>()
-			.Select(ok => ok.Valor)];
-		return new Result<IReadOnlyList<Paciente2025>>.Ok(pacientesOk);
-	}
-
-
-	public static Result<IReadOnlyList<Medico2025>> _ValidarMedicos(IReadOnlyList<Result<Medico2025>> medicosResults) {
-		List<string> errores = [];
-		foreach (Result<Medico2025> medico in medicosResults) {
-			if (medico is Result<Medico2025>.Error err)
-				errores.Add(err.Mensaje);
-			medico.PrintAndContinue("Medico domainizado");
-		}
-		if (errores.Count > 0)
-			return new Result<IReadOnlyList<Medico2025>>.Error(string.Join("; ", errores));
-		IReadOnlyList<Medico2025> medicosOk = [.. medicosResults
-			.Cast<Result<Medico2025>.Ok>()
-			.Select(ok => ok.Valor)];
-		return new Result<IReadOnlyList<Medico2025>>.Ok(medicosOk);
-	}
-
-	public static Result<DisponibilidadEspecialidad2025> _EncontrarProximaDisponibilidad(
+internal static class ServiciosPrivados {
+	internal static Result<DisponibilidadEspecialidad2025> EncontrarProximaDisponibilidad(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
 		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoIdInVigencia,
 		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas
 	) {
-		DisponibilidadEspecialidad2025? proxima = _GenerarDisponibilidades(
+		DisponibilidadEspecialidad2025? proxima = GenerarDisponibilidades(
 			solicitudEspecialidad,
 			solicitudFechaCreacion,
 			funcSelectMedicosWhereEspecialidad,
@@ -75,10 +25,7 @@ public static class ServiciosPrivados {
 	}
 
 
-
-
-	public static bool _DisponibilidadNoColisiona(
-		MedicoId medicoId,
+	internal static bool DisponibilidadNoColisiona(
 		EspecialidadMedica2025 especialidad,
 		DateTime fechaHoraDesde,
 		DateTime fechaHoraHasta,
@@ -104,7 +51,7 @@ public static class ServiciosPrivados {
 
 		return true;
 	}
-	public static IEnumerable<DisponibilidadEspecialidad2025> _GenerarDisponibilidades(
+	internal static IEnumerable<DisponibilidadEspecialidad2025> GenerarDisponibilidades(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
@@ -119,8 +66,8 @@ public static class ServiciosPrivados {
 			DateTime rangoDesde = solicitudFechaCreacion.Date;
 			DateTime rangoHasta = solicitudFechaCreacion.Date.AddDays(7 * 30);
 
-            // pedir horarios vigentes en ese rango
-            IEnumerable<HorarioMedico2025> horarios = funcSelectHorariosWhereMedicoIdInVigencia(medico.Id, rangoDesde, rangoHasta);
+			// pedir horarios vigentes en ese rango
+			IEnumerable<HorarioMedico2025> horarios = funcSelectHorariosWhereMedicoIdInVigencia(medico.Id, rangoDesde, rangoHasta);
 
 			// traer turnos ya asignados dentro del rango
 			List<Turno2025> turnos = [.. funcSelectTurnosWhereMedicoIdBetweenFechas(medico.Id, rangoDesde, rangoHasta)]; // se usa mucho
@@ -140,11 +87,12 @@ public static class ServiciosPrivados {
 						continue;
 
 					for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
-                        DisponibilidadEspecialidad2025 disp = new(solicitudEspecialidad, medico.Id, slot, slot.AddMinutes(duracion));
+						DisponibilidadEspecialidad2025 disp = new(solicitudEspecialidad, medico.Id, slot, slot.AddMinutes(duracion));
 
-						if (!_DisponibilidadNoColisiona(
-							disp.MedicoId, disp.Especialidad,
-							disp.FechaHoraDesde, disp.FechaHoraHasta,
+						if (!DisponibilidadNoColisiona(
+							disp.Especialidad,
+							disp.FechaHoraDesde,
+							disp.FechaHoraHasta,
 							turnos))
 							continue;
 
@@ -154,11 +102,6 @@ public static class ServiciosPrivados {
 			}
 		}
 	}
-
-
-
-
-
 
 
 
