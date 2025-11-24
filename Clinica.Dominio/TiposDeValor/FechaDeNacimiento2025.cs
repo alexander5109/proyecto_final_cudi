@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using Clinica.Dominio.Comun;
 
-namespace Clinica.Dominio.Entidades;
+namespace Clinica.Dominio.TiposDeValor;
 
-public readonly record struct FechaDeNacimiento2025(DateOnly Valor) : IComoTexto {
+public record FechaDeNacimiento2025(DateOnly Valor) : IComoTexto {
 	public string ATexto() {
 		return Valor.ToString("dd/MM/yyyy");
 	}

@@ -41,7 +41,7 @@ public static class MainProgram {
 		Result<Turno2025> turno = (await servicio.SolicitarTurnoEnLaPrimeraDisponibilidad(
 			new PacienteId(1),
 			EspecialidadMedica2025.ClinicoGeneral,
-			DateTime.Now
+			new FechaRegistro2025(DateTime.Now)
 		)).PrintAndContinue("Turno asignado:");
 
 		// Caso de uso 3

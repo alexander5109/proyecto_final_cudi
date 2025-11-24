@@ -37,7 +37,7 @@ public static class ServiciosPublicos {
 	public static async Task<Result<Turno2025>> SolicitarTurnoEnLaPrimeraDisponibilidad(
 		PacienteId pacienteId,
 		EspecialidadMedica2025 solicitudEspecialidad,
-		DateTime solicitudFechaCreacion,
+		FechaRegistro2025 solicitudFechaCreacion,
 		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
 		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoIdInVigencia,
 		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas,
@@ -45,7 +45,7 @@ public static class ServiciosPublicos {
 	) {
 		Result<DisponibilidadEspecialidad2025> dispResult = ServiciosPrivados.EncontrarProximaDisponibilidad(
 			solicitudEspecialidad,
-			solicitudFechaCreacion,
+			solicitudFechaCreacion.Valor,
 			funcSelectMedicosWhereEspecialidad,
 			funcSelectHorariosWhereMedicoIdInVigencia,
 			funcSelectTurnosWhereMedicoIdBetweenFechas

@@ -32,8 +32,8 @@ public class BaseDeDatosRepositorio {
 		try {
 			using IDbConnection conn = _factory.CreateConnection();
 			DynamicParameters parameters = new DynamicParameters();
-			parameters.Add("@FechaDeCreacion", turno.FechaDeCreacion);
-			parameters.Add("@PacienteId", turno.PacienteId.Value);
+			parameters.Add("@FechaDeCreacion", turno.FechaDeCreacion.Valor);
+			parameters.Add("@PacienteId", turno.PacienteId.Valor);
 			parameters.Add("@MedicoId", turno.MedicoId.Valor);
 			parameters.Add("@EspecialidadCodigo", turno.Especialidad.CodigoInterno.Valor);
 			parameters.Add("@FechaHoraAsignadaDesde", turno.FechaHoraAsignadaDesde);

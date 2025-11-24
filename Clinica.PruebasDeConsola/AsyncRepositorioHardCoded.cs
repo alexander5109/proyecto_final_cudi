@@ -36,7 +36,7 @@ public static class AsyncRepositorioHardCoded  {
 						new HorarioHora2025(TimeOnly.Parse("15:00"))
 					)
 				]),
-				FechaIngreso2025.Crear(DateTime.Parse("2014/12/12")),
+				FechaRegistro2025.Crear(DateTime.Parse("2014/12/12")),
 				false
 			)
 			.PrintAndContinue("Creando a clinico general-gastroenterologo Carlos Merkier: ")
@@ -71,7 +71,7 @@ public static class AsyncRepositorioHardCoded  {
 						new HorarioHora2025(TimeOnly.Parse("18:00"))
 					)
 				]),
-				FechaIngreso2025.Crear(DateTime.Parse("2014/12/12")),
+				FechaRegistro2025.Crear(DateTime.Parse("2014/12/12")),
 				false
 			)
 			.PrintAndContinue("Creando a pediatra-ginecologo Jorge Pereyra: ")
@@ -111,7 +111,7 @@ public static class AsyncRepositorioHardCoded  {
 						new HorarioHora2025(TimeOnly.Parse("12:00"))
 					)
 				]),
-				FechaIngreso2025.Crear(DateTime.Parse("2013/12/12")),
+				FechaRegistro2025.Crear(DateTime.Parse("2013/12/12")),
 				false
 			)
 			.PrintAndContinue("Creando a neurologa-osteopata Marta Algerich: ")
@@ -138,7 +138,7 @@ public static class AsyncRepositorioHardCoded  {
 					"Calle Falsa 123"
 				),
 				FechaDeNacimiento2025.Crear(DateTime.Parse("1990/05/15")),
-				FechaIngreso2025.Crear(DateTime.Parse("2022/01/10"))
+				FechaRegistro2025.Crear(DateTime.Parse("2022/01/10"))
 			).PrintAndContinue("Creando a Juan: "),
 
 			Paciente2025.Crear(
@@ -157,7 +157,7 @@ public static class AsyncRepositorioHardCoded  {
 					"Palmerita 12223"
 				),
 				FechaDeNacimiento2025.Crear(DateTime.Parse("1996/05/15")),
-				FechaIngreso2025.Crear(DateTime.Parse("2024/01/10"))
+				FechaRegistro2025.Crear(DateTime.Parse("2024/01/10"))
 			).PrintAndContinue("Creando a Pedro: "),
 
 			Paciente2025.Crear(
@@ -176,7 +176,7 @@ public static class AsyncRepositorioHardCoded  {
 					"Urien 2223"
 				),
 				FechaDeNacimiento2025.Crear(DateTime.Parse("1994/05/15")),
-				FechaIngreso2025.Crear(DateTime.Parse("2023/01/10"))
+				FechaRegistro2025.Crear(DateTime.Parse("2023/01/10"))
 			).PrintAndContinue("Creando a Herminda: "),
 
 		});

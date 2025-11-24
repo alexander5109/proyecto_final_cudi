@@ -207,7 +207,7 @@ public partial class ViewModelMedico : ObservableObject {
 					HorarioHora2025.Crear(h.Hasta)
 				))
 			),
-			FechaIngreso2025.Crear(this.FechaIngreso),
+			FechaRegistro2025.Crear(this.FechaIngreso),
 			MedicoSueldoMinimo2025.Crear(this.SueldoMinimoGarantizado),
 			this.Guardia ?? false
 		);

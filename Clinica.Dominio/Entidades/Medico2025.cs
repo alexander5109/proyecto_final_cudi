@@ -14,7 +14,7 @@ public record Medico2025(
 	DomicilioArgentino2025 Domicilio,
 	ContactoTelefono2025 Telefono,
 	ListaHorarioMedicos2025 ListaHorarios,
-	FechaIngreso2025 FechaIngreso,
+	FechaRegistro2025 FechaIngreso,
 	bool HaceGuardias
 ) {
 	public static Result<Medico2025> Crear(
@@ -25,7 +25,7 @@ public record Medico2025(
 		Result<DomicilioArgentino2025> domicilioResult,
 		Result<ContactoTelefono2025> telefonoResult,
 		Result<ListaHorarioMedicos2025> horariosResult,
-		Result<FechaIngreso2025> fechaIngresoResult,
+		Result<FechaRegistro2025> fechaIngresoResult,
 		bool haceGuardia
 	) =>
 		from nombre in nombreResult

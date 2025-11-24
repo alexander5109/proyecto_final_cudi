@@ -15,7 +15,7 @@ public enum TurnoOutcomeEstado2025 {
 public record struct TurnoId(int Valor);
 public record Turno2025(
 	TurnoId Id,
-	DateTime FechaDeCreacion,
+	FechaRegistro2025 FechaDeCreacion,
 	PacienteId PacienteId,
 	MedicoId MedicoId,
 	EspecialidadMedica2025 Especialidad,
@@ -45,13 +45,9 @@ public record Turno2025(
 	public static Result<Turno2025> Crear(
 		TurnoId turnoId,
 		PacienteId pacienteId,
-		DateTime solicitadoEn,
+		FechaRegistro2025 solicitadoEn,
 		Result<DisponibilidadEspecialidad2025> dispResult
 	) {
-		// --- Validación de los Result ----
-		//if (solicitudResult is Result<SolicitudDeTurno>.Error solError)
-		//return new Result<Turno2025>.Error($"Error en solicitud: {solError.Mensaje}");
-
 		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error dispError)
 			return new Result<Turno2025>.Error($"Error en disponibilidad: {dispError.Mensaje}");
 
@@ -85,7 +81,7 @@ public record Turno2025(
 		}
 		return new Result<Turno2025>.Ok(new Turno2025(
 			turnoId,
-			OutcomeFecha.Value,
+			new FechaRegistro2025(OutcomeFecha.Value), //En efecto, la creamos desde la finalizacion del estado anterior.
 			PacienteId,
 			MedicoId,
 			Especialidad,

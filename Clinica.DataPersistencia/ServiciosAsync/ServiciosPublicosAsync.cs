@@ -34,7 +34,7 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio baseDeDatos) 
 	public async Task<Result<Turno2025>> SolicitarTurnoEnLaPrimeraDisponibilidad(
 		PacienteId pacienteId,
 		EspecialidadMedica2025 especialidad,
-		DateTime fechaSolicitud
+		FechaRegistro2025 fechaSolicitud
 	) {
 		return await ServiciosPublicos.SolicitarTurnoEnLaPrimeraDisponibilidad(
 			pacienteId,

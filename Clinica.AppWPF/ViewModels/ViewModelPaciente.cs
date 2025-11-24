@@ -74,7 +74,7 @@ public partial class ViewModelPaciente : ObservableObject {
 				this.Domicilio
 			),
 			FechaDeNacimiento2025.Crear(FechaNacimiento),
-			FechaIngreso2025.Crear(FechaIngreso)
+			FechaRegistro2025.Crear(FechaIngreso)
 		);
 	}
 }

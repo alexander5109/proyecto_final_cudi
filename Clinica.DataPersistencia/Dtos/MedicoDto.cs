@@ -43,7 +43,7 @@ public record class MedicoDto {
 			),
 			ContactoTelefono2025.Crear(Telefono),
 			ListaHorarioMedicos2025.Crear(horariosDto.Select(x => x.ToDomain())),
-			FechaIngreso2025.Crear(FechaIngreso),
+			FechaRegistro2025.Crear(FechaIngreso),
 			Guardia
 		);
 	}

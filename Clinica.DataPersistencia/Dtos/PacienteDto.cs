@@ -41,7 +41,7 @@ public record class PacienteDto {
 				? FechaDeNacimiento2025.Crear(DateOnly.FromDateTime(DateTime.UnixEpoch))
 				: FechaDeNacimiento2025.Crear(DateOnly.FromDateTime(FechaNacimiento.Value));
 
-        Result<FechaIngreso2025> ingreso = FechaIngreso2025.Crear(FechaIngreso);
+        Result<FechaRegistro2025> ingreso = FechaRegistro2025.Crear(FechaIngreso);
 
 		return Paciente2025.Crear(
 			new PacienteId(Id),
