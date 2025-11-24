@@ -88,22 +88,18 @@ public class ServiciosPublicosAsync(
 		}
 	}
 
-	public async Task<Result<Turno2025>> SolicitarCancelacion(Result<Turno2025> turnoOriginalResult, DateTime solicitudFecha, string solicitudReason) {
+	public async Task<Result<Turno2025>> SolicitarCancelacion(Result<Turno2025> turnoOriginalResult, DateTime outcomeFecha, string outcomeComentario) {
 		switch (turnoOriginalResult) {
 			case Result<Turno2025>.Error turnoError: {
 				return new Result<Turno2025>.Error($"SolicitarCancelacion fallido porque turno ya traia error: \n{turnoError.Mensaje}");
 			}
 			case Result<Turno2025>.Ok turnoOk: {
 				IEnumerable<MedicoDto> medicosDtos = await _medicosDapper.ReadMedicosFullWhereEspecialidad(turnoOk.Valor.Especialidad);
-				IEnumerable<TurnoDto> turnosDtos = await _turnosDapper.GetTurnosPorMedicos(
-					medicosDtos.Select(medicoDto => medicoDto.Id)
-				);
-				IReadOnlyList<Result<Turno2025>> turnosResults = [.. turnosDtos.Select(turnoDto => turnoDto.ToDomain())];
-				return ServiciosPublicos.SolicitarCancelacion(
+				return await ServiciosPublicos.SolicitarCancelacion(
 					turnoOriginalResult,
-					solicitudFecha,
-					solicitudReason,
-					turnosResults
+					outcomeFecha,
+					outcomeComentario,
+					funcUpdateTurno: _turnosDapper.UpdateTurno
 				);
 			}
 			default: throw new InvalidOperationException(); //impossible to occur

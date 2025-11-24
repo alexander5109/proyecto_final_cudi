@@ -49,47 +49,25 @@ public static class ServiciosPublicos {
 		IReadOnlyList<Result<Medico2025>> medicosResults,
 		IReadOnlyList<Result<Turno2025>> turnosResults,
 		Func<Turno2025, Task<Result<TurnoId>>> funcInsertTurno
-	//TurnoId resultingTurnoId 
 	) {
 		//Faltaria validacion pacienteId in Pacientes.
-
 		Result<IReadOnlyList<Medico2025>> medicosVerificados = ServiciosPrivados._ValidarMedicos(medicosResults);
 		if (medicosVerificados.IsError) {
 			return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Medico2025>>.Error)medicosVerificados).Mensaje}");
 		}
 		IReadOnlyList<Medico2025> medicos = ((Result<IReadOnlyList<Medico2025>>.Ok)medicosVerificados).Valor;
 
-
-
-
-
 		Result<IReadOnlyList<Turno2025>> turnosVerificados = ServiciosPrivados._ValidarTurnos(turnosResults);
 		if (turnosVerificados.IsError) {
 			return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Turno2025>>.Error)turnosVerificados).Mensaje}");
 		}
 		IReadOnlyList<Turno2025> turnos = ((Result<IReadOnlyList<Turno2025>>.Ok)turnosVerificados).Valor;
-
-
-
-
-
 		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1 = ServiciosPrivados._EncontrarProximaDisponibilidad(especialidadMedica, when, medicos, turnos);
-
-
-
-
-
-
-
 		Result<Turno2025> turnoProvisorioResult = Turno2025.Crear(new TurnoId(-1), pacienteId, when, disponibilidadParaPaciente1);
 
 		if (turnoProvisorioResult is Result<Turno2025>.Error err3)
 			return err3;
-
 		Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)turnoProvisorioResult).Valor;
-		//IO: EJECITAR insertTurno
-		//_AgendarTurno(turno, turnos).PrintAndContinue("Agendando medico: ");
-
 
 		// ---------------------------------------------------------
 		// 5. IO: Insertar nuevo turno y obtener ID
@@ -112,7 +90,6 @@ public static class ServiciosPublicos {
 
 				return new Result<Turno2025>.Ok(turnoFinal);
 			}
-
 			default:
 				throw new Exception("Inalcanzable"); // por exhaustividad
 		}
@@ -218,27 +195,52 @@ public static class ServiciosPublicos {
 
 
 
-	public static Result<Turno2025> SolicitarCancelacion(
+	public static async Task<Result<Turno2025>> SolicitarCancelacion(
 		Result<Turno2025> turnoOriginalResult,
 		DateTime outcomeFecha,
 		string outcomeComentario,
-		IReadOnlyList<Result<Turno2025>> turnosResults
+		Func<Turno2025, Task<Result<Unit>>> funcUpdateTurno
 	) {
 		if (turnoOriginalResult.IsError) {
-			return new Result<Turno2025>.Error($"No se puede reprogramar un medico con errores previos: {((Result<Turno2025>.Error)turnoOriginalResult).Mensaje}");
+			return new Result<Turno2025>.Error($"No se puede reprogramar un turno con errores previos: {((Result<Turno2025>.Error)turnoOriginalResult).Mensaje}");
 		}
 		Turno2025 turnoOriginal = ((Result<Turno2025>.Ok)turnoOriginalResult).Valor;
 
 
+        Result<Turno2025> turnoCanceladoResult = turnoOriginal.SetOutcome(TurnoOutcomeEstado2025.Cancelado, outcomeFecha, outcomeComentario);
+
+		if (turnoCanceladoResult is Result<Turno2025>.Error err1)
+			return new Result<Turno2025>.Error(err1.Mensaje);
+
+		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)turnoCanceladoResult).Valor;
 
 
-		Result<IReadOnlyList<Turno2025>> turnosVerificados = ServiciosPrivados._ValidarTurnos(turnosResults);
-		if (turnosVerificados.IsError) {
-			return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Turno2025>>.Error)turnosVerificados).Mensaje}");
+
+		//Result<IReadOnlyList<Turno2025>> turnosVerificados = ServiciosPrivados._ValidarTurnos(turnosResults);
+		//if (turnosVerificados.IsError) {
+		//	return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Turno2025>>.Error)turnosVerificados).Mensaje}");
+		//}
+		//IReadOnlyList<Turno2025> turnos = ((Result<IReadOnlyList<Turno2025>>.Ok)turnosVerificados).Valor;
+
+
+
+		// ---------------------------------------------------------
+		// 2. IO: Persistir cambios del turno cancelado
+		// ---------------------------------------------------------
+		Result<Unit> updateResult = await funcUpdateTurno(turnoCancelado);
+
+		switch (updateResult) {
+			case Result<Unit>.Error errUpdate:
+				return new Result<Turno2025>.Error(
+					$"Error al persistir la cancelación del turno: {errUpdate.Mensaje}"
+				);
+
+			case Result<Unit>.Ok:
+				return new Result<Turno2025>.Ok(turnoCancelado);
+
+			default:
+				throw new Exception("Inalcanzable"); // por exhaustividad
 		}
-		IReadOnlyList<Turno2025> turnos = ((Result<IReadOnlyList<Turno2025>>.Ok)turnosVerificados).Valor;
-
-		return turnoOriginal.SetOutcome(TurnoOutcomeEstado2025.Cancelado, outcomeFecha, outcomeComentario);
 	}
 
 
