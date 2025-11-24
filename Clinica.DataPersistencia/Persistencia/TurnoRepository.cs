@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.TiposDeValor;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
@@ -27,7 +28,7 @@ public class TurnoRepository(IDbConnectionFactory factory) {
 		);
 	}
 
-	public async Task<Result<TurnoId>> CreateTurno(Turno2025 turno) {
+	public async Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 turno) {
 		try {
 			using IDbConnection conn = _factory.CreateConnection();
 			var parameters = new DynamicParameters();
@@ -38,7 +39,7 @@ public class TurnoRepository(IDbConnectionFactory factory) {
 			parameters.Add("@FechaHoraAsignadaDesde", turno.FechaHoraAsignadaDesde);
 			parameters.Add("@FechaHoraAsignadaHasta", turno.FechaHoraAsignadaHasta);
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
-			await conn.ExecuteAsync("sp_CreateTurno", parameters, commandType: CommandType.StoredProcedure);
+			await conn.ExecuteAsync("sp_InsertTurno", parameters, commandType: CommandType.StoredProcedure);
 			int newId = parameters.Get<int>("@NewId");
 			return new Result<TurnoId>.Ok(new TurnoId(newId));
 		} catch (SqlException ex) {
@@ -48,16 +49,16 @@ public class TurnoRepository(IDbConnectionFactory factory) {
 		}
 	}
 
-	public async Task<Result<Unit>> UpdateTurno(Turno2025 turno){
+	public async Task<Result<Unit>> UpdateTurnoWhereId(Turno2025 turno) {
 		try {
 			using IDbConnection conn = _factory.CreateConnection();
 			await conn.ExecuteAsync(
 				"sp_UpdateTurno",
 				new {
-					TurnoId = (int) turno.Id.Valor, 
-					OutcomeEstado = (byte)turno.OutcomeEstado, 
-					OutcomeFecha = (DateTime) turno.OutcomeFecha.Value, 
-					OutcomeComentario = (string?) turno.OutcomeComentario.Value
+					TurnoId = (int)turno.Id.Valor,
+					OutcomeEstado = (byte)turno.OutcomeEstado,
+					OutcomeFecha = (DateTime)turno.OutcomeFecha.Value,
+					OutcomeComentario = (string?)turno.OutcomeComentario.Value
 				},
 				commandType: CommandType.StoredProcedure
 			);
@@ -69,4 +70,15 @@ public class TurnoRepository(IDbConnectionFactory factory) {
 		}
 	}
 
+	internal IEnumerable<HorarioMedico2025> SelectHorariosWhereMedicoId(MedicoId id) {
+		throw new NotImplementedException();
+	}
+
+	internal IEnumerable<Medico2025> SelectMedicosWhereEspecialidad(EspecialidadMedica2025 medica) {
+		throw new NotImplementedException();
+	}
+
+	internal IEnumerable<Turno2025> SelectTurnosWhereMedicoIdAndDate(MedicoId id, DateTime time) {
+		throw new NotImplementedException();
+	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Servicios;
@@ -33,16 +34,17 @@ public class ServiciosPublicosAsync(
 			pacienteId,
 			especialidad,
 			fechaSolicitud,
-			medicos,
-			turnos,
-			funcInsertTurno: _turnosDapper.CreateTurno
+			funcSelectMedicosWhereEspecialidad: _turnosDapper.SelectMedicosWhereEspecialidad,
+			funcSelectHorariosWhereMedicoId: _turnosDapper.SelectHorariosWhereMedicoId,
+			funcSelectTurnosWhereMedicoIdAndDate: _turnosDapper.SelectTurnosWhereMedicoIdAndDate,
+			funcInsertTurnoReturnId: _turnosDapper.InsertTurnoReturnId
 		);
 	}
 
 	public async Task<Result<Turno2025>> SolicitarReprogramacionALaPrimeraDisponibilidad(
 		Result<Turno2025> turnoOriginalResult,
-		DateTime when,
-		string why
+		DateTime outcomeFecha,
+		string outcomeComentario
 	) {
 		switch (turnoOriginalResult) {
 			case Result<Turno2025>.Error turnoError: {
@@ -64,9 +66,6 @@ public class ServiciosPublicosAsync(
 				IReadOnlyList<Medico2025> medicos = ((Result<IReadOnlyList<Medico2025>>.Ok)medicosVerificados).Valor;
 
 
-
-
-
 				Result<IReadOnlyList<Turno2025>> turnosVerificados = ServiciosPrivados._ValidarTurnos(turnosResults);
 				if (turnosVerificados.IsError) {
 					return new Result<Turno2025>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Turno2025>>.Error)turnosVerificados).Mensaje}");
@@ -76,12 +75,13 @@ public class ServiciosPublicosAsync(
 
 				return await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
 					turnoOk.Valor,
-					when,
-					why,
-					medicos,
-					turnos,
-					funcUpdateTurno: _turnosDapper.UpdateTurno,
-					funcInsertTurno: _turnosDapper.CreateTurno
+					outcomeFecha,
+					outcomeComentario,
+					funcSelectMedicosWhereEspecialidad: _turnosDapper.SelectMedicosWhereEspecialidad,
+					funcSelectHorariosWhereMedicoId: _turnosDapper.SelectHorariosWhereMedicoId,
+					funcSelectTurnosWhereMedicoIdAndDate: _turnosDapper.SelectTurnosWhereMedicoIdAndDate,
+					funcUpdateTurnoWhereId: _turnosDapper.UpdateTurnoWhereId,
+					funcInsertTurnoReturnId: _turnosDapper.InsertTurnoReturnId
 				);
 			}
 			default: throw new InvalidOperationException(); //impossible to occur
@@ -99,7 +99,7 @@ public class ServiciosPublicosAsync(
 					turnoOriginalResult,
 					outcomeFecha,
 					outcomeComentario,
-					funcUpdateTurno: _turnosDapper.UpdateTurno
+					funcUpdateTurnoWhereId: _turnosDapper.UpdateTurnoWhereId
 				);
 			}
 			default: throw new InvalidOperationException(); //impossible to occur

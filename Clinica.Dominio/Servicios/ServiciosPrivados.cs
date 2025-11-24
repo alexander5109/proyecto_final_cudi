@@ -58,16 +58,16 @@ public static class ServiciosPrivados {
 	public static Result<DisponibilidadEspecialidad2025> _EncontrarProximaDisponibilidad(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
-		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcMedicosPorEspecialidad,
-		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcHorariosDeMedico,
-		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcTurnosDelMedicoDesde
+		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
+		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoId,
+		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdAndDate
 	) {
 		DisponibilidadEspecialidad2025? proxima = _GenerarDisponibilidades(
 			solicitudEspecialidad,
 			solicitudFechaCreacion,
-			funcMedicosPorEspecialidad,
-			funcHorariosDeMedico,
-			funcTurnosDelMedicoDesde
+			funcSelectMedicosWhereEspecialidad,
+			funcSelectHorariosWhereMedicoId,
+			funcSelectTurnosWhereMedicoIdAndDate
 		).FirstOrDefault();
 		if (proxima is null)
 			return new Result<DisponibilidadEspecialidad2025>.Error("No se encontraron proximaDisponibilidad");
@@ -82,20 +82,21 @@ public static class ServiciosPrivados {
 		EspecialidadMedica2025 especialidad,
 		DateTime fechaHoraDesde,
 		DateTime fechaHoraHasta,
-		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcTurnosDelMedicoDesde
+		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdAndDate
 	) {
-		//Faltaria validacion medicoId in Medicos
+		// Traés solo los turnos relevantes del médico desde esa fecha
+		IEnumerable<Turno2025> turnos = funcSelectTurnosWhereMedicoIdAndDate(medicoId, fechaHoraDesde);
 
 		foreach (Turno2025 turno in turnos) {
+			// Debe ser de la misma especialidad
+			if (turno.Especialidad != especialidad)
+				continue;
 
-			// 1) Debe ser del mismo médico y especialidad
-			if (turno.MedicoId != medicoId) continue;
-			if (turno.Especialidad != especialidad) continue;
+			// Solo bloquean los programados
+			if (turno.OutcomeEstado != TurnoOutcomeEstado2025.Programado)
+				continue;
 
-			// 2) Solo los medicosResults programados bloquean agenda
-			if (turno.OutcomeEstado != TurnoOutcomeEstado2025.Programado) continue;
-
-			// 3) Chequeo de solapamiento clásico
+			// Solapamiento clásico
 			bool solapa =
 				turno.FechaHoraAsignadaDesde < fechaHoraHasta &&
 				fechaHoraDesde < turno.FechaHoraAsignadaHasta;
@@ -109,49 +110,51 @@ public static class ServiciosPrivados {
 	public static IEnumerable<DisponibilidadEspecialidad2025> _GenerarDisponibilidades(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
-		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcMedicosPorEspecialidad,
-		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcHorariosDeMedico,
-		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcTurnosDelMedicoDesde
+		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
+		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoId,
+		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdAndDate
 	) {
-		foreach (Medico2025 medico in medicos)
-			foreach (EspecialidadMedica2025 especialidad in medico.Especialidades.Valores) {
-				if (especialidad != solicitudEspecialidad)
-					continue;
+		// Pedimos solo los médicos relevantes
+		foreach (Medico2025 medico in funcSelectMedicosWhereEspecialidad(solicitudEspecialidad)) {
+			int duracion = solicitudEspecialidad.DuracionConsultaMinutos;
 
-				int duracion = especialidad.DuracionConsultaMinutos;
+			// Traemos horarios del médico
+			foreach (HorarioMedico2025 franja in funcSelectHorariosWhereMedicoId(medico.Id)) {
+				DateTime fecha = solicitudFechaCreacion.Date;
 
-				foreach (HorarioMedico2025 franja in medico.ListaHorarios.Valores) {
-					DateTime fecha = solicitudFechaCreacion.Date;
+				// Ajustar al próximo día válido
+				while (fecha.DayOfWeek != franja.DiaSemana.Valor)
+					fecha = fecha.AddDays(1);
 
-					// Ajustar al próximo día válido
-					while (fecha.DayOfWeek != franja.DiaSemana.Valor)
-						fecha = fecha.AddDays(1);
+				for (int semana = 0; semana < 30; semana++, fecha = fecha.AddDays(7)) {
+					DateTime desde = fecha + franja.Desde.Valor.ToTimeSpan();
+					DateTime hasta = fecha + franja.Hasta.Valor.ToTimeSpan();
 
-					for (int semana = 0; semana < 30; semana++, fecha = fecha.AddDays(7)) {
-						DateTime desde = fecha + franja.Desde.Valor.ToTimeSpan();
-						DateTime hasta = fecha + franja.Hasta.Valor.ToTimeSpan();
+					if (desde < DateTime.Now)
+						continue;
 
-						// evitar slots pasados
-						if (desde < DateTime.Now)
+					for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
+						var disp = new DisponibilidadEspecialidad2025(
+							solicitudEspecialidad,
+							medico.Id,
+							slot,
+							slot.AddMinutes(duracion)
+						);
+
+						// Validación de colisión usando función
+						if (!_DisponibilidadNoColisiona(
+								disp.MedicoId,
+								disp.Especialidad,
+								disp.FechaHoraDesde,
+								disp.FechaHoraHasta,
+								funcSelectTurnosWhereMedicoIdAndDate))
 							continue;
 
-						for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
-							var disp = new DisponibilidadEspecialidad2025(
-								especialidad,
-								medico.Id,
-								slot,
-								slot.AddMinutes(duracion)
-							);
-
-							// chequeo de colisión inline
-							if (!_DisponibilidadNoColisiona(disp.MedicoId, disp.Especialidad, disp.FechaHoraDesde, disp.FechaHoraHasta, turnos))
-								continue;
-
-							yield return disp;
-						}
+						yield return disp;
 					}
 				}
 			}
+		}
 	}
 
 

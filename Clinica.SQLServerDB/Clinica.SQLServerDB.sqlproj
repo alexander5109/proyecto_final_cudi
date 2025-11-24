@@ -61,7 +61,7 @@
     <Folder Include="Dto\StoredProcedures" />
     <Folder Include="Publications" />
     <Folder Include="Dto\UserDefinedTableTypes" />
-    <Folder Include="StoredProcedures2025" />
+    <Folder Include="Dto\StoredProcedures2025" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Dto\Tables\HorarioMedico.sql" />
@@ -72,7 +72,6 @@
     <Build Include="Dto\StoredProcedures\sp_CreateMedico.sql" />
     <Build Include="Dto\StoredProcedures\sp_CreateMedicoWithHorarios.sql" />
     <Build Include="Dto\StoredProcedures\sp_CreatePaciente.sql" />
-    <Build Include="Dto\StoredProcedures\sp_CreateTurno.sql" />
     <Build Include="Dto\StoredProcedures\sp_DeleteHorarioMedico.sql" />
     <Build Include="Dto\StoredProcedures\sp_ReadHorariosMedicosAll.sql" />
     <Build Include="Dto\StoredProcedures\sp_ReadPacientesAll.sql" />
@@ -83,9 +82,10 @@
     <Build Include="Dto\StoredProcedures\sp_UpdatePaciente.sql" />
     <Build Include="Dto\UserDefinedTableTypes\HorarioMedicoTableType.sql" />
     <Build Include="Dto\StoredProcedures\sp_ReadTurnosAllWhereMedico.sql" />
-    <Build Include="StoredProcedures2025\sp_UpdateTurno.sql" />
-    <Build Include="StoredProcedures2025\sp_ReadMedicosFull.sql" />
-    <Build Include="StoredProcedures2025\sp_ReadMedicosFullWhereEspecialidad.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_InsertTurno.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_ReadMedicosFull.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_ReadMedicosFullWhereEspecialidad.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_UpdateTurno.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publications\Clinica.SQLServerDB.publish.xml" />
