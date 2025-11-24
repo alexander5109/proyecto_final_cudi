@@ -51,8 +51,8 @@ public static class ServiciosPublicos {
 			funcSelectMedicosWhereEspecialidad,
 			funcSelectHorariosWhereMedicoIdInVigencia,
 			funcSelectTurnosWhereMedicoIdBetweenFechas
-		);
-		Result<Turno2025> turnoProvisorioResult = Turno2025.Crear(new TurnoId(-1), pacienteId, solicitudFechaCreacion, disponibilidadParaPaciente1);
+		).PrintAndContinue();
+		Result<Turno2025> turnoProvisorioResult = Turno2025.Crear(new TurnoId(-1), pacienteId, solicitudFechaCreacion, disponibilidadParaPaciente1).PrintAndContinue();
 
 		if (turnoProvisorioResult is Result<Turno2025>.Error err3)
 			return err3;
@@ -63,10 +63,10 @@ public static class ServiciosPublicos {
 		// ---------------------------------------------------------
 		Result<TurnoId> insertResult = await funcInsertTurnoReturnId(turnoProvisorio);
 
-		switch (insertResult) {
+		switch (insertResult.PrintAndContinue()) {
 			case Result<TurnoId>.Error errInsert:
 				return new Result<Turno2025>.Error(
-					$"Error al persistir el nuevo turno reprogramado: {errInsert.Mensaje}"
+					$"Error al persistir el nuevo turno: {errInsert.Mensaje}"
 				);
 
 			case Result<TurnoId>.Ok okInsert: {
