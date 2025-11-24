@@ -58,7 +58,7 @@ public static class ServiciosPublicos {
 			new TurnoId(-1),
 			pacienteId,
 			solicitudFechaCreacion,
-			dispResult
+			dispResult.Unwrap()
 		);
 
 		if (turnoResult is Result<Turno2025>.Error e2)

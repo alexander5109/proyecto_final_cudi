@@ -4,7 +4,6 @@ using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
 
-
 public enum TurnoOutcomeEstado2025 {
 	Programado = 1,
 	Ausente = 2,
@@ -13,6 +12,7 @@ public enum TurnoOutcomeEstado2025 {
 	Reprogramado = 5
 }
 public record struct TurnoId(int Valor);
+
 public record Turno2025(
 	TurnoId Id,
 	FechaRegistro2025 FechaDeCreacion,
@@ -25,12 +25,12 @@ public record Turno2025(
 	Option<DateTime> OutcomeFecha,
 	Option<string> OutcomeComentario
 ) : IComoTexto {
+
 	public string ATexto() {
 		var fecha = FechaHoraAsignadaDesde.ToString("dddd dd/MM/yyyy");
 		var desde = FechaHoraAsignadaDesde.ToString("HH:mm");
 		var hasta = FechaHoraAsignadaHasta.ToString("HH:mm");
 		var duracion = (FechaHoraAsignadaHasta - FechaHoraAsignadaDesde).TotalMinutes;
-
 		return
 			$"Turno de {Especialidad.ATexto()}\n" +
 			$"  • PacienteId: {PacienteId}\n" +
@@ -40,19 +40,21 @@ public record Turno2025(
 			$"  • OutcomeEstado: {OutcomeEstado}";
 	}
 
-
-
 	public static Result<Turno2025> Crear(
 		TurnoId turnoId,
 		PacienteId pacienteId,
 		FechaRegistro2025 solicitadoEn,
-		Result<DisponibilidadEspecialidad2025> dispResult
+		DisponibilidadEspecialidad2025 disp
 	) {
-		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error dispError)
-			return new Result<Turno2025>.Error($"Error en disponibilidad: {dispError.Mensaje}");
+		if (disp.FechaHoraDesde >= disp.FechaHoraHasta)
+			return new Result<Turno2025>.Error(
+				"La hora de inicio debe ser anterior a la hora de fin."
+			);
 
-		//SolicitudDeTurno solicitud = ((Result<SolicitudDeTurno>.Ok)solicitudResult).Valor;
-		DisponibilidadEspecialidad2025 disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
+		if (disp.FechaHoraDesde.Date != disp.FechaHoraHasta.Date)
+			return new Result<Turno2025>.Error(
+				"Un turno no puede extenderse entre dos días distintos."
+			);
 
 		return new Result<Turno2025>.Ok(new Turno2025(
 			Id: turnoId,
@@ -69,24 +71,39 @@ public record Turno2025(
 	}
 
 	public Result<Turno2025> SetOutcome(TurnoOutcomeEstado2025 outcomeEstado, DateTime outcomeFecha, string outcomeComentario) {
-		if (OutcomeEstado != TurnoOutcomeEstado2025.Programado) {
-			return new Result<Turno2025>.Error("No se puede volver a cambiar el estado del turno.");
-		}
-		return new Result<Turno2025>.Ok(this with { OutcomeEstado = outcomeEstado, OutcomeComentario = Option<string>.Some(outcomeComentario), OutcomeFecha = Option<DateTime>.Some(outcomeFecha) });
+		if (OutcomeEstado != TurnoOutcomeEstado2025.Programado)
+			return new Result<Turno2025>.Error("El turno ya tiene un estado final. No puede modificarse.");
+
+		return new Result<Turno2025>.Ok(
+			this with {
+				OutcomeEstado = outcomeEstado,
+				OutcomeComentario = Option<string>.Some(outcomeComentario),
+				OutcomeFecha = Option<DateTime>.Some(outcomeFecha)
+			}
+		);
 	}
 
-	public Result<Turno2025> Reprogramar(DisponibilidadEspecialidad2025 disponibilidad, TurnoId turnoId) {
-		if (OutcomeEstado == TurnoOutcomeEstado2025.Programado || !OutcomeFecha.HasValue) {
-			return new Result<Turno2025>.Error("No se puede reprogramar un turno que todavia esta programado.");
-		}
+	public Result<Turno2025> Reprogramar(
+		DisponibilidadEspecialidad2025 nuevaDisp,
+		TurnoId nuevoId
+	) {
+		if (OutcomeEstado == TurnoOutcomeEstado2025.Programado)
+			return new Result<Turno2025>.Error("No puede reprogramarse un turno que todavía está programado.");
+
+		if (!OutcomeFecha.HasValue)
+			return new Result<Turno2025>.Error("No se puede reprogramar un turno sin fecha de finalización del estado anterior.");
+
+		if (nuevaDisp.FechaHoraDesde >= nuevaDisp.FechaHoraHasta)
+			return new Result<Turno2025>.Error("La disponibilidad nueva es inválida: fechaDesde >= fechaHasta.");
+
 		return new Result<Turno2025>.Ok(new Turno2025(
-			turnoId,
-			new FechaRegistro2025(OutcomeFecha.Value), //En efecto, la creamos desde la finalizacion del estado anterior.
-			PacienteId,
-			MedicoId,
-			Especialidad,
-			FechaHoraAsignadaDesde: disponibilidad.FechaHoraDesde,
-			FechaHoraAsignadaHasta: disponibilidad.FechaHoraHasta,
+			Id: nuevoId,
+			FechaDeCreacion: new FechaRegistro2025(OutcomeFecha.Value),
+			PacienteId: PacienteId,
+			MedicoId: MedicoId,
+			Especialidad: Especialidad,
+			FechaHoraAsignadaDesde: nuevaDisp.FechaHoraDesde,
+			FechaHoraAsignadaHasta: nuevaDisp.FechaHoraHasta,
 			OutcomeEstado: TurnoOutcomeEstado2025.Programado,
 			OutcomeFecha: Option<DateTime>.None,
 			OutcomeComentario: Option<string>.None

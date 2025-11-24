@@ -10,13 +10,9 @@ using Microsoft.Data.SqlClient;
 namespace Clinica.Infrastructure.Persistencia;
 
 
-public class BaseDeDatosRepositorio {
-	private readonly IDbConnectionFactory _factory;
-	public BaseDeDatosRepositorio(IDbConnectionFactory factory) {
-		_factory = factory;
-	}
+public class BaseDeDatosRepositorio(IDbConnectionFactory factory) {
 	private static DataTable BuildIntList(IEnumerable<int> valores) {
-		DataTable table = new DataTable();
+		DataTable table = new();
 		table.Columns.Add("Valor", typeof(int));
 
 		foreach (var v in valores)
@@ -30,8 +26,8 @@ public class BaseDeDatosRepositorio {
 
 	public async Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 turno) {
 		try {
-			using IDbConnection conn = _factory.CreateConnection();
-			DynamicParameters parameters = new DynamicParameters();
+			using IDbConnection conn = factory.CreateConnection();
+			DynamicParameters parameters = new();
 			parameters.Add("@FechaDeCreacion", turno.FechaDeCreacion.Valor);
 			parameters.Add("@PacienteId", turno.PacienteId.Valor);
 			parameters.Add("@MedicoId", turno.MedicoId.Valor);
@@ -55,7 +51,7 @@ public class BaseDeDatosRepositorio {
 	//-----------------------UPDATE WHERE ID------------------
 	public async Task<Result<Unit>> UpdateTurnoWhereId(Turno2025 turno) {
 		try {
-			using IDbConnection conn = _factory.CreateConnection();
+			using IDbConnection conn = factory.CreateConnection();
 			await conn.ExecuteAsync(
 				"sp_UpdateTurnoWhereId",
 				new {
@@ -79,7 +75,7 @@ public class BaseDeDatosRepositorio {
 
 
 	public async Task<IEnumerable<HorarioMedicoDto>> SelectHorariosWhereMedicoIdInVigencia(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta) {
-		using IDbConnection conn = _factory.CreateConnection();
+		using IDbConnection conn = factory.CreateConnection();
 
 		return await conn.QueryAsync<HorarioMedicoDto>(
 			"sp_SelectHorariosWhereMedicoIdInVigencia",
@@ -93,7 +89,7 @@ public class BaseDeDatosRepositorio {
 	}
 
 	public async Task<IEnumerable<TurnoDto>> SelectTurnosWhereMedicoIdBetweenFechas(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta) {
-		using IDbConnection conn = _factory.CreateConnection();
+		using IDbConnection conn = factory.CreateConnection();
 
 		return await conn.QueryAsync<TurnoDto>(
 			"sp_SelectTurnosWhereMedicoIdBetweenFechas",
@@ -107,7 +103,7 @@ public class BaseDeDatosRepositorio {
 	}
 
 	public async Task<IEnumerable<MedicoDto>> SelectMedicosWhereEspecialidad(EspecialidadMedica2025 especialidad) {
-		using IDbConnection conn = _factory.CreateConnection();
+		using IDbConnection conn = factory.CreateConnection();
 
 		return await conn.QueryAsync<MedicoDto>(
 			"sp_SelectMedicosWhereEspecialidad",
@@ -123,21 +119,21 @@ public class BaseDeDatosRepositorio {
 	//-----------------------SELECT * FROM TABLES------------------
 
 	public async Task<IEnumerable<MedicoDto>> SelectMedicos() {
-		using IDbConnection conn = _factory.CreateConnection();
+		using IDbConnection conn = factory.CreateConnection();
 		return await conn.QueryAsync<MedicoDto>(
 			"sp_SelectMedicos",
 			commandType: CommandType.StoredProcedure
 		);
 	}
 	public async Task<IEnumerable<PacienteDto>> SelectPacientes() {
-		using IDbConnection conn = _factory.CreateConnection();
+		using IDbConnection conn = factory.CreateConnection();
 		return await conn.QueryAsync<PacienteDto>(
 			"sp_SelectPacientes",
 			commandType: CommandType.StoredProcedure
 		);
 	}
 	public async Task<IEnumerable<TurnoDto>> SelectTurnos() {
-		using IDbConnection conn = _factory.CreateConnection();
+		using IDbConnection conn = factory.CreateConnection();
 		return await conn.QueryAsync<TurnoDto>(
 			"sp_SelectTurnos",
 			commandType: CommandType.StoredProcedure
