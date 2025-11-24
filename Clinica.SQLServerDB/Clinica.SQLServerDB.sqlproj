@@ -74,18 +74,22 @@
     <Build Include="Dto\StoredProcedures\sp_CreatePaciente.sql" />
     <Build Include="Dto\StoredProcedures\sp_DeleteHorarioMedico.sql" />
     <Build Include="Dto\StoredProcedures\sp_ReadHorariosMedicosAll.sql" />
-    <Build Include="Dto\StoredProcedures\sp_ReadPacientesAll.sql" />
-    <Build Include="Dto\StoredProcedures\sp_ReadTurnos.sql" />
     <Build Include="Dto\StoredProcedures\sp_UpdateHorarioMedico.sql" />
     <Build Include="Dto\StoredProcedures\sp_UpdateMedico.sql" />
     <Build Include="Dto\StoredProcedures\sp_UpdateMedicoWithHorarios.sql" />
     <Build Include="Dto\StoredProcedures\sp_UpdatePaciente.sql" />
     <Build Include="Dto\UserDefinedTableTypes\HorarioMedicoTableType.sql" />
     <Build Include="Dto\StoredProcedures\sp_ReadTurnosAllWhereMedico.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_InsertTurno.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_ReadMedicosFull.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_ReadMedicosFullWhereEspecialidad.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_UpdateTurno.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_InsertTurnoReturnId.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectMedicos.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectMedicosWhereEspecialidad.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_UpdateTurnoWhereId.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectTurnos.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectPacientes.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectTurnosWhereMedicosIds.sql" />
+    <Build Include="Dto\UserDefinedTableTypes\IntListTableType.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectTurnosWhereMedicoIdBetweenFechas.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectHorariosWhereMedicoIdInVigencia.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publications\Clinica.SQLServerDB.publish.xml" />

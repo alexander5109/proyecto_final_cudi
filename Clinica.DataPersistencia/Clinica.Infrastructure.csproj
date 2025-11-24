@@ -23,8 +23,4 @@
     <ProjectReference Include="..\Clinica.Dominio\Clinica.Dominio.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Aplicacion\" />
-  </ItemGroup>
-
 </Project>

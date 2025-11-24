@@ -17,23 +17,22 @@ public static class MainProgram {
 			.AddJsonFile("appsettings.Development.json")
 			.Build();
 
-        SqlConnectionFactory factory = new(config.GetConnectionString("ClinicaMedica"));
+		// 2. Crear el servicio de casos de uso
+		ServiciosPublicosAsync servicio = new(
+			new BaseDeDatosRepositorio(
+				new SqlConnectionFactory(config.GetConnectionString("ClinicaMedica")
+				)
+			)
+		);
 
-        MedicoRepository medicoRepo = new(factory);
-        TurnoRepository turnoRepo = new(factory);
-
-
-        // 2. Crear el servicio de casos de uso
-        ServiciosPublicosAsync servicio = new(medicoRepo, turnoRepo);
-
-        // 3. Ejecutar casos de uso, NO cargar colecciones
-        Result<Turno2025> turno = (await servicio.SolicitarTurnoEnLaPrimeraDisponibilidad(
+		// 3. Ejecutar casos de uso, NO cargar colecciones
+		Result<Turno2025> turno = (await servicio.SolicitarTurnoEnLaPrimeraDisponibilidad(
 			new PacienteId(1),
 			EspecialidadMedica2025.ClinicoGeneral,
 			DateTime.Now
 		)).PrintAndContinue("Turno asignado:");
 
-        Result<Turno2025> reprogramado = (await servicio.SolicitarReprogramacionALaPrimeraDisponibilidad(
+		Result<Turno2025> reprogramado = (await servicio.SolicitarReprogramacionALaPrimeraDisponibilidad(
 			turno,
 			DateTime.Now.AddDays(1),
 			"Reprogramación"

@@ -1,6 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 using System.Collections.Immutable;
+using System.Text;
 
 namespace Clinica.Dominio.ListasOrganizadoras;
 
@@ -11,7 +12,7 @@ public sealed record ListaEspecialidadesMedicas2025(
 		if (Valores is null || Valores.Count == 0)
 			return "No hay especialidades asignadas.";
 
-		var sb = new System.Text.StringBuilder();
+        StringBuilder sb = new System.Text.StringBuilder();
 		sb.AppendLine("Listado de especialidades:");
 
 		foreach (EspecialidadMedica2025 esp in Valores)

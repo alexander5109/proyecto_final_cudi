@@ -1,5 +1,4 @@
-﻿CREATE PROCEDURE sp_ReadMedicosFullWhereEspecialidad
-    @EspecialidadCodigoInterno INT
+﻿CREATE PROCEDURE sp_SelectMedicos
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -26,7 +25,6 @@ BEGIN
             WHERE H.MedicoId = M.Id
             FOR JSON PATH
         ) AS HorariosJson    -- <--- cambiar nombre del alias
-    FROM Medico M
-    WHERE M.EspecialidadCodigoInterno = @EspecialidadCodigoInterno;
+    FROM Medico M;
 END;
 GO

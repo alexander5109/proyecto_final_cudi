@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE sp_InsertTurno
+﻿CREATE PROCEDURE sp_InsertTurnoReturnId
 (
     @FechaDeCreacion DATETIME2(1),
     @PacienteId INT,

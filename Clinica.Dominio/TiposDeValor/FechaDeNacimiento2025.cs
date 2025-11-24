@@ -47,7 +47,7 @@ public readonly record struct FechaDeNacimiento2025(DateOnly Valor) : IComoTexto
 
 	// --- Edad aproximada ---
 	public static int Edad(FechaDeNacimiento2025 fecha) {
-		var hoy = DateOnly.FromDateTime(DateTime.Now);
+        DateOnly hoy = DateOnly.FromDateTime(DateTime.Now);
 		int edad = hoy.Year - fecha.Valor.Year;
 		if (hoy < fecha.Valor.AddYears(edad)) edad--;
 		return edad;

@@ -2,7 +2,7 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Infrastructure.Persistencia;
+namespace Clinica.Infrastructure.Dtos;
 
 public record class PacienteDto {
 	public int Id { get; set; }

@@ -2,7 +2,7 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Infrastructure.Persistencia;
+namespace Clinica.Infrastructure.Dtos;
 
 public record TurnoDto(
 	int Id,
@@ -16,6 +16,7 @@ public record TurnoDto(
 	DateTime? OutcomeFecha,
 	string? OutcomeComentario
 ) {
+
 	public Result<Turno2025> ToDomain() {
 		return new Result<Turno2025>.Ok(new Turno2025(
 			new TurnoId(Id),
@@ -30,4 +31,5 @@ public record TurnoDto(
 			OutcomeComentario.ToOption()
 		));
 	}
+
 }

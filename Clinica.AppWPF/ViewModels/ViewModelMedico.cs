@@ -6,7 +6,7 @@ using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using Clinica.Dominio.ListasOrganizadoras;
-using Clinica.Infrastructure.Persistencia;
+using Clinica.Infrastructure.Dtos;
 
 namespace Clinica.AppWPF.ViewModels;
 

@@ -5,7 +5,7 @@ using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
 
-public record struct MedicoId(int Value);
+public record struct MedicoId(int Valor);
 public record Medico2025(
 	MedicoId Id,
 	NombreCompleto2025 NombreCompleto,
@@ -61,7 +61,7 @@ public readonly record struct MedicoSueldoMinimo2025(
 			< 0 => new Result<MedicoSueldoMinimo2025>.Error("El sueldo no puede ser negativo."),
 			< MINIMO => new Result<MedicoSueldoMinimo2025>.Error($"El sueldo mínimo razonable es {MINIMO:N0}."),
 			> MAXIMO => new Result<MedicoSueldoMinimo2025>.Error($"El sueldo ingresado ({input}) es excesivamente alto."),
-			_ => new Result<MedicoSueldoMinimo2025>.Ok(new MedicoSueldoMinimo2025(input.Value))
+			_ => new Result<MedicoSueldoMinimo2025>.Ok(new MedicoSueldoMinimo2025(input.Valor))
 		};
 	}
 	public static Result<MedicoSueldoMinimo2025> _ValidarMedicos(string? input) {

@@ -49,7 +49,7 @@ public partial class App : Application {
 		string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
 								   "Media", fileName);
 		try {
-			using var player = new SoundPlayer(path);
+			using SoundPlayer player = new SoundPlayer(path);
 			player.Play();
 		} catch (Exception ex) {
 			MessageBox.Show($"Error reproduciendo sonido del sistema: {ex.Message}");
@@ -69,7 +69,7 @@ public partial class App : Application {
 	private static void PlaySound(string fileName) {
 		try {
 			string path = GetSoundPath(fileName);
-			using var player = new SoundPlayer(path);
+			using SoundPlayer player = new SoundPlayer(path);
 			player.Load();  // forces immediate load (optional)
 			player.Play();  // PlaySync() blocks until done, Play() is async
 		} catch (Exception ex) {

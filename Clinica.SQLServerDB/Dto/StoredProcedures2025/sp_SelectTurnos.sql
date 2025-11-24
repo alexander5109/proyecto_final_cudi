@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].sp_ReadTurnos
+﻿CREATE PROCEDURE [dbo].sp_SelectTurnos
 AS
 BEGIN
 	SET NOCOUNT ON;

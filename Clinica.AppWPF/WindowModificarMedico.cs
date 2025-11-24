@@ -87,13 +87,13 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 			return;
 		}
 
-		var nuevoHorario = new ViewModelHorario {
+        ViewModelHorario nuevoHorario = new ViewModelHorario {
 			DiaSemana = dia,
 			Desde = new TimeOnly(8, 0),
 			Hasta = new TimeOnly(12, 0)
 		};
 
-		var win = new WindowModificarHorario(SelectedMedico, nuevoHorario, esNuevo: true);
+        WindowModificarHorario win = new WindowModificarHorario(SelectedMedico, nuevoHorario, esNuevo: true);
 
 		if (win.ShowDialog() == true) {
 			// Se agregó realmente dentro de WindowModificarHorario
@@ -110,7 +110,7 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 			return;
 		}
 
-		var win = new WindowModificarHorario(SelectedMedico, horario, esNuevo: false);
+        WindowModificarHorario win = new WindowModificarHorario(SelectedMedico, horario, esNuevo: false);
 
 		if (win.ShowDialog() == true) {
 			// El horario ya está modificado (data binding)

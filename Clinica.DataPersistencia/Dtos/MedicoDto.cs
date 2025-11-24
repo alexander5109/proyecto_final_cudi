@@ -5,7 +5,7 @@ using Clinica.Dominio.ListasOrganizadoras;
 using Clinica.Dominio.TiposDeValor;
 
 
-namespace Clinica.Infrastructure.Persistencia;
+namespace Clinica.Infrastructure.Dtos;
 
 public record HorarioMedicoDto(
 	int Id,
@@ -39,10 +39,10 @@ public record class MedicoDto {
 	public MedicoDto() { }
 
 	public Result<Medico2025> ToDomain() {
-		var json = string.IsNullOrWhiteSpace(HorariosJson) ? "[]" : HorariosJson;
+        string json = string.IsNullOrWhiteSpace(HorariosJson) ? "[]" : HorariosJson;
 		List<HorarioMedicoDto> horariosDto =
 			JsonSerializer.Deserialize<List<HorarioMedicoDto>>(json)
-			?? new List<HorarioMedicoDto>();
+			?? [];
 
 		return Medico2025.Crear(
 			new MedicoId(Id),

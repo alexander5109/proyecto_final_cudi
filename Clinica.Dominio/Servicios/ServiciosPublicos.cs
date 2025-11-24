@@ -15,16 +15,15 @@ public static class ServiciosPublicos {
 		DateTime solicitudFechaCreacion,
 		int cuantos,
 		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoId,
-		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdAndDate
+		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoIdInVigencia,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas
 	) {
-
 		IReadOnlyList<DisponibilidadEspecialidad2025> disponibles = [.. ServiciosPrivados._GenerarDisponibilidades(
-			solicitudEspecialidad, 
+			solicitudEspecialidad,
 			solicitudFechaCreacion,
 			funcSelectMedicosWhereEspecialidad,
-			funcSelectHorariosWhereMedicoId,
-			funcSelectTurnosWhereMedicoIdAndDate
+			funcSelectHorariosWhereMedicoIdInVigencia,
+			funcSelectTurnosWhereMedicoIdBetweenFechas
 		)
 			.OrderBy(d => d.FechaHoraDesde)
 			.Take(cuantos)];
@@ -41,17 +40,17 @@ public static class ServiciosPublicos {
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoId,
-		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdAndDate,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoIdInVigencia,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas,
 		Func<Turno2025, Task<Result<TurnoId>>> funcInsertTurnoReturnId
 	) {
 		//Faltaria validacion pacienteId in Pacientes.
 		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1 = ServiciosPrivados._EncontrarProximaDisponibilidad(
-			solicitudEspecialidad, 
+			solicitudEspecialidad,
 			solicitudFechaCreacion,
 			funcSelectMedicosWhereEspecialidad,
-			funcSelectHorariosWhereMedicoId,
-			funcSelectTurnosWhereMedicoIdAndDate
+			funcSelectHorariosWhereMedicoIdInVigencia,
+			funcSelectTurnosWhereMedicoIdBetweenFechas
 		);
 		Result<Turno2025> turnoProvisorioResult = Turno2025.Crear(new TurnoId(-1), pacienteId, solicitudFechaCreacion, disponibilidadParaPaciente1);
 
@@ -92,15 +91,15 @@ public static class ServiciosPublicos {
 		DateTime outcomeFecha,
 		string outcomeComentario,
 		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoId,
-		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdAndDate,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoIdInVigencia,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas,
 		Func<Turno2025, Task<Result<Unit>>> funcUpdateTurnoWhereId,
 		Func<Turno2025, Task<Result<TurnoId>>> funcInsertTurnoReturnId
 	) {
 		// ---------------------------------------------------------
 		// 1. Cambiar estado del turno original (PURO)
 		// ---------------------------------------------------------
-		var turnoCanceladoResult = turnoOriginal.SetOutcome(
+		Result<Turno2025> turnoCanceladoResult = turnoOriginal.SetOutcome(
 			TurnoOutcomeEstado2025.Reprogramado,
 			outcomeFecha,
 			outcomeComentario
@@ -131,12 +130,12 @@ public static class ServiciosPublicos {
 		// ---------------------------------------------------------
 		// 3. Encontrar próxima disponibilidad (PURO)
 		// ---------------------------------------------------------
-		var dispResult = ServiciosPrivados._EncontrarProximaDisponibilidad(
+		Result<DisponibilidadEspecialidad2025> dispResult = ServiciosPrivados._EncontrarProximaDisponibilidad(
 			turnoOriginal.Especialidad,
 			outcomeFecha,
 			funcSelectMedicosWhereEspecialidad,
-			funcSelectHorariosWhereMedicoId,
-			funcSelectTurnosWhereMedicoIdAndDate
+			funcSelectHorariosWhereMedicoIdInVigencia,
+			funcSelectTurnosWhereMedicoIdBetweenFechas
 		);
 
 		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error errDisp)
@@ -147,7 +146,7 @@ public static class ServiciosPublicos {
 		// 4. Crear nuevo turno (PURO)
 		//    El ID aún no lo sabemos → se pone dummy
 		// ---------------------------------------------------------
-		var turnoProvisorioResult = turnoCancelado.Reprogramar(
+		Result<Turno2025> turnoProvisorioResult = turnoCancelado.Reprogramar(
 			dispResult,
 			new TurnoId(-1) // placeholder
 		);
@@ -199,7 +198,7 @@ public static class ServiciosPublicos {
 		Turno2025 turnoOriginal = ((Result<Turno2025>.Ok)turnoOriginalResult).Valor;
 
 
-        Result<Turno2025> turnoCanceladoResult = turnoOriginal.SetOutcome(TurnoOutcomeEstado2025.Cancelado, outcomeFecha, outcomeComentario);
+		Result<Turno2025> turnoCanceladoResult = turnoOriginal.SetOutcome(TurnoOutcomeEstado2025.Cancelado, outcomeFecha, outcomeComentario);
 
 		if (turnoCanceladoResult is Result<Turno2025>.Error err1)
 			return new Result<Turno2025>.Error(err1.Mensaje);

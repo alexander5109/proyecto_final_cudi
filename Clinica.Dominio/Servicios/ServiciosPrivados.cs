@@ -59,15 +59,15 @@ public static class ServiciosPrivados {
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoId,
-		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdAndDate
+		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoIdInVigencia,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas
 	) {
 		DisponibilidadEspecialidad2025? proxima = _GenerarDisponibilidades(
 			solicitudEspecialidad,
 			solicitudFechaCreacion,
 			funcSelectMedicosWhereEspecialidad,
-			funcSelectHorariosWhereMedicoId,
-			funcSelectTurnosWhereMedicoIdAndDate
+			funcSelectHorariosWhereMedicoIdInVigencia,
+			funcSelectTurnosWhereMedicoIdBetweenFechas
 		).FirstOrDefault();
 		if (proxima is null)
 			return new Result<DisponibilidadEspecialidad2025>.Error("No se encontraron proximaDisponibilidad");
@@ -82,11 +82,8 @@ public static class ServiciosPrivados {
 		EspecialidadMedica2025 especialidad,
 		DateTime fechaHoraDesde,
 		DateTime fechaHoraHasta,
-		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdAndDate
+		List<Turno2025> turnos
 	) {
-		// Traés solo los turnos relevantes del médico desde esa fecha
-		IEnumerable<Turno2025> turnos = funcSelectTurnosWhereMedicoIdAndDate(medicoId, fechaHoraDesde);
-
 		foreach (Turno2025 turno in turnos) {
 			// Debe ser de la misma especialidad
 			if (turno.Especialidad != especialidad)
@@ -111,18 +108,27 @@ public static class ServiciosPrivados {
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoId,
-		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdAndDate
+		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoIdInVigencia,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas
 	) {
-		// Pedimos solo los médicos relevantes
+		// buscar médicos para esa especialidad
 		foreach (Medico2025 medico in funcSelectMedicosWhereEspecialidad(solicitudEspecialidad)) {
 			int duracion = solicitudEspecialidad.DuracionConsultaMinutos;
 
-			// Traemos horarios del médico
-			foreach (HorarioMedico2025 franja in funcSelectHorariosWhereMedicoId(medico.Id)) {
+			// Generamos un rango de 30 semanas desde la solicitud
+			DateTime rangoDesde = solicitudFechaCreacion.Date;
+			DateTime rangoHasta = solicitudFechaCreacion.Date.AddDays(7 * 30);
+
+            // pedir horarios vigentes en ese rango
+            IEnumerable<HorarioMedico2025> horarios = funcSelectHorariosWhereMedicoIdInVigencia(medico.Id, rangoDesde, rangoHasta);
+
+			// traer turnos ya asignados dentro del rango
+			List<Turno2025> turnos = [.. funcSelectTurnosWhereMedicoIdBetweenFechas(medico.Id, rangoDesde, rangoHasta)]; // se usa mucho
+
+			foreach (HorarioMedico2025 franja in horarios) {
 				DateTime fecha = solicitudFechaCreacion.Date;
 
-				// Ajustar al próximo día válido
+				// ajustar al próximo día válido según la franja
 				while (fecha.DayOfWeek != franja.DiaSemana.Valor)
 					fecha = fecha.AddDays(1);
 
@@ -134,20 +140,12 @@ public static class ServiciosPrivados {
 						continue;
 
 					for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
-						var disp = new DisponibilidadEspecialidad2025(
-							solicitudEspecialidad,
-							medico.Id,
-							slot,
-							slot.AddMinutes(duracion)
-						);
+                        DisponibilidadEspecialidad2025 disp = new(solicitudEspecialidad, medico.Id, slot, slot.AddMinutes(duracion));
 
-						// Validación de colisión usando función
 						if (!_DisponibilidadNoColisiona(
-								disp.MedicoId,
-								disp.Especialidad,
-								disp.FechaHoraDesde,
-								disp.FechaHoraHasta,
-								funcSelectTurnosWhereMedicoIdAndDate))
+							disp.MedicoId, disp.Especialidad,
+							disp.FechaHoraDesde, disp.FechaHoraHasta,
+							turnos))
 							continue;
 
 						yield return disp;
@@ -156,6 +154,7 @@ public static class ServiciosPrivados {
 			}
 		}
 	}
+
 
 
 

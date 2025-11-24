@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[sp_ReadPacientesAll]
+﻿CREATE PROCEDURE [dbo].sp_SelectPacientes
 AS
 BEGIN
 	SET NOCOUNT ON;

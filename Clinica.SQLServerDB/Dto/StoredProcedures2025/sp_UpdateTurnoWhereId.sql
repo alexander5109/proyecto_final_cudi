@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE sp_UpdateTurno
+﻿CREATE PROCEDURE sp_UpdateTurnoWhereId
 (
     @TurnoId INT,
     @OutcomeEstado TINYINT,
