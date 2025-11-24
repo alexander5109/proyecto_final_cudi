@@ -22,7 +22,7 @@ public class TurnoRepository(IDbConnectionFactory factory) {
 		using IDbConnection conn = _factory.CreateConnection();
 
 		return await conn.QueryAsync<TurnoDto>(
-			"sp_ReadTurnosAll",
+			"sp_ReadTurnos",
 			commandType: CommandType.StoredProcedure
 		);
 	}

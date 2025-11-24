@@ -42,12 +42,13 @@ public static class ServiciosPublicos {
 	}
 
 
-	public static Result<Turno2025> SolicitarTurnoEnLaPrimeraDisponibilidad(
+	public static async Task<Result<Turno2025>> SolicitarTurnoEnLaPrimeraDisponibilidad(
 		PacienteId pacienteId,
 		EspecialidadMedica2025 especialidadMedica,
 		DateTime when,
 		IReadOnlyList<Result<Medico2025>> medicosResults,
-		IReadOnlyList<Result<Turno2025>> turnosResults
+		IReadOnlyList<Result<Turno2025>> turnosResults,
+		Func<Turno2025, Task<Result<TurnoId>>> funcInsertTurno
 	//TurnoId resultingTurnoId 
 	) {
 		//Faltaria validacion pacienteId in Pacientes.
@@ -74,12 +75,47 @@ public static class ServiciosPublicos {
 
 		Result<DisponibilidadEspecialidad2025> disponibilidadParaPaciente1 = ServiciosPrivados._EncontrarProximaDisponibilidad(especialidadMedica, when, medicos, turnos);
 
-		Result<Turno2025> turno = Turno2025.Crear(new TurnoId(534534), pacienteId, when, disponibilidadParaPaciente1);
 
-		//TO-DO POST
+
+
+
+
+
+		Result<Turno2025> turnoProvisorioResult = Turno2025.Crear(new TurnoId(-1), pacienteId, when, disponibilidadParaPaciente1);
+
+		if (turnoProvisorioResult is Result<Turno2025>.Error err3)
+			return err3;
+
+		Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)turnoProvisorioResult).Valor;
+		//IO: EJECITAR insertTurno
 		//_AgendarTurno(turno, turnos).PrintAndContinue("Agendando medico: ");
 
-		return turno;
+
+		// ---------------------------------------------------------
+		// 5. IO: Insertar nuevo turno y obtener ID
+		// ---------------------------------------------------------
+		Result<TurnoId> insertResult = await funcInsertTurno(turnoProvisorio);
+
+		switch (insertResult) {
+			case Result<TurnoId>.Error errInsert:
+				return new Result<Turno2025>.Error(
+					$"Error al persistir el nuevo turno reprogramado: {errInsert.Mensaje}"
+				);
+
+			case Result<TurnoId>.Ok okInsert: {
+				TurnoId idReal = okInsert.Valor;
+
+				// -------------------------------------------------
+				// 6. Adjuntar Id real (PURO)
+				// -------------------------------------------------
+				Turno2025 turnoFinal = turnoProvisorio with { Id = idReal };
+
+				return new Result<Turno2025>.Ok(turnoFinal);
+			}
+
+			default:
+				throw new Exception("Inalcanzable"); // por exhaustividad
+		}
 	}
 
 

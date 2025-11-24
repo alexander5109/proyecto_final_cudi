@@ -26,6 +26,9 @@ public class MedicoRepository {
 
 		return await conn.QueryAsync<MedicoDto>(
 			"sp_ReadMedicosFullWhereEspecialidad",
+			new {
+				EspecialidadCodigoInterno = especialidad.CodigoInterno.Valor
+			},
 			commandType: CommandType.StoredProcedure
 		);
 	}

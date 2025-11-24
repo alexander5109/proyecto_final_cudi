@@ -29,12 +29,13 @@ public class ServiciosPublicosAsync(
 		IReadOnlyList<Result<Turno2025>> turnos = [.. turnosDtos.Select(turnoDto => turnoDto.ToDomain())];
 
 		// 3. Ejecuta el dominio
-		return ServiciosPublicos.SolicitarTurnoEnLaPrimeraDisponibilidad(
+		return await ServiciosPublicos.SolicitarTurnoEnLaPrimeraDisponibilidad(
 			pacienteId,
 			especialidad,
 			fechaSolicitud,
 			medicos,
-			turnos
+			turnos,
+			funcInsertTurno: _turnosDapper.CreateTurno
 		);
 	}
 
