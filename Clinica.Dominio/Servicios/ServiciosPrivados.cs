@@ -55,24 +55,20 @@ public static class ServiciosPrivados {
 		return new Result<IReadOnlyList<Medico2025>>.Ok(medicosOk);
 	}
 
-
-	public static Result<Turno2025> _AgendarTurno(Result<Turno2025> turnoResult, List<Turno2025> turnos) {
-		return turnoResult.Match<Result<Turno2025>>(
-			ok => {
-				turnos.Add(ok);
-				return turnoResult;
-			},
-			mensaje => turnoResult
-		);
-	}
-
 	public static Result<DisponibilidadEspecialidad2025> _EncontrarProximaDisponibilidad(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
-		IReadOnlyList<Medico2025> medicos,
-		IReadOnlyList<Turno2025> turnos
+		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcMedicosPorEspecialidad,
+		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcHorariosDeMedico,
+		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcTurnosDelMedicoDesde
 	) {
-		DisponibilidadEspecialidad2025? proxima = _GenerarDisponibilidades(solicitudEspecialidad, solicitudFechaCreacion, medicos, turnos).FirstOrDefault();
+		DisponibilidadEspecialidad2025? proxima = _GenerarDisponibilidades(
+			solicitudEspecialidad,
+			solicitudFechaCreacion,
+			funcMedicosPorEspecialidad,
+			funcHorariosDeMedico,
+			funcTurnosDelMedicoDesde
+		).FirstOrDefault();
 		if (proxima is null)
 			return new Result<DisponibilidadEspecialidad2025>.Error("No se encontraron proximaDisponibilidad");
 		return new Result<DisponibilidadEspecialidad2025>.Ok((DisponibilidadEspecialidad2025)proxima);
@@ -86,7 +82,7 @@ public static class ServiciosPrivados {
 		EspecialidadMedica2025 especialidad,
 		DateTime fechaHoraDesde,
 		DateTime fechaHoraHasta,
-		IReadOnlyList<Turno2025> turnos
+		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcTurnosDelMedicoDesde
 	) {
 		//Faltaria validacion medicoId in Medicos
 
@@ -113,8 +109,9 @@ public static class ServiciosPrivados {
 	public static IEnumerable<DisponibilidadEspecialidad2025> _GenerarDisponibilidades(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
-		IReadOnlyList<Medico2025> medicos,
-		IReadOnlyList<Turno2025> turnos
+		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcMedicosPorEspecialidad,
+		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcHorariosDeMedico,
+		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcTurnosDelMedicoDesde
 	) {
 		foreach (Medico2025 medico in medicos)
 			foreach (EspecialidadMedica2025 especialidad in medico.Especialidades.Valores) {
@@ -156,5 +153,12 @@ public static class ServiciosPrivados {
 				}
 			}
 	}
+
+
+
+
+
+
+
 
 }

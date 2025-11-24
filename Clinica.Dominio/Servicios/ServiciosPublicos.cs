@@ -12,26 +12,18 @@ public static class ServiciosPublicos {
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		int cuantos,
-		IReadOnlyList<Result<Medico2025>> medicosResults,
-		IReadOnlyList<Result<Turno2025>> turnosResults
+		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcMedicosPorEspecialidad,
+		Func<MedicoId, IEnumerable<HorarioMedico2025>> funcHorariosDeMedico,
+		Func<MedicoId, DateTime, IEnumerable<Turno2025>> funcTurnosDelMedicoDesde
 	) {
-		Result<IReadOnlyList<Medico2025>> medicosVerificados = ServiciosPrivados._ValidarMedicos(medicosResults);
-		if (medicosVerificados.IsError) {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Medico2025>>.Error)medicosVerificados).Mensaje}");
-		}
-		IReadOnlyList<Medico2025> medicos = ((Result<IReadOnlyList<Medico2025>>.Ok)medicosVerificados).Valor;
 
-
-
-		Result<IReadOnlyList<Turno2025>> turnosVerificados = ServiciosPrivados._ValidarTurnos(turnosResults);
-		if (turnosVerificados.IsError) {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error($"Error en la lista de turnos: {((Result<IReadOnlyList<Turno2025>>.Error)turnosVerificados).Mensaje}");
-		}
-		IReadOnlyList<Turno2025> turnos = ((Result<IReadOnlyList<Turno2025>>.Ok)turnosVerificados).Valor;
-
-
-
-		IReadOnlyList<DisponibilidadEspecialidad2025> disponibles = [.. ServiciosPrivados._GenerarDisponibilidades(solicitudEspecialidad, solicitudFechaCreacion, medicos, turnos)
+		IReadOnlyList<DisponibilidadEspecialidad2025> disponibles = [.. ServiciosPrivados._GenerarDisponibilidades(
+			solicitudEspecialidad, 
+			solicitudFechaCreacion,
+			funcMedicosPorEspecialidad,
+			funcHorariosDeMedico,
+			funcTurnosDelMedicoDesde
+		)
 			.OrderBy(d => d.FechaHoraDesde)
 			.Take(cuantos)];
 		if (disponibles.Count > 0) {
