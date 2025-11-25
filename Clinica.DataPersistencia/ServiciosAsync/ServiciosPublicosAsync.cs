@@ -26,8 +26,8 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio baseDeDatos) 
 			solicitudFechaCreacion,
 			cuantos,
 			funcSelectMedicosWhereEspecialidad: FunctorSelectMedicosWhereEspecialidad(),
-			funcSelectHorariosWhereMedicoIdInVigencia: FunctorSelectHorariosWhereMedicoIdInVigencia(),
-			funcSelectTurnosWhereMedicoIdBetweenFechas: FunctorSelectTurnosWhereMedicoIdBetweenFechas()
+			funcSelectHorariosVigentesBetweenFechasWhereMedicoId: FunctorSelectHorariosVigentesBetweenFechasWhereMedicoId(),
+			funcSelectTurnosProgramadosBetweenFechasWhereMedicoId: FunctorSelectTurnosProgramadosBetweenFechasWhereMedicoId()
 		);
 	}
 
@@ -41,8 +41,8 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio baseDeDatos) 
 			especialidad,
 			fechaSolicitud,
 			funcSelectMedicosWhereEspecialidad: FunctorSelectMedicosWhereEspecialidad(),
-			funcSelectHorariosWhereMedicoIdInVigencia: FunctorSelectHorariosWhereMedicoIdInVigencia(),
-			funcSelectTurnosWhereMedicoIdBetweenFechas: FunctorSelectTurnosWhereMedicoIdBetweenFechas(),
+			funcSelectHorariosVigentesBetweenFechasWhereMedicoId: FunctorSelectHorariosVigentesBetweenFechasWhereMedicoId(),
+			funcSelectTurnosProgramadosBetweenFechasWhereMedicoId: FunctorSelectTurnosProgramadosBetweenFechasWhereMedicoId(),
 			funcInsertTurnoReturnId: BaseDeDatos.InsertTurnoReturnId
 		);
 	}
@@ -63,8 +63,8 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio baseDeDatos) 
 					outcomeFecha,
 					outcomeComentario,
 					funcSelectMedicosWhereEspecialidad: FunctorSelectMedicosWhereEspecialidad(),
-					funcSelectHorariosWhereMedicoIdInVigencia: FunctorSelectHorariosWhereMedicoIdInVigencia(),
-					funcSelectTurnosWhereMedicoIdBetweenFechas: FunctorSelectTurnosWhereMedicoIdBetweenFechas(),
+					funcSelectHorariosVigentesBetweenFechasWhereMedicoId: FunctorSelectHorariosVigentesBetweenFechasWhereMedicoId(),
+					funcSelectTurnosWhereMedicoIdBetweenFechas: FunctorSelectTurnosProgramadosBetweenFechasWhereMedicoId(),
 					funcUpdateTurnoWhereId: BaseDeDatos.UpdateTurnoWhereId,
 					funcInsertTurnoReturnId: BaseDeDatos.InsertTurnoReturnId
 				);

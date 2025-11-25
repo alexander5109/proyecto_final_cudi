@@ -74,11 +74,11 @@ public class BaseDeDatosRepositorio(IDbConnectionFactory factory) {
 
 
 
-	public async Task<IEnumerable<HorarioMedicoDto>> SelectHorariosWhereMedicoIdInVigencia(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta) {
+	public async Task<IEnumerable<HorarioMedicoDto>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta) {
 		using IDbConnection conn = factory.CreateConnection();
 
 		return await conn.QueryAsync<HorarioMedicoDto>(
-			"sp_SelectHorariosWhereMedicoIdInVigencia",
+			"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId",
 			new {
 				MedicoId = medicoId.Valor,
 				FechaDesde = fechaDesde.Date,
@@ -88,11 +88,11 @@ public class BaseDeDatosRepositorio(IDbConnectionFactory factory) {
 		);
 	}
 
-	public async Task<IEnumerable<TurnoDto>> SelectTurnosWhereMedicoIdBetweenFechas(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta) {
+	public async Task<IEnumerable<TurnoDto>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta) {
 		using IDbConnection conn = factory.CreateConnection();
 
 		return await conn.QueryAsync<TurnoDto>(
-			"sp_SelectTurnosWhereMedicoIdBetweenFechas",
+			"sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId",
 			new {
 				MedicoId = medicoId.Valor,
 				FechaDesde = fechaDesde,

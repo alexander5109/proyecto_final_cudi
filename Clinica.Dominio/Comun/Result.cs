@@ -132,7 +132,7 @@ public static class ResultExtensions {
 	// CombineResults: IEnumerable<Result<T>> → Result<List<T>>
 	public static Result<List<T>> CombineResults<T>(
 		this IEnumerable<Result<T>> results) {
-		List<T> list = new List<T>();
+		List<T> list = new();
 		foreach (Result<T> r in results) {
 			switch (r) {
 				case Result<T>.Ok ok:

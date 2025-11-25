@@ -128,9 +128,9 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				VALUES (@PacienteId, @MedicoId, @Fecha, @Hora);
 				SELECT SCOPE_IDENTITY();"; // DEVOLEME RAPIDAMENTE LA ID QUE ACABAS DE GENERAR
 		try {
-			using (SqlConnection connection = new SqlConnection(connectionString)) {
+			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
-				using (SqlCommand sqlComando = new SqlCommand(insertQuery, connection)) {
+				using (SqlCommand sqlComando = new(insertQuery, connection)) {
 					sqlComando.Parameters.AddWithValue("@PacienteId", instancia.PacienteId);
 					sqlComando.Parameters.AddWithValue("@MedicoId", instancia.MedicoId);
 					sqlComando.Parameters.AddWithValue("@Fecha", instancia.Fecha);
@@ -189,9 +189,9 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		}
 		string query = "UPDATE Medico SET Name = @Name, LastName = @LastName, Dni = @Dni, Provincia = @Provincia, Domicilio = @Domicilio, Localidad = @Localidad, Especialidad = @Especialidad, Telefono = @Telefono, Guardia = @Guardia, FechaIngreso = @FechaIngreso, SueldoMinimoGarantizado = @SueldoMinimoGarantizado WHERE CodigoInterno = @CodigoInterno";
 		try {
-			using (SqlConnection connection = new SqlConnection(connectionString)) {
+			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
-				using (SqlCommand sqlComando = new SqlCommand(query, connection)) {
+				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
 					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
 					sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
@@ -227,7 +227,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		if (instanceId == null) { return false; }
 		string query = "UPDATE Paciente SET Dni = @Dni, Name = @Name, LastName = @LastName, FechaIngreso = @FechaIngreso, Email = @Email, Telefono = @Telefono, FechaNacimiento = @FechaNacimiento, Domicilio = @Domicilio, Localidad = @Localidad, Provincia = @Provincia WHERE CodigoInterno = @CodigoInterno";
 		try {
-			using (SqlConnection connection = new SqlConnection(connectionString)) {
+			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
 				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
@@ -264,7 +264,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		string query = "UPDATE Turno SET PacienteId = @PacienteId, MedicoId = @MedicoId, Fecha = @Fecha, Hora = @Hora WHERE CodigoInterno = @CodigoInterno";
 		// string query = "UPDATE ModelViewTurno SET PacienteId = @PacienteId, MedicoId = @MedicoId WHERE CodigoInterno = @CodigoInterno";
 		try {
-			using (SqlConnection connection = new SqlConnection(connectionString)) {
+			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
 				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@PacienteId", instancia.PacienteId);
@@ -303,7 +303,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		string query = "DELETE FROM Medico WHERE CodigoInterno = @CodigoInterno";
 
 		try {
-			using (SqlConnection connection = new SqlConnection(connectionString)) {
+			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
 				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@CodigoInterno", instancia.Id);
@@ -333,7 +333,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		}
 		string query = "DELETE FROM Paciente WHERE CodigoInterno = @CodigoInterno";
 		try {
-			using (SqlConnection connection = new SqlConnection(connectionString)) {
+			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
 				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@CodigoInterno", instancia.Id);
@@ -360,7 +360,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 		}
 		string query = "DELETE FROM Turno WHERE CodigoInterno = @CodigoInterno";
 		try {
-			using (SqlConnection connection = new SqlConnection(connectionString)) {
+			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
 				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@CodigoInterno", instancia.Id);
@@ -409,10 +409,10 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 	//------------------------private.LOAD.WindowListarPacientes----------------------//
 	private bool SQLCargarPacientesExitosamente() {
 		try {
-			using (SqlConnection conexion = new SqlConnection(connectionString)) {
+			using (SqlConnection conexion = new(connectionString)) {
 				conexion.Open();
 				string consulta = "SELECT * FROM Paciente";
-				using (SqlCommand sqlComando = new SqlCommand(consulta, conexion))
+				using (SqlCommand sqlComando = new(consulta, conexion))
 				using (SqlDataReader reader = sqlComando.ExecuteReader()) {
 					while (reader.Read()) {
                         ViewModelPaciente paciente = new(
@@ -446,10 +446,10 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 	//------------------------private.LOAD.WindowListarTurnos----------------------//
 	private bool SQLCargarTurnosExitosamente() {
 		try {
-			using (SqlConnection conexion = new SqlConnection(connectionString)) {
+			using (SqlConnection conexion = new(connectionString)) {
 				conexion.Open();
 				string consulta = "SELECT * FROM Turno";
-				using (SqlCommand sqlComando = new SqlCommand(consulta, conexion))
+				using (SqlCommand sqlComando = new(consulta, conexion))
 				using (SqlDataReader reader = sqlComando.ExecuteReader()) {
 					while (reader.Read()) {
                         ViewModelTurno turno = new(
@@ -487,7 +487,7 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 
 	public bool CadenaDeConexionEsValida() {
 		try {
-			using (SqlConnection connection = new SqlConnection(connectionString)) {
+			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
 			}
 			return true;

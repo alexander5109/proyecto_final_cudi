@@ -25,13 +25,13 @@ public partial class ServiciosPublicosAsync {
 	}
 
 
-	private Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> FunctorSelectTurnosWhereMedicoIdBetweenFechas() {
+	private Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> FunctorSelectTurnosProgramadosBetweenFechasWhereMedicoId() {
 		return (medicoId, fechaDesde, fechaHasta) => {
 			return Enumerar();
 
 			IEnumerable<Turno2025> Enumerar() {
 				IEnumerable<TurnoDto> dtos = BaseDeDatos
-					.SelectTurnosWhereMedicoIdBetweenFechas(medicoId, fechaDesde, fechaHasta)
+					.SelectTurnosProgramadosBetweenFechasWhereMedicoId(medicoId, fechaDesde, fechaHasta)
 					.Result;
 
 				foreach (TurnoDto dto in dtos) {
@@ -44,13 +44,13 @@ public partial class ServiciosPublicosAsync {
 	}
 
 	private Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>>
-		FunctorSelectHorariosWhereMedicoIdInVigencia() {
+		FunctorSelectHorariosVigentesBetweenFechasWhereMedicoId() {
 		return (medicoId, fechaDesde, fechaHasta) => {
 			return Enumerar();
 
 			IEnumerable<HorarioMedico2025> Enumerar() {
                 IEnumerable<HorarioMedicoDto> dtos = BaseDeDatos
-					.SelectHorariosWhereMedicoIdInVigencia(medicoId, fechaDesde, fechaHasta)
+					.SelectHorariosVigentesBetweenFechasWhereMedicoId(medicoId, fechaDesde, fechaHasta)
 					.Result;
 
 				foreach (HorarioMedicoDto dto in dtos) {

@@ -9,21 +9,20 @@ namespace Clinica.Dominio.Servicios;
 
 public static class ServiciosPublicos {
 
-
 	public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> SolicitarDisponibilidadesPara(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		int cuantos,
 		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoIdInVigencia,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas
+		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosProgramadosBetweenFechasWhereMedicoId
 	) {
 		IReadOnlyList<DisponibilidadEspecialidad2025> disponibles = [.. ServiciosPrivados.GenerarDisponibilidades(
 			solicitudEspecialidad,
 			solicitudFechaCreacion,
 			funcSelectMedicosWhereEspecialidad,
-			funcSelectHorariosWhereMedicoIdInVigencia,
-			funcSelectTurnosWhereMedicoIdBetweenFechas
+			funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
+			funcSelectTurnosProgramadosBetweenFechasWhereMedicoId
 		)
 			.OrderBy(d => d.FechaHoraDesde)
 			.Take(cuantos)];
@@ -39,16 +38,16 @@ public static class ServiciosPublicos {
 		EspecialidadMedica2025 solicitudEspecialidad,
 		FechaRegistro2025 solicitudFechaCreacion,
 		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoIdInVigencia,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosProgramadosBetweenFechasWhereMedicoId,
 		Func<Turno2025, Task<Result<TurnoId>>> funcInsertTurnoReturnId
 	) {
 		Result<DisponibilidadEspecialidad2025> dispResult = ServiciosPrivados.EncontrarProximaDisponibilidad(
 			solicitudEspecialidad,
 			solicitudFechaCreacion.Valor,
 			funcSelectMedicosWhereEspecialidad,
-			funcSelectHorariosWhereMedicoIdInVigencia,
-			funcSelectTurnosWhereMedicoIdBetweenFechas
+			funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
+			funcSelectTurnosProgramadosBetweenFechasWhereMedicoId
 		);
 
 		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error e1)
@@ -87,7 +86,7 @@ public static class ServiciosPublicos {
 		DateTime outcomeFecha,
 		string outcomeComentario,
 		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosWhereMedicoIdInVigencia,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
 		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas,
 		Func<Turno2025, Task<Result<Unit>>> funcUpdateTurnoWhereId,
 		Func<Turno2025, Task<Result<TurnoId>>> funcInsertTurnoReturnId
@@ -116,7 +115,7 @@ public static class ServiciosPublicos {
 			turnoOriginal.Especialidad,
 			outcomeFecha,
 			funcSelectMedicosWhereEspecialidad,
-			funcSelectHorariosWhereMedicoIdInVigencia,
+			funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
 			funcSelectTurnosWhereMedicoIdBetweenFechas
 		);
 

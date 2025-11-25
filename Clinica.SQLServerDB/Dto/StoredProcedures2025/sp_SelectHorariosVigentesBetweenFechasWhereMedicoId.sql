@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[sp_SelectHorariosWhereMedicoIdInVigencia]
+﻿CREATE PROCEDURE [dbo].sp_SelectHorariosVigentesBetweenFechasWhereMedicoId
     @MedicoId INT,
     @FechaDesde DATE,
     @FechaHasta DATE

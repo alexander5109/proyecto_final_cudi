@@ -87,8 +87,8 @@
     <Build Include="Dto\StoredProcedures2025\sp_SelectPacientes.sql" />
     <Build Include="Dto\StoredProcedures2025\sp_SelectTurnosWhereMedicosIds.sql" />
     <Build Include="Dto\UserDefinedTableTypes\IntListTableType.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_SelectTurnosWhereMedicoIdBetweenFechas.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_SelectHorariosWhereMedicoIdInVigencia.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectHorariosVigentesBetweenFechasWhereMedicoId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publications\Clinica.SQLServerDB.publish.xml" />
