@@ -13,7 +13,7 @@ public readonly record struct HorarioHora2025(
 
 		if (TimeOnly.TryParseExact(
 				input.Trim(),
-				new[] { "HH:mm", "H:mm" },
+				["HH:mm", "H:mm"],
 				CultureInfo.InvariantCulture,
 				DateTimeStyles.None,
 				out TimeOnly time))

@@ -28,12 +28,16 @@ public static class AsyncRepositorioHardCoded  {
 					HorarioMedico2025.Crear(
 						DiaSemana2025.Lunes,
 						new HorarioHora2025(TimeOnly.Parse("09:00")),
-						new HorarioHora2025(TimeOnly.Parse("15:00"))
+						new HorarioHora2025(TimeOnly.Parse("15:00")),
+						new VigenciaHorario2025(new DateOnly(2024, 1, 1)),
+						new VigenciaHorario2025(new DateOnly(2026, 1, 1))
 					),
 					HorarioMedico2025.Crear(
 						DiaSemana2025.Miercoles,
 						new HorarioHora2025(TimeOnly.Parse("09:00")),
-						new HorarioHora2025(TimeOnly.Parse("15:00"))
+						new HorarioHora2025(TimeOnly.Parse("15:00")),
+						new VigenciaHorario2025(new DateOnly(2024, 1, 1)),
+						new VigenciaHorario2025(new DateOnly(2026, 1, 1))
 					)
 				]),
 				FechaRegistro2025.Crear(DateTime.Parse("2014/12/12")),
@@ -62,16 +66,20 @@ public static class AsyncRepositorioHardCoded  {
 				ListaHorarioMedicos2025.Crear([
 					HorarioMedico2025.Crear(
 						DiaSemana2025.Martes,
-						new HorarioHora2025(TimeOnly.Parse("08:00")),
-						new HorarioHora2025(TimeOnly.Parse("18:00"))
+						new HorarioHora2025(new TimeOnly(08, 0)),
+						new HorarioHora2025(new TimeOnly(18, 00)),
+						new VigenciaHorario2025(new DateOnly(2024, 1, 12)),
+						new VigenciaHorario2025(new DateOnly(2026, 1, 12))
 					),
 					HorarioMedico2025.Crear(
 						DiaSemana2025.Jueves,
-						new HorarioHora2025(TimeOnly.Parse("08:00")),
-						new HorarioHora2025(TimeOnly.Parse("18:00"))
+						new HorarioHora2025(new TimeOnly(08,00)),
+						new HorarioHora2025(new TimeOnly(18,0)),
+						new VigenciaHorario2025(new DateOnly(2024, 1, 12)),
+						new VigenciaHorario2025(new DateOnly(2026, 1, 12))
 					)
 				]),
-				FechaRegistro2025.Crear(DateTime.Parse("2014/12/12")),
+				FechaRegistro2025.Crear(new DateTime(2014, 12, 12)),
 				false
 			)
 			.PrintAndContinue("Creando a pediatra-ginecologo Jorge Pereyra: ")
@@ -98,17 +106,23 @@ public static class AsyncRepositorioHardCoded  {
 					HorarioMedico2025.Crear(
 						DiaSemana2025.Lunes,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),
-						new HorarioHora2025(TimeOnly.Parse("12:00"))
+						new HorarioHora2025(TimeOnly.Parse("12:00")),
+						new VigenciaHorario2025(new DateOnly(2022, 1, 12)),
+						new VigenciaHorario2025(new DateOnly(2024, 1, 12))
 					),
 					HorarioMedico2025.Crear(
 						DiaSemana2025.Miercoles,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),
-						new HorarioHora2025(TimeOnly.Parse("12:00"))
+						new HorarioHora2025(TimeOnly.Parse("12:00")),
+						new VigenciaHorario2025(new DateOnly(2022, 1, 12)),
+						new VigenciaHorario2025(new DateOnly(2024, 1, 12))
 					),
 					HorarioMedico2025.Crear(
 						DiaSemana2025.Viernes,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),
-						new HorarioHora2025(TimeOnly.Parse("12:00"))
+						new HorarioHora2025(TimeOnly.Parse("12:00")),
+						new VigenciaHorario2025(new DateOnly(2022, 1, 12)),
+						new VigenciaHorario2025(new DateOnly(2024, 1, 12))
 					)
 				]),
 				FechaRegistro2025.Crear(DateTime.Parse("2013/12/12")),

@@ -21,7 +21,7 @@ public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 //	DateTime FechaCreacion
 //) : IComoTexto {
 
-//	public static Result<SolicitudDeTurno> Crear(
+//	public static Result<SolicitudDeTurno> CrearFromStrings(
 //		PacienteId pacienteId,
 //		EspecialidadMedica2025 especialidad,
 //		DateTime fechaSolicitada

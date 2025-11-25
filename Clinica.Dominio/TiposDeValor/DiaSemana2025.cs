@@ -1,4 +1,5 @@
-﻿using Clinica.Dominio.Comun;
+﻿using System.ComponentModel.Design;
+using Clinica.Dominio.Comun;
 
 namespace Clinica.Dominio.TiposDeValor;
 
@@ -24,8 +25,11 @@ public sealed record DiaSemana2025(
 	}
 
 	public static Result<DiaSemana2025> Crear(string input) {
-        Enum.TryParse(input, out DayOfWeek dia);
-		return new Result<DiaSemana2025>.Ok(new(dia));
+		if (Enum.TryParse(input, out DayOfWeek dia)) {
+			return new Result<DiaSemana2025>.Ok(new(dia));
+		} else {
+			return new Result<DiaSemana2025>.Error("No es un dia válido");
+		}
 	}
 }
 public static class DayOfWeekExtensiones {

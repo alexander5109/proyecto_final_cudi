@@ -1,25 +1,34 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 
+
+namespace Clinica.Infrastructure.Dtos;
+
 public class HorarioMedicoDto {
 	public HorarioMedicoDto() { }
-	public HorarioMedicoDto(int id, int medicoId, int diaSemana, TimeSpan horaDesde, TimeSpan horaHasta) {
+	public HorarioMedicoDto(int id, int medicoId, int diaSemana, TimeSpan horaDesde, TimeSpan horaHasta, DateTime vigenteDesde, DateTime vigenciaHasta) {
 		Id = id;
 		MedicoId = medicoId;
 		DiaSemana = diaSemana;
 		HoraDesde = horaDesde;
 		HoraHasta = horaHasta;
+		VigenciaDesde = vigenteDesde;
+		VigenciaHasta = vigenciaHasta;
 	}
 	public int Id { get; set; }
 	public int MedicoId { get; set; }
 	public int DiaSemana { get; set; }
 	public TimeSpan HoraDesde { get; set; }
 	public TimeSpan HoraHasta { get; set; }
+	public DateTime VigenciaDesde { get; set; }
+	public DateTime VigenciaHasta { get; set; }
 	public Result<HorarioMedico2025> ToDomain() {
 		return HorarioMedico2025.Crear(
 			new DiaSemana2025((DayOfWeek)DiaSemana),
 			new HorarioHora2025(TimeOnly.FromTimeSpan(HoraDesde)),
-			new HorarioHora2025(TimeOnly.FromTimeSpan(HoraHasta))
+			new HorarioHora2025(TimeOnly.FromTimeSpan(HoraHasta)),
+			new VigenciaHorario2025(new DateOnly(2014, 1, 1)),
+			new VigenciaHorario2025(new DateOnly(2026, 1, 1))
 		);
 	}
 }

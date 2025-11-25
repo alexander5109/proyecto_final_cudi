@@ -75,7 +75,7 @@ public static class ResultExtensions {
 
 		return result;
 	}
-	public static T Unwrap<T>(this Result<T> result) =>
+	public static T UnwrapOrRaise<T>(this Result<T> result) =>
 		result.Match(
 			ok => ok,
 			mensaje => throw new InvalidOperationException(mensaje)

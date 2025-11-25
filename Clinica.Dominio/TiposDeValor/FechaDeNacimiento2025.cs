@@ -3,6 +3,7 @@ using Clinica.Dominio.Comun;
 
 namespace Clinica.Dominio.TiposDeValor;
 
+
 public record FechaDeNacimiento2025(DateOnly Valor) : IComoTexto {
 	public string ATexto() {
 		return Valor.ToString("dd/MM/yyyy");
@@ -47,7 +48,7 @@ public record FechaDeNacimiento2025(DateOnly Valor) : IComoTexto {
 
 	// --- Edad aproximada ---
 	public static int Edad(FechaDeNacimiento2025 fecha) {
-        DateOnly hoy = DateOnly.FromDateTime(DateTime.Now);
+		DateOnly hoy = DateOnly.FromDateTime(DateTime.Now);
 		int edad = hoy.Year - fecha.Valor.Year;
 		if (hoy < fecha.Valor.AddYears(edad)) edad--;
 		return edad;

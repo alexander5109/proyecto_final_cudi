@@ -12,13 +12,13 @@ public static class MainProgram {
 	static async Task Main() {
 		Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-		// 1. Crear fábrica de conexión
+		// 1. CrearFromStrings fábrica de conexión
 		IConfiguration config = new ConfigurationBuilder()
 			.SetBasePath(AppContext.BaseDirectory)
 			.AddJsonFile("appsettings.Development.json")
 			.Build();
 
-		// 2. Crear el servicio de casos de uso
+		// 2. CrearFromStrings el servicio de casos de uso
 		ServiciosPublicosAsync servicio = new(
 			new BaseDeDatosRepositorio(
 				new SqlConnectionFactory(config.GetConnectionString("ClinicaMedica")
