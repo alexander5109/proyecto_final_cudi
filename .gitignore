@@ -3,7 +3,7 @@
 *.secret
 # shortcuts 
 *.lnk
-
+*.appsettings.Development.json
 
 
 ## Ignore Visual Studio temporary files, build results, and

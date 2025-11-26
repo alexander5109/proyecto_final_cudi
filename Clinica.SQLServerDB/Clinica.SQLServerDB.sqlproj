@@ -9,8 +9,7 @@
     <ProjectGuid>{f5455df7-82aa-46f8-b35b-13fc441acd2d}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
-    <RootPath>
-    </RootPath>
+    <RootPath />
     <RootNamespace>Clinica.SQLServerDB</RootNamespace>
     <AssemblyName>Clinica.SQLServerDB</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
@@ -49,7 +48,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
-    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
@@ -57,41 +55,48 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="dbo" />
-    <Folder Include="dbo\StoredProcedures" />
-    <Folder Include="dbo\Tables" />
+    <Folder Include="Dto" />
+    <Folder Include="Dto\Tables" />
+    <Folder Include="Dto\PostDeployInserts" />
+    <Folder Include="Dto\StoredProcedures" />
+    <Folder Include="Publications" />
+    <Folder Include="Dto\UserDefinedTableTypes" />
+    <Folder Include="Dto\StoredProcedures2025" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\StoredProcedures\sp_CreateMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_CreatePaciente.sql" />
-    <Build Include="dbo\StoredProcedures\sp_CreateTurno.sql" />
-    <Build Include="dbo\StoredProcedures\sp_DeleteMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_DeletePaciente.sql" />
-    <Build Include="dbo\StoredProcedures\sp_DeleteTurno.sql" />
-    <Build Include="dbo\StoredProcedures\sp_ReadMedicosAllWithHorarios.sql" />
-    <Build Include="dbo\StoredProcedures\sp_ReadPacientesAll.sql" />
-    <Build Include="dbo\StoredProcedures\sp_ReadTurnosAll.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdateMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdatePaciente.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdateTurno.sql" />
-    <Build Include="dbo\Tables\Medico.sql" />
-    <Build Include="dbo\Tables\Paciente.sql" />
-    <Build Include="dbo\Tables\Turno.sql" />
-    <Build Include="dbo\Tables\HorarioMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_CreateHorarioMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_DeleteHorarioMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_ReadHorariosMedicosAll.sql" />
-    <Build Include="dbo\StoredProcedures\sp_UpdateHorarioMedico.sql" />
-    <Build Include="dbo\StoredProcedures\sp_ReadMedicosAll.sql" />
+    <Build Include="Dto\Tables\HorarioMedico.sql" />
+    <Build Include="Dto\Tables\Medico.sql" />
+    <Build Include="Dto\Tables\Paciente.sql" />
+    <Build Include="Dto\Tables\Turno.sql" />
+    <Build Include="Dto\StoredProcedures\sp_CreateHorarioMedico.sql" />
+    <Build Include="Dto\StoredProcedures\sp_CreateMedico.sql" />
+    <Build Include="Dto\StoredProcedures\sp_CreateMedicoWithHorarios.sql" />
+    <Build Include="Dto\StoredProcedures\sp_CreatePaciente.sql" />
+    <Build Include="Dto\StoredProcedures\sp_DeleteHorarioMedico.sql" />
+    <Build Include="Dto\StoredProcedures\sp_ReadHorariosMedicosAll.sql" />
+    <Build Include="Dto\StoredProcedures\sp_UpdateHorarioMedico.sql" />
+    <Build Include="Dto\StoredProcedures\sp_UpdateMedico.sql" />
+    <Build Include="Dto\StoredProcedures\sp_UpdateMedicoWithHorarios.sql" />
+    <Build Include="Dto\StoredProcedures\sp_UpdatePaciente.sql" />
+    <Build Include="Dto\UserDefinedTableTypes\HorarioMedicoTableType.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_InsertTurnoReturnId.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectMedicos.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectMedicosWhereEspecialidad.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_UpdateTurnoWhereId.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectTurnos.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectPacientes.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectTurnosWhereMedicosIds.sql" />
+    <Build Include="Dto\UserDefinedTableTypes\IntListTableType.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectHorariosVigentesBetweenFechasWhereMedicoId.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PostDeploy Include="Script.PostDeployment.sql" />
-    <None Include="Clinica.SQLServerDB.publish.xml" />
+    <None Include="Publications\Clinica.SQLServerDB.publish.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PreDeploy Include="Script.PreDeployment.sql" />
+    <PreDeploy Include="Dto\Script.PreDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
-    <RefactorLog Include="Clinica.SQLServerDB.refactorlog" />
+    <PostDeploy Include="Dto\PostDeployInserts\Script.PostDeployment.sql" />
   </ItemGroup>
 </Project>

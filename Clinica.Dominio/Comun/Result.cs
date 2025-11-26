@@ -1,67 +1,47 @@
-﻿namespace Clinica.Dominio.Comun;
+﻿
+namespace Clinica.Dominio.Comun;
 
-//
-// ==========================================
-//  BASE (sin genéricos)
-// ==========================================
-public abstract class Result {
-	public sealed class Ok : Result { }
-
-	public sealed class Error(string mensaje) : Result {
-        public string Mensaje { get; } = mensaje;
-    }
-
-	public bool IsOk => this is Ok;
-	public bool IsError => this is Error;
-
-	// ✅ Métodos estáticos sin colisiones
-	public static Result Success() => new Ok();
-	public static Result Failure(string mensaje) => new Error(mensaje);
-
-	public void Switch(Action ok, Action<string> error) {
-		switch (this) {
-			case Ok: ok(); break;
-			case Error e: error(e.Mensaje); break;
-			default: throw new InvalidOperationException();
-		}
-	}
-
-	public TOut Match<TOut>(Func<TOut> ok, Func<string, TOut> error)
-		=> this switch {
-			Ok => ok(),
-			Error e => error(e.Mensaje),
-			_ => throw new InvalidOperationException()
-		};
-
-	// ✅ Métodos auxiliares para versión genérica
-	public static Result<T> Success<T>(T value) => new Result<T>.Ok(value);
-	public static Result<T> Failure<T>(string message) => new Result<T>.Error(message);
+public readonly struct Unit {
+	public static readonly Unit Valor = default;
 }
 
-
-
-//
-// ==========================================
-//  VERSION GENÉRICA (Result<T>)
-// ==========================================
 public abstract class Result<T> {
 	public sealed class Ok(T valor) : Result<T> {
-        public T Valor { get; } = valor;
-    }
+		public T Valor { get; } = valor;
+	}
 
 	public sealed class Error(string mensaje) : Result<T> {
-        public string Mensaje { get; } = mensaje;
-    }
+		public string Mensaje { get; } = mensaje;
+	}
 
 	public bool IsOk => this is Ok;
 	public bool IsError => this is Error;
-
+	public void Match(Action<T> ok, Action<string> error) {
+		switch (this) {
+			case Ok o: ok(o.Valor); break;
+			case Error e: error(e.Mensaje); break;
+		}
+	}
 	public TOut Match<TOut>(Func<T, TOut> ok, Func<string, TOut> error)
 		=> this switch {
 			Ok o => ok(o.Valor),
 			Error e => error(e.Mensaje),
 			_ => throw new InvalidOperationException()
 		};
+	//public void Match(Action<T> ok, Action<string> error) {
+	//	switch (this) {
+	//		case Ok o:
+	//			ok(o.Valor);
+	//			break;
+
+	//		case Error e:
+	//			error(e.Mensaje);
+	//			break;
+
+	//		default:
+	//			throw new InvalidOperationException();
+	//	}
+	//}
 
 	public void Switch(Action<T> ok, Action<string> error) {
 		switch (this) {
@@ -71,13 +51,51 @@ public abstract class Result<T> {
 		}
 	}
 }
-
-
 //
 // ==========================================
 //  EXTENSIONES FUNCIONALES
 // ==========================================
 public static class ResultExtensions {
+
+	public static Result<T> PrintAndContinue<T>(this Result<T> result, string? label = null) {
+		string prefix = label is null ? "" : $"{label}: ";
+
+		result.Match(
+			ok => {
+				Console.ForegroundColor = ConsoleColor.Green;
+				Console.WriteLine($"{prefix}OK → {typeof(T).Name} succeded");
+				Console.ResetColor();
+			},
+			err => {
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.WriteLine($"{prefix}ERROR → {err}");
+				Console.ResetColor();
+			}
+		);
+
+		return result;
+	}
+	public static T UnwrapOrRaise<T>(this Result<T> result) =>
+		result.Match(
+			ok => ok,
+			mensaje => throw new InvalidOperationException(mensaje)
+		);
+
+	public static T GetOrRaise<T>(this Result<T> result) =>
+		result.Match(
+			ok => {
+				Console.WriteLine($"Succesfully asserting {typeof(T)}");
+				return ok;
+			},
+			mensaje => {
+				Console.WriteLine(mensaje);
+				Console.Write("Presione enter para lanzar la excepcion: ");
+				Console.ReadLine();
+				throw new InvalidOperationException(mensaje);
+			}
+		);
+
+
 	// Map: Result<T> → Result<U>
 	public static Result<U> Map<T, U>(this Result<T> r, Func<T, U> f) =>
 		r switch {
@@ -103,7 +121,7 @@ public static class ResultExtensions {
 	public static Result<U> Bind<T, U>(
 		this IEnumerable<Result<T>> results,
 		Func<IReadOnlyList<T>, Result<U>> func) {
-		var combined = results.CombineResults();
+		Result<List<T>> combined = results.CombineResults();
 		return combined switch {
 			Result<List<T>>.Ok ok => func(ok.Valor),
 			Result<List<T>>.Error err => new Result<U>.Error(err.Mensaje),
@@ -114,8 +132,8 @@ public static class ResultExtensions {
 	// CombineResults: IEnumerable<Result<T>> → Result<List<T>>
 	public static Result<List<T>> CombineResults<T>(
 		this IEnumerable<Result<T>> results) {
-		var list = new List<T>();
-		foreach (var r in results) {
+		List<T> list = new();
+		foreach (Result<T> r in results) {
 			switch (r) {
 				case Result<T>.Ok ok:
 					list.Add(ok.Valor);
@@ -127,20 +145,6 @@ public static class ResultExtensions {
 		return new Result<List<T>>.Ok(list);
 	}
 
-	// MapToNonGeneric: permite degradar Result<T> → Result
-	public static Result MapToNonGeneric<T>(this Result<T> r) =>
-		r switch {
-			Result<T>.Ok => new Result.Ok(),
-			Result<T>.Error e => new Result.Error(e.Mensaje),
-			_ => throw new InvalidOperationException()
-		};
-}
-public static class ResultLinqExtensions {
-	// SELECT  (equivalente a Map)
-	public static Result<U> Select<T, U>(
-		this Result<T> r,
-		Func<T, U> f
-	) => r.Map(f);
 
 	// SELECT MANY (equivalente a Bind)
 	public static Result<V> SelectMany<T, U, V>(

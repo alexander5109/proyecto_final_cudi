@@ -1,11 +1,11 @@
-﻿using Clinica.AppWPF.ModelViews;
+﻿using Clinica.AppWPF.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Clinica.AppWPF;
     public partial class WindowListarPacientes : Window {
-	private static ModelViewTurno? SelectedTurno;
-	private static ModelViewPaciente? SelectedPaciente;
+	private static ViewModelTurno? SelectedTurno;
+	private static ViewModelPaciente? SelectedPaciente;
 	public WindowListarPacientes(){
             InitializeComponent();
 	}
@@ -16,14 +16,16 @@ namespace Clinica.AppWPF;
 		buttonModificarPaciente.IsEnabled = SelectedPaciente != null;
 	}
 	private void UpdateTurnoUI(){
-		turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWherePacienteId(SelectedPaciente);
+		if (SelectedPaciente != null && SelectedPaciente.Id != null) {
+			turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWherePacienteId((int)SelectedPaciente.Id);
+		}
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 	private void UpdateMedicoUI() {
 		txtMedicoDni.Text = SelectedTurno?.MedicoRelacionado.Dni;
 		txtMedicoNombre.Text = SelectedTurno?.MedicoRelacionado.Name;
 		txtMedicoApellido.Text = SelectedTurno?.MedicoRelacionado.LastName;
-		txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado.Especialidad;
+		txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado?.EspecialidadCodigoInterno.ToString();
 		buttonModificarMedico.IsEnabled = SelectedTurno?.MedicoRelacionado != null;
 	}
 
@@ -38,13 +40,13 @@ namespace Clinica.AppWPF;
 		UpdateMedicoUI();
 	}
 	private void listViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedTurno = (ModelViewTurno)turnosListView.SelectedItem;
+		SelectedTurno = (ViewModelTurno)turnosListView.SelectedItem;
 		UpdatePacienteUI();
 		UpdateTurnoUI();
 		UpdateMedicoUI();
 	}
 	private void pacientesListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedPaciente = (ModelViewPaciente)pacientesListView.SelectedItem;
+		SelectedPaciente = (ViewModelPaciente)pacientesListView.SelectedItem;
 		UpdateMedicoUI();
 		UpdateTurnoUI();
 		UpdatePacienteUI();

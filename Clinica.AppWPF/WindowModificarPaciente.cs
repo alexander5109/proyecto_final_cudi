@@ -1,15 +1,15 @@
-﻿using Clinica.AppWPF.ModelViews;
-using Clinica.Dominio.Comun;
+﻿using Clinica.AppWPF.ViewModels;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Tipos;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.TiposDeValor;
 using System.ComponentModel;
 using System.Windows;
 
 namespace Clinica.AppWPF; 
 public partial class WindowModificarPaciente : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public ModelViewPaciente _selectedView = ModelViewPaciente.NewEmpty();
-	public ModelViewPaciente SelectedPaciente { get => _selectedView; set { _selectedView = value; OnPropertyChanged(nameof(SelectedPaciente)); } }
+	public ViewModelPaciente _selectedView = ViewModelPaciente.NewEmpty();
+	public ViewModelPaciente SelectedPaciente { get => _selectedView; set { _selectedView = value; OnPropertyChanged(nameof(SelectedPaciente)); } }
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 
@@ -18,7 +18,7 @@ public partial class WindowModificarPaciente : Window, INotifyPropertyChanged {
 		DataContext = this;
 	}
 
-	public WindowModificarPaciente(ModelViewPaciente selectedPaciente){
+	public WindowModificarPaciente(ViewModelPaciente selectedPaciente){
 		InitializeComponent();
 		SelectedPaciente = selectedPaciente;
 		DataContext = this;
@@ -33,7 +33,7 @@ public partial class WindowModificarPaciente : Window, INotifyPropertyChanged {
 			ok => {
 				bool exito;
 				if (SelectedPaciente.Id is null) {
-					// Crear nuevo paciente
+					// _ValidarRepositorios nuevo paciente
 					exito = App.BaseDeDatos.CreatePaciente(ok, SelectedPaciente);
 				} else {
 					// Actualizar existente

@@ -1,17 +1,17 @@
-﻿using Clinica.AppWPF.ModelViews;
+﻿using Clinica.AppWPF.ViewModels;
 using Clinica.AppWPF.Ventanas;
-using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
 using System.ComponentModel;
 using System.Windows;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.AppWPF;
 
 public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	public ModelViewMedico _selectedMedico = ModelViewMedico.NewEmpty();
-	public ModelViewMedico SelectedMedico { get => _selectedMedico; set { _selectedMedico = value; OnPropertyChanged(nameof(SelectedMedico)); } }
+	public ViewModelMedico _selectedMedico = ViewModelMedico.NewEmpty();
+	public ViewModelMedico SelectedMedico { get => _selectedMedico; set { _selectedMedico = value; OnPropertyChanged(nameof(SelectedMedico)); } }
 
 	//---------------------constructor-------------------//
 	public WindowModificarMedico() {
@@ -19,7 +19,7 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 		DataContext = this;
 	}
 
-	public WindowModificarMedico(ModelViewMedico selectedMedico) {
+	public WindowModificarMedico(ViewModelMedico selectedMedico) {
 		InitializeComponent();
 		SelectedMedico = selectedMedico;
 		DataContext = this;
@@ -33,7 +33,7 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 			ok => {
 				bool exito;
 				if (SelectedMedico.Id is null) {
-					// Crear nuevo médico
+					// _ValidarRepositorios nuevo médico
 					exito = App.BaseDeDatos.CreateMedico(ok, SelectedMedico);
 				} else {
 					// Actualizar médico existente
@@ -78,22 +78,22 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 
 		DayOfWeek dia;
 
-		if (selected is ModelViewHorariosAgrupados grupo) {
+		if (selected is ViewModelHorariosAgrupados grupo) {
 			dia = grupo.DiaSemana;
-		} else if (selected is ModelViewHorario horario) {
+		} else if (selected is ViewModelHorario horario) {
 			dia = horario.DiaSemana;
 		} else {
 			MessageBox.Show("Seleccione un día en el árbol para agregar un horario.");
 			return;
 		}
 
-		var nuevoHorario = new ModelViewHorario {
+        ViewModelHorario nuevoHorario = new() {
 			DiaSemana = dia,
 			Desde = new TimeOnly(8, 0),
 			Hasta = new TimeOnly(12, 0)
 		};
 
-		var win = new WindowModificarHorario(SelectedMedico, nuevoHorario, esNuevo: true);
+        WindowModificarHorario win = new(SelectedMedico, nuevoHorario, esNuevo: true);
 
 		if (win.ShowDialog() == true) {
 			// Se agregó realmente dentro de WindowModificarHorario
@@ -105,12 +105,12 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
 		var selected = GetSelectedTreeItem();
 
-		if (selected is not ModelViewHorario horario) {
+		if (selected is not ViewModelHorario horario) {
 			MessageBox.Show("Seleccione un horario para editar.");
 			return;
 		}
 
-		var win = new WindowModificarHorario(SelectedMedico, horario, esNuevo: false);
+        WindowModificarHorario win = new(SelectedMedico, horario, esNuevo: false);
 
 		if (win.ShowDialog() == true) {
 			// El horario ya está modificado (data binding)
@@ -121,7 +121,7 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	private void BtnEliminarHorario_Click(object sender, RoutedEventArgs e) {
 		var selected = GetSelectedTreeItem();
 
-		if (selected is not ModelViewHorario horario) {
+		if (selected is not ViewModelHorario horario) {
 			MessageBox.Show("Seleccione un horario para eliminar.");
 			return;
 		}
