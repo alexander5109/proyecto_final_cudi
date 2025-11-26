@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.Persistencia;
@@ -12,13 +11,11 @@ public static class MainProgram {
 	static async Task Main() {
 		Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-		// 1. CrearFromStrings fábrica de conexión
 		IConfiguration config = new ConfigurationBuilder()
 			.SetBasePath(AppContext.BaseDirectory)
 			.AddJsonFile("appsettings.Development.json")
 			.Build();
 
-		// 2. CrearFromStrings el servicio de casos de uso
 		ServiciosPublicosAsync servicio = new(
 			new BaseDeDatosRepositorio(
 				new SqlConnectionFactory(config.GetConnectionString("ClinicaMedica")
@@ -33,9 +30,9 @@ public static class MainProgram {
 			DateTime.Now,
 			15
 		)).PrintAndContinue("Disponbiildiades encontradas::");
-		//var lista = disponibilidades.GetOrRaise();
-		//foreach (var d in lista)
-		//	Console.WriteLine(d.ATexto());
+		var lista = disponibilidades.GetOrRaise();
+		foreach (var d in lista)
+			Console.WriteLine(d.ATexto());
 
 		// Caso de uso 2
 		Result<Turno2025> turno = (await servicio.SolicitarTurnoEnLaPrimeraDisponibilidad(

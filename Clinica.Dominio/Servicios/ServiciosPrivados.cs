@@ -5,8 +5,6 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Dominio.Servicios;
 
 internal static class ServiciosPrivados {
-
-
 	internal static Result<DisponibilidadEspecialidad2025> TomarPrimera(this Result<IReadOnlyList<DisponibilidadEspecialidad2025>> listadoResult) {
 		return listadoResult.Match<Result<DisponibilidadEspecialidad2025>>(
 			ok => {
@@ -77,7 +75,7 @@ internal static class ServiciosPrivados {
 			List<Turno2025> turnos = [
 				.. funcSelectTurnosProgramadosBetweenFechasWhereMedicoId(
 				medico.Id, desdeBusqueda, hastaBusqueda)
-			]; // Cacheás una sola vez los turnos del médico
+			];
 
 			foreach (HorarioMedico2025 franja in funcSelectHorariosVigentesBetweenFechasWhereMedicoId(medico.Id, desdeBusqueda, hastaBusqueda)) {
 
@@ -99,7 +97,6 @@ internal static class ServiciosPrivados {
 							solicitudEspecialidad, medico.Id,
 							slot, slot.AddMinutes(duracion));
 
-						// --- Corrección central aquí ---
 						bool solapa = turnos.Any(t =>
 							t.Especialidad == disp.Especialidad &&
 							t.OutcomeEstado == TurnoOutcomeEstado2025.Programado &&
@@ -114,6 +111,4 @@ internal static class ServiciosPrivados {
 			}
 		}
 	}
-
-
 }
