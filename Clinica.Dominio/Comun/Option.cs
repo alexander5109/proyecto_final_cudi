@@ -1,12 +1,12 @@
 ﻿namespace Clinica.Dominio.Comun;
 
 public readonly struct Option<T> {
-	public bool HasValue { get; }
-	public T Value { get; }
+	public bool HasValor { get; }
+	public T Valor { get; }
 
 	private Option(T value) {
-		HasValue = true;
-		Value = value;
+		HasValor = true;
+		Valor = value;
 	}
 
 	public static Option<T> None => new();    // Sin valor
@@ -14,6 +14,20 @@ public readonly struct Option<T> {
 }
 
 public static class OptionExtensions {
+	/// <summary>
+	/// Ejecuta una de dos funciones dependiendo si el Option tiene valor o no.
+	/// </summary>
+	public static TResult Match<T, TResult>(
+		this Option<T> option,
+		Func<T, TResult> some,
+		Func<TResult> none
+	) {
+		if (option.HasValor)
+			return some(option.Valor);
+
+		return none();
+	}
+
 	public static Option<T> ToOption<T>(this T? value) where T : struct
 		=> value.HasValue ? Option<T>.Some(value.Value) : Option<T>.None;
 
@@ -21,6 +35,7 @@ public static class OptionExtensions {
 		=> string.IsNullOrWhiteSpace(value)
 			? Option<string>.None
 			: Option<string>.Some(value);
+
 }
 
 //public abstract record Option<T> {

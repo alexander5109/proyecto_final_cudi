@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="DTOs\DtosWebAPI.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clinica.Infrastructure\Clinica.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

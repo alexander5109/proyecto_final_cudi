@@ -99,9 +99,9 @@ internal static class ServiciosPrivados {
 
 						bool solapa = turnos.Any(t =>
 							t.Especialidad == disp.Especialidad &&
-							t.OutcomeEstado == TurnoOutcomeEstado2025.Programado &&
-							t.FechaHoraAsignadaDesde < disp.FechaHoraHasta &&
-							disp.FechaHoraDesde < t.FechaHoraAsignadaHasta
+							t.OutcomeEstadoOption == TurnoOutcomeEstado2025.Programado &&
+							t.FechaHoraAsignadaDesdeValor < disp.FechaHoraHasta &&
+							disp.FechaHoraDesde < t.FechaHoraAsignadaHastaValor
 						);
 
 						if (!solapa)

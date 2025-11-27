@@ -4,13 +4,7 @@ using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
 
-public enum TurnoOutcomeEstado2025 {
-	Programado = 1,
-	Ausente = 2,
-	Cancelado = 3,
-	Concretado = 4,
-	Reprogramado = 5
-}
+
 public record struct TurnoId(int Valor);
 
 public record Turno2025(
@@ -19,28 +13,80 @@ public record Turno2025(
 	PacienteId PacienteId,
 	MedicoId MedicoId,
 	EspecialidadMedica2025 Especialidad,
-	DateTime FechaHoraAsignadaDesde,
-	DateTime FechaHoraAsignadaHasta,
-	TurnoOutcomeEstado2025 OutcomeEstado,
-	Option<DateTime> OutcomeFecha,
-	Option<string> OutcomeComentario
+	DateTime FechaHoraAsignadaDesdeValor,
+	DateTime FechaHoraAsignadaHastaValor,
+	TurnoOutcomeEstado2025 OutcomeEstadoOption,
+	Option<DateTime> OutcomeFechaOption,
+	Option<string> OutcomeComentarioOption
 ) : IComoTexto {
 
 	public string ATexto() {
-		var fecha = FechaHoraAsignadaDesde.ToString("dddd dd/MM/yyyy");
-		var desde = FechaHoraAsignadaDesde.ToString("HH:mm");
-		var hasta = FechaHoraAsignadaHasta.ToString("HH:mm");
-		var duracion = (FechaHoraAsignadaHasta - FechaHoraAsignadaDesde).TotalMinutes;
+		var fecha = FechaHoraAsignadaDesdeValor.ToString("dddd dd/MM/yyyy");
+		var desde = FechaHoraAsignadaDesdeValor.ToString("HH:mm");
+		var hasta = FechaHoraAsignadaHastaValor.ToString("HH:mm");
+		var duracion = (FechaHoraAsignadaHastaValor - FechaHoraAsignadaDesdeValor).TotalMinutes;
 		return
 			$"Turno de {Especialidad.ATexto()}\n" +
 			$"  • PacienteId: {PacienteId}\n" +
 			$"  • Médico asignado: {MedicoId}\n" +
 			$"  • Fecha: {fecha}\n" +
 			$"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
-			$"  • OutcomeEstado: {OutcomeEstado}";
+			$"  • OutcomeEstadoOption: {OutcomeEstadoOption}";
+	}
+	public static Result<Turno2025> Crear(
+		TurnoId id,
+		Result<FechaRegistro2025> fechaCreacionResult,
+		PacienteId pacienteId,
+		MedicoId medicoId,
+		Result<EspecialidadMedica2025> especialidadResult,
+		DateTime desde,
+		DateTime hasta,
+		Result<TurnoOutcomeEstado2025> outcomeEstadoResult,
+		Option<DateTime> outcomeFecha,
+		Option<string> outcomeComentario
+	) {
+		// Componemos los VO dependientes
+		return
+			from fechaCreacion in fechaCreacionResult
+			from especialidad in especialidadResult
+			from estado in outcomeEstadoResult
+			from _ in ValidarOutcome(estado, outcomeFecha, outcomeComentario)
+			select new Turno2025(
+				id,
+				fechaCreacion,
+				pacienteId,
+				medicoId,
+				especialidad,
+				desde,
+				hasta,
+				estado,
+				outcomeFecha,
+				outcomeComentario
+			);
+	}
+	private static Result<Unit> ValidarOutcome(TurnoOutcomeEstado2025 estado, Option<DateTime> fecha, Option<string> comentario) {
+		bool esProgramado = estado == TurnoOutcomeEstado2025.Programado;
+
+		if (esProgramado) {
+			if (fecha.HasValor || comentario.HasValor)
+				return new Result<Unit>.Error(
+					"Un turno Programado no puede tener Fecha ni Comentario."
+				);
+
+			return new Result<Unit>.Ok(Unit.Valor);
+		}
+
+		// Estado es Ausente, Cancelado, Concretado, Reprogramado
+		if (fecha.HasValor || comentario.HasValor)
+			return new Result<Unit>.Error(
+				"Los turnos NO programados deben tener Fecha y Comentario."
+			);
+
+		return new Result<Unit>.Ok(Unit.Valor);
 	}
 
-	public static Result<Turno2025> Crear(
+
+	public static Result<Turno2025> ProgramarNuevo(
 		TurnoId turnoId,
 		PacienteId pacienteId,
 		FechaRegistro2025 solicitadoEn,
@@ -62,23 +108,23 @@ public record Turno2025(
 			PacienteId: pacienteId,
 			MedicoId: disp.MedicoId,
 			Especialidad: disp.Especialidad,
-			FechaHoraAsignadaDesde: disp.FechaHoraDesde,
-			FechaHoraAsignadaHasta: disp.FechaHoraHasta,
-			OutcomeEstado: TurnoOutcomeEstado2025.Programado,
-			OutcomeFecha: Option<DateTime>.None,
-			OutcomeComentario: Option<string>.None
+			FechaHoraAsignadaDesdeValor: disp.FechaHoraDesde,
+			FechaHoraAsignadaHastaValor: disp.FechaHoraHasta,
+			OutcomeEstadoOption: TurnoOutcomeEstado2025.Programado,
+			OutcomeFechaOption: Option<DateTime>.None,
+			OutcomeComentarioOption: Option<string>.None
 		));
 	}
 
 	public Result<Turno2025> SetOutcome(TurnoOutcomeEstado2025 outcomeEstado, DateTime outcomeFecha, string outcomeComentario) {
-		if (OutcomeEstado != TurnoOutcomeEstado2025.Programado)
+		if (OutcomeEstadoOption != TurnoOutcomeEstado2025.Programado)
 			return new Result<Turno2025>.Error("El turno ya tiene un estado final. No puede modificarse.");
 
 		return new Result<Turno2025>.Ok(
 			this with {
-				OutcomeEstado = outcomeEstado,
-				OutcomeComentario = Option<string>.Some(outcomeComentario),
-				OutcomeFecha = Option<DateTime>.Some(outcomeFecha)
+				OutcomeEstadoOption = outcomeEstado,
+				OutcomeComentarioOption = Option<string>.Some(outcomeComentario),
+				OutcomeFechaOption = Option<DateTime>.Some(outcomeFecha)
 			}
 		);
 	}
@@ -87,10 +133,10 @@ public record Turno2025(
 		DisponibilidadEspecialidad2025 nuevaDisp,
 		TurnoId nuevoId
 	) {
-		if (OutcomeEstado == TurnoOutcomeEstado2025.Programado)
+		if (OutcomeEstadoOption == TurnoOutcomeEstado2025.Programado)
 			return new Result<Turno2025>.Error("No puede reprogramarse un turno que todavía está programado.");
 
-		if (!OutcomeFecha.HasValue)
+		if (!OutcomeFechaOption.HasValor)
 			return new Result<Turno2025>.Error("No se puede reprogramar un turno sin fecha de finalización del estado anterior.");
 
 		if (nuevaDisp.FechaHoraDesde >= nuevaDisp.FechaHoraHasta)
@@ -98,15 +144,15 @@ public record Turno2025(
 
 		return new Result<Turno2025>.Ok(new Turno2025(
 			Id: nuevoId,
-			FechaDeCreacion: new FechaRegistro2025(OutcomeFecha.Value),
+			FechaDeCreacion: new FechaRegistro2025(OutcomeFechaOption.Valor),
 			PacienteId: PacienteId,
 			MedicoId: MedicoId,
 			Especialidad: Especialidad,
-			FechaHoraAsignadaDesde: nuevaDisp.FechaHoraDesde,
-			FechaHoraAsignadaHasta: nuevaDisp.FechaHoraHasta,
-			OutcomeEstado: TurnoOutcomeEstado2025.Programado,
-			OutcomeFecha: Option<DateTime>.None,
-			OutcomeComentario: Option<string>.None
+			FechaHoraAsignadaDesdeValor: nuevaDisp.FechaHoraDesde,
+			FechaHoraAsignadaHastaValor: nuevaDisp.FechaHoraHasta,
+			OutcomeEstadoOption: TurnoOutcomeEstado2025.Programado,
+			OutcomeFechaOption: Option<DateTime>.None,
+			OutcomeComentarioOption: Option<string>.None
 		));
 	}
 }

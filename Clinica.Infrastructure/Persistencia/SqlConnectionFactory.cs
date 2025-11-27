@@ -4,12 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Clinica.Infrastructure.Persistencia;
 
-
-public interface IDbConnectionFactory {
-	IDbConnection CreateConnection();
-}
-
-public class SqlConnectionFactory : IDbConnectionFactory {
+public class SqlConnectionFactory {
 	private readonly string _connectionString;
 
 	public SqlConnectionFactory(string connectionString) {

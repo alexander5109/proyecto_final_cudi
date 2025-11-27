@@ -1,37 +1,34 @@
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Infrastructure.Dtos;
 using Clinica.Infrastructure.ServiciosAsync;
-using Clinica.WebAPI.DTOs;
-using Clinica.WebAPI.Mapping;
+using Clinica.WebAPI.DtosWebAPI;
 using Microsoft.AspNetCore.Mvc;
+using Clinica.Infrastructure.DtosEntidades;
+using static Clinica.WebAPI.DtosWebAPI.DtosWebAPI;
+
 
 namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class TurnosController : ControllerBase {
-	private readonly ServiciosPublicosAsync _servicio;
-	private readonly ILogger<TurnosController> _logger;
+public class TurnosController(
+	ServiciosPublicosAsync servicio,
+	ILogger<TurnosController> logger) : ControllerBase {
 
-	public TurnosController(
-		ServiciosPublicosAsync servicio,
-		ILogger<TurnosController> logger) {
-		_servicio = servicio;
-		_logger = logger;
-	}
+
+
 
 	// --------------------------------------------------------
 	// GET /turnos/{id}
 	// --------------------------------------------------------
 	[HttpGet("{id:int}")]
 	public async Task<IActionResult> GetPorId(int id) {
-		Result<Turno2025> result = await _servicio.ObtenerTurnoPorIdAsync(id);
+		Result<Turno2025> result = await servicio.ObtenerTurnoPorIdAsync(id);
 
 		return result switch {
 			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDTO()),
+				Ok(ok.Valor.ToDto()),
 
 			Result<Turno2025>.Error err =>
 				NotFound(new { error = err.Mensaje }),
@@ -53,7 +50,7 @@ public class TurnosController : ControllerBase {
 
 		EspecialidadMedica2025 especialidad = espResult.GetOrRaise();
 
-		var result = await _servicio.AgendarTurnoAsync(
+		Result<Turno2025> result = await servicio.AgendarTurnoAsync(
 			dto.PacienteId,
 			dto.MedicoId,
 			especialidad,
@@ -63,7 +60,7 @@ public class TurnosController : ControllerBase {
 
 		return result switch {
 			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDTO()),
+				Ok(ok.Valor.ToDto()),
 
 			Result<Turno2025>.Error err =>
 				BadRequest(new { error = err.Mensaje }),
@@ -77,7 +74,7 @@ public class TurnosController : ControllerBase {
 	// --------------------------------------------------------
 	[HttpPut("{id:int}/reprogramar")]
 	public async Task<IActionResult> Reprogramar(int id, [FromBody] ReprogramarTurnoRequestDto dto) {
-		Result<Turno2025> result = await _servicio.ReprogramarTurnoAsync(
+		Result<Turno2025> result = await servicio.ReprogramarTurnoAsync(
 			id,
 			dto.NuevaFechaDesde,
 			dto.NuevaFechaHasta
@@ -85,7 +82,7 @@ public class TurnosController : ControllerBase {
 
 		return result switch {
 			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDTO()),
+				Ok(ok.Valor.ToDto()),
 
 			Result<Turno2025>.Error err =>
 				BadRequest(new { error = err.Mensaje }),
@@ -99,11 +96,11 @@ public class TurnosController : ControllerBase {
 	// --------------------------------------------------------
 	[HttpPut("{id:int}/cancelar")]
 	public async Task<IActionResult> Cancelar(int id, [FromBody] string? comentario) {
-		var result = await _servicio.CancelarTurnoAsync(id, comentario.ToOption());
+		Result<Turno2025> result = await servicio.CancelarTurnoAsync(id, comentario.ToOption());
 
 		return result switch {
 			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDTO()),
+				Ok(ok.Valor.ToDto()),
 
 			Result<Turno2025>.Error err =>
 				BadRequest(new { error = err.Mensaje }),
@@ -117,11 +114,11 @@ public class TurnosController : ControllerBase {
 	// --------------------------------------------------------
 	[HttpPut("{id:int}/concretar")]
 	public async Task<IActionResult> Concretar(int id, [FromBody] string? comentario) {
-		var result = await _servicio.MarcarTurnoComoConcretadoAsync(id, comentario.ToOption());
+		Result<Turno2025> result = await servicio.MarcarTurnoComoConcretadoAsync(id, comentario.ToOption());
 
 		return result switch {
 			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDTO()),
+				Ok(ok.Valor.ToDto()),
 
 			Result<Turno2025>.Error err =>
 				BadRequest(new { error = err.Mensaje }),
@@ -135,11 +132,11 @@ public class TurnosController : ControllerBase {
 	// --------------------------------------------------------
 	[HttpPut("{id:int}/ausente")]
 	public async Task<IActionResult> Ausente(int id, [FromBody] string? comentario) {
-		var result = await _servicio.MarcarTurnoComoAusenteAsync(id, comentario.ToOption());
+		Result<Turno2025> result = await servicio.MarcarTurnoComoAusenteAsync(id, comentario.ToOption());
 
 		return result switch {
 			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDTO()),
+				Ok(ok.Valor.ToDto()),
 
 			Result<Turno2025>.Error err =>
 				BadRequest(new { error = err.Mensaje }),

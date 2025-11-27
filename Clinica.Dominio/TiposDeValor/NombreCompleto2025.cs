@@ -3,10 +3,10 @@
 namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct NombreCompleto2025(
-	string Nombre,
-	string Apellido
+	string NombreValor,
+	string ApellidoValor
 ): IComoTexto {
-	public string ATexto() => $"{Apellido} {Nombre}";
+	public string ATexto() => $"{ApellidoValor} {NombreValor}";
 
 	static readonly int MaxLongitud = 100; // razonable, pero configurable
 	public static Result<NombreCompleto2025> Crear(string? nombre, string? apellido) {

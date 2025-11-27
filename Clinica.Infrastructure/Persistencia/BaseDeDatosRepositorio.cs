@@ -3,14 +3,15 @@ using System.Data;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Infrastructure.Dtos;
+using Clinica.Infrastructure.DtosEntidades;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
 
 namespace Clinica.Infrastructure.Persistencia;
 
 
-public class BaseDeDatosRepositorio(IDbConnectionFactory factory) {
+public class BaseDeDatosRepositorio(SqlConnectionFactory factory) {
 	private static DataTable BuildIntList(IEnumerable<int> valores) {
 		DataTable table = new();
 		table.Columns.Add("Valor", typeof(int));
@@ -32,8 +33,8 @@ public class BaseDeDatosRepositorio(IDbConnectionFactory factory) {
 			parameters.Add("@PacienteId", turno.PacienteId.Valor);
 			parameters.Add("@MedicoId", turno.MedicoId.Valor);
 			parameters.Add("@EspecialidadCodigo", turno.Especialidad.CodigoInterno.Valor);
-			parameters.Add("@FechaHoraAsignadaDesde", turno.FechaHoraAsignadaDesde);
-			parameters.Add("@FechaHoraAsignadaHasta", turno.FechaHoraAsignadaHasta);
+			parameters.Add("@FechaHoraAsignadaDesdeValor", turno.FechaHoraAsignadaDesdeValor);
+			parameters.Add("@FechaHoraAsignadaHastaValor", turno.FechaHoraAsignadaHastaValor);
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
 			await conn.ExecuteAsync("sp_InsertTurnoReturnId", parameters, commandType: CommandType.StoredProcedure);
@@ -55,10 +56,10 @@ public class BaseDeDatosRepositorio(IDbConnectionFactory factory) {
 			await conn.ExecuteAsync(
 				"sp_UpdateTurnoWhereId",
 				new {
-					TurnoId = (int)turno.Id.Valor,
-					OutcomeEstado = (byte)turno.OutcomeEstado,
-					OutcomeFecha = (DateTime)turno.OutcomeFecha.Value,
-					OutcomeComentario = (string?)turno.OutcomeComentario.Value
+					TurnoId = turno.Id.Valor,
+					OutcomeEstado = turno.OutcomeEstadoOption.Codigo.Valor,
+					OutcomeFecha = turno.OutcomeFechaOption.Valor,
+					OutcomeComentario = turno.OutcomeComentarioOption.Valor
 				},
 				commandType: CommandType.StoredProcedure
 			);

@@ -53,11 +53,11 @@ public static class ServiciosPublicos {
 		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error e1)
 			return new Result<Turno2025>.Error(e1.Mensaje);
 
-		Result<Turno2025> turnoResult = Turno2025.Crear(
+		Result<Turno2025> turnoResult = Turno2025.ProgramarNuevo(
 			new TurnoId(-1),
 			pacienteId,
 			solicitudFechaCreacion,
-			dispResult.UnwrapOrRaise()
+			dispResult.UnwrapAsOk()
 		);
 
 		if (turnoResult is Result<Turno2025>.Error e2)

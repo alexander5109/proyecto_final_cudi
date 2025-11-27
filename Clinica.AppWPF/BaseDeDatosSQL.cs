@@ -39,15 +39,15 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
 				using (SqlCommand sqlComando = new(insertQuery, connection)) {
-					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
-					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
+					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.NombreValor);
+					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.ApellidoValor);
 					sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
-					sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
-					sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
-					sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
+					sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.NombreValor);
+					sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.DireccionValor);
+					sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.NombreValor);
 					sqlComando.Parameters.AddWithValue("@Especialidad", instancia.Especialidad.Titulo);
 					sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono.Valor);
-					sqlComando.Parameters.AddWithValue("@Guardia", instancia.HaceGuardias);
+					sqlComando.Parameters.AddWithValue("@Guardia", instancia.HaceGuardiasValor);
 					sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Valor);
 					sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado.Valor);
 					instanceDto.Id = int.Parse(sqlComando.ExecuteScalar().ToString()); //ahora la instancia creada desde la ventana tiene su propia CodigoInterno
@@ -88,15 +88,15 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				connection.Open();
 				using (SqlCommand sqlComando = new(insertQuery, connection)) {
 					sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
-					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
-					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
+					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.NombreValor);
+					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.ApellidoValor);
 					sqlComando.Parameters.AddWithValue("@FechaIngreso", DateTime.Today.ToString());
 					sqlComando.Parameters.AddWithValue("@Email", instancia.Contacto.Email.Valor);
 					sqlComando.Parameters.AddWithValue("@Telefono", instancia.Contacto.Telefono.Valor);
 					sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento.Valor);
-					sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
-					sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
-					sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
+					sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.DireccionValor);
+					sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.NombreValor);
+					sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.NombreValor);
 					instanceDto.Id = int.Parse(sqlComando.ExecuteScalar()?.ToString());    //ahora la instancia creada desde la ventana tiene su propia CodigoInterno
 				}
 			}
@@ -192,15 +192,15 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 			using (SqlConnection connection = new(connectionString)) {
 				connection.Open();
 				using (SqlCommand sqlComando = new(query, connection)) {
-					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
-					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
+					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.NombreValor);
+					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.ApellidoValor);
 					sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
-					sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
-					sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
-					sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
+					sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.NombreValor);
+					sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.DireccionValor);
+					sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.NombreValor);
 					sqlComando.Parameters.AddWithValue("@Especialidad", instancia.Especialidad.Titulo);
 					sqlComando.Parameters.AddWithValue("@Telefono", instancia.Telefono.Valor);
-					sqlComando.Parameters.AddWithValue("@Guardia", instancia.HaceGuardias);
+					sqlComando.Parameters.AddWithValue("@Guardia", instancia.HaceGuardiasValor);
 					sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Valor);
 					sqlComando.Parameters.AddWithValue("@SueldoMinimoGarantizado", instancia.SueldoMinimoGarantizado.Valor);
 					sqlComando.Parameters.AddWithValue("@CodigoInterno", instanceId);
@@ -231,15 +231,15 @@ public class BaseDeDatosSQL : BaseDeDatosAbstracta {
 				connection.Open();
 				using (SqlCommand sqlComando = new(query, connection)) {
 					sqlComando.Parameters.AddWithValue("@Dni", instancia.Dni.Valor);
-					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.Nombre);
-					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.Apellido);
+					sqlComando.Parameters.AddWithValue("@Name", instancia.NombreCompleto.NombreValor);
+					sqlComando.Parameters.AddWithValue("@LastName", instancia.NombreCompleto.ApellidoValor);
 					sqlComando.Parameters.AddWithValue("@FechaIngreso", instancia.FechaIngreso.Valor);
 					sqlComando.Parameters.AddWithValue("@Email", instancia.Contacto.Email.Valor);
 					sqlComando.Parameters.AddWithValue("@Telefono", instancia.Contacto.Telefono.Valor);
 					sqlComando.Parameters.AddWithValue("@FechaNacimiento", instancia.FechaNacimiento.Valor);
-					sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.Direccion);
-					sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.Nombre);
-					sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.Nombre);
+					sqlComando.Parameters.AddWithValue("@Domicilio", instancia.Domicilio.DireccionValor);
+					sqlComando.Parameters.AddWithValue("@Localidad", instancia.Domicilio.Localidad.NombreValor);
+					sqlComando.Parameters.AddWithValue("@Provincia", instancia.Domicilio.Localidad.Provincia.NombreValor);
 					sqlComando.Parameters.AddWithValue("@CodigoInterno", instanceId);
 					sqlComando.ExecuteNonQuery();
 				}

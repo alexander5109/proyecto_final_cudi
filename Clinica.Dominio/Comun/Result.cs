@@ -1,5 +1,4 @@
-﻿
-namespace Clinica.Dominio.Comun;
+﻿namespace Clinica.Dominio.Comun;
 
 public readonly struct Unit {
 	public static readonly Unit Valor = default;
@@ -28,6 +27,8 @@ public abstract class Result<T> {
 			Error e => error(e.Mensaje),
 			_ => throw new InvalidOperationException()
 		};
+
+
 	//public void Match(Action<T> ok, Action<string> error) {
 	//	switch (this) {
 	//		case Ok o:
@@ -75,7 +76,21 @@ public static class ResultExtensions {
 
 		return result;
 	}
-	public static T UnwrapOrRaise<T>(this Result<T> result) =>
+
+
+
+	//UNSAFE
+	public static string UnwrapAsError<T>(this Result<T> result) =>
+		result.Match(
+			ok => throw new InvalidOperationException(
+				$"Expected Error result but got Ok({ok})"
+			),
+			mensaje => mensaje
+		);
+
+
+	//UNSAFE
+	public static T UnwrapAsOk<T>(this Result<T> result) =>
 		result.Match(
 			ok => ok,
 			mensaje => throw new InvalidOperationException(mensaje)
@@ -132,7 +147,7 @@ public static class ResultExtensions {
 	// CombineResults: IEnumerable<Result<T>> → Result<List<T>>
 	public static Result<List<T>> CombineResults<T>(
 		this IEnumerable<Result<T>> results) {
-		List<T> list = new();
+		List<T> list = [];
 		foreach (Result<T> r in results) {
 			switch (r) {
 				case Result<T>.Ok ok:

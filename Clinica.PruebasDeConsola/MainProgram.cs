@@ -4,6 +4,7 @@ using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.Persistencia;
 using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.Extensions.Configuration;
+using static System.Net.WebRequestMethods;
 
 namespace Clinica.PruebasDeConsola;
 
@@ -22,6 +23,9 @@ public static class MainProgram {
 				)
 			)
 		);
+
+		//var response = await http.GetAsync($"/disponibilidades?especialidadCodigoInterno=3&cuantos=10");
+
 
 
 		// Caso de uso 1

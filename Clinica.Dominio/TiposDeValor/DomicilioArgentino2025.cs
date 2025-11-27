@@ -5,9 +5,9 @@ namespace Clinica.Dominio.Entidades;
 
 public readonly record struct DomicilioArgentino2025(
 	LocalidadDeProvincia2025 Localidad,
-	string Direccion
+	string DireccionValor
 ): IComoTexto {
-	public string ATexto() => $"{Direccion}, {Localidad.ATexto()}";
+	public string ATexto() => $"{DireccionValor}, {Localidad.ATexto()}";
 	public static Result<DomicilioArgentino2025> Crear(Result<LocalidadDeProvincia2025> localidadResult, string? direccionTexto) {
 		if (string.IsNullOrWhiteSpace(direccionTexto))
 			return new Result<DomicilioArgentino2025>.Error("La dirección no puede estar vacía");
@@ -30,10 +30,10 @@ public readonly record struct DomicilioArgentino2025(
 
 
 public readonly record struct LocalidadDeProvincia2025(
-	string Nombre,
+	string NombreValor,
 	ProvinciaArgentina2025 Provincia
 ) : IComoTexto {
-	public string ATexto() => $"{Nombre}, {Provincia.ATexto()}";
+	public string ATexto() => $"{NombreValor}, {Provincia.ATexto()}";
 	public static Result<LocalidadDeProvincia2025> Crear(string? nombreLocalidad, Result<ProvinciaArgentina2025> provinciaResult) {
 		if (string.IsNullOrWhiteSpace(nombreLocalidad))
 			return new Result<LocalidadDeProvincia2025>.Error("El nombre de la localidad no puede estar vacío.");
@@ -50,10 +50,10 @@ public readonly record struct LocalidadDeProvincia2025(
 
 
 public readonly record struct ProvinciaArgentina2025(
-	byte CodigoInterno,
-	string Nombre
+	byte CodigoInternoValor,
+	string NombreValor
 ) : IComoTexto {
-	public string ATexto() => Nombre;
+	public string ATexto() => NombreValor;
 
 	// --- Diccionario canónico ---
 	private static readonly Dictionary<byte, string> _provinciasPorCodigo = new()
