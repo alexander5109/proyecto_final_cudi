@@ -11,10 +11,11 @@ public static class AsyncRepositorioHardCoded  {
 		Medico2025.Crear(
 				new MedicoId(1),
 				NombreCompleto2025.Crear("Carlos Alfredo", "Markier"),
-				ListaEspecialidadesMedicas2025.Crear([
-					EspecialidadMedica2025.Gastroenterologo,
-					EspecialidadMedica2025.ClinicoGeneral
-				]),
+				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Gastroenterologo.CodigoInterno.Valor),
+				//ListaEspecialidadesMedicas2025.Crear([
+				//	EspecialidadMedica2025.Gastroenterologo,
+				//	EspecialidadMedica2025.ClinicoGeneral
+				//]),
 				DniArgentino2025.Crear("15350996"),
 				DomicilioArgentino2025.Crear(
 					LocalidadDeProvincia2025.Crear(
@@ -24,6 +25,7 @@ public static class AsyncRepositorioHardCoded  {
 					"Avenida Rivadavia 2323"
 				),
 				ContactoTelefono2025.Crear("1133832021"),
+				ContactoEmail2025.Crear("carlosmerkeir@gmail.com"),
 				ListaHorarioMedicos2025.Crear([
 					HorarioMedico2025.Crear(
 						DiaSemana2025.Lunes,
@@ -50,10 +52,11 @@ public static class AsyncRepositorioHardCoded  {
 			Medico2025.Crear(
 				new MedicoId(2),
 				NombreCompleto2025.Crear("Jorge", "Pereyra"),
-				ListaEspecialidadesMedicas2025.Crear([
-					EspecialidadMedica2025.Pediatra,
-					EspecialidadMedica2025.Ginecologo
-				]),
+				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Ginecologo.CodigoInterno.Valor),
+				//ListaEspecialidadesMedicas2025.Crear([
+				//	EspecialidadMedica2025.Pediatra,
+				//	EspecialidadMedica2025.Ginecologo
+				//]),
 				DniArgentino2025.Crear("20350996"),
 				DomicilioArgentino2025.Crear(
 					LocalidadDeProvincia2025.Crear(
@@ -63,6 +66,7 @@ public static class AsyncRepositorioHardCoded  {
 					"Armonia 23231"
 				),
 				ContactoTelefono2025.Crear("1163632071"),
+				ContactoEmail2025.Crear("jorgepereiyra@gmail.com"),
 				ListaHorarioMedicos2025.Crear([
 					HorarioMedico2025.Crear(
 						DiaSemana2025.Martes,
@@ -89,10 +93,11 @@ public static class AsyncRepositorioHardCoded  {
 			Medico2025.Crear(
 				new MedicoId(3),
 				NombreCompleto2025.Crear("Marta", "Algerich"),
-				ListaEspecialidadesMedicas2025.Crear([
-					EspecialidadMedica2025.Neurologo,
-					EspecialidadMedica2025.Osteopata
-				]),
+				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Neurologo.CodigoInterno.Valor),
+				//ListaEspecialidadesMedicas2025.Crear([
+					//new Result.Ok<EspecialidadMedica2025>(EspecialidadMedica2025.Neurologo),
+					//EspecialidadMedica2025.Osteopata
+				//]),
 				DniArgentino2025.Crear("10350996"),
 				DomicilioArgentino2025.Crear(
 					LocalidadDeProvincia2025.Crear(
@@ -102,6 +107,7 @@ public static class AsyncRepositorioHardCoded  {
 					"Entre Rios 123"
 				),
 				ContactoTelefono2025.Crear("1149920537"),
+				ContactoEmail2025.Crear("martaalgerich@gmail.com"),
 				ListaHorarioMedicos2025.Crear([
 					HorarioMedico2025.Crear(
 						DiaSemana2025.Lunes,

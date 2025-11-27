@@ -8,9 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Clinica.DataAccess\Clinica.Infrastructure.csproj" />
-    <ProjectReference Include="..\Clinica.DataPersistencia\Clinica.Infrastructure.csproj" />
     <ProjectReference Include="..\Clinica.Dominio\Clinica.Dominio.csproj" />
+    <ProjectReference Include="..\Clinica.Infrastructure\Clinica.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -119,7 +119,7 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio BaseDeDatos) 
 			IEnumerable<Medico2025> Enumerar() {
 				IEnumerable<MedicoDto> dtos = BaseDeDatos.SelectMedicosWhereEspecialidad(especialidad).Result;
 				foreach (MedicoDto dto in dtos) {
-					Result<Medico2025> dom = dto.ToDomain();
+					Result<Medico2025> dom = dto.ToDomain().PrintAndContinue("MedicoDomainizado::");
 					if (dom is Result<Medico2025>.Ok ok)
 						yield return ok.Valor;
 				}
@@ -138,7 +138,7 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio BaseDeDatos) 
 					.Result;
 
 				foreach (TurnoDto dto in dtos) {
-					Result<Turno2025> dom = dto.ToDomain();
+					Result<Turno2025> dom = dto.ToDomain().PrintAndContinue("TurnoDomainizado::");
 					if (dom is Result<Turno2025>.Ok ok)
 						yield return ok.Valor;
 				}
@@ -156,7 +156,7 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio BaseDeDatos) 
 					.Result;
 
 				foreach (HorarioMedicoDto dto in dtos) {
-					Result<HorarioMedico2025> dom = dto.ToDomain();
+					Result<HorarioMedico2025> dom = dto.ToDomain().PrintAndContinue("HorarioMedicoDoaminizadzo::");
 					if (dom is Result<HorarioMedico2025>.Ok ok)
 						yield return ok.Valor;
 				}

@@ -14,6 +14,7 @@ BEGIN
         M.Localidad,
         M.ProvinciaCodigo,
         M.Telefono,
+        M.Email,
         M.Guardia,
         (
             SELECT 

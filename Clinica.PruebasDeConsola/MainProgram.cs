@@ -4,7 +4,6 @@ using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.Persistencia;
 using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.Extensions.Configuration;
-using static System.Net.WebRequestMethods;
 
 namespace Clinica.PruebasDeConsola;
 
@@ -27,16 +26,15 @@ public static class MainProgram {
 		//var response = await http.GetAsync($"/disponibilidades?especialidadCodigoInterno=3&cuantos=10");
 
 
-
 		// Caso de uso 1
 		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidades = (await servicio.SolicitarDisponibilidadesPara(
 			EspecialidadMedica2025.ClinicoGeneral,
 			DateTime.Now,
 			15
 		)).PrintAndContinue("Disponbiildiades encontradas::");
-		var lista = disponibilidades.GetOrRaise();
-		foreach (var d in lista)
-			Console.WriteLine(d.ATexto());
+		//var lista = disponibilidades.GetOrRaise();
+		//foreach (var d in lista)
+		//	Console.WriteLine(d.ATexto());
 
 		// Caso de uso 2
 		Result<Turno2025> turno = (await servicio.SolicitarTurnoEnLaPrimeraDisponibilidad(

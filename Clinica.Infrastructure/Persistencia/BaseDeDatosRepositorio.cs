@@ -33,10 +33,9 @@ public class BaseDeDatosRepositorio(SqlConnectionFactory factory) {
 			parameters.Add("@PacienteId", turno.PacienteId.Valor);
 			parameters.Add("@MedicoId", turno.MedicoId.Valor);
 			parameters.Add("@EspecialidadCodigo", turno.Especialidad.CodigoInterno.Valor);
-			parameters.Add("@FechaHoraAsignadaDesdeValor", turno.FechaHoraAsignadaDesdeValor);
-			parameters.Add("@FechaHoraAsignadaHastaValor", turno.FechaHoraAsignadaHastaValor);
+			parameters.Add("@FechaHoraAsignadaDesde", turno.FechaHoraAsignadaDesdeValor);
+			parameters.Add("@FechaHoraAsignadaHasta", turno.FechaHoraAsignadaHastaValor);
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
-
 			await conn.ExecuteAsync("sp_InsertTurnoReturnId", parameters, commandType: CommandType.StoredProcedure);
 
 			int newId = parameters.Get<int>("@NewId");
