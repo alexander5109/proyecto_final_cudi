@@ -6,7 +6,6 @@ namespace Clinica.AppWPF;
 public partial class WindowLogin : Window {
 	public WindowLogin() {
 
-		var viewmodel = new WindowLoginViewModel();
 		InitializeComponent();
 		soundCheckBox.IsChecked = App.SoundOn;
 	}
@@ -25,9 +24,9 @@ public partial class WindowLogin : Window {
 			//App.BaseDeDatos = new BaseDeDatosSQL($"Server={labelServidor.Text};Database=ClinicaMedica;User ID={labelUsuario.Text};Password={labelPassword.Text};");
 		}
 		//App.UsuarioLogueado = App.BaseDeDatos.ConectadaExitosamente;
-		if (App.UsuarioLogueado) {
-			this.Cerrar();
-		}
+		//if (App.UsuarioLogueado) {
+		//	this.Cerrar();
+		//}
 	}
 
 	public void MetodoBotonSalir(object sender, RoutedEventArgs e) {

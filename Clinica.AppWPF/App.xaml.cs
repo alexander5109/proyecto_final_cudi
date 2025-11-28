@@ -1,12 +1,16 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Media;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Clinica.AppWPF.Infrastructure;
 
 namespace Clinica.AppWPF;
+
+
 public partial class App : Application {
 
 
@@ -21,7 +25,31 @@ public partial class App : Application {
 
 	public static bool SoundOn = true;
 	public static BaseDeDatosInterface BaseDeDatos;
-	public static bool UsuarioLogueado = false;
+
+
+
+	private static HttpClient? _apiClient;
+
+	public static HttpClient ApiClient {
+		get {
+			if (_apiClient is not null)
+				return _apiClient;
+
+			HttpClient client = new() {
+				// Configuración estándar de tu API
+				BaseAddress = new Uri("https://localhost:5001"),   // <-- cambiar según tu API
+				Timeout = TimeSpan.FromSeconds(15)
+			};
+
+			client.DefaultRequestHeaders.Accept.Clear();
+			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+			_apiClient = client;
+			return _apiClient;
+		}
+	}
+
+	public static UsuarioLogueadoDTO? UsuarioActual { get; set; }
 	public static MediaPlayer Sonidito = new();
 
 	private static string GetSoundPath(string fileName) {
