@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using System.Windows.Media.Imaging;
+using Clinica.AppWPF.Infrastructure;
 
 namespace Clinica.AppWPF{
 	public partial class MainWindow : Window {

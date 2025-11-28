@@ -1,6 +1,4 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Infrastructure.ServiciosAsync;
+﻿using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
 

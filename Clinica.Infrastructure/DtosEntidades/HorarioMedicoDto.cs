@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Infrastructure.DtosEntidades;

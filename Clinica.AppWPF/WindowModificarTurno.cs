@@ -1,38 +1,37 @@
 ﻿using Clinica.AppWPF.ViewModels;
 using System.ComponentModel;
-using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
+using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 
 namespace Clinica.AppWPF;
-public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {
+public partial class WindowModificarTurno : Window, INotifyPropertyChanged {
 
 
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public ViewModelTurno _selectedTurnoView = ViewModelTurno.NewEmpty();
-	public ViewModelTurno SelectedTurno { get => _selectedTurnoView; set { _selectedTurnoView = value; OnPropertyChanged(nameof(SelectedTurno)); } }
+	public WindowModificarTurnoViewModel _selectedTurnoView = WindowModificarTurnoViewModel.NewEmpty();
+	public WindowModificarTurnoViewModel SelectedTurno { get => _selectedTurnoView; set { _selectedTurnoView = value; OnPropertyChanged(nameof(SelectedTurno)); } }
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 	// Colecciones para los ComboBoxes
-	public IEnumerable<ViewModelPaciente> PacientesDisponibles { get; private set; } = System.Linq.Enumerable.Empty<ViewModelPaciente>();
-	public IEnumerable<ViewModelMedico> MedicosDisponibles { get; private set; } = System.Linq.Enumerable.Empty<ViewModelMedico>();
+	public IEnumerable<WindowModificarPacienteViewModel> PacientesDisponibles { get; private set; } = System.Linq.Enumerable.Empty<WindowModificarPacienteViewModel>();
+	public IEnumerable<WindowModificarMedicoViewModel> MedicosDisponibles { get; private set; } = System.Linq.Enumerable.Empty<WindowModificarMedicoViewModel>();
 
-	public string[] EspecialidadesDisponibles { get; } = App.BaseDeDatos.ReadDistinctEspecialidades();
+	public List<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = App.BaseDeDatos.ReadDistinctEspecialidades();
 
 
 
 	//---------------------public.constructors-------------------//
-	public WindowModificarTurnos() //Constructor vacio ==> _ValidarRepositorios.
+	public WindowModificarTurno() //Constructor vacio ==> _ValidarRepositorios.
 {
 		InitializeComponent();
 		DataContext = this;
 		LLenarComboBoxes();
 	}
 
-	public WindowModificarTurnos(ViewModelTurno selectedTurno) //Constructor con un objeto como parametro ==> Modificarlo.
+	public WindowModificarTurno(WindowModificarTurnoViewModel selectedTurno) //Constructor con un objeto como parametro ==> Modificarlo.
 	{
 		InitializeComponent();
 		DataContext = this;
@@ -48,8 +47,8 @@ public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {
 			PacientesDisponibles = App.BaseDeDatos.ReadPacientes();
 			MedicosDisponibles = App.BaseDeDatos.ReadMedicos();
 		} catch {
-			PacientesDisponibles = System.Linq.Enumerable.Empty<ViewModelPaciente>();
-			MedicosDisponibles = System.Linq.Enumerable.Empty<ViewModelMedico>();
+			PacientesDisponibles = System.Linq.Enumerable.Empty<WindowModificarPacienteViewModel>();
+			MedicosDisponibles = System.Linq.Enumerable.Empty<WindowModificarMedicoViewModel>();
 		}
 		OnPropertyChanged(nameof(PacientesDisponibles));
 		OnPropertyChanged(nameof(MedicosDisponibles));
@@ -80,10 +79,10 @@ public partial class WindowModificarTurnos : Window, INotifyPropertyChanged {
 
 				if (SelectedTurno.Id is null) {
 					// _ValidarRepositorios nuevo turno
-					exito = App.BaseDeDatos.CreateTurno(ok, SelectedTurno);
+					exito = App.BaseDeDatos.CreateTurno(SelectedTurno);
 				} else {
 					// Actualizar existente
-					exito = App.BaseDeDatos.UpdateTurno(ok, SelectedTurno);
+					exito = App.BaseDeDatos.UpdateTurno(SelectedTurno);
 				}
 
 				if (exito)

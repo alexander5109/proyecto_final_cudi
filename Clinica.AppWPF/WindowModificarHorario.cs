@@ -1,37 +1,20 @@
 ﻿using Clinica.AppWPF.ViewModels;
-using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows;
 
 namespace Clinica.AppWPF.Ventanas;
 
-public partial class VMModificarHorario : ObservableObject {
-	public ViewModelMedico Medico { get; }
-
-	[ObservableProperty]
-	private ViewModelHorario horario;
-
-	public IEnumerable<DayOfWeek> DiaSemanaValues => DiaSemana2025.Los7EnumDias;
-
-	public bool EsNuevo { get; }
-
-	public VMModificarHorario(ViewModelMedico medico, ViewModelHorario horario, bool esNuevo) {
-		Medico = medico;
-		Horario = horario;
-		EsNuevo = esNuevo;
-	}
-}
 
 public partial class WindowModificarHorario : Window {
-	public VMModificarHorario VM { get; }
+	public WindowModificarHorarioViewModel VM { get; }
 
-	public WindowModificarHorario(ViewModelMedico medico, ViewModelHorario horario, bool esNuevo) {
+	public WindowModificarHorario(WindowModificarMedicoViewModel medico, HorarioMedicoViewModel horario, bool esNuevo) {
 		InitializeComponent();
-		VM = new VMModificarHorario(medico, horario, esNuevo);
+		VM = new WindowModificarHorarioViewModel(medico, horario, esNuevo);
 		DataContext = VM;
 	}
 
-	private bool ValidarHorario(ViewModelMedico medico, ViewModelHorario nuevo) {
+	private bool ValidarHorario(WindowModificarMedicoViewModel medico, HorarioMedicoViewModel nuevo) {
 		return !medico.Horarios.Any(h =>
 			h != nuevo &&
 			h.DiaSemana == nuevo.DiaSemana &&

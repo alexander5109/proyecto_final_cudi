@@ -1,6 +1,5 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
-using System.Collections.Immutable;
 using System.Text;
 
 namespace Clinica.Dominio.ListasOrganizadoras;

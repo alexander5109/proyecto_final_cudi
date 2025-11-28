@@ -1,11 +1,12 @@
-﻿using Clinica.AppWPF.ViewModels;
+﻿using Clinica.AppWPF.Infrastructure;
 using System.Windows;
-using System.Windows.Controls;
-			
-		
+
+
 namespace Clinica.AppWPF; 
 public partial class WindowLogin : Window {
 	public WindowLogin() {
+
+		var viewmodel = new WindowLoginViewModel();
 		InitializeComponent();
 		soundCheckBox.IsChecked = App.SoundOn;
 	}
@@ -19,11 +20,11 @@ public partial class WindowLogin : Window {
 			//App.BaseDeDatos = new BaseDeDatosJSON();
 		//} else if ( datos_completados() ) {
 		if (datos_completados() ) {
-			App.BaseDeDatos = new BaseDeDatosSQL();
-		} else {
-			App.BaseDeDatos = new BaseDeDatosSQL($"Server={labelServidor.Text};Database=ClinicaMedica;User ID={labelUsuario.Text};Password={labelPassword.Text};");
+			App.BaseDeDatos = new BaseDeDatosWebAPI();
+		//} else {
+			//App.BaseDeDatos = new BaseDeDatosSQL($"Server={labelServidor.Text};Database=ClinicaMedica;User ID={labelUsuario.Text};Password={labelPassword.Text};");
 		}
-		App.UsuarioLogueado = App.BaseDeDatos.ConectadaExitosamente;
+		//App.UsuarioLogueado = App.BaseDeDatos.ConectadaExitosamente;
 		if (App.UsuarioLogueado) {
 			this.Cerrar();
 		}

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.ListasOrganizadoras;
 using Clinica.Dominio.TiposDeValor;
 

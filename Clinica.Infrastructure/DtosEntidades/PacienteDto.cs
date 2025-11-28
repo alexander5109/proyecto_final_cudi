@@ -23,7 +23,7 @@ public static partial class DtosEntidades {
 	}
 	public static Result<Paciente2025> ToDomain(this PacienteDto pacientedto) {
 		return Paciente2025.Crear(
-			new PacienteId(pacientedto.Id),
+			PacienteId.Crear(pacientedto.Id),
 			NombreCompleto2025.Crear(pacientedto.Nombre, pacientedto.Apellido),
 			DniArgentino2025.Crear(pacientedto.Dni),
 			Contacto2025.Crear(

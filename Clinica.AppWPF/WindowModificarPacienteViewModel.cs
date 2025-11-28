@@ -1,12 +1,11 @@
-﻿using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Newtonsoft.Json;
 
 namespace Clinica.AppWPF.ViewModels;
 //---------------------------------Tablas.WindowListarPacientes-------------------------------//
-public partial class ViewModelPaciente : ObservableObject {
+public partial class WindowModificarPacienteViewModel : ObservableObject {
 	[ObservableProperty] private int? id = default;
 	[ObservableProperty] private string dni = string.Empty;
 	[ObservableProperty] private string name = string.Empty;
@@ -18,9 +17,9 @@ public partial class ViewModelPaciente : ObservableObject {
 	[ObservableProperty] private string domicilio = string.Empty;
 	[ObservableProperty] private string localidad = string.Empty;
 	[ObservableProperty] private string provincia = string.Empty;
-	[JsonIgnore] public string Displayear => $"{Id}: {Name} {LastName}";
+	public string Displayear => $"{Id}: {Name} {LastName}";
 
-	public static ViewModelPaciente NewEmpty() => new(
+	public static WindowModificarPacienteViewModel NewEmpty() => new(
 		default,   // id
 		string.Empty,   // dni
 		string.Empty,   // name
@@ -35,7 +34,7 @@ public partial class ViewModelPaciente : ObservableObject {
 	);
 
 
-	public ViewModelPaciente(
+	public WindowModificarPacienteViewModel(
 		int? id,
 		string? dni,
 		string? name,
@@ -62,7 +61,11 @@ public partial class ViewModelPaciente : ObservableObject {
 	}
 
 	public Result<Paciente2025> ToDomain() {
+
+
+		//throw new NotImplementedException("Implementar Medico2025 ToDomain");
 		return Paciente2025.Crear(
+			PacienteId.Crear(Id),
 			NombreCompleto2025.Crear(Name, LastName),
 			DniArgentino2025.Crear(Dni),
 			Contacto2025.Crear(

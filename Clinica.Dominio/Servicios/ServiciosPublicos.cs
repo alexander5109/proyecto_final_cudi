@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 

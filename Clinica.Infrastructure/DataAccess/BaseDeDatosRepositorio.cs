@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Infrastructure.DtosEntidades;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;

@@ -4,7 +4,12 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Dominio.Entidades;
 
 
-public record struct PacienteId(int Valor);
+public readonly record struct PacienteId(int Valor) {
+	public static Result<PacienteId> Crear(int? id) => 
+		id is int idGood
+		? new Result<PacienteId>.Ok(new PacienteId(idGood))
+		: new Result<PacienteId>.Error("El id no puede ser nulo.");
+}
 
 public record Paciente2025(
 	PacienteId Id,
@@ -16,7 +21,7 @@ public record Paciente2025(
 	FechaRegistro2025 FechaIngreso
 ) {
 	public static Result<Paciente2025> Crear(
-		PacienteId id,
+		Result<PacienteId> idResult,
 		Result<NombreCompleto2025> nombreResult,
 		Result<DniArgentino2025> dniResult,
 		Result<Contacto2025> contactoResult,
@@ -25,6 +30,7 @@ public record Paciente2025(
 		Result<FechaRegistro2025> fechaIngresoResult
 	)
 	=>
+		from id in idResult
 		from nombre in nombreResult
 		from dni in dniResult
 		from contacto in contactoResult

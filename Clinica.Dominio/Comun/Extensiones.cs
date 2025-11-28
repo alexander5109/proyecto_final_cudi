@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Clinica.Dominio.Comun;
+﻿namespace Clinica.Dominio.Comun;
 
 public static class Extensiones {
 	public static int IndexOf<T>(this IReadOnlyList<T> source, Predicate<T> pred) {

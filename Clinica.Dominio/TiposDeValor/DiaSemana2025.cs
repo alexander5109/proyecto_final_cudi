@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Design;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
 
 namespace Clinica.Dominio.TiposDeValor;
 

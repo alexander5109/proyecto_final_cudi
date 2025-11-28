@@ -4,6 +4,7 @@ using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Clinica.AppWPF.Infrastructure;
 
 namespace Clinica.AppWPF;
 public partial class App : Application {
@@ -19,7 +20,7 @@ public partial class App : Application {
 	}
 
 	public static bool SoundOn = true;
-	public static BaseDeDatosAbstracta BaseDeDatos;
+	public static BaseDeDatosInterface BaseDeDatos;
 	public static bool UsuarioLogueado = false;
 	public static MediaPlayer Sonidito = new();
 
@@ -89,10 +90,10 @@ public partial class App : Application {
 
 
 	public static void UpdateLabelDataBaseModo(Label label) {
-		if (App.BaseDeDatos is BaseDeDatosSQL) {
+		if (App.BaseDeDatos is BaseDeDatosWebAPI) {
 			//if (App.BaseDeDatos is BaseDeDatosJSON) {
 			//label.Content = "Modo JSON";
-			//} else if (App.BaseDeDatos is BaseDeDatosSQL) {
+			//} else if (App.BaseDeDatos is BaseDeDatosWebAPI) {
 			label.Content = "Modo SQL";
 		} else {
 			label.Content = "Elegir DB Modo";

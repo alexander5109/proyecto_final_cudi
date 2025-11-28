@@ -1,88 +1,29 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows;
-using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+using Clinica.Dominio.ListasOrganizadoras;
 using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Newtonsoft.Json;
-using Clinica.Dominio.ListasOrganizadoras;
-using Clinica.Infrastructure.Dtos;
 
 namespace Clinica.AppWPF.ViewModels;
 
 
+public partial class WindowModificarMedicoViewModel : ObservableObject {
 
-// View-model simple types (internos, auto-contenidos para demo)
-public record ViewModelEspecialidadMedica(int CodigoInterno, string Titulo);
-public record ViewModelDiaSemana(int Value, string NombreDia);
-public record ViewModelDisponibilidadEspecialidad(DateTime Fecha, string Hora, string Medico);
-
-
-
-
-
-public partial class ViewModelHorario : ObservableObject {
-	[ObservableProperty] private DayOfWeek diaSemana;
-	[ObservableProperty] private TimeOnly desde;
-	[ObservableProperty] private TimeOnly hasta;
-}
-
-public partial class ViewModelHorariosAgrupados : ObservableObject {
-	public DayOfWeek DiaSemana { get; }
-	public string DiaSemanaNombre => DiaSemana.ATexto();
-	[ObservableProperty] private ObservableCollection<ViewModelHorario> horarios = [];
-
-	public ViewModelHorariosAgrupados(DayOfWeek dia) {
-		DiaSemana = dia;
-	}
-}
-
-
-public static class ModelDtoExtensions {
-	public static ViewModelMedico ToViewModel(this MedicoDto medicoDto) {
-		return new ViewModelMedico(
-			new ObservableCollection<ViewModelHorario>(
-				medicoDto.Horarios.Select(h => new ViewModelHorario {
-					DiaSemana = Enum.Parse<DayOfWeek>(h.DiaSemana),
-					Desde = TimeOnly.Parse(h.Desde),
-					Hasta = TimeOnly.Parse(h.Hasta)
-				})
-			),
-			medicoDto.Id,
-			medicoDto.Nombre,
-			medicoDto.Apellido,
-			medicoDto.Dni,
-			medicoDto.Provincia,
-			medicoDto.Domicilio,
-			medicoDto.Localidad,
-			medicoDto.EspecialidadCodigoInterno,
-			medicoDto.Telefono,
-			medicoDto.Guardia,
-			medicoDto.FechaIngreso,
-			medicoDto.SueldoMinimoGarantizado
-		);
-	}
-}
-
-public partial class ViewModelMedico : ObservableObject {
-
-
-
-	[ObservableProperty]
-	private ObservableCollection<ViewModelHorario> horarios = [];
+	[ObservableProperty] private ObservableCollection<HorarioMedicoViewModel> horarios = [];
 
 	public ObservableCollection<ViewModelHorariosAgrupados> HorariosAgrupados {
 		get {
 			ObservableCollection<ViewModelHorariosAgrupados> lista = [];
 
 			// _ValidarRepositorios los 7 días vacíos
-			foreach (DayOfWeek dia in DiaSemana2025.Los7EnumDias) {
+			foreach (DiaDeSemanaViewModel dia in DiaDeSemanaViewModel.Los7DiasDeLaSemana) {
 				lista.Add(new ViewModelHorariosAgrupados(dia));
 			}
 
 			// Mapear horarios existentes
-			foreach (ViewModelHorario horario in Horarios) {
-                ViewModelHorariosAgrupados grupo = lista.First(g => g.DiaSemana == horario.DiaSemana);
+			foreach (HorarioMedicoViewModel horario in Horarios) {
+				ViewModelHorariosAgrupados grupo = lista.First(g => g.DiaSemana == horario.DiaSemana);
 				grupo.Horarios.Add(horario);
 			}
 
@@ -100,7 +41,7 @@ public partial class ViewModelMedico : ObservableObject {
 	[ObservableProperty] private string localidad = string.Empty;
 	[ObservableProperty] private int? especialidadCodigoInterno = default;
 	//[ObservableProperty] private string especialidadCodigoInterno = string.Empty;
-	[ObservableProperty] private double ?sueldoMinimoGarantizado;
+	[ObservableProperty] private double? sueldoMinimoGarantizado;
 	[ObservableProperty] private string provincia = string.Empty;
 	[ObservableProperty] private string domicilio = string.Empty;
 	[ObservableProperty] private DateTime? fechaIngreso = DateTime.Today;
@@ -109,7 +50,7 @@ public partial class ViewModelMedico : ObservableObject {
 
 
 	//public List<string> EspecialidadesDisponibles { get; } = EspecialidadMedica2025.EspecialidadesDisponibles;
-	[JsonIgnore] public string Displayear => $"{Id}: {EspecialidadCodigoInterno} - {Name} {LastName}";
+	public string Displayear => $"{Id}: {EspecialidadCodigoInterno} - {Name} {LastName}";
 
 
 
@@ -127,13 +68,13 @@ public partial class ViewModelMedico : ObservableObject {
 	//				MessageBoxButton.OK,
 	//				MessageBoxImage.Error
 	//			);
-	//			return ViewModelPaciente.NewEmpty();
+	//			return PacienteViewModel.NewEmpty();
 	//		}
 	//	}
 	//}
 
 
-	public static ViewModelMedico NewEmpty() => new(
+	public static WindowModificarMedicoViewModel NewEmpty() => new(
 		[],
 		default,   // id
 		string.Empty,   // name
@@ -152,8 +93,8 @@ public partial class ViewModelMedico : ObservableObject {
 
 
 
-	public ViewModelMedico(
-		ObservableCollection<ViewModelHorario> horarios,
+	public WindowModificarMedicoViewModel(
+		ObservableCollection<HorarioMedicoViewModel> horarios,
 		int? id,
 		string? name,
 		string? lastName,
@@ -187,30 +128,25 @@ public partial class ViewModelMedico : ObservableObject {
 
 
 	public Result<Medico2025> ToDomain() {
-		return Medico2025.Crear(
-			NombreCompleto2025.Crear(this.Name, this.LastName),
-			EspecialidadMedica2025.CrearPorCodigoInterno(
-				this.EspecialidadCodigoInterno
-			//EspecialidadMedica2025.RamasDisponibles.First()
-			),
-			DniArgentino2025.Crear(this.Dni),
-			DomicilioArgentino2025.Crear(
-			LocalidadDeProvincia2025.Crear(this.Localidad, ProvinciaArgentina2025.Crear(this.Provincia)),
-			this.Domicilio
-		),
-			ContactoTelefono2025.Crear(this.Telefono),
-			ListaHorarioMedicos2025.Crear(
-			this.Horarios.Select(h =>
-				HorarioMedico2025.Crear(
-					DiaSemana2025.Crear(h.DiaSemana),
-					HorarioHora2025.Crear(h.Desde),
-					HorarioHora2025.Crear(h.Hasta)
-				))
-			),
-			FechaRegistro2025.Crear(this.FechaIngreso),
-			MedicoSueldoMinimo2025.Crear(this.SueldoMinimoGarantizado),
-			this.Guardia ?? false
-		);
+		throw new NotImplementedException("Implementar Medico2025 ToDomain");
+		//return Medico2025.Crear(
+		//	NombreCompleto2025.Crear(this.Name, this.LastName),
+		//	EspecialidadMedica2025.CrearPorCodigoInterno(
+		//		this.EspecialidadCodigoInterno
+		//	//EspecialidadMedica2025.RamasDisponibles.First()
+		//	),
+		//	DniArgentino2025.Crear(this.Dni),
+		//	DomicilioArgentino2025.Crear(
+		//	LocalidadDeProvincia2025.Crear(this.Localidad, ProvinciaArgentina2025.Crear(this.Provincia)),
+		//	this.Domicilio
+		//),
+		//	ContactoTelefono2025.Crear(this.Telefono),
+		//	ListaHorarioMedicos2025.Crear(
+		//	this.Horarios.Select(h =>
+		//	),
+		//	FechaRegistro2025.Crear(this.FechaIngreso),
+		//	this.Guardia ?? false
+		//);
 	}
 
 

@@ -1,13 +1,14 @@
-﻿using Clinica.AppWPF.ViewModels;
-using Clinica.Dominio.TiposDeValor;
+﻿using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Clinica.AppWPF;
 public partial class WindowListarTurnos : Window {
-	private static ViewModelTurno? SelectedTurno = null;
+	private static WindowModificarTurnoViewModel? SelectedTurno = null;
 
 	public WindowListarTurnos() {
+		var viewmodel = new WindowListarTurnosViewModel();
 		InitializeComponent();
 	}
 
@@ -45,7 +46,7 @@ public partial class WindowListarTurnos : Window {
 		UpdatePacienteUI();
 	}
 	private void listViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedTurno = (ViewModelTurno)turnosListView.SelectedItem;
+		SelectedTurno = (WindowModificarTurnoViewModel)turnosListView.SelectedItem;
 		UpdateTurnoUI();
 		UpdateMedicoUI();
 		UpdatePacienteUI();
@@ -57,7 +58,7 @@ public partial class WindowListarTurnos : Window {
 	//---------------------botonesDeModificar-------------------//
 	private void ButtonModificarTurno(object sender, RoutedEventArgs e) {
 		if (SelectedTurno != null) {
-			this.AbrirComoDialogo<WindowModificarTurnos>(SelectedTurno);
+			this.AbrirComoDialogo<WindowModificarTurno>(SelectedTurno);
 		}
 	}
 	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
@@ -81,7 +82,7 @@ public partial class WindowListarTurnos : Window {
 		this.AbrirComoDialogo<WindowModificarPaciente>(); // this.NavegarA<WindowModificarPaciente>();
 	}
 	private void ButtonAgregarTurno(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<WindowModificarTurnos>();
+		this.AbrirComoDialogo<WindowModificarTurno>();
 	}
 
 
