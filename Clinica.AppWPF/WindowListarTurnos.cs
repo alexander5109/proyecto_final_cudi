@@ -45,7 +45,7 @@ public partial class WindowListarTurnos : Window {
 		UpdateMedicoUI();
 		UpdatePacienteUI();
 	}
-	private void listViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+	private void ListViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 		SelectedTurno = (WindowModificarTurnoViewModel)turnosListView.SelectedItem;
 		UpdateTurnoUI();
 		UpdateMedicoUI();
@@ -63,12 +63,12 @@ public partial class WindowListarTurnos : Window {
 	}
 	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
 		if (SelectedTurno?.MedicoRelacionado != null) {
-			this.AbrirComoDialogo<WindowModificarMedico>(SelectedTurno?.MedicoRelacionado);
+			this.AbrirComoDialogo<WindowModificarMedico>(SelectedTurno.MedicoRelacionado);
 		}
 	}
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
 		if (SelectedTurno?.PacienteRelacionado != null) {
-			this.AbrirComoDialogo<WindowModificarPaciente>(SelectedTurno?.PacienteRelacionado);
+			this.AbrirComoDialogo<WindowModificarPaciente>(SelectedTurno.PacienteRelacionado);
 		}
 	}
 

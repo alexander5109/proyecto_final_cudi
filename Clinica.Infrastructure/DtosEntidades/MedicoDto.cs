@@ -29,7 +29,7 @@ public static partial class DtosEntidades {
 		List<HorarioMedicoDto> horariosDto = JsonSerializer.Deserialize<List<HorarioMedicoDto>>(json)
 			?? [];
 		return Medico2025.Crear(
-			new MedicoId(medicoDto.Id),
+			MedicoId.Crear(medicoDto.Id),
 			NombreCompleto2025.Crear(medicoDto.Nombre, medicoDto.Apellido),
 			//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
 			EspecialidadMedica2025.CrearPorCodigoInterno(medicoDto.EspecialidadCodigoInterno),

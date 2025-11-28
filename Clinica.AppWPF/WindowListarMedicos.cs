@@ -69,7 +69,7 @@ public partial class WindowListarMedicos : Window {
 	}
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
 		if (SelectedTurno?.PacienteRelacionado != null) {
-			this.AbrirComoDialogo<WindowModificarPaciente>(SelectedTurno?.PacienteRelacionado);
+			this.AbrirComoDialogo<WindowModificarPaciente>(SelectedTurno.PacienteRelacionado);
 		}
 	}
 

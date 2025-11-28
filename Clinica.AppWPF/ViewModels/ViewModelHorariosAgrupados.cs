@@ -3,12 +3,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Clinica.AppWPF.ViewModels;
 
-public partial class ViewModelHorariosAgrupados : ObservableObject {
-	public DiaDeSemanaViewModel DiaSemana { get; }
+public partial class ViewModelHorariosAgrupados(DiaDeSemanaViewModel dia) : ObservableObject {
+	public DiaDeSemanaViewModel DiaSemana { get; } = dia;
 
 	[ObservableProperty] private ObservableCollection<HorarioMedicoViewModel> horarios = [];
-
-	public ViewModelHorariosAgrupados(DiaDeSemanaViewModel dia) {
-		DiaSemana = dia;
-	}
 }

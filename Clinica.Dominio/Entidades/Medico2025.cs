@@ -4,7 +4,14 @@ using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Entidades;
 
-public record struct MedicoId(int Valor);
+public record struct MedicoId(int Valor) {
+	public static Result<MedicoId> Crear(int? id) =>
+		id is int idGood
+		? new Result<MedicoId>.Ok(new MedicoId(idGood))
+		: new Result<MedicoId>.Error("El id no puede ser nulo.");
+}
+
+
 public record Medico2025(
 	MedicoId Id,
 	NombreCompleto2025 NombreCompleto,
@@ -19,7 +26,7 @@ public record Medico2025(
 	bool HaceGuardiasValor
 ) {
 	public static Result<Medico2025> Crear(
-		MedicoId id,
+		Result<MedicoId> idResult,
 		Result<NombreCompleto2025> nombreResult,
 		Result<EspecialidadMedica2025> especialidadResult,
 		//Result<ListaEspecialidadesMedicas2025> especialidadResult,
@@ -31,6 +38,7 @@ public record Medico2025(
 		Result<FechaRegistro2025> fechaIngresoResult,
 		bool haceGuardia
 	) =>
+		from id in idResult
 		from nombre in nombreResult
 		from esp in especialidadResult
 		from dni in dniResult
