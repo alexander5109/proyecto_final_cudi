@@ -2,7 +2,7 @@
 using Microsoft.Data.SqlClient;
 
 
-namespace Clinica.Infrastructure.Persistencia;
+namespace Clinica.Infrastructure.DataAccess;
 
 public class SqlConnectionFactory {
 	private readonly string _connectionString;

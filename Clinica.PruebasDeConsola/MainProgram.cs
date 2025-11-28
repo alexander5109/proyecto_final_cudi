@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Infrastructure.Persistencia;
+using Clinica.Infrastructure.DataAccess;
 using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.Extensions.Configuration;
 

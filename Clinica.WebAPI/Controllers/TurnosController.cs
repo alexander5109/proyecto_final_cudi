@@ -1,10 +1,11 @@
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Infrastructure.DtosEntidades;
 using Clinica.Infrastructure.ServiciosAsync;
 using Clinica.WebAPI.DtosWebAPI;
 using Microsoft.AspNetCore.Mvc;
-using Clinica.Infrastructure.DtosEntidades;
+using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
 using static Clinica.WebAPI.DtosWebAPI.DtosWebAPI;
 
 
@@ -14,10 +15,22 @@ namespace Clinica.WebAPI.Controllers;
 [Route("[controller]")]
 public class TurnosController(
 	ServiciosPublicosAsync servicio,
-	ILogger<TurnosController> logger) : ControllerBase {
+	ILogger<TurnosController> logger
+) : ControllerBase {
 
 
 
+	// GET: api/<MedicosController>
+	[HttpGet]
+	public async Task<ActionResult<IEnumerable<TurnoDto>>> Get() {
+		try {
+			IEnumerable<TurnoDto> instances = await servicio.baseDeDatos.SelectTurnos();
+			return Ok(instances);
+		} catch (Exception ex) {
+			logger.LogError(ex, "Error al obtener listado de instances.");
+			return StatusCode(500, "Error interno del servidor.");
+		}
+	}
 
 	// --------------------------------------------------------
 	// GET /turnos/{id}

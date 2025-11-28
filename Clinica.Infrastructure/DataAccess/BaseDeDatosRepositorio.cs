@@ -8,7 +8,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
 
-namespace Clinica.Infrastructure.Persistencia;
+namespace Clinica.Infrastructure.DataAccess;
 
 
 public class BaseDeDatosRepositorio(SqlConnectionFactory factory) {

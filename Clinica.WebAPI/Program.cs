@@ -1,4 +1,4 @@
-using Clinica.Infrastructure.Persistencia;
+using Clinica.Infrastructure.DataAccess;
 using Clinica.Infrastructure.ServiciosAsync;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -3,14 +3,15 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.DtosEntidades;
-using Clinica.Infrastructure.Persistencia;
+using Clinica.Infrastructure.DataAccess;
 using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
 
 
 namespace Clinica.Infrastructure.ServiciosAsync;
 
 
-public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio BaseDeDatos) {
+public class ServiciosPublicosAsync(BaseDeDatosRepositorio BaseDeDatos) {
+	public readonly BaseDeDatosRepositorio baseDeDatos = BaseDeDatos;
 
 	public async Task<Result<Turno2025>> CancelarTurnoAsync(int id, Option<string> option) {
 		throw new NotImplementedException();
@@ -62,7 +63,7 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio BaseDeDatos) 
 			funcSelectMedicosWhereEspecialidad: FunctorSelectMedicosWhereEspecialidad(),
 			funcSelectHorariosVigentesBetweenFechasWhereMedicoId: FunctorSelectHorariosVigentesBetweenFechasWhereMedicoId(),
 			funcSelectTurnosProgramadosBetweenFechasWhereMedicoId: FunctorSelectTurnosProgramadosBetweenFechasWhereMedicoId(),
-			funcInsertTurnoReturnId: BaseDeDatos.InsertTurnoReturnId
+			funcInsertTurnoReturnId: baseDeDatos.InsertTurnoReturnId
 		);
 	}
 
@@ -84,8 +85,8 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio BaseDeDatos) 
 					funcSelectMedicosWhereEspecialidad: FunctorSelectMedicosWhereEspecialidad(),
 					funcSelectHorariosVigentesBetweenFechasWhereMedicoId: FunctorSelectHorariosVigentesBetweenFechasWhereMedicoId(),
 					funcSelectTurnosWhereMedicoIdBetweenFechas: FunctorSelectTurnosProgramadosBetweenFechasWhereMedicoId(),
-					funcUpdateTurnoWhereId: BaseDeDatos.UpdateTurnoWhereId,
-					funcInsertTurnoReturnId: BaseDeDatos.InsertTurnoReturnId
+					funcUpdateTurnoWhereId: baseDeDatos.UpdateTurnoWhereId,
+					funcInsertTurnoReturnId: baseDeDatos.InsertTurnoReturnId
 				);
 			}
 			default: throw new InvalidOperationException(); //impossible to occur
@@ -98,12 +99,12 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio BaseDeDatos) 
 				return new Result<Turno2025>.Error($"SolicitarCancelacion fallido porque turno ya traia error: \n{turnoError.Mensaje}");
 			}
 			case Result<Turno2025>.Ok turnoOk: {
-				IEnumerable<MedicoDto> medicosDtos = await BaseDeDatos.SelectMedicosWhereEspecialidad(turnoOk.Valor.Especialidad);
+				IEnumerable<MedicoDto> medicosDtos = await baseDeDatos.SelectMedicosWhereEspecialidad(turnoOk.Valor.Especialidad);
 				return await ServiciosPublicos.SolicitarCancelacion(
 					turnoOk.Valor,
 					outcomeFecha,
 					outcomeComentario,
-					funcUpdateTurnoWhereId: BaseDeDatos.UpdateTurnoWhereId
+					funcUpdateTurnoWhereId: baseDeDatos.UpdateTurnoWhereId
 				);
 			}
 			default: throw new InvalidOperationException(); //impossible to occur
@@ -117,7 +118,7 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio BaseDeDatos) 
 		return especialidad => {
 			return Enumerar();
 			IEnumerable<Medico2025> Enumerar() {
-				IEnumerable<MedicoDto> dtos = BaseDeDatos.SelectMedicosWhereEspecialidad(especialidad).Result;
+				IEnumerable<MedicoDto> dtos = baseDeDatos.SelectMedicosWhereEspecialidad(especialidad).Result;
 				foreach (MedicoDto dto in dtos) {
 					Result<Medico2025> dom = dto.ToDomain().PrintAndContinue("MedicoDomainizado::");
 					if (dom is Result<Medico2025>.Ok ok)
@@ -133,7 +134,7 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio BaseDeDatos) 
 			return Enumerar();
 
 			IEnumerable<Turno2025> Enumerar() {
-				IEnumerable<TurnoDto> dtos = BaseDeDatos
+				IEnumerable<TurnoDto> dtos = baseDeDatos
 					.SelectTurnosProgramadosBetweenFechasWhereMedicoId(medicoId, fechaDesde, fechaHasta)
 					.Result;
 
@@ -151,7 +152,7 @@ public partial class ServiciosPublicosAsync(BaseDeDatosRepositorio BaseDeDatos) 
 			return Enumerar();
 
 			IEnumerable<HorarioMedico2025> Enumerar() {
-				IEnumerable<HorarioMedicoDto> dtos = BaseDeDatos
+				IEnumerable<HorarioMedicoDto> dtos = baseDeDatos
 					.SelectHorariosVigentesBetweenFechasWhereMedicoId(medicoId, fechaDesde, fechaHasta)
 					.Result;
 
