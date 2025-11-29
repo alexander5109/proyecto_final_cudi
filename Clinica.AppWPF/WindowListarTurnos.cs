@@ -8,7 +8,7 @@ public partial class WindowListarTurnos : Window {
 	private static WindowModificarTurnoViewModel? SelectedTurno = null;
 
 	public WindowListarTurnos() {
-		var viewmodel = new WindowListarTurnosViewModel();
+        WindowListarTurnosViewModel viewmodel = new();
 		InitializeComponent();
 	}
 

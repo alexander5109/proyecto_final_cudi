@@ -2,30 +2,49 @@
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Infrastructure.DtosEntidades;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
 
 namespace Clinica.Infrastructure.DataAccess;
 
-
-public class BaseDeDatosRepositorio(SqlConnectionFactory factory) {
-	private static DataTable BuildIntList(IEnumerable<int> valores) {
-		DataTable table = new();
-		table.Columns.Add("Valor", typeof(int));
-
-		foreach (var v in valores)
-			table.Rows.Add(v);
-
-		return table;
+public class SQLServerConnectionFactory(string connectionString) {
+	public IDbConnection CrearConexion() {
+		return new SqlConnection(connectionString);
 	}
+}
 
+
+public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory) {
 
 	//-----------------------INSERT AND RETURN ID------------------
+	public async Task<Result<UsuarioId>> InsertUsuarioReturnId(
+	NombreUsuario nombre,
+	PasswordHasheado password,
+	byte enumRole) {
+		try {
+			using IDbConnection conn = factory.CrearConexion();
+
+			DynamicParameters parameters = new();
+			parameters.Add("@NombreUsuario", nombre.Valor);
+			parameters.Add("@PasswordHash", password.Valor);
+			parameters.Add("@EnumRole", enumRole);
+			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+			await conn.ExecuteAsync("sp_InsertUsuarioReturnId", parameters, commandType: CommandType.StoredProcedure);
+
+			return new Result<UsuarioId>.Ok(new UsuarioId(parameters.Get<int>("@NewId")));
+		} catch (SqlException ex) {
+			return new Result<UsuarioId>.Error($"Error SQL insertando usuario: {ex.Message}");
+		} catch (Exception ex) {
+			return new Result<UsuarioId>.Error($"Error inesperado: {ex.Message}");
+		}
+	}
 
 	public async Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 turno) {
 		try {
-			using IDbConnection conn = factory.CreateConnection();
+			using IDbConnection conn = factory.CrearConexion();
 			DynamicParameters parameters = new();
 			parameters.Add("@FechaDeCreacion", turno.FechaDeCreacion.Valor);
 			parameters.Add("@PacienteId", turno.PacienteId.Valor);
@@ -49,7 +68,7 @@ public class BaseDeDatosRepositorio(SqlConnectionFactory factory) {
 	//-----------------------UPDATE WHERE ID------------------
 	public async Task<Result<Unit>> UpdateTurnoWhereId(Turno2025 turno) {
 		try {
-			using IDbConnection conn = factory.CreateConnection();
+			using IDbConnection conn = factory.CrearConexion();
 			await conn.ExecuteAsync(
 				"sp_UpdateTurnoWhereId",
 				new {
@@ -70,10 +89,51 @@ public class BaseDeDatosRepositorio(SqlConnectionFactory factory) {
 
 	//-----------------------SELECT * FROM TABLES WHERE CONDITION------------------
 
+	public async Task<Result<UsuarioBase2025>> SelectUsuarioWhereNombre(NombreUsuario nombre) {
+		try {
+			using IDbConnection conn = factory.CrearConexion();
+
+            UsuarioDto? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDto>(
+				"sp_SelectUsuarioWhereNombre",
+				new { NombreUsuario = nombre.Valor },
+				commandType: CommandType.StoredProcedure
+			);
+
+			if (dto is null)
+				return new Result<UsuarioBase2025>.Error("Usuario no encontrado");
+
+			return new Result<UsuarioBase2025>.Ok(dto.ToDomain());
+		} catch (SqlException ex) {
+			return new Result<UsuarioBase2025>.Error($"Error SQL consultando usuario: {ex.Message}");
+		} catch (Exception ex) {
+			return new Result<UsuarioBase2025>.Error($"Error inesperado: {ex.Message}");
+		}
+	}
+
+	public async Task<Result<UsuarioBase2025>> SelectUsuarioWhereId(UsuarioId id) {
+		try {
+			using IDbConnection conn = factory.CrearConexion();
+
+            UsuarioDto? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDto>(
+				"sp_SelectUsuarioWhereId",
+				new { Id = id.Valor },
+				commandType: CommandType.StoredProcedure
+			);
+
+			if (dto is null)
+				return new Result<UsuarioBase2025>.Error("Usuario no encontrado");
+
+			return new Result<UsuarioBase2025>.Ok(dto.ToDomain());
+		} catch (SqlException ex) {
+			return new Result<UsuarioBase2025>.Error($"Error SQL consultando usuario por id: {ex.Message}");
+		} catch (Exception ex) {
+			return new Result<UsuarioBase2025>.Error($"Error inesperado: {ex.Message}");
+		}
+	}
 
 
 	public async Task<IEnumerable<HorarioMedicoDto>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta) {
-		using IDbConnection conn = factory.CreateConnection();
+		using IDbConnection conn = factory.CrearConexion();
 
 		return await conn.QueryAsync<HorarioMedicoDto>(
 			"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId",
@@ -87,7 +147,7 @@ public class BaseDeDatosRepositorio(SqlConnectionFactory factory) {
 	}
 
 	public async Task<IEnumerable<TurnoDto>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta) {
-		using IDbConnection conn = factory.CreateConnection();
+		using IDbConnection conn = factory.CrearConexion();
 
 		return await conn.QueryAsync<TurnoDto>(
 			"sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId",
@@ -101,7 +161,7 @@ public class BaseDeDatosRepositorio(SqlConnectionFactory factory) {
 	}
 
 	public async Task<IEnumerable<MedicoDto>> SelectMedicosWhereEspecialidad(EspecialidadMedica2025 especialidad) {
-		using IDbConnection conn = factory.CreateConnection();
+		using IDbConnection conn = factory.CrearConexion();
 
 		return await conn.QueryAsync<MedicoDto>(
 			"sp_SelectMedicosWhereEspecialidad",
@@ -117,21 +177,21 @@ public class BaseDeDatosRepositorio(SqlConnectionFactory factory) {
 	//-----------------------SELECT * FROM TABLES------------------
 
 	public async Task<IEnumerable<MedicoDto>> SelectMedicos() {
-		using IDbConnection conn = factory.CreateConnection();
+		using IDbConnection conn = factory.CrearConexion();
 		return await conn.QueryAsync<MedicoDto>(
 			"sp_SelectMedicos",
 			commandType: CommandType.StoredProcedure
 		);
 	}
 	public async Task<IEnumerable<PacienteDto>> SelectPacientes() {
-		using IDbConnection conn = factory.CreateConnection();
+		using IDbConnection conn = factory.CrearConexion();
 		return await conn.QueryAsync<PacienteDto>(
 			"sp_SelectPacientes",
 			commandType: CommandType.StoredProcedure
 		);
 	}
 	public async Task<IEnumerable<TurnoDto>> SelectTurnos() {
-		using IDbConnection conn = factory.CreateConnection();
+		using IDbConnection conn = factory.CrearConexion();
 		return await conn.QueryAsync<TurnoDto>(
 			"sp_SelectTurnos",
 			commandType: CommandType.StoredProcedure

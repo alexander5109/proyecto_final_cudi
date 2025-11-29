@@ -89,6 +89,10 @@
     <Build Include="Dto\UserDefinedTableTypes\IntListTableType.sql" />
     <Build Include="Dto\StoredProcedures2025\sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId.sql" />
     <Build Include="Dto\StoredProcedures2025\sp_SelectHorariosVigentesBetweenFechasWhereMedicoId.sql" />
+    <Build Include="Dto\Tables\Usuario.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_InsertUsuarioReturnId.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectUsuarioWhereNombre.sql" />
+    <Build Include="Dto\StoredProcedures2025\sp_SelectUsuarioWhereId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publications\Clinica.SQLServerDB.publish.xml" />

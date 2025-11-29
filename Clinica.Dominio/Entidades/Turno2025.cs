@@ -20,10 +20,10 @@ public record Turno2025(
 ) : IComoTexto {
 
 	public string ATexto() {
-		var fecha = FechaHoraAsignadaDesdeValor.ToString("dddd dd/MM/yyyy");
-		var desde = FechaHoraAsignadaDesdeValor.ToString("HH:mm");
-		var hasta = FechaHoraAsignadaHastaValor.ToString("HH:mm");
-		var duracion = (FechaHoraAsignadaHastaValor - FechaHoraAsignadaDesdeValor).TotalMinutes;
+        string fecha = FechaHoraAsignadaDesdeValor.ToString("dddd dd/MM/yyyy");
+        string desde = FechaHoraAsignadaDesdeValor.ToString("HH:mm");
+        string hasta = FechaHoraAsignadaHastaValor.ToString("HH:mm");
+        double duracion = (FechaHoraAsignadaHastaValor - FechaHoraAsignadaDesdeValor).TotalMinutes;
 		return
 			$"Turno de {Especialidad.ATexto()}\n" +
 			$"  • PacienteId: {PacienteId}\n" +

@@ -18,7 +18,7 @@ public static class MainProgram {
 
 		ServiciosPublicosAsync servicio = new(
 			new BaseDeDatosRepositorio(
-				new SqlConnectionFactory(config.GetConnectionString("ClinicaMedica")
+				new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")
 				)
 			)
 		);

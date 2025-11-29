@@ -1,10 +1,14 @@
 ﻿using Clinica.Dominio.TiposDeValor;
-namespace Clinica.WebAPI.DtosWebAPI;
+namespace Clinica.WebAPI.DTOs;
+
 public static class DtosWebAPI {
 	public record ReprogramarTurnoRequestDto(
 		DateTime NuevaFechaDesde,
 		DateTime NuevaFechaHasta
 	);
+	public record LoginRequestDto(string Username, string Password);
+	public record LoginResponseDto(string Nombre, string Rol, string Token);
+
 
 	public record CrearTurnoRequestDto(
 		int PacienteId,

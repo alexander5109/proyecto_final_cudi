@@ -47,7 +47,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 	public WindowGestionTurno() {
 		InitializeComponent();
 
-		var viewmodel = new WindowGestionTurnoViewModel();
+        WindowGestionTurnoViewModel viewmodel = new();
 
 
 		DataContext = this;

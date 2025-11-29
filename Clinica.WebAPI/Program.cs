@@ -1,5 +1,6 @@
 using Clinica.Infrastructure.DataAccess;
 using Clinica.Infrastructure.ServiciosAsync;
+using Clinica.WebAPI.Servicios;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -27,16 +28,21 @@ builder.Services.AddSwaggerGen();
 // 3. Dependency Injection: Database + ServiciosPublicosAsync
 // ------------------------------------------------------------
 
-// SqlConnectionFactory (singleton)
-builder.Services.AddSingleton<SqlConnectionFactory>(sp =>
-	new SqlConnectionFactory(
+// SQLServerConnectionFactory (singleton)
+builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
+	new SQLServerConnectionFactory(
 		config.GetConnectionString("ClinicaMedica")
 			?? throw new InvalidOperationException("Connection string 'ClinicaMedica' not found")
 	)
 );
 
 // BaseDeDatosRepositorio (scoped)
-builder.Services.AddScoped<BaseDeDatosRepositorio>();
+builder.Services.AddSingleton<BaseDeDatosRepositorio>();
+builder.Services.AddSingleton<AuthService>(sp => {
+    BaseDeDatosRepositorio repo = sp.GetRequiredService<BaseDeDatosRepositorio>();
+    string? key = builder.Configuration["Jwt:Key"];
+	return new AuthService(repo, key!);
+});
 
 // ServiciosPublicosAsync (scoped)
 builder.Services.AddScoped<ServiciosPublicosAsync>();

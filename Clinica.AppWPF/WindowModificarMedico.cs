@@ -75,7 +75,7 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	}
 
 	private void BtnAgregarHorarioFranja_Click(object sender, RoutedEventArgs e) {
-		var selected = GetSelectedTreeItem();
+        object? selected = GetSelectedTreeItem();
 
 		DiaDeSemanaViewModel dia;
 
@@ -104,7 +104,7 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	}
 
 	private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
-		var selected = GetSelectedTreeItem();
+        object? selected = GetSelectedTreeItem();
 
 		if (selected is not HorarioMedicoViewModel horario) {
 			MessageBox.Show("Seleccione un horario para editar.");
@@ -120,7 +120,7 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	}
 
 	private void BtnEliminarHorario_Click(object sender, RoutedEventArgs e) {
-		var selected = GetSelectedTreeItem();
+        object? selected = GetSelectedTreeItem();
 
 		if (selected is not HorarioMedicoViewModel horario) {
 			MessageBox.Show("Seleccione un horario para eliminar.");

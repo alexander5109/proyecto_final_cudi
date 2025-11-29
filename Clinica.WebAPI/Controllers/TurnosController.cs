@@ -3,10 +3,10 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.DtosEntidades;
 using Clinica.Infrastructure.ServiciosAsync;
-using Clinica.WebAPI.DtosWebAPI;
+using Clinica.WebAPI.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
-using static Clinica.WebAPI.DtosWebAPI.DtosWebAPI;
+using static Clinica.WebAPI.DTOs.DtosWebAPI;
 
 
 namespace Clinica.WebAPI.Controllers;

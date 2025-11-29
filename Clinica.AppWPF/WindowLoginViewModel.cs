@@ -10,21 +10,16 @@ public record UsuarioLogueadoDTO(
 	string Token
 );
 
-public class WindowLoginViewModel {
-	private readonly HttpClient _http;
-
+public class WindowLoginViewModel(HttpClient http) {
 	public string? Usuario { get; set; }
 	public string? Password { get; set; }
-
-	public WindowLoginViewModel(HttpClient http) => _http = http;
-
 
 	public async Task<Result<UsuarioLogueadoDTO>> IntentarLoginAsync() {
 		if (string.IsNullOrWhiteSpace(Usuario) || string.IsNullOrWhiteSpace(Password)) {
 			return new Result<UsuarioLogueadoDTO>.Error("Debe completar usuario y contraseña.");
 		}
 		try {
-			HttpResponseMessage response = await _http.PostAsJsonAsync(
+			HttpResponseMessage response = await http.PostAsJsonAsync(
 				"/auth/login",
 				new { username = Usuario, password = Password }
 			);
@@ -44,17 +39,17 @@ public class WindowLoginViewModel {
 		} catch (HttpRequestException ex) {
 			// API caída, offline, URL incorrecta, servidor no responde
 			return new Result<UsuarioLogueadoDTO>.Error(
-				"No se pudo conectar con el servidor. Verifique su conexión o intente más tarde."
+				$"No se pudo conectar con el servidor. Verifique su conexión o intente más tarde.\nFull error:\n{ex}"
 			);
 		} catch (TaskCanceledException ex) {
 			// timeout
 			return new Result<UsuarioLogueadoDTO>.Error(
-				"El servidor tardó demasiado en responder (timeout)."
+				$"El servidor tardó demasiado en responder (timeout).\nFull error:\n{ex}"
 			);
 		} catch (Exception ex) {
 			// cualquier otro error inesperado
 			return new Result<UsuarioLogueadoDTO>.Error(
-				"Ocurrió un error inesperado al intentar iniciar sesión."
+				$"Ocurrió un error inesperado al intentar iniciar sesión.\nFull error:\n{ex}"
 			);
 		}
 	}
