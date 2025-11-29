@@ -1,6 +1,9 @@
 using Clinica.Infrastructure.DataAccess;
 using Clinica.Infrastructure.Servicios;
 using Clinica.Infrastructure.ServiciosAsync;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -39,8 +42,8 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 // BaseDeDatosRepositorio (scoped)
 builder.Services.AddSingleton<BaseDeDatosRepositorio>();
 builder.Services.AddSingleton<AuthService>(sp => {
-    BaseDeDatosRepositorio repo = sp.GetRequiredService<BaseDeDatosRepositorio>();
-    string? key = builder.Configuration["Jwt:Key"];
+	BaseDeDatosRepositorio repo = sp.GetRequiredService<BaseDeDatosRepositorio>();
+	string? key = builder.Configuration["Jwt:Key"];
 	return new AuthService(repo, key!);
 });
 
@@ -58,6 +61,26 @@ builder.Services.AddCors(options => {
 	});
 });
 
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddJwtBearer(options => {
+		options.TokenValidationParameters = new TokenValidationParameters {
+			ValidateIssuer = true,
+			ValidateAudience = true,
+			ValidateLifetime = true,
+			ValidateIssuerSigningKey = true,
+
+			ValidIssuer = builder.Configuration["Jwt:Issuer"],
+			ValidAudience = builder.Configuration["Jwt:Audience"],
+			IssuerSigningKey = new SymmetricSecurityKey(
+				Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+			)
+		};
+	});
+
+builder.Services.AddAuthorization();
+
 // ------------------------------------------------------------
 // Build app
 // ------------------------------------------------------------
@@ -73,10 +96,13 @@ if (app.Environment.IsDevelopment()) {
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCors("AllowAll");
 
 app.MapControllers();
+
+Console.WriteLine("JWT Key cargada: " + builder.Configuration["Jwt:Key"]);
 
 app.Run();
