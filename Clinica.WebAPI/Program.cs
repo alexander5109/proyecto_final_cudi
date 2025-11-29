@@ -1,5 +1,4 @@
 using Clinica.Infrastructure.DataAccess;
-using Clinica.Infrastructure.Servicios;
 using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -34,18 +33,23 @@ builder.Services.AddSwaggerGen();
 // SQLServerConnectionFactory (singleton)
 builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	new SQLServerConnectionFactory(
-		config.GetConnectionString("ClinicaMedica")
+		builder.Configuration.GetConnectionString("ClinicaMedica")
 			?? throw new InvalidOperationException("Connection string 'ClinicaMedica' not found")
 	)
 );
 
-// BaseDeDatosRepositorio (scoped)
-builder.Services.AddSingleton<BaseDeDatosRepositorio>();
-builder.Services.AddSingleton<AuthService>(sp => {
-	BaseDeDatosRepositorio repo = sp.GetRequiredService<BaseDeDatosRepositorio>();
-	string? key = builder.Configuration["Jwt:Key"];
-	return new AuthService(repo, key!);
+// BaseDeDatosRepositorio (singleton)
+builder.Services.AddSingleton<BaseDeDatosRepositorio>(sp => {
+	SQLServerConnectionFactory factory = sp.GetRequiredService<SQLServerConnectionFactory>();
+
+	string? jwtKey = builder.Configuration["Jwt:Key"];
+	if (string.IsNullOrWhiteSpace(jwtKey))
+		throw new InvalidOperationException("Falta la clave JWT en configuración: 'Jwt:Key'");
+
+	return new BaseDeDatosRepositorio(factory, jwtKey);
 });
+
+
 
 // ServiciosPublicosAsync (scoped)
 builder.Services.AddScoped<ServiciosPublicosAsync>();

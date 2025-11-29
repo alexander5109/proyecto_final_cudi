@@ -1,10 +1,14 @@
 ﻿using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.DtosEntidades;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
 
 namespace Clinica.Infrastructure.DataAccess;
@@ -16,7 +20,45 @@ public class SQLServerConnectionFactory(string connectionString) {
 }
 
 
-public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory) {
+public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string jwtKey) {
+
+	public async Task<Result<UsuarioBase2025>> ValidarCredenciales(string username, string password) {
+		Result<UsuarioBase2025> resultadoUsuario = await SelectUsuarioWhereNombre(new NombreUsuario(username));
+
+		return resultadoUsuario.Match(
+			usuarioOk => usuarioOk.PasswordMatch(password),
+			notFound => resultadoUsuario
+		);
+	}
+
+	public string EmitirJwt(UsuarioBase2025 usuario) {
+		JwtSecurityTokenHandler handler = new();
+		byte[] key = Encoding.ASCII.GetBytes(jwtKey);
+
+		List<Claim> claims = [
+			new("userid", usuario.UserId.Valor.ToString()),
+			new("username", usuario.UserName.Valor),
+			new("role", usuario switch {
+				Usuario2025Nivel1Admin => "Admin",
+				Usuario2025Nivel2Secretaria => "Secretaria",
+				_ => "Desconocido"
+			})
+		];
+
+		SecurityTokenDescriptor tokenDescriptor = new() {
+			Subject = new ClaimsIdentity(claims),
+
+			Expires = DateTime.UtcNow.AddHours(8),
+
+			SigningCredentials = new SigningCredentials(
+				new SymmetricSecurityKey(key),
+				SecurityAlgorithms.HmacSha256Signature
+			)
+		};
+
+		SecurityToken token = handler.CreateToken(tokenDescriptor);
+		return handler.WriteToken(token);
+	}
 
 	//-----------------------INSERT AND RETURN ID------------------
 	public async Task<Result<UsuarioId>> InsertUsuarioReturnId(
@@ -93,7 +135,7 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory) {
 		try {
 			using IDbConnection conn = factory.CrearConexion();
 
-            UsuarioDto? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDto>(
+			UsuarioDto? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDto>(
 				"sp_SelectUsuarioWhereNombre",
 				new { NombreUsuario = nombre.Valor },
 				commandType: CommandType.StoredProcedure
@@ -114,7 +156,7 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory) {
 		try {
 			using IDbConnection conn = factory.CrearConexion();
 
-            UsuarioDto? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDto>(
+			UsuarioDto? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDto>(
 				"sp_SelectUsuarioWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure

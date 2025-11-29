@@ -12,7 +12,7 @@ public partial class WindowLogin : Window {
 
 		InitializeComponent();
 		soundCheckBox.IsChecked = App.SoundOn;
-		viewModel = new WindowLoginViewModel(App.ApiClient);
+		viewModel = new WindowLoginViewModel(Api.Cliente);
 		DataContext = viewModel;
 	}
 
@@ -44,7 +44,7 @@ public partial class WindowLogin : Window {
 		UsuarioLogueadoDTO usuario = ok.Valor;
 
 		// guardar token y configurar httpclient
-		App.ApiClient.DefaultRequestHeaders.Authorization =
+		Api.Cliente.DefaultRequestHeaders.Authorization =
 			new AuthenticationHeaderValue("Bearer", usuario.Token);
 
 		App.UsuarioActual = usuario;
