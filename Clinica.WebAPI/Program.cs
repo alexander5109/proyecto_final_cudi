@@ -1,7 +1,7 @@
 using Clinica.Infrastructure.DataAccess;
 using Clinica.Infrastructure.ServiciosAsync;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // ------------------------------------------------------------
 // 1. Load configuration (appsettings.json + environment config)
@@ -55,7 +55,7 @@ builder.Services.AddCors(options => {
 // ------------------------------------------------------------
 // Build app
 // ------------------------------------------------------------
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // ------------------------------------------------------------
 // 4. Middleware pipeline

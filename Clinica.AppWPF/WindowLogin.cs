@@ -1,32 +1,54 @@
-﻿using Clinica.AppWPF.Infrastructure;
+﻿using System.Net.Http.Headers;
 using System.Windows;
+using Clinica.AppWPF.Infrastructure;
+using Clinica.Dominio.Comun;
 
 
-namespace Clinica.AppWPF; 
+namespace Clinica.AppWPF;
+
 public partial class WindowLogin : Window {
+	private readonly WindowLoginViewModel viewModel;
 	public WindowLogin() {
 
 		InitializeComponent();
 		soundCheckBox.IsChecked = App.SoundOn;
+		viewModel = new WindowLoginViewModel(App.ApiClient);
+		DataContext = viewModel;
 	}
-	
-	private bool datos_completados(){
-		return string.IsNullOrEmpty(labelServidor.Text) && string.IsNullOrEmpty(labelUsuario.Text) && string.IsNullOrEmpty(labelPassword.Text); 
-	}
-	
-	private void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
+
+
+	private async void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
+
 		//if (checkboxJSON.IsChecked == true) {
-			//App.BaseDeDatos = new BaseDeDatosJSON();
-		//} else if ( datos_completados() ) {
-		if (datos_completados() ) {
-			App.BaseDeDatos = new BaseDeDatosWebAPI();
+		//App.BaseDeDatos = new BaseDeDatosJSON();
+		//} else if ( ValidarCamposVacios() ) {
+		//if (ValidarCamposVacios()) => App.BaseDeDatos = new BaseDeDatosWebAPI();
 		//} else {
-			//App.BaseDeDatos = new BaseDeDatosSQL($"Server={labelServidor.Text};Database=ClinicaMedica;User ID={labelUsuario.Text};Password={labelPassword.Text};");
-		}
+		//App.BaseDeDatos = new BaseDeDatosSQL($"Server={labelServidor.Text};Database=ClinicaMedica;User ID={guiUsuario.Text};Password={guiPassword.Text};");
 		//App.UsuarioLogueado = App.BaseDeDatos.ConectadaExitosamente;
 		//if (App.UsuarioLogueado) {
 		//	this.Cerrar();
 		//}
+
+		viewModel.Usuario = guiUsuario.Text;
+		viewModel.Password = guiPassword.Password;
+
+		Result<UsuarioLogueadoDTO> result = await viewModel.IntentarLoginAsync();
+
+		if (result is Result<UsuarioLogueadoDTO>.Error err) {
+			MessageBox.Show(err.Mensaje, "Error", MessageBoxButton.OK);
+			return;
+		}
+
+		Result<UsuarioLogueadoDTO>.Ok ok = (Result<UsuarioLogueadoDTO>.Ok)result;
+		UsuarioLogueadoDTO usuario = ok.Valor;
+
+		// guardar token y configurar httpclient
+		App.ApiClient.DefaultRequestHeaders.Authorization =
+			new AuthenticationHeaderValue("Bearer", usuario.Token);
+
+		App.UsuarioActual = usuario;
+		this.Cerrar();
 	}
 
 	public void MetodoBotonSalir(object sender, RoutedEventArgs e) {
@@ -37,31 +59,12 @@ public partial class WindowLogin : Window {
 		this.Cerrar();
 	}
 
-	private void checkboxJSON_Checked(object sender, RoutedEventArgs e)
-	{
-		if (labelPassword != null) labelPassword.IsEnabled = false;
-		if (labelServidor != null) labelServidor.IsEnabled = false;
-		if (labelUsuario != null) labelUsuario.IsEnabled = false;
-	}
-
-	private void checkboxSQL_Checked(object sender, RoutedEventArgs e)
-	{
-		if (labelPassword != null) labelPassword.IsEnabled = true;
-		if (labelServidor != null) labelServidor.IsEnabled = true;
-		if (labelUsuario != null) labelUsuario.IsEnabled = true;
-	}
-
 	private void soundCheckBox_Checked(object sender, RoutedEventArgs e) {
 		if (soundCheckBox.IsChecked == true) {
 			App.SoundOn = true;
 			App.PlayClickJewel();
-		}
-		else {
+		} else {
 			App.SoundOn = false;
 		}
-        }
-
-	// private void MetodoEliminarDatabase(object sender, RoutedEventArgs e) {
-		// App.BaseDeDatos.EliminarDatabaseExitosamente();
-	// }
+	}
 }

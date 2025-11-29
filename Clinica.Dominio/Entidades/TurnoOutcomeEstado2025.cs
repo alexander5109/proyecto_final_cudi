@@ -32,7 +32,7 @@ public sealed record TurnoOutcomeEstado2025(
 		if (codigo is null)
 			return new Result<TurnoOutcomeEstado2025>.Error("El código del Outcome no puede ser nulo.");
 
-		var estado = Todos.FirstOrDefault(e => e.Codigo.Valor == codigo.Value);
+        TurnoOutcomeEstado2025? estado = Todos.FirstOrDefault(e => e.Codigo.Valor == codigo.Value);
 
 		return estado is not null
 			? new Result<TurnoOutcomeEstado2025>.Ok(estado)

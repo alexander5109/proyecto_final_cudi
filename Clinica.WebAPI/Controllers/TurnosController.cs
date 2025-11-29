@@ -55,8 +55,8 @@ public class TurnosController(
 	// --------------------------------------------------------
 	[HttpPost]
 	public async Task<IActionResult> Crear([FromBody] CrearTurnoRequestDto dto) {
-		// Validar especialidad
-		var espResult = EspecialidadMedica2025.CrearPorCodigoInterno(dto.EspecialidadCodigo);
+        // Validar especialidad
+        Result<EspecialidadMedica2025> espResult = EspecialidadMedica2025.CrearPorCodigoInterno(dto.EspecialidadCodigo);
 
 		if (espResult.IsError)
 			return BadRequest($"Especialidad inválida: {dto.EspecialidadCodigo}");

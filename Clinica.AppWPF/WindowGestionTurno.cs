@@ -15,7 +15,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-	private readonly HorarioMedicoViewModel _agendaService;
+	//private readonly HorarioMedicoViewModel _agendaService;
 
 	public ObservableCollection<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = new();
 	public ObservableCollection<MedicoSimpleDto> MedicosEspecialistas { get; } = new();
