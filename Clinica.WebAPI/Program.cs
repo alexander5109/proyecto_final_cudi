@@ -1,6 +1,6 @@
 using Clinica.Infrastructure.DataAccess;
+using Clinica.Infrastructure.Servicios;
 using Clinica.Infrastructure.ServiciosAsync;
-using Clinica.WebAPI.Servicios;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

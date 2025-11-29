@@ -2,13 +2,37 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.DataAccess;
+using Clinica.Infrastructure.Servicios;
 using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.Extensions.Configuration;
 
 namespace Clinica.PruebasDeConsola;
 
 public static class MainProgram {
+
+
+
+
+	static void CifrarContraseña() {
+		string? rawPassword = null;
+		while (string.IsNullOrWhiteSpace(rawPassword)) {
+			Console.Write("Ingrese contraseña directamente: ");
+			rawPassword = Console.ReadLine();
+			if (string.IsNullOrWhiteSpace(rawPassword)) Console.WriteLine("La contraseña no puede estar vacía.\n");
+		}
+		Console.WriteLine($"\nHashed:");
+		Console.WriteLine(AuthService.ComputeSha256(rawPassword));
+
+		Console.WriteLine("\nPresione ENTER para continuar...");
+		Console.ReadLine();
+	}
+
+
+
 	static async Task Main() {
+
+		CifrarContraseña();
+
 		Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 		IConfiguration config = new ConfigurationBuilder()
@@ -30,11 +54,11 @@ public static class MainProgram {
 		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidades = (await servicio.SolicitarDisponibilidadesPara(
 			EspecialidadMedica2025.ClinicoGeneral,
 			DateTime.Now,
-			15
+			4
 		)).PrintAndContinue("Disponbiildiades encontradas::");
-		//var lista = disponibilidades.GetOrRaise();
-		//foreach (var d in lista)
-		//	Console.WriteLine(d.ATexto());
+		var lista = disponibilidades.GetOrRaise();
+		foreach (var d in lista)
+			Console.WriteLine(d.ATexto());
 
 		// Caso de uso 2
 		Result<Turno2025> turno = (await servicio.SolicitarTurnoEnLaPrimeraDisponibilidad(

@@ -7,7 +7,7 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.DataAccess;
 using Microsoft.IdentityModel.Tokens;
-namespace Clinica.WebAPI.Servicios;
+namespace Clinica.Infrastructure.Servicios;
 
 public class AuthService(BaseDeDatosRepositorio repo, string jwtKey) {
 	public async Task<Result<UsuarioBase2025>> ValidarCredenciales(string username, string password) {
@@ -57,7 +57,7 @@ public class AuthService(BaseDeDatosRepositorio repo, string jwtKey) {
 		return handler.WriteToken(token);
 	}
 
-	private static string ComputeSha256(string raw) {
+	public static string ComputeSha256(string raw) {
 		byte[] bytes = SHA256.HashData(Encoding.UTF8.GetBytes(raw));
 		return Convert.ToHexString(bytes);
 	}

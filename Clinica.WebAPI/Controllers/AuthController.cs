@@ -1,6 +1,6 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.WebAPI.Servicios;
+using Clinica.Infrastructure.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.WebAPI.DTOs.DtosWebAPI;
 
