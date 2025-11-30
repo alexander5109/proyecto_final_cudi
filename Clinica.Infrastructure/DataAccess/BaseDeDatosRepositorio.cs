@@ -62,9 +62,10 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 
 	//-----------------------INSERT AND RETURN ID------------------
 	public async Task<Result<UsuarioId>> InsertUsuarioReturnId(
-	NombreUsuario nombre,
-	ContraseñaHasheada password,
-	byte enumRole) {
+		NombreUsuario nombre,
+		ContraseñaHasheada password,
+		byte enumRole
+	) {
 		try {
 			using IDbConnection conn = factory.CrearConexion();
 
@@ -225,13 +226,6 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 			commandType: CommandType.StoredProcedure
 		);
 	}
-	public async Task<IEnumerable<PacienteDto>> SelectPacientes() {
-		using IDbConnection conn = factory.CrearConexion();
-		return await conn.QueryAsync<PacienteDto>(
-			"sp_SelectPacientes",
-			commandType: CommandType.StoredProcedure
-		);
-	}
 	public async Task<IEnumerable<TurnoDto>> SelectTurnos() {
 		using IDbConnection conn = factory.CrearConexion();
 		return await conn.QueryAsync<TurnoDto>(
@@ -239,5 +233,100 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 			commandType: CommandType.StoredProcedure
 		);
 	}
+
+
+	//-----------------------PACIENTESSSSS------------------
+
+	private async Task<Result<T>> TryAsync<T>(Func<IDbConnection, Task<T>> action) {
+		try {
+			using var conn = factory.CrearConexion();
+			var result = await action(conn);
+			return new Result<T>.Ok(result);
+		} catch (SqlException ex) {
+			return new Result<T>.Error($"Error SQL: {ex.Message}");
+		} catch (Exception ex) {
+			return new Result<T>.Error($"Error inesperado: {ex.Message}");
+		}
+	}
+
+	private async Task<Result<Unit>> TryAsyncVoid(Func<IDbConnection, Task> action) {
+		try {
+			using var conn = factory.CrearConexion();
+			await action(conn);
+			return new Result<Unit>.Ok(Unit.Valor);
+		} catch (SqlException ex) {
+			return new Result<Unit>.Error($"Error SQL: {ex.Message}");
+		} catch (Exception ex) {
+			return new Result<Unit>.Error($"Error inesperado: {ex.Message}");
+		}
+	}
+
+
+	public Task<Result<Unit>> DeletePaciente(int id)
+		=> TryAsyncVoid(conn =>
+			conn.ExecuteAsync(
+				"sp_DeletePaciente",
+				new { Id = id },
+				commandType: CommandType.StoredProcedure
+			)
+		);
+
+
+	public Task<Result<IEnumerable<PacienteDto>>> SelectPacientes()
+		=> TryAsync(conn => conn.QueryAsync<PacienteDto>("sp_SelectPacientes", commandType: CommandType.StoredProcedure));
+
+
+	public Task<Result<IEnumerable<PacienteListDto>>> SelectPacientesList()
+		=> TryAsync(conn => conn.QueryAsync<PacienteListDto>("sp_SelectPacientesListView", commandType: CommandType.StoredProcedure));
+
+
+
+	public Task<Result<int>> CreatePaciente(PacienteDto dto)
+		=> TryAsync(async conn => {
+			var parameters = new {
+				dto.Dni,
+				dto.Nombre,
+				dto.Apellido,
+				dto.FechaIngreso,
+				dto.Email,
+				dto.Telefono,
+				dto.FechaNacimiento,
+				dto.Domicilio,
+				dto.Localidad,
+				dto.ProvinciaCodigo
+			};
+
+			return await conn.ExecuteScalarAsync<int>(
+				"sp_CreatePaciente",
+				parameters,
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
+	public Task<Result<Unit>> UpdatePaciente(PacienteId id, PacienteDto dto)
+		=> TryAsyncVoid(async conn => {
+			var parameters = new {
+				Id = id.Valor,
+				dto.Dni,
+				dto.Nombre,
+				dto.Apellido,
+				dto.FechaIngreso,
+				dto.Email,
+				dto.Telefono,
+				dto.FechaNacimiento,
+				dto.Domicilio,
+				dto.Localidad,
+				dto.ProvinciaCodigo
+			};
+
+			await conn.ExecuteAsync(
+				"sp_UpdatePaciente",
+				parameters,
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
 
 }

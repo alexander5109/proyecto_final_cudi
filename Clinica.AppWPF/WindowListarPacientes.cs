@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.ViewModels;
+using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF;
 
@@ -46,16 +47,16 @@ public partial class WindowListarPacientes : Window {
 	}
 	private async Task UpdateMedicoUIAsync() {
 		if (turnosListView.SelectedItem is TurnoListDto turno) {
-			MedicoListDto? medico =
+			MedicoRelacionado =
 				await Api.Cliente.GetFromJsonAsync<MedicoListDto>(
 					$"api/medicos/{turno.MedicoId}"
 				);
 
-			txtMedicoDni.Text = medico?.Dni;
-			txtMedicoNombre.Text = medico?.Nombre;
-			txtMedicoApellido.Text = medico?.Apellido;
-			txtMedicoEspecialidad.Text = medico?.EspecialidadCodigoInterno.ToString();
-			buttonModificarMedico.IsEnabled = medico != null;
+			txtMedicoDni.Text = MedicoRelacionado?.Dni;
+			txtMedicoNombre.Text = MedicoRelacionado?.Nombre;
+			txtMedicoApellido.Text = MedicoRelacionado?.Apellido;
+			txtMedicoEspecialidad.Text = MedicoRelacionado?.EspecialidadCodigoInterno.ToString();
+			buttonModificarMedico.IsEnabled = MedicoRelacionado != null;
 		}
 	}
 

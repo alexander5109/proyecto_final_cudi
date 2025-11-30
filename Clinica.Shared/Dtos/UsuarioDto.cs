@@ -12,9 +12,9 @@ public static partial class DomainDtos {
 	string PasswordHash,
 	byte EnumRole);
 	public static UsuarioBase2025 ToDomain(this UsuarioDto dto) {
-        UsuarioId id = new(dto.Id);
-        NombreUsuario nombre = new(dto.NombreUsuario);
-        ContraseñaHasheada password = new(dto.PasswordHash);
+		UsuarioId id = new(dto.Id);
+		NombreUsuario nombre = new(dto.NombreUsuario);
+		ContraseñaHasheada password = new(dto.PasswordHash);
 
 		return dto.EnumRole switch {
 			1 => new Usuario2025Nivel1Admin(id, nombre, password),

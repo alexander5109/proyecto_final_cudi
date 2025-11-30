@@ -1,9 +1,9 @@
-﻿using Clinica.Infrastructure.ServiciosAsync;
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Shared.Dtos.DomainDtos;
 using static Clinica.Shared.Dtos.ApiDtos;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using static Clinica.Shared.Dtos.DomainDtos;
 
 namespace Clinica.WebAPI.Controllers;
 
@@ -14,40 +14,70 @@ public class PacientesController(
 	ILogger<PacientesController> logger
 ) : ControllerBase {
 
+	// ------------------ HELPERS ------------------ //
 
+	private ActionResult FromResult<T>(Result<T> result) {
+		return result switch {
+			Result<T>.Ok ok => Ok(ok.Valor),
+			Result<T>.Error err => BadRequest(err.Mensaje),
+			_ => StatusCode(500)
+		};
+	}
 
-	// GET: api/<ValuesController>
+	private ActionResult FromResult(Result<Unit> result) {
+		return result switch {
+			Result<Unit>.Ok => NoContent(),
+			Result<Unit>.Error e => BadRequest(e.Mensaje),
+			_ => StatusCode(500)
+		};
+	}
+
+	// ------------------ GET ------------------ //
+
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<PacienteDto>>> Get() {
-		try {
-			IEnumerable<PacienteDto> pacientes = await servicio.baseDeDatos.SelectPacientes();
-			return Ok(pacientes);
-		} catch (Exception ex) {
-			logger.LogError(ex, "Error al obtener listado de pacientes.");
-			return StatusCode(500, "Error interno del servidor.");
-		}
+	public async Task<ActionResult> GetPacientes() {
+		var result = await servicio.baseDeDatos.SelectPacientes();
+		return FromResult(result);
 	}
 
-
-
-	// GET api/<ValuesController>/5
-	[HttpGet("{id}")]
-	public string Get(int id) {
-		return "value";
+	[HttpGet("list")]
+	public async Task<ActionResult> GetPacientesList() {
+		var result = await servicio.baseDeDatos.SelectPacientesList();
+		return FromResult(result);
 	}
 
-	// POST api/<ValuesController>
-	[HttpPost]
-	public void Post([FromBody] string value) {
-	}
+	// ------------------ DELETE ------------------ //
 
-	// PUT api/<ValuesController>/5
-	[HttpPut("{id}")]
-	public void Put(int id, [FromBody] string value) {
-	}
-
-	// DELETE api/<ValuesController>/5
 	[HttpDelete("{id}")]
-	public void Delete(int id) {
+	public async Task<ActionResult> Delete(int id) {
+		var result = await servicio.baseDeDatos.DeletePaciente(id);
+		return FromResult(result);
+	}
+
+	// ------------------ POST ------------------ //
+
+	[HttpPost]
+	public async Task<ActionResult> Create([FromBody] PacienteDto dto) {
+		if (dto is null)
+			return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
+
+		var result = await servicio.baseDeDatos.CreatePaciente(dto);
+
+		return result switch {
+			Result<int>.Ok ok => CreatedAtAction(nameof(GetPacientes), new { id = ok.Valor }, ok.Valor),
+			Result<int>.Error err => BadRequest(err.Mensaje),
+			_ => StatusCode(500)
+		};
+	}
+
+	// ------------------ PUT ------------------ //
+
+	[HttpPut("{id}")]
+	public async Task<ActionResult> Update(int id, [FromBody] PacienteDto dto) {
+		if (dto is null)
+			return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
+
+		var result = await servicio.baseDeDatos.UpdatePaciente(new PacienteId(id), dto);
+		return FromResult(result);
 	}
 }

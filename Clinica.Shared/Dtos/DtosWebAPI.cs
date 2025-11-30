@@ -3,6 +3,42 @@
 namespace Clinica.Shared.Dtos;
 
 public static class ApiDtos {
+
+
+	public record PacienteListDto(
+		int Id,
+		string Dni,
+		string Nombre,
+		string Apellido,
+		string Email,
+		string Telefono
+	);
+	public record TurnoListDto(
+		int Id,
+		TimeSpan Hora,
+		DateTime Fecha,
+		byte EspecialidadCodigoInterno,
+		byte Estado,
+		int MedicoId
+	);
+
+	public record MedicoListDto(
+		string Dni,
+		string Nombre,
+		string Apellido,
+		byte EspecialidadCodigoInterno
+	);
+
+
+
+
+
+
+
+
+
+
+
 	public record ReprogramarTurnoRequestDto(
 		DateTime NuevaFechaDesde,
 		DateTime NuevaFechaHasta

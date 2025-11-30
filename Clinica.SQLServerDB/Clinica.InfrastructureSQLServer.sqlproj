@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>Clinica.SQLServerDB</Name>
+    <Name>Clinica.InfrastructureSQLServer</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{f5455df7-82aa-46f8-b35b-13fc441acd2d}</ProjectGuid>
@@ -56,43 +56,48 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Dto" />
-    <Folder Include="Dto\Tables" />
     <Folder Include="Dto\PostDeployInserts" />
-    <Folder Include="Dto\StoredProcedures" />
     <Folder Include="Publications" />
-    <Folder Include="Dto\UserDefinedTableTypes" />
-    <Folder Include="Dto\StoredProcedures2025" />
+    <Folder Include="Dto\Tables" />
+    <Folder Include="Dto\Tables\Medicos" />
+    <Folder Include="Dto\Tables\HorariosMedicos" />
+    <Folder Include="Dto\Tables\Pacientes" />
+    <Folder Include="Dto\Tables\Turnos" />
+    <Folder Include="Dto\Tables\Usuarios" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Dto\Tables\HorarioMedico.sql" />
-    <Build Include="Dto\Tables\Medico.sql" />
-    <Build Include="Dto\Tables\Paciente.sql" />
-    <Build Include="Dto\Tables\Turno.sql" />
-    <Build Include="Dto\StoredProcedures\sp_CreateHorarioMedico.sql" />
-    <Build Include="Dto\StoredProcedures\sp_CreateMedico.sql" />
-    <Build Include="Dto\StoredProcedures\sp_CreateMedicoWithHorarios.sql" />
-    <Build Include="Dto\StoredProcedures\sp_CreatePaciente.sql" />
-    <Build Include="Dto\StoredProcedures\sp_DeleteHorarioMedico.sql" />
-    <Build Include="Dto\StoredProcedures\sp_ReadHorariosMedicosAll.sql" />
-    <Build Include="Dto\StoredProcedures\sp_UpdateHorarioMedico.sql" />
-    <Build Include="Dto\StoredProcedures\sp_UpdateMedico.sql" />
-    <Build Include="Dto\StoredProcedures\sp_UpdateMedicoWithHorarios.sql" />
-    <Build Include="Dto\StoredProcedures\sp_UpdatePaciente.sql" />
-    <Build Include="Dto\UserDefinedTableTypes\HorarioMedicoTableType.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_InsertTurnoReturnId.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_SelectMedicos.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_SelectMedicosWhereEspecialidad.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_UpdateTurnoWhereId.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_SelectTurnos.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_SelectPacientes.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_SelectTurnosWhereMedicosIds.sql" />
-    <Build Include="Dto\UserDefinedTableTypes\IntListTableType.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_SelectHorariosVigentesBetweenFechasWhereMedicoId.sql" />
-    <Build Include="Dto\Tables\Usuario.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_InsertUsuarioReturnId.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_SelectUsuarioWhereNombre.sql" />
-    <Build Include="Dto\StoredProcedures2025\sp_SelectUsuarioWhereId.sql" />
+    <Build Include="Dto\Tables\Medicos\sp_CreateMedico.sql" />
+    <Build Include="Dto\Tables\Medicos\sp_CreateMedicoWithHorarios.sql" />
+    <Build Include="Dto\Tables\Medicos\sp_SelectMedicos.sql" />
+    <Build Include="Dto\Tables\Medicos\sp_SelectMedicosWhereEspecialidad.sql" />
+    <Build Include="Dto\Tables\Medicos\sp_UpdateMedico.sql" />
+    <Build Include="Dto\Tables\Medicos\sp_UpdateMedicoWithHorarios.sql" />
+    <Build Include="Dto\Tables\Medicos\table_Medico.sql" />
+    <Build Include="Dto\Tables\HorariosMedicos\sp_CreateHorarioMedico.sql" />
+    <Build Include="Dto\Tables\HorariosMedicos\sp_DeleteHorarioMedico.sql" />
+    <Build Include="Dto\Tables\HorariosMedicos\sp_ReadHorariosMedicosAll.sql" />
+    <Build Include="Dto\Tables\HorariosMedicos\sp_SelectHorariosVigentesBetweenFechasWhereMedicoId.sql" />
+    <Build Include="Dto\Tables\HorariosMedicos\sp_UpdateHorarioMedico.sql" />
+    <Build Include="Dto\Tables\HorariosMedicos\table_HorarioMedico.sql" />
+    <Build Include="Dto\Tables\HorariosMedicos\udtt_HorarioMedicoTable.sql" />
+    <Build Include="Dto\Tables\HorariosMedicos\udtt_ListTable.sql" />
+    <Build Include="Dto\Tables\Pacientes\sp_CreatePaciente.sql" />
+    <Build Include="Dto\Tables\Pacientes\sp_SelectPacientes.sql" />
+    <Build Include="Dto\Tables\Pacientes\sp_UpdatePaciente.sql" />
+    <Build Include="Dto\Tables\Pacientes\table_Paciente.sql" />
+    <Build Include="Dto\Tables\Pacientes\view_PacienteListView.sql" />
+    <Build Include="Dto\Tables\Turnos\sp_InsertTurnoReturnId.sql" />
+    <Build Include="Dto\Tables\Turnos\sp_SelectTurnos.sql" />
+    <Build Include="Dto\Tables\Turnos\sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId.sql" />
+    <Build Include="Dto\Tables\Turnos\sp_SelectTurnosWhereMedicosIds.sql" />
+    <Build Include="Dto\Tables\Turnos\sp_UpdateTurnoWhereId.sql" />
+    <Build Include="Dto\Tables\Turnos\table_Turno.sql" />
+    <Build Include="Dto\Tables\Usuarios\sp_InsertUsuarioReturnId.sql" />
+    <Build Include="Dto\Tables\Usuarios\sp_SelectUsuarioWhereId.sql" />
+    <Build Include="Dto\Tables\Usuarios\sp_SelectUsuarioWhereNombre.sql" />
+    <Build Include="Dto\Tables\Usuarios\table_Usuario.sql" />
+    <Build Include="Dto\Tables\Pacientes\sp_SelectPacientesListView.sql" />
+    <Build Include="Dto\Tables\Pacientes\sp_DeletePaciente.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publications\Clinica.SQLServerDB.publish.xml" />
