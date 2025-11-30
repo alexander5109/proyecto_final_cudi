@@ -7,8 +7,8 @@ namespace Clinica.Dominio.Entidades;
 
 public readonly record struct UsuarioId(int Valor);
 public readonly record struct NombreUsuario(string Valor);
-public readonly record struct PasswordHasheado(string Valor) {
-	public static PasswordHasheado CrearFromRaw(string raw) {
+public readonly record struct ContraseñaHasheada(string Valor) {
+	public static ContraseñaHasheada CrearFromRaw(string raw) {
 		var hash = SHA256.HashData(Encoding.UTF8.GetBytes(raw));
 		return new(Convert.ToHexString(hash));
 	}
@@ -23,7 +23,7 @@ public readonly record struct PasswordHasheado(string Valor) {
 public abstract record UsuarioBase2025(
 	UsuarioId UserId,
 	NombreUsuario UserName,
-	PasswordHasheado UserPassword) {
+	ContraseñaHasheada UserPassword) {
 	public Result<UsuarioBase2025> PasswordMatch(string raw) {
 		return UserPassword.IgualA(raw)
 			? new Result<UsuarioBase2025>.Ok(this)
@@ -34,13 +34,13 @@ public abstract record UsuarioBase2025(
 public sealed record Usuario2025Nivel1Admin(
 	UsuarioId UserId,
 	NombreUsuario UserName,
-	PasswordHasheado UserPassword
+	ContraseñaHasheada UserPassword
 ) : UsuarioBase2025(UserId, UserName, UserPassword);
 
 public sealed record Usuario2025Nivel2Secretaria(
 	UsuarioId UserId,
 	NombreUsuario UserName,
-	PasswordHasheado UserPassword
+	ContraseñaHasheada UserPassword
 ) : UsuarioBase2025(UserId, UserName, UserPassword);
 
 

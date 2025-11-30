@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Clinica.Dominio.Entidades;
 
-namespace Clinica.Infrastructure.DtosEntidades;
+namespace Clinica.Shared.Dtos;
 
-public static partial class DtosEntidades {
+public static partial class DomainDtos {
 	public record UsuarioDto(
 	int Id,
 	string NombreUsuario,
@@ -14,7 +14,7 @@ public static partial class DtosEntidades {
 	public static UsuarioBase2025 ToDomain(this UsuarioDto dto) {
         UsuarioId id = new(dto.Id);
         NombreUsuario nombre = new(dto.NombreUsuario);
-        PasswordHasheado password = new(dto.PasswordHash);
+        ContraseñaHasheada password = new(dto.PasswordHash);
 
 		return dto.EnumRole switch {
 			1 => new Usuario2025Nivel1Admin(id, nombre, password),

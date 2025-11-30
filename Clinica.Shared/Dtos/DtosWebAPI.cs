@@ -1,7 +1,8 @@
 ﻿using Clinica.Dominio.TiposDeValor;
-namespace Clinica.WebAPI.DTOs;
 
-public static class DtosWebAPI {
+namespace Clinica.Shared.Dtos;
+
+public static class ApiDtos {
 	public record ReprogramarTurnoRequestDto(
 		DateTime NuevaFechaDesde,
 		DateTime NuevaFechaHasta

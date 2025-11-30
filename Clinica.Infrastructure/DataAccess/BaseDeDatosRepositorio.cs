@@ -5,11 +5,11 @@ using System.Text;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Infrastructure.DtosEntidades;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
-using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
+using static Clinica.Shared.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.Infrastructure.DataAccess;
 
@@ -63,7 +63,7 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 	//-----------------------INSERT AND RETURN ID------------------
 	public async Task<Result<UsuarioId>> InsertUsuarioReturnId(
 	NombreUsuario nombre,
-	PasswordHasheado password,
+	ContraseñaHasheada password,
 	byte enumRole) {
 		try {
 			using IDbConnection conn = factory.CrearConexion();

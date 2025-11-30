@@ -1,9 +1,9 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Infrastructure.DtosEntidades;
+namespace Clinica.Shared.Dtos;
 
-public static partial class DtosEntidades {
+public static partial class DomainDtos {
 	public class HorarioMedicoDto {
 		public HorarioMedicoDto() { }
 		public HorarioMedicoDto(int id, int medicoId, int diaSemana, TimeSpan horaDesde, TimeSpan horaHasta, DateTime vigenteDesde, DateTime vigenciaHasta) {

@@ -2,9 +2,9 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Infrastructure.DtosEntidades;
 using Clinica.Infrastructure.DataAccess;
-using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
+using static Clinica.Shared.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
 
 
 namespace Clinica.Infrastructure.ServiciosAsync;

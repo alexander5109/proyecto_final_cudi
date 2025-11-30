@@ -2,8 +2,8 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Mvc;
-
-using static Clinica.WebAPI.DTOs.DtosWebAPI;
+using static Clinica.Shared.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.WebAPI.Controllers;
 

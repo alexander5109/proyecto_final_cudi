@@ -4,9 +4,9 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.ListasOrganizadoras;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Infrastructure.DtosEntidades;
+namespace Clinica.Shared.Dtos;
 
-public static partial class DtosEntidades {
+public static partial class DomainDtos {
 	public record class MedicoDto {
 		public int Id { get; set; }
 		public byte EspecialidadCodigoInterno { get; set; }

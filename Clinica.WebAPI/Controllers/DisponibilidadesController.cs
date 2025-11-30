@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Clinica.Infrastructure.ServiciosAsync;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.Comun;
-using Clinica.WebAPI.DTOs;
+using static Clinica.Shared.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
+
 
 namespace Clinica.WebAPI.Controllers;
 
