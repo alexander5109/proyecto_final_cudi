@@ -12,33 +12,33 @@ namespace Clinica.AppWPF {
 			this.AbrirComoDialogo<WindowLogin>();
 		}
 		private void MetodoBotonMedicos(object sender, RoutedEventArgs e) {
-			if (App.UsuarioActual?.Rol == "SECRETARY") {
+			if (App.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowListarMedicos>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioActual?.Rol == "SECRETARY") {
+				if (App.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowListarMedicos>();
 				}
 			}
 		}
 
 		private void MetodoBotonPacientes(object sender, RoutedEventArgs e) {
-			if (App.UsuarioActual?.Rol == "SECRETARY") {
+			if (App.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowListarPacientes>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioActual?.Rol == "SECRETARY") {
+				if (App.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowListarPacientes>();
 				}
 			}
 		}
 
 		private void MetodoBotonTurnos(object sender, RoutedEventArgs e) {
-			if (App.UsuarioActual?.Rol == "SECRETARY") {
+			if (App.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowListarTurnos>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioActual?.Rol == "SECRETARY") {
+				if (App.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowListarTurnos>();
 				}
 			}
@@ -62,11 +62,11 @@ namespace Clinica.AppWPF {
 		}
 
 		private void MetodoBotonTurnos2025(object sender, RoutedEventArgs e) {
-			if (App.UsuarioActual?.Rol == "SECRETARY") {
+			if (App.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowGestionTurno>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioActual?.Rol == "SECRETARY") {
+				if (App.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowGestionTurno>();
 				}
 			}

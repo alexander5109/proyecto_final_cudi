@@ -13,22 +13,22 @@ public partial class WindowListarMedicos : Window {
 
 	//----------------------ActualizarSecciones-------------------//
 	private void UpdateMedicoUI() {
-		medicosListView.ItemsSource = App.BaseDeDatos.ReadMedicos();
+		//medicosListView.ItemsSource = App.BaseDeDatos.ReadMedicos();
 		buttonModificarMedico.IsEnabled = SelectedMedico != null;
 	}
 	private void UpdateTurnoUI() {
 		if (SelectedMedico != null && SelectedMedico.Id != null) {
-			turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWhereMedicoId((int)SelectedMedico.Id);
+			//turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWhereMedicoId((int)SelectedMedico.Id);
 		}
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 	private void UpdatePacienteUI() {
-		txtPacienteDni.Text = SelectedTurno?.PacienteRelacionado.Dni;
-		txtPacienteNombre.Text = SelectedTurno?.PacienteRelacionado.Name;
-		txtPacienteApellido.Text = SelectedTurno?.PacienteRelacionado.LastName;
-		txtPacienteEmail.Text = SelectedTurno?.PacienteRelacionado.Email;
-		txtPacienteTelefono.Text = SelectedTurno?.PacienteRelacionado.Telefono;
-		buttonModificarPaciente.IsEnabled = SelectedTurno?.PacienteRelacionado != null;
+		//txtPacienteDni.Text = SelectedTurno?.PacienteRelacionado.Dni;
+		//txtPacienteNombre.Text = SelectedTurno?.PacienteRelacionado.Name;
+		//txtPacienteApellido.Text = SelectedTurno?.PacienteRelacionado.LastName;
+		//txtPacienteEmail.Text = SelectedTurno?.PacienteRelacionado.Email;
+		//txtPacienteTelefono.Text = SelectedTurno?.PacienteRelacionado.Telefono;
+		//buttonModificarPaciente.IsEnabled = SelectedTurno?.PacienteRelacionado != null;
 	}
 
 
@@ -68,9 +68,9 @@ public partial class WindowListarMedicos : Window {
 		}
 	}
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
-		if (SelectedTurno?.PacienteRelacionado != null) {
-			this.AbrirComoDialogo<WindowModificarPaciente>(SelectedTurno.PacienteRelacionado);
-		}
+		//if (SelectedTurno?.PacienteRelacionado != null) {
+		//	this.AbrirComoDialogo<WindowModificarPaciente>(SelectedTurno.PacienteRelacionado);
+		//}
 	}
 
 

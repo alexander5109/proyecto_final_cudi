@@ -6,7 +6,7 @@ namespace Clinica.AppWPF;
 
 public record UsuarioLogueadoDTO(
 	string Nombre,
-	string Rol,
+	byte RolEnum,
 	string Token
 );
 

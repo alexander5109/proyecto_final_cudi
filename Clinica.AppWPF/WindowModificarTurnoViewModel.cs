@@ -12,8 +12,8 @@ public partial class WindowModificarTurnoViewModel : ObservableObject {
 	[ObservableProperty] private DateTime? fecha = null;
 	[ObservableProperty] private string? hora = null;
 	[ObservableProperty] private int? duracionMinutos = null;
-	public WindowModificarMedicoViewModel MedicoRelacionado => App.BaseDeDatos.GetMedicoById(MedicoId ?? throw new Exception("El ID del médico es nulo."));
-	public WindowModificarPacienteViewModel PacienteRelacionado => App.BaseDeDatos.GetPacienteById(PacienteId ?? throw new Exception("El ID del paciente es nulo."));
+	//public WindowModificarMedicoViewModel MedicoRelacionado => App.BaseDeDatos.GetMedicoById(MedicoId ?? throw new Exception("El ID del médico es nulo."));
+	//public WindowModificarPacienteViewModel PacienteRelacionado => App.BaseDeDatos.GetPacienteById(PacienteId ?? throw new Exception("El ID del paciente es nulo."));
 
 	public static WindowModificarTurnoViewModel NewEmpty() => new(
 		id: default,

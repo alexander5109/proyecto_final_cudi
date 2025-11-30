@@ -11,7 +11,7 @@ public static class AppConfig {
 			if (_config is not null)
 				return _config;
 
-			var builder = new ConfigurationBuilder()
+            IConfigurationBuilder builder = new ConfigurationBuilder()
 				.SetBasePath(AppContext.BaseDirectory)
 				.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 

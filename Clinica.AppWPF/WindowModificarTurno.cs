@@ -19,7 +19,7 @@ public partial class WindowModificarTurno : Window, INotifyPropertyChanged {
 	public IEnumerable<WindowModificarPacienteViewModel> PacientesDisponibles { get; private set; } = System.Linq.Enumerable.Empty<WindowModificarPacienteViewModel>();
 	public IEnumerable<WindowModificarMedicoViewModel> MedicosDisponibles { get; private set; } = System.Linq.Enumerable.Empty<WindowModificarMedicoViewModel>();
 
-	public List<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = App.BaseDeDatos.ReadDistinctEspecialidades();
+	//public List<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = App.BaseDeDatos.ReadDistinctEspecialidades();
 
 
 
@@ -44,8 +44,8 @@ public partial class WindowModificarTurno : Window, INotifyPropertyChanged {
 	private void LLenarComboBoxes() //por defecto llenamos todos los comboboxes
 	{
 		try {
-			PacientesDisponibles = App.BaseDeDatos.ReadPacientes();
-			MedicosDisponibles = App.BaseDeDatos.ReadMedicos();
+			//PacientesDisponibles = App.BaseDeDatos.ReadPacientes();
+			//MedicosDisponibles = App.BaseDeDatos.ReadMedicos();
 		} catch {
 			PacientesDisponibles = System.Linq.Enumerable.Empty<WindowModificarPacienteViewModel>();
 			MedicosDisponibles = System.Linq.Enumerable.Empty<WindowModificarMedicoViewModel>();
@@ -56,14 +56,14 @@ public partial class WindowModificarTurno : Window, INotifyPropertyChanged {
 		//txtEspecialidades.ItemsSource = App.BaseDeDatos.ReadDistinctEspecialidades();
 
 		//txtPacientes.ItemsSource = App.BaseDeDatos.ReadPacientes();
-		//txtPacientes.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
+		//txtPacientes.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 
 		//txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicos();
-		//txtMedicos.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
+		//txtMedicos.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 	}
 	//private void txtEspecialidades_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 		//txtMedicos.SelectedValuePath = "CodigoInterno";
-		//txtMedicos.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni name y lastName. 
+		//txtMedicos.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 		//txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicosWhereEspecialidad(txtEspecialidades.SelectedItem.ToString());
 	//}
 	//---------------------botones.GuardarCambios-------------------//
@@ -75,14 +75,14 @@ public partial class WindowModificarTurno : Window, INotifyPropertyChanged {
 
 		resultado.Switch(
 			ok => {
-				bool exito;
+				bool exito = false;
 
 				if (SelectedTurno.Id is null) {
 					// _ValidarRepositorios nuevo turno
-					exito = App.BaseDeDatos.CreateTurno(SelectedTurno);
+					//exito = App.BaseDeDatos.CreateTurno(SelectedTurno);
 				} else {
 					// Actualizar existente
-					exito = App.BaseDeDatos.UpdateTurno(SelectedTurno);
+					//exito = App.BaseDeDatos.UpdateTurno(SelectedTurno);
 				}
 
 				if (exito)
@@ -116,9 +116,9 @@ public partial class WindowModificarTurno : Window, INotifyPropertyChanged {
 			return;
 		}
 		//---------Eliminar-----------//
-		if (App.BaseDeDatos.DeleteTurno(SelectedTurno)) {
-			this.Cerrar();
-		}
+		//if (App.BaseDeDatos.DeleteTurno(SelectedTurno)) {
+		//	this.Cerrar();
+		//}
 	}
 
 

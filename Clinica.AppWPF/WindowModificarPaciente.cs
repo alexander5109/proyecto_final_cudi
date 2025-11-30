@@ -31,13 +31,13 @@ public partial class WindowModificarPaciente : Window, INotifyPropertyChanged {
 		Result<Paciente2025> resultado = SelectedPaciente.ToDomain();
 		resultado.Switch(
 			ok => {
-				bool exito;
+				bool exito = false;
 				if (SelectedPaciente.Id is null) {
 					// _ValidarRepositorios nuevo paciente
-					exito = App.BaseDeDatos.CreatePaciente(SelectedPaciente);
+					//exito = App.BaseDeDatos.CreatePaciente(SelectedPaciente);
 				} else {
 					// Actualizar existente
-					exito = App.BaseDeDatos.UpdatePaciente(SelectedPaciente);
+					//exito = App.BaseDeDatos.UpdatePaciente(SelectedPaciente);
 				}
 				if (exito)
 					this.Cerrar();
@@ -57,16 +57,16 @@ public partial class WindowModificarPaciente : Window, INotifyPropertyChanged {
 	//---------------------botones.Eliminar-------------------//
 	private void ButtonEliminar(object sender, RoutedEventArgs e) {
 		App.PlayClickJewel();
-		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedPaciente.Name}",
+		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedPaciente.Nombre}",
 			"Confirmar Eliminación",
 			MessageBoxButton.OKCancel,
 			MessageBoxImage.Warning
 		) != MessageBoxResult.OK) {
 			return;
 		}
-		if (App.BaseDeDatos.DeletePaciente(SelectedPaciente)) {
-			this.Cerrar(); // this.NavegarA<WindowListarMedicos>();
-		}
+		//if (App.BaseDeDatos.DeletePaciente(SelectedPaciente)) {
+			//this.Cerrar(); // this.NavegarA<WindowListarMedicos>();
+		//}
 	}
 	//---------------------botones.Salida-------------------//
 	private void ButtonCancelar(object sender, RoutedEventArgs e) {

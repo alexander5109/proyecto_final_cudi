@@ -9,26 +9,13 @@ namespace Clinica.AppWPF;
 public partial class WindowLogin : Window {
 	private readonly WindowLoginViewModel viewModel;
 	public WindowLogin() {
-
 		InitializeComponent();
 		soundCheckBox.IsChecked = App.SoundOn;
 		viewModel = new WindowLoginViewModel(Api.Cliente);
 		DataContext = viewModel;
 	}
 
-
 	private async void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
-
-		//if (checkboxJSON.IsChecked == true) {
-		//App.BaseDeDatos = new BaseDeDatosJSON();
-		//} else if ( ValidarCamposVacios() ) {
-		//if (ValidarCamposVacios()) => App.BaseDeDatos = new BaseDeDatosWebAPI();
-		//} else {
-		//App.BaseDeDatos = new BaseDeDatosSQL($"Server={labelServidor.Text};Database=ClinicaMedica;User ID={guiUsuario.Text};Password={guiPassword.Text};");
-		//App.UsuarioLogueado = App.BaseDeDatos.ConectadaExitosamente;
-		//if (App.UsuarioLogueado) {
-		//	this.Cerrar();
-		//}
 
 		viewModel.Usuario = guiUsuario.Text;
 		viewModel.Password = guiPassword.Password;
@@ -48,6 +35,7 @@ public partial class WindowLogin : Window {
 			new AuthenticationHeaderValue("Bearer", usuario.Token);
 
 		App.UsuarioActual = usuario;
+		App.BaseDeDatos = new BaseDeDatosWebAPI();
 		this.Cerrar();
 	}
 
@@ -58,7 +46,6 @@ public partial class WindowLogin : Window {
 	private void MetodoBotonCancelar(object sender, RoutedEventArgs e) {
 		this.Cerrar();
 	}
-
 	private void soundCheckBox_Checked(object sender, RoutedEventArgs e) {
 		if (soundCheckBox.IsChecked == true) {
 			App.SoundOn = true;

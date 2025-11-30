@@ -7,7 +7,6 @@ namespace Clinica.Dominio.Entidades;
 
 public readonly record struct UsuarioId(int Valor);
 public readonly record struct NombreUsuario(string Valor);
-
 public readonly record struct PasswordHasheado(string Valor) {
 	public static PasswordHasheado CrearFromRaw(string raw) {
 		var hash = SHA256.HashData(Encoding.UTF8.GetBytes(raw));

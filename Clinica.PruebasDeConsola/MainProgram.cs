@@ -56,8 +56,8 @@ public static class MainProgram {
 			DateTime.Now,
 			4
 		)).PrintAndContinue("Disponbiildiades encontradas::");
-		var lista = disponibilidades.GetOrRaise();
-		foreach (var d in lista)
+        IReadOnlyList<DisponibilidadEspecialidad2025> lista = disponibilidades.GetOrRaise();
+		foreach (DisponibilidadEspecialidad2025 d in lista)
 			Console.WriteLine(d.ATexto());
 
 		// Caso de uso 2

@@ -32,13 +32,13 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 
 		resultado.Switch(
 			ok => {
-				bool exito;
+				bool exito = false;
 				if (SelectedMedico.Id is null) {
 					// _ValidarRepositorios nuevo médico
-					exito = App.BaseDeDatos.CreateMedico(SelectedMedico);
+					//exito = App.BaseDeDatos.CreateMedico(SelectedMedico);
 				} else {
 					// Actualizar médico existente
-					exito = App.BaseDeDatos.UpdateMedico(SelectedMedico);
+					//exito = App.BaseDeDatos.UpdateMedico(SelectedMedico);
 				}
 				if (exito)
 					this.Cerrar();
@@ -59,9 +59,9 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedMedico.Name}", "Confirmar Eliminación", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK) {
 			return;
 		}
-		if (App.BaseDeDatos.DeleteMedico(SelectedMedico)) {
-			this.Cerrar(); // this.NavegarA<WindowListarMedicos>();
-		}
+		//if (App.BaseDeDatos.DeleteMedico(SelectedMedico)) {
+		//	this.Cerrar(); // this.NavegarA<WindowListarMedicos>();
+		//}
 	}
 
 	//---------------------botones.Salida-------------------//

@@ -14,25 +14,25 @@ public partial class WindowListarTurnos : Window {
 
 	//----------------------ActualizarSecciones-------------------//
 	private void UpdateTurnoUI() {
-		turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnos();
+		//turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnos();
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 		txtCalendario.SelectedDate = SelectedTurno?.Fecha;
 		txtCalendario.DisplayDate = SelectedTurno?.Fecha ?? DateTime.Today;
 	}
 	private void UpdateMedicoUI() {
-		txtMedicoDni.Text = SelectedTurno?.MedicoRelacionado?.Dni;
-		txtMedicoNombre.Text = SelectedTurno?.MedicoRelacionado?.Name;
-		txtMedicoApellido.Text = SelectedTurno?.MedicoRelacionado?.LastName;
-		txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado?.EspecialidadCodigoInterno.ToString();
-		buttonModificarMedico.IsEnabled = SelectedTurno?.MedicoRelacionado != null;
+		//txtMedicoDni.Text = SelectedTurno?.MedicoRelacionado?.Dni;
+		//txtMedicoNombre.Text = SelectedTurno?.MedicoRelacionado?.Name;
+		//txtMedicoApellido.Text = SelectedTurno?.MedicoRelacionado?.LastName;
+		//txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado?.EspecialidadCodigoInterno.ToString();
+		//buttonModificarMedico.IsEnabled = SelectedTurno?.MedicoRelacionado != null;
 	}
 	private void UpdatePacienteUI() {
-		txtPacienteDni.Text = SelectedTurno?.PacienteRelacionado.Dni;
-		txtPacienteNombre.Text = SelectedTurno?.PacienteRelacionado.Name;
-		txtPacienteApellido.Text = SelectedTurno?.PacienteRelacionado.LastName;
-		txtPacienteEmail.Text = SelectedTurno?.PacienteRelacionado.Email;
-		txtPacienteTelefono.Text = SelectedTurno?.PacienteRelacionado.Telefono;
-		buttonModificarPaciente.IsEnabled = SelectedTurno?.PacienteRelacionado != null;
+		//txtPacienteDni.Text = SelectedTurno?.PacienteRelacionado.Dni;
+		//txtPacienteNombre.Text = SelectedTurno?.PacienteRelacionado.Name;
+		//txtPacienteApellido.Text = SelectedTurno?.PacienteRelacionado.LastName;
+		//txtPacienteEmail.Text = SelectedTurno?.PacienteRelacionado.Email;
+		//txtPacienteTelefono.Text = SelectedTurno?.PacienteRelacionado.Telefono;
+		//buttonModificarPaciente.IsEnabled = SelectedTurno?.PacienteRelacionado != null;
 	}
 
 
@@ -62,14 +62,14 @@ public partial class WindowListarTurnos : Window {
 		}
 	}
 	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
-		if (SelectedTurno?.MedicoRelacionado != null) {
-			this.AbrirComoDialogo<WindowModificarMedico>(SelectedTurno.MedicoRelacionado);
-		}
+		//if (SelectedTurno?.MedicoRelacionado != null) {
+		//	this.AbrirComoDialogo<WindowModificarMedico>(SelectedTurno.MedicoRelacionado);
+		//}
 	}
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
-		if (SelectedTurno?.PacienteRelacionado != null) {
-			this.AbrirComoDialogo<WindowModificarPaciente>(SelectedTurno.PacienteRelacionado);
-		}
+		//if (SelectedTurno?.PacienteRelacionado != null) {
+		//	this.AbrirComoDialogo<WindowModificarPaciente>(SelectedTurno.PacienteRelacionado);
+		//}
 	}
 
 

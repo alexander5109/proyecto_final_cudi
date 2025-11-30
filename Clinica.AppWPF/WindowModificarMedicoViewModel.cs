@@ -77,10 +77,10 @@ public partial class WindowModificarMedicoViewModel : ObservableObject {
 	public static WindowModificarMedicoViewModel NewEmpty() => new(
 		[],
 		default,   // id
-		string.Empty,   // name
-		string.Empty,   // lastName
+		string.Empty,   // nombre
+		string.Empty,   // apellido
 		string.Empty,   // dni
-		string.Empty,   // provincia
+		string.Empty,   // provinciaCodigo
 		string.Empty,   // domicilio
 		string.Empty,   // localidad
 		default,   // especialidadCodigoInterno
