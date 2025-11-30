@@ -100,7 +100,7 @@ public partial class App : Application {
 			//if (App.BaseDeDatos is BaseDeDatosJSON) {
 			//label.Content = "Modo JSON";
 			//} else if (App.BaseDeDatos is BaseDeDatosWebAPI) {
-			label.Content = "Modo SQL";
+			label.Content = "Modo API";
 		} else {
 			label.Content = "Elegir DB Modo";
 		}

@@ -18,7 +18,7 @@ public partial class WindowListarMedicos : Window {
 	}
 	private void UpdateTurnoUI() {
 		if (SelectedMedico != null && SelectedMedico.Id != null) {
-			//turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWhereMedicoId((int)SelectedMedico.Id);
+			//turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWhereMedicoId((int)MedicoRelacionado.Id);
 		}
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}

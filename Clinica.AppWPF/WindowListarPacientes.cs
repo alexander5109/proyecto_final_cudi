@@ -1,27 +1,28 @@
-﻿using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.ViewModels;
+﻿using System.Net.Http.Json;
 using System.Windows;
 using System.Windows.Controls;
+using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.ViewModels;
 
 namespace Clinica.AppWPF;
 
 public partial class WindowListarPacientes : Window {
-	private static WindowModificarTurnoViewModel? SelectedTurno;
-	private static WindowModificarPacienteViewModel? SelectedPaciente;
+	private TurnoListDto? SelectedTurno; // instead of PacienteListDto?
+	private PacienteListDto? SelectedPaciente; // instead of WindowModificarPacienteViewModel?
+	private MedicoListDto? MedicoRelacionado; // instead of WindowModificarPacienteViewModel?
 	private bool _isLoadingPacientes = false;
-	private bool IsBusy = false;
+	//private bool IsBusy = false;
 	public WindowListarPacientes() {
 		InitializeComponent();
 	}
-
 	//----------------------ActualizarSecciones-------------------//
 	private async Task UpdatePacienteUIAsync() {
 		if (_isLoadingPacientes) return; // evita reentrada
 		_isLoadingPacientes = true;
 		try {
-			// Si querés mostrar un spinner:
-			IsBusy = true;
-			var pacientes = await App.BaseDeDatos.ReadPacientes();
+			//IsBusy = true;
+			//List<WindowModificarPacienteViewModel> pacientes = await App.BaseDeDatos.ReadPacientes();
+			List<PacienteListDto> pacientes = await Api.Cliente.GetFromJsonAsync<List<PacienteListDto>>("api/pacientes/list");
 			pacientesListView.ItemsSource = pacientes;
 
 			// Actualizar enabled/selected depende del ItemsSource y SelectedPaciente
@@ -30,54 +31,57 @@ public partial class WindowListarPacientes : Window {
 			// Manejo de errores centralizado: log / MessageBox
 			MessageBox.Show($"Error cargando pacientes: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 		} finally {
-			IsBusy = false;
+			//IsBusy = false;
 			_isLoadingPacientes = false;
 		}
 	}
-	private void UpdateTurnoUI() {
-		if (SelectedPaciente != null && SelectedPaciente.Id != null) {
-			//turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWherePacienteId((int)SelectedPaciente.Id);
+	private async Task UpdateTurnosUIAsync() {
+		if (pacientesListView.SelectedItem is PacienteListDto paciente) {
+			turnosListView.ItemsSource =
+				await Api.Cliente.GetFromJsonAsync<List<TurnoListDto>>(
+					$"api/pacientes/{paciente.Id}/turnos"
+				);
 		}
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
-	private void UpdateMedicoUI() {
-		//txtMedicoDni.Text = SelectedTurno?.MedicoRelacionado.Dni;
-		//txtMedicoNombre.Text = SelectedTurno?.MedicoRelacionado.Name;
-		//txtMedicoApellido.Text = SelectedTurno?.MedicoRelacionado.LastName;
-		//txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado?.EspecialidadCodigoInterno.ToString();
-		//buttonModificarMedico.IsEnabled = SelectedTurno?.MedicoRelacionado != null;
+	private async Task UpdateMedicoUIAsync() {
+		if (turnosListView.SelectedItem is TurnoListDto turno) {
+			MedicoListDto? medico =
+				await Api.Cliente.GetFromJsonAsync<MedicoListDto>(
+					$"api/medicos/{turno.MedicoId}"
+				);
+
+			txtMedicoDni.Text = medico?.Dni;
+			txtMedicoNombre.Text = medico?.Nombre;
+			txtMedicoApellido.Text = medico?.Apellido;
+			txtMedicoEspecialidad.Text = medico?.EspecialidadCodigoInterno.ToString();
+			buttonModificarMedico.IsEnabled = medico != null;
+		}
 	}
 
-
-
-
 	//----------------------EventosRefresh-------------------//
+	private async void Window_Loaded(object sender, RoutedEventArgs e) {
+		await UpdatePacienteUIAsync();
+	}
+
 	private async void Window_ActivatedAsync(object sender, EventArgs e) {
 		try {
 			App.UpdateLabelDataBaseModo(this.labelBaseDeDatosModo);
-
-			// Espera a que terminen las cargas (si hay varias, puedes hacerlas en paralelo)
 			await UpdatePacienteUIAsync();
-
-			// Si UpdateTurnoUI y UpdateMedicoUI son síncronas, se llaman normalmente:
-			UpdateTurnoUI();
-			UpdateMedicoUI();
+			await UpdateTurnosUIAsync();
+			await UpdateMedicoUIAsync();
 		} catch (Exception ex) {
-			// Atrapá excepciones aquí (async void propaga excepciones al SyncContext si no se capturan)
 			MessageBox.Show($"Error en Activated: {ex.Message}");
 		}
 	}
 	private async void ListViewTurnos_SelectionChangedAsync(object sender, SelectionChangedEventArgs e) {
-		SelectedTurno = (WindowModificarTurnoViewModel)turnosListView.SelectedItem;
-		await UpdatePacienteUIAsync();
-		UpdateTurnoUI();
-		UpdateMedicoUI();
+		SelectedTurno = (TurnoListDto)turnosListView.SelectedItem;
+		await UpdateMedicoUIAsync();
 	}
 	private async void ListViewPacientes_SelectionChangedAsync(object sender, SelectionChangedEventArgs e) {
-		SelectedPaciente = (WindowModificarPacienteViewModel)pacientesListView.SelectedItem;
-		UpdateMedicoUI();
-		UpdateTurnoUI();
-		await UpdatePacienteUIAsync();
+		SelectedPaciente = (PacienteListDto)pacientesListView.SelectedItem;
+		await UpdateTurnosUIAsync();
+		await UpdateMedicoUIAsync(); // opcional, si un turno estaba seleccionado
 	}
 
 
@@ -90,9 +94,9 @@ public partial class WindowListarPacientes : Window {
 		}
 	}
 	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
-		//if (SelectedTurno?.MedicoRelacionado != null) {
-		//	this.AbrirComoDialogo<WindowModificarMedico>(SelectedTurno?.MedicoRelacionado!);
-		//}
+		if (MedicoRelacionado != null) {
+			this.AbrirComoDialogo<WindowModificarMedico>(MedicoRelacionado);
+		}
 	}
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
 		if (SelectedPaciente != null) {
@@ -109,13 +113,11 @@ public partial class WindowListarPacientes : Window {
 		this.AbrirComoDialogo<WindowModificarMedico>();
 	}
 	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<WindowModificarPaciente>(); // this.NavegarA<WindowModificarPaciente>();
+		this.AbrirComoDialogo<WindowModificarPaciente>();
 	}
 	private void ButtonAgregarTurno(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<WindowModificarMedico>();
+		this.AbrirComoDialogo<WindowModificarTurno>();
 	}
-
-
 
 
 
