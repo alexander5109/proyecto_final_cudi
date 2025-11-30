@@ -1,6 +1,8 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.TiposDeValor;
+using static Clinica.Dominio.Dtos.DomainDtos;
 
 
 namespace Clinica.Dominio.Servicios;
@@ -15,90 +17,109 @@ public static class ServiciosPublicos {
 
 
 
+	public static async Task<Result<Turno2025>> SolicitarCancelacion(Result<Turno2025> turnoOriginalResult, DateTime outcomeFecha, string outcomeComentario, IBaseDeDatosRepositorio repositorio) {
+		switch (turnoOriginalResult) {
+			case Result<Turno2025>.Error turnoError: {
+				return new Result<Turno2025>.Error($"SolicitarCancelacion fallido porque turno ya traia error: \n{turnoError.Mensaje}");
+			}
+			case Result<Turno2025>.Ok turnoOk: {
+				IEnumerable<MedicoDto> medicosDtos = await repositorio.SelectMedicosWhereEspecialidad(turnoOk.Valor.Especialidad);
+				return await ServiciosPublicos.SolicitarCancelacion(
+					turnoOk.Valor,
+					outcomeFecha,
+					outcomeComentario,
+					funcUpdateTurnoWhereId: repositorio.UpdateTurnoWhereId
+				);
+			}
+			default: throw new InvalidOperationException(); //impossible to occur
+		}
+	}
 
 
 	public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> SolicitarDisponibilidadesPara(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		int cuantos,
-		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosProgramadosBetweenFechasWhereMedicoId
+		IBaseDeDatosRepositorio repositorio
 	) {
-		IReadOnlyList<DisponibilidadEspecialidad2025> disponibles = [.. ServiciosPrivados.GenerarDisponibilidades(
+		var lista = new List<DisponibilidadEspecialidad2025>(capacity: cuantos);
+
+		await foreach (var disp in ServiciosPrivados.GenerarDisponibilidades(
 			solicitudEspecialidad,
 			solicitudFechaCreacion,
-			funcSelectMedicosWhereEspecialidad,
-			funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
-			funcSelectTurnosProgramadosBetweenFechasWhereMedicoId
-		)
-			.OrderBy(d => d.FechaHoraDesde)
-			.Take(cuantos)];
-		if (disponibles.Count > 0) {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok(disponibles);
+			repositorio
+		)) {
+			lista.Add(disp);
+
+			if (lista.Count >= cuantos)
+				break;
+		}
+
+		if (lista.Count > 0) {
+			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok(lista);
 		} else {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error("No se encontraron proximaDisponibilidad");
+			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error(
+				"No se encontraron disponibilidades."
+			);
 		}
 	}
+
 
 	public static async Task<Result<Turno2025>> SolicitarTurnoEnLaPrimeraDisponibilidad(
 		PacienteId pacienteId,
 		EspecialidadMedica2025 solicitudEspecialidad,
 		FechaRegistro2025 solicitudFechaCreacion,
-		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosProgramadosBetweenFechasWhereMedicoId,
-		Func<Turno2025, Task<Result<TurnoId>>> funcInsertTurnoReturnId
+		IBaseDeDatosRepositorio repositorio
 	) {
-		Result<DisponibilidadEspecialidad2025> dispResult = ServiciosPrivados.EncontrarProximaDisponibilidad(
-			solicitudEspecialidad,
-			solicitudFechaCreacion.Valor,
-			funcSelectMedicosWhereEspecialidad,
-			funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
-			funcSelectTurnosProgramadosBetweenFechasWhereMedicoId
-		);
+		// 1. Buscar próxima disponibilidad
+		Result<DisponibilidadEspecialidad2025> dispResult =
+			await ServiciosPrivados.EncontrarProximaDisponibilidad(
+				solicitudEspecialidad,
+				solicitudFechaCreacion.Valor,
+				repositorio
+			);
 
-		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error e1)
-			return new Result<Turno2025>.Error(e1.Mensaje);
+		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error errDisp)
+			return new Result<Turno2025>.Error(errDisp.Mensaje);
 
+		DisponibilidadEspecialidad2025 disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
+
+		// 2. Crear turno provisorio desde el dominio
 		Result<Turno2025> turnoResult = Turno2025.ProgramarNuevo(
-			new TurnoId(-1),
+			new TurnoId(-1),            // provisional
 			pacienteId,
 			solicitudFechaCreacion,
-			dispResult.UnwrapAsOk()
+			disp
 		);
 
-		if (turnoResult is Result<Turno2025>.Error e2)
-			return new Result<Turno2025>.Error(e2.Mensaje);
+		if (turnoResult is Result<Turno2025>.Error errTurno)
+			return new Result<Turno2025>.Error(errTurno.Mensaje);
 
 		Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)turnoResult).Valor;
 
-		Result<TurnoId> insertResult = await funcInsertTurnoReturnId(turnoProvisorio);
+		// 3. Persistir en la BD (insert que devuelve el TurnoId)
+		Result<TurnoId> insertResult = await repositorio.InsertTurnoReturnId(turnoProvisorio);
 
-		if (insertResult is Result<TurnoId>.Error e3)
-			return new Result<Turno2025>.Error(
-				$"Error al persistir el nuevo turno: {e3.Mensaje}"
-			);
+		if (insertResult is Result<TurnoId>.Error errPersist)
+			return new Result<Turno2025>.Error($"Error al persistir el nuevo turno: {errPersist.Mensaje}");
 
 		TurnoId idReal = ((Result<TurnoId>.Ok)insertResult).Valor;
 
-		return new Result<Turno2025>.Ok(
-			turnoProvisorio with { Id = idReal }
-		);
+		// 4. Devolver el turno ya con su ID real seteado
+		return new Result<Turno2025>.Ok(turnoProvisorio with { Id = idReal });
 	}
 
 
 
 	public static async Task<Result<Turno2025>> SolicitarReprogramacionALaPrimeraDisponibilidad(
-		Turno2025 turnoOriginal,
+		Result<Turno2025> turnoOriginalResult,
 		DateTime outcomeFecha,
 		string outcomeComentario,
-		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosWhereMedicoIdBetweenFechas,
-		Func<Turno2025, Task<Result<Unit>>> funcUpdateTurnoWhereId,
-		Func<Turno2025, Task<Result<TurnoId>>> funcInsertTurnoReturnId
+		IBaseDeDatosRepositorio repositorio
 	) {
+		if (turnoOriginalResult.IsError) return turnoOriginalResult;
+        Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
+
 		Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
 			TurnoOutcomeEstado2025.Reprogramado,
 			outcomeFecha,
@@ -111,7 +132,7 @@ public static class ServiciosPublicos {
 		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
 
 
-		Result<Unit> updateResult = await funcUpdateTurnoWhereId(turnoCancelado);
+		Result<Unit> updateResult = await repositorio.UpdateTurnoWhereId(turnoCancelado);
 
 		if (updateResult is Result<Unit>.Error e2)
 			return new Result<Turno2025>.Error(
@@ -119,12 +140,10 @@ public static class ServiciosPublicos {
 			);
 
 
-		Result<DisponibilidadEspecialidad2025> dispResult = ServiciosPrivados.EncontrarProximaDisponibilidad(
+		Result<DisponibilidadEspecialidad2025> dispResult = await ServiciosPrivados.EncontrarProximaDisponibilidad(
 			turnoOriginal.Especialidad,
 			outcomeFecha,
-			funcSelectMedicosWhereEspecialidad,
-			funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
-			funcSelectTurnosWhereMedicoIdBetweenFechas
+			repositorio
 		);
 
 		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error e3)
@@ -144,7 +163,7 @@ public static class ServiciosPublicos {
 		Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)provResult).Valor;
 
 
-		Result<TurnoId> insertResult = await funcInsertTurnoReturnId(turnoProvisorio);
+		Result<TurnoId> insertResult = await repositorio.InsertTurnoReturnId(turnoProvisorio);
 
 		if (insertResult is Result<TurnoId>.Error e5)
 			return new Result<Turno2025>.Error(

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.Entidades;
 
-namespace Clinica.Shared.Dtos;
+namespace Clinica.Dominio.Dtos;
 
 public static partial class DomainDtos {
 	public record UsuarioDto(

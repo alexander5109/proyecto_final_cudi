@@ -4,19 +4,19 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.ListasOrganizadoras;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Shared.Dtos;
+namespace Clinica.Dominio.Dtos;
 
 public static partial class DomainDtos {
 	public record class MedicoDto {
-		public int Id { get; set; }
-		public byte EspecialidadCodigoInterno { get; set; }
+		public MedicoId Id { get; set; }
+		public EspecialidadCodigo2025 EspecialidadCodigoInterno { get; set; }
 		public string Dni { get; set; } = "";
 		public string Nombre { get; set; } = "";
 		public string Apellido { get; set; } = "";
 		public DateTime FechaIngreso { get; set; }
 		public string Domicilio { get; set; } = "";
 		public string Localidad { get; set; } = "";
-		public byte ProvinciaCodigo { get; set; }
+		public ProvinciaCodigo2025 ProvinciaCodigo { get; set; }
 		public string Telefono { get; set; } = "";
 		public string Email { get; set; } = "";
 		public bool HaceGuardias { get; set; }
@@ -29,7 +29,7 @@ public static partial class DomainDtos {
 		List<HorarioMedicoDto> horariosDto = JsonSerializer.Deserialize<List<HorarioMedicoDto>>(json)
 			?? [];
 		return Medico2025.Crear(
-			MedicoId.Crear(medicoDto.Id),
+			MedicoId.Crear(medicoDto.Id.Valor),
 			NombreCompleto2025.Crear(medicoDto.Nombre, medicoDto.Apellido),
 			//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
 			EspecialidadMedica2025.CrearPorCodigoInterno(medicoDto.EspecialidadCodigoInterno),
@@ -51,8 +51,8 @@ public static partial class DomainDtos {
 
 	public static MedicoDto ToDto(this Medico2025 medico) {
 		return new MedicoDto {
-			Id = medico.Id.Valor,
-			EspecialidadCodigoInterno = medico.EspecialidadUnica.CodigoInterno.Valor,
+			Id = medico.Id,
+			EspecialidadCodigoInterno = medico.EspecialidadUnica.CodigoInternoValor,
 			Dni = medico.Dni.Valor,
 			Nombre = medico.NombreCompleto.NombreValor,
 			Apellido = medico.NombreCompleto.ApellidoValor,

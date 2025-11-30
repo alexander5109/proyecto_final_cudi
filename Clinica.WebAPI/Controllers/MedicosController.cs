@@ -1,7 +1,7 @@
 ﻿using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Shared.Dtos.DomainDtos;
-using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Dominio.Dtos.DomainDtos;
+using static Clinica.Dominio.Dtos.ApiDtos;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

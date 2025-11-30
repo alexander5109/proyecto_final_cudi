@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Clinica.Dominio\Clinica.Dominio.csproj" />
-    <ProjectReference Include="..\Clinica.Shared\Clinica.Shared.csproj" />
   </ItemGroup>
 
 </Project>

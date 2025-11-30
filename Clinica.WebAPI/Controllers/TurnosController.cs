@@ -3,8 +3,8 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Shared.Dtos.DomainDtos;
-using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Dominio.Dtos.DomainDtos;
+using static Clinica.Dominio.Dtos.ApiDtos;
 
 
 namespace Clinica.WebAPI.Controllers;

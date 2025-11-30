@@ -11,7 +11,7 @@ public static class AsyncRepositorioHardCoded  {
 		Medico2025.Crear(
 				MedicoId.Crear(1),
 				NombreCompleto2025.Crear("Carlos Alfredo", "Markier"),
-				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Gastroenterologo.CodigoInterno.Valor),
+				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Gastroenterologo.CodigoInternoValor),
 				//ListaEspecialidadesMedicas2025.Crear([
 				//	EspecialidadMedica2025.Gastroenterologo,
 				//	EspecialidadMedica2025.ClinicoGeneral
@@ -52,7 +52,7 @@ public static class AsyncRepositorioHardCoded  {
 			Medico2025.Crear(
 				MedicoId.Crear(2),
 				NombreCompleto2025.Crear("Jorge", "Pereyra"),
-				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Ginecologo.CodigoInterno.Valor),
+				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Ginecologo.CodigoInternoValor),
 				//ListaEspecialidadesMedicas2025.Crear([
 				//	EspecialidadMedica2025.Pediatra,
 				//	EspecialidadMedica2025.Ginecologo
@@ -93,7 +93,7 @@ public static class AsyncRepositorioHardCoded  {
 			Medico2025.Crear(
 				MedicoId.Crear(3),
 				NombreCompleto2025.Crear("Marta", "Algerich"),
-				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Neurologo.CodigoInterno.Valor),
+				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Neurologo.CodigoInternoValor),
 				//ListaEspecialidadesMedicas2025.Crear([
 					//new Result.Ok<EspecialidadMedica2025>(EspecialidadMedica2025.Neurologo),
 					//EspecialidadMedica2025.Osteopata

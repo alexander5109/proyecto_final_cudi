@@ -57,13 +57,13 @@ public partial class WindowModificarMedicoViewModel : ObservableObject {
 	//public ViewModelEspecialidadMedica EspecialidadRelacionada {
 	//	get {
 	//		try {
-	//			if (EspecialidadCodigoInterno is null)
+	//			if (EspecialidadCodigo2025 is null)
 	//				throw new Exception("El ID del paciente es nulo.");
-	//			return EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadCodigoInterno);
-	//			return App.BaseDeDatos.DictEspecialidades[(int)EspecialidadCodigoInterno];
+	//			return EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadCodigo2025);
+	//			return App.BaseDeDatos.DictEspecialidades[(int)EspecialidadCodigo2025];
 	//		} catch (Exception ex) {
 	//			MessageBox.Show(
-	//				$"Error al obtener el paciente con ID '{EspecialidadCodigoInterno}':\n{ex.Message}",
+	//				$"Error al obtener el paciente con ID '{EspecialidadCodigo2025}':\n{ex.Message}",
 	//				"Error de acceso a datos",
 	//				MessageBoxButton.OK,
 	//				MessageBoxImage.Error
@@ -132,7 +132,7 @@ public partial class WindowModificarMedicoViewModel : ObservableObject {
 		//return Medico2025.Crear(
 		//	NombreCompleto2025.Crear(this.Name, this.LastName),
 		//	EspecialidadMedica2025.CrearPorCodigoInterno(
-		//		this.EspecialidadCodigoInterno
+		//		this.EspecialidadCodigo2025
 		//	//EspecialidadMedica2025.RamasDisponibles.First()
 		//	),
 		//	DniArgentino2025.Crear(this.Dni),

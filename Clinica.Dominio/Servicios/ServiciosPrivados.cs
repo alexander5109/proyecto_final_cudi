@@ -1,6 +1,8 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.TiposDeValor;
+using static Clinica.Dominio.Dtos.DomainDtos;
 
 namespace Clinica.Dominio.Servicios;
 
@@ -39,76 +41,172 @@ internal static class ServiciosPrivados {
 		}
 	}
 
-	internal static Result<DisponibilidadEspecialidad2025> EncontrarProximaDisponibilidad(
+	internal static async Task<Result<DisponibilidadEspecialidad2025>> EncontrarProximaDisponibilidad(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
-		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosProgramadosBetweenFechasWhereMedicoId
+		IBaseDeDatosRepositorio repositorio
 	) {
-		DisponibilidadEspecialidad2025? proxima = GenerarDisponibilidades(
+		await foreach (var disp in GenerarDisponibilidades(
 			solicitudEspecialidad,
 			solicitudFechaCreacion,
-			funcSelectMedicosWhereEspecialidad,
-			funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
-			funcSelectTurnosProgramadosBetweenFechasWhereMedicoId
-		).FirstOrDefault();
-		if (proxima is null)
-			return new Result<DisponibilidadEspecialidad2025>.Error("No se encontraron proximaDisponibilidad");
-		return new Result<DisponibilidadEspecialidad2025>.Ok((DisponibilidadEspecialidad2025)proxima);
+			repositorio
+		)) {
+			// First element wins → return immediately
+			return new Result<DisponibilidadEspecialidad2025>.Ok(disp);
+		}
+
+		return new Result<DisponibilidadEspecialidad2025>.Error(
+			"No se encontró ninguna disponibilidad."
+		);
 	}
 
-	internal static IEnumerable<DisponibilidadEspecialidad2025> GenerarDisponibilidades(
-		EspecialidadMedica2025 solicitudEspecialidad,
-		DateTime solicitudFechaCreacion,
-		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
-		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosProgramadosBetweenFechasWhereMedicoId
+	public static async Task<DateTime?> CalcularPrimerSlotDisponible(
+		MedicoId medicoId,
+		EspecialidadMedica2025 especialidad,
+		IBaseDeDatosRepositorio repositorio
 	) {
-		foreach (Medico2025 medico in funcSelectMedicosWhereEspecialidad(solicitudEspecialidad)) {
+		int duracion = especialidad.DuracionConsultaMinutos;
 
-			int duracion = solicitudEspecialidad.DuracionConsultaMinutos;
-			int semanas = 30;
-			DateTime desdeBusqueda = solicitudFechaCreacion.Date;
-			DateTime hastaBusqueda = solicitudFechaCreacion.Date.AddDays(7 * semanas);
+		DateTime desdeBusqueda = DateTime.Now.Date;
+		DateTime hastaBusqueda = desdeBusqueda.AddDays(7 * 30); // 30 semanas
 
-			List<Turno2025> turnos = [
-				.. funcSelectTurnosProgramadosBetweenFechasWhereMedicoId(
-				medico.Id, desdeBusqueda, hastaBusqueda)
-			];
+		// 1. Cargar turnos del médico en el rango
+		var turnos = (await repositorio.SelectTurnosProgramadosBetweenFechasWhereMedicoId(
+			medicoId, desdeBusqueda, hastaBusqueda)).ToList();
 
-			foreach (HorarioMedico2025 franja in funcSelectHorariosVigentesBetweenFechasWhereMedicoId(medico.Id, desdeBusqueda, hastaBusqueda)) {
+		// 2. Cargar sus horarios vigentes
+		var franjas = (await repositorio.SelectHorariosVigentesBetweenFechasWhereMedicoId(
+			medicoId, desdeBusqueda, hastaBusqueda)).ToList();
 
-				DateTime fecha = desdeBusqueda;
-				while (fecha.DayOfWeek != franja.DiaSemana.Valor)
-					fecha = fecha.AddDays(1);
+		foreach (var franja in franjas) {
+			// Ubicar primer día coincidente con el DíaSemana de la franja
+			DateTime fecha = desdeBusqueda;
+			while (fecha.DayOfWeek != franja.DiaSemana)
+				fecha = fecha.AddDays(1);
 
-				for (int semana = 0; semana < semanas; semana++, fecha = fecha.AddDays(7)) {
+			// 3. Iterar por semanas
+			for (int semana = 0; semana < 30; semana++, fecha = fecha.AddDays(7)) {
+				DateTime desde = fecha + franja.HoraDesde;
+				DateTime hasta = fecha + franja.HoraHasta;
 
-					DateTime desde = fecha + franja.Desde.Valor.ToTimeSpan();
-					DateTime hasta = fecha + franja.Hasta.Valor.ToTimeSpan();
+				if (hasta <= DateTime.Now)
+					continue;
 
-					if (desde < DateTime.Now)
+				// 4. Iterar slots dentro de la franja
+				for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
+					DateTime slotHasta = slot.AddMinutes(duracion);
+
+					if (slotHasta <= DateTime.Now)
 						continue;
 
-					for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
+					bool solapa = false;
 
-						DisponibilidadEspecialidad2025 disp = new(
-							solicitudEspecialidad, medico.Id,
-							slot, slot.AddMinutes(duracion));
-
-						bool solapa = turnos.Any(t =>
-							t.Especialidad == disp.Especialidad &&
-							t.OutcomeEstadoOption == TurnoOutcomeEstado2025.Programado &&
-							t.FechaHoraAsignadaDesdeValor < disp.FechaHoraHasta &&
-							disp.FechaHoraDesde < t.FechaHoraAsignadaHastaValor
-						);
-
-						if (!solapa)
-							yield return disp;
+					foreach (var t in turnos) {
+						if (t.EspecialidadCodigo == especialidad.CodigoInternoValor &&
+							t.OutcomeEstado == TurnoOutcomeEstado2025.Programado.Codigo &&
+							t.FechaHoraAsignadaDesde < slotHasta &&
+							slot < t.FechaHoraAsignadaHasta) {
+							solapa = true;
+							break;
+						}
 					}
+
+					if (!solapa)
+						return slot;
+				}
+			}
+		}
+
+		return null; // no hay turnos disponibles
+	}
+
+	internal static async IAsyncEnumerable<DisponibilidadEspecialidad2025> GenerarDisponibilidades(
+		EspecialidadMedica2025 solicitudEspecialidad,
+		DateTime solicitudFechaCreacion,
+		IBaseDeDatosRepositorio repositorio
+	) {
+		var medicos = await repositorio.SelectMedicosWhereEspecialidad(solicitudEspecialidad);
+
+		var medicosConPrioridad = new List<(MedicoDto medico, DateTime? firstSlot)>();
+
+		foreach (var medico in medicos) {
+			DateTime? first = await CalcularPrimerSlotDisponible(
+				new MedicoId(medico.Id.Valor),
+				solicitudEspecialidad,
+				repositorio);
+
+			medicosConPrioridad.Add((medico, first));
+		}
+
+		// Ordenar nulls últimos
+		foreach (var x in medicosConPrioridad
+			.OrderBy(x => x.firstSlot ?? DateTime.MaxValue)) {
+			if (x.firstSlot is null)
+				continue;
+
+			// Generar slots para este médico
+			await foreach (var disp in GenerarDisponibilidadesDeMedico(
+				solicitudEspecialidad, solicitudFechaCreacion, x.medico, repositorio)) {
+				yield return disp;
+			}
+		}
+	}
+
+
+
+	private static async IAsyncEnumerable<DisponibilidadEspecialidad2025> GenerarDisponibilidadesDeMedico(
+		EspecialidadMedica2025 solicitudEspecialidad,
+		DateTime solicitudFechaCreacion,
+		MedicoDto medico,
+		IBaseDeDatosRepositorio repositorio
+	) {
+		int duracion = solicitudEspecialidad.DuracionConsultaMinutos;
+		int semanas = 30;
+
+		DateTime desdeBusqueda = solicitudFechaCreacion.Date;
+		DateTime hastaBusqueda = solicitudFechaCreacion.Date.AddDays(7 * semanas);
+
+		var turnos = (await repositorio.SelectTurnosProgramadosBetweenFechasWhereMedicoId(
+			new MedicoId(medico.Id.Valor), desdeBusqueda, hastaBusqueda)).ToList();
+
+		var franjas = (await repositorio.SelectHorariosVigentesBetweenFechasWhereMedicoId(
+			new MedicoId(medico.Id.Valor), desdeBusqueda, hastaBusqueda)).ToList();
+
+		foreach (var franja in franjas) {
+			DateTime fecha = desdeBusqueda;
+			while (fecha.DayOfWeek != franja.DiaSemana)
+				fecha = fecha.AddDays(1);
+
+			for (int semana = 0; semana < semanas; semana++, fecha = fecha.AddDays(7)) {
+				DateTime desde = fecha + franja.HoraDesde;
+				DateTime hasta = fecha + franja.HoraHasta;
+
+				if (desde < DateTime.Now)
+					continue;
+
+				for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
+					var disp = new DisponibilidadEspecialidad2025(
+						solicitudEspecialidad, medico.Id,
+						slot, slot.AddMinutes(duracion));
+
+					bool solapa = false;
+					foreach (var t in turnos) {
+						if (t.EspecialidadCodigo == disp.Especialidad.CodigoInternoValor &&
+							t.OutcomeEstado == TurnoOutcomeEstado2025.Programado.Codigo &&
+							t.FechaHoraAsignadaDesde < disp.FechaHoraHasta &&
+							disp.FechaHoraDesde < t.FechaHoraAsignadaHasta) {
+							solapa = true;
+							break;
+						}
+					}
+
+					if (!solapa)
+						yield return disp;
 				}
 			}
 		}
 	}
+
+
+
 }

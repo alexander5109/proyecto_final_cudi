@@ -8,19 +8,59 @@ using Clinica.Dominio.TiposDeValor;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
-using static Clinica.Shared.Dtos.DomainDtos;
-using static Clinica.Shared.Dtos.ApiDtos;
+using Clinica.Dominio.IRepositorios;
+using static Clinica.Dominio.Dtos.DomainDtos;
+using static Clinica.Dominio.Dtos.ApiDtos;
 
 namespace Clinica.Infrastructure.DataAccess;
 
+
+
+
+public class TurnoIdHandler : SqlMapper.TypeHandler<TurnoId> {
+	public override void SetValue(IDbDataParameter parameter, TurnoId value) {
+		parameter.Value = value.Valor; // store as int in DB
+	}
+
+	public override TurnoId Parse(object value) {
+		return new TurnoId(Convert.ToInt32(value)); // read from DB as int
+	}
+}
+
+public class MedicoIdHandler : SqlMapper.TypeHandler<MedicoId> {
+	public override void SetValue(IDbDataParameter parameter, MedicoId value) {
+		parameter.Value = value.Valor; // store as int in DB
+	}
+	public override MedicoId Parse(object value) {
+		return new MedicoId(Convert.ToInt32(value)); // read from DB as int
+	}
+}
+
+public class PacienteIdHandler : SqlMapper.TypeHandler<PacienteId> {
+	public override void SetValue(IDbDataParameter parameter, PacienteId value) {
+		parameter.Value = value.Valor; // store as int in DB
+	}
+
+	public override PacienteId Parse(object value) {
+		return new PacienteId(Convert.ToInt32(value)); // read from DB as int
+	}
+}
+
+
+
 public class SQLServerConnectionFactory(string connectionString) {
 	public IDbConnection CrearConexion() {
+
+		SqlMapper.AddTypeHandler(new TurnoIdHandler());
+		SqlMapper.AddTypeHandler(new PacienteIdHandler());
+		SqlMapper.AddTypeHandler(new MedicoIdHandler());
+
 		return new SqlConnection(connectionString);
 	}
 }
 
 
-public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string jwtKey) {
+public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string jwtKey) : IBaseDeDatosRepositorio {
 
 	public async Task<Result<UsuarioBase2025>> ValidarCredenciales(string username, string password) {
 		Result<UsuarioBase2025> resultadoUsuario = await SelectUsuarioWhereNombre(new NombreUsuario(username));
@@ -92,7 +132,7 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 			parameters.Add("@FechaDeCreacion", turno.FechaDeCreacion.Valor);
 			parameters.Add("@PacienteId", turno.PacienteId.Valor);
 			parameters.Add("@MedicoId", turno.MedicoId.Valor);
-			parameters.Add("@EspecialidadCodigo", turno.Especialidad.CodigoInterno.Valor);
+			parameters.Add("@EspecialidadCodigo", turno.Especialidad.CodigoInternoValor);
 			parameters.Add("@FechaHoraAsignadaDesde", turno.FechaHoraAsignadaDesdeValor);
 			parameters.Add("@FechaHoraAsignadaHasta", turno.FechaHoraAsignadaHastaValor);
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
@@ -116,7 +156,7 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 				"sp_UpdateTurnoWhereId",
 				new {
 					TurnoId = turno.Id.Valor,
-					OutcomeEstado = turno.OutcomeEstadoOption.Codigo.Valor,
+					OutcomeEstado = turno.OutcomeEstadoOption.Codigo,
 					OutcomeFecha = turno.OutcomeFechaOption.Valor,
 					OutcomeComentario = turno.OutcomeComentarioOption.Valor
 				},
@@ -209,13 +249,13 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 		return await conn.QueryAsync<MedicoDto>(
 			"sp_SelectMedicosWhereEspecialidad",
 			new {
-				EspecialidadCodigoInterno = especialidad.CodigoInterno.Valor
+				EspecialidadCodigoInterno = especialidad.CodigoInternoValor
 			},
 			commandType: CommandType.StoredProcedure
 		);
 	}
 
-
+	
 
 	//-----------------------SELECT * FROM TABLES------------------
 
@@ -240,7 +280,7 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 	private async Task<Result<T>> TryAsync<T>(Func<IDbConnection, Task<T>> action) {
 		try {
 			using IDbConnection conn = factory.CrearConexion();
-            T? result = await action(conn);
+			T? result = await action(conn);
 			return new Result<T>.Ok(result);
 		} catch (SqlException ex) {
 			return new Result<T>.Error($"Error SQL: {ex.Message}");
@@ -281,7 +321,7 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 
 
 
-	public Task<Result<int>> CreatePaciente(Paciente2025 paciente)
+	public Task<Result<PacienteId>> CreatePaciente(Paciente2025 paciente)
 		=> TryAsync(async conn => {
 			var parameters = new {
 				Dni = paciente.Dni.Valor,
@@ -295,11 +335,11 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 				Localidad = paciente.Domicilio.Localidad.NombreValor,
 				ProvinciaCodigo = paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
 			};
-			return await conn.ExecuteScalarAsync<int>(
+			return new PacienteId(await conn.ExecuteScalarAsync<int>(
 				"sp_CreatePaciente",
 				parameters,
 				commandType: CommandType.StoredProcedure
-			);
+			));
 		});
 
 

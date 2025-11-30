@@ -1,9 +1,8 @@
 ﻿using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Shared.Dtos;
+namespace Clinica.Dominio.Dtos;
 
 public static class ApiDtos {
-
 
 	public record PacienteListDto(
 		int Id,
@@ -64,12 +63,12 @@ public static class ApiDtos {
 		int MedicoId,
 		DateTime FechaInicio,
 		DateTime FechaFin,
-		int EspecialidadCodigoInterno
+		EspecialidadCodigo2025 EspecialidadCodigoInterno
 	);
 	public static DisponibilidadDTO ToDto(this DisponibilidadEspecialidad2025 d) => new(d.MedicoId.Valor,
 		d.FechaHoraDesde,
 		d.FechaHoraHasta,
-		d.Especialidad.CodigoInterno.Valor
+		d.Especialidad.CodigoInternoValor
 	);
 
 

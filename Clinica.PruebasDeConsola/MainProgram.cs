@@ -1,8 +1,8 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.DataAccess;
-using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.Extensions.Configuration;
 
 namespace Clinica.PruebasDeConsola;
@@ -38,14 +38,15 @@ public static class MainProgram {
 			.AddJsonFile("appsettings.Development.json")
 			.Build();
 
-		ServiciosPublicosAsync servicio = new(new BaseDeDatosRepositorio(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!), config["Jwt:Key"]! ));
+		BaseDeDatosRepositorio repositorio = new BaseDeDatosRepositorio(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!), config["Jwt:Key"]! );
 		//var response = await http.GetAsync($"/disponibilidades?especialidadCodigoInterno=3&cuantos=10");
 
 		// Caso de uso 1
-		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidades = (await servicio.SolicitarDisponibilidadesPara(
+		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidadesPara(
 			EspecialidadMedica2025.ClinicoGeneral,
 			DateTime.Now,
-			4
+			4,
+			repositorio
 		));
 		disponibilidades.PrintAndContinue("Disponbiildiades encontradas::");
 		IReadOnlyList<DisponibilidadEspecialidad2025> lista = disponibilidades.GetOrRaise();
@@ -53,26 +54,29 @@ public static class MainProgram {
 			Console.WriteLine(d.ATexto());
 
 		// Caso de uso 2
-		Result<Turno2025> turno = (await servicio.SolicitarTurnoEnLaPrimeraDisponibilidad(
+		Result<Turno2025> turno = (await ServiciosPublicos.SolicitarTurnoEnLaPrimeraDisponibilidad(
 			new PacienteId(1),
 			EspecialidadMedica2025.ClinicoGeneral,
-			new FechaRegistro2025(DateTime.Now)
+			new FechaRegistro2025(DateTime.Now),
+			repositorio
 		));
 		turno.PrintAndContinue("Turno asignado:");
 
 		// Caso de uso 3
-		Result<Turno2025> reprogramado = (await servicio.SolicitarReprogramacionALaPrimeraDisponibilidad(
+		Result<Turno2025> reprogramado = (await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
 			turno,
 			DateTime.Now.AddDays(1),
-			"Reprogramación"
+			"Reprogramación",
+			repositorio
 		));
 		reprogramado.PrintAndContinue("Turno reprogramado:");
 
 		// Caso de uso 4
-		Result<Turno2025> cancelado = (await servicio.SolicitarCancelacion(
+		Result<Turno2025> cancelado = (await ServiciosPublicos.SolicitarCancelacion(
 			reprogramado,
 			DateTime.Now.AddDays(2),
-			"Cancelación definitiva"
+			"Cancelación definitiva",
+			repositorio
 		));
 		cancelado.PrintAndContinue("Turno cancelado:");
 

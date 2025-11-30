@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.ViewModels;
-using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Dominio.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF;
 

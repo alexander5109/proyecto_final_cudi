@@ -4,7 +4,12 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Dominio.Entidades;
 
 
-public record struct TurnoId(int Valor);
+public record struct TurnoId(int Valor) {
+	public static Result<TurnoId> Crear(int? id) =>
+		id is int idGood
+		? new Result<TurnoId>.Ok(new TurnoId(idGood))
+		: new Result<TurnoId>.Error("El id no puede ser nulo.");
+}
 
 public record Turno2025(
 	TurnoId Id,
@@ -20,10 +25,10 @@ public record Turno2025(
 ) : IComoTexto {
 
 	public string ATexto() {
-        string fecha = FechaHoraAsignadaDesdeValor.ToString("dddd dd/MM/yyyy");
-        string desde = FechaHoraAsignadaDesdeValor.ToString("HH:mm");
-        string hasta = FechaHoraAsignadaHastaValor.ToString("HH:mm");
-        double duracion = (FechaHoraAsignadaHastaValor - FechaHoraAsignadaDesdeValor).TotalMinutes;
+		string fecha = FechaHoraAsignadaDesdeValor.ToString("dddd dd/MM/yyyy");
+		string desde = FechaHoraAsignadaDesdeValor.ToString("HH:mm");
+		string hasta = FechaHoraAsignadaHastaValor.ToString("HH:mm");
+		double duracion = (FechaHoraAsignadaHastaValor - FechaHoraAsignadaDesdeValor).TotalMinutes;
 		return
 			$"Turno de {Especialidad.ATexto()}\n" +
 			$"  • PacienteId: {PacienteId}\n" +
@@ -33,10 +38,10 @@ public record Turno2025(
 			$"  • OutcomeEstadoOption: {OutcomeEstadoOption}";
 	}
 	public static Result<Turno2025> Crear(
-		TurnoId id,
+		Result<TurnoId> idResult,
 		Result<FechaRegistro2025> fechaCreacionResult,
-		PacienteId pacienteId,
-		MedicoId medicoId,
+		Result<PacienteId> pacienteIdResult,
+		Result<MedicoId> medicoIdResult,
 		Result<EspecialidadMedica2025> especialidadResult,
 		DateTime desde,
 		DateTime hasta,
@@ -46,7 +51,10 @@ public record Turno2025(
 	) {
 		// Componemos los VO dependientes
 		return
+			from id in idResult
 			from fechaCreacion in fechaCreacionResult
+			from pacienteId in pacienteIdResult
+			from medicoId in medicoIdResult
 			from especialidad in especialidadResult
 			from estado in outcomeEstadoResult
 			from _ in ValidarOutcome(estado, outcomeFecha, outcomeComentario)

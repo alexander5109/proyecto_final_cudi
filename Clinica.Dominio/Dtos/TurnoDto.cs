@@ -2,41 +2,41 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Shared.Dtos;
+namespace Clinica.Dominio.Dtos;
 
 public static partial class DomainDtos {
 	public record TurnoDto(
-		int Id,
+		TurnoId Id,
 		DateTime FechaDeCreacion,
-		int PacienteId,
-		int MedicoId,
-		int EspecialidadCodigo,
+		PacienteId PacienteId,
+		MedicoId MedicoId,
+		EspecialidadCodigo2025 EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
-		byte? OutcomeEstado,
+		TurnoOutcomeEstadoCodigo2025 OutcomeEstado,
 		DateTime? OutcomeFecha,
 		string? OutcomeComentario
 	);
 	public static TurnoDto ToDto(this Turno2025 turno) {
 		return new TurnoDto(
-			turno.Id.Valor,
+			turno.Id,
 			turno.FechaDeCreacion.Valor,
-			turno.PacienteId.Valor,
-			turno.MedicoId.Valor,
-			turno.Especialidad.CodigoInterno.Valor,
+			turno.PacienteId,
+			turno.MedicoId,
+			turno.Especialidad.CodigoInternoValor,
 			turno.FechaHoraAsignadaDesdeValor,
 			turno.FechaHoraAsignadaHastaValor,
-			(byte?)turno.OutcomeEstadoOption.Codigo.Valor,
+			turno.OutcomeEstadoOption.Codigo,
 			turno.OutcomeFechaOption.Match(d => d, () => (DateTime?)null),
 			turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
 		);
 	}
 	public static Result<Turno2025> ToDomain(this TurnoDto turnoDto) {
 		return Turno2025.Crear(
-			new TurnoId(turnoDto.Id),
+			TurnoId.Crear(turnoDto.Id.Valor),
 			FechaRegistro2025.Crear(turnoDto.FechaDeCreacion),
-			new PacienteId(turnoDto.PacienteId),
-			new MedicoId(turnoDto.MedicoId),
+			PacienteId.Crear(turnoDto.PacienteId.Valor),
+			MedicoId.Crear(turnoDto.MedicoId.Valor),
 			EspecialidadMedica2025.CrearPorCodigoInterno(turnoDto.EspecialidadCodigo),
 			turnoDto.FechaHoraAsignadaDesde,
 			turnoDto.FechaHoraAsignadaHasta,
