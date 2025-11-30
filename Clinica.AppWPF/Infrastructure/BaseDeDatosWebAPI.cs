@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Windows;
@@ -14,6 +15,12 @@ public class BaseDeDatosWebAPI : BaseDeDatosInterface {
 				string errorMsg = await response.Content.ReadAsStringAsync();
 				throw new Exception($"Error HTTP {(int)response.StatusCode}: {errorMsg}");
 			}
+
+
+			string rawJson = await response.Content.ReadAsStringAsync();
+			File.WriteAllText("debug_pacientes.json", rawJson);
+
+			//MessageBox.Show()
 			List<WindowModificarPacienteViewModel>? data = await response.Content.ReadFromJsonAsync<List<WindowModificarPacienteViewModel>>();
 			return data ?? [];
 		} catch (Exception ex) {

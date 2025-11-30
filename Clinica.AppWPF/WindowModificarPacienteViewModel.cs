@@ -10,13 +10,13 @@ public partial class WindowModificarPacienteViewModel : ObservableObject {
 	[ObservableProperty] private string dni = string.Empty;
 	[ObservableProperty] private string nombre = string.Empty;
 	[ObservableProperty] private string apellido = string.Empty;
-	[ObservableProperty] private DateTime? fechaIngreso;
+	[ObservableProperty] private DateTime fechaIngreso;
 	[ObservableProperty] private string domicilio = string.Empty;
 	[ObservableProperty] private string localidad = string.Empty;
 	[ObservableProperty] private byte provinciaCodigo = default;
 	[ObservableProperty] private string telefono = string.Empty;
 	[ObservableProperty] private string email = string.Empty;
-	[ObservableProperty] private DateTime? fechaNacimiento;
+	[ObservableProperty] private DateTime fechaNacimiento;
 	public string Displayear => $"{Id}: {Nombre} {Apellido}";
 
 	public static WindowModificarPacienteViewModel NewEmpty() => new(
@@ -24,10 +24,10 @@ public partial class WindowModificarPacienteViewModel : ObservableObject {
 		string.Empty,   // dni
 		string.Empty,   // nombre
 		string.Empty,   // apellido
-		null,           // fechaIngreso
+		default,           // fechaIngreso
 		string.Empty,   // email
 		string.Empty,   // telefono
-		null,           // fechaNacimiento
+		default,           // fechaNacimiento
 		string.Empty,   // domicilio
 		string.Empty,   // localidad
 		default    // provinciaCodigo
@@ -39,10 +39,10 @@ public partial class WindowModificarPacienteViewModel : ObservableObject {
 		string? dni,
 		string? name,
 		string? lastName,
-		DateTime? fechaIngreso,
+		DateTime fechaIngreso,
 		string? email,
 		string? telefono,
-		DateTime? fechaNacimiento,
+		DateTime fechaNacimiento,
 		string? domicilio,
 		string? localidad,
 		byte? provincia

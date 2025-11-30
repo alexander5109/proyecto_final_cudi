@@ -26,6 +26,9 @@ public class PacientesController(
 			return StatusCode(500, "Error interno del servidor.");
 		}
 	}
+
+
+
 	// GET api/<ValuesController>/5
 	[HttpGet("{id}")]
 	public string Get(int id) {
