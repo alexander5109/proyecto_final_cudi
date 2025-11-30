@@ -5,18 +5,47 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Dominio.Dtos;
 
 public static partial class DomainDtos {
-	public record TurnoDto(
-		TurnoId Id,
-		DateTime FechaDeCreacion,
-		PacienteId PacienteId,
-		MedicoId MedicoId,
-		EspecialidadCodigo2025 EspecialidadCodigo,
-		DateTime FechaHoraAsignadaDesde,
-		DateTime FechaHoraAsignadaHasta,
-		TurnoOutcomeEstadoCodigo2025 OutcomeEstado,
-		DateTime? OutcomeFecha,
-		string? OutcomeComentario
-	);
+	public record TurnoDto {
+		public TurnoId Id { get; set; }
+		public DateTime FechaDeCreacion { get; set; }
+		public PacienteId PacienteId { get; set; }
+		public MedicoId MedicoId { get; set; }
+		public EspecialidadCodigo2025 EspecialidadCodigo { get; set; }
+		public DateTime FechaHoraAsignadaDesde { get; set; }
+		public DateTime FechaHoraAsignadaHasta { get; set; }
+		public TurnoOutcomeEstadoCodigo2025 OutcomeEstado { get; set; }
+		public DateTime? OutcomeFecha { get; set; }
+		public string? OutcomeComentario { get; set; }
+
+		// Necesario para Dapper
+		public TurnoDto() { }
+
+		// Conveniencia si querés el ctor completo
+		public TurnoDto(
+			TurnoId id,
+			DateTime fechaDeCreacion,
+			PacienteId pacienteId,
+			MedicoId medicoId,
+			EspecialidadCodigo2025 especialidadCodigo,
+			DateTime fechaHoraAsignadaDesde,
+			DateTime fechaHoraAsignadaHasta,
+			TurnoOutcomeEstadoCodigo2025 outcomeEstado,
+			DateTime? outcomeFecha,
+			string? outcomeComentario
+		) {
+			Id = id;
+			FechaDeCreacion = fechaDeCreacion;
+			PacienteId = pacienteId;
+			MedicoId = medicoId;
+			EspecialidadCodigo = especialidadCodigo;
+			FechaHoraAsignadaDesde = fechaHoraAsignadaDesde;
+			FechaHoraAsignadaHasta = fechaHoraAsignadaHasta;
+			OutcomeEstado = outcomeEstado;
+			OutcomeFecha = outcomeFecha;
+			OutcomeComentario = outcomeComentario;
+		}
+	}
+
 	public static TurnoDto ToDto(this Turno2025 turno) {
 		return new TurnoDto(
 			turno.Id,
