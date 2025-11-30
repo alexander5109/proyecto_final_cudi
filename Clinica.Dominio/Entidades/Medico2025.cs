@@ -11,12 +11,14 @@ public record struct MedicoId(int Valor) {
 		: new Result<MedicoId>.Error("El id no puede ser nulo.");
 }
 
+//public struct HaceGuardia(bool Valor);
 
 public record Medico2025(
+	//ListaEspecialidadesMedicas2025 Especialidades,
+
 	MedicoId Id,
 	NombreCompleto2025 NombreCompleto,
 	EspecialidadMedica2025 EspecialidadUnica,
-	//ListaEspecialidadesMedicas2025 Especialidades,
 	DniArgentino2025 Dni,
 	DomicilioArgentino2025 Domicilio,
 	ContactoTelefono2025 Telefono,

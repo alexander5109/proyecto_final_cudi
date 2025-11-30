@@ -7,6 +7,16 @@ namespace Clinica.Dominio.Servicios;
 
 public static class ServiciosPublicos {
 
+	//CRUD paciente
+	//CRUD medico
+	//CRUD turno
+	//public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> Crear(
+
+
+
+
+
+
 	public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> SolicitarDisponibilidadesPara(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,

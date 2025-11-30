@@ -36,13 +36,13 @@ public class PacientesController(
 
 	[HttpGet]
 	public async Task<ActionResult> GetPacientes() {
-		var result = await servicio.baseDeDatos.SelectPacientes();
+		Result<IEnumerable<PacienteDto>> result = await servicio.baseDeDatos.SelectPacientes();
 		return FromResult(result);
 	}
 
 	[HttpGet("list")]
 	public async Task<ActionResult> GetPacientesList() {
-		var result = await servicio.baseDeDatos.SelectPacientesList();
+		Result<IEnumerable<PacienteListDto>> result = await servicio.baseDeDatos.SelectPacientesList();
 		return FromResult(result);
 	}
 
@@ -50,7 +50,7 @@ public class PacientesController(
 
 	[HttpDelete("{id}")]
 	public async Task<ActionResult> Delete(int id) {
-		var result = await servicio.baseDeDatos.DeletePaciente(id);
+		Result<Unit> result = await servicio.baseDeDatos.DeletePaciente(id);
 		return FromResult(result);
 	}
 
@@ -61,9 +61,12 @@ public class PacientesController(
 		if (dto is null)
 			return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
 
-		var result = await servicio.baseDeDatos.CreatePaciente(dto);
+		Result<Paciente2025> pacienteResult = dto.ToDomain();
+		if (pacienteResult.IsError) return BadRequest(pacienteResult.UnwrapAsError());
 
-		return result switch {
+		Result<int> result2 = await servicio.baseDeDatos.CreatePaciente(pacienteResult.UnwrapAsOk());
+
+		return result2 switch {
 			Result<int>.Ok ok => CreatedAtAction(nameof(GetPacientes), new { id = ok.Valor }, ok.Valor),
 			Result<int>.Error err => BadRequest(err.Mensaje),
 			_ => StatusCode(500)
@@ -77,7 +80,7 @@ public class PacientesController(
 		if (dto is null)
 			return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
 
-		var result = await servicio.baseDeDatos.UpdatePaciente(new PacienteId(id), dto);
+		Result<Unit> result = await servicio.baseDeDatos.UpdatePaciente(new PacienteId(id), dto);
 		return FromResult(result);
 	}
 }

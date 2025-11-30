@@ -239,8 +239,8 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 
 	private async Task<Result<T>> TryAsync<T>(Func<IDbConnection, Task<T>> action) {
 		try {
-			using var conn = factory.CrearConexion();
-			var result = await action(conn);
+			using IDbConnection conn = factory.CrearConexion();
+            T? result = await action(conn);
 			return new Result<T>.Ok(result);
 		} catch (SqlException ex) {
 			return new Result<T>.Error($"Error SQL: {ex.Message}");
@@ -251,7 +251,7 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 
 	private async Task<Result<Unit>> TryAsyncVoid(Func<IDbConnection, Task> action) {
 		try {
-			using var conn = factory.CrearConexion();
+			using IDbConnection conn = factory.CrearConexion();
 			await action(conn);
 			return new Result<Unit>.Ok(Unit.Valor);
 		} catch (SqlException ex) {
@@ -281,21 +281,20 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 
 
 
-	public Task<Result<int>> CreatePaciente(PacienteDto dto)
+	public Task<Result<int>> CreatePaciente(Paciente2025 paciente)
 		=> TryAsync(async conn => {
 			var parameters = new {
-				dto.Dni,
-				dto.Nombre,
-				dto.Apellido,
-				dto.FechaIngreso,
-				dto.Email,
-				dto.Telefono,
-				dto.FechaNacimiento,
-				dto.Domicilio,
-				dto.Localidad,
-				dto.ProvinciaCodigo
+				Dni = paciente.Dni.Valor,
+				Nombre = paciente.NombreCompleto.NombreValor,
+				Apellido = paciente.NombreCompleto.ApellidoValor,
+				FechaIngreso = paciente.FechaIngreso.Valor,
+				Email = paciente.Contacto.Email.Valor,
+				Telefono = paciente.Contacto.Telefono.Valor,
+				FechaNacimiento = paciente.FechaNacimiento.Valor,
+				Domicilio = paciente.Domicilio.DireccionValor,
+				Localidad = paciente.Domicilio.Localidad.NombreValor,
+				ProvinciaCodigo = paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
 			};
-
 			return await conn.ExecuteScalarAsync<int>(
 				"sp_CreatePaciente",
 				parameters,

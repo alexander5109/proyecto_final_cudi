@@ -59,12 +59,12 @@ internal static class ServiciosPrivados {
 	}
 
 	internal static IEnumerable<DisponibilidadEspecialidad2025> GenerarDisponibilidades(
-	EspecialidadMedica2025 solicitudEspecialidad,
-	DateTime solicitudFechaCreacion,
-	Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
-	Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
-	Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosProgramadosBetweenFechasWhereMedicoId
-) {
+		EspecialidadMedica2025 solicitudEspecialidad,
+		DateTime solicitudFechaCreacion,
+		Func<EspecialidadMedica2025, IEnumerable<Medico2025>> funcSelectMedicosWhereEspecialidad,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<HorarioMedico2025>> funcSelectHorariosVigentesBetweenFechasWhereMedicoId,
+		Func<MedicoId, DateTime, DateTime, IEnumerable<Turno2025>> funcSelectTurnosProgramadosBetweenFechasWhereMedicoId
+	) {
 		foreach (Medico2025 medico in funcSelectMedicosWhereEspecialidad(solicitudEspecialidad)) {
 
 			int duracion = solicitudEspecialidad.DuracionConsultaMinutos;
