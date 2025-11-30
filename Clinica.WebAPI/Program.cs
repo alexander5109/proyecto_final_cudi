@@ -1,5 +1,5 @@
+using Clinica.Dominio.IRepositorios;
 using Clinica.Infrastructure.DataAccess;
-using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -38,21 +38,17 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	)
 );
 
-// BaseDeDatosRepositorio (singleton)
-builder.Services.AddSingleton<BaseDeDatosRepositorio>(sp => {
-	SQLServerConnectionFactory factory = sp.GetRequiredService<SQLServerConnectionFactory>();
+// BaseDeDatosRepositorioDapper (singleton)
+builder.Services.AddSingleton<IBaseDeDatosRepositorio>(sp => {
+	var factory = sp.GetRequiredService<SQLServerConnectionFactory>();
 
 	string? jwtKey = builder.Configuration["Jwt:Key"];
 	if (string.IsNullOrWhiteSpace(jwtKey))
 		throw new InvalidOperationException("Falta la clave JWT en configuración: 'Jwt:Key'");
 
-	return new BaseDeDatosRepositorio(factory, jwtKey);
+	return new BaseDeDatosRepositorioDapper(factory, jwtKey);
 });
 
-
-
-// ServiciosPublicosAsync (scoped)
-builder.Services.AddScoped<ServiciosPublicosAsync>();
 
 // ------------------------------------------------------------
 // (Optional) CORS – if you will call API from WPF or browser

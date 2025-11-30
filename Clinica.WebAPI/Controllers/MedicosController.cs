@@ -1,7 +1,7 @@
-﻿using Clinica.Infrastructure.ServiciosAsync;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using static Clinica.Dominio.Dtos.DomainDtos;
 using static Clinica.Dominio.Dtos.ApiDtos;
+using Clinica.Dominio.IRepositorios;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,14 +10,14 @@ namespace Clinica.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class MedicosController(
-	ServiciosPublicosAsync servicio,
+	IBaseDeDatosRepositorio repositorio,
 	ILogger<TurnosController> logger
 ) : ControllerBase {
 	// GET: api/<MedicosController>
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<MedicoDto>>> Get() {
 		try {
-			IEnumerable<MedicoDto> instances = await servicio.baseDeDatos.SelectMedicos();
+			IEnumerable<MedicoDto> instances = await repositorio.SelectMedicos();
 			return Ok(instances);
 		} catch (Exception ex) {
 			logger.LogError(ex, "Error al obtener listado de instances.");

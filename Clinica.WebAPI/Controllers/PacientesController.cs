@@ -1,6 +1,6 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Infrastructure.ServiciosAsync;
+using Clinica.Dominio.IRepositorios;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Dominio.Dtos.ApiDtos;
 using static Clinica.Dominio.Dtos.DomainDtos;
@@ -10,7 +10,7 @@ namespace Clinica.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class PacientesController(
-	ServiciosPublicosAsync servicio,
+	IBaseDeDatosRepositorio repositorio,
 	ILogger<PacientesController> logger
 ) : ControllerBase {
 
@@ -36,13 +36,13 @@ public class PacientesController(
 
 	[HttpGet]
 	public async Task<ActionResult> GetPacientes() {
-		Result<IEnumerable<PacienteDto>> result = await servicio.baseDeDatos.SelectPacientes();
+		Result<IEnumerable<PacienteDto>> result = await repositorio.SelectPacientes();
 		return FromResult(result);
 	}
 
 	[HttpGet("list")]
 	public async Task<ActionResult> GetPacientesList() {
-		Result<IEnumerable<PacienteListDto>> result = await servicio.baseDeDatos.SelectPacientesList();
+		Result<IEnumerable<PacienteListDto>> result = await repositorio.SelectPacientesList();
 		return FromResult(result);
 	}
 
@@ -50,7 +50,7 @@ public class PacientesController(
 
 	[HttpDelete("{id}")]
 	public async Task<ActionResult> Delete(int id) {
-		Result<Unit> result = await servicio.baseDeDatos.DeletePaciente(id);
+		Result<Unit> result = await repositorio.DeletePaciente(id);
 		return FromResult(result);
 	}
 
@@ -64,11 +64,11 @@ public class PacientesController(
 		Result<Paciente2025> pacienteResult = dto.ToDomain();
 		if (pacienteResult.IsError) return BadRequest(pacienteResult.UnwrapAsError());
 
-		Result<int> result2 = await servicio.baseDeDatos.CreatePaciente(pacienteResult.UnwrapAsOk());
+		Result<PacienteId> result2 = await repositorio.CreatePaciente(pacienteResult.UnwrapAsOk());
 
 		return result2 switch {
-			Result<int>.Ok ok => CreatedAtAction(nameof(GetPacientes), new { id = ok.Valor }, ok.Valor),
-			Result<int>.Error err => BadRequest(err.Mensaje),
+			Result<PacienteId>.Ok ok => CreatedAtAction(nameof(GetPacientes), new { id = ok.Valor }, ok.Valor),
+			Result<PacienteId>.Error err => BadRequest(err.Mensaje),
 			_ => StatusCode(500)
 		};
 	}
@@ -80,7 +80,7 @@ public class PacientesController(
 		if (dto is null)
 			return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
 
-		Result<Unit> result = await servicio.baseDeDatos.UpdatePaciente(new PacienteId(id), dto);
+		Result<Unit> result = await repositorio.UpdatePaciente(new PacienteId(id), dto);
 		return FromResult(result);
 	}
 }

@@ -1,21 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
-using Clinica.Infrastructure.ServiciosAsync;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.Comun;
 using static Clinica.Dominio.Dtos.DomainDtos;
 using static Clinica.Dominio.Dtos.ApiDtos;
+using Clinica.Dominio.IRepositorios;
 
 
 namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class DisponibilidadesController(ServiciosPublicosAsync servicio, ILogger<DisponibilidadesController> logger) : ControllerBase {
+public class DisponibilidadesController(IBaseDeDatosRepositorio repositorio, ILogger<DisponibilidadesController> logger) : ControllerBase {
 
 
 	[HttpGet(Name = "GetDisponibilidades")]
 	public async Task<IActionResult> Get(
-		[FromQuery] int especialidadCodigoInterno,
+		[FromQuery] EspecialidadCodigo2025 especialidadCodigoInterno,
 		[FromQuery] int cuantos = 10) {
 		Result<EspecialidadMedica2025> especialidadResult = EspecialidadMedica2025.CrearPorCodigoInterno(especialidadCodigoInterno);
 		if (especialidadResult.IsError) {
@@ -23,7 +23,7 @@ public class DisponibilidadesController(ServiciosPublicosAsync servicio, ILogger
 		}
 		EspecialidadMedica2025 especialidad = especialidadResult.GetOrRaise();
 
-		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> result = await servicio.SolicitarDisponibilidadesPara(
+		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> result = await repositorio.SolicitarDisponibilidadesPara(
 			especialidad,
 			DateTime.Now,
 			cuantos

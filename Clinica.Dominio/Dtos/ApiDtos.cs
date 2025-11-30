@@ -49,7 +49,7 @@ public static class ApiDtos {
 	public record CrearTurnoRequestDto(
 		int PacienteId,
 		int MedicoId,
-		int EspecialidadCodigo,
+		EspecialidadCodigo2025 EspecialidadCodigo,
 		DateTime Desde,
 		DateTime Hasta
 	);

@@ -1,10 +1,10 @@
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Dominio.Dtos.DomainDtos;
 using static Clinica.Dominio.Dtos.ApiDtos;
+using Clinica.Dominio.IRepositorios;
 
 
 namespace Clinica.WebAPI.Controllers;
@@ -12,7 +12,7 @@ namespace Clinica.WebAPI.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class TurnosController(
-	ServiciosPublicosAsync servicio,
+	IBaseDeDatosRepositorio repositorio,
 	ILogger<TurnosController> logger
 ) : ControllerBase {
 
@@ -22,7 +22,7 @@ public class TurnosController(
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<TurnoDto>>> Get() {
 		try {
-			IEnumerable<TurnoDto> instances = await servicio.baseDeDatos.SelectTurnos();
+			IEnumerable<TurnoDto> instances = await repositorio.SelectTurnos();
 			return Ok(instances);
 		} catch (Exception ex) {
 			logger.LogError(ex, "Error al obtener listado de instances.");
@@ -34,8 +34,8 @@ public class TurnosController(
 	// GET /turnos/{id}
 	// --------------------------------------------------------
 	[HttpGet("{id:int}")]
-	public async Task<IActionResult> GetPorId(int id) {
-		Result<Turno2025> result = await servicio.ObtenerTurnoPorIdAsync(id);
+	public async Task<IActionResult> GetPorId(TurnoId id) {
+		Result<Turno2025> result = await repositorio.ObtenerTurnoPorIdAsync(id);
 
 		return result switch {
 			Result<Turno2025>.Ok ok =>
@@ -61,7 +61,7 @@ public class TurnosController(
 
 		EspecialidadMedica2025 especialidad = espResult.GetOrRaise();
 
-		Result<Turno2025> result = await servicio.AgendarTurnoAsync(
+		Result<Turno2025> result = await repositorio.AgendarTurnoAsync(
 			dto.PacienteId,
 			dto.MedicoId,
 			especialidad,
@@ -85,7 +85,7 @@ public class TurnosController(
 	// --------------------------------------------------------
 	[HttpPut("{id:int}/reprogramar")]
 	public async Task<IActionResult> Reprogramar(int id, [FromBody] ReprogramarTurnoRequestDto dto) {
-		Result<Turno2025> result = await servicio.ReprogramarTurnoAsync(
+		Result<Turno2025> result = await repositorio.ReprogramarTurnoAsync(
 			id,
 			dto.NuevaFechaDesde,
 			dto.NuevaFechaHasta
@@ -107,7 +107,7 @@ public class TurnosController(
 	// --------------------------------------------------------
 	[HttpPut("{id:int}/cancelar")]
 	public async Task<IActionResult> Cancelar(int id, [FromBody] string? comentario) {
-		Result<Turno2025> result = await servicio.CancelarTurnoAsync(id, comentario.ToOption());
+		Result<Turno2025> result = await repositorio.CancelarTurnoAsync(id, comentario.ToOption());
 
 		return result switch {
 			Result<Turno2025>.Ok ok =>
@@ -125,7 +125,7 @@ public class TurnosController(
 	// --------------------------------------------------------
 	[HttpPut("{id:int}/concretar")]
 	public async Task<IActionResult> Concretar(int id, [FromBody] string? comentario) {
-		Result<Turno2025> result = await servicio.MarcarTurnoComoConcretadoAsync(id, comentario.ToOption());
+		Result<Turno2025> result = await repositorio.MarcarTurnoComoConcretadoAsync(id, comentario.ToOption());
 
 		return result switch {
 			Result<Turno2025>.Ok ok =>
@@ -143,7 +143,7 @@ public class TurnosController(
 	// --------------------------------------------------------
 	[HttpPut("{id:int}/ausente")]
 	public async Task<IActionResult> Ausente(int id, [FromBody] string? comentario) {
-		Result<Turno2025> result = await servicio.MarcarTurnoComoAusenteAsync(id, comentario.ToOption());
+		Result<Turno2025> result = await repositorio.MarcarTurnoComoAusenteAsync(id, comentario.ToOption());
 
 		return result switch {
 			Result<Turno2025>.Ok ok =>

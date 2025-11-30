@@ -11,40 +11,10 @@ using Microsoft.IdentityModel.Tokens;
 using Clinica.Dominio.IRepositorios;
 using static Clinica.Dominio.Dtos.DomainDtos;
 using static Clinica.Dominio.Dtos.ApiDtos;
+using Clinica.Infrastructure.TypeHandlers;
 
 namespace Clinica.Infrastructure.DataAccess;
 
-
-
-
-public class TurnoIdHandler : SqlMapper.TypeHandler<TurnoId> {
-	public override void SetValue(IDbDataParameter parameter, TurnoId value) {
-		parameter.Value = value.Valor; // store as int in DB
-	}
-
-	public override TurnoId Parse(object value) {
-		return new TurnoId(Convert.ToInt32(value)); // read from DB as int
-	}
-}
-
-public class MedicoIdHandler : SqlMapper.TypeHandler<MedicoId> {
-	public override void SetValue(IDbDataParameter parameter, MedicoId value) {
-		parameter.Value = value.Valor; // store as int in DB
-	}
-	public override MedicoId Parse(object value) {
-		return new MedicoId(Convert.ToInt32(value)); // read from DB as int
-	}
-}
-
-public class PacienteIdHandler : SqlMapper.TypeHandler<PacienteId> {
-	public override void SetValue(IDbDataParameter parameter, PacienteId value) {
-		parameter.Value = value.Valor; // store as int in DB
-	}
-
-	public override PacienteId Parse(object value) {
-		return new PacienteId(Convert.ToInt32(value)); // read from DB as int
-	}
-}
 
 
 
@@ -60,7 +30,7 @@ public class SQLServerConnectionFactory(string connectionString) {
 }
 
 
-public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string jwtKey) : IBaseDeDatosRepositorio {
+public class BaseDeDatosRepositorioDapper(SQLServerConnectionFactory factory, string jwtKey) : IBaseDeDatosRepositorio {
 
 	public async Task<Result<UsuarioBase2025>> ValidarCredenciales(string username, string password) {
 		Result<UsuarioBase2025> resultadoUsuario = await SelectUsuarioWhereNombre(new NombreUsuario(username));
@@ -366,6 +336,31 @@ public class BaseDeDatosRepositorio(SQLServerConnectionFactory factory, string j
 			);
 		});
 
+    Task<Result<Turno2025>> IBaseDeDatosRepositorio.AgendarTurnoAsync(int pacienteId, int medicoId, EspecialidadMedica2025 especialidad, DateTime desde, DateTime hasta) {
+        throw new NotImplementedException();
+    }
 
+    Task<Result<Turno2025>> IBaseDeDatosRepositorio.CancelarTurnoAsync(int id, Option<string> option) {
+        throw new NotImplementedException();
+    }
 
+    Task<Result<Turno2025>> IBaseDeDatosRepositorio.MarcarTurnoComoAusenteAsync(int id, Option<string> option) {
+        throw new NotImplementedException();
+    }
+
+    Task<Result<Turno2025>> IBaseDeDatosRepositorio.MarcarTurnoComoConcretadoAsync(int id, Option<string> option) {
+        throw new NotImplementedException();
+    }
+
+    Task<Result<Turno2025>> IBaseDeDatosRepositorio.ObtenerTurnoPorIdAsync(TurnoId id) {
+        throw new NotImplementedException();
+    }
+
+    Task<Result<Turno2025>> IBaseDeDatosRepositorio.ReprogramarTurnoAsync(int id, DateTime nuevaFechaDesde, DateTime nuevaFechaHasta) {
+        throw new NotImplementedException();
+    }
+
+    Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> IBaseDeDatosRepositorio.SolicitarDisponibilidadesPara(EspecialidadMedica2025 especialidad, DateTime now, int cuantos) {
+        throw new NotImplementedException();
+    }
 }

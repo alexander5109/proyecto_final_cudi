@@ -9,7 +9,7 @@ namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("auth")]
-public class AuthController(BaseDeDatosRepositorio repository) : ControllerBase {
+public class AuthController(BaseDeDatosRepositorioDapper repository) : ControllerBase {
 	[HttpPost("login")]
 	public async Task<IActionResult> Login([FromBody] LoginRequestDto dto) {
 		Result<UsuarioBase2025> resultado = await repository.ValidarCredenciales(dto.Username, dto.Password);
