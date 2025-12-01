@@ -2,7 +2,7 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.Servicios;
-using Clinica.Infrastructure.DataAccess;
+using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Dominio.Dtos.ApiDtos;
 using static Clinica.Dominio.Dtos.DomainDtos;

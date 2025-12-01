@@ -3,6 +3,7 @@ using Clinica.Dominio.IRepositorios;
 using Clinica.Infrastructure.DataAccess;
 using Clinica.WebAPI.Controllers;
 using Clinica.WebAPI.RouteConstraint;
+using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -47,7 +48,7 @@ builder.Services.AddSingleton<RepositorioInterface>(sp => {
 });
 
 
-// RepositorioDapper (singleton)
+// JwtService (singleton)
 builder.Services.AddSingleton<JwtService>(sp => {
 	string? jwtKey = builder.Configuration["Jwt:Key"];
 	if (string.IsNullOrWhiteSpace(jwtKey))

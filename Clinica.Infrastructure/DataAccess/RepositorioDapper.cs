@@ -13,8 +13,6 @@ using static Clinica.Dominio.Dtos.DomainDtos;
 namespace Clinica.Infrastructure.DataAccess;
 
 
-
-
 public class SQLServerConnectionFactory(string connectionString) {
 	public IDbConnection CrearConexion() {
 
