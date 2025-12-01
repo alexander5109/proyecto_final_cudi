@@ -9,11 +9,18 @@ public record struct MedicoId(int Valor) {
 		id is int idGood
 		? new Result<MedicoId>.Ok(new MedicoId(idGood))
 		: new Result<MedicoId>.Error("El id no puede ser nulo.");
+	public static bool TryParse(string? s, out MedicoId id) {
+		if (int.TryParse(s, out int value)) {
+			id = new MedicoId(value);
+			return true;
+		}
 
-	public override string ToString() {
-		return Valor.ToString();
+		id = default;
+		return false;
 	}
+	public override string ToString() => Valor.ToString();
 }
+
 
 //public struct HaceGuardia(bool Valor);
 

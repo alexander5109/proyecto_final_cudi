@@ -9,9 +9,9 @@ using static Clinica.Shared.Dtos.DomainDtos;
 namespace Clinica.AppWPF;
 
 public partial class WindowListarPacientes : Window {
-	private TurnoListDto? SelectedTurno; // instead of PacienteListDto?
-	private PacienteListDto? SelectedPaciente; // instead of WindowModificarPacienteViewModel?
-	private MedicoListDto? MedicoRelacionado; // instead of WindowModificarPacienteViewModel?
+	private TurnoDto? SelectedTurno; // instead of PacienteListDto?
+	private PacienteDto? SelectedPaciente; // instead of WindowModificarPacienteViewModel?
+	private MedicoDto? MedicoRelacionado; // instead of WindowModificarPacienteViewModel?
 	private bool _isLoadingPacientes = false;
 	//private bool IsBusy = false;
 	public WindowListarPacientes() {
@@ -39,20 +39,14 @@ public partial class WindowListarPacientes : Window {
 		}
 	}
 	private async Task UpdateTurnosUIAsync() {
-		if (pacientesListView.SelectedItem is PacienteListDto paciente) {
-			turnosListView.ItemsSource =
-				await Api.Cliente.GetFromJsonAsync<List<TurnoListDto>>(
-					$"api/pacientes/{paciente.Id}/turnos"
-				);
+		if (pacientesListView.SelectedItem is PacienteDto paciente) {
+			turnosListView.ItemsSource = await Api.Cliente.GetFromJsonAsync<List<TurnoDto>>($"api/pacientes/{paciente.Id}/turnos");
 		}
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 	private async Task UpdateMedicoUIAsync() {
-		if (turnosListView.SelectedItem is TurnoListDto turno) {
-			MedicoRelacionado =
-				await Api.Cliente.GetFromJsonAsync<MedicoListDto>(
-					$"api/medicos/{turno.MedicoId}"
-				);
+		if (turnosListView.SelectedItem is TurnoDto turno) {
+			MedicoRelacionado = await Api.Cliente.GetFromJsonAsync<MedicoDto>($"api/medicos/{turno.MedicoId}");
 
 			txtMedicoDni.Text = MedicoRelacionado?.Dni;
 			txtMedicoNombre.Text = MedicoRelacionado?.Nombre;
@@ -78,11 +72,11 @@ public partial class WindowListarPacientes : Window {
 		}
 	}
 	private async void ListViewTurnos_SelectionChangedAsync(object sender, SelectionChangedEventArgs e) {
-		SelectedTurno = (TurnoListDto)turnosListView.SelectedItem;
+		SelectedTurno = (TurnoDto)turnosListView.SelectedItem;
 		await UpdateMedicoUIAsync();
 	}
 	private async void ListViewPacientes_SelectionChangedAsync(object sender, SelectionChangedEventArgs e) {
-		SelectedPaciente = (PacienteListDto)pacientesListView.SelectedItem;
+		SelectedPaciente = (PacienteDto)pacientesListView.SelectedItem;
 		await UpdateTurnosUIAsync();
 		await UpdateMedicoUIAsync(); // opcional, si un turno estaba seleccionado
 	}

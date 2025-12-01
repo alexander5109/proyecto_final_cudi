@@ -1,6 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
+using Clinica.Dominio.Servicios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.Dtos.ApiDtos;
@@ -17,52 +18,31 @@ namespace Clinica.WebAPI.Controllers;
 public class MedicosController(RepositorioInterface repositorio, ILogger<TurnosController> logger) : ControllerBase {
 	// GET: api/<MedicosController>
 
-	[HttpGet]
-	public async Task<ActionResult<IEnumerable<MedicoDto>>> Get() {
-		try {
-			var instances = await repositorio.SelectMedicos();
-			return Ok(instances);
-		} catch (Exception ex) {
-			logger.LogError(ex, "Error al obtener listado de instances.");
-			return StatusCode(500, "Error interno del servidor.");
-		}
-	}
-	// GET api/<MedicosController>/5
+	[Authorize]
 	[HttpGet("{id}")]
-	public string Get(int id) {
-		return "value";
+	public async Task<ActionResult<MedicoDto>> GetMedicoPorId([FromRoute] MedicoId id) {
+		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
+			return Unauthorized("Token válido pero sin usuario asociado");
+
+		Result<Medico2025> result =
+			await ServiciosPublicos.SelectMedicoWhereId(usuario, repositorio, id);
+
+		ActionResult<MedicoDto> respuesta = null!;
+
+		result.Switch(
+			ok => {
+				respuesta = Ok(ok.ToDto());
+			},
+			error => {
+				respuesta = Forbid(error);
+			}
+		);
+
+		return respuesta;
 	}
 
 
 
-	[HttpGet("{medicoId:MedicoId}/turnos")]
-	public async Task<ActionResult<IEnumerable<TurnoListDto>>> GetTurnosPorMedico([FromRoute] MedicoId medicoId) {
-		//listo
-
-		try {
-			var instances = await repositorio.SelectTurnosWhereMedicoId(medicoId);
-			return Ok(instances);
-		} catch (Exception ex) {
-			logger.LogError(ex, "Error al obtener listado de instances.");
-			return StatusCode(500, "Error interno del servidor.");
-		}
-
-	}
 
 
-
-	// POST api/<MedicosController>
-	[HttpPost]
-	public void Post([FromBody] string value) {
-	}
-
-	// PUT api/<MedicosController>/5
-	[HttpPut("{id}")]
-	public void Put(int id, [FromBody] string value) {
-	}
-
-	// DELETE api/<MedicosController>/5
-	[HttpDelete("{id}")]
-	public void Delete(int id) {
-	}
 }

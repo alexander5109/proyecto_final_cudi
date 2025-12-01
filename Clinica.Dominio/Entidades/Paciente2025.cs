@@ -5,12 +5,19 @@ using static Clinica.Dominio.Comun.ValidatedExtensions;
 namespace Clinica.Dominio.Entidades;
 
 
-public readonly record struct PacienteId(int Valor) {
+public record struct PacienteId(int Valor) {
 	public static Result<PacienteId> Crear(int? id) =>
 		id is int idGood
 		? new Result<PacienteId>.Ok(new PacienteId(idGood))
 		: new Result<PacienteId>.Error("El id no puede ser nulo.");
-
+	public static bool TryParse(string? s, out PacienteId id) {
+		if (int.TryParse(s, out int value)) {
+			id = new PacienteId(value);
+			return true;
+		}
+		id = default;
+		return false;
+	}
 	public override string ToString() {
 		return Valor.ToString();
 	}

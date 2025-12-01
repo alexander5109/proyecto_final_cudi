@@ -98,6 +98,8 @@
     <Build Include="Dto\Tables\Usuarios\table_Usuario.sql" />
     <Build Include="Dto\Tables\Pacientes\sp_SelectPacientesListView.sql" />
     <Build Include="Dto\Tables\Pacientes\sp_DeletePaciente.sql" />
+    <Build Include="Dto\Tables\Turnos\sp_SelectTurnosWherePacienteId.sql" />
+    <Build Include="Dto\Tables\Turnos\sp_SelectTurnosWhereMedicoId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publications\Clinica.SQLServerDB.publish.xml" />

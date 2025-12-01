@@ -30,38 +30,56 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 		};
 	}
 
-	[HttpGet]
-	public async Task<ActionResult<IEnumerable<PacienteDto>>> GetPacientes() {
 
-		UsuarioBase2025? usuario = HttpContext.Items["Usuario"] as UsuarioBase2025;
 
-		if (usuario is null)
+	[Authorize]
+	[HttpGet("{id}/turnos")]
+	public async Task<ActionResult<IEnumerable<TurnoDto>>> GetTurnosPorPaciente([FromRoute] PacienteId id) {
+		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
 			return Unauthorized("Token válido pero sin usuario asociado");
 
+		Result<IEnumerable<Turno2025>> result =
+			await ServiciosPublicos.SelectTurnosWherePacienteId(usuario, repositorio, id);
 
-		//UsuarioBase2025 usuario = HttpContext.Items["Usuario"] as UsuarioBase2025
-			//?? throw new Exception("Usuario no autenticado");
+		ActionResult<IEnumerable<TurnoDto>> respuesta = null!;
 
-		//return Ok("Hola mundo todo bien?");
+		result.Switch(
+			ok => {
+				respuesta = Ok(ok.Select(t => t.ToDto()));
+			},
+			error => {
+				respuesta = Forbid(error);
+			}
+		);
 
-		Result<IEnumerable<Paciente2025>> result = await ServiciosPublicos.SelectPacientes(usuario, repositorio);
-
-		return result switch {
-			Result<IEnumerable<Paciente2025>>.Ok ok =>
-				Ok(ok.Valor.Select(p => p.ToDto())),
-
-			Result<IEnumerable<Paciente2025>>.Error err =>
-				Forbid(err.Mensaje),
-
-			_ => StatusCode(500)
-		};
+		return respuesta;
 	}
 
-	[HttpGet("list")]
-	public async Task<ActionResult> GetPacientesList() {
-		var result = await repositorio.SelectPacientes();
-		return FromResult(result);
+
+	[HttpGet]
+	public async Task<ActionResult<IEnumerable<PacienteDto>>> GetPacientes() {
+		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
+			return Unauthorized("Token válido pero sin usuario asociado");
+		Result<IEnumerable<Paciente2025>> result =
+			await ServiciosPublicos.SelectPacientes(usuario, repositorio);
+		ActionResult<IEnumerable<PacienteDto>> respuesta = null!;
+
+		result.Switch(
+			ok => {
+				respuesta = Ok(ok.Select(p => p.ToDto()));
+			},
+			error => {
+				respuesta = Forbid(error);
+			}
+		);
+		return respuesta;
 	}
+
+	//[HttpGet("list")]
+	//public async Task<ActionResult> GetPacientesList() {
+	//	var result = await repositorio.SelectPacientes();
+	//	return FromResult(result);
+	//}
 
 
 

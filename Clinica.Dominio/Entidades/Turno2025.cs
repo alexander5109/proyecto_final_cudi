@@ -9,6 +9,14 @@ public record struct TurnoId(int Valor) {
 		id is int idGood
 		? new Result<TurnoId>.Ok(new TurnoId(idGood))
 		: new Result<TurnoId>.Error("El id no puede ser nulo.");
+	public static bool TryParse(string? s, out TurnoId id) {
+		if (int.TryParse(s, out int value)) {
+			id = new TurnoId(value);
+			return true;
+		}
+		id = default;
+		return false;
+	}
 
 	public override string ToString() {
 		return Valor.ToString();

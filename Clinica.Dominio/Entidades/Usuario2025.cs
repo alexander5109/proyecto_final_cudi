@@ -5,24 +5,29 @@ using Clinica.Dominio.Comun;
 
 namespace Clinica.Dominio.Entidades;
 
+public record struct UsuarioId(int Valor) {
+	public static Result<UsuarioId> Crear(int? id) =>
+		id is int idGood
+		? new Result<UsuarioId>.Ok(new UsuarioId(idGood))
+		: new Result<UsuarioId>.Error("El id no puede ser nulo.");
+	public static bool TryParse(string? s, out UsuarioId id) {
+		if (int.TryParse(s, out int value)) {
+			id = new UsuarioId(value);
+			return true;
+		}
 
+		id = default;
+		return false;
+	}
+	public override string ToString() {
+		return Valor.ToString();
+	}
+}
 public enum UsuarioEnumRole : byte {
 	Nivel1Admin = 1,
 	Nivel2Secretaria = 2,
 	Nivel3Medico = 3,
 	Nivel4Paciente = 4,
-}
-
-public readonly record struct UsuarioId(int Valor) {
-	public static Result<UsuarioId> Crear(int? id) =>
-		id is int idGood
-		? new Result<UsuarioId>.Ok(new UsuarioId(idGood))
-		: new Result<UsuarioId>.Error("El id no puede ser nulo.");
-
-	public override string ToString() {
-		return Valor.ToString();
-	}
-
 }
 public readonly record struct NombreUsuario(string Valor);
 public readonly record struct ContraseñaHasheada(string Valor) {
