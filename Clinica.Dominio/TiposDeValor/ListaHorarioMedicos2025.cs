@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.ListasOrganizadoras;

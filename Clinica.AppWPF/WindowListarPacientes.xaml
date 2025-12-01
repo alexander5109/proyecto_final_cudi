@@ -1,130 +1,114 @@
-﻿<Window x:Class="Clinica.AppWPF.WindowListarPacientes"
-		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:local="clr-namespace:Clinica.AppWPF"
-		mc:Ignorable="d"
-		Title="Clinica Medica - Pacientes"
-		Height="600"
-		Width="1024"
-		Icon="pack://application:,,,/PublishedResources/icons/icono.png"
-		WindowStartupLocation="CenterScreen"
-		Activated="Window_Activated">
-
-
-
-	<Grid HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch">
-
-
+﻿<Window
+	x:Class="Clinica.AppWPF.WindowListarPacientes"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:Clinica.AppWPF"
+	mc:Ignorable="d"
+	Title="Clinica Medica - Pacientes"
+	Height="600"
+	Width="1024"
+	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
+	WindowStartupLocation="CenterScreen"
+	Activated="Window_ActivatedAsync">
+	<Grid
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch">
 		<Grid.Background>
-			<ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/falopa.jpg"/>
+			<ImageBrush
+				ImageSource="pack://application:,,,/PublishedResources/images/falopa.jpg" />
 		</Grid.Background>
-
-
-		<ContentControl Style="{StaticResource ContentControlLindo}" Margin="512,17,22,180" >
-
-			<StackPanel Orientation="Vertical" Background="Transparent">
-
-
-
-				<Label Content="Pacientes"
-							HorizontalAlignment="Center"
-							FontSize="72"
-							Height="125"
-							FontFamily="Ringbearer"
-							
-							FontWeight="Bold" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
-				<ListView Name="pacientesListView"
-							  ItemsSource="{Binding PacientesList}"
-							  Width="Auto"
-							  Height="167"
-							
-							SelectionChanged="pacientesListView_SelectionChanged"
-							d:ItemsSource="{d:SampleData ItemCount=5}"
-							>
+		<ContentControl
+			Style="{StaticResource ContentControlLindo}"
+			Margin="512,17,22,180">
+			<StackPanel
+				Orientation="Vertical"
+				Background="Transparent">
+				<Label
+					Content="Pacientes"
+					HorizontalAlignment="Center"
+					FontSize="72"
+					Height="125"
+					FontFamily="Ringbearer"
+					FontWeight="Bold"
+					HorizontalContentAlignment="Center"
+					VerticalAlignment="Center" />
+				<ListView
+					Name="pacientesListView"
+					ItemsSource="{Binding PacientesList}"
+					Width="Auto"
+					Height="167"
+					SelectionChanged="ListViewPacientes_SelectionChangedAsync"
+					d:ItemsSource="{d:SampleData ItemCount=5}">
 					<ListView.View>
 						<GridView>
 							<!-- Dni Column -->
-							<GridViewColumn Header="Id"
-										DisplayMemberBinding="{Binding Id}"
-										Width="25"/>
-
-							<GridViewColumn Header="Dni"
-										DisplayMemberBinding="{Binding Dni}"
-										Width="50"/>
+							<GridViewColumn
+								Header="Id"
+								DisplayMemberBinding="{Binding Id}"
+								Width="25" />
+							<GridViewColumn
+								Header="Dni"
+								DisplayMemberBinding="{Binding Dni}"
+								Width="50" />
 							<!-- Name Column -->
-							<GridViewColumn Header="Nombre"
-										DisplayMemberBinding="{Binding Name}"
-										Width="60"/>
-
-							<GridViewColumn Header="Apellido"
-										DisplayMemberBinding="{Binding LastName}"
-										Width="70"/>
-
-							<GridViewColumn Header="Email"
-										DisplayMemberBinding="{Binding Email}"
-										Width="120"/>
-
-							<GridViewColumn Header="Teléfono"
-										DisplayMemberBinding="{Binding Telefono}"
-										Width="90"/>
-
+							<GridViewColumn
+								Header="Nombre"
+								DisplayMemberBinding="{Binding Nombre}"
+								Width="60" />
+							<GridViewColumn
+								Header="Apellido"
+								DisplayMemberBinding="{Binding Apellido}"
+								Width="70" />
+							<GridViewColumn
+								Header="Email"
+								DisplayMemberBinding="{Binding Email}"
+								Width="120" />
+							<GridViewColumn
+								Header="Teléfono"
+								DisplayMemberBinding="{Binding Telefono}"
+								Width="90" />
 						</GridView>
 					</ListView.View>
 				</ListView>
-
-
-
-
-
-
-				<StackPanel Orientation="Horizontal" Background="Transparent" Margin="5,5,5,5" VerticalAlignment="Center" HorizontalAlignment="Center">
+				<StackPanel
+					Orientation="Horizontal"
+					Background="Transparent"
+					Margin="5,5,5,5"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center">
 					<Button
-							Content="Agregar nuevo"
-							HorizontalAlignment="Left"
-							VerticalAlignment="Top"
-							Height="35"
-							Width="150"
-							Click="ButtonAgregarPaciente"
-							FontSize="20"
-							Style="{StaticResource BotonRedondeado}"
-							FontWeight="Bold"
-							BorderBrush="#FF0E0D0D"
-							FontFamily="Baskerville Old Face" Margin="25,0,25,5"
-							>
-					</Button>
-					<Button x:Name="buttonModificarPaciente"
-								Content="Modificar"
-								HorizontalAlignment="Left"
-								VerticalAlignment="Top"
-								Height="35"
-								Click="ButtonModificarPaciente"
-								FontSize="20"
-								Style="{StaticResource BotonRedondeado}"
-								FontWeight="Bold"
-								BorderBrush="#FF0E0D0D"
-								FontFamily="Baskerville Old Face"
-								IsEnabled="False" Margin="25,0,25,0" Width="150"
-								/>
+						Content="Agregar nuevo"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Top"
+						Height="35"
+						Width="150"
+						Click="ButtonAgregarPaciente"
+						FontSize="20"
+						Style="{StaticResource BotonRedondeado}"
+						FontWeight="Bold"
+						BorderBrush="#FF0E0D0D"
+						FontFamily="Baskerville Old Face"
+						Margin="25,0,25,5"></Button>
+					<Button
+						x:Name="buttonModificarPaciente"
+						Content="Modificar"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Top"
+						Height="35"
+						Click="ButtonModificarPaciente"
+						FontSize="20"
+						Style="{StaticResource BotonRedondeado}"
+						FontWeight="Bold"
+						BorderBrush="#FF0E0D0D"
+						FontFamily="Baskerville Old Face"
+						IsEnabled="False"
+						Margin="25,0,25,0"
+						Width="150" />
 				</StackPanel>
-
-
-
-
-
-
-
-
-
-
-
-
 			</StackPanel>
 		</ContentControl>
-
-
 		<Button
 			Content="Home"
 			HorizontalAlignment="Left"
@@ -137,7 +121,7 @@
 			FontWeight="Bold"
 			BorderBrush="#FF0E0D0D"
 			Margin="810,446,0,0"
-			FontFamily="Baskerville Old Face"/>
+			FontFamily="Baskerville Old Face" />
 		<Button
 			Content="Salir"
 			HorizontalAlignment="Left"
@@ -150,73 +134,117 @@
 			FontWeight="Bold"
 			BorderBrush="#FF0E0D0D"
 			Margin="810,501,0,0"
-			FontFamily="Baskerville Old Face"/>
-		<ContentControl Style="{StaticResource ContentControlLindo}" Margin="280,17,534,210">
-			<StackPanel Orientation="Vertical" Background="Transparent">
-				<Label Content="Turnos"
-				FontSize="35"
-				  FontFamily="Ringbearer"
-				  FontWeight="Bold" HorizontalAlignment="Center"/>
-
-				<ListView x:Name="turnosListView"
-				  Background="Transparent"
-				  BorderThickness="0"
-				  SelectionChanged="listViewTurnos_SelectionChanged" Height="195" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center">
+			FontFamily="Baskerville Old Face" />
+		<ContentControl
+			Style="{StaticResource ContentControlLindo}"
+			Margin="280,17,534,210">
+			<StackPanel
+				Orientation="Vertical"
+				Background="Transparent">
+				<Label
+					Content="Turnos"
+					FontSize="35"
+					FontFamily="Ringbearer"
+					FontWeight="Bold"
+					HorizontalAlignment="Center" />
+				<ListView
+					x:Name="turnosListView"
+					Background="Transparent"
+					BorderThickness="0"
+					SelectionChanged="ListViewTurnos_SelectionChangedAsync"
+					Height="195"
+					HorizontalContentAlignment="Center"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center">
 					<ListView.View>
 						<GridView>
-							<GridViewColumn Header="Id"
-						   DisplayMemberBinding="{Binding Id}"
-						   Width="25"/>
-							<GridViewColumn Header="Fecha"
-						   DisplayMemberBinding="{Binding Fecha, StringFormat={}{0:dd/MM/yyyy}}"
-						   Width="73"/>
-							<GridViewColumn Header="Hora"
-						   DisplayMemberBinding="{Binding Hora, StringFormat={}{0:hh\\:mm}}"
-						   Width="63"/>
+							<GridViewColumn
+								Header="Id"
+								DisplayMemberBinding="{Binding Id}"
+								Width="25" />
+							<GridViewColumn
+								Header="Fecha"
+								DisplayMemberBinding="{Binding Fecha, StringFormat={}{0:dd/MM/yyyy}}"
+								Width="73" />
+							<GridViewColumn
+								Header="Hora"
+								DisplayMemberBinding="{Binding Hora, StringFormat={}{0:hh\\:mm}}"
+								Width="63" />
 						</GridView>
 					</ListView.View>
 				</ListView>
-
-
-
-				<StackPanel Orientation="Horizontal" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center">
-					<Button x:Name="buttonModificarTurno"
-				  Content="Modificar"
-				  VerticalAlignment="Center"
-				  Height="30"
-				  Click="ButtonModificarTurno"
-				  FontSize="20"
-				  Style="{StaticResource BotonRedondeado}"
-				  FontWeight="Bold"
-				  BorderBrush="#FF0E0D0D"
-				  FontFamily="Baskerville Old Face"
-				  IsEnabled="False" Margin="25,10,25,25" Width="120" HorizontalAlignment="Center"
-					/>
+				<StackPanel
+					Orientation="Horizontal"
+					Background="Transparent"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center">
+					<Button
+						x:Name="buttonModificarTurno"
+						Content="Modificar"
+						VerticalAlignment="Center"
+						Height="30"
+						Click="ButtonModificarTurno"
+						FontSize="20"
+						Style="{StaticResource BotonRedondeado}"
+						FontWeight="Bold"
+						BorderBrush="#FF0E0D0D"
+						FontFamily="Baskerville Old Face"
+						IsEnabled="False"
+						Margin="25,10,25,25"
+						Width="120"
+						HorizontalAlignment="Center" />
 				</StackPanel>
-
 			</StackPanel>
 		</ContentControl>
-		<ContentControl Style="{StaticResource ContentControlLindo}" Margin="35,17,779,210" >
+		<ContentControl
+			Style="{StaticResource ContentControlLindo}"
+			Margin="35,17,779,210">
 			<!-- </Expander> -->
 			<!-- <Expander Header="Información del Médico" IsExpanded="True" Background="Transparent" BorderThickness="0"> -->
-			<StackPanel Orientation="Vertical" Background="Transparent">
-
-				<Label Content="Medico" FontSize="25" FontFamily="Ringbearer" FontWeight="Bold" HorizontalAlignment="Center"/>
-
-				<TextBlock Text="DNI:" FontWeight="Bold" Margin="0,5,0,5" />
-				<TextBlock x:Name="txtMedicoDni" Margin="0,0,0,10" />
-
-				<TextBlock Text="Nombre:" FontWeight="Bold" Margin="0,5,0,5" />
-				<TextBlock x:Name="txtMedicoNombre" Margin="0,0,0,10" />
-
-				<TextBlock Text="Apellido:" FontWeight="Bold" Margin="0,5,0,5" />
-				<TextBlock x:Name="txtMedicoApellido" Margin="0,0,0,10" />
-
-				<TextBlock Text="Especialidad:" FontWeight="Bold" Margin="0,5,0,5" />
-				<TextBlock x:Name="txtMedicoEspecialidad" Margin="0,0,0,10" />
-
-				<StackPanel Orientation="Horizontal" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center">
-					<Button x:Name="buttonModificarMedico"
+			<StackPanel
+				Orientation="Vertical"
+				Background="Transparent">
+				<Label
+					Content="Medico"
+					FontSize="25"
+					FontFamily="Ringbearer"
+					FontWeight="Bold"
+					HorizontalAlignment="Center" />
+				<TextBlock
+					Text="DNI:"
+					FontWeight="Bold"
+					Margin="0,5,0,5" />
+				<TextBlock
+					x:Name="txtMedicoDni"
+					Margin="0,0,0,10" />
+				<TextBlock
+					Text="Nombre:"
+					FontWeight="Bold"
+					Margin="0,5,0,5" />
+				<TextBlock
+					x:Name="txtMedicoNombre"
+					Margin="0,0,0,10" />
+				<TextBlock
+					Text="Apellido:"
+					FontWeight="Bold"
+					Margin="0,5,0,5" />
+				<TextBlock
+					x:Name="txtMedicoApellido"
+					Margin="0,0,0,10" />
+				<TextBlock
+					Text="Especialidad:"
+					FontWeight="Bold"
+					Margin="0,5,0,5" />
+				<TextBlock
+					x:Name="txtMedicoEspecialidad"
+					Margin="0,0,0,10" />
+				<StackPanel
+					Orientation="Horizontal"
+					Background="Transparent"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center">
+					<Button
+						x:Name="buttonModificarMedico"
 						Content="Modificar"
 						HorizontalAlignment="Center"
 						VerticalAlignment="Center"
@@ -227,28 +255,25 @@
 						FontWeight="Bold"
 						BorderBrush="#FF0E0D0D"
 						FontFamily="Baskerville Old Face"
-						IsEnabled="False" Margin="25,10,25,25" Width="120"
-					/>
+						IsEnabled="False"
+						Margin="25,10,25,25"
+						Width="120" />
 				</StackPanel>
-
-
-
-
-
-
 			</StackPanel>
 		</ContentControl>
-
-
-
-
-		<Label Style="{StaticResource LabelLindo}"  x:Name="labelBaseDeDatosModo" Content="Elegir DB Modo" Margin="49,471,0,0" FontSize="35" HorizontalAlignment="Left" FontFamily="Palatino Linotype" VerticalAlignment="Top" Foreground="#FF0F0A2B" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="10,10,10,10" Width="316"/>
-
-
-
-
-
-
-
+		<Label
+			Style="{StaticResource LabelLindo}"
+			x:Name="labelBaseDeDatosModo"
+			Content="Elegir DB Modo"
+			Margin="49,471,0,0"
+			FontSize="35"
+			HorizontalAlignment="Left"
+			FontFamily="Palatino Linotype"
+			VerticalAlignment="Top"
+			Foreground="#FF0F0A2B"
+			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
+			Padding="10,10,10,10"
+			Width="316" />
 	</Grid>
 </Window>

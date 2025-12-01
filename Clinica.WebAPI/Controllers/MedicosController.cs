@@ -1,47 +1,83 @@
-﻿using Clinica.Infrastructure.ServiciosAsync;
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+using Clinica.Dominio.IRepositorios;
+using Clinica.Dominio.Servicios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
+using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DomainDtos;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Clinica.WebAPI.Controllers;
 
+
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class MedicosController(
-	ServiciosPublicosAsync servicio,
-	ILogger<TurnosController> logger
-) : ControllerBase {
+public class MedicosController(RepositorioInterface repositorio, ILogger<TurnosController> logger) : ControllerBase {
 	// GET: api/<MedicosController>
+
+
+
+
+
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<MedicoDto>>> Get() {
-		try {
-			IEnumerable<MedicoDto> instances = await servicio.baseDeDatos.SelectMedicos();
-			return Ok(instances);
-		} catch (Exception ex) {
-			logger.LogError(ex, "Error al obtener listado de instances.");
-			return StatusCode(500, "Error interno del servidor.");
-		}
+	public async Task<ActionResult<IEnumerable<MedicoDto>>> GetTodos() {
+		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
+			return Unauthorized("Token válido pero sin usuario asociado");
+
+		Result<IEnumerable<Medico2025>> result =
+			await ServiciosPublicos.SelectMedicos(usuario, repositorio);
+
+		ActionResult<IEnumerable<MedicoDto>> respuesta = null!;
+		result.Switch(
+			ok => {
+				respuesta = Ok(ok.Select(p => p.ToDto()));
+			},
+			error => {
+				respuesta = Forbid(error);
+			}
+		);
+		return respuesta;
 	}
-	// GET api/<MedicosController>/5
+
+
+
+
+
+
+
+
+
+
+
+
+
 	[HttpGet("{id}")]
-	public string Get(int id) {
-		return "value";
+	public async Task<ActionResult<MedicoDto>> GetMedicoPorId([FromRoute] MedicoId id) {
+		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
+			return Unauthorized("Token válido pero sin usuario asociado");
+
+		Result<Medico2025> result =
+			await ServiciosPublicos.SelectMedicoWhereId(usuario, repositorio, id);
+
+		ActionResult<MedicoDto> respuesta = null!;
+
+		result.Switch(
+			ok => {
+				respuesta = Ok(ok.ToDto());
+			},
+			error => {
+				respuesta = Problem(error);
+			}
+		);
+
+		return respuesta;
 	}
 
-	// POST api/<MedicosController>
-	[HttpPost]
-	public void Post([FromBody] string value) {
-	}
 
-	// PUT api/<MedicosController>/5
-	[HttpPut("{id}")]
-	public void Put(int id, [FromBody] string value) {
-	}
 
-	// DELETE api/<MedicosController>/5
-	[HttpDelete("{id}")]
-	public void Delete(int id) {
-	}
+
+
 }

@@ -2,16 +2,17 @@
 using Clinica.AppWPF.Ventanas;
 using System.ComponentModel;
 using System.Windows;
-using Clinica.Dominio.Comun;
+using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.Comun;
 
 namespace Clinica.AppWPF;
 
 public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	public ViewModelMedico _selectedMedico = ViewModelMedico.NewEmpty();
-	public ViewModelMedico SelectedMedico { get => _selectedMedico; set { _selectedMedico = value; OnPropertyChanged(nameof(SelectedMedico)); } }
+	public WindowModificarMedicoViewModel _selectedMedico = WindowModificarMedicoViewModel.NewEmpty();
+	public WindowModificarMedicoViewModel SelectedMedico { get => _selectedMedico; set { _selectedMedico = value; OnPropertyChanged(nameof(SelectedMedico)); } }
 
 	//---------------------constructor-------------------//
 	public WindowModificarMedico() {
@@ -19,25 +20,25 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 		DataContext = this;
 	}
 
-	public WindowModificarMedico(ViewModelMedico selectedMedico) {
+	public WindowModificarMedico(WindowModificarMedicoViewModel selectedMedico) {
 		InitializeComponent();
 		SelectedMedico = selectedMedico;
 		DataContext = this;
 	}
 	//---------------------botones.GuardarCambios-------------------//
 	private void ButtonGuardar(object sender, RoutedEventArgs e) {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		Result<Medico2025> resultado = SelectedMedico.ToDomain();
 
 		resultado.Switch(
 			ok => {
-				bool exito;
+				bool exito = false;
 				if (SelectedMedico.Id is null) {
 					// _ValidarRepositorios nuevo médico
-					exito = App.BaseDeDatos.CreateMedico(ok, SelectedMedico);
+					//exito = App.BaseDeDatos.CreateMedico(MedicoRelacionado);
 				} else {
 					// Actualizar médico existente
-					exito = App.BaseDeDatos.UpdateMedico(ok, SelectedMedico.Id);
+					//exito = App.BaseDeDatos.UpdateMedico(MedicoRelacionado);
 				}
 				if (exito)
 					this.Cerrar();
@@ -54,13 +55,13 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	}
 	//---------------------botones.Eliminar-------------------//
 	private void ButtonEliminar(object sender, RoutedEventArgs e) {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedMedico.Name}", "Confirmar Eliminación", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK) {
 			return;
 		}
-		if (App.BaseDeDatos.DeleteMedico(SelectedMedico)) {
-			this.Cerrar(); // this.NavegarA<WindowListarMedicos>();
-		}
+		//if (App.BaseDeDatos.DeleteMedico(MedicoRelacionado)) {
+		//	this.Cerrar(); // this.NavegarA<WindowListarMedicos>();
+		//}
 	}
 
 	//---------------------botones.Salida-------------------//
@@ -74,26 +75,26 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	}
 
 	private void BtnAgregarHorarioFranja_Click(object sender, RoutedEventArgs e) {
-		var selected = GetSelectedTreeItem();
+        object? selected = GetSelectedTreeItem();
 
-		DayOfWeek dia;
+		DiaDeSemanaViewModel dia;
 
 		if (selected is ViewModelHorariosAgrupados grupo) {
 			dia = grupo.DiaSemana;
-		} else if (selected is ViewModelHorario horario) {
+		} else if (selected is HorarioMedicoViewModel horario) {
 			dia = horario.DiaSemana;
 		} else {
 			MessageBox.Show("Seleccione un día en el árbol para agregar un horario.");
 			return;
 		}
 
-        ViewModelHorario nuevoHorario = new() {
+		HorarioMedicoViewModel nuevoHorario = new() {
 			DiaSemana = dia,
 			Desde = new TimeOnly(8, 0),
 			Hasta = new TimeOnly(12, 0)
 		};
 
-        WindowModificarHorario win = new(SelectedMedico, nuevoHorario, esNuevo: true);
+		WindowModificarHorario win = new(SelectedMedico, nuevoHorario, esNuevo: true);
 
 		if (win.ShowDialog() == true) {
 			// Se agregó realmente dentro de WindowModificarHorario
@@ -103,9 +104,9 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	}
 
 	private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
-		var selected = GetSelectedTreeItem();
+        object? selected = GetSelectedTreeItem();
 
-		if (selected is not ViewModelHorario horario) {
+		if (selected is not HorarioMedicoViewModel horario) {
 			MessageBox.Show("Seleccione un horario para editar.");
 			return;
 		}
@@ -119,9 +120,9 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	}
 
 	private void BtnEliminarHorario_Click(object sender, RoutedEventArgs e) {
-		var selected = GetSelectedTreeItem();
+        object? selected = GetSelectedTreeItem();
 
-		if (selected is not ViewModelHorario horario) {
+		if (selected is not HorarioMedicoViewModel horario) {
 			MessageBox.Show("Seleccione un horario para eliminar.");
 			return;
 		}

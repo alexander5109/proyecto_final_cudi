@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "API-WPF",
+    "Projects": [
+      {
+        "Path": "Clinica.AppWPF\\Clinica.AppWPF.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Clinica.WebAPI\\Clinica.WebAPI.csproj",
+        "Action": "StartWithoutDebugging"
+      }
+    ]
+  }
+]

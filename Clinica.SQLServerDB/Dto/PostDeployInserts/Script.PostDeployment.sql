@@ -10,6 +10,19 @@
 
 
 ----------------------------------------------------
+-- Cargar datos de ejemplo en Usuario
+----------------------------------------------------
+IF NOT EXISTS (SELECT 1 FROM dbo.Usuario)
+BEGIN
+    INSERT INTO dbo.Usuario 
+        (NombreUsuario, PasswordHash, EnumRole)
+    VALUES
+        ('admin1', '240BE518FABD2724DDB6F04EEB1DA5967448D7E831C08C8FA822809F74C720A9', 1), --password: admin123
+        ('secret1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 2) --password: 123
+END;
+GO
+
+----------------------------------------------------
 -- Cargar datos de ejemplo en Medico
 ----------------------------------------------------
 IF NOT EXISTS (SELECT 1 FROM dbo.Medico)

@@ -28,22 +28,6 @@ public abstract class Result<T> {
 			_ => throw new InvalidOperationException()
 		};
 
-
-	//public void Match(Action<T> ok, Action<string> error) {
-	//	switch (this) {
-	//		case Ok o:
-	//			ok(o.Valor);
-	//			break;
-
-	//		case Error e:
-	//			error(e.Mensaje);
-	//			break;
-
-	//		default:
-	//			throw new InvalidOperationException();
-	//	}
-	//}
-
 	public void Switch(Action<T> ok, Action<string> error) {
 		switch (this) {
 			case Ok o: ok(o.Valor); break;

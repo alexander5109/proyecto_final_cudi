@@ -1,30 +1,30 @@
-﻿using Clinica.AppWPF.ViewModels;
+﻿using System.Net.Http.Headers;
 using System.Windows;
-using System.Windows.Controls;
-			
-		
-namespace Clinica.AppWPF; 
+using Clinica.AppWPF.Infrastructure;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+
+
+namespace Clinica.AppWPF;
+
 public partial class WindowLogin : Window {
 	public WindowLogin() {
 		InitializeComponent();
-		soundCheckBox.IsChecked = App.SoundOn;
 	}
-	
-	private bool datos_completados(){
-		return string.IsNullOrEmpty(labelServidor.Text) && string.IsNullOrEmpty(labelUsuario.Text) && string.IsNullOrEmpty(labelPassword.Text); 
-	}
-	
-	private void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
-		//if (checkboxJSON.IsChecked == true) {
-			//App.BaseDeDatos = new BaseDeDatosJSON();
-		//} else if ( datos_completados() ) {
-		if (datos_completados() ) {
-			App.BaseDeDatos = new BaseDeDatosSQL();
-		} else {
-			App.BaseDeDatos = new BaseDeDatosSQL($"Server={labelServidor.Text};Database=ClinicaMedica;User ID={labelUsuario.Text};Password={labelPassword.Text};");
+
+	private async void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
+		if (string.IsNullOrEmpty(guiUsuario.Text) || string.IsNullOrEmpty(guiPassword.Password)){
+			MessageBox.Show("Complete todos los campos");
+			return;
 		}
-		App.UsuarioLogueado = App.BaseDeDatos.ConectadaExitosamente;
-		if (App.UsuarioLogueado) {
+
+		var result = await AuthService.LoginAsync(App.Api, guiUsuario.Text, guiPassword.Password);
+
+		if (result.IsError) {
+			MessageBox.Show(result.UnwrapAsError(), "Error", MessageBoxButton.OK);
+			return;
+		} else {
+			SoundsService.PlayClickSound();
 			this.Cerrar();
 		}
 	}
@@ -36,32 +36,7 @@ public partial class WindowLogin : Window {
 	private void MetodoBotonCancelar(object sender, RoutedEventArgs e) {
 		this.Cerrar();
 	}
-
-	private void checkboxJSON_Checked(object sender, RoutedEventArgs e)
-	{
-		if (labelPassword != null) labelPassword.IsEnabled = false;
-		if (labelServidor != null) labelServidor.IsEnabled = false;
-		if (labelUsuario != null) labelUsuario.IsEnabled = false;
+	private void SoundCheckBox_Checked(object sender, RoutedEventArgs e) {
+		SoundsService.ToggleSound(soundCheckBox.IsChecked);
 	}
-
-	private void checkboxSQL_Checked(object sender, RoutedEventArgs e)
-	{
-		if (labelPassword != null) labelPassword.IsEnabled = true;
-		if (labelServidor != null) labelServidor.IsEnabled = true;
-		if (labelUsuario != null) labelUsuario.IsEnabled = true;
-	}
-
-	private void soundCheckBox_Checked(object sender, RoutedEventArgs e) {
-		if (soundCheckBox.IsChecked == true) {
-			App.SoundOn = true;
-			App.PlayClickJewel();
-		}
-		else {
-			App.SoundOn = false;
-		}
-        }
-
-	// private void MetodoEliminarDatabase(object sender, RoutedEventArgs e) {
-		// App.BaseDeDatos.EliminarDatabaseExitosamente();
-	// }
 }

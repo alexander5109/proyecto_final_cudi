@@ -1,160 +1,159 @@
-using Clinica.Dominio.Comun;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.TiposDeValor;
-using Clinica.Infrastructure.DtosEntidades;
-using Clinica.Infrastructure.ServiciosAsync;
-using Clinica.WebAPI.DtosWebAPI;
+using Clinica.Dominio.IRepositorios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Infrastructure.DtosEntidades.DtosEntidades;
-using static Clinica.WebAPI.DtosWebAPI.DtosWebAPI;
+using Microsoft.IdentityModel.Tokens;
+
+using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DomainDtos;
 
 
 namespace Clinica.WebAPI.Controllers;
 
+
+
+
+[Authorize]
 [ApiController]
 [Route("[controller]")]
-public class TurnosController(
-	ServiciosPublicosAsync servicio,
-	ILogger<TurnosController> logger
-) : ControllerBase {
-
-
+public class TurnosController(RepositorioInterface repositorio, ILogger<TurnosController> logger) : ControllerBase {
 
 	// GET: api/<MedicosController>
-	[HttpGet]
-	public async Task<ActionResult<IEnumerable<TurnoDto>>> Get() {
-		try {
-			IEnumerable<TurnoDto> instances = await servicio.baseDeDatos.SelectTurnos();
-			return Ok(instances);
-		} catch (Exception ex) {
-			logger.LogError(ex, "Error al obtener listado de instances.");
-			return StatusCode(500, "Error interno del servidor.");
-		}
-	}
+	// [HttpGet]
+	// public async Task<ActionResult<IEnumerable<TurnoDto>>> Get() {
+	// try {
+	// IEnumerable<TurnoDto> instances = await repositorio.SelectTurnos();
+	// return Ok(instances);
+	// } catch (Exception ex) {
+	// logger.LogError(ex, "Error al obtener listado de instances.");
+	// return StatusCode(500, "Error interno del servidor.");
+	// }
+	// }
 
 	// --------------------------------------------------------
 	// GET /turnos/{id}
 	// --------------------------------------------------------
-	[HttpGet("{id:int}")]
-	public async Task<IActionResult> GetPorId(int id) {
-		Result<Turno2025> result = await servicio.ObtenerTurnoPorIdAsync(id);
+	// [HttpGet("{id:TurnoId}")]
+	// public async Task<IActionResult> GetPorId([FromRoute] TurnoId id) {
+	// Result<Turno2025> result = await repositorio.SelectTurnoWhereId(id);
 
-		return result switch {
-			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDto()),
+	// return result switch {
+	// Result<Turno2025>.Ok ok =>
+	// Ok(ok.Valor.ToDto()),
 
-			Result<Turno2025>.Error err =>
-				NotFound(new { error = err.Mensaje }),
+	// Result<Turno2025>.Error err =>
+	// NotFound(new { error = err.Mensaje }),
 
-			_ => StatusCode(500),
-		};
-	}
+	// _ => StatusCode(500),
+	// };
+	// }
 
 	// --------------------------------------------------------
 	// POST /turnos   (crear / agendar)
 	// --------------------------------------------------------
-	[HttpPost]
-	public async Task<IActionResult> Crear([FromBody] CrearTurnoRequestDto dto) {
-		// Validar especialidad
-		var espResult = EspecialidadMedica2025.CrearPorCodigoInterno(dto.EspecialidadCodigo);
+	// [HttpPost]
+	// public async Task<IActionResult> Crear([FromBody] CrearTurnoRequestDto dto) {
+	// Result<EspecialidadMedica2025> espResult = EspecialidadMedica2025.CrearPorCodigoInterno(dto.EspecialidadCodigo);
 
-		if (espResult.IsError)
-			return BadRequest($"Especialidad inválida: {dto.EspecialidadCodigo}");
+	// if (espResult.IsError)
+	// return BadRequest($"Especialidad inválida: {dto.EspecialidadCodigo}");
 
-		EspecialidadMedica2025 especialidad = espResult.GetOrRaise();
+	// EspecialidadMedica2025 especialidad = espResult.GetOrRaise();
 
-		Result<Turno2025> result = await servicio.AgendarTurnoAsync(
-			dto.PacienteId,
-			dto.MedicoId,
-			especialidad,
-			dto.Desde,
-			dto.Hasta
-		);
+	// Result<Turno2025> result = await repositorio.AgendarTurnoAsync(
+	// dto.PacienteId,
+	// dto.MedicoId,
+	// especialidad,
+	// dto.Desde,
+	// dto.Hasta
+	// );
 
-		return result switch {
-			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDto()),
+	// return result switch {
+	// Result<Turno2025>.Ok ok =>
+	// Ok(ok.Valor.ToDto()),
 
-			Result<Turno2025>.Error err =>
-				BadRequest(new { error = err.Mensaje }),
+	// Result<Turno2025>.Error err =>
+	// BadRequest(new { error = err.Mensaje }),
 
-			_ => StatusCode(500),
-		};
-	}
+	// _ => StatusCode(500),
+	// };
+	// }
+
+
+
+
 
 	// --------------------------------------------------------
 	// PUT /turnos/{id}/reprogramar
 	// --------------------------------------------------------
-	[HttpPut("{id:int}/reprogramar")]
-	public async Task<IActionResult> Reprogramar(int id, [FromBody] ReprogramarTurnoRequestDto dto) {
-		Result<Turno2025> result = await servicio.ReprogramarTurnoAsync(
-			id,
-			dto.NuevaFechaDesde,
-			dto.NuevaFechaHasta
-		);
+	// [HttpPut("{id:TurnoId}/reprogramar")]
+	// public async Task<IActionResult> Reprogramar([FromRoute] TurnoId id, [FromBody] ReprogramarTurnoRequestDto dto) {
+	// Result<Turno2025> result = await repositorio.ReprogramarTurnoAsync(
+	// id,
+	// dto.NuevaFechaDesde,
+	// dto.NuevaFechaHasta
+	// );
 
-		return result switch {
-			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDto()),
-
-			Result<Turno2025>.Error err =>
-				BadRequest(new { error = err.Mensaje }),
-
-			_ => StatusCode(500),
-		};
-	}
+	// return result switch {
+	// Result<Turno2025>.Ok ok => Ok(ok.Valor.ToDto()),
+	// Result<Turno2025>.Error err => BadRequest(new { error = err.Mensaje }),
+	// _ => StatusCode(500)
+	// };
+	// }
 
 	// --------------------------------------------------------
 	// PUT /turnos/{id}/cancelar
 	// --------------------------------------------------------
-	[HttpPut("{id:int}/cancelar")]
-	public async Task<IActionResult> Cancelar(int id, [FromBody] string? comentario) {
-		Result<Turno2025> result = await servicio.CancelarTurnoAsync(id, comentario.ToOption());
+	// [HttpPut("{id:TurnoId}/cancelar")]
+	// public async Task<IActionResult> Cancelar(
+	// [FromRoute] TurnoId id,
+	// [FromBody] string? comentario) {
+	// Result<Turno2025> result =
+	// await repositorio.CancelarTurnoAsync(id, comentario.ToOption());
 
-		return result switch {
-			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDto()),
-
-			Result<Turno2025>.Error err =>
-				BadRequest(new { error = err.Mensaje }),
-
-			_ => StatusCode(500),
-		};
-	}
+	// return result switch {
+	// Result<Turno2025>.Ok ok => Ok(ok.Valor.ToDto()),
+	// Result<Turno2025>.Error err => BadRequest(new { error = err.Mensaje }),
+	// _ => StatusCode(500)
+	// };
+	// }
 
 	// --------------------------------------------------------
 	// PUT /turnos/{id}/concretar
 	// --------------------------------------------------------
-	[HttpPut("{id:int}/concretar")]
-	public async Task<IActionResult> Concretar(int id, [FromBody] string? comentario) {
-		Result<Turno2025> result = await servicio.MarcarTurnoComoConcretadoAsync(id, comentario.ToOption());
+	// [HttpPut("{id:TurnoId}/concretar")]
+	// public async Task<IActionResult> Concretar([FromRoute] TurnoId id, [FromBody] string? comentario) {
+	// Result<Turno2025> result = await repositorio.MarcarTurnoComoConcretadoAsync(id, comentario.ToOption());
 
-		return result switch {
-			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDto()),
+	// return result switch {
+	// Result<Turno2025>.Ok ok =>
+	// Ok(ok.Valor.ToDto()),
 
-			Result<Turno2025>.Error err =>
-				BadRequest(new { error = err.Mensaje }),
+	// Result<Turno2025>.Error err =>
+	// BadRequest(new { error = err.Mensaje }),
 
-			_ => StatusCode(500),
-		};
-	}
+	// _ => StatusCode(500),
+	// };
+	// }
 
 	// --------------------------------------------------------
 	// PUT /turnos/{id}/ausente
 	// --------------------------------------------------------
-	[HttpPut("{id:int}/ausente")]
-	public async Task<IActionResult> Ausente(int id, [FromBody] string? comentario) {
-		Result<Turno2025> result = await servicio.MarcarTurnoComoAusenteAsync(id, comentario.ToOption());
+	// [HttpPut("{id:TurnoId}/ausente")]
+	// public async Task<IActionResult> Ausente([FromRoute] TurnoId id, [FromBody] string? comentario) {
+	// Result<Turno2025> result = await repositorio.MarcarTurnoComoAusenteAsync(id, comentario.ToOption());
 
-		return result switch {
-			Result<Turno2025>.Ok ok =>
-				Ok(ok.Valor.ToDto()),
+	// return result switch {
+	// Result<Turno2025>.Ok ok =>
+	// Ok(ok.Valor.ToDto()),
 
-			Result<Turno2025>.Error err =>
-				BadRequest(new { error = err.Mensaje }),
+	// Result<Turno2025>.Error err =>
+	// BadRequest(new { error = err.Mensaje }),
 
-			_ => StatusCode(500),
-		};
-	}
+	// _ => StatusCode(500),
+	// };
+	// }
 }

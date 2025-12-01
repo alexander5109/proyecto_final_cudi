@@ -1,51 +1,49 @@
 ﻿using System.Windows;
-using System.Windows.Media.Imaging;
+using Clinica.AppWPF.Infrastructure;
 
-namespace Clinica.AppWPF{
+namespace Clinica.AppWPF {
 	public partial class MainWindow : Window {
-		
+
 		public MainWindow() {
 			InitializeComponent();
-			soundCheckBox.IsChecked = App.SoundOn;
+			soundCheckBox.IsChecked = SoundsService.SoundOn;
 		}
 		public void MetodoBotonLogin(object sender, RoutedEventArgs e) {
 			this.AbrirComoDialogo<WindowLogin>();
 		}
-        private void MetodoBotonMedicos(object sender, RoutedEventArgs e) {
-			if (App.UsuarioLogueado) {
+		private void MetodoBotonMedicos(object sender, RoutedEventArgs e) {
+			if (App.Api.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowListarMedicos>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioLogueado) {
+				if (App.Api.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowListarMedicos>();
 				}
 			}
 		}
 
-        private void MetodoBotonPacientes(object sender, RoutedEventArgs e) {
-			if (App.UsuarioLogueado) {
+		private void MetodoBotonPacientes(object sender, RoutedEventArgs e) {
+			if (App.Api.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowListarPacientes>();
-			}
-			else {
+			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioLogueado) {
+				if (App.Api.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowListarPacientes>();
 				}
 			}
 		}
 
 		private void MetodoBotonTurnos(object sender, RoutedEventArgs e) {
-			if (App.UsuarioLogueado) {
+			if (App.Api.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowListarTurnos>();
-			}
-			else {
+			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioLogueado) {
+				if (App.Api.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowListarTurnos>();
 				}
 			}
 		}
-		
+
 		private void Window_Activated(object sender, EventArgs e) {
 			App.UpdateLabelDataBaseModo(this.labelBaseDeDatosModo);
 		}
@@ -55,21 +53,15 @@ namespace Clinica.AppWPF{
 		}
 
 		private void soundCheckBox_Checked(object sender, RoutedEventArgs e) {
-			if (soundCheckBox.IsChecked == true) {
-				App.SoundOn = true;
-				App.PlayClickJewel();
-			}
-			else {
-				App.SoundOn = false;
-			}
+			SoundsService.ToggleSound(this.soundCheckBox.IsChecked);
 		}
 
-        private void MetodoBotonTurnos2025(object sender, RoutedEventArgs e) {
-			if (App.UsuarioLogueado) {
+		private void MetodoBotonTurnos2025(object sender, RoutedEventArgs e) {
+			if (App.Api.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowGestionTurno>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioLogueado) {
+				if (App.Api.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowGestionTurno>();
 				}
 			}

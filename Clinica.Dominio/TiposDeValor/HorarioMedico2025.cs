@@ -4,13 +4,13 @@ namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct HorarioMedico2025(
 	DiaSemana2025 DiaSemana,
-	HorarioHora2025 Desde,
-	HorarioHora2025 Hasta,
+	HorarioHora2025 HoraDesde,
+	HorarioHora2025 HoraHasta,
 	VigenciaHorario2025 VigenteDesde,
 	VigenciaHorario2025 VigenteHasta
 ) : IComoTexto {
 	public string ATexto()
-		=> $"{DiaSemana.ATexto()}: {Desde.ATexto()} — {Hasta.ATexto()} (vigencia {VigenteDesde.ATexto()} → {VigenteHasta.ATexto()}";
+		=> $"{DiaSemana.ATexto()}: {HoraDesde.ATexto()} — {HoraHasta.ATexto()} (vigencia {VigenteDesde.ATexto()} → {VigenteHasta.ATexto()}";
 
 	public static Result<HorarioMedico2025> Crear(
 		DiaSemana2025 dia,

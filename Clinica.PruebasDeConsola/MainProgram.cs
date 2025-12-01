@@ -1,14 +1,36 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.DataAccess;
-using Clinica.Infrastructure.ServiciosAsync;
 using Microsoft.Extensions.Configuration;
 
 namespace Clinica.PruebasDeConsola;
 
 public static class MainProgram {
+
+
+
+
+	static void CifrarContraseña() {
+		string? rawPassword = null;
+		while (string.IsNullOrWhiteSpace(rawPassword)) {
+			Console.Write("Ingrese contraseña directamente: ");
+			rawPassword = Console.ReadLine();
+			if (string.IsNullOrWhiteSpace(rawPassword)) Console.WriteLine("La contraseña no puede estar vacía.\n");
+		}
+		Console.WriteLine($"\nHashed:");
+		Console.WriteLine($"Raw: {rawPassword}\nHashed: {ContraseñaHasheada.CrearFromRaw(rawPassword).Valor}");
+		Console.WriteLine("\nPresione ENTER para continuar...");
+		Console.ReadLine();
+	}
+
+
+
 	static async Task Main() {
+
+		CifrarContraseña();
+
 		Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 		IConfiguration config = new ConfigurationBuilder()
@@ -16,47 +38,47 @@ public static class MainProgram {
 			.AddJsonFile("appsettings.Development.json")
 			.Build();
 
-		ServiciosPublicosAsync servicio = new(
-			new BaseDeDatosRepositorio(
-				new SqlConnectionFactory(config.GetConnectionString("ClinicaMedica")
-				)
-			)
-		);
-
+		RepositorioDapper repositorio = new(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
 		//var response = await http.GetAsync($"/disponibilidades?especialidadCodigoInterno=3&cuantos=10");
 
-
 		// Caso de uso 1
-		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidades = (await servicio.SolicitarDisponibilidadesPara(
+		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidadesPara(
 			EspecialidadMedica2025.ClinicoGeneral,
 			DateTime.Now,
-			15
-		)).PrintAndContinue("Disponbiildiades encontradas::");
-		//var lista = disponibilidades.GetOrRaise();
-		//foreach (var d in lista)
-		//	Console.WriteLine(d.ATexto());
+			4,
+			repositorio
+		));
+		disponibilidades.PrintAndContinue("Disponbiildiades encontradas::");
+		IReadOnlyList<DisponibilidadEspecialidad2025> lista = disponibilidades.GetOrRaise();
+		foreach (DisponibilidadEspecialidad2025 d in lista)
+			Console.WriteLine(d.ATexto());
 
 		// Caso de uso 2
-		Result<Turno2025> turno = (await servicio.SolicitarTurnoEnLaPrimeraDisponibilidad(
+		Result<Turno2025> turno = (await ServiciosPublicos.SolicitarTurnoEnLaPrimeraDisponibilidad(
 			new PacienteId(1),
 			EspecialidadMedica2025.ClinicoGeneral,
-			new FechaRegistro2025(DateTime.Now)
-		)).PrintAndContinue("Turno asignado:");
+			new FechaRegistro2025(DateTime.Now),
+			repositorio
+		));
+		turno.PrintAndContinue("Turno asignado:");
 
 		// Caso de uso 3
-		Result<Turno2025> reprogramado = (await servicio.SolicitarReprogramacionALaPrimeraDisponibilidad(
+		Result<Turno2025> reprogramado = (await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
 			turno,
 			DateTime.Now.AddDays(1),
-			"Reprogramación"
-		)).PrintAndContinue("Turno reprogramado:");
+			"Reprogramación",
+			repositorio
+		));
+		reprogramado.PrintAndContinue("Turno reprogramado:");
 
 		// Caso de uso 4
-		Result<Turno2025> cancelado = (await servicio.SolicitarCancelacion(
+		Result<Turno2025> cancelado = (await ServiciosPublicos.SolicitarCancelacion(
 			reprogramado,
 			DateTime.Now.AddDays(2),
-			"Cancelación definitiva"
-		)).PrintAndContinue("Turno cancelado:");
-
+			"Cancelación definitiva",
+			repositorio
+		));
+		cancelado.PrintAndContinue("Turno cancelado:");
 
 	}
 

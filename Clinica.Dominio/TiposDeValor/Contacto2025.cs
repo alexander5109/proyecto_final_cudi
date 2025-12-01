@@ -32,7 +32,7 @@ public readonly record struct ContactoTelefono2025(
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<ContactoTelefono2025>.Error("El teléfono no puede estar vacío.");
 
-		var soloNumeros = Regex.Replace(input, @"\D", "");
+        string soloNumeros = Regex.Replace(input, @"\D", "");
 
 		if (soloNumeros.Length > 10)
 			return new Result<ContactoTelefono2025>.Error("El teléfono debe tener exactamente 10 dígitos (sin +54, sin espacios, sin guiones).");

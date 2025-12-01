@@ -1,33 +1,34 @@
-﻿using Clinica.AppWPF.ViewModels;
+﻿using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 namespace Clinica.AppWPF;
 
 public partial class WindowListarMedicos : Window {
-	private static ViewModelMedico? SelectedMedico = null;
-	private static ViewModelTurno? SelectedTurno = null;
+	private static WindowModificarMedicoViewModel? SelectedMedico = null;
+	private static WindowModificarTurnoViewModel? SelectedTurno = null;
 	public WindowListarMedicos() {
 		InitializeComponent();
 	}
 
 	//----------------------ActualizarSecciones-------------------//
 	private void UpdateMedicoUI() {
-		medicosListView.ItemsSource = App.BaseDeDatos.ReadMedicos();
+		//medicosListView.ItemsSource = App.BaseDeDatos.ReadMedicos();
 		buttonModificarMedico.IsEnabled = SelectedMedico != null;
 	}
 	private void UpdateTurnoUI() {
 		if (SelectedMedico != null && SelectedMedico.Id != null) {
-			turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWhereMedicoId((int)SelectedMedico.Id);
+			//turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWhereMedicoId((int)MedicoRelacionado.Id);
 		}
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 	private void UpdatePacienteUI() {
-		txtPacienteDni.Text = SelectedTurno?.PacienteRelacionado.Dni;
-		txtPacienteNombre.Text = SelectedTurno?.PacienteRelacionado.Name;
-		txtPacienteApellido.Text = SelectedTurno?.PacienteRelacionado.LastName;
-		txtPacienteEmail.Text = SelectedTurno?.PacienteRelacionado.Email;
-		txtPacienteTelefono.Text = SelectedTurno?.PacienteRelacionado.Telefono;
-		buttonModificarPaciente.IsEnabled = SelectedTurno?.PacienteRelacionado != null;
+		//txtPacienteDni.Text = SelectedTurno?.PacienteRelacionado.Dni;
+		//txtPacienteNombre.Text = SelectedTurno?.PacienteRelacionado.Name;
+		//txtPacienteApellido.Text = SelectedTurno?.PacienteRelacionado.LastName;
+		//txtPacienteEmail.Text = SelectedTurno?.PacienteRelacionado.Email;
+		//txtPacienteTelefono.Text = SelectedTurno?.PacienteRelacionado.Telefono;
+		//buttonModificarPaciente.IsEnabled = SelectedTurno?.PacienteRelacionado != null;
 	}
 
 
@@ -40,13 +41,13 @@ public partial class WindowListarMedicos : Window {
 		UpdatePacienteUI();
 	}
 	private void listViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedTurno = (ViewModelTurno)turnosListView.SelectedItem;
+		SelectedTurno = (WindowModificarTurnoViewModel)turnosListView.SelectedItem;
 		UpdateMedicoUI();
 		UpdateTurnoUI();
 		UpdatePacienteUI();
 	}
 	private void medicosListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedMedico = (ViewModelMedico)medicosListView.SelectedItem;
+		SelectedMedico = (WindowModificarMedicoViewModel)medicosListView.SelectedItem;
 		UpdateMedicoUI();
 		UpdateTurnoUI();
 		UpdatePacienteUI();
@@ -58,7 +59,7 @@ public partial class WindowListarMedicos : Window {
 	//---------------------botonesDeModificar-------------------//
 	private void ButtonModificarTurno(object sender, RoutedEventArgs e) {
 		if (SelectedTurno != null) {
-			this.AbrirComoDialogo<WindowModificarTurnos>(SelectedTurno);
+			this.AbrirComoDialogo<WindowModificarTurno>(SelectedTurno);
 		}
 	}
 	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
@@ -67,9 +68,9 @@ public partial class WindowListarMedicos : Window {
 		}
 	}
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
-		if (SelectedTurno?.PacienteRelacionado != null) {
-			this.AbrirComoDialogo<WindowModificarPaciente>(SelectedTurno?.PacienteRelacionado);
-		}
+		//if (SelectedTurno?.PacienteRelacionado != null) {
+		//	this.AbrirComoDialogo<WindowModificarPaciente>(SelectedTurno.PacienteRelacionado);
+		//}
 	}
 
 

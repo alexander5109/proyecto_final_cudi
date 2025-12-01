@@ -9,9 +9,9 @@ public static class AsyncRepositorioHardCoded  {
 	public static Task<List<Medico2025>> GetMedicos()
 		=> Task.FromResult(new List<Medico2025> {
 		Medico2025.Crear(
-				new MedicoId(1),
+				MedicoId.Crear(1),
 				NombreCompleto2025.Crear("Carlos Alfredo", "Markier"),
-				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Gastroenterologo.CodigoInterno.Valor),
+				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Gastroenterologo.CodigoInternoValor),
 				//ListaEspecialidadesMedicas2025.Crear([
 				//	EspecialidadMedica2025.Gastroenterologo,
 				//	EspecialidadMedica2025.ClinicoGeneral
@@ -50,9 +50,9 @@ public static class AsyncRepositorioHardCoded  {
 			,
 
 			Medico2025.Crear(
-				new MedicoId(2),
+				MedicoId.Crear(2),
 				NombreCompleto2025.Crear("Jorge", "Pereyra"),
-				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Ginecologo.CodigoInterno.Valor),
+				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Ginecologo.CodigoInternoValor),
 				//ListaEspecialidadesMedicas2025.Crear([
 				//	EspecialidadMedica2025.Pediatra,
 				//	EspecialidadMedica2025.Ginecologo
@@ -91,9 +91,9 @@ public static class AsyncRepositorioHardCoded  {
 			,
 
 			Medico2025.Crear(
-				new MedicoId(3),
+				MedicoId.Crear(3),
 				NombreCompleto2025.Crear("Marta", "Algerich"),
-				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Neurologo.CodigoInterno.Valor),
+				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Neurologo.CodigoInternoValor),
 				//ListaEspecialidadesMedicas2025.Crear([
 					//new Result.Ok<EspecialidadMedica2025>(EspecialidadMedica2025.Neurologo),
 					//EspecialidadMedica2025.Osteopata
@@ -143,7 +143,7 @@ public static class AsyncRepositorioHardCoded  {
 	public static Task<List<Result<Paciente2025>>> GetPacientes()
 		=> Task.FromResult(new List<Result<Paciente2025>> {
 		Paciente2025.Crear(
-				new PacienteId(1),
+				PacienteId.Crear(1),
 				NombreCompleto2025.Crear("Juan", "Diaz"),
 				DniArgentino2025.Crear("44444444"),
 				Contacto2025.Crear(
@@ -162,7 +162,7 @@ public static class AsyncRepositorioHardCoded  {
 			).PrintAndContinue("Creando a Juan: "),
 
 			Paciente2025.Crear(
-				new PacienteId(2),
+				PacienteId.Crear(2),
 				NombreCompleto2025.Crear("Pedro", "Fernandez"),
 				DniArgentino2025.Crear("30350123"),
 				Contacto2025.Crear(
@@ -181,7 +181,7 @@ public static class AsyncRepositorioHardCoded  {
 			).PrintAndContinue("Creando a Pedro: "),
 
 			Paciente2025.Crear(
-				new PacienteId(3),
+				PacienteId.Crear(3),
 				NombreCompleto2025.Crear("Herminda", "Gutierrez Lopez"),
 				DniArgentino2025.Crear("44444444"),
 				Contacto2025.Crear(

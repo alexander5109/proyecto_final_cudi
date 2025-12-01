@@ -121,7 +121,7 @@
 						</HierarchicalDataTemplate>
 
 						<!-- Ítem (horario) -->
-						<DataTemplate DataType="{x:Type local:ViewModelHorario}">
+						<DataTemplate DataType="{x:Type local:HorarioMedicoViewModel}">
 							<StackPanel Orientation="Horizontal" Margin="15,0,0,0">
 								<TextBlock Text="{Binding Desde}" Width="50"/>
 								<TextBlock Text=" - "/>

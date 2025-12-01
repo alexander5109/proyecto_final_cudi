@@ -1,69 +1,98 @@
-﻿using Clinica.AppWPF.ViewModels;
+﻿using System.Net.Http.Json;
 using System.Windows;
 using System.Windows.Controls;
+using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.ViewModels;
+using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DomainDtos;
 
 namespace Clinica.AppWPF;
-    public partial class WindowListarPacientes : Window {
-	private static ViewModelTurno? SelectedTurno;
-	private static ViewModelPaciente? SelectedPaciente;
-	public WindowListarPacientes(){
-            InitializeComponent();
+
+public partial class WindowListarPacientes : Window {
+	private TurnoDto? SelectedTurno; // instead of PacienteListDto?
+	private PacienteDto? SelectedPaciente; // instead of WindowModificarPacienteViewModel?
+	private MedicoDto? MedicoRelacionado; // instead of WindowModificarPacienteViewModel?
+	private bool _isLoadingPacientes = false;
+	//private bool IsBusy = false;
+	public WindowListarPacientes() {
+		InitializeComponent();
 	}
-	
 	//----------------------ActualizarSecciones-------------------//
-	private void UpdatePacienteUI() {
-		pacientesListView.ItemsSource = App.BaseDeDatos.ReadPacientes();
-		buttonModificarPaciente.IsEnabled = SelectedPaciente != null;
+	private async Task UpdatePacienteUIAsync() {
+		if (_isLoadingPacientes) return; // evita reentrada
+		_isLoadingPacientes = true;
+		try {
+			//IsBusy = true;
+			//List<WindowModificarPacienteViewModel> pacientes = await App.BaseDeDatos.ReadPacientes();
+			List<PacienteDto>? pacientes = await App.Api.Cliente.GetFromJsonAsync<List<PacienteDto>>("api/pacientes");
+			//List<PacienteListDto> pacientes = await ApiHelper.Cliente.GetFromJsonAsync<List<PacienteListDto>>("api/pacientes/list");
+			pacientesListView.ItemsSource = pacientes;
+
+			// Actualizar enabled/selected depende del ItemsSource y SelectedPaciente
+			buttonModificarPaciente.IsEnabled = SelectedPaciente != null;
+		} catch (Exception ex) {
+			// Manejo de errores centralizado: log / MessageBox
+			MessageBox.Show($"Error cargando pacientes: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+		} finally {
+			//IsBusy = false;
+			_isLoadingPacientes = false;
+		}
 	}
-	private void UpdateTurnoUI(){
-		if (SelectedPaciente != null && SelectedPaciente.Id != null) {
-			turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWherePacienteId((int)SelectedPaciente.Id);
+	private async Task UpdateTurnosUIAsync() {
+		if (pacientesListView.SelectedItem is PacienteDto paciente) {
+			turnosListView.ItemsSource = await App.Api.Cliente.GetFromJsonAsync<List<TurnoDto>>($"api/pacientes/{paciente.Id.Valor}/turnos");
 		}
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
-	private void UpdateMedicoUI() {
-		txtMedicoDni.Text = SelectedTurno?.MedicoRelacionado.Dni;
-		txtMedicoNombre.Text = SelectedTurno?.MedicoRelacionado.Name;
-		txtMedicoApellido.Text = SelectedTurno?.MedicoRelacionado.LastName;
-		txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado?.EspecialidadCodigoInterno.ToString();
-		buttonModificarMedico.IsEnabled = SelectedTurno?.MedicoRelacionado != null;
+	private async Task UpdateMedicoUIAsync() {
+		if (turnosListView.SelectedItem is TurnoDto turno) {
+			MedicoRelacionado = await App.Api.Cliente.GetFromJsonAsync<MedicoDto>($"api/medicos/{turno.MedicoId}");
+
+			txtMedicoDni.Text = MedicoRelacionado?.Dni;
+			txtMedicoNombre.Text = MedicoRelacionado?.Nombre;
+			txtMedicoApellido.Text = MedicoRelacionado?.Apellido;
+			txtMedicoEspecialidad.Text = MedicoRelacionado?.EspecialidadCodigoInterno.ToString();
+			buttonModificarMedico.IsEnabled = MedicoRelacionado != null;
+		}
 	}
-
-
-
 
 	//----------------------EventosRefresh-------------------//
-	private void Window_Activated(object sender, EventArgs e) {	
-		App.UpdateLabelDataBaseModo(this.labelBaseDeDatosModo);
-		UpdatePacienteUI();
-		UpdateTurnoUI();
-		UpdateMedicoUI();
+	private async void Window_Loaded(object sender, RoutedEventArgs e) {
+		await UpdatePacienteUIAsync();
 	}
-	private void listViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedTurno = (ViewModelTurno)turnosListView.SelectedItem;
-		UpdatePacienteUI();
-		UpdateTurnoUI();
-		UpdateMedicoUI();
+
+	private async void Window_ActivatedAsync(object sender, EventArgs e) {
+		try {
+			App.UpdateLabelDataBaseModo(this.labelBaseDeDatosModo);
+			await UpdatePacienteUIAsync();
+			await UpdateTurnosUIAsync();
+			await UpdateMedicoUIAsync();
+		} catch (Exception ex) {
+			MessageBox.Show($"Error en Activated: {ex.Message}");
+		}
 	}
-	private void pacientesListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedPaciente = (ViewModelPaciente)pacientesListView.SelectedItem;
-		UpdateMedicoUI();
-		UpdateTurnoUI();
-		UpdatePacienteUI();
+	private async void ListViewTurnos_SelectionChangedAsync(object sender, SelectionChangedEventArgs e) {
+		SelectedTurno = (TurnoDto)turnosListView.SelectedItem;
+		await UpdateMedicoUIAsync();
 	}
-	
-	
-	
-	
+	private async void ListViewPacientes_SelectionChangedAsync(object sender, SelectionChangedEventArgs e) {
+		SelectedPaciente = (PacienteDto)pacientesListView.SelectedItem;
+		await UpdateTurnosUIAsync();
+		await UpdateMedicoUIAsync(); // opcional, si un turno estaba seleccionado
+	}
+
+
+
+
 	//---------------------botonesDeModificar-------------------//
 	private void ButtonModificarTurno(object sender, RoutedEventArgs e) {
 		if (SelectedTurno != null) {
-			this.AbrirComoDialogo<WindowModificarTurnos>(SelectedTurno);
+			this.AbrirComoDialogo<WindowModificarTurno>(SelectedTurno);
 		}
 	}
 	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
-		if (SelectedTurno?.MedicoRelacionado != null) {
-			this.AbrirComoDialogo<WindowModificarMedico>(SelectedTurno?.MedicoRelacionado!);
+		if (MedicoRelacionado != null) {
+			this.AbrirComoDialogo<WindowModificarMedico>(MedicoRelacionado);
 		}
 	}
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
@@ -71,26 +100,24 @@ namespace Clinica.AppWPF;
 			this.AbrirComoDialogo<WindowModificarPaciente>(SelectedPaciente);
 		}
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	//------------------botonesParaCrear------------------//
 	private void ButtonAgregarMedico(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<WindowModificarMedico>(); 
+		this.AbrirComoDialogo<WindowModificarMedico>();
 	}
 	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<WindowModificarPaciente>(); // this.NavegarA<WindowModificarPaciente>();
+		this.AbrirComoDialogo<WindowModificarPaciente>();
 	}
 	private void ButtonAgregarTurno(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<WindowModificarMedico>(); 
+		this.AbrirComoDialogo<WindowModificarTurno>();
 	}
-	
-	
-	
-	
-	
+
+
+
 	//---------------------botonesDeVolver-------------------//
 	private void ButtonSalir(object sender, RoutedEventArgs e) {
 		this.Salir();

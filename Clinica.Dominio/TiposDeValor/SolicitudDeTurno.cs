@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.Comun;
 
 namespace Clinica.Dominio.TiposDeValor;
 

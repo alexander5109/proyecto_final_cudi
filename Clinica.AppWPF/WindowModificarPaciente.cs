@@ -1,15 +1,15 @@
 ﻿using Clinica.AppWPF.ViewModels;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Comun;
-using Clinica.Dominio.TiposDeValor;
 using System.ComponentModel;
 using System.Windows;
+using Clinica.AppWPF.Infrastructure;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.AppWPF; 
 public partial class WindowModificarPaciente : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public ViewModelPaciente _selectedView = ViewModelPaciente.NewEmpty();
-	public ViewModelPaciente SelectedPaciente { get => _selectedView; set { _selectedView = value; OnPropertyChanged(nameof(SelectedPaciente)); } }
+	public WindowModificarPacienteViewModel _selectedView = WindowModificarPacienteViewModel.NewEmpty();
+	public WindowModificarPacienteViewModel SelectedPaciente { get => _selectedView; set { _selectedView = value; OnPropertyChanged(nameof(SelectedPaciente)); } }
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 
@@ -18,7 +18,7 @@ public partial class WindowModificarPaciente : Window, INotifyPropertyChanged {
 		DataContext = this;
 	}
 
-	public WindowModificarPaciente(ViewModelPaciente selectedPaciente){
+	public WindowModificarPaciente(WindowModificarPacienteViewModel selectedPaciente){
 		InitializeComponent();
 		SelectedPaciente = selectedPaciente;
 		DataContext = this;
@@ -27,17 +27,17 @@ public partial class WindowModificarPaciente : Window, INotifyPropertyChanged {
 
 	//---------------------botones.GuardarCambios-------------------//
 	private void ButtonGuardar(object sender, RoutedEventArgs e) {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		Result<Paciente2025> resultado = SelectedPaciente.ToDomain();
 		resultado.Switch(
 			ok => {
-				bool exito;
+				bool exito = false;
 				if (SelectedPaciente.Id is null) {
 					// _ValidarRepositorios nuevo paciente
-					exito = App.BaseDeDatos.CreatePaciente(ok, SelectedPaciente);
+					//exito = App.BaseDeDatos.CreatePaciente(SelectedPaciente);
 				} else {
 					// Actualizar existente
-					exito = App.BaseDeDatos.UpdatePaciente(ok, SelectedPaciente.Id);
+					//exito = App.BaseDeDatos.UpdatePaciente(SelectedPaciente);
 				}
 				if (exito)
 					this.Cerrar();
@@ -56,17 +56,17 @@ public partial class WindowModificarPaciente : Window, INotifyPropertyChanged {
 
 	//---------------------botones.Eliminar-------------------//
 	private void ButtonEliminar(object sender, RoutedEventArgs e) {
-		App.PlayClickJewel();
-		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedPaciente.Name}",
+		SoundsService.PlayClickSound();
+		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedPaciente.Nombre}",
 			"Confirmar Eliminación",
 			MessageBoxButton.OKCancel,
 			MessageBoxImage.Warning
 		) != MessageBoxResult.OK) {
 			return;
 		}
-		if (App.BaseDeDatos.DeletePaciente(SelectedPaciente)) {
-			this.Cerrar(); // this.NavegarA<WindowListarMedicos>();
-		}
+		//if (App.BaseDeDatos.DeletePaciente(SelectedPaciente)) {
+			//this.Cerrar(); // this.NavegarA<WindowListarMedicos>();
+		//}
 	}
 	//---------------------botones.Salida-------------------//
 	private void ButtonCancelar(object sender, RoutedEventArgs e) {

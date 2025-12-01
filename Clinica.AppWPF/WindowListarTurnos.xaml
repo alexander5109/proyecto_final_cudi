@@ -58,7 +58,7 @@
 					  Background="Transparent"
 					  BorderThickness="0"
 							 
-							SelectionChanged="listViewTurnos_SelectionChanged" Height="196" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center">
+							SelectionChanged="ListViewTurnos_SelectionChanged" Height="196" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center">
 					<ListView.View>
 						<GridView>
 

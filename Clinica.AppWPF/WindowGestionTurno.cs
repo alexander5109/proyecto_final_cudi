@@ -1,21 +1,25 @@
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using Clinica.AppWPF.ViewModels;
 
 namespace Clinica.AppWPF;
 
+
+public record EspecialidadMedicaDto(string UId, string Titulo);
+public record MedicoSimpleDto(int Id, string Displayear);
+public record DisponibilidadDto(DateTime Fecha, string Hora, string Medico);
+
+
 public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-	private readonly IAgendaService _agendaService;
+	//private readonly HorarioMedicoViewModel _agendaService;
 
-	public ObservableCollection<EspecialidadDto> EspecialidadesDisponibles { get; } = new();
+	public ObservableCollection<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = new();
 	public ObservableCollection<MedicoSimpleDto> MedicosEspecialistas { get; } = new();
-	public ObservableCollection<DiaSemanaDto> DiasSemana { get; } = new();
+	public ObservableCollection<DiaDeSemanaViewModel> DiasSemana { get; } = new();
 	public ObservableCollection<int> Horas { get; } = new();
 	public ObservableCollection<DisponibilidadDto> Disponibilidades { get; } = new();
 
@@ -40,27 +44,29 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 	private bool _filtroHoraEnabled = false;
 	public bool FiltroHoraEnabled { get => _filtroHoraEnabled; set { if (_filtroHoraEnabled == value) return; _filtroHoraEnabled = value; OnPropertyChanged(nameof(FiltroHoraEnabled)); RefreshDisponibilidades(); } }
 
-	public WindowGestionTurno() : this(new Clinica.AppWPF.Services.InMemoryAgendaService()) { }
-
-	public WindowGestionTurno(IAgendaService agendaService) {
+	public WindowGestionTurno() {
 		InitializeComponent();
+
+        WindowGestionTurnoViewModel viewmodel = new();
+
+
 		DataContext = this;
-		_agendaService = agendaService;
+		//_agendaService = agendaService;
 		LoadInitialData();
 	}
 
 	private void LoadInitialData() {
 		EspecialidadesDisponibles.Clear();
-		foreach (var e in _agendaService.GetEspecialidades()) EspecialidadesDisponibles.Add(e);
+		//foreach (var e in _agendaService.GetEspecialidades()) EspecialidadesDisponibles.Add(e);
 
 		MedicosEspecialistas.Clear();
-		foreach (var m in _agendaService.GetMedicosByEspecialidad(EspecialidadesDisponibles.FirstOrDefault()?.UId ?? string.Empty)) MedicosEspecialistas.Add(m);
+		//foreach (var m in _agendaService.GetMedicosByEspecialidad(EspecialidadesDisponibles.FirstOrDefault()?.UId ?? string.Empty)) MedicosEspecialistas.Add(m);
 
 		DiasSemana.Clear();
-		foreach (var d in _agendaService.GetDiasSemana()) DiasSemana.Add(d);
+		//foreach (var d in _agendaService.GetDiasSemana()) DiasSemana.Add(d);
 
 		Horas.Clear();
-		foreach (var h in _agendaService.GetHoras()) HoursAdd(h);
+		//foreach (var h in _agendaService.GetHoras()) HoursAdd(h);
 
 		RefreshDisponibilidades();
 	}
@@ -70,7 +76,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 	private void OnEspecialidadChanged() {
 		MedicosEspecialistas.Clear();
 		if (!string.IsNullOrEmpty(SelectedEspecialidadUId)) {
-			foreach (var m in _agendaService.GetMedicosByEspecialidad(SelectedEspecialidadUId)) MedicosEspecialistas.Add(m);
+			//foreach (var m in _agendaService.GetMedicosByEspecialidad(SelectedEspecialidadUId)) MedicosEspecialistas.Add(m);
 			SelectedMedicoId = MedicosEspecialistas.FirstOrDefault()?.Id;
 		}
 		RefreshDisponibilidades();
@@ -78,13 +84,13 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 
 	private void RefreshDisponibilidades() {
 		Disponibilidades.Clear();
-		var datos = _agendaService.GetDisponibilidades(SelectedEspecialidadUId ?? string.Empty, SelectedMedicoId, FiltroDiaEnabled ? SelectedDiaValue : null, FiltroHoraEnabled ? SelectedHora : null);
-		foreach (var d in datos) Disponibilidades.Add(d);
+		//var datos = _agendaService.GetDisponibilidades(SelectedEspecialidadUId ?? string.Empty, SelectedMedicoId, FiltroDiaEnabled ? SelectedDiaValue : null, FiltroHoraEnabled ? SelectedHora : null);
+		//foreach (var d in datos) Disponibilidades.Add(d);
 	}
 
 	private void ButtonCancelar(object sender, RoutedEventArgs e) => Close();
 	private void ButtonReservar(object sender, RoutedEventArgs e) {
-        DisponibilidadDto? seleccionado = (DisponibilidadDto?)txtDisponibilidades.SelectedItem ?? Disponibilidades.FirstOrDefault();
+		DisponibilidadDto? seleccionado = (DisponibilidadDto?)txtDisponibilidades.SelectedItem ?? Disponibilidades.FirstOrDefault();
 		if (seleccionado is null) { MessageBox.Show("No hay una disponibilidad seleccionada."); return; }
 		MessageBox.Show($"Reservando: {seleccionado.Fecha:d} {seleccionado.Hora} - {seleccionado.Medico}");
 		Close();
