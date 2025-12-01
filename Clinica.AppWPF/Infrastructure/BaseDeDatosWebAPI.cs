@@ -7,10 +7,10 @@ using Clinica.AppWPF.ViewModels;
 
 namespace Clinica.AppWPF.Infrastructure;
 
-public class BaseDeDatosWebAPI : BaseDeDatosInterface {
+public class BaseDeDatosWebAPI(ApiCliente Api) : BaseDeDatosInterface {
 	async Task<List<WindowModificarPacienteViewModel>> BaseDeDatosInterface.ReadPacientes() {
 		try {
-			HttpResponseMessage response = await Api.Cliente.GetAsync("api/pacientes");
+            HttpResponseMessage response = await Api.Http.GetAsync("api/pacientes");
 			if (!response.IsSuccessStatusCode) {
 				string errorMsg = await response.Content.ReadAsStringAsync();
 				throw new Exception($"Error HTTP {(int)response.StatusCode}: {errorMsg}");

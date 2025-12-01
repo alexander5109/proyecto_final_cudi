@@ -34,7 +34,7 @@ public static class ApiDtos {
 
 
 
-
+	public record UsuarioLogueadoDTO(string Nombre, byte RolEnum, string Token);
 
 
 

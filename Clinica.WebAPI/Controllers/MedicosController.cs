@@ -18,7 +18,7 @@ namespace Clinica.WebAPI.Controllers;
 public class MedicosController(RepositorioInterface repositorio, ILogger<TurnosController> logger) : ControllerBase {
 	// GET: api/<MedicosController>
 
-	[Authorize]
+
 	[HttpGet("{id}")]
 	public async Task<ActionResult<MedicoDto>> GetMedicoPorId([FromRoute] MedicoId id) {
 		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
@@ -34,7 +34,7 @@ public class MedicosController(RepositorioInterface repositorio, ILogger<TurnosC
 				respuesta = Ok(ok.ToDto());
 			},
 			error => {
-				respuesta = Forbid(error);
+				respuesta = Problem(error);
 			}
 		);
 

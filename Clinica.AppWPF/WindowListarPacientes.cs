@@ -24,8 +24,8 @@ public partial class WindowListarPacientes : Window {
 		try {
 			//IsBusy = true;
 			//List<WindowModificarPacienteViewModel> pacientes = await App.BaseDeDatos.ReadPacientes();
-			List<PacienteDto> pacientes = await Api.Cliente.GetFromJsonAsync<List<PacienteDto>>("api/pacientes");
-			//List<PacienteListDto> pacientes = await Api.Cliente.GetFromJsonAsync<List<PacienteListDto>>("api/pacientes/list");
+			List<PacienteDto> pacientes = await ApiCliente.Cliente.GetFromJsonAsync<List<PacienteDto>>("api/pacientes");
+			//List<PacienteListDto> pacientes = await ApiCliente.Cliente.GetFromJsonAsync<List<PacienteListDto>>("api/pacientes/list");
 			pacientesListView.ItemsSource = pacientes;
 
 			// Actualizar enabled/selected depende del ItemsSource y SelectedPaciente
@@ -40,13 +40,13 @@ public partial class WindowListarPacientes : Window {
 	}
 	private async Task UpdateTurnosUIAsync() {
 		if (pacientesListView.SelectedItem is PacienteDto paciente) {
-			turnosListView.ItemsSource = await Api.Cliente.GetFromJsonAsync<List<TurnoDto>>($"api/pacientes/{paciente.Id}/turnos");
+			turnosListView.ItemsSource = await ApiCliente.Cliente.GetFromJsonAsync<List<TurnoDto>>($"api/pacientes/{paciente.Id}/turnos");
 		}
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 	private async Task UpdateMedicoUIAsync() {
 		if (turnosListView.SelectedItem is TurnoDto turno) {
-			MedicoRelacionado = await Api.Cliente.GetFromJsonAsync<MedicoDto>($"api/medicos/{turno.MedicoId}");
+			MedicoRelacionado = await ApiCliente.Cliente.GetFromJsonAsync<MedicoDto>($"api/medicos/{turno.MedicoId}");
 
 			txtMedicoDni.Text = MedicoRelacionado?.Dni;
 			txtMedicoNombre.Text = MedicoRelacionado?.Nombre;

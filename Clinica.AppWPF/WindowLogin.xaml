@@ -107,7 +107,7 @@
 				Width="50"
 				Height="50"
 				Background="Transparent"
-				Click="soundCheckBox_Checked"
+				Click="SoundCheckBox_Checked"
 				ToolTip="Sonido">
 				<CheckBox.Template>
 					<ControlTemplate
