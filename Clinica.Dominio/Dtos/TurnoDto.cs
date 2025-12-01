@@ -55,7 +55,7 @@ public static partial class DomainDtos {
 			turno.Especialidad.CodigoInternoValor,
 			turno.FechaHoraAsignadaDesdeValor,
 			turno.FechaHoraAsignadaHastaValor,
-			turno.OutcomeEstadoOption.Codigo,
+			turno.OutcomeEstado.Codigo,
 			turno.OutcomeFechaOption.Match(d => d, () => (DateTime?)null),
 			turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
 		);

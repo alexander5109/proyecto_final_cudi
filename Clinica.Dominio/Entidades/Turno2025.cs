@@ -9,6 +9,10 @@ public record struct TurnoId(int Valor) {
 		id is int idGood
 		? new Result<TurnoId>.Ok(new TurnoId(idGood))
 		: new Result<TurnoId>.Error("El id no puede ser nulo.");
+
+	public override string ToString() {
+		return Valor.ToString();
+	}
 }
 
 public record Turno2025(
@@ -19,7 +23,7 @@ public record Turno2025(
 	EspecialidadMedica2025 Especialidad,
 	DateTime FechaHoraAsignadaDesdeValor,
 	DateTime FechaHoraAsignadaHastaValor,
-	TurnoOutcomeEstado2025 OutcomeEstadoOption,
+	TurnoOutcomeEstado2025 OutcomeEstado,
 	Option<DateTime> OutcomeFechaOption,
 	Option<string> OutcomeComentarioOption
 ) : IComoTexto {
@@ -35,7 +39,7 @@ public record Turno2025(
 			$"  • Médico asignado: {MedicoId}\n" +
 			$"  • Fecha: {fecha}\n" +
 			$"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
-			$"  • OutcomeEstadoOption: {OutcomeEstadoOption}";
+			$"  • OutcomeEstado: {OutcomeEstado}";
 	}
 	public static Result<Turno2025> Crear(
 		Result<TurnoId> idResult,
@@ -117,19 +121,19 @@ public record Turno2025(
 			Especialidad: disp.Especialidad,
 			FechaHoraAsignadaDesdeValor: disp.FechaHoraDesde,
 			FechaHoraAsignadaHastaValor: disp.FechaHoraHasta,
-			OutcomeEstadoOption: TurnoOutcomeEstado2025.Programado,
+			OutcomeEstado: TurnoOutcomeEstado2025.Programado,
 			OutcomeFechaOption: Option<DateTime>.None,
 			OutcomeComentarioOption: Option<string>.None
 		));
 	}
 
 	public Result<Turno2025> SetOutcome(TurnoOutcomeEstado2025 outcomeEstado, DateTime outcomeFecha, string outcomeComentario) {
-		if (OutcomeEstadoOption != TurnoOutcomeEstado2025.Programado)
+		if (OutcomeEstado != TurnoOutcomeEstado2025.Programado)
 			return new Result<Turno2025>.Error("El turno ya tiene un estado final. No puede modificarse.");
 
 		return new Result<Turno2025>.Ok(
 			this with {
-				OutcomeEstadoOption = outcomeEstado,
+				OutcomeEstado = outcomeEstado,
 				OutcomeComentarioOption = Option<string>.Some(outcomeComentario),
 				OutcomeFechaOption = Option<DateTime>.Some(outcomeFecha)
 			}
@@ -140,7 +144,7 @@ public record Turno2025(
 		DisponibilidadEspecialidad2025 nuevaDisp,
 		TurnoId nuevoId
 	) {
-		if (OutcomeEstadoOption == TurnoOutcomeEstado2025.Programado)
+		if (OutcomeEstado == TurnoOutcomeEstado2025.Programado)
 			return new Result<Turno2025>.Error("No puede reprogramarse un turno que todavía está programado.");
 
 		if (!OutcomeFechaOption.HasValor)
@@ -157,7 +161,7 @@ public record Turno2025(
 			Especialidad: Especialidad,
 			FechaHoraAsignadaDesdeValor: nuevaDisp.FechaHoraDesde,
 			FechaHoraAsignadaHastaValor: nuevaDisp.FechaHoraHasta,
-			OutcomeEstadoOption: TurnoOutcomeEstado2025.Programado,
+			OutcomeEstado: TurnoOutcomeEstado2025.Programado,
 			OutcomeFechaOption: Option<DateTime>.None,
 			OutcomeComentarioOption: Option<string>.None
 		));

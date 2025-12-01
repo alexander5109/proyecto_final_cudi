@@ -55,11 +55,11 @@
 							<!-- Name Column -->
 							<GridViewColumn
 								Header="Nombre"
-								DisplayMemberBinding="{Binding Name}"
+								DisplayMemberBinding="{Binding Nombre}"
 								Width="60" />
 							<GridViewColumn
 								Header="Apellido"
-								DisplayMemberBinding="{Binding LastName}"
+								DisplayMemberBinding="{Binding Apellido}"
 								Width="70" />
 							<GridViewColumn
 								Header="Email"

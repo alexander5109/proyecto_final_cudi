@@ -10,6 +10,11 @@ public readonly record struct PacienteId(int Valor) {
 		id is int idGood
 		? new Result<PacienteId>.Ok(new PacienteId(idGood))
 		: new Result<PacienteId>.Error("El id no puede ser nulo.");
+
+	public override string ToString() {
+		return Valor.ToString();
+	}
+
 }
 
 public record Paciente2025(

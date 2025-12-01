@@ -1,18 +1,20 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
+using Clinica.Dominio.IRepositorios;
+using Clinica.Dominio.Servicios;
 using Clinica.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Dominio.Dtos.DomainDtos;
 using static Clinica.Dominio.Dtos.ApiDtos;
+using static Clinica.Dominio.Dtos.DomainDtos;
 
 namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("auth")]
-public class AuthController(BaseDeDatosRepositorioDapper repository) : ControllerBase {
+public class AuthController(RepositorioInterface repository) : ControllerBase {
 	[HttpPost("login")]
 	public async Task<IActionResult> Login([FromBody] LoginRequestDto dto) {
-		Result<UsuarioBase2025> resultado = await repository.ValidarCredenciales(dto.Username, dto.Password);
+		Result<UsuarioBase2025> resultado = await ServiciosPublicos.ValidarCredenciales(dto.Username, dto.Password, repository);
 
 		if (resultado.IsError) {
 			return Unauthorized(new { error = ((Result<UsuarioBase2025>.Error)resultado).Mensaje });

@@ -36,3 +36,15 @@ public class PacienteIdHandler : SqlMapper.TypeHandler<PacienteId> {
 	}
 }
 
+
+
+public class UsuarioIdHandler : SqlMapper.TypeHandler<UsuarioId> {
+	public override void SetValue(IDbDataParameter parameter, UsuarioId value) {
+		parameter.Value = value.Valor; // store as int in DB
+	}
+
+	public override UsuarioId Parse(object value) {
+		return new UsuarioId(Convert.ToInt32(value)); // read from DB as int
+	}
+}
+

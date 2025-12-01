@@ -15,24 +15,54 @@ public static class ServiciosPublicos {
 	//public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> Crear(
 
 
+	//Task<Result<Turno2025>> AgendarTurnoAsync(PacienteId pacienteId, MedicoId medicoId, EspecialidadCodigo2025 especialidadCodigo, DateTime desde, DateTime hasta);
+
+	//Task<Result<Turno2025>> CancelarTurnoAsync(TurnoId id, Option<string> motivo);
+
+	//Task<Result<Turno2025>> ReprogramarTurnoAsync(TurnoId id, DateTime nuevaFechaDesde, DateTime nuevaFechaHasta);
+
+	//Task<Result<Turno2025>> MarcarComoAusente(TurnoId id, Option<string> motivo);
+	//Task<Result<Turno2025>> MarcarComoConcretado(TurnoId id, Option<string> motivo);
 
 
-	public static async Task<Result<Turno2025>> SolicitarCancelacion(Result<Turno2025> turnoOriginalResult, DateTime outcomeFecha, string outcomeComentario, IBaseDeDatosRepositorio repositorio) {
-		switch (turnoOriginalResult) {
-			case Result<Turno2025>.Error turnoError: {
-				return new Result<Turno2025>.Error($"SolicitarCancelacion fallido porque turno ya traia error: \n{turnoError.Mensaje}");
-			}
-			case Result<Turno2025>.Ok turnoOk: {
-				IEnumerable<MedicoDto> medicosDtos = await repositorio.SelectMedicosWhereEspecialidad(turnoOk.Valor.Especialidad);
-				return await ServiciosPublicos.SolicitarCancelacion(
-					turnoOk.Valor,
-					outcomeFecha,
-					outcomeComentario,
-					funcUpdateTurnoWhereId: repositorio.UpdateTurnoWhereId
-				);
-			}
-			default: throw new InvalidOperationException(); //impossible to occur
-		}
+	public static async Task<Result<UsuarioBase2025>> ValidarCredenciales(string username, string password, RepositorioInterface repositorio) {
+		Result<UsuarioBase2025> resultadoUsuario = await repositorio.SelectUsuarioWhereName(new NombreUsuario(username));
+
+		return resultadoUsuario.Match(
+			usuarioOk => usuarioOk.PasswordMatch(password),
+			notFound => resultadoUsuario
+		);
+	}
+
+	public static async Task<Result<Turno2025>> SolicitarCancelacion(
+		Result<Turno2025> turnoOriginalResult,
+		DateTime outcomeFecha,
+		string outcomeComentario,
+		RepositorioInterface repositorio
+	) {
+		if (turnoOriginalResult.IsError) { return turnoOriginalResult; }
+		Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
+		// 1. Aplicar regla de dominio para cancelar
+		Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
+			TurnoOutcomeEstado2025.Cancelado,
+			outcomeFecha,
+			outcomeComentario
+		);
+
+		if (canceladoResult is Result<Turno2025>.Error e1)
+			return new Result<Turno2025>.Error(e1.Mensaje);
+
+		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
+
+		// 2. Guardar cambios (IO)
+		Result<Unit> updateResult = await repositorio.UpdateTurnoWhereId(turnoCancelado);
+
+		if (updateResult is Result<Unit>.Error e2)
+			return new Result<Turno2025>.Error(
+				$"Error al persistir la cancelación del turno: {e2.Mensaje}"
+			);
+
+		return new Result<Turno2025>.Ok(turnoCancelado);
 	}
 
 
@@ -40,11 +70,11 @@ public static class ServiciosPublicos {
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		int cuantos,
-		IBaseDeDatosRepositorio repositorio
+		RepositorioInterface repositorio
 	) {
-		var lista = new List<DisponibilidadEspecialidad2025>(capacity: cuantos);
+		List<DisponibilidadEspecialidad2025> lista = new(capacity: cuantos);
 
-		await foreach (var disp in ServiciosPrivados.GenerarDisponibilidades(
+		await foreach (DisponibilidadEspecialidad2025 disp in ServiciosPrivados.GenerarDisponibilidades(
 			solicitudEspecialidad,
 			solicitudFechaCreacion,
 			repositorio
@@ -69,7 +99,7 @@ public static class ServiciosPublicos {
 		PacienteId pacienteId,
 		EspecialidadMedica2025 solicitudEspecialidad,
 		FechaRegistro2025 solicitudFechaCreacion,
-		IBaseDeDatosRepositorio repositorio
+		RepositorioInterface repositorio
 	) {
 		// 1. Buscar próxima disponibilidad
 		Result<DisponibilidadEspecialidad2025> dispResult =
@@ -115,10 +145,10 @@ public static class ServiciosPublicos {
 		Result<Turno2025> turnoOriginalResult,
 		DateTime outcomeFecha,
 		string outcomeComentario,
-		IBaseDeDatosRepositorio repositorio
+		RepositorioInterface repositorio
 	) {
 		if (turnoOriginalResult.IsError) return turnoOriginalResult;
-        Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
+		Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
 
 		Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
 			TurnoOutcomeEstado2025.Reprogramado,

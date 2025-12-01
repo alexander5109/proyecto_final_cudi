@@ -4,13 +4,14 @@ using Clinica.Dominio.Comun;
 using static Clinica.Dominio.Dtos.DomainDtos;
 using static Clinica.Dominio.Dtos.ApiDtos;
 using Clinica.Dominio.IRepositorios;
+using Clinica.Dominio.Servicios;
 
 
 namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class DisponibilidadesController(IBaseDeDatosRepositorio repositorio, ILogger<DisponibilidadesController> logger) : ControllerBase {
+public class DisponibilidadesController(RepositorioInterface repositorio, ILogger<DisponibilidadesController> logger) : ControllerBase {
 
 
 	[HttpGet(Name = "GetDisponibilidades")]
@@ -23,14 +24,15 @@ public class DisponibilidadesController(IBaseDeDatosRepositorio repositorio, ILo
 		}
 		EspecialidadMedica2025 especialidad = especialidadResult.GetOrRaise();
 
-		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> result = await repositorio.SolicitarDisponibilidadesPara(
+		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> result = await ServiciosPublicos.SolicitarDisponibilidadesPara(
 			especialidad,
 			DateTime.Now,
-			cuantos
+			cuantos,
+			repositorio
 		);
 		return result switch {
 			Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok ok =>
-				Ok(ok.Valor.Select(d => d.ToDto()).ToList()),
+				Ok(ok.Valor.Select(d => d.Especialidad.CodigoInternoValor).ToList()),
 
 			Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error err =>
 				BadRequest(new { error = err.Mensaje }),

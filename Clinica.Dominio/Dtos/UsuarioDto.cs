@@ -1,31 +1,37 @@
-﻿using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.Dominio.Dtos;
 
 public static partial class DomainDtos {
-	public record UsuarioDto(
-	int Id,
-	string NombreUsuario,
-	string PasswordHash,
-	byte EnumRole);
-	public static UsuarioBase2025 ToDomain(this UsuarioDto dto) {
-		UsuarioId id = new(dto.Id);
-		NombreUsuario nombre = new(dto.NombreUsuario);
-		ContraseñaHasheada password = new(dto.PasswordHash);
+	public class UsuarioDto {
+		// Constructor vacío para Dapper
+		public UsuarioDto() { }
 
-		return dto.EnumRole switch {
-			1 => new Usuario2025Nivel1Admin(id, nombre, password),
-			2 => new Usuario2025Nivel2Secretaria(id, nombre, password),
-			_ => throw new Exception($"Rol desconocido: {dto.EnumRole}")
-		};
-	}
-	public static UsuarioDto ToDto(this UsuarioBase2025 entidad) {
-		byte enumrole = entidad switch {
-			Usuario2025Nivel1Admin => 1,
-			Usuario2025Nivel2Secretaria => 2,
-			_ => throw new Exception($"Entidad de dominio todavia no reconocida por infrastructura")
-		};
-		return new UsuarioDto(entidad.UserId.Valor, entidad.UserName.Valor, entidad.UserPassword.Valor, enumrole);
+		// Constructor completo (opcional)
+		public UsuarioDto(UsuarioId id, string nombreUsuario, string passwordHash, UsuarioEnumRole enumRole) {
+			Id = id;
+			NombreUsuario = nombreUsuario;
+			PasswordHash = passwordHash;
+			EnumRole = enumRole;
+		}
 
+		public UsuarioId Id { get; set; }
+		public string NombreUsuario { get; set; } = "";
+		public string PasswordHash { get; set; } = "";
+		public UsuarioEnumRole EnumRole { get; set; }
+
+		public Result<UsuarioBase2025> ToDomain()
+			=> UsuarioBase2025.Crear(Id, NombreUsuario, PasswordHash, EnumRole);
+
+		public static UsuarioDto FromDomain(UsuarioBase2025 entidad) {
+			UsuarioEnumRole enumrole = entidad switch {
+				Usuario2025Nivel1Admin => UsuarioEnumRole.Nivel1Admin,
+				Usuario2025Nivel2Secretaria => UsuarioEnumRole.Nivel2Secretaria,
+				_ => throw new Exception("Entidad de dominio no reconocida por infraestructura")
+			};
+
+			return new UsuarioDto(entidad.UserId, entidad.UserName.Valor, entidad.UserPassword.Valor, enumrole);
+		}
 	}
 }

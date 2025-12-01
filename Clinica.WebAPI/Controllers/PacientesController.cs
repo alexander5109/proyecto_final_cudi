@@ -9,10 +9,7 @@ namespace Clinica.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PacientesController(
-	IBaseDeDatosRepositorio repositorio,
-	ILogger<PacientesController> logger
-) : ControllerBase {
+public class PacientesController(RepositorioInterface repositorio, ILogger<PacientesController> logger) : ControllerBase {
 
 	// ------------------ HELPERS ------------------ //
 
@@ -32,25 +29,47 @@ public class PacientesController(
 		};
 	}
 
+
 	// ------------------ GET ------------------ //
 
 	[HttpGet]
 	public async Task<ActionResult> GetPacientes() {
-		Result<IEnumerable<PacienteDto>> result = await repositorio.SelectPacientes();
+		var result = await repositorio.SelectPacientes();
 		return FromResult(result);
 	}
 
 	[HttpGet("list")]
 	public async Task<ActionResult> GetPacientesList() {
-		Result<IEnumerable<PacienteListDto>> result = await repositorio.SelectPacientesList();
+		var result = await repositorio.SelectPacientes();
 		return FromResult(result);
 	}
+
+
+
+
+
+
+	//[HttpGet("{pacienteId:PacienteId}/turnos")]
+	//public async Task<ActionResult<IEnumerable<TurnoListDto>>> GetTurnosPorPaciente([FromRoute] PacienteId pacienteId) {
+	//	//listo
+
+	//	try {
+	//		IEnumerable<TurnoListDto> instances = await repositorio.SelectTurnosWherePacienteId(pacienteId);
+	//		return Ok(instances);
+	//	} catch (Exception ex) {
+	//		logger.LogError(ex, "Error al obtener listado de instances.");
+	//		return StatusCode(500, "Error interno del servidor.");
+	//	}
+
+	//}
+
+
 
 	// ------------------ DELETE ------------------ //
 
 	[HttpDelete("{id}")]
-	public async Task<ActionResult> Delete(int id) {
-		Result<Unit> result = await repositorio.DeletePaciente(id);
+	public async Task<ActionResult> Delete([FromRoute] PacienteId id) {
+		Result<Unit> result = await repositorio.DeletePacienteWhereId(id);
 		return FromResult(result);
 	}
 
@@ -64,7 +83,7 @@ public class PacientesController(
 		Result<Paciente2025> pacienteResult = dto.ToDomain();
 		if (pacienteResult.IsError) return BadRequest(pacienteResult.UnwrapAsError());
 
-		Result<PacienteId> result2 = await repositorio.CreatePaciente(pacienteResult.UnwrapAsOk());
+		Result<PacienteId> result2 = await repositorio.InsertPacienteReturnId(pacienteResult.UnwrapAsOk());
 
 		return result2 switch {
 			Result<PacienteId>.Ok ok => CreatedAtAction(nameof(GetPacientes), new { id = ok.Valor }, ok.Valor),
@@ -75,12 +94,12 @@ public class PacientesController(
 
 	// ------------------ PUT ------------------ //
 
-	[HttpPut("{id}")]
-	public async Task<ActionResult> Update(int id, [FromBody] PacienteDto dto) {
-		if (dto is null)
-			return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
+	//[HttpPut("{id}")]
+	//public async Task<ActionResult> Update([FromRoute] PacienteId id, [FromBody] PacienteDto dto) {
+	//	if (dto is null)
+	//		return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
 
-		Result<Unit> result = await repositorio.UpdatePaciente(new PacienteId(id), dto);
-		return FromResult(result);
-	}
+	//	Result<Unit> result = await repositorio.UpdatePaciente(id, dto);
+	//	return FromResult(result);
+	//}
 }

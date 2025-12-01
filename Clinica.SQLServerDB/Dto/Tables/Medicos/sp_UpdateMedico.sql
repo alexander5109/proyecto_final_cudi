@@ -8,6 +8,7 @@
     @Localidad NVARCHAR(100),
     @EspecialidadCodigoInterno INT,
     @Telefono NVARCHAR(50),
+    @Email NVARCHAR(150),
     @Guardia BIT,
     @FechaIngreso DATE
 AS
@@ -24,6 +25,7 @@ BEGIN
         [Localidad] = @Localidad,
         EspecialidadCodigoInterno = @EspecialidadCodigoInterno,
         [Telefono] = @Telefono,
+        [Email] = @Email,
         [Guardia] = @Guardia,
         [FechaIngreso] = @FechaIngreso
     WHERE [Id] = @Id;

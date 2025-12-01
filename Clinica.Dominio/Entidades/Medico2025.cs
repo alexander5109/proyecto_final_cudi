@@ -9,6 +9,10 @@ public record struct MedicoId(int Valor) {
 		id is int idGood
 		? new Result<MedicoId>.Ok(new MedicoId(idGood))
 		: new Result<MedicoId>.Error("El id no puede ser nulo.");
+
+	public override string ToString() {
+		return Valor.ToString();
+	}
 }
 
 //public struct HaceGuardia(bool Valor);

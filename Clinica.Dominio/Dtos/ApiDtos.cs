@@ -1,11 +1,12 @@
-﻿using Clinica.Dominio.TiposDeValor;
+﻿using Clinica.Dominio.Entidades;
+using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Dtos;
 
 public static class ApiDtos {
 
 	public record PacienteListDto(
-		int Id,
+		PacienteId Id,
 		string Dni,
 		string Nombre,
 		string Apellido,
@@ -13,19 +14,19 @@ public static class ApiDtos {
 		string Telefono
 	);
 	public record TurnoListDto(
-		int Id,
+		TurnoId Id,
 		TimeSpan Hora,
 		DateTime Fecha,
-		byte EspecialidadCodigoInterno,
-		byte Estado,
-		int MedicoId
+		EspecialidadCodigo2025 EspecialidadCodigoInterno,
+		TurnoOutcomeEstadoCodigo2025 Estado,
+		MedicoId MedicoId
 	);
 
 	public record MedicoListDto(
 		string Dni,
 		string Nombre,
 		string Apellido,
-		byte EspecialidadCodigoInterno
+		EspecialidadCodigo2025 EspecialidadCodigoInterno
 	);
 
 
@@ -47,8 +48,8 @@ public static class ApiDtos {
 
 
 	public record CrearTurnoRequestDto(
-		int PacienteId,
-		int MedicoId,
+		PacienteId PacienteId,
+		MedicoId MedicoId,
 		EspecialidadCodigo2025 EspecialidadCodigo,
 		DateTime Desde,
 		DateTime Hasta
@@ -60,15 +61,10 @@ public static class ApiDtos {
 	);
 
 	public record DisponibilidadDTO(
-		int MedicoId,
+		MedicoId MedicoId,
 		DateTime FechaInicio,
 		DateTime FechaFin,
 		EspecialidadCodigo2025 EspecialidadCodigoInterno
-	);
-	public static DisponibilidadDTO ToDto(this DisponibilidadEspecialidad2025 d) => new(d.MedicoId.Valor,
-		d.FechaHoraDesde,
-		d.FechaHoraHasta,
-		d.Especialidad.CodigoInternoValor
 	);
 
 
@@ -78,7 +74,7 @@ public static class ApiDtos {
 	);
 
 	public record SolicitarTurnoRequest(
-		int PacienteId,
+		PacienteId PacienteId,
 		string Especialidad   // string para no acoplar la API al enum interno
 	);
 

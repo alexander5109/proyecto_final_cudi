@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using static Clinica.Dominio.Dtos.DomainDtos;
-using static Clinica.Dominio.Dtos.ApiDtos;
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
+using Microsoft.AspNetCore.Mvc;
+using static Clinica.Dominio.Dtos.ApiDtos;
+using static Clinica.Dominio.Dtos.DomainDtos;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,15 +11,12 @@ namespace Clinica.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class MedicosController(
-	IBaseDeDatosRepositorio repositorio,
-	ILogger<TurnosController> logger
-) : ControllerBase {
+public class MedicosController(RepositorioInterface repositorio, ILogger<TurnosController> logger) : ControllerBase {
 	// GET: api/<MedicosController>
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<MedicoDto>>> Get() {
 		try {
-			IEnumerable<MedicoDto> instances = await repositorio.SelectMedicos();
+			var instances = await repositorio.SelectMedicos();
 			return Ok(instances);
 		} catch (Exception ex) {
 			logger.LogError(ex, "Error al obtener listado de instances.");
@@ -29,6 +28,24 @@ public class MedicosController(
 	public string Get(int id) {
 		return "value";
 	}
+
+
+
+	[HttpGet("{medicoId:MedicoId}/turnos")]
+	public async Task<ActionResult<IEnumerable<TurnoListDto>>> GetTurnosPorMedico([FromRoute] MedicoId medicoId) {
+		//listo
+
+		try {
+			var instances = await repositorio.SelectTurnosWhereMedicoId(medicoId);
+			return Ok(instances);
+		} catch (Exception ex) {
+			logger.LogError(ex, "Error al obtener listado de instances.");
+			return StatusCode(500, "Error interno del servidor.");
+		}
+
+	}
+
+
 
 	// POST api/<MedicosController>
 	[HttpPost]
