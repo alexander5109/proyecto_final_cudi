@@ -1,9 +1,10 @@
+using System.Text;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Infrastructure.DataAccess;
+using Clinica.WebAPI.Controllers;
 using Clinica.WebAPI.RouteConstraint;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -42,13 +43,18 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 // RepositorioDapper (singleton)
 builder.Services.AddSingleton<RepositorioInterface>(sp => {
 	var factory = sp.GetRequiredService<SQLServerConnectionFactory>();
+	return new RepositorioDapper(factory);
+});
 
+
+// RepositorioDapper (singleton)
+builder.Services.AddSingleton<JwtService>(sp => {
 	string? jwtKey = builder.Configuration["Jwt:Key"];
 	if (string.IsNullOrWhiteSpace(jwtKey))
 		throw new InvalidOperationException("Falta la clave JWT en configuración: 'Jwt:Key'");
-
-	return new RepositorioDapper(factory, jwtKey);
+	return new JwtService(jwtKey);
 });
+
 
 
 builder.Services.Configure<RouteOptions>(options => {

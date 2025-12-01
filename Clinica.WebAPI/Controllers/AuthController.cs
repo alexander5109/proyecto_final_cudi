@@ -11,7 +11,7 @@ namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("auth")]
-public class AuthController(RepositorioInterface repository) : ControllerBase {
+public class AuthController(RepositorioInterface repository, JwtService jwtService) : ControllerBase {
 	[HttpPost("login")]
 	public async Task<IActionResult> Login([FromBody] LoginRequestDto dto) {
 		Result<UsuarioBase2025> resultado = await ServiciosPublicos.ValidarCredenciales(dto.Username, dto.Password, repository);
@@ -22,7 +22,7 @@ public class AuthController(RepositorioInterface repository) : ControllerBase {
 
 		UsuarioBase2025 usuario = ((Result<UsuarioBase2025>.Ok)resultado).Valor;
 
-		string token = repository.EmitirJwt(usuario);
+		string token = jwtService.EmitirJwt(usuario);
 
 		return Ok(new LoginResponseDto(
 			usuario.UserName.Valor,

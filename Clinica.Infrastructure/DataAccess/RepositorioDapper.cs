@@ -1,8 +1,4 @@
 ﻿using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using System.Text;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
@@ -32,7 +28,7 @@ public class SQLServerConnectionFactory(string connectionString) {
 }
 
 
-public class RepositorioDapper(SQLServerConnectionFactory factory, string jwtKey) : RepositorioInterface {
+public class RepositorioDapper(SQLServerConnectionFactory factory) : RepositorioInterface {
 
 	private async Task<Result<T>> TryAsync<T>(Func<IDbConnection, Task<T>> action) {
 		try {
@@ -60,36 +56,6 @@ public class RepositorioDapper(SQLServerConnectionFactory factory, string jwtKey
 
 	//public Task<Result<IEnumerable<PacienteListDto>>> SelectPacientesList() => TryAsync(conn => conn.QueryAsync<PacienteListDto>("sp_SelectPacientesListView", commandType: CommandType.StoredProcedure));
 
-
-
-	public string EmitirJwt(UsuarioBase2025 usuario) {
-		JwtSecurityTokenHandler handler = new();
-		byte[] key = Encoding.ASCII.GetBytes(jwtKey);
-
-		List<Claim> claims = [
-			new("userid", usuario.UserId.Valor.ToString()),
-			new("username", usuario.UserName.Valor),
-			new("role", usuario switch {
-				Usuario2025Nivel1Admin => "Admin",
-				Usuario2025Nivel2Secretaria => "Secretaria",
-				_ => "Desconocido"
-			})
-		];
-
-		SecurityTokenDescriptor tokenDescriptor = new() {
-			Subject = new ClaimsIdentity(claims),
-
-			Expires = DateTime.UtcNow.AddHours(8),
-
-			SigningCredentials = new SigningCredentials(
-				new SymmetricSecurityKey(key),
-				SecurityAlgorithms.HmacSha256Signature
-			)
-		};
-
-		SecurityToken token = handler.CreateToken(tokenDescriptor);
-		return handler.WriteToken(token);
-	}
 
 
 
