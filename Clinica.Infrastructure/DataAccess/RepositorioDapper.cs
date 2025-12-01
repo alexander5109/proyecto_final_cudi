@@ -441,4 +441,22 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 				commandType: CommandType.StoredProcedure
 			);
 		});
+	public static async Task<Result<Unit>> UpdatePacienteWhereId(UsuarioBase2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
+		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
+			return new Result<Unit>.Error("No cuenta con permisos para actualizar pacientes.");
+		}
+		return await repositorio.UpdatePacienteWhereId(paciente);
+	}
+	public static async Task<Result<PacienteId>> InsertPaciente(UsuarioBase2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
+		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
+			return new Result<PacienteId>.Error("No cuenta con permisos para crear pacientes.");
+		}
+		return await repositorio.InsertPacienteReturnId(paciente);
+	}
+	public static async Task<Result<Unit>> DeletePacienteWhereId(UsuarioBase2025 usuario, RepositorioInterface repositorio, PacienteId id) {
+		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
+			return new Result<Unit>.Error("No cuenta con permisos para eliminar pacientes.");
+		}
+		return await repositorio.DeletePacienteWhereId(id);
+	}
 }

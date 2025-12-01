@@ -75,33 +75,28 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 		return respuesta;
 	}
 
-	//[HttpGet("list")]
-	//public async Task<ActionResult> GetPacientesList() {
-	//	var result = await repositorio.SelectPacientes();
-	//	return FromResult(result);
-	//}
 
 
-
-	// ------------------ DELETE ------------------ //
 
 	[HttpDelete("{id}")]
 	public async Task<ActionResult> Delete([FromRoute] PacienteId id) {
-		Result<Unit> result = await repositorio.DeletePacienteWhereId(id);
+		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
+			return Unauthorized("Token válido pero sin usuario asociado");
+
+		Result<Unit> result = await ServiciosPublicos.DeletePacienteWhereId(usuario, repositorio, id);
 		return FromResult(result);
 	}
 
-	// ------------------ POST ------------------ //
-
 	[HttpPost]
 	public async Task<ActionResult> Create([FromBody] PacienteDto dto) {
-		if (dto is null)
-			return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
-
+		if (dto is null) return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
 		Result<Paciente2025> pacienteResult = dto.ToDomain();
 		if (pacienteResult.IsError) return BadRequest(pacienteResult.UnwrapAsError());
 
-		Result<PacienteId> result2 = await repositorio.InsertPacienteReturnId(pacienteResult.UnwrapAsOk());
+		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
+			return Unauthorized("Token válido pero sin usuario asociado");
+
+		Result<PacienteId> result2 = await ServiciosPublicos.InsertPaciente(usuario, repositorio, pacienteResult.UnwrapAsOk());
 
 		return result2 switch {
 			Result<PacienteId>.Ok ok => CreatedAtAction(nameof(GetPacientes), new { id = ok.Valor }, ok.Valor),
@@ -109,5 +104,4 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 			_ => StatusCode(500)
 		};
 	}
-
 }
