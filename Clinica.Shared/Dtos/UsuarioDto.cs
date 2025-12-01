@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 
-namespace Clinica.Dominio.Dtos;
+namespace Clinica.Shared.Dtos;
 
 public static partial class DomainDtos {
 	public class UsuarioDto {

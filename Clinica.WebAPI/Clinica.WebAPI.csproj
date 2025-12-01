@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Clinica.Infrastructure\Clinica.Infrastructure.csproj" />
+    <ProjectReference Include="..\Clinica.Shared\Clinica.Shared.csproj" />
   </ItemGroup>
 
 </Project>

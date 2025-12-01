@@ -3,7 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.ViewModels;
-using static Clinica.Dominio.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DomainDtos;
 
 namespace Clinica.AppWPF;
 
@@ -23,7 +24,8 @@ public partial class WindowListarPacientes : Window {
 		try {
 			//IsBusy = true;
 			//List<WindowModificarPacienteViewModel> pacientes = await App.BaseDeDatos.ReadPacientes();
-			List<PacienteListDto> pacientes = await Api.Cliente.GetFromJsonAsync<List<PacienteListDto>>("api/pacientes/list");
+			List<PacienteDto> pacientes = await Api.Cliente.GetFromJsonAsync<List<PacienteDto>>("api/pacientes");
+			//List<PacienteListDto> pacientes = await Api.Cliente.GetFromJsonAsync<List<PacienteListDto>>("api/pacientes/list");
 			pacientesListView.ItemsSource = pacientes;
 
 			// Actualizar enabled/selected depende del ItemsSource y SelectedPaciente

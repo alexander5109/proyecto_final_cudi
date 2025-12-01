@@ -6,8 +6,8 @@ using Clinica.Dominio.IRepositorios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-using static Clinica.Dominio.Dtos.ApiDtos;
-using static Clinica.Dominio.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DomainDtos;
 
 
 namespace Clinica.WebAPI.Controllers;

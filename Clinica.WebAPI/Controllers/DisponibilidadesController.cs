@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.Comun;
-using static Clinica.Dominio.Dtos.DomainDtos;
-using static Clinica.Dominio.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.Servicios;
 

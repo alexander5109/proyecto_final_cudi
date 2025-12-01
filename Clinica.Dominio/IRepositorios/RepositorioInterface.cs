@@ -1,8 +1,6 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
-using static Clinica.Dominio.Dtos.DomainDtos;
-using static Clinica.Dominio.Dtos.ApiDtos;
 
 namespace Clinica.Dominio.IRepositorios;
 
@@ -19,10 +17,10 @@ public interface RepositorioInterface {
 
 	// ----------------SELECT ONE
 	Task<Result<UsuarioBase2025>> SelectUsuarioWhereName(NombreUsuario nombre);
+	Task<Result<UsuarioBase2025>> SelectUsuarioWhereId(UsuarioId id);
 	Task<Result<Medico2025>> SelectMedicoWhereId(MedicoId id);
 	Task<Result<Paciente2025>> SelectPacienteWhereId(PacienteId id);
 	Task<Result<Turno2025>> SelectTurnoWhereId(TurnoId id);
-	Task<Result<UsuarioBase2025>> SelectUsuarioWhereId(UsuarioId id);
 	// ----------------INSERT
 	Task<Result<UsuarioId>> InsertUsuarioReturnId(UsuarioBase2025 usuario);
 	Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 turno);

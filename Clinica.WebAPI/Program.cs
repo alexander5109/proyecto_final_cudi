@@ -6,34 +6,15 @@ using Clinica.WebAPI.RouteConstraint;
 using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
-// ------------------------------------------------------------
-// 1. Load configuration (appsettings.json + environment config)
-// ------------------------------------------------------------
 IConfiguration config = builder.Configuration;
-// No necesitas nada más: builder.Configuration ya incluye:
-// - appsettings.json
-// - appsettings.{Environment}.json
-// - secrets.json (si aplica)
-// - variables de entorno
-// ------------------------------------------------------------
-
-// ------------------------------------------------------------
-// 2. Add services to the container
-// ------------------------------------------------------------
 builder.Services.AddControllers();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// ------------------------------------------------------------
-// 3. Dependency Injection: Database + ServiciosPublicosAsync
-// ------------------------------------------------------------
-
-// SQLServerConnectionFactory (singleton)
 builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	new SQLServerConnectionFactory(
 		builder.Configuration.GetConnectionString("ClinicaMedica")
@@ -62,11 +43,9 @@ builder.Services.Configure<RouteOptions>(options => {
 	options.ConstraintMap["PacienteId"] = typeof(PacienteIdRouteConstraint);
 	options.ConstraintMap["MedicoId"] = typeof(MedicoIdRouteConstraint);
 	options.ConstraintMap["TurnoId"] = typeof(TurnoIdRouteConstraint);
+	options.ConstraintMap["UsuarioId"] = typeof(UsuarioIdRouteConstraint);
 });
 
-// ------------------------------------------------------------
-// (Optional) CORS – if you will call API from WPF or browser
-// ------------------------------------------------------------
 builder.Services.AddCors(options => {
 	options.AddPolicy("AllowAll", policy => {
 		policy.AllowAnyOrigin()
@@ -75,34 +54,47 @@ builder.Services.AddCors(options => {
 	});
 });
 
-
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-	.AddJwtBearer(options => {
+builder.Services.AddAuthentication("Bearer")
+	.AddJwtBearer("Bearer", options => {
 		options.TokenValidationParameters = new TokenValidationParameters {
-			ValidateIssuer = true,
-			ValidateAudience = true,
-			ValidateLifetime = true,
+			ValidateIssuer = false,
+			ValidateAudience = false,
 			ValidateIssuerSigningKey = true,
-
-			ValidIssuer = builder.Configuration["Jwt:Issuer"],
-			ValidAudience = builder.Configuration["Jwt:Audience"],
 			IssuerSigningKey = new SymmetricSecurityKey(
-				Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+				Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"])
 			)
 		};
 	});
 
 builder.Services.AddAuthorization();
 
-// ------------------------------------------------------------
-// Build app
-// ------------------------------------------------------------
+
+
+
+builder.Services.AddSwaggerGen(c => {
+	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme() {
+		Name = "Authorization",
+		Type = SecuritySchemeType.Http,
+		Scheme = "Bearer",
+		BearerFormat = "JWT",
+		In = ParameterLocation.Header,
+		Description = "Ingrese 'Bearer <token>'"
+	});
+
+	c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+	{
+		new OpenApiSecurityScheme {
+			Reference = new OpenApiReference {
+				Type = ReferenceType.SecurityScheme,
+				Id = "Bearer"
+			}
+		},
+		Array.Empty<string>()
+	}});
+});
+
 WebApplication app = builder.Build();
 
-// ------------------------------------------------------------
-// 4. Middleware pipeline
-// ------------------------------------------------------------
 if (app.Environment.IsDevelopment()) {
 	app.UseSwagger();
 	app.UseSwaggerUI();
@@ -110,10 +102,10 @@ if (app.Environment.IsDevelopment()) {
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseCors("AllowAll");
+app.UseMiddleware<UsuarioMiddleware>();
 
 app.MapControllers();
 

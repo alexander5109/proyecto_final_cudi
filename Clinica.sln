@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.PruebasDeConsola", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Infrastructure", "Clinica.Infrastructure\Clinica.Infrastructure.csproj", "{11E847E5-98C7-0CFD-CB8D-DA8635B704BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Shared", "Clinica.Shared\Clinica.Shared.csproj", "{D28B6D4C-A0B8-4DAF-B807-9B170319DC29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{11E847E5-98C7-0CFD-CB8D-DA8635B704BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11E847E5-98C7-0CFD-CB8D-DA8635B704BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11E847E5-98C7-0CFD-CB8D-DA8635B704BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D28B6D4C-A0B8-4DAF-B807-9B170319DC29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D28B6D4C-A0B8-4DAF-B807-9B170319DC29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D28B6D4C-A0B8-4DAF-B807-9B170319DC29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D28B6D4C-A0B8-4DAF-B807-9B170319DC29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

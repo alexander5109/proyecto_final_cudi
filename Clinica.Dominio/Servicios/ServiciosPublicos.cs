@@ -2,7 +2,6 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.TiposDeValor;
-using static Clinica.Dominio.Dtos.DomainDtos;
 
 
 namespace Clinica.Dominio.Servicios;
@@ -23,6 +22,27 @@ public static class ServiciosPublicos {
 
 	//Task<Result<Turno2025>> MarcarComoAusente(TurnoId id, Option<string> motivo);
 	//Task<Result<Turno2025>> MarcarComoConcretado(TurnoId id, Option<string> motivo);
+
+
+
+
+	public static async Task<Result<IEnumerable<Paciente2025>>> SelectPacientes(
+		UsuarioBase2025 usuario,
+		RepositorioInterface repositorio) {
+		// --- Validación de permisos ---
+		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin
+							  and not UsuarioEnumRole.Nivel2Secretaria) {
+			return new Result<IEnumerable<Paciente2025>>.Error(
+				"No cuenta con permisos para ver pacientes");
+		}
+
+		// --- Delegar la obtención de datos ---
+		return await repositorio.SelectPacientes();
+	}
+
+
+
+
 
 
 	public static async Task<Result<UsuarioBase2025>> ValidarCredenciales(string username, string password, RepositorioInterface repositorio) {

@@ -1,9 +1,10 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Dominio.Dtos.ApiDtos;
-using static Clinica.Dominio.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DomainDtos;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,6 +14,9 @@ namespace Clinica.WebAPI.Controllers;
 [ApiController]
 public class MedicosController(RepositorioInterface repositorio, ILogger<TurnosController> logger) : ControllerBase {
 	// GET: api/<MedicosController>
+
+
+	[Authorize]
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<MedicoDto>>> Get() {
 		try {

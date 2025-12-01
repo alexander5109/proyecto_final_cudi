@@ -3,31 +3,15 @@ using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Infrastructure.TypeHandlers;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
-using static Clinica.Dominio.Dtos.ApiDtos;
-using static Clinica.Dominio.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DomainDtos;
 
 namespace Clinica.Infrastructure.DataAccess;
 
-
-public class SQLServerConnectionFactory(string connectionString) {
-	public IDbConnection CrearConexion() {
-
-		SqlMapper.AddTypeHandler(new TurnoIdHandler());
-		SqlMapper.AddTypeHandler(new PacienteIdHandler());
-		SqlMapper.AddTypeHandler(new MedicoIdHandler());
-		SqlMapper.AddTypeHandler(new UsuarioIdHandler());
-
-		return new SqlConnection(connectionString);
-	}
-}
-
-
 public class RepositorioDapper(SQLServerConnectionFactory factory) : RepositorioInterface {
-
 	private async Task<Result<T>> TryAsync<T>(Func<IDbConnection, Task<T>> action) {
 		try {
 			using IDbConnection conn = factory.CrearConexion();
@@ -53,8 +37,6 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 	}
 
 	//public Task<Result<IEnumerable<PacienteListDto>>> SelectPacientesList() => TryAsync(conn => conn.QueryAsync<PacienteListDto>("sp_SelectPacientesListView", commandType: CommandType.StoredProcedure));
-
-
 
 
 	//-----------------------SELECT one ------------------
@@ -189,8 +171,8 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 	public Task<Result<IEnumerable<HorarioMedico2025>>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
 		=> TryAsync(async conn => {
 			IEnumerable<HorarioMedicoDto> dtos = await conn.QueryAsync<HorarioMedicoDto>(
-				"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId", 
-				new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde.Date, FechaHasta = fechaHasta.Date }, 
+				"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId",
+				new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde.Date, FechaHasta = fechaHasta.Date },
 				commandType: CommandType.StoredProcedure
 			);
 			List<HorarioMedico2025> instances = [];

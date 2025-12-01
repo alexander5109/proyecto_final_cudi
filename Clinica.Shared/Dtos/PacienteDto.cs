@@ -2,7 +2,7 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Dominio.Dtos;
+namespace Clinica.Shared.Dtos;
 
 public static partial class DomainDtos {
 	public record class PacienteDto {

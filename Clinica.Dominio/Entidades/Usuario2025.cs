@@ -2,7 +2,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using Clinica.Dominio.Comun;
-using static Clinica.Dominio.Dtos.DomainDtos;
 
 namespace Clinica.Dominio.Entidades;
 

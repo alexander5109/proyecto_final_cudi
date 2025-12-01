@@ -1,17 +1,17 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
+using Clinica.Dominio.Servicios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Dominio.Dtos.ApiDtos;
-using static Clinica.Dominio.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DomainDtos;
 
 namespace Clinica.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class PacientesController(RepositorioInterface repositorio, ILogger<PacientesController> logger) : ControllerBase {
-
-	// ------------------ HELPERS ------------------ //
 
 	private ActionResult FromResult<T>(Result<T> result) {
 		return result switch {
@@ -30,12 +30,32 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 	}
 
 
-	// ------------------ GET ------------------ //
-
+	[Authorize]
 	[HttpGet]
-	public async Task<ActionResult> GetPacientes() {
-		var result = await repositorio.SelectPacientes();
-		return FromResult(result);
+	public async Task<ActionResult<IEnumerable<PacienteDto>>> GetPacientes() {
+
+		UsuarioBase2025? usuario = HttpContext.Items["Usuario"] as UsuarioBase2025;
+
+		if (usuario is null)
+			return Unauthorized("Token válido pero sin usuario asociado");
+
+
+		//UsuarioBase2025 usuario = HttpContext.Items["Usuario"] as UsuarioBase2025
+			//?? throw new Exception("Usuario no autenticado");
+
+		//return Ok("Hola mundo todo bien?");
+
+		Result<IEnumerable<Paciente2025>> result = await ServiciosPublicos.SelectPacientes(usuario, repositorio);
+
+		return result switch {
+			Result<IEnumerable<Paciente2025>>.Ok ok =>
+				Ok(ok.Valor.Select(p => p.ToDto())),
+
+			Result<IEnumerable<Paciente2025>>.Error err =>
+				Forbid(err.Mensaje),
+
+			_ => StatusCode(500)
+		};
 	}
 
 	[HttpGet("list")]
@@ -43,25 +63,6 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 		var result = await repositorio.SelectPacientes();
 		return FromResult(result);
 	}
-
-
-
-
-
-
-	//[HttpGet("{pacienteId:PacienteId}/turnos")]
-	//public async Task<ActionResult<IEnumerable<TurnoListDto>>> GetTurnosPorPaciente([FromRoute] PacienteId pacienteId) {
-	//	//listo
-
-	//	try {
-	//		IEnumerable<TurnoListDto> instances = await repositorio.SelectTurnosWherePacienteId(pacienteId);
-	//		return Ok(instances);
-	//	} catch (Exception ex) {
-	//		logger.LogError(ex, "Error al obtener listado de instances.");
-	//		return StatusCode(500, "Error interno del servidor.");
-	//	}
-
-	//}
 
 
 
@@ -92,14 +93,4 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 		};
 	}
 
-	// ------------------ PUT ------------------ //
-
-	//[HttpPut("{id}")]
-	//public async Task<ActionResult> Update([FromRoute] PacienteId id, [FromBody] PacienteDto dto) {
-	//	if (dto is null)
-	//		return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
-
-	//	Result<Unit> result = await repositorio.UpdatePaciente(id, dto);
-	//	return FromResult(result);
-	//}
 }

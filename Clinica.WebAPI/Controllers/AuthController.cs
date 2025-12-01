@@ -4,8 +4,8 @@ using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.Servicios;
 using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Dominio.Dtos.ApiDtos;
-using static Clinica.Dominio.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DomainDtos;
 
 namespace Clinica.WebAPI.Controllers;
 
