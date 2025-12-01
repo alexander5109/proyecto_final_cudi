@@ -19,6 +19,41 @@ public class MedicosController(RepositorioInterface repositorio, ILogger<TurnosC
 	// GET: api/<MedicosController>
 
 
+
+
+
+	[HttpGet]
+	public async Task<ActionResult<IEnumerable<MedicoDto>>> GetTodos() {
+		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
+			return Unauthorized("Token válido pero sin usuario asociado");
+
+		Result<IEnumerable<Medico2025>> result =
+			await ServiciosPublicos.SelectMedicos(usuario, repositorio);
+
+		ActionResult<IEnumerable<MedicoDto>> respuesta = null!;
+		result.Switch(
+			ok => {
+				respuesta = Ok(ok.Select(p => p.ToDto()));
+			},
+			error => {
+				respuesta = Forbid(error);
+			}
+		);
+		return respuesta;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 	[HttpGet("{id}")]
 	public async Task<ActionResult<MedicoDto>> GetMedicoPorId([FromRoute] MedicoId id) {
 		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)

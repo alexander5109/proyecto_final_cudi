@@ -67,6 +67,18 @@ public static class ServiciosPublicos {
 		return await repositorio.SelectPacientes();
 	}
 
+
+
+	public static async Task<Result<IEnumerable<Medico2025>>> SelectMedicos(
+		UsuarioBase2025 usuario,
+		RepositorioInterface repositorio
+	) {
+		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
+			return new Result<IEnumerable<Medico2025>>.Error("No cuenta con permisos para ver esta entidad");
+		}
+		return await repositorio.SelectMedicos();
+	}
+
 	public static async Task<Result<IEnumerable<Turno2025>>> SelectTurnosWherePacienteId(
 		UsuarioBase2025 usuario,
 		RepositorioInterface repositorio,

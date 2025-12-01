@@ -40,7 +40,7 @@ public partial class WindowListarPacientes : Window {
 	}
 	private async Task UpdateTurnosUIAsync() {
 		if (pacientesListView.SelectedItem is PacienteDto paciente) {
-			turnosListView.ItemsSource = await App.Api.Cliente.GetFromJsonAsync<List<TurnoDto>>($"api/pacientes/{paciente.Id}/turnos");
+			turnosListView.ItemsSource = await App.Api.Cliente.GetFromJsonAsync<List<TurnoDto>>($"api/pacientes/{paciente.Id.Valor}/turnos");
 		}
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
