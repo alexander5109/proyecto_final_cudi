@@ -4,29 +4,29 @@ using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF.Infrastructure;
 
-public class ApiCliente {
-	private readonly HttpClient _http;
+public class ApiHelper {
+	private readonly HttpClient _cliente;
 
 	public UsuarioLogueadoDTO? UsuarioActual { get; private set; }
 
-	public ApiCliente() {
-		string? baseUrl = AppConfig.Config["ApiCliente:BaseUrl"]
-			?? throw new InvalidOperationException("ApiCliente:BaseUrl missing");
+	public ApiHelper() {
+		string? baseUrl = AppConfig.Config["Api:BaseUrl"]
+			?? throw new InvalidOperationException("Api:BaseUrl missing");
 
-		_http = new HttpClient {
+		_cliente = new HttpClient {
 			BaseAddress = new Uri(baseUrl),
 			Timeout = TimeSpan.FromSeconds(15)
 		};
 
-		_http.DefaultRequestHeaders.Accept.Clear();
-		_http.DefaultRequestHeaders.Accept.Add(
+		_cliente.DefaultRequestHeaders.Accept.Clear();
+		_cliente.DefaultRequestHeaders.Accept.Add(
 			new MediaTypeWithQualityHeaderValue("application/json"));
 	}
 
-	public HttpClient Http => _http;
+	public HttpClient Cliente => _cliente;
 
 	public void SetToken(string token) {
-		_http.DefaultRequestHeaders.Authorization =
+		_cliente.DefaultRequestHeaders.Authorization =
 			new AuthenticationHeaderValue("Bearer", token);
 	}
 

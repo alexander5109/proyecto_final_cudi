@@ -69,7 +69,7 @@ public partial class WindowModificarTurno : Window, INotifyPropertyChanged {
 	//---------------------botones.GuardarCambios-------------------//
 
 	private void ButtonGuardar(object sender, RoutedEventArgs e) {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 
 		Result<Turno2025> resultado = SelectedTurno.ToDomain();
 
@@ -101,7 +101,7 @@ public partial class WindowModificarTurno : Window, INotifyPropertyChanged {
 
 	//---------------------botones.Eliminar-------------------//
 	private void ButtonEliminar(object sender, RoutedEventArgs e) {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		//---------Checknulls-----------//
 		if (SelectedTurno is null) {
 			MessageBox.Show($"No hay item seleccionado.");

@@ -18,7 +18,7 @@ public partial class WindowLogin : Window {
 			return;
 		}
 
-		var result = await AuthService.LoginAsync(App.ApiClient, guiUsuario.Text, guiPassword.Password);
+		var result = await AuthService.LoginAsync(App.Api, guiUsuario.Text, guiPassword.Password);
 
 		if (result.IsError) {
 			MessageBox.Show(result.UnwrapAsError(), "Error", MessageBoxButton.OK);

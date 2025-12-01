@@ -11,7 +11,7 @@ using Clinica.AppWPF.Infrastructure;
 namespace Clinica.AppWPF;
 
 public static class SoundsService {
-	private static bool SoundOn = true;
+	public static bool SoundOn = true;
 	//private static MediaPlayer Sonidito = new();
 
 	public static void ToggleSound(bool? toggleOn) {

@@ -4,14 +4,14 @@ namespace Clinica.AppWPF.Infrastructure;
 
 public static class ExtensionMethods {
 	public static void NavegarA<T>(this Window previousWindow) where T : Window, new() {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		T nuevaVentana = new();
 		Application.Current.MainWindow = nuevaVentana;  // Establecer la nueva ventana como la principal
 		nuevaVentana.Show();  // Mostrar la nueva ventana
 		previousWindow.Close();  // Cerrar la ventana actual
 	}
 	public static void NavegarA<T>(this Window previousWindow, object optionalArg) where T : Window, new() {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		T nuevaVentana = (T)Activator.CreateInstance(typeof(T), optionalArg);
 		Application.Current.MainWindow = nuevaVentana;  // Establecer la nueva ventana como la principal
 		nuevaVentana.Show();  // Mostrar la nueva ventana
@@ -19,25 +19,25 @@ public static class ExtensionMethods {
 	}
 
 	public static void AbrirComoDialogo<T>(this Window previousWindow) where T : Window, new() {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		T nuevaVentana = new();
 		Application.Current.MainWindow = nuevaVentana;
 		nuevaVentana.ShowDialog();
 	}
 
 	public static void AbrirComoDialogo<T>(this Window previousWindow, object optionalArg) where T : Window {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		T nuevaVentana = (T)Activator.CreateInstance(typeof(T), optionalArg);
 		Application.Current.MainWindow = nuevaVentana;
 		nuevaVentana.ShowDialog();
 	}
 
 	public static void VolverAHome(this Window previousWindow) {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		previousWindow.NavegarA<MainWindow>();
 	}
 	public static void Salir(this Window previousWindow) {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		if (MessageBox.Show($"¿Está seguro que desea salir de la aplicacion?",
 			"Confirmar ciere",
 			MessageBoxButton.OKCancel,
@@ -50,7 +50,7 @@ public static class ExtensionMethods {
 		Application.Current.Shutdown();  // Apagar la aplicación
 	}
 	public static void Cerrar(this Window previousWindow) {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		previousWindow.Close();
 	}
 }

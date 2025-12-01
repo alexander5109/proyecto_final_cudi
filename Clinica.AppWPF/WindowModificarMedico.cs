@@ -27,7 +27,7 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	}
 	//---------------------botones.GuardarCambios-------------------//
 	private void ButtonGuardar(object sender, RoutedEventArgs e) {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		Result<Medico2025> resultado = SelectedMedico.ToDomain();
 
 		resultado.Switch(
@@ -55,7 +55,7 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	}
 	//---------------------botones.Eliminar-------------------//
 	private void ButtonEliminar(object sender, RoutedEventArgs e) {
-		App.PlayClickJewel();
+		SoundsService.PlayClickSound();
 		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedMedico.Name}", "Confirmar Eliminación", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK) {
 			return;
 		}

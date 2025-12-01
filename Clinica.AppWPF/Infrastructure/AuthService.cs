@@ -8,12 +8,12 @@ using static Clinica.Shared.Dtos.ApiDtos;
 namespace Clinica.AppWPF.Infrastructure;
 
 public static class AuthService {
-	public static async Task<Result<UsuarioLogueadoDTO>> LoginAsync(ApiCliente api, string user, string pass) {
+	public static async Task<Result<UsuarioLogueadoDTO>> LoginAsync(ApiHelper api, string user, string pass) {
 		if (string.IsNullOrWhiteSpace(user) || string.IsNullOrWhiteSpace(pass))
 			return new Result<UsuarioLogueadoDTO>.Error("Debe completar usuario y contraseña.");
 
 		try {
-			var response = await api.Http.PostAsJsonAsync("/auth/login",
+			var response = await api.Cliente.PostAsJsonAsync("/auth/login",
 				new { username = user, password = pass });
 
 			if (!response.IsSuccessStatusCode)
@@ -23,7 +23,7 @@ public static class AuthService {
 			if (data is null)
 				return new Result<UsuarioLogueadoDTO>.Error("Error inesperado del servidor.");
 
-			// acá queda guardado en el ApiCliente
+			// acá queda guardado en el ApiHelper
 			api.SetUsuario(data);
 
 			return new Result<UsuarioLogueadoDTO>.Ok(data);

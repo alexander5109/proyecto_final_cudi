@@ -6,39 +6,39 @@ namespace Clinica.AppWPF {
 
 		public MainWindow() {
 			InitializeComponent();
-			soundCheckBox.IsChecked = App.SoundOn;
+			soundCheckBox.IsChecked = SoundsService.SoundOn;
 		}
 		public void MetodoBotonLogin(object sender, RoutedEventArgs e) {
 			this.AbrirComoDialogo<WindowLogin>();
 		}
 		private void MetodoBotonMedicos(object sender, RoutedEventArgs e) {
-			if (App.UsuarioActual?.RolEnum < 2) {
+			if (App.Api.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowListarMedicos>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioActual?.RolEnum < 2) {
+				if (App.Api.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowListarMedicos>();
 				}
 			}
 		}
 
 		private void MetodoBotonPacientes(object sender, RoutedEventArgs e) {
-			if (App.UsuarioActual?.RolEnum < 2) {
+			if (App.Api.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowListarPacientes>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioActual?.RolEnum < 2) {
+				if (App.Api.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowListarPacientes>();
 				}
 			}
 		}
 
 		private void MetodoBotonTurnos(object sender, RoutedEventArgs e) {
-			if (App.UsuarioActual?.RolEnum < 2) {
+			if (App.Api.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowListarTurnos>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioActual?.RolEnum < 2) {
+				if (App.Api.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowListarTurnos>();
 				}
 			}
@@ -53,20 +53,15 @@ namespace Clinica.AppWPF {
 		}
 
 		private void soundCheckBox_Checked(object sender, RoutedEventArgs e) {
-			if (soundCheckBox.IsChecked == true) {
-				App.SoundOn = true;
-				App.PlayClickJewel();
-			} else {
-				App.SoundOn = false;
-			}
+			SoundsService.ToggleSound(this.soundCheckBox.IsChecked);
 		}
 
 		private void MetodoBotonTurnos2025(object sender, RoutedEventArgs e) {
-			if (App.UsuarioActual?.RolEnum < 2) {
+			if (App.Api.UsuarioActual?.RolEnum < 2) {
 				this.NavegarA<WindowGestionTurno>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
-				if (App.UsuarioActual?.RolEnum < 2) {
+				if (App.Api.UsuarioActual?.RolEnum < 2) {
 					this.NavegarA<WindowGestionTurno>();
 				}
 			}
