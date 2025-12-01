@@ -6,8 +6,8 @@ using Clinica.AppWPF.Infrastructure;
 namespace Clinica.AppWPF;
 
 public partial class App : Application {
-	public static BaseDeDatosInterface BaseDeDatos;
-	public static ApiCliente ApiClient;
+	public static BaseDeDatosInterface BaseDeDatos = new BaseDeDatosWebAPI();
+	public static ApiCliente ApiClient = new();
 
 
 	protected override void OnStartup(StartupEventArgs e) {
@@ -17,8 +17,8 @@ public partial class App : Application {
 		PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Error;
 		System.Diagnostics.PresentationTraceSources.Refresh();
 		System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
-		ApiClient = new ApiCliente();
-		BaseDeDatos = new BaseDeDatosWebAPI(ApiClient);
+		//ApiClient = new ApiCliente();
+		//BaseDeDatos = new BaseDeDatosWebAPI(ApiClient);
 
 
 	}
