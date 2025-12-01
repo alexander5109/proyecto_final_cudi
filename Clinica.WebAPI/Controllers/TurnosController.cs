@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,6 +16,7 @@ namespace Clinica.WebAPI.Controllers;
 
 
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class TurnosController(RepositorioInterface repositorio, ILogger<TurnosController> logger) : ControllerBase {

@@ -9,6 +9,7 @@ using static Clinica.Shared.Dtos.DomainDtos;
 
 namespace Clinica.WebAPI.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class PacientesController(RepositorioInterface repositorio, ILogger<PacientesController> logger) : ControllerBase {
@@ -29,8 +30,6 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 		};
 	}
 
-
-	[Authorize]
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<PacienteDto>>> GetPacientes() {
 

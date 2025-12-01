@@ -10,13 +10,13 @@ using static Clinica.Shared.Dtos.DomainDtos;
 
 namespace Clinica.WebAPI.Controllers;
 
+
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class MedicosController(RepositorioInterface repositorio, ILogger<TurnosController> logger) : ControllerBase {
 	// GET: api/<MedicosController>
 
-
-	[Authorize]
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<MedicoDto>>> Get() {
 		try {
