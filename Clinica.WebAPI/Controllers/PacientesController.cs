@@ -14,21 +14,21 @@ namespace Clinica.WebAPI.Controllers;
 [ApiController]
 public class PacientesController(RepositorioInterface repositorio, ILogger<PacientesController> logger) : ControllerBase {
 
-	private ActionResult FromResult<T>(Result<T> result) {
-		return result switch {
-			Result<T>.Ok ok => Ok(ok.Valor),
-			Result<T>.Error err => BadRequest(err.Mensaje),
-			_ => StatusCode(500)
-		};
-	}
+	//private ActionResult FromResult<T>(Result<T> result) {
+	//	return result switch {
+	//		Result<T>.Ok ok => Ok(ok.Valor),
+	//		Result<T>.Error err => BadRequest(err.Mensaje),
+	//		_ => StatusCode(500)
+	//	};
+	//}
 
-	private ActionResult FromResult(Result<Unit> result) {
-		return result switch {
-			Result<Unit>.Ok => NoContent(),
-			Result<Unit>.Error e => BadRequest(e.Mensaje),
-			_ => StatusCode(500)
-		};
-	}
+	//private ActionResult FromResult(Result<Unit> result) {
+	//	return result switch {
+	//		Result<Unit>.Ok => NoContent(),
+	//		Result<Unit>.Error e => BadRequest(e.Mensaje),
+	//		_ => StatusCode(500)
+	//	};
+	//}
 
 
 
@@ -54,6 +54,10 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 
 	//	return respuesta;
 	//}
+
+
+
+
 	[HttpGet("{id}/turnos")]
 	public async Task<IActionResult> GetTurnosPorPaciente([FromRoute] int id) {
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
@@ -67,8 +71,6 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 	}
 
 
-
-
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<PacienteDto>>> GetPacientes() {
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
@@ -80,6 +82,38 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 		var pacientes = await repositorio.SelectPacientes(); //VOLVER A CMABIAR ESTO....
 		return Ok(pacientes);
 	}
+
+	[HttpPost]
+	public async Task<IActionResult> CrearPaciente([FromBody] PacienteDto dto) {
+		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+			return Unauthorized();
+
+		if (!usuario.HasPermission(PermisoSistema.CrearPacientes))
+			return Forbid();
+
+		Result<Paciente2025> pacienteResult = dto.ToDomain();
+
+		if (pacienteResult.IsError)
+			return BadRequest(new { error = pacienteResult.UnwrapAsError() });
+
+		Paciente2025 paciente = pacienteResult.UnwrapAsOk();
+
+		Result<PacienteId> guardarResult =
+			await repositorio.InsertPacienteReturnId(paciente);
+
+		return guardarResult.Match<IActionResult>(
+			pacienteAgregadoId => Ok(new {
+				mensaje = $"Paciente creado exitosamente con id: {pacienteAgregadoId.Valor}"
+			}),
+			pacienteDBInsertError => Problem(pacienteDBInsertError)
+		);
+	}
+
+
+
+
+
+
 
 
 

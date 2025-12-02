@@ -2,6 +2,7 @@
 	VerPacientes,
 	VerTurnos,
 	VerMedicos,
+	CrearPacientes,
 
 	CrearTurno,
 	CancelarTurno,
@@ -21,6 +22,7 @@ public static class PermisosPorRol {
 			PermisoSistema.CrearTurno,
 			PermisoSistema.CancelarTurno,
 			PermisoSistema.ReprogramarTurno,
+			PermisoSistema.CrearPacientes,
 		},
 
 		[UsuarioEnumRole.Nivel2Secretaria] = new()
@@ -30,6 +32,7 @@ public static class PermisosPorRol {
 			PermisoSistema.VerMedicos,
 			PermisoSistema.CrearTurno,
 			PermisoSistema.CancelarTurno,
+			PermisoSistema.CrearPacientes,
 		},
 
 		[UsuarioEnumRole.Nivel3Medico] = new()
