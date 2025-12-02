@@ -3,17 +3,13 @@ using Clinica.Dominio.IRepositorios;
 using Clinica.Infrastructure.DataAccess;
 using Clinica.WebAPI.RouteConstraint;
 using Clinica.WebAPI.Servicios;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
-using System.Security.Claims;
 
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IConfiguration config = builder.Configuration;
 builder.Services.AddControllers();
-
-
 
 
 

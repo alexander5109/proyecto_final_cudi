@@ -61,7 +61,6 @@ public record Turno2025(
 		Option<DateTime> outcomeFecha,
 		Option<string> outcomeComentario
 	) {
-		// Componemos los VO dependientes
 		return
 			from id in idResult
 			from fechaCreacion in fechaCreacionResult
@@ -69,8 +68,8 @@ public record Turno2025(
 			from medicoId in medicoIdResult
 			from especialidad in especialidadResult
 			from estado in outcomeEstadoResult
-                // from _ in ValidarOutcome(estado, outcomeFecha, outcomeComentario)	// TUVE QUE ELIMINAR ESTA VALIDACION O LA API CRASHEA, Y EL ERROR SOLO APARECE POR CONSOLA (MESCLADO CON EL TRACEBACK DE LA EXCEPCION) CUANDO SE SOLICITA TURNOS. ACA HAY UN PROBLEMA DE DISEÑO
-            select new Turno2025(
+			from _ in ValidarOutcome(id, estado, outcomeFecha, outcomeComentario)
+			select new Turno2025(
 				id,
 				fechaCreacion,
 				pacienteId,
@@ -83,23 +82,48 @@ public record Turno2025(
 				outcomeComentario
 			);
 	}
-	private static Result<Unit> ValidarOutcome(TurnoOutcomeEstado2025 estado, Option<DateTime> fecha, Option<string> comentario) {
-		bool esProgramado = estado == TurnoOutcomeEstado2025.Programado;
 
-		if (esProgramado) {
-			if (fecha.HasValor || comentario.HasValor)
+	private static Result<Unit> ValidarOutcome(
+		TurnoId id,
+		TurnoOutcomeEstado2025 estado,
+		Option<DateTime> fecha,
+		Option<string> comentario
+	) {
+		bool programado = estado == TurnoOutcomeEstado2025.Programado;
+		bool tieneFecha = fecha.HasValor;
+		bool tieneComentario = comentario.HasValor;
+
+		// ------------------------
+		// CASO 1 — Programado
+		// ------------------------
+		if (programado) {
+			if (tieneFecha || tieneComentario) {
 				return new Result<Unit>.Error(
-					"Un turno Programado no puede tener Fecha ni Comentario."
+					$"Turno {id.Valor} está Programado y no debe tener Fecha ni Comentario. " +
+					$"Recibido: Fecha={(tieneFecha ? fecha.Valor.ToString() : "—")}, " +
+					$"Comentario={(tieneComentario ? comentario.Valor : "—")}."
 				);
+			}
 
 			return new Result<Unit>.Ok(Unit.Valor);
 		}
 
-		// Estado es Ausente, Cancelado, Concretado, Reprogramado
-		if (fecha.HasValor || comentario.HasValor)
+		// ------------------------
+		// CASO 2 — NO programado
+		// ------------------------
+		// Estados 2, 3, 4, 5: requieren AMBOS fecha y comentario
+		if (!tieneFecha || !tieneComentario) {
+			string faltantes =
+				(!tieneFecha && !tieneComentario) ? "Fecha y Comentario" :
+				(!tieneFecha) ? "Fecha" :
+				"Comentario";
+
 			return new Result<Unit>.Error(
-				"Los turnos NO programados deben tener Fecha y Comentario."
+				$"Turno {id.Valor} en estado '{estado}' debe tener {faltantes}. " +
+				$"Recibido: Fecha={(tieneFecha ? fecha.Valor.ToString() : "—")}, " +
+				$"Comentario={(tieneComentario ? comentario.Valor : "—")}."
 			);
+		}
 
 		return new Result<Unit>.Ok(Unit.Valor);
 	}
