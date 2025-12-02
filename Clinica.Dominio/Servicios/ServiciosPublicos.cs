@@ -303,7 +303,7 @@ public static class ServiciosPublicos {
 		Turno2025 turnoOriginal,
 		DateTime outcomeFecha,
 		string outcomeComentario,
-		Func<Turno2025, Task<Result<Unit>>> funcUpdateTurnoWhereId
+		IRepositorioDomain repositorio
 	) {
 		// 1. Aplicar regla de dominio para cancelar
 		Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
@@ -318,7 +318,7 @@ public static class ServiciosPublicos {
 		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
 
 		// 2. Guardar cambios (IO)
-		Result<Unit> updateResult = await funcUpdateTurnoWhereId(turnoCancelado);
+		Result<Unit> updateResult = await repositorio.UpdateTurnoWhereId(turnoCancelado);
 
 		if (updateResult is Result<Unit>.Error e2)
 			return new Result<Turno2025>.Error(
