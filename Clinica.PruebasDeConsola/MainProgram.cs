@@ -72,7 +72,7 @@ public static class MainProgram {
 			4,
 			repositorio
 		));
-		disponibilidades.PrintAndContinue("Disponbiildiades encontradas::");
+		//disponibilidades.PrintAndContinue("Disponbiildiades encontradas::");
 		IReadOnlyList<DisponibilidadEspecialidad2025> lista = disponibilidades.GetOrRaise();
 		foreach (DisponibilidadEspecialidad2025 d in lista)
 			Console.WriteLine(d.ATexto());

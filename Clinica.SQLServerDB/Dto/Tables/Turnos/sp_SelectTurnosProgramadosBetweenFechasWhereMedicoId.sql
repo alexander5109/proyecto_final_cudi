@@ -5,8 +5,13 @@
 AS
 BEGIN
     SET NOCOUNT ON;
-
-    SELECT *
+    SELECT 
+        Id, 
+        MedicoId, 
+        EspecialidadCodigo, 
+        FechaHoraAsignadaDesde, 
+        FechaHoraAsignadaHasta, 
+        OutcomeEstado
     FROM Turno
     WHERE MedicoId = @MedicoId
       AND FechaHoraAsignadaDesde >= @FechaDesde

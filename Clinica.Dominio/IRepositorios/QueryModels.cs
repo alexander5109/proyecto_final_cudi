@@ -21,17 +21,17 @@ public static class QueryModels {
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
 		TurnoOutcomeEstadoCodigo2025 OutcomeEstado // ej: "Programado"
-	);
-
-	//public sealed record MedicoQM(
-		//MedicoId Id
-		//IReadOnlyList<EspecialidadCodigo2025> EspecialidadesCodigos
-	//);
-
+	) {
+		public TurnoQM()
+			: this(default!, default!, default, default, default, default) { }
+	}
 	public sealed record HorarioMedicoQM(
 		MedicoId MedicoId,
 		DayOfWeek DiaSemana,   // 1=Lunes … 7=Domingo
 		TimeSpan HoraDesde,
 		TimeSpan HoraHasta
-	);
+	) {
+		public HorarioMedicoQM()
+			: this(default!, default, default, default) { }
+	}
 }

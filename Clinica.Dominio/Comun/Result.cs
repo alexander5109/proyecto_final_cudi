@@ -83,7 +83,7 @@ public static class ResultExtensions {
 	public static T GetOrRaise<T>(this Result<T> result) =>
 		result.Match(
 			ok => {
-				Console.WriteLine($"Succesfully asserting {typeof(T)}");
+				Console.WriteLine($"Succesfully asserting {typeof(T).Name}");
 				return ok;
 			},
 			mensaje => {

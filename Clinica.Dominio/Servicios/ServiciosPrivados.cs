@@ -174,7 +174,7 @@ internal static class ServiciosPrivados {
 		// 1. Cargar turnos del médico en el rango
 		var turnosResult = (await repositorio.SelectTurnosProgramadosBetweenFechasWhereMedicoId(medicoId, desdeBusqueda, hastaBusqueda));
 		if (turnosResult.IsError) {
-			return new Result<DateTime>.Error($"Error de la base de datos. No se pudo acceder a los turnos programados del {medicoId}: Traceback: {turnosResult.UnwrapAsError()}");
+			return new Result<DateTime>.Error($"Error de la base de datos.\n\t No se pudo acceder a los turnos programados del MedicoId {medicoId}: \n\t\t Traceback: {turnosResult.UnwrapAsError()}");
 		}
 		var turnos = turnosResult.UnwrapAsOk();
 
@@ -182,7 +182,7 @@ internal static class ServiciosPrivados {
 		var franjasResult = (await repositorio.SelectHorariosVigentesBetweenFechasWhereMedicoId(
 			medicoId, desdeBusqueda, hastaBusqueda));
 		if (franjasResult.IsError) {
-			return new Result<DateTime>.Error($"Error de la base de datos. No se pudo acceder a los horarios del {medicoId}: Traceback: {turnosResult.UnwrapAsError()}");
+			return new Result<DateTime>.Error($"Error de la base de datos.\n\tNo se pudo acceder a los horarios del MedicoId{medicoId}:\n\t\tTraceback: {turnosResult.UnwrapAsError()}");
 		}
 		var franjas = franjasResult.UnwrapAsOk();
 
