@@ -29,9 +29,11 @@ public static class MainProgram {
 
 	static async Task Main() {
 
-		CifrarContraseña();
+		//CifrarContraseña();
 
 		Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+
 
 		IConfiguration config = new ConfigurationBuilder()
 			.SetBasePath(AppContext.BaseDirectory)
@@ -40,6 +42,28 @@ public static class MainProgram {
 
 		RepositorioDapper repositorio = new(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
 		//var response = await http.GetAsync($"/disponibilidades?especialidadCodigoInterno=3&cuantos=10");
+
+		NombreUsuario nombreUsuario = new ("admin1");
+		Result<UsuarioBase2025> usuarioFakeResult = await repositorio.SelectUsuarioWhereName(nombreUsuario);
+		if (usuarioFakeResult.IsError) {
+			Console.WriteLine($"No se encontro el usuario {nombreUsuario}");
+			return;
+		}
+        UsuarioBase2025 usuarioFake = usuarioFakeResult.UnwrapAsOk();
+
+
+		//CRUD TESTS
+		PacienteId pacienteId = new(1);
+		Result<IEnumerable<Turno2025>> responseResult = await ServiciosPublicos.SelectTurnosWherePacienteId(usuarioFake, repositorio, pacienteId);
+		if (responseResult.IsError) {
+			Console.WriteLine($"No se encontraron turnos para pacienteid {pacienteId}");
+			return;
+		}
+		foreach (var turno2025 in responseResult.UnwrapAsOk()) {
+			Console.Write(turno2025.ATexto());
+			break;
+		}
+
 
 		// Caso de uso 1
 		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidadesPara(

@@ -47,7 +47,7 @@ public record Turno2025(
 			$"  • Médico asignado: {MedicoId}\n" +
 			$"  • Fecha: {fecha}\n" +
 			$"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
-			$"  • OutcomeEstado: {OutcomeEstado}";
+			$"  • OutcomeEstado: {OutcomeEstado.Nombre}\n";
 	}
 	public static Result<Turno2025> Crear(
 		Result<TurnoId> idResult,
@@ -69,7 +69,7 @@ public record Turno2025(
 			from medicoId in medicoIdResult
 			from especialidad in especialidadResult
 			from estado in outcomeEstadoResult
-                // from _ in ValidarOutcome(estado, outcomeFecha, outcomeComentario)
+                // from _ in ValidarOutcome(estado, outcomeFecha, outcomeComentario)	// TUVE QUE ELIMINAR ESTA VALIDACION O LA API CRASHEA, Y EL ERROR SOLO APARECE POR CONSOLA (MESCLADO CON EL TRACEBACK DE LA EXCEPCION) CUANDO SE SOLICITA TURNOS. ACA HAY UN PROBLEMA DE DISEÑO
             select new Turno2025(
 				id,
 				fechaCreacion,

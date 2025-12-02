@@ -44,10 +44,7 @@ public static class ServiciosPublicos {
 		return await repositorio.DeletePacienteWhereId(id);
 	}
 
-	public static async Task<Result<Medico2025>> SelectMedicoWhereId(
-		UsuarioBase2025 usuario,
-		RepositorioInterface repositorio,
-		MedicoId id
+	public static async Task<Result<Medico2025>> SelectMedicoWhereId(UsuarioBase2025 usuario,RepositorioInterface repositorio,MedicoId id
 	) {
 		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
 			return new Result<Medico2025>.Error("No cuenta con permisos para ver esta entidad");
@@ -57,8 +54,7 @@ public static class ServiciosPublicos {
 		return await repositorio.SelectMedicoWhereId(id);
 	}
 
-	public static async Task<Result<IEnumerable<Paciente2025>>> SelectPacientes(
-		UsuarioBase2025 usuario,
+	public static async Task<Result<IEnumerable<Paciente2025>>> SelectPacientes(UsuarioBase2025 usuario,
 		RepositorioInterface repositorio
 	) {
 		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {

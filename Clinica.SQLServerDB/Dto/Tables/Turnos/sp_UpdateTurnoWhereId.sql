@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE sp_UpdateTurnoWhereId
 (
-    @TurnoId INT,
+    @Id INT,
     @OutcomeEstado TINYINT,
     @OutcomeFecha DATETIME2(1),
     @OutcomeComentario NVARCHAR(280)
@@ -14,7 +14,7 @@ BEGIN
         OutcomeEstado = @OutcomeEstado,
         OutcomeFecha = @OutcomeFecha,
         OutcomeComentario = @OutcomeComentario
-    WHERE Id = @TurnoId;
+    WHERE Id = @Id;
 
     -- Verificar que se haya actualizado
     IF (@@ROWCOUNT = 0)

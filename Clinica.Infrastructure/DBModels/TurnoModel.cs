@@ -1,0 +1,53 @@
+﻿using System.ComponentModel.DataAnnotations;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+using Clinica.Dominio.TiposDeValor;
+
+namespace Clinica.Shared.Dtos;
+
+public static partial class DbModels {
+	public record TurnoModel(
+		TurnoId Id,
+		DateTime FechaDeCreacion,
+		PacienteId PacienteId,
+		MedicoId MedicoId,
+		EspecialidadCodigo2025 EspecialidadCodigo,
+		DateTime FechaHoraAsignadaDesde,
+		DateTime FechaHoraAsignadaHasta,
+		TurnoOutcomeEstadoCodigo2025 OutcomeEstado,
+		DateTime? OutcomeFecha,
+		string? OutcomeComentario
+	) {
+		// Constructor sin parámetros requerido por algunos ORMs/serializadores
+		public TurnoModel() : this(default!, default, default!, default!, default!, default, default, default!, default, default) { }
+	};
+
+	public static TurnoModel ToDto(this Turno2025 turno) {
+		return new TurnoModel(
+			turno.Id,
+			turno.FechaDeCreacion.Valor,
+			turno.PacienteId,
+			turno.MedicoId,
+			turno.Especialidad.CodigoInternoValor,
+			turno.FechaHoraAsignadaDesdeValor,
+			turno.FechaHoraAsignadaHastaValor,
+			turno.OutcomeEstado.Codigo,
+			turno.OutcomeFechaOption.Match(d => d, () => (DateTime?)null),
+			turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
+		);
+	}
+	public static Result<Turno2025> ToModel(this TurnoModel turnoDto) {
+		return Turno2025.Crear(
+			TurnoId.Crear(turnoDto.Id.Valor),
+			FechaRegistro2025.Crear(turnoDto.FechaDeCreacion),
+			PacienteId.Crear(turnoDto.PacienteId.Valor),
+			MedicoId.Crear(turnoDto.MedicoId.Valor),
+			EspecialidadMedica2025.CrearPorCodigoInterno(turnoDto.EspecialidadCodigo),
+			turnoDto.FechaHoraAsignadaDesde,
+			turnoDto.FechaHoraAsignadaHasta,
+			TurnoOutcomeEstado2025.CrearPorCodigo(turnoDto.OutcomeEstado),
+			turnoDto.OutcomeFecha.ToOption(),
+			turnoDto.OutcomeComentario.ToOption()
+		);
+	}
+}

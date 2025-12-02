@@ -23,9 +23,9 @@ public class TurnosController(RepositorioInterface repositorio, ILogger<TurnosCo
 
 	// GET: api/<MedicosController>
 	// [HttpGet]
-	// public async Task<ActionResult<IEnumerable<TurnoDto>>> Get() {
+	// public async Task<ActionResult<IEnumerable<TurnoModel>>> Get() {
 	// try {
-	// IEnumerable<TurnoDto> instances = await repositorio.SelectTurnos();
+	// IEnumerable<TurnoModel> instances = await repositorio.SelectTurnos();
 	// return Ok(instances);
 	// } catch (Exception ex) {
 	// logger.LogError(ex, "Error al obtener listado de instances.");
@@ -42,7 +42,7 @@ public class TurnosController(RepositorioInterface repositorio, ILogger<TurnosCo
 
 	// return result switch {
 	// Result<Turno2025>.Ok ok =>
-	// Ok(ok.Valor.ToDto()),
+	// Ok(ok.Valor.ToModel()),
 
 	// Result<Turno2025>.Error err =>
 	// NotFound(new { error = err.Mensaje }),
@@ -73,7 +73,7 @@ public class TurnosController(RepositorioInterface repositorio, ILogger<TurnosCo
 
 	// return result switch {
 	// Result<Turno2025>.Ok ok =>
-	// Ok(ok.Valor.ToDto()),
+	// Ok(ok.Valor.ToModel()),
 
 	// Result<Turno2025>.Error err =>
 	// BadRequest(new { error = err.Mensaje }),
@@ -98,7 +98,7 @@ public class TurnosController(RepositorioInterface repositorio, ILogger<TurnosCo
 	// );
 
 	// return result switch {
-	// Result<Turno2025>.Ok ok => Ok(ok.Valor.ToDto()),
+	// Result<Turno2025>.Ok ok => Ok(ok.Valor.ToModel()),
 	// Result<Turno2025>.Error err => BadRequest(new { error = err.Mensaje }),
 	// _ => StatusCode(500)
 	// };
@@ -115,7 +115,7 @@ public class TurnosController(RepositorioInterface repositorio, ILogger<TurnosCo
 	// await repositorio.CancelarTurnoAsync(id, comentario.ToOption());
 
 	// return result switch {
-	// Result<Turno2025>.Ok ok => Ok(ok.Valor.ToDto()),
+	// Result<Turno2025>.Ok ok => Ok(ok.Valor.ToModel()),
 	// Result<Turno2025>.Error err => BadRequest(new { error = err.Mensaje }),
 	// _ => StatusCode(500)
 	// };
@@ -130,7 +130,7 @@ public class TurnosController(RepositorioInterface repositorio, ILogger<TurnosCo
 
 	// return result switch {
 	// Result<Turno2025>.Ok ok =>
-	// Ok(ok.Valor.ToDto()),
+	// Ok(ok.Valor.ToModel()),
 
 	// Result<Turno2025>.Error err =>
 	// BadRequest(new { error = err.Mensaje }),
@@ -148,7 +148,7 @@ public class TurnosController(RepositorioInterface repositorio, ILogger<TurnosCo
 
 	// return result switch {
 	// Result<Turno2025>.Ok ok =>
-	// Ok(ok.Valor.ToDto()),
+	// Ok(ok.Valor.ToModel()),
 
 	// Result<Turno2025>.Error err =>
 	// BadRequest(new { error = err.Mensaje }),

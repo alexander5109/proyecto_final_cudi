@@ -15,7 +15,9 @@
         DROP TABLE Turno;
     IF OBJECT_ID('Paciente', 'U') IS NOT NULL
         DROP TABLE Paciente;
-    IF OBJECT_ID('Medico', 'U') IS NOT NULL
-        DROP TABLE Medico;
     IF OBJECT_ID('HorarioMedico', 'U') IS NOT NULL
         DROP TABLE HorarioMedico;
+    IF OBJECT_ID('Medico', 'U') IS NOT NULL
+        DROP TABLE Medico;
+
+    PRINT 'TABLAS ELIMINADAS';

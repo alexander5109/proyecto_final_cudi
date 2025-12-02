@@ -55,7 +55,6 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="Publications" />
     <Folder Include="Dto" />
     <Folder Include="Dto\PostDeployInserts" />
     <Folder Include="Dto\Tables" />
@@ -77,7 +76,7 @@
     <Build Include="Dto\Tables\Medicos\sp_CreateMedico.sql" />
     <Build Include="Dto\Tables\Medicos\sp_CreateMedicoWithHorarios.sql" />
     <Build Include="Dto\Tables\Medicos\sp_SelectMedicos.sql" />
-    <Build Include="Dto\Tables\Medicos\sp_SelectMedicosWhereEspecialidad.sql" />
+    <Build Include="Dto\Tables\Medicos\sp_SelectMedicosWhereEspecialidadCode.sql" />
     <Build Include="Dto\Tables\Medicos\sp_UpdateMedico.sql" />
     <Build Include="Dto\Tables\Medicos\sp_UpdateMedicoWithHorarios.sql" />
     <Build Include="Dto\Tables\Medicos\table_Medico.sql" />
@@ -102,12 +101,12 @@
     <Build Include="Dto\Tables\Usuarios\table_Usuario.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Publications\Clinica.InfrastructureSQLServer.publish.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <PostDeploy Include="Dto\PostDeployInserts\Script.PostDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="Dto\Script.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Clinica.InfrastructureSQLServer.publish.xml" />
   </ItemGroup>
 </Project>

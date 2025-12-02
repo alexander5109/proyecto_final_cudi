@@ -6,8 +6,7 @@ using Clinica.Dominio.TiposDeValor;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
-using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.Infrastructure.DataAccess;
 
@@ -42,7 +41,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 	//-----------------------SELECT one ------------------
 	public Task<Result<UsuarioBase2025>> SelectUsuarioWhereName(NombreUsuario nombre)
 		=> TryAsync(async conn => {
-			UsuarioDto? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDto>(
+			UsuarioModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioModel>(
 				"sp_SelectUsuarioWhereNombre",
 				new { NombreUsuario = nombre.Valor },
 				commandType: CommandType.StoredProcedure
@@ -57,7 +56,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 	public Task<Result<UsuarioBase2025>> SelectUsuarioWhereId(UsuarioId id)
 		=> TryAsync(async conn => {
-			UsuarioDto? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDto>(
+			UsuarioModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioModel>(
 				"sp_SelectUsuarioWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure
@@ -74,7 +73,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 	public Task<Result<Medico2025>> SelectMedicoWhereId(MedicoId id)
 		=> TryAsync(async conn => {
-			MedicoDto? dto = await conn.QuerySingleOrDefaultAsync<MedicoDto>(
+			MedicoModel? dto = await conn.QuerySingleOrDefaultAsync<MedicoModel>(
 				"sp_SelectMedicoWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure
@@ -85,13 +84,13 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 			Result<Medico2025> r = dto.ToDomain();
 			if (r.IsError)
-				throw new Exception($"Error creando MedicoDto desde DTO: {r.UnwrapAsError()}");
-			return r.UnwrapAsOk(); // devuelve el valor crudo (MedicoDto)
+				throw new Exception($"Error creando MedicoModel desde DTO: {r.UnwrapAsError()}");
+			return r.UnwrapAsOk(); // devuelve el valor crudo (MedicoModel)
 		});
 
 	public Task<Result<Paciente2025>> SelectPacienteWhereId(PacienteId id)
 		=> TryAsync(async conn => {
-			PacienteDto? dto = await conn.QuerySingleOrDefaultAsync<PacienteDto>(
+			PacienteModel? dto = await conn.QuerySingleOrDefaultAsync<PacienteModel>(
 				"sp_SelectPacienteWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure
@@ -102,13 +101,13 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 			Result<Paciente2025> r = dto.ToDomain();
 			if (r.IsError)
-				throw new Exception($"Error creando PacienteDto desde DTO: {r.UnwrapAsError()}");
-			return r.UnwrapAsOk(); // devuelve el valor crudo (PacienteDto)
+				throw new Exception($"Error creando PacienteModel desde DTO: {r.UnwrapAsError()}");
+			return r.UnwrapAsOk(); // devuelve el valor crudo (PacienteModel)
 		});
 
 	public Task<Result<Turno2025>> SelectTurnoWhereId(TurnoId id)
 		=> TryAsync(async conn => {
-			TurnoDto? dto = await conn.QuerySingleOrDefaultAsync<TurnoDto>(
+			TurnoModel? dto = await conn.QuerySingleOrDefaultAsync<TurnoModel>(
 				"sp_SelectTurnoWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure
@@ -117,10 +116,10 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 			if (dto is null)
 				throw new Exception("Turno no encontrado");
 
-			Result<Turno2025> r = dto.ToDomain();
+			Result<Turno2025> r = dto.ToModel();
 			if (r.IsError)
-				throw new Exception($"Error creando TurnoDto desde DTO: {r.UnwrapAsError()}");
-			return r.UnwrapAsOk(); // devuelve el valor crudo (TurnoDto)
+				throw new Exception($"Error creando TurnoModel desde DTO: {r.UnwrapAsError()}");
+			return r.UnwrapAsOk(); // devuelve el valor crudo (TurnoModel)
 		});
 
 
@@ -128,7 +127,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 	//-----------------------SELECT * ------------------
 	public Task<Result<IEnumerable<Paciente2025>>> SelectPacientes()
 		=> TryAsync(async conn => {
-			IEnumerable<PacienteDto> dtos = await conn.QueryAsync<PacienteDto>("sp_SelectPacientes", commandType: CommandType.StoredProcedure);
+			IEnumerable<PacienteModel> dtos = await conn.QueryAsync<PacienteModel>("sp_SelectPacientes", commandType: CommandType.StoredProcedure);
 			List<Paciente2025> instances = [];
 			foreach (var dto in dtos) {
 				Result<Paciente2025> r = dto.ToDomain();
@@ -140,7 +139,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 		});
 	public Task<Result<IEnumerable<Medico2025>>> SelectMedicos()
 		=> TryAsync(async conn => {
-			IEnumerable<MedicoDto> dtos = await conn.QueryAsync<MedicoDto>("sp_SelectMedicos", commandType: CommandType.StoredProcedure);
+			IEnumerable<MedicoModel> dtos = await conn.QueryAsync<MedicoModel>("sp_SelectMedicos", commandType: CommandType.StoredProcedure);
 			List<Medico2025> instances = [];
 			foreach (var dto in dtos) {
 				Result<Medico2025> r = dto.ToDomain();
@@ -152,7 +151,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 		});
 	public Task<Result<IEnumerable<Medico2025>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code)
 		=> TryAsync(async conn => {
-			IEnumerable<MedicoDto> dtos = await conn.QueryAsync<MedicoDto>("sp_SelectMedicosWhereEspecialidadCode", new { EspecialidadCodigoInterno = code }, commandType: CommandType.StoredProcedure);
+			IEnumerable<MedicoModel> dtos = await conn.QueryAsync<MedicoModel>("sp_SelectMedicosWhereEspecialidadCode", new { EspecialidadCodigoInterno = code }, commandType: CommandType.StoredProcedure);
 			List<Medico2025> instances = [];
 			foreach (var dto in dtos) {
 				Result<Medico2025> r = dto.ToDomain();
@@ -170,13 +169,13 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 	public Task<Result<IEnumerable<HorarioMedico2025>>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
 		=> TryAsync(async conn => {
-			IEnumerable<HorarioMedicoDto> dtos = await conn.QueryAsync<HorarioMedicoDto>(
+			IEnumerable<HorarioMedicoModel> dtos = await conn.QueryAsync<HorarioMedicoModel>(
 				"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId",
 				new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde.Date, FechaHasta = fechaHasta.Date },
 				commandType: CommandType.StoredProcedure
 			);
 			List<HorarioMedico2025> instances = [];
-			foreach (HorarioMedicoDto dto in dtos) {
+			foreach (HorarioMedicoModel dto in dtos) {
 				Result<HorarioMedico2025> r = dto.ToDomain();
 				if (r.IsError)
 					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
@@ -188,10 +187,10 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 	public Task<Result<IEnumerable<Turno2025>>> SelectTurnos()
 		=> TryAsync(async conn => {
-			IEnumerable<TurnoDto> dtos = await conn.QueryAsync<TurnoDto>("sp_SelectPacientes", commandType: CommandType.StoredProcedure);
+			IEnumerable<TurnoModel> dtos = await conn.QueryAsync<TurnoModel>("sp_SelectPacientes", commandType: CommandType.StoredProcedure);
 			List<Turno2025> instances = [];
 			foreach (var dto in dtos) {
-				Result<Turno2025> r = dto.ToDomain();
+				Result<Turno2025> r = dto.ToModel();
 				if (r.IsError)
 					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
 				instances.Add(r.UnwrapAsOk());
@@ -201,11 +200,11 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 	public Task<Result<IEnumerable<Turno2025>>> SelectTurnosWherePacienteId(PacienteId id)
 		=> TryAsync(async conn => {
-			IEnumerable<TurnoDto> dtos = await conn.QueryAsync<TurnoDto>("sp_SelectTurnosWherePacienteId",
+			IEnumerable<TurnoModel> dtos = await conn.QueryAsync<TurnoModel>("sp_SelectTurnosWherePacienteId",
 			new { PacienteId = id.Valor }, commandType: CommandType.StoredProcedure);
 			List<Turno2025> instances = [];
 			foreach (var dto in dtos) {
-				Result<Turno2025> r = dto.ToDomain();
+				Result<Turno2025> r = dto.ToModel();
 				if (r.IsError)
 					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
 				instances.Add(r.UnwrapAsOk());
@@ -215,11 +214,11 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 	public Task<Result<IEnumerable<Turno2025>>> SelectTurnosWhereMedicoId(MedicoId id)
 		=> TryAsync(async conn => {
-			IEnumerable<TurnoDto> dtos = await conn.QueryAsync<TurnoDto>("sp_SelectTurnosWhereMedicoIdId",
+			IEnumerable<TurnoModel> dtos = await conn.QueryAsync<TurnoModel>("sp_SelectTurnosWhereMedicoIdId",
 			new { PacienteId = id }, commandType: CommandType.StoredProcedure);
 			List<Turno2025> instances = [];
 			foreach (var dto in dtos) {
-				Result<Turno2025> r = dto.ToDomain();
+				Result<Turno2025> r = dto.ToModel();
 				if (r.IsError)
 					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
 				instances.Add(r.UnwrapAsOk());
@@ -230,11 +229,11 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 	public Task<Result<IEnumerable<Turno2025>>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
 		=> TryAsync(async conn => {
-			IEnumerable<TurnoDto> dtos = await conn.QueryAsync<TurnoDto>("sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId",
+			IEnumerable<TurnoModel> dtos = await conn.QueryAsync<TurnoModel>("sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId",
 			new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde, FechaHasta = fechaHasta }, commandType: CommandType.StoredProcedure);
 			List<Turno2025> instances = [];
 			foreach (var dto in dtos) {
-				Result<Turno2025> r = dto.ToDomain();
+				Result<Turno2025> r = dto.ToModel();
 				if (r.IsError)
 					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
 				instances.Add(r.UnwrapAsOk());
