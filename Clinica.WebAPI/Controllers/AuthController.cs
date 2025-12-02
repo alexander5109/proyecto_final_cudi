@@ -7,7 +7,7 @@ using static Clinica.Shared.Dtos.ApiDtos;
 
 [ApiController]
 [Route("auth")]
-public class AuthController(RepositorioInterface repositorio, JwtService jwtService)
+public class AuthController(IRepositorioDomain repositorio, JwtService jwtService)
 	: ControllerBase {
 	[HttpPost("login")]
 	public async Task<IActionResult> Login([FromBody] LoginRequestDto dto) {

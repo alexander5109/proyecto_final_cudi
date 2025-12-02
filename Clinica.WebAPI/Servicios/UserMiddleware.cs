@@ -11,7 +11,7 @@ public class UsuarioMiddleware {
 	public UsuarioMiddleware(RequestDelegate next)
 		=> _next = next;
 
-	public async Task Invoke(HttpContext context, RepositorioInterface repo) {
+	public async Task Invoke(HttpContext context, IRepositorioDomain repo) {
 		ClaimsPrincipal user = context.User;
 
 		if (user.Identity is { IsAuthenticated: true }) {

@@ -2,6 +2,7 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.Servicios;
+using Clinica.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.Dtos.ApiDtos;
@@ -12,7 +13,7 @@ namespace Clinica.WebAPI.Controllers;
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class PacientesController(RepositorioInterface repositorio, ILogger<PacientesController> logger) : ControllerBase {
+public class PacientesController(RepositorioDapper repositorio, ILogger<PacientesController> logger) : ControllerBase {
 
 	//private ActionResult FromResult<T>(Result<T> result) {
 	//	return result switch {

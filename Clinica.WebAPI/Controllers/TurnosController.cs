@@ -19,7 +19,7 @@ namespace Clinica.WebAPI.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class TurnosController(RepositorioInterface repositorio, ILogger<TurnosController> logger) : ControllerBase {
+public class TurnosController(IRepositorioDomain repositorio, ILogger<TurnosController> logger) : ControllerBase {
 
 	// GET: api/<MedicosController>
 	// [HttpGet]

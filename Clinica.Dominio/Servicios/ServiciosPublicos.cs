@@ -2,6 +2,7 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.TiposDeValor;
+using static Clinica.Dominio.IRepositorios.QueryModels;
 
 
 namespace Clinica.Dominio.Servicios;
@@ -25,26 +26,26 @@ public static class ServiciosPublicos {
 
 
 
-	//public static async Task<Result<PacienteId>> InsertPaciente(Usuario2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
+	//public static async Task<Result<PacienteId>> InsertPaciente(Usuario2025 usuario, IRepositorioDomain repositorio, Paciente2025 paciente) {
 	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
 	//		return new Result<PacienteId>.Error("No cuenta con permisos para crear pacientes.");
 	//	}
 	//	return await repositorio.InsertPacienteReturnId(paciente);
 	//}
-	//public static async Task<Result<Unit>> UpdatePacienteWhereId(Usuario2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
+	//public static async Task<Result<Unit>> UpdatePacienteWhereId(Usuario2025 usuario, IRepositorioDomain repositorio, Paciente2025 paciente) {
 	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
 	//		return new Result<Unit>.Error("No cuenta con permisos para actualizar pacientes.");
 	//	}
 	//	return await repositorio.UpdatePacienteWhereId(paciente);
 	//}
-	//public static async Task<Result<Unit>> DeletePacienteWhereId(Usuario2025 usuario, RepositorioInterface repositorio, PacienteId id) {
+	//public static async Task<Result<Unit>> DeletePacienteWhereId(Usuario2025 usuario, IRepositorioDomain repositorio, PacienteId id) {
 	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
 	//		return new Result<Unit>.Error("No cuenta con permisos para eliminar pacientes.");
 	//	}
 	//	return await repositorio.DeletePacienteWhereId(id);
 	//}
 
-	//public static async Task<Result<Medico2025>> SelectMedicoWhereId(Usuario2025 usuario, RepositorioInterface repositorio, MedicoId id
+	//public static async Task<Result<Medico2025>> SelectMedicoWhereId(Usuario2025 usuario, IRepositorioDomain repositorio, MedicoId id
 	//) {
 	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
 	//		return new Result<Medico2025>.Error("No cuenta con permisos para ver esta entidad");
@@ -55,7 +56,7 @@ public static class ServiciosPublicos {
 	//}
 
 	//public static async Task<Result<IEnumerable<Paciente2025>>> SelectPacientes(Usuario2025 usuario,
-	//	RepositorioInterface repositorio
+	//	IRepositorioDomain repositorio
 	//) {
 	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
 	//		return new Result<IEnumerable<Paciente2025>>.Error("No cuenta con permisos para ver esta entidad");
@@ -67,7 +68,7 @@ public static class ServiciosPublicos {
 
 	//public static async Task<Result<IEnumerable<Medico2025>>> SelectMedicos(
 	//	Usuario2025 usuario,
-	//	RepositorioInterface repositorio
+	//	IRepositorioDomain repositorio
 	//) {
 	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
 	//		return new Result<IEnumerable<Medico2025>>.Error("No cuenta con permisos para ver esta entidad");
@@ -77,7 +78,7 @@ public static class ServiciosPublicos {
 
 	//public static async Task<Result<IEnumerable<Turno2025>>> SelectTurnosWherePacienteId(
 	//	Usuario2025 usuario,
-	//	RepositorioInterface repositorio,
+	//	IRepositorioDomain repositorio,
 	//	PacienteId id
 	//) {
 	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
@@ -87,7 +88,7 @@ public static class ServiciosPublicos {
 	//}
 	//public static async Task<Result<IEnumerable<Result<Turno2025>>>> SelectTurnosWherePacienteId(
 	//	Usuario2025 usuario,
-	//	RepositorioInterface repositorio,
+	//	IRepositorioDomain repositorio,
 	//	PacienteId id
 	//) {
 	//	if (usuario.EnumRole is not (UsuarioEnumRole.Nivel1Admin or UsuarioEnumRole.Nivel2Secretaria)) {
@@ -104,9 +105,9 @@ public static class ServiciosPublicos {
 	public static async Task<Result<Usuario2025>> ValidarCredenciales(
 		string username,
 		string password,
-		RepositorioInterface repositorio
+		IRepositorioDomain repositorio
 	) {
-		Result<Usuario2025> resultadoUsuario =
+        Result<Usuario2025> resultadoUsuario =
 			await repositorio.SelectUsuarioWhereName(new NombreUsuario(username));
 
 		return resultadoUsuario switch {
@@ -126,7 +127,7 @@ public static class ServiciosPublicos {
 		Result<Turno2025> turnoOriginalResult,
 		DateTime outcomeFecha,
 		string outcomeComentario,
-		RepositorioInterface repositorio
+		IRepositorioDomain repositorio
 	) {
 		if (turnoOriginalResult.IsError) { return turnoOriginalResult; }
 		Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
@@ -158,7 +159,7 @@ public static class ServiciosPublicos {
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		int cuantos,
-		RepositorioInterface repositorio
+		IRepositorioDomain repositorio
 	) {
 		List<DisponibilidadEspecialidad2025> lista = new(capacity: cuantos);
 
@@ -187,7 +188,7 @@ public static class ServiciosPublicos {
 		PacienteId pacienteId,
 		EspecialidadMedica2025 solicitudEspecialidad,
 		FechaRegistro2025 solicitudFechaCreacion,
-		RepositorioInterface repositorio
+		IRepositorioDomain repositorio
 	) {
 		// 1. Buscar próxima disponibilidad
 		Result<DisponibilidadEspecialidad2025> dispResult =
@@ -233,7 +234,7 @@ public static class ServiciosPublicos {
 		Result<Turno2025> turnoOriginalResult,
 		DateTime outcomeFecha,
 		string outcomeComentario,
-		RepositorioInterface repositorio
+		IRepositorioDomain repositorio
 	) {
 		if (turnoOriginalResult.IsError) return turnoOriginalResult;
 		Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();

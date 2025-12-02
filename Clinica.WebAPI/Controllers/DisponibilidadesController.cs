@@ -13,7 +13,7 @@ namespace Clinica.WebAPI.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class DisponibilidadesController(RepositorioInterface repositorio, ILogger<DisponibilidadesController> logger) : ControllerBase {
+public class DisponibilidadesController(IRepositorioDomain repositorio, ILogger<DisponibilidadesController> logger) : ControllerBase {
 
 
 	[HttpGet(Name = "GetDisponibilidades")]

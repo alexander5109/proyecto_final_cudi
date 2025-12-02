@@ -6,11 +6,12 @@ using Clinica.Dominio.TiposDeValor;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
+using static Clinica.Dominio.IRepositorios.QueryModels;
 using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.Infrastructure.DataAccess;
 
-public class RepositorioDapper(SQLServerConnectionFactory factory) : RepositorioInterface {
+public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositorioDomain {
 	private async Task<Result<T>> TryAsync<T>(Func<IDbConnection, Task<T>> action) {
 		try {
 			using IDbConnection conn = factory.CrearConexion();
@@ -35,7 +36,41 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 		}
 	}
 
+	//--------------DOMAIN QUERY MODELS-----------//
+	public Task<Result<IEnumerable<HorarioMedicoQM>>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<HorarioMedicoQM>(
+				"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId",
+				new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde.Date, FechaHasta = fechaHasta.Date },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+	public Task<Result<IEnumerable<MedicoQM>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<MedicoQM>("sp_SelectMedicosWhereEspecialidadCode", new { EspecialidadCodigoInterno = code }, commandType: CommandType.StoredProcedure);
+		});
+
+	public Task<Result<IEnumerable<TurnoQM>>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<TurnoQM>("sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId",
+			new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde, FechaHasta = fechaHasta }, commandType: CommandType.StoredProcedure);
+		});
+
+
+
+
+
+
+
+
+
+
 	//public Task<Result<IEnumerable<PacienteListDto>>> SelectPacientesList() => TryAsync(conn => conn.QueryAsync<PacienteListDto>("sp_SelectPacientesListView", commandType: CommandType.StoredProcedure));
+
+
+
+
+
 
 
 	//-----------------------SELECT one ------------------
@@ -149,40 +184,10 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 			}
 			return (IEnumerable<Medico2025>)instances;
 		});
-	public Task<Result<IEnumerable<Medico2025>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code)
-		=> TryAsync(async conn => {
-			IEnumerable<MedicoDbModel> dtos = await conn.QueryAsync<MedicoDbModel>("sp_SelectMedicosWhereEspecialidadCode", new { EspecialidadCodigoInterno = code }, commandType: CommandType.StoredProcedure);
-			List<Medico2025> instances = [];
-			foreach (var dto in dtos) {
-				Result<Medico2025> r = dto.ToDomain();
-				if (r.IsError)
-					throw new Exception($"Error creando Medico2025 desde DTO: {r.UnwrapAsError()}");
-				instances.Add(r.UnwrapAsOk());
-			}
-			return (IEnumerable<Medico2025>)instances;
-		});
 
 
 
 
-
-
-	public Task<Result<IEnumerable<HorarioMedico2025>>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
-		=> TryAsync(async conn => {
-			IEnumerable<HorarioMedicoDbModel> dtos = await conn.QueryAsync<HorarioMedicoDbModel>(
-				"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId",
-				new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde.Date, FechaHasta = fechaHasta.Date },
-				commandType: CommandType.StoredProcedure
-			);
-			List<HorarioMedico2025> instances = [];
-			foreach (HorarioMedicoDbModel dto in dtos) {
-				Result<HorarioMedico2025> r = dto.ToDomain();
-				if (r.IsError)
-					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
-				instances.Add(r.UnwrapAsOk());
-			}
-			return (IEnumerable<HorarioMedico2025>)instances;
-		});
 
 
 	public Task<Result<IEnumerable<Turno2025>>> SelectTurnos()
@@ -238,19 +243,8 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 		});
 
 
-	public Task<Result<IEnumerable<Turno2025>>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
-		=> TryAsync(async conn => {
-			IEnumerable<TurnoDbModel> dtos = await conn.QueryAsync<TurnoDbModel>("sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId",
-			new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde, FechaHasta = fechaHasta }, commandType: CommandType.StoredProcedure);
-			List<Turno2025> instances = [];
-			foreach (var dto in dtos) {
-				Result<Turno2025> r = dto.ToDomain();
-				if (r.IsError)
-					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
-				instances.Add(r.UnwrapAsOk());
-			}
-			return (IEnumerable<Turno2025>)instances;
-		});
+
+
 
 
 
@@ -451,19 +445,21 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 				commandType: CommandType.StoredProcedure
 			);
 		});
-	//public static async Task<Result<Unit>> UpdatePacienteWhereId(Usuario2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
+
+
+	//public static async Task<Result<Unit>> UpdatePacienteWhereId(Usuario2025 usuario, IRepositorioDomain repositorio, Paciente2025 paciente) {
 	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
 	//		return new Result<Unit>.Error("No cuenta con permisos para actualizar pacientes.");
 	//	}
 	//	return await repositorio.UpdatePacienteWhereId(paciente);
 	//}
-	//public static async Task<Result<PacienteId>> InsertPaciente(Usuario2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
+	//public static async Task<Result<PacienteId>> InsertPaciente(Usuario2025 usuario, IRepositorioDomain repositorio, Paciente2025 paciente) {
 	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
 	//		return new Result<PacienteId>.Error("No cuenta con permisos para crear pacientes.");
 	//	}
 	//	return await repositorio.InsertPacienteReturnId(paciente);
 	//}
-	//public static async Task<Result<Unit>> DeletePacienteWhereId(Usuario2025 usuario, RepositorioInterface repositorio, PacienteId id) {
+	//public static async Task<Result<Unit>> DeletePacienteWhereId(Usuario2025 usuario, IRepositorioDomain repositorio, PacienteId id) {
 	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
 	//		return new Result<Unit>.Error("No cuenta con permisos para eliminar pacientes.");
 	//	}
