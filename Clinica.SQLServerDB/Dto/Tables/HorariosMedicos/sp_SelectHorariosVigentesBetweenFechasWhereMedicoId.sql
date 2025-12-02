@@ -7,13 +7,13 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        Id,
+        -- Id,
         MedicoId,
         DiaSemana,
         HoraDesde,
-        HoraHasta,
-        VigenteDesde,
-        VigenteHasta
+        HoraHasta
+        -- VigenteDesde,
+        -- VigenteHasta
     FROM HorarioMedico
     WHERE MedicoId = @MedicoId
       AND VigenteDesde <= @FechaHasta

@@ -53,58 +53,51 @@ internal static class ServiciosPrivados {
 			repositorio
 		)) {
 			// First element wins → return immediately
-			return new Result<DisponibilidadEspecialidad2025>.Ok(disp);
+			return disp;
 		}
 
-		return new Result<DisponibilidadEspecialidad2025>.Error(
-			"No se encontró ninguna disponibilidad."
-		);
+		return new Result<DisponibilidadEspecialidad2025>.Error("No se encontró ninguna disponibilidad.");
 	}
 
 
-	internal static async IAsyncEnumerable<DisponibilidadEspecialidad2025> GenerarDisponibilidades(
+	internal static async IAsyncEnumerable<Result<DisponibilidadEspecialidad2025>>GenerarDisponibilidades(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		IRepositorioDomain repositorio
 	) {
-        Result<IEnumerable<MedicoQM>> medicosResult = (await repositorio.SelectMedicosWhereEspecialidadCode(solicitudEspecialidad.CodigoInternoValor));
-
-		if (medicosResult.IsError) {
+		var medicosResult = await repositorio.SelectMedicosWhereEspecialidadCode(solicitudEspecialidad.CodigoInternoValor);
+		if (medicosResult is Result<IEnumerable<MedicoId>>.Error errMeds) {
+			yield return new Result<DisponibilidadEspecialidad2025>.Error(errMeds.Mensaje);
 			yield break;
 		}
-       var medicos = medicosResult.UnwrapAsOk();
-
-		List<(MedicoQM medico, DateTime firstSlot)> medicosConPrioridad = new();
-
-		foreach (MedicoQM medico in medicos) {
-			Result<DateTime> first = await CalcularPrimerSlotDisponible(
-				medico.Id,
+		var medicos = ((Result<IEnumerable<MedicoId>>.Ok)medicosResult).Valor;
+		var medicosConPrioridad = new List<(MedicoId medico, DateTime firstSlot)>();
+		foreach (var medicoId in medicos) {
+			var first = await CalcularPrimerSlotDisponible(
+				medicoId,
 				solicitudEspecialidad,
 				repositorio);
-			if (first.IsOk) { 
-				medicosConPrioridad.Add((medico, first.UnwrapAsOk()));
+			if (first is Result<DateTime>.Error errSlot) {
+				// propagamos error
+				yield return new Result<DisponibilidadEspecialidad2025>.Error(errSlot.Mensaje);
+				yield break;
 			}
+			medicosConPrioridad.Add((medicoId, ((Result<DateTime>.Ok)first).Valor));
 		}
-
-		// Ordenar nulls últimos
-		foreach ((MedicoQM medico, DateTime firstSlot) x in medicosConPrioridad
-			.OrderBy(x => x.firstSlot)) {
-
-			// Generar slots para este médico
-			await foreach (DisponibilidadEspecialidad2025 disp in GenerarDisponibilidadesDeMedico(
+		foreach (var x in medicosConPrioridad.OrderBy(x => x.firstSlot)) {
+			await foreach (var dispResult in GenerarDisponibilidadesDeMedico(
 				solicitudEspecialidad, solicitudFechaCreacion, x.medico, repositorio)) {
-				yield return disp;
+				yield return dispResult;
 			}
 		}
-
 	}
 
 
 
-	private static async IAsyncEnumerable<DisponibilidadEspecialidad2025> GenerarDisponibilidadesDeMedico(
+	private static async IAsyncEnumerable<Result<DisponibilidadEspecialidad2025>> GenerarDisponibilidadesDeMedico(
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
-		MedicoQM medico,
+		MedicoId medicoId,
 		IRepositorioDomain repositorio
 	) {
 		int duracion = solicitudEspecialidad.DuracionConsultaMinutos;
@@ -114,18 +107,20 @@ internal static class ServiciosPrivados {
 		DateTime hastaBusqueda = solicitudFechaCreacion.Date.AddDays(7 * semanas);
 
 		var turnosResult = (await repositorio.SelectTurnosProgramadosBetweenFechasWhereMedicoId(
-			new MedicoId(medico.Id.Valor), desdeBusqueda, hastaBusqueda));
+			medicoId, desdeBusqueda, hastaBusqueda));
 
 		if (turnosResult.IsError) {
+			yield return new Result<DisponibilidadEspecialidad2025>.Error(turnosResult.UnwrapAsError());
 			yield break;
 		}
 		var turnos = turnosResult.UnwrapAsOk();
 
 
 		var franjasResult = (await repositorio.SelectHorariosVigentesBetweenFechasWhereMedicoId(
-			new MedicoId(medico.Id.Valor), desdeBusqueda, hastaBusqueda));
+			medicoId, desdeBusqueda, hastaBusqueda));
 
 		if (franjasResult.IsError) {
+			yield return new Result<DisponibilidadEspecialidad2025>.Error(franjasResult.UnwrapAsError());
 			yield break;
 		}
 		var franjas = franjasResult.UnwrapAsOk();
@@ -145,7 +140,7 @@ internal static class ServiciosPrivados {
 
 				for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
 					var disp = new DisponibilidadEspecialidad2025(
-						solicitudEspecialidad, medico.Id,
+						solicitudEspecialidad, medicoId,
 						slot, slot.AddMinutes(duracion));
 
 					bool solapa = false;
@@ -160,7 +155,7 @@ internal static class ServiciosPrivados {
 					}
 
 					if (!solapa)
-						yield return disp;
+						yield return new Result<DisponibilidadEspecialidad2025>.Ok(disp);
 				}
 			}
 		}
@@ -229,7 +224,7 @@ internal static class ServiciosPrivados {
 				}
 			}
 		}
-		return new Result<DateTime>.Error("No hay disponibilidad para este medico"); // no hay turnos disponibles
+		return new Result<DateTime>.Error("No hay disponibilidad para este medicoId"); // no hay turnos disponibles
 	}
 
 

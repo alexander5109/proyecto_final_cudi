@@ -1,4 +1,4 @@
-﻿CREATE TABLE HorarioMedico (
+﻿CREATE TABLE [dbo].HorarioMedico (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     MedicoId INT NOT NULL,
     DiaSemana TINYINT NOT NULL CHECK (DiaSemana BETWEEN 0 AND 6), -- DOMINGO 0, LUNES 1, SABADO 6

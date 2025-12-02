@@ -2,6 +2,7 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.Servicios;
+using Clinica.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.Dtos.ApiDtos;
@@ -15,7 +16,7 @@ namespace Clinica.WebAPI.Controllers;
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class MedicosController(IRepositorioDomain repositorio, ILogger<TurnosController> logger) : ControllerBase {
+public class MedicosController(RepositorioDapper repositorio, ILogger<TurnosController> logger) : ControllerBase {
 	// GET: api/<MedicosController>
 
 	[HttpGet("{id}")]

@@ -1,13 +1,14 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.Servicios;
+using Clinica.Infrastructure.DataAccess;
 using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.Dtos.ApiDtos;
 
 [ApiController]
 [Route("auth")]
-public class AuthController(IRepositorioDomain repositorio, JwtService jwtService)
+public class AuthController(RepositorioDapper repositorio, JwtService jwtService)
 	: ControllerBase {
 	[HttpPost("login")]
 	public async Task<IActionResult> Login([FromBody] LoginRequestDto dto) {

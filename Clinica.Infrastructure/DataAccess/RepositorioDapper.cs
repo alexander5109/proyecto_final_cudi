@@ -45,9 +45,9 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 				commandType: CommandType.StoredProcedure
 			);
 		});
-	public Task<Result<IEnumerable<MedicoQM>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code)
+	public Task<Result<IEnumerable<MedicoId>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code)
 		=> TryAsync(async conn => {
-			return await conn.QueryAsync<MedicoQM>("sp_SelectMedicosWhereEspecialidadCode", new { EspecialidadCodigoInterno = code }, commandType: CommandType.StoredProcedure);
+			return await conn.QueryAsync<MedicoId>("sp_SelectMedicosWhereEspecialidadCode", new { EspecialidadCodigoInterno = code }, commandType: CommandType.StoredProcedure);
 		});
 
 	public Task<Result<IEnumerable<TurnoQM>>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)

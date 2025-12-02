@@ -23,10 +23,10 @@ public static class QueryModels {
 		TurnoOutcomeEstadoCodigo2025 OutcomeEstado // ej: "Programado"
 	);
 
-	public sealed record MedicoQM(
-		MedicoId Id,
-		IReadOnlyList<EspecialidadCodigo2025> EspecialidadesCodigos
-	);
+	//public sealed record MedicoQM(
+		//MedicoId Id
+		//IReadOnlyList<EspecialidadCodigo2025> EspecialidadesCodigos
+	//);
 
 	public sealed record HorarioMedicoQM(
 		MedicoId MedicoId,

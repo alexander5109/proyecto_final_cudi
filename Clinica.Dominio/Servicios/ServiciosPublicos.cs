@@ -155,33 +155,40 @@ public static class ServiciosPublicos {
 	}
 
 
-	public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> SolicitarDisponibilidadesPara(
-		EspecialidadMedica2025 solicitudEspecialidad,
-		DateTime solicitudFechaCreacion,
-		int cuantos,
-		IRepositorioDomain repositorio
-	) {
+	public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>>
+		SolicitarDisponibilidadesPara(
+			EspecialidadMedica2025 solicitudEspecialidad,
+			DateTime solicitudFechaCreacion,
+			int cuantos,
+			IRepositorioDomain repositorio) {
 		List<DisponibilidadEspecialidad2025> lista = new(capacity: cuantos);
 
-		await foreach (DisponibilidadEspecialidad2025 disp in ServiciosPrivados.GenerarDisponibilidades(
-			solicitudEspecialidad,
-			solicitudFechaCreacion,
-			repositorio
-		)) {
-			lista.Add(disp);
+		await foreach (Result<DisponibilidadEspecialidad2025> dispResult in
+			ServiciosPrivados.GenerarDisponibilidades(
+				solicitudEspecialidad,
+				solicitudFechaCreacion,
+				repositorio)) {
+			if (dispResult.IsError) {
+				// Propagamos el error aguas arriba
+				return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>
+					.Error(dispResult.UnwrapAsError());
+			}
+
+			lista.Add(dispResult.UnwrapAsOk());
 
 			if (lista.Count >= cuantos)
 				break;
 		}
 
 		if (lista.Count > 0) {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok(lista);
-		} else {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error(
-				"No se encontraron disponibilidades."
-			);
+			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>
+				.Ok(lista);
 		}
+
+		return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>
+			.Error("No se encontraron disponibilidades.");
 	}
+
 
 
 	public static async Task<Result<Turno2025>> SolicitarTurnoEnLaPrimeraDisponibilidad(

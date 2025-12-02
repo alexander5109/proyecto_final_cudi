@@ -2,6 +2,7 @@
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
+using Clinica.Infrastructure.DataAccess;
 
 namespace Clinica.WebAPI.Servicios;
 
@@ -11,7 +12,7 @@ public class UsuarioMiddleware {
 	public UsuarioMiddleware(RequestDelegate next)
 		=> _next = next;
 
-	public async Task Invoke(HttpContext context, IRepositorioDomain repo) {
+	public async Task Invoke(HttpContext context, RepositorioDapper repo) {
 		ClaimsPrincipal user = context.User;
 
 		if (user.Identity is { IsAuthenticated: true }) {
