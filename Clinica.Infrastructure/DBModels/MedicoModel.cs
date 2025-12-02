@@ -8,23 +8,25 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Shared.Dtos;
 
 public static partial class DbModels {
-	public record class MedicoModel {
-		[Key]
-		public MedicoId Id { get; set; }
-		public EspecialidadCodigo2025 EspecialidadCodigoInterno { get; set; }
-		public string Dni { get; set; } = "";
-		public string Nombre { get; set; } = "";
-		public string Apellido { get; set; } = "";
-		public DateTime FechaIngreso { get; set; }
-		public string Domicilio { get; set; } = "";
-		public string Localidad { get; set; } = "";
-		public ProvinciaCodigo2025 ProvinciaCodigo { get; set; }
-		public string Telefono { get; set; } = "";
-		public string Email { get; set; } = "";
-		public bool HaceGuardias { get; set; }
-		public string? HorariosJson { get; set; }
-		public MedicoModel() { }
+	public record MedicoModel(
+		MedicoId Id,
+		EspecialidadCodigo2025 EspecialidadCodigoInterno,
+		string Dni,
+		string Nombre,
+		string Apellido,
+		DateTime FechaIngreso,
+		string Domicilio,
+		string Localidad,
+		ProvinciaCodigo2025 ProvinciaCodigo,
+		string Telefono,
+		string Email,
+		bool HaceGuardias,
+		string? HorariosJson
+	) {
+		public MedicoModel()
+			: this(default!, default, "", "", "", default, "", "", default, "", "", default, null) { }
 	}
+
 
 	public static Result<Medico2025> ToDomain(this MedicoModel medicoDto) {
 		string json = string.IsNullOrWhiteSpace(medicoDto.HorariosJson) ? "[]" : medicoDto.HorariosJson;

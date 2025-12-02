@@ -6,22 +6,21 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Shared.Dtos;
 
 public static partial class DbModels {
-	public record class PacienteModel {
-		[Key]
-		public PacienteId Id { get; set; }
-		public string Dni { get; set; } = "";
-		public string Nombre { get; set; }
-		public string Apellido { get; set; }
-		public DateTime FechaIngreso { get; set; }
-		public string Domicilio { get; set; }
-		public string Localidad { get; set; }
-		public ProvinciaCodigo2025 ProvinciaCodigo { get; set; }
-		public string Telefono { get; set; } = "";
-		public string Email { get; set; }
-		public DateTime FechaNacimiento { get; set; }
-
-		public PacienteModel() { }
-
+	public record PacienteModel(
+		PacienteId Id,
+		string Dni,
+		string Nombre,
+		string Apellido,
+		DateTime FechaIngreso,
+		string Domicilio,
+		string Localidad,
+		ProvinciaCodigo2025 ProvinciaCodigo,
+		string Telefono,
+		string Email,
+		DateTime FechaNacimiento
+	) {
+		public PacienteModel()
+			: this(default!, "", "", "", default, "", "", default, "", "", default) { }
 	}
 	public static Result<Paciente2025> ToDomain(this PacienteModel pacientedto) {
 		return Paciente2025.Crear(

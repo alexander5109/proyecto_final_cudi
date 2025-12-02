@@ -5,21 +5,14 @@ using Clinica.Dominio.Entidades;
 namespace Clinica.Shared.Dtos;
 
 public static partial class DbModels {
-	public class UsuarioModel {
-
-		[Key]
-		public UsuarioId Id { get; set; }
-		public string NombreUsuario { get; set; } = "";
-		public string PasswordHash { get; set; } = "";
-		public UsuarioEnumRole EnumRole { get; set; }
-		public UsuarioModel() { }
-		public UsuarioModel(UsuarioId id, string nombreUsuario, string passwordHash, UsuarioEnumRole enumRole) {
-			Id = id;
-			NombreUsuario = nombreUsuario;
-			PasswordHash = passwordHash;
-			EnumRole = enumRole;
-		}
-
+	public record UsuarioModel(
+		UsuarioId Id,
+		string NombreUsuario,
+		string PasswordHash,
+		UsuarioEnumRole EnumRole
+	) {
+		// Constructor sin parámetros requerido por Dapper / serializadores
+		public UsuarioModel() : this(default!, "", "", default) { }
 	}
 	public static Result<UsuarioBase2025> ToDomain(this UsuarioModel usuario)
 		=> UsuarioBase2025.Crear(usuario.Id, usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole);
