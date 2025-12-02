@@ -32,28 +32,59 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 
 
 
-	[Authorize]
+	//[Authorize]
+	//[HttpGet("{id}/turnos")]
+	//public async Task<ActionResult<IEnumerable<TurnoDto>>> GetTurnosPorPaciente([FromRoute] int id) {
+	//	if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
+	//		return Unauthorized("Token válido pero sin usuario asociado");
+
+	//	Result<IEnumerable<Turno2025>> result =
+	//		await ServiciosPublicos.SelectTurnosWherePacienteId(usuario, repositorio, new PacienteId(id));
+
+	//	ActionResult<IEnumerable<TurnoDto>> respuesta = null!;
+
+	//	result.Switch(
+	//		ok => {
+	//			respuesta = Ok(ok.Select(t => t.ToDto()));
+	//		},
+	//		error => {
+	//			respuesta = Forbid(error);
+	//		}
+	//	);
+
+	//	return respuesta;
+	//}
 	[HttpGet("{id}/turnos")]
-	public async Task<ActionResult<IEnumerable<TurnoDto>>> GetTurnosPorPaciente([FromRoute] int id) {
+	public async Task<IActionResult> GetTurnosPorPaciente([FromRoute] int id) {
 		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
-			return Unauthorized("Token válido pero sin usuario asociado");
+			return Unauthorized();
 
-		Result<IEnumerable<Turno2025>> result =
-			await ServiciosPublicos.SelectTurnosWherePacienteId(usuario, repositorio, new PacienteId(id));
-
-		ActionResult<IEnumerable<TurnoDto>> respuesta = null!;
-
-		result.Switch(
-			ok => {
-				respuesta = Ok(ok.Select(t => t.ToDto()));
-			},
-			error => {
-				respuesta = Forbid(error);
-			}
+		var result = await ServiciosPublicos.SelectTurnosWherePacienteId(
+			usuario, repositorio, new PacienteId(id)
 		);
 
-		return respuesta;
+		if (result.IsError)
+			return BadRequest(new { error = result.UnwrapAsError() });
+
+		// es OK → procesamos lista mixta
+		var lista = result.UnwrapAsOk();
+
+		var okDtos = new List<TurnoDto>();
+		var errores = new List<object>();
+
+		foreach (var item in lista) {
+			item.Match(
+				ok => okDtos.Add(ok.ToDto()),
+				error => errores.Add(new { error })
+			);
+		}
+
+		return Ok(new {
+			ok = okDtos,
+			errores
+		});
 	}
+
 
 
 	[HttpGet]

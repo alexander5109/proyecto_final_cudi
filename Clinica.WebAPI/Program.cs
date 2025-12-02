@@ -1,20 +1,28 @@
 using System.Text;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Infrastructure.DataAccess;
-using Clinica.WebAPI.Controllers;
 using Clinica.WebAPI.RouteConstraint;
 using Clinica.WebAPI.Servicios;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
+using System.Security.Claims;
+
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IConfiguration config = builder.Configuration;
 builder.Services.AddControllers();
 
-// Swagger
+
+
+
+
+builder.Services.AddOpenApi();
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	new SQLServerConnectionFactory(
 		builder.Configuration.GetConnectionString("ClinicaMedica")
@@ -69,33 +77,24 @@ builder.Services.AddAuthentication("Bearer")
 builder.Services.AddAuthorization();
 
 
-
-
-builder.Services.AddSwaggerGen(c => {
-	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme() {
-		Name = "Authorization",
+builder.Services.AddSwaggerGen(options => {
+	options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme {
 		Type = SecuritySchemeType.Http,
-		Scheme = "Bearer",
+		Scheme = "bearer",
 		BearerFormat = "JWT",
-		In = ParameterLocation.Header,
 		Description = "Ingrese 'Bearer <token>'"
 	});
-
-	c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-	{
-		new OpenApiSecurityScheme {
-			Reference = new OpenApiReference {
-				Type = ReferenceType.SecurityScheme,
-				Id = "Bearer"
-			}
-		},
-		Array.Empty<string>()
-	}});
+	options.AddSecurityRequirement(document => new OpenApiSecurityRequirement {
+		[new OpenApiSecuritySchemeReference("bearer", document)] = []
+	});
 });
+
+
 
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment()) {
+	app.MapOpenApi();
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }

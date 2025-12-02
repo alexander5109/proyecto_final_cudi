@@ -6,7 +6,7 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Shared.Dtos;
 
 public static partial class DbModels {
-	public record TurnoModel(
+	public record TurnoDbModel(
 		TurnoId Id,
 		DateTime FechaDeCreacion,
 		PacienteId PacienteId,
@@ -19,11 +19,11 @@ public static partial class DbModels {
 		string? OutcomeComentario
 	) {
 		// Constructor sin parámetros requerido por algunos ORMs/serializadores
-		public TurnoModel() : this(default!, default, default!, default!, default!, default, default, default!, default, default) { }
+		public TurnoDbModel() : this(default!, default, default!, default!, default!, default, default, default!, default, default) { }
 	};
 
-	public static TurnoModel ToDto(this Turno2025 turno) {
-		return new TurnoModel(
+	public static TurnoDbModel ToModel(this Turno2025 turno) {
+		return new TurnoDbModel(
 			turno.Id,
 			turno.FechaDeCreacion.Valor,
 			turno.PacienteId,
@@ -36,7 +36,7 @@ public static partial class DbModels {
 			turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
 		);
 	}
-	public static Result<Turno2025> ToModel(this TurnoModel turnoDto) {
+	public static Result<Turno2025> ToDomain(this TurnoDbModel turnoDto) {
 		return Turno2025.Crear(
 			TurnoId.Crear(turnoDto.Id.Valor),
 			FechaRegistro2025.Crear(turnoDto.FechaDeCreacion),

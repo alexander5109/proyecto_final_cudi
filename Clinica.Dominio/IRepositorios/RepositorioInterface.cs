@@ -7,7 +7,9 @@ namespace Clinica.Dominio.IRepositorios;
 public interface RepositorioInterface {
 	// ----------------SELECT *
 	Task<Result<IEnumerable<Turno2025>>> SelectTurnos();
-	Task<Result<IEnumerable<Turno2025>>> SelectTurnosWherePacienteId(PacienteId id);
+	//Task<Result<IEnumerable<Turno2025>>> SelectTurnosWherePacienteId(PacienteId id);
+	Task<Result<IEnumerable<Result<Turno2025>>>> SelectTurnosWherePacienteId(PacienteId id);
+
 	Task<Result<IEnumerable<Turno2025>>> SelectTurnosWhereMedicoId(MedicoId id);
 	Task<Result<IEnumerable<Turno2025>>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta);
 	Task<Result<IEnumerable<Paciente2025>>> SelectPacientes();
@@ -21,6 +23,8 @@ public interface RepositorioInterface {
 	Task<Result<Medico2025>> SelectMedicoWhereId(MedicoId id);
 	Task<Result<Paciente2025>> SelectPacienteWhereId(PacienteId id);
 	Task<Result<Turno2025>> SelectTurnoWhereId(TurnoId id);
+
+
 	// ----------------INSERT
 	Task<Result<UsuarioId>> InsertUsuarioReturnId(UsuarioBase2025 usuario);
 	Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 turno);

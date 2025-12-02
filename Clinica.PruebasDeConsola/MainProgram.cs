@@ -54,13 +54,13 @@ public static class MainProgram {
 
 		//CRUD TESTS
 		PacienteId pacienteId = new(1);
-		Result<IEnumerable<Turno2025>> responseResult = await ServiciosPublicos.SelectTurnosWherePacienteId(usuarioFake, repositorio, pacienteId);
+        Result<IEnumerable<Result<Turno2025>>> responseResult = await ServiciosPublicos.SelectTurnosWherePacienteId(usuarioFake, repositorio, pacienteId);
 		if (responseResult.IsError) {
 			Console.WriteLine($"No se encontraron turnos para pacienteid {pacienteId}");
 			return;
 		}
 		foreach (var turno2025 in responseResult.UnwrapAsOk()) {
-			Console.Write(turno2025.ATexto());
+			Console.Write(turno2025.UnwrapAsOk().ATexto());
 			break;
 		}
 

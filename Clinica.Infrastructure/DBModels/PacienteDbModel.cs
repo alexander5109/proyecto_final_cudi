@@ -6,7 +6,7 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Shared.Dtos;
 
 public static partial class DbModels {
-	public record PacienteModel(
+	public record PacienteDbModel(
 		PacienteId Id,
 		string Dni,
 		string Nombre,
@@ -19,10 +19,10 @@ public static partial class DbModels {
 		string Email,
 		DateTime FechaNacimiento
 	) {
-		public PacienteModel()
+		public PacienteDbModel()
 			: this(default!, "", "", "", default, "", "", default, "", "", default) { }
 	}
-	public static Result<Paciente2025> ToDomain(this PacienteModel pacientedto) {
+	public static Result<Paciente2025> ToDomain(this PacienteDbModel pacientedto) {
 		return Paciente2025.Crear(
 			PacienteId.Crear(pacientedto.Id.Valor),
 			NombreCompleto2025.Crear(pacientedto.Nombre, pacientedto.Apellido),
@@ -42,8 +42,8 @@ public static partial class DbModels {
 		);
 	}
 
-	public static PacienteModel ToModel(this Paciente2025 paciente) {
-		return new PacienteModel {
+	public static PacienteDbModel ToModel(this Paciente2025 paciente) {
+		return new PacienteDbModel {
 			Id = paciente.Id,
 			Dni = paciente.Dni.Valor,
 			Nombre = paciente.NombreCompleto.NombreValor,

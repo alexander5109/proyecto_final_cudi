@@ -5,7 +5,7 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Shared.Dtos;
 
 public static partial class DbModels {
-	public record HorarioMedicoModel(
+	public record HorarioMedicoDbModel(
 		int Id,
 		int MedicoId,
 		DayOfWeek DiaSemana,
@@ -14,11 +14,11 @@ public static partial class DbModels {
 		DateTime VigenciaDesde,
 		DateTime VigenciaHasta
 	) {
-		public HorarioMedicoModel()
+		public HorarioMedicoDbModel()
 			: this(default, default, default, default, default, default, default) { }
 	}
 
-	public static Result<HorarioMedico2025> ToDomain(this HorarioMedicoModel horarioDto) {
+	public static Result<HorarioMedico2025> ToDomain(this HorarioMedicoDbModel horarioDto) {
 		return HorarioMedico2025.Crear(
 			new DiaSemana2025(horarioDto.DiaSemana),
 			new HorarioHora2025(TimeOnly.FromTimeSpan(horarioDto.HoraDesde)),

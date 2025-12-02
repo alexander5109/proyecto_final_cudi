@@ -8,7 +8,7 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Shared.Dtos;
 
 public static partial class DbModels {
-	public record MedicoModel(
+	public record MedicoDbModel(
 		MedicoId Id,
 		EspecialidadCodigo2025 EspecialidadCodigoInterno,
 		string Dni,
@@ -23,14 +23,14 @@ public static partial class DbModels {
 		bool HaceGuardias,
 		string? HorariosJson
 	) {
-		public MedicoModel()
+		public MedicoDbModel()
 			: this(default!, default, "", "", "", default, "", "", default, "", "", default, null) { }
 	}
 
 
-	public static Result<Medico2025> ToDomain(this MedicoModel medicoDto) {
+	public static Result<Medico2025> ToDomain(this MedicoDbModel medicoDto) {
 		string json = string.IsNullOrWhiteSpace(medicoDto.HorariosJson) ? "[]" : medicoDto.HorariosJson;
-		List<HorarioMedicoModel> horariosDto = JsonSerializer.Deserialize<List<HorarioMedicoModel>>(json)
+		List<HorarioMedicoDbModel> horariosDto = JsonSerializer.Deserialize<List<HorarioMedicoDbModel>>(json)
 			?? [];
 		return Medico2025.Crear(
 			MedicoId.Crear(medicoDto.Id.Valor),
@@ -53,8 +53,8 @@ public static partial class DbModels {
 	}
 
 
-	public static MedicoModel ToModel(this Medico2025 medico) {
-		return new MedicoModel {
+	public static MedicoDbModel ToModel(this Medico2025 medico) {
+		return new MedicoDbModel {
 			Id = medico.Id,
 			EspecialidadCodigoInterno = medico.EspecialidadUnica.CodigoInternoValor,
 			Dni = medico.Dni.Valor,
