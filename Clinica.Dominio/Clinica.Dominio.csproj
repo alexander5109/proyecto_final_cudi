@@ -12,8 +12,4 @@
     <None Include="TiposDeValor\VigenciaHorario2025.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="QueryModels\" />
-  </ItemGroup>
-
 </Project>

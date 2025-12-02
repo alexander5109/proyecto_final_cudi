@@ -57,6 +57,23 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 		});
 
 
+	public Task<Result<Usuario2025>> SelectUsuarioWhereId(UsuarioId id)
+		=> TryAsync(async conn => {
+			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
+				"sp_SelectUsuarioWhereId",
+				new { Id = id.Valor },
+				commandType: CommandType.StoredProcedure
+			);
+
+			if (dto is null)
+				throw new Exception($"Usuario con Id={id.Valor} no encontrado.");
+
+			Result<Usuario2025> map = dto.ToDomain();
+			if (map.IsError)
+				throw new Exception($"Error creando Usuario2025 desde DTO (Id={id.Valor}): {map.UnwrapAsError()}");
+
+			return map.UnwrapAsOk();
+		});
 
 
 
@@ -86,24 +103,6 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 				throw new Exception($"Error creando Usuario2025 desde DTO: {r.UnwrapAsError()}");
 
 			return r.UnwrapAsOk(); // <- T = Usuario2025
-		});
-
-
-	public Task<Result<Usuario2025>> SelectUsuarioWhereId(UsuarioId id)
-		=> TryAsync(async conn => {
-			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
-				"sp_SelectUsuarioWhereId",
-				new { Id = id.Valor },
-				commandType: CommandType.StoredProcedure
-			);
-
-			if (dto is null)
-				throw new Exception("Usuario no encontrado");
-
-			Result<Usuario2025> r = dto.ToDomain();
-			if (r.IsError)
-				throw new Exception($"Error creando Usuario2025 desde DTO: {r.UnwrapAsError()}");
-			return r.UnwrapAsOk(); // devuelve el valor crudo (Usuario2025)
 		});
 
 	public Task<Result<Medico2025>> SelectMedicoWhereId(MedicoId id)
