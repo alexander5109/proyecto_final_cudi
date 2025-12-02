@@ -202,7 +202,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 	public Task<Result<IEnumerable<Turno2025>>> SelectTurnosWherePacienteId(PacienteId id)
 		=> TryAsync(async conn => {
 			IEnumerable<TurnoDto> dtos = await conn.QueryAsync<TurnoDto>("sp_SelectTurnosWherePacienteId",
-			new { PacienteId = id }, commandType: CommandType.StoredProcedure);
+			new { PacienteId = id.Valor }, commandType: CommandType.StoredProcedure);
 			List<Turno2025> instances = [];
 			foreach (var dto in dtos) {
 				Result<Turno2025> r = dto.ToDomain();

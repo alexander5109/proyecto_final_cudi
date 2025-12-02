@@ -34,12 +34,12 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 
 	[Authorize]
 	[HttpGet("{id}/turnos")]
-	public async Task<ActionResult<IEnumerable<TurnoDto>>> GetTurnosPorPaciente([FromRoute] PacienteId id) {
+	public async Task<ActionResult<IEnumerable<TurnoDto>>> GetTurnosPorPaciente([FromRoute] int id) {
 		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
 			return Unauthorized("Token válido pero sin usuario asociado");
 
 		Result<IEnumerable<Turno2025>> result =
-			await ServiciosPublicos.SelectTurnosWherePacienteId(usuario, repositorio, id);
+			await ServiciosPublicos.SelectTurnosWherePacienteId(usuario, repositorio, new PacienteId(id));
 
 		ActionResult<IEnumerable<TurnoDto>> respuesta = null!;
 

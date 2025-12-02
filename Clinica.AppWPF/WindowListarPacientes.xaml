@@ -12,20 +12,20 @@
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 	WindowStartupLocation="CenterScreen"
 	Activated="Window_ActivatedAsync">
-	<Grid
+    <Grid
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch">
-		<Grid.Background>
-			<ImageBrush
+        <Grid.Background>
+            <ImageBrush
 				ImageSource="pack://application:,,,/PublishedResources/images/falopa.jpg" />
-		</Grid.Background>
-		<ContentControl
+        </Grid.Background>
+        <ContentControl
 			Style="{StaticResource ContentControlLindo}"
 			Margin="512,17,22,180">
-			<StackPanel
+            <StackPanel
 				Orientation="Vertical"
 				Background="Transparent">
-				<Label
+                <Label
 					Content="Pacientes"
 					HorizontalAlignment="Center"
 					FontSize="72"
@@ -34,51 +34,51 @@
 					FontWeight="Bold"
 					HorizontalContentAlignment="Center"
 					VerticalAlignment="Center" />
-				<ListView
+                <ListView
 					Name="pacientesListView"
 					ItemsSource="{Binding PacientesList}"
 					Width="Auto"
 					Height="167"
 					SelectionChanged="ListViewPacientes_SelectionChangedAsync"
 					d:ItemsSource="{d:SampleData ItemCount=5}">
-					<ListView.View>
-						<GridView>
-							<!-- Dni Column -->
-							<GridViewColumn
+                    <ListView.View>
+                        <GridView>
+                            <!-- Dni Column -->
+                            <GridViewColumn
 								Header="Id"
 								DisplayMemberBinding="{Binding Id}"
 								Width="25" />
-							<GridViewColumn
+                            <GridViewColumn
 								Header="Dni"
 								DisplayMemberBinding="{Binding Dni}"
 								Width="50" />
-							<!-- Name Column -->
-							<GridViewColumn
+                            <!-- Name Column -->
+                            <GridViewColumn
 								Header="Nombre"
 								DisplayMemberBinding="{Binding Nombre}"
 								Width="60" />
-							<GridViewColumn
+                            <GridViewColumn
 								Header="Apellido"
 								DisplayMemberBinding="{Binding Apellido}"
 								Width="70" />
-							<GridViewColumn
+                            <GridViewColumn
 								Header="Email"
 								DisplayMemberBinding="{Binding Email}"
 								Width="120" />
-							<GridViewColumn
+                            <GridViewColumn
 								Header="Teléfono"
 								DisplayMemberBinding="{Binding Telefono}"
 								Width="90" />
-						</GridView>
-					</ListView.View>
-				</ListView>
-				<StackPanel
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <StackPanel
 					Orientation="Horizontal"
 					Background="Transparent"
 					Margin="5,5,5,5"
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center">
-					<Button
+                    <Button
 						Content="Agregar nuevo"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"
@@ -91,7 +91,7 @@
 						BorderBrush="#FF0E0D0D"
 						FontFamily="Baskerville Old Face"
 						Margin="25,0,25,5"></Button>
-					<Button
+                    <Button
 						x:Name="buttonModificarPaciente"
 						Content="Modificar"
 						HorizontalAlignment="Left"
@@ -106,10 +106,10 @@
 						IsEnabled="False"
 						Margin="25,0,25,0"
 						Width="150" />
-				</StackPanel>
-			</StackPanel>
-		</ContentControl>
-		<Button
+                </StackPanel>
+            </StackPanel>
+        </ContentControl>
+        <Button
 			Content="Home"
 			HorizontalAlignment="Left"
 			VerticalAlignment="Top"
@@ -122,7 +122,7 @@
 			BorderBrush="#FF0E0D0D"
 			Margin="810,446,0,0"
 			FontFamily="Baskerville Old Face" />
-		<Button
+        <Button
 			Content="Salir"
 			HorizontalAlignment="Left"
 			VerticalAlignment="Top"
@@ -135,50 +135,53 @@
 			BorderBrush="#FF0E0D0D"
 			Margin="810,501,0,0"
 			FontFamily="Baskerville Old Face" />
-		<ContentControl
+        <ContentControl
 			Style="{StaticResource ContentControlLindo}"
-			Margin="280,17,534,210">
-			<StackPanel
+			Margin="164,17,534,210">
+            <StackPanel
 				Orientation="Vertical"
 				Background="Transparent">
-				<Label
+                <Label
 					Content="Turnos"
 					FontSize="35"
 					FontFamily="Ringbearer"
 					FontWeight="Bold"
 					HorizontalAlignment="Center" />
-				<ListView
+                <ListView
 					x:Name="turnosListView"
 					Background="Transparent"
 					BorderThickness="0"
 					SelectionChanged="ListViewTurnos_SelectionChangedAsync"
 					Height="195"
 					HorizontalContentAlignment="Center"
-					VerticalAlignment="Center"
-					HorizontalAlignment="Center">
-					<ListView.View>
-						<GridView>
-							<GridViewColumn
-								Header="Id"
-								DisplayMemberBinding="{Binding Id}"
+					HorizontalAlignment="Center" Width="278">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn
+								Header="FechaAsignada"
+								DisplayMemberBinding="{Binding FechaHoraAsignadaDesde}"
 								Width="25" />
-							<GridViewColumn
-								Header="Fecha"
-								DisplayMemberBinding="{Binding Fecha, StringFormat={}{0:dd/MM/yyyy}}"
+                            <GridViewColumn
+								Header="EspecialidadId"
+								DisplayMemberBinding="{Binding EspecialidadCodigo}"
 								Width="73" />
-							<GridViewColumn
-								Header="Hora"
-								DisplayMemberBinding="{Binding Hora, StringFormat={}{0:hh\\:mm}}"
+                            <GridViewColumn
+								Header="MedicoId"
+								DisplayMemberBinding="{Binding MedicoId}"
 								Width="63" />
-						</GridView>
-					</ListView.View>
-				</ListView>
-				<StackPanel
+                            <GridViewColumn
+								Header="Estado"
+								DisplayMemberBinding="{Binding OutcomeEstado}"
+								Width="63" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <StackPanel
 					Orientation="Horizontal"
 					Background="Transparent"
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center">
-					<Button
+                    <Button
 						x:Name="buttonModificarTurno"
 						Content="Modificar"
 						VerticalAlignment="Center"
@@ -193,57 +196,57 @@
 						Margin="25,10,25,25"
 						Width="120"
 						HorizontalAlignment="Center" />
-				</StackPanel>
-			</StackPanel>
-		</ContentControl>
-		<ContentControl
+                </StackPanel>
+            </StackPanel>
+        </ContentControl>
+        <ContentControl
 			Style="{StaticResource ContentControlLindo}"
-			Margin="35,17,779,210">
-			<!-- </Expander> -->
-			<!-- <Expander Header="Información del Médico" IsExpanded="True" Background="Transparent" BorderThickness="0"> -->
-			<StackPanel
+			Margin="-63,47,877,180">
+            <!-- </Expander> -->
+            <!-- <Expander Header="Información del Médico" IsExpanded="True" Background="Transparent" BorderThickness="0"> -->
+            <StackPanel
 				Orientation="Vertical"
 				Background="Transparent">
-				<Label
+                <Label
 					Content="Medico"
 					FontSize="25"
 					FontFamily="Ringbearer"
 					FontWeight="Bold"
 					HorizontalAlignment="Center" />
-				<TextBlock
+                <TextBlock
 					Text="DNI:"
 					FontWeight="Bold"
 					Margin="0,5,0,5" />
-				<TextBlock
+                <TextBlock
 					x:Name="txtMedicoDni"
 					Margin="0,0,0,10" />
-				<TextBlock
+                <TextBlock
 					Text="Nombre:"
 					FontWeight="Bold"
 					Margin="0,5,0,5" />
-				<TextBlock
+                <TextBlock
 					x:Name="txtMedicoNombre"
 					Margin="0,0,0,10" />
-				<TextBlock
+                <TextBlock
 					Text="Apellido:"
 					FontWeight="Bold"
 					Margin="0,5,0,5" />
-				<TextBlock
+                <TextBlock
 					x:Name="txtMedicoApellido"
 					Margin="0,0,0,10" />
-				<TextBlock
+                <TextBlock
 					Text="Especialidad:"
 					FontWeight="Bold"
 					Margin="0,5,0,5" />
-				<TextBlock
+                <TextBlock
 					x:Name="txtMedicoEspecialidad"
 					Margin="0,0,0,10" />
-				<StackPanel
+                <StackPanel
 					Orientation="Horizontal"
 					Background="Transparent"
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center">
-					<Button
+                    <Button
 						x:Name="buttonModificarMedico"
 						Content="Modificar"
 						HorizontalAlignment="Center"
@@ -258,10 +261,10 @@
 						IsEnabled="False"
 						Margin="25,10,25,25"
 						Width="120" />
-				</StackPanel>
-			</StackPanel>
-		</ContentControl>
-		<Label
+                </StackPanel>
+            </StackPanel>
+        </ContentControl>
+        <Label
 			Style="{StaticResource LabelLindo}"
 			x:Name="labelBaseDeDatosModo"
 			Content="Elegir DB Modo"
@@ -275,5 +278,5 @@
 			VerticalContentAlignment="Center"
 			Padding="10,10,10,10"
 			Width="316" />
-	</Grid>
+    </Grid>
 </Window>
