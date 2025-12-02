@@ -102,12 +102,12 @@
     <Build Include="Dto\Tables\Usuarios\table_Usuario.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Publications\Clinica.SQLServerDB.publish.xml" />
+    <None Include="Publications\Clinica.InfrastructureSQLServer.publish.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Dto\PostDeployInserts\Script.PostDeployment.sql" />
+    <PostDeploy Include="Dto\PostDeployInserts\Script.PostDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Dto\Script.PreDeployment.sql" />
+    <PreDeploy Include="Dto\Script.PreDeployment.sql" />
   </ItemGroup>
 </Project>

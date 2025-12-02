@@ -69,8 +69,8 @@ public record Turno2025(
 			from medicoId in medicoIdResult
 			from especialidad in especialidadResult
 			from estado in outcomeEstadoResult
-			from _ in ValidarOutcome(estado, outcomeFecha, outcomeComentario)
-			select new Turno2025(
+                // from _ in ValidarOutcome(estado, outcomeFecha, outcomeComentario)
+            select new Turno2025(
 				id,
 				fechaCreacion,
 				pacienteId,
