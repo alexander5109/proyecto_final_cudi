@@ -43,51 +43,44 @@ internal static class ServiciosPrivados {
 
 
 	internal static async Task<Result<DisponibilidadEspecialidad2025>> EncontrarProximaDisponibilidad(
-		EspecialidadMedica2025 solicitudEspecialidad,
-		DateTime solicitudFechaCreacion,
-		IRepositorioDomain repositorio
+			EspecialidadMedica2025 solicitudEspecialidad,
+			DateTime solicitudFechaCreacion,
+			IRepositorioDomain repositorio
 	) {
 		await foreach (var disp in GenerarDisponibilidades(
 			solicitudEspecialidad,
 			solicitudFechaCreacion,
-			repositorio
-		)) {
-			// First element wins → return immediately
+			repositorio)) {
 			return disp;
 		}
-
 		return new Result<DisponibilidadEspecialidad2025>.Error("No se encontró ninguna disponibilidad.");
 	}
 
 
 	internal static async IAsyncEnumerable<Result<DisponibilidadEspecialidad2025>>GenerarDisponibilidades(
-		EspecialidadMedica2025 solicitudEspecialidad,
-		DateTime solicitudFechaCreacion,
-		IRepositorioDomain repositorio
+		EspecialidadMedica2025 especialidad,
+		DateTime fechaCreacion,
+		IRepositorioDomain repo
 	) {
-		var medicosResult = await repositorio.SelectMedicosWhereEspecialidadCode(solicitudEspecialidad.CodigoInternoValor);
-		if (medicosResult is Result<IEnumerable<MedicoId>>.Error errMeds) {
-			yield return new Result<DisponibilidadEspecialidad2025>.Error(errMeds.Mensaje);
+		var medicosResult = await repo.SelectMedicosWhereEspecialidadCode(especialidad.CodigoInternoValor);
+		if (medicosResult is Result<IEnumerable<MedicoId>>.Error errMed) {
+			yield return new Result<DisponibilidadEspecialidad2025>.Error(errMed.Mensaje);
 			yield break;
 		}
 		var medicos = ((Result<IEnumerable<MedicoId>>.Ok)medicosResult).Valor;
-		var medicosConPrioridad = new List<(MedicoId medico, DateTime firstSlot)>();
-		foreach (var medicoId in medicos) {
-			var first = await CalcularPrimerSlotDisponible(
-				medicoId,
-				solicitudEspecialidad,
-				repositorio);
-			if (first is Result<DateTime>.Error errSlot) {
-				// propagamos error
+		var ordenados = new List<(MedicoId medico, DateTime slot)>();
+		foreach (var medico in medicos) {
+			var primero = await CalcularPrimerSlotDisponible(medico, especialidad, repo);
+			if (primero is Result<DateTime>.Error errSlot) {
 				yield return new Result<DisponibilidadEspecialidad2025>.Error(errSlot.Mensaje);
 				yield break;
 			}
-			medicosConPrioridad.Add((medicoId, ((Result<DateTime>.Ok)first).Valor));
+			ordenados.Add((medico, ((Result<DateTime>.Ok)primero).Valor));
 		}
-		foreach (var x in medicosConPrioridad.OrderBy(x => x.firstSlot)) {
-			await foreach (var dispResult in GenerarDisponibilidadesDeMedico(
-				solicitudEspecialidad, solicitudFechaCreacion, x.medico, repositorio)) {
-				yield return dispResult;
+		foreach (var x in ordenados.OrderBy(t => t.slot)) {
+			await foreach (var disp in GenerarDisponibilidadesDeMedico(
+				especialidad, fechaCreacion, x.medico, repo)) {
+				yield return disp;
 			}
 		}
 	}
