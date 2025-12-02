@@ -29,7 +29,7 @@ public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 
 //	public string ATexto() =>
 //		$"Solicitud básica:\n" +
-//		$"  • Paciente: {PacienteId}\n" +
+//		$"  • Nivel4Paciente: {PacienteId}\n" +
 //		$"  • Especialidad: {Especialidad.ATexto()}\n" +
 //		$"  • Solicitado en: {FechaCreacion:G}";
 //}
@@ -57,7 +57,7 @@ public readonly record struct SolicitudDeTurnoPreferencias(
 //	SolicitudDeTurno Basica,
 //	SolicitudDeTurnoPreferencias Preferencias
 //) : IComoTexto {
-//	public Paciente2025 Paciente => Basica.Paciente;
+//	public Paciente2025 Nivel4Paciente => Basica.Nivel4Paciente;
 //	public EspecialidadMedica2025 Especialidad => Basica.Especialidad;
 //	public DateTime FechaCreacion => Basica.FechaCreacion;
 

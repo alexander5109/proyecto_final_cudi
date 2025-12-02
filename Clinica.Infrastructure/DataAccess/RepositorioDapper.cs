@@ -39,22 +39,22 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 
 	//-----------------------SELECT one ------------------
-	public Task<Result<UsuarioBase2025>> SelectUsuarioWhereName(NombreUsuario nombre)
+	public Task<Result<Usuario2025>> SelectUsuarioWhereName(NombreUsuario nombre)
 		=> TryAsync(async conn => {
 			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
 				"sp_SelectUsuarioWhereNombre",
 				new { NombreUsuario = nombre.Valor },
 				commandType: CommandType.StoredProcedure
 			) ?? throw new Exception("Usuario no encontrado");
-			Result<UsuarioBase2025> r = dto.ToDomain();
+			Result<Usuario2025> r = dto.ToDomain();
 			if (r.IsError)
-				throw new Exception($"Error creando UsuarioBase2025 desde DTO: {r.UnwrapAsError()}");
+				throw new Exception($"Error creando Usuario2025 desde DTO: {r.UnwrapAsError()}");
 
-			return r.UnwrapAsOk(); // <- T = UsuarioBase2025
+			return r.UnwrapAsOk(); // <- T = Usuario2025
 		});
 
 
-	public Task<Result<UsuarioBase2025>> SelectUsuarioWhereId(UsuarioId id)
+	public Task<Result<Usuario2025>> SelectUsuarioWhereId(UsuarioId id)
 		=> TryAsync(async conn => {
 			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
 				"sp_SelectUsuarioWhereId",
@@ -65,10 +65,10 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 			if (dto is null)
 				throw new Exception("Usuario no encontrado");
 
-			Result<UsuarioBase2025> r = dto.ToDomain();
+			Result<Usuario2025> r = dto.ToDomain();
 			if (r.IsError)
-				throw new Exception($"Error creando UsuarioBase2025 desde DTO: {r.UnwrapAsError()}");
-			return r.UnwrapAsOk(); // devuelve el valor crudo (UsuarioBase2025)
+				throw new Exception($"Error creando Usuario2025 desde DTO: {r.UnwrapAsError()}");
+			return r.UnwrapAsOk(); // devuelve el valor crudo (Usuario2025)
 		});
 
 	public Task<Result<Medico2025>> SelectMedicoWhereId(MedicoId id)
@@ -80,7 +80,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 			);
 
 			if (dto is null)
-				throw new Exception("Medico no encontrado");
+				throw new Exception("Nivel3Medico no encontrado");
 
 			Result<Medico2025> r = dto.ToDomain();
 			if (r.IsError)
@@ -97,7 +97,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 			);
 
 			if (dto is null)
-				throw new Exception("Paciente no encontrado");
+				throw new Exception("Nivel4Paciente no encontrado");
 
 			Result<Paciente2025> r = dto.ToDomain();
 			if (r.IsError)
@@ -302,7 +302,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 			));
 		});
 
-	public async Task<Result<UsuarioId>> InsertUsuarioReturnId(UsuarioBase2025 usuario)
+	public async Task<Result<UsuarioId>> InsertUsuarioReturnId(Usuario2025 usuario)
 		=> await TryAsync(async conn => {
 			DynamicParameters parameters = new();
 			parameters.Add("@NombreUsuario", usuario.UserName.Valor);
@@ -451,22 +451,22 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 				commandType: CommandType.StoredProcedure
 			);
 		});
-	public static async Task<Result<Unit>> UpdatePacienteWhereId(UsuarioBase2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
-		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
-			return new Result<Unit>.Error("No cuenta con permisos para actualizar pacientes.");
-		}
-		return await repositorio.UpdatePacienteWhereId(paciente);
-	}
-	public static async Task<Result<PacienteId>> InsertPaciente(UsuarioBase2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
-		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
-			return new Result<PacienteId>.Error("No cuenta con permisos para crear pacientes.");
-		}
-		return await repositorio.InsertPacienteReturnId(paciente);
-	}
-	public static async Task<Result<Unit>> DeletePacienteWhereId(UsuarioBase2025 usuario, RepositorioInterface repositorio, PacienteId id) {
-		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
-			return new Result<Unit>.Error("No cuenta con permisos para eliminar pacientes.");
-		}
-		return await repositorio.DeletePacienteWhereId(id);
-	}
+	//public static async Task<Result<Unit>> UpdatePacienteWhereId(Usuario2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
+	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
+	//		return new Result<Unit>.Error("No cuenta con permisos para actualizar pacientes.");
+	//	}
+	//	return await repositorio.UpdatePacienteWhereId(paciente);
+	//}
+	//public static async Task<Result<PacienteId>> InsertPaciente(Usuario2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
+	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
+	//		return new Result<PacienteId>.Error("No cuenta con permisos para crear pacientes.");
+	//	}
+	//	return await repositorio.InsertPacienteReturnId(paciente);
+	//}
+	//public static async Task<Result<Unit>> DeletePacienteWhereId(Usuario2025 usuario, RepositorioInterface repositorio, PacienteId id) {
+	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
+	//		return new Result<Unit>.Error("No cuenta con permisos para eliminar pacientes.");
+	//	}
+	//	return await repositorio.DeletePacienteWhereId(id);
+	//}
 }

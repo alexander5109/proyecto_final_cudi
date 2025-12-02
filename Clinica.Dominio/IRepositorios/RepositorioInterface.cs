@@ -18,15 +18,15 @@ public interface RepositorioInterface {
 	Task<Result<IEnumerable<HorarioMedico2025>>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta);
 
 	// ----------------SELECT ONE
-	Task<Result<UsuarioBase2025>> SelectUsuarioWhereName(NombreUsuario nombre);
-	Task<Result<UsuarioBase2025>> SelectUsuarioWhereId(UsuarioId id);
+	Task<Result<Usuario2025>> SelectUsuarioWhereName(NombreUsuario nombre);
+	Task<Result<Usuario2025>> SelectUsuarioWhereId(UsuarioId id);
 	Task<Result<Medico2025>> SelectMedicoWhereId(MedicoId id);
 	Task<Result<Paciente2025>> SelectPacienteWhereId(PacienteId id);
 	Task<Result<Turno2025>> SelectTurnoWhereId(TurnoId id);
 
 
 	// ----------------INSERT
-	Task<Result<UsuarioId>> InsertUsuarioReturnId(UsuarioBase2025 usuario);
+	Task<Result<UsuarioId>> InsertUsuarioReturnId(Usuario2025 usuario);
 	Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 turno);
 	Task<Result<PacienteId>> InsertPacienteReturnId(Paciente2025 paciente);
 	Task<Result<MedicoId>> InsertMedicoReturnId(Medico2025 paciente);

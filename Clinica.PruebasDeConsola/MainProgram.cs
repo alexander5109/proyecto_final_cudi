@@ -44,25 +44,25 @@ public static class MainProgram {
 		//var response = await http.GetAsync($"/disponibilidades?especialidadCodigoInterno=3&cuantos=10");
 
 		NombreUsuario nombreUsuario = new ("admin1");
-		Result<UsuarioBase2025> usuarioFakeResult = await repositorio.SelectUsuarioWhereName(nombreUsuario);
+		Result<Usuario2025> usuarioFakeResult = await repositorio.SelectUsuarioWhereName(nombreUsuario);
 		if (usuarioFakeResult.IsError) {
 			Console.WriteLine($"No se encontro el usuario {nombreUsuario}");
 			return;
 		}
-        UsuarioBase2025 usuarioFake = usuarioFakeResult.UnwrapAsOk();
+        Usuario2025 usuarioFake = usuarioFakeResult.UnwrapAsOk();
 
 
 		//CRUD TESTS
-		PacienteId pacienteId = new(1);
-        Result<IEnumerable<Result<Turno2025>>> responseResult = await ServiciosPublicos.SelectTurnosWherePacienteId(usuarioFake, repositorio, pacienteId);
-		if (responseResult.IsError) {
-			Console.WriteLine($"No se encontraron turnos para pacienteid {pacienteId}");
-			return;
-		}
-		foreach (var turno2025 in responseResult.UnwrapAsOk()) {
-			Console.Write(turno2025.UnwrapAsOk().ATexto());
-			break;
-		}
+		//PacienteId pacienteId = new(1);
+  //      Result<IEnumerable<Result<Turno2025>>> responseResult = await ServiciosPublicos.SelectTurnosWherePacienteId(usuarioFake, repositorio, pacienteId);
+		//if (responseResult.IsError) {
+		//	Console.WriteLine($"No se encontraron turnos para pacienteid {pacienteId}");
+		//	return;
+		//}
+		//foreach (var turno2025 in responseResult.UnwrapAsOk()) {
+		//	Console.Write(turno2025.UnwrapAsOk().ATexto());
+		//	break;
+		//}
 
 
 		// Caso de uso 1

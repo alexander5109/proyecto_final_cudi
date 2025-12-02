@@ -35,7 +35,7 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 	//[Authorize]
 	//[HttpGet("{id}/turnos")]
 	//public async Task<ActionResult<IEnumerable<TurnoDto>>> GetTurnosPorPaciente([FromRoute] int id) {
-	//	if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
+	//	if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 	//		return Unauthorized("Token válido pero sin usuario asociado");
 
 	//	Result<IEnumerable<Turno2025>> result =
@@ -56,83 +56,57 @@ public class PacientesController(RepositorioInterface repositorio, ILogger<Pacie
 	//}
 	[HttpGet("{id}/turnos")]
 	public async Task<IActionResult> GetTurnosPorPaciente([FromRoute] int id) {
-		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
+		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
 
-		var result = await ServiciosPublicos.SelectTurnosWherePacienteId(
-			usuario, repositorio, new PacienteId(id)
-		);
+		if (!usuario.HasPermission(PermisoSistema.VerTurnos))
+			return Forbid();
 
-		if (result.IsError)
-			return BadRequest(new { error = result.UnwrapAsError() });
-
-		// es OK → procesamos lista mixta
-		var lista = result.UnwrapAsOk();
-
-		var okDtos = new List<TurnoDto>();
-		var errores = new List<object>();
-
-		foreach (var item in lista) {
-			item.Match(
-				ok => okDtos.Add(ok.ToDto()),
-				error => errores.Add(new { error })
-			);
-		}
-
-		return Ok(new {
-			ok = okDtos,
-			errores
-		});
+		var turnos = await repositorio.SelectTurnosWherePacienteId(new PacienteId(id));
+		return Ok(turnos);
 	}
+
 
 
 
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<PacienteDto>>> GetPacientes() {
-		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
-			return Unauthorized("Token válido pero sin usuario asociado");
-		Result<IEnumerable<Paciente2025>> result =
-			await ServiciosPublicos.SelectPacientes(usuario, repositorio);
-		ActionResult<IEnumerable<PacienteDto>> respuesta = null!;
+		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+			return Unauthorized();
 
-		result.Switch(
-			ok => {
-				respuesta = Ok(ok.Select(p => p.ToDto()));
-			},
-			error => {
-				respuesta = Forbid(error);
-			}
-		);
-		return respuesta;
+		if (!usuario.HasPermission(PermisoSistema.VerPacientes))
+			return Forbid();
+
+		var pacientes = await repositorio.SelectPacientes(); //VOLVER A CMABIAR ESTO....
+		return Ok(pacientes);
 	}
 
 
 
+	//[HttpDelete("{id}")]
+	//public async Task<ActionResult> Delete([FromRoute] PacienteId id) {
+	//	if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+	//		return Unauthorized("Token válido pero sin usuario asociado");
 
-	[HttpDelete("{id}")]
-	public async Task<ActionResult> Delete([FromRoute] PacienteId id) {
-		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
-			return Unauthorized("Token válido pero sin usuario asociado");
+	//	Result<Unit> result = await ServiciosPublicos.DeletePacienteWhereId(usuario, repositorio, id);
+	//	return FromResult(result);
+	//}
 
-		Result<Unit> result = await ServiciosPublicos.DeletePacienteWhereId(usuario, repositorio, id);
-		return FromResult(result);
-	}
+	//[HttpPost]
+	//public async Task<ActionResult> Create([FromBody] PacienteDto dto) {
+	//	if (dto is null) return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
+	//	Result<Paciente2025> pacienteResult = dto.ToDomain();
+	//	if (pacienteResult.IsError) return BadRequest(pacienteResult.UnwrapAsError());
 
-	[HttpPost]
-	public async Task<ActionResult> Create([FromBody] PacienteDto dto) {
-		if (dto is null) return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
-		Result<Paciente2025> pacienteResult = dto.ToDomain();
-		if (pacienteResult.IsError) return BadRequest(pacienteResult.UnwrapAsError());
+	//	if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+	//		return Unauthorized("Token válido pero sin usuario asociado");
 
-		if (HttpContext.Items["Usuario"] is not UsuarioBase2025 usuario)
-			return Unauthorized("Token válido pero sin usuario asociado");
+	//	Result<PacienteId> result2 = await ServiciosPublicos.InsertPaciente(usuario, repositorio, pacienteResult.UnwrapAsOk());
 
-		Result<PacienteId> result2 = await ServiciosPublicos.InsertPaciente(usuario, repositorio, pacienteResult.UnwrapAsOk());
-
-		return result2 switch {
-			Result<PacienteId>.Ok ok => CreatedAtAction(nameof(GetPacientes), new { id = ok.Valor }, ok.Valor),
-			Result<PacienteId>.Error err => BadRequest(err.Mensaje),
-			_ => StatusCode(500)
-		};
-	}
+	//	return result2 switch {
+	//		Result<PacienteId>.Ok ok => CreatedAtAction(nameof(GetPacientes), new { id = ok.Valor }, ok.Valor),
+	//		Result<PacienteId>.Error err => BadRequest(err.Mensaje),
+	//		_ => StatusCode(500)
+	//	};
+	//}
 }
