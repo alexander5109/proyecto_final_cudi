@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
+﻿using System.Data;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
@@ -12,7 +9,7 @@ using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.Infrastructure.DataAccess;
 
-public class DominioRepositorioDapper(SQLServerConnectionFactory factory) : RepositorioDapperBase(factory), IRepositorioDomain, ITurnosRepositorio {
+public class DominioRepositorioYTurnosDapper(SQLServerConnectionFactory factory) : RepositorioDapperBase(factory), IRepositorioDomain, ITurnosRepositorio {
 	public Task<Result<Unit>> UpdateTurnoWhereId(Turno2025 turno)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
@@ -52,14 +49,10 @@ public class DominioRepositorioDapper(SQLServerConnectionFactory factory) : Repo
 		//QUISIERA SEPARAR EN 2 CLASES DISTINTAS PERO COMPARTEN ALGUNOS METODOS COMUNES, ASI QUE ESTA CLASE IMPLEMENTA 2 INTERFACES (QUE TIENEN FIRMAS EN COMUN)
 		=> TryAsync(async conn => {
 			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
-				"sp_SelectUsuarioWhereId",
+				"sp_SelectUsuarioWhereNombre",
 				new { NombreUsuario = nombre.Valor },
 				commandType: CommandType.StoredProcedure
-			);
-
-			if (dto is null)
-				throw new Exception($"Usuario con NombreUsuario={nombre.Valor} no encontrado.");
-
+			) ?? throw new Exception($"Usuario con NombreUsuario={nombre.Valor} no encontrado.");
 			Result<Usuario2025> map = dto.ToDomain();
 			if (map.IsError)
 				throw new Exception($"Error creando Usuario2025 desde UsuarioDbModel (NombreUsuario={nombre.Valor}): {map.UnwrapAsError()}");
@@ -80,7 +73,10 @@ public class DominioRepositorioDapper(SQLServerConnectionFactory factory) : Repo
 	public Task<Result<IEnumerable<TurnoQM>>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<TurnoQM>("sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId",
-			new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde, FechaHasta = fechaHasta }, commandType: CommandType.StoredProcedure);
+			new { MedicoId = medicoId.Valor, 
+				FechaDesde = fechaDesde, 
+				FechaHasta = fechaHasta 
+			}, commandType: CommandType.StoredProcedure);
 		});
 
 
@@ -89,14 +85,13 @@ public class DominioRepositorioDapper(SQLServerConnectionFactory factory) : Repo
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<HorarioMedicoQM>(
 				"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId",
-				new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde.Date, FechaHasta = fechaHasta.Date },
+				new { MedicoId = medicoId.Valor, 
+					FechaDesde = fechaDesde.Date, 
+					FechaHasta = fechaHasta.Date 
+				},
 				commandType: CommandType.StoredProcedure
 			);
 		});
-
-
-
-
 
 
 	//----------------------------------------------implementaciones de turnosInterface
@@ -114,7 +109,7 @@ public class DominioRepositorioDapper(SQLServerConnectionFactory factory) : Repo
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_DeleteTurnoWhereId",
-				new {Id = id.Valor,},
+				new { Id = id.Valor, },
 				commandType: CommandType.StoredProcedure
 			);
 		});
@@ -133,14 +128,14 @@ public class DominioRepositorioDapper(SQLServerConnectionFactory factory) : Repo
 	public Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnos()
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<TurnoDbModel>(
-				"sp_SelectPacientes", 
+				"sp_SelectTurnos",
 				commandType: CommandType.StoredProcedure
 			);
 		});
 
 	public Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id)
 		=> TryAsync(async conn => {
-			return await conn.QueryAsync<TurnoDbModel>("sp_SelectTurnosWhereMedicoIdId",new { Id = id.Valor, }, commandType: CommandType.StoredProcedure);
+			return await conn.QueryAsync<TurnoDbModel>("sp_SelectTurnosWhereMedicoId", new { Id = id.Valor, }, commandType: CommandType.StoredProcedure);
 		});
 
 

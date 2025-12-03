@@ -13,6 +13,13 @@ public interface IPacientesRepositorio {
     Task<Result<PacienteDbModel?>> SelectPacienteWhereId(PacienteId id);
     Task<Result<Unit>> UpdatePacienteWhereId(Paciente2025 paciente);
 }
+public interface IHorarioMedicosRepositorio {
+	Task<Result<Unit>> DeleteHorarioMedicoWhereId(HorarioId id);
+	Task<Result<HorarioId>> InsertHorarioMedicoReturnId(HorarioMedico2025 HorarioMedico);
+	Task<Result<IEnumerable<HorarioMedicoDbModel>>> SelectHorarioMedicos();
+	Task<Result<HorarioMedicoDbModel?>> SelectHorarioMedicoWhereId(HorarioId id);
+	Task<Result<Unit>> UpdateHorarioMedicoWhereId(HorarioMedico2025 paciente);
+}
 
 public interface IMedicosRepositorio {
     Task<Result<Unit>> DeleteMedicoWhereId(MedicoId id);
