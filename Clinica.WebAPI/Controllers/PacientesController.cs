@@ -1,12 +1,9 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.IRepositorios;
-using Clinica.Dominio.Servicios;
 using Clinica.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.DomainDtos;
+using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.WebAPI.Controllers;
 
@@ -15,46 +12,75 @@ namespace Clinica.WebAPI.Controllers;
 [ApiController]
 public class PacientesController(RepositorioDapper repositorio, ILogger<PacientesController> logger) : ControllerBase {
 
-	//private ActionResult FromResult<T>(Result<T> result) {
-	//	return result switch {
-	//		Result<T>.Ok ok => Ok(ok.Valor),
-	//		Result<T>.Error err => BadRequest(err.Mensaje),
-	//		_ => StatusCode(500)
-	//	};
-	//}
+	[HttpGet("{id:int}")]
+	public async Task<IActionResult> GetPacientePorId(int id) {
+		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+			return Unauthorized();
 
-	//private ActionResult FromResult(Result<Unit> result) {
-	//	return result switch {
-	//		Result<Unit>.Ok => NoContent(),
-	//		Result<Unit>.Error e => BadRequest(e.Mensaje),
-	//		_ => StatusCode(500)
-	//	};
-	//}
+		if (!usuario.HasPermission(PermisoSistema.VerPacientes))
+			return Forbid();
+
+		Result<PacienteDbModel?> resultado = await repositorio.SelectPacienteWhereId(new PacienteId(id));
+
+		return resultado.Match<IActionResult>(
+			ok => {
+				if (ok is null)
+					return NotFound(new { mensaje = $"No existe paciente con id {id}" });
+
+				return Ok(ok);
+			},
+			error => Problem(error)
+		);
+	}
+
+	//---------------------------------------------------------------------
+	// PUT api/pacientes/{id}
+	//---------------------------------------------------------------------
+	[HttpPut("{id:int}")]
+	public async Task<IActionResult> ActualizarPaciente(int id, [FromBody] PacienteDbModel dto) {
+		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+			return Unauthorized();
+
+		if (!usuario.HasPermission(PermisoSistema.EditarPacientes))
+			return Forbid();
+
+		// Validar dominio
+		Result<Paciente2025> pacienteResult = dto.ToDomain();
+
+		if (pacienteResult.IsError)
+			return BadRequest(new { error = pacienteResult.UnwrapAsError() });
+
+		Paciente2025 paciente = pacienteResult.UnwrapAsOk();
+
+		// Este método recibe dominio ya validado
+		Result<Unit> updateResult = await repositorio.UpdatePacienteWhereId(paciente);
+
+		return updateResult.Match<IActionResult>(
+			_ => Ok(new { mensaje = $"Paciente {id} actualizado correctamente" }),
+			error => Problem(error)
+		);
+	}
 
 
+	//---------------------------------------------------------------------
+	// DELETE api/pacientes/{id}
+	//---------------------------------------------------------------------
+	[HttpDelete("{id:int}")]
+	public async Task<IActionResult> EliminarPaciente(int id) {
+		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+			return Unauthorized();
 
-	//[Authorize]
-	//[HttpGet("{id}/turnos")]
-	//public async Task<ActionResult<IEnumerable<TurnoDto>>> GetTurnosPorPaciente([FromRoute] int id) {
-	//	if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
-	//		return Unauthorized("Token válido pero sin usuario asociado");
+		if (!usuario.HasPermission(PermisoSistema.EliminarEntidad))
+			return Forbid();
 
-	//	Result<IEnumerable<Turno2025>> result =
-	//		await ServiciosPublicos.SelectTurnosWherePacienteId(usuario, repositorio, new PacienteId(id));
+		Result<Unit> deleteResult = await repositorio.DeletePacienteWhereId(new PacienteId(id));
 
-	//	ActionResult<IEnumerable<TurnoDto>> respuesta = null!;
+		return deleteResult.Match<IActionResult>(
+			_ => Ok(new { mensaje = $"Paciente {id} eliminado correctamente" }),
+			error => Problem(error)
+		);
+	}
 
-	//	result.Switch(
-	//		ok => {
-	//			respuesta = Ok(ok.Select(t => t.ToDto()));
-	//		},
-	//		error => {
-	//			respuesta = Forbid(error);
-	//		}
-	//	);
-
-	//	return respuesta;
-	//}
 
 
 
@@ -73,19 +99,19 @@ public class PacientesController(RepositorioDapper repositorio, ILogger<Paciente
 
 
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<PacienteDto>>> GetPacientes() {
+	public async Task<ActionResult<IEnumerable<PacienteDbModel>>> GetPacientes() {
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
 
 		if (!usuario.HasPermission(PermisoSistema.VerPacientes))
 			return Forbid();
 
-		var pacientes = await repositorio.SelectPacientes(); //VOLVER A CMABIAR ESTO....
+		Result<IEnumerable<PacienteDbModel>> pacientes = await repositorio.SelectPacientes(); //VOLVER A CMABIAR ESTO....
 		return Ok(pacientes);
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> CrearPaciente([FromBody] PacienteDto dto) {
+	public async Task<IActionResult> CrearPaciente([FromBody] PacienteDbModel dto) {
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
 
@@ -112,36 +138,4 @@ public class PacientesController(RepositorioDapper repositorio, ILogger<Paciente
 
 
 
-
-
-
-
-
-
-	//[HttpDelete("{id}")]
-	//public async Task<ActionResult> Delete([FromRoute] PacienteId id) {
-	//	if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
-	//		return Unauthorized("Token válido pero sin usuario asociado");
-
-	//	Result<Unit> result = await ServiciosPublicos.DeletePacienteWhereId(usuario, repositorio, id);
-	//	return FromResult(result);
-	//}
-
-	//[HttpPost]
-	//public async Task<ActionResult> Create([FromBody] PacienteDto dto) {
-	//	if (dto is null) return BadRequest("El cuerpo de la solicitud no puede ser nulo.");
-	//	Result<Paciente2025> pacienteResult = dto.ToDomain();
-	//	if (pacienteResult.IsError) return BadRequest(pacienteResult.UnwrapAsError());
-
-	//	if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
-	//		return Unauthorized("Token válido pero sin usuario asociado");
-
-	//	Result<PacienteId> result2 = await ServiciosPublicos.InsertPaciente(usuario, repositorio, pacienteResult.UnwrapAsOk());
-
-	//	return result2 switch {
-	//		Result<PacienteId>.Ok ok => CreatedAtAction(nameof(GetPacientes), new { id = ok.Valor }, ok.Valor),
-	//		Result<PacienteId>.Error err => BadRequest(err.Mensaje),
-	//		_ => StatusCode(500)
-	//	};
-	//}
 }

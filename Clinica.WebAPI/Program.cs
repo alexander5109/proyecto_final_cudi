@@ -1,7 +1,6 @@
 using System.Text;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Infrastructure.DataAccess;
-using Clinica.WebAPI.RouteConstraint;
 using Clinica.WebAPI.Servicios;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -26,11 +25,9 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	)
 );
 
-builder.Services.AddSingleton<RepositorioDapper>(sp => {
-	var factory = sp.GetRequiredService<SQLServerConnectionFactory>();
-	return new RepositorioDapper(factory);
-});
-
+builder.Services.AddTransient<IPacientesRepositorio, PacientesRepositorioDapper>();
+//builder.Services.AddTransient<IMedicosRepositorio, MedicosRepositorioDapper>();
+//builder.Services.AddTransient<ITurnosRepositorio, TurnosRepositorioDapper>();
 
 // JwtService (singleton)
 builder.Services.AddSingleton<JwtService>(sp => {
@@ -40,14 +37,6 @@ builder.Services.AddSingleton<JwtService>(sp => {
 	return new JwtService(jwtKey);
 });
 
-
-
-builder.Services.Configure<RouteOptions>(options => {
-	options.ConstraintMap["PacienteId"] = typeof(PacienteIdRouteConstraint);
-	options.ConstraintMap["MedicoId"] = typeof(MedicoIdRouteConstraint);
-	options.ConstraintMap["TurnoId"] = typeof(TurnoIdRouteConstraint);
-	options.ConstraintMap["UsuarioId"] = typeof(UsuarioIdRouteConstraint);
-});
 
 builder.Services.AddCors(options => {
 	options.AddPolicy("AllowAll", policy => {

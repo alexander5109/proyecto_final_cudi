@@ -108,7 +108,7 @@ public static class ServiciosPublicos {
 		IRepositorioDomain repositorio
 	) {
         Result<Usuario2025> resultadoUsuario =
-			await repositorio.SelectUsuarioWhereName(new NombreUsuario(username));
+			await repositorio.SelectUsuarioWhereNombre(new NombreUsuario(username));
 
 		return resultadoUsuario switch {
 			Result<Usuario2025>.Ok ok =>

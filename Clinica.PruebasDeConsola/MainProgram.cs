@@ -44,7 +44,7 @@ public static class MainProgram {
 		//var response = await http.GetAsync($"/disponibilidades?especialidadCodigoInterno=3&cuantos=10");
 
 		NombreUsuario nombreUsuario = new ("admin1");
-		Result<Usuario2025> usuarioFakeResult = await repositorio.SelectUsuarioWhereName(nombreUsuario);
+		Result<Usuario2025> usuarioFakeResult = await repositorio.SelectUsuarioWhereNombre(nombreUsuario);
 		if (usuarioFakeResult.IsError) {
 			Console.WriteLine($"No se encontro el usuario {nombreUsuario}");
 			return;

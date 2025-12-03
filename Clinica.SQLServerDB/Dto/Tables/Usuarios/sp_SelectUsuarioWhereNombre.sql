@@ -2,7 +2,7 @@
     @NombreUsuario NVARCHAR(100)
 AS
 BEGIN
-    SELECT *
+    SELECT TOP 1 *
     FROM Usuario
     WHERE NombreUsuario = @NombreUsuario;
 END

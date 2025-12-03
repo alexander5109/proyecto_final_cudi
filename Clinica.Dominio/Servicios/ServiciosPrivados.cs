@@ -62,7 +62,7 @@ internal static class ServiciosPrivados {
 		DateTime fechaCreacion,
 		IRepositorioDomain repo
 	) {
-		var medicosResult = await repo.SelectMedicosWhereEspecialidadCode(especialidad.CodigoInternoValor);
+		var medicosResult = await repo.SelectMedicosIdWhereEspecialidadCode(especialidad.CodigoInternoValor);
 		if (medicosResult is Result<IEnumerable<MedicoId>>.Error errMed) {
 			yield return new Result<DisponibilidadEspecialidad2025>.Error(errMed.Mensaje);
 			yield break;
