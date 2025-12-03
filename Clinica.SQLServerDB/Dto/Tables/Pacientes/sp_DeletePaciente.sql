@@ -4,7 +4,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    DELETE FROM Paciente
+    DELETE FROM dbo.Paciente
     WHERE Id = @Id;
 END;
 GO

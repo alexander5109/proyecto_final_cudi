@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Turno](
+﻿CREATE TABLE dbo.[Turno](
     Id INT IDENTITY(1,1) PRIMARY KEY,
     FechaDeCreacion DATETIME2(1) NOT NULL,
     PacienteId INT NOT NULL,

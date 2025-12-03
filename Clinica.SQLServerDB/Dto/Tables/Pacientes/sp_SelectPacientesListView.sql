@@ -2,6 +2,6 @@
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT * FROM PacienteListView;
+    SELECT * FROM dbo.PacienteListView;
 END;
 GO

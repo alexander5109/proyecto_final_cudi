@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].sp_DeleteHorarioMedico
+﻿CREATE PROCEDURE dbo.sp_DeleteHorarioMedico
 	@Id INT
 AS
 BEGIN

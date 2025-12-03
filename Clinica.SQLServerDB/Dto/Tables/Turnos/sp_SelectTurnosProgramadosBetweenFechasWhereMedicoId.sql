@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId
+﻿CREATE PROCEDURE dbo.sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId
     @MedicoId INT,
     @FechaDesde DATETIME,
     @FechaHasta DATETIME
@@ -12,7 +12,7 @@ BEGIN
         FechaHoraAsignadaDesde, 
         FechaHoraAsignadaHasta, 
         OutcomeEstado
-    FROM Turno
+    FROM dbo.Turno
     WHERE MedicoId = @MedicoId
       AND FechaHoraAsignadaDesde >= @FechaDesde
       AND FechaHoraAsignadaDesde <  @FechaHasta

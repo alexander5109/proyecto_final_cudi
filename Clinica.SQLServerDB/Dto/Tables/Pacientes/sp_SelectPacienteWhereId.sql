@@ -1,9 +1,10 @@
-﻿CREATE PROCEDURE dbo.sp_SelectUsuarioWhereId
+﻿CREATE PROCEDURE dbo.sp_SelectPacienteWhereId
     @Id INT
 AS
 BEGIN
     SET NOCOUNT ON;
     SELECT TOP 1 *
-    FROM dbo.Usuario
+	FROM dbo.Paciente
     WHERE Id = @Id;
-END
+END;
+GO

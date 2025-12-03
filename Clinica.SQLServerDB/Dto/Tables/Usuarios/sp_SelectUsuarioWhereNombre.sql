@@ -1,8 +1,9 @@
-﻿CREATE PROCEDURE sp_SelectUsuarioWhereNombre
+﻿CREATE PROCEDURE dbo.sp_SelectUsuarioWhereNombre
     @NombreUsuario NVARCHAR(100)
 AS
 BEGIN
+    SET NOCOUNT ON;
     SELECT TOP 1 *
-    FROM Usuario
+    FROM dbo.Usuario
     WHERE NombreUsuario = @NombreUsuario;
 END

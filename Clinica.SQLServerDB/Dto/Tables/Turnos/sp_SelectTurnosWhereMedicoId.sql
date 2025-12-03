@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].sp_SelectTurnosWhereMedicoId
+﻿CREATE PROCEDURE dbo.sp_SelectTurnosWhereMedicoId
     @MedicoId INT
 AS
 BEGIN

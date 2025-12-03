@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[sp_CreateMedico]
+﻿CREATE PROCEDURE dbo.[sp_CreateMedico]
     @Nombre NVARCHAR(100),
     @Apellido NVARCHAR(100),
     @Dni NVARCHAR(20),
@@ -13,7 +13,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    INSERT INTO [dbo].[Medico]
+    INSERT INTO dbo.[Medico]
         ([Nombre], [Apellido], [Dni], [ProvinciaCodigo], [Domicilio], [Localidad],
          EspecialidadCodigoInterno, [Telefono], [Guardia], [FechaIngreso])
     VALUES

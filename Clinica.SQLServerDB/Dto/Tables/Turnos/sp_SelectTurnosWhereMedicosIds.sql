@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[sp_SelectTurnosWhereMedicosIds]
+﻿CREATE PROCEDURE dbo.[sp_SelectTurnosWhereMedicosIds]
     @MedicoIds IntListType READONLY
 AS
 BEGIN

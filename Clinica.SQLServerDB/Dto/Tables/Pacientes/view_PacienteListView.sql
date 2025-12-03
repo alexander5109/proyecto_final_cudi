@@ -1,4 +1,4 @@
-﻿CREATE VIEW [dbo].[PacienteListView] AS
+﻿CREATE VIEW dbo.[PacienteListView] AS
 SELECT
     Id,
     Dni,
@@ -6,5 +6,5 @@ SELECT
     Apellido,
     Email,
     Telefono
-FROM Paciente;
+FROM dbo.Paciente;
 GO

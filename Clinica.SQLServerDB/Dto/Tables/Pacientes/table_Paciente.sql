@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Paciente](
+﻿CREATE TABLE [Paciente](
     Id INT IDENTITY(1,1) PRIMARY KEY,
     Dni CHAR(8) NOT NULL UNIQUE, -- ej 20253532
     Nombre VARCHAR(50) NOT NULL,

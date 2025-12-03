@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[sp_UpdatePaciente]
+﻿CREATE PROCEDURE dbo.[sp_UpdatePaciente]
     @Id INT,
     @Dni NVARCHAR(20),
     @Nombre NVARCHAR(100),
@@ -14,7 +14,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    UPDATE [dbo].[Paciente]
+    UPDATE dbo.[Paciente]
     SET 
         [Dni] = @Dni,
         [Nombre] = @Nombre,
