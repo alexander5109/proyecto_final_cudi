@@ -1,3 +1,5 @@
+using Clinica.Dominio.IRepositorios;
+using Clinica.Dominio.Servicios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
@@ -7,7 +9,7 @@ namespace Clinica.WebAPI.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class DomainController(IRepositorio repositorio, ILogger<DomainController> logger) : ControllerBase {
+public class ServiciosPublicosController(ServiciosPublicos repositorio, ILogger<ServiciosPublicosController> logger) : ControllerBase {
 
 	// GET: api/<MedicosController>
 	// [HttpGet]

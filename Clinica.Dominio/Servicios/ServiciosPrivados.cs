@@ -45,7 +45,7 @@ internal static class ServiciosPrivados {
 	internal static async Task<Result<DisponibilidadEspecialidad2025>> EncontrarProximaDisponibilidad(
 			EspecialidadMedica2025 solicitudEspecialidad,
 			DateTime solicitudFechaCreacion,
-			IRepositorioDomain repositorio
+			IRepositorioDomainServiciosPrivados repositorio
 	) {
 		await foreach (var disp in GenerarDisponibilidades(
 			solicitudEspecialidad,
@@ -60,7 +60,7 @@ internal static class ServiciosPrivados {
 	internal static async IAsyncEnumerable<Result<DisponibilidadEspecialidad2025>>GenerarDisponibilidades(
 		EspecialidadMedica2025 especialidad,
 		DateTime fechaCreacion,
-		IRepositorioDomain repo
+		IRepositorioDomainServiciosPrivados repo
 	) {
 		var medicosResult = await repo.SelectMedicosIdWhereEspecialidadCode(especialidad.CodigoInternoValor);
 		if (medicosResult is Result<IEnumerable<MedicoId>>.Error errMed) {
@@ -91,7 +91,7 @@ internal static class ServiciosPrivados {
 		EspecialidadMedica2025 solicitudEspecialidad,
 		DateTime solicitudFechaCreacion,
 		MedicoId medicoId,
-		IRepositorioDomain repositorio
+		IRepositorioDomainServiciosPrivados repositorio
 	) {
 		int duracion = solicitudEspecialidad.DuracionConsultaMinutos;
 		int semanas = 30;
@@ -157,7 +157,7 @@ internal static class ServiciosPrivados {
 	public static async Task<Result<DateTime>> CalcularPrimerSlotDisponible(
 		MedicoId medicoId,
 		EspecialidadMedica2025 especialidad,
-		IRepositorioDomain repositorio
+		IRepositorioDomainServiciosPrivados repositorio
 	) {
 		int duracion = especialidad.DuracionConsultaMinutos;
 

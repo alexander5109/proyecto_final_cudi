@@ -37,7 +37,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 	}
 
 
-	Task<Result<Usuario2025>> IRepositorioDomain.SelectUsuarioWhereIdAsDomain(UsuarioId id)
+	Task<Result<Usuario2025>> IRepositorioDomainServiciosPrivados.SelectUsuarioWhereIdAsDomain(UsuarioId id)
 		=> TryAsync(async conn => {
 			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
 				"sp_SelectUsuarioWhereId",
@@ -51,7 +51,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 		});
 
 
-	Task<Result<Usuario2025>> IRepositorioDomain.SelectUsuarioWhereNombreAsDomain(NombreUsuario nombre)
+	Task<Result<Usuario2025>> IRepositorioDomainServiciosPrivados.SelectUsuarioWhereNombreAsDomain(NombreUsuario nombre)
 		=> TryAsync(async conn => {
 			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
 				"sp_SelectUsuarioWhereNombre",
@@ -176,7 +176,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-	Task<Result<Unit>> IRepositorioDomain.UpdateTurnoWhereId(Turno2025 instance) => ((IRepositorioTurnos)this).UpdateTurnoWhereId(instance);
+	Task<Result<Unit>> IRepositorioDomainServiciosPrivados.UpdateTurnoWhereId(Turno2025 instance) => ((IRepositorioTurnos)this).UpdateTurnoWhereId(instance);
 
 	Task<Result<Unit>> IRepositorioTurnos.UpdateTurnoWhereId(Turno2025 instance)
 		=> TryAsyncVoid(async conn => {
@@ -201,7 +201,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-	Task<Result<TurnoId>> IRepositorioDomain.InsertTurnoReturnId(Turno2025 instance) => ((IRepositorioTurnos)this).InsertTurnoReturnId(instance);
+	Task<Result<TurnoId>> IRepositorioDomainServiciosPrivados.InsertTurnoReturnId(Turno2025 instance) => ((IRepositorioTurnos)this).InsertTurnoReturnId(instance);
 
 	Task<Result<TurnoId>> IRepositorioTurnos.InsertTurnoReturnId(Turno2025 instance)
 		=> TryAsync(async conn => {
@@ -220,7 +220,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-	Task<Result<IEnumerable<MedicoId>>> IRepositorioDomain.SelectMedicosIdWhereEspecialidadCode(EspecialidadCodigo2025 code)
+	Task<Result<IEnumerable<MedicoId>>> IRepositorioDomainServiciosPrivados.SelectMedicosIdWhereEspecialidadCode(EspecialidadCodigo2025 code)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<MedicoId>(
 				"sp_SelectMedicosIdWhereEspecialidadCode",
@@ -231,7 +231,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-	Task<Result<IEnumerable<TurnoQM>>> IRepositorioDomain.SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
+	Task<Result<IEnumerable<TurnoQM>>> IRepositorioDomainServiciosPrivados.SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<TurnoQM>(
 				"sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId",
@@ -246,7 +246,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-	Task<Result<IEnumerable<HorarioMedicoQM>>> IRepositorioDomain.SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
+	Task<Result<IEnumerable<HorarioMedicoQM>>> IRepositorioDomainServiciosPrivados.SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<HorarioMedicoQM>(
 				"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId",

@@ -8,7 +8,7 @@ namespace Clinica.Infrastructure.DataAccess;
 
 public static class IRepositorioInterfaces {
 	public interface IRepositorio :
-		IRepositorioDomain,
+		IRepositorioDomainServiciosPrivados,
 		IRepositorioUsuarios,
 		IRepositorioTurnos,
 		IRepositorioPacientes,
