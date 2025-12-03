@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.Comun;
 
 namespace Clinica.Shared.Dtos;
 

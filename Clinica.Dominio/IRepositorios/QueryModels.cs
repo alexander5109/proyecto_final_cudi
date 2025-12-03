@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.IRepositorios;

@@ -2,7 +2,6 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.TiposDeValor;
-using static Clinica.Dominio.IRepositorios.QueryModels;
 
 
 namespace Clinica.Dominio.Servicios;

@@ -1,5 +1,4 @@
 using System.Text;
-using Clinica.Dominio.IRepositorios;
 using Clinica.Infrastructure.DataAccess;
 using Clinica.WebAPI.Servicios;
 using Microsoft.IdentityModel.Tokens;

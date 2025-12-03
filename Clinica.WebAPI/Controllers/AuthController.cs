@@ -1,9 +1,5 @@
 ﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.Servicios;
-using Clinica.Infrastructure.DataAccess;
-using Clinica.WebAPI.Controllers;
-using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.Dtos.ApiDtos;

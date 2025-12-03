@@ -1,6 +1,5 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
@@ -12,19 +11,12 @@ namespace Clinica.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class PacientesController(IRepositorio repositorio, ILogger<PacientesController> logger) : ControllerBase {
-
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<PacienteDbModel>>> GetPacientes() {
-		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
-			return Unauthorized();
-
-		if (!usuario.HasPermission(PermisoSistema.VerPacientes))
-			return Forbid();
-
-		Result<IEnumerable<PacienteDbModel>> pacientes = await repositorio.SelectPacientes(); //VOLVER A CMABIAR ESTO....
-		return Ok(pacientes);
-	}
-
+	public Task<IActionResult> GetPacientes()
+	=> this.SafeExecute(
+		PermisoSistema.VerPacientes,
+	() => repositorio.SelectPacientes()
+	);
 
 	[HttpGet("{id:int}")]
 	public async Task<IActionResult> GetPacientePorId(int id) {
@@ -47,9 +39,37 @@ public class PacientesController(IRepositorio repositorio, ILogger<PacientesCont
 		);
 	}
 
-	//---------------------------------------------------------------------
-	// PUT api/pacientes/{id}
-	//---------------------------------------------------------------------
+
+	[HttpDelete("{id:int}")]
+	public async Task<IActionResult> EliminarPaciente(int id) {
+		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+			return Unauthorized();
+
+		if (!usuario.HasPermission(PermisoSistema.EliminarEntidad))
+			return Forbid();
+
+		Result<Unit> deleteResult = await repositorio.DeletePacienteWhereId(new PacienteId(id));
+
+		return deleteResult.Match<IActionResult>(
+			_ => Ok(new { mensaje = $"Paciente {id} eliminado correctamente" }),
+			error => Problem(error)
+		);
+	}
+
+	[HttpGet("{id}/turnos")]
+	public async Task<IActionResult> GetTurnosPorPaciente([FromRoute] int id) {
+		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+			return Unauthorized();
+
+		if (!usuario.HasPermission(PermisoSistema.VerTurnos))
+			return Forbid();
+
+		var turnos = await repositorio.SelectTurnosWherePacienteId(new PacienteId(id));
+		return Ok(turnos);
+	}
+
+
+
 	[HttpPut("{id:int}")]
 	public async Task<IActionResult> ActualizarPaciente(int id, [FromBody] PacienteDbModel dto) {
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
@@ -74,44 +94,6 @@ public class PacientesController(IRepositorio repositorio, ILogger<PacientesCont
 			error => Problem(error)
 		);
 	}
-
-
-	//---------------------------------------------------------------------
-	// DELETE api/pacientes/{id}
-	//---------------------------------------------------------------------
-	[HttpDelete("{id:int}")]
-	public async Task<IActionResult> EliminarPaciente(int id) {
-		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
-			return Unauthorized();
-
-		if (!usuario.HasPermission(PermisoSistema.EliminarEntidad))
-			return Forbid();
-
-		Result<Unit> deleteResult = await repositorio.DeletePacienteWhereId(new PacienteId(id));
-
-		return deleteResult.Match<IActionResult>(
-			_ => Ok(new { mensaje = $"Paciente {id} eliminado correctamente" }),
-			error => Problem(error)
-		);
-	}
-
-
-
-
-
-	[HttpGet("{id}/turnos")]
-	public async Task<IActionResult> GetTurnosPorPaciente([FromRoute] int id) {
-		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
-			return Unauthorized();
-
-		if (!usuario.HasPermission(PermisoSistema.VerTurnos))
-			return Forbid();
-
-		var turnos = await repositorio.SelectTurnosWherePacienteId(new PacienteId(id));
-		return Ok(turnos);
-	}
-
-
 
 	[HttpPost]
 	public async Task<IActionResult> CrearPaciente([FromBody] PacienteDbModel dto) {

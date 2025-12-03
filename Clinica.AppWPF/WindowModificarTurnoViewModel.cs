@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using CommunityToolkit.Mvvm.ComponentModel;
 

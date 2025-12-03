@@ -1,12 +1,6 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Media;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using Clinica.AppWPF.Infrastructure;
 
 namespace Clinica.AppWPF;
 

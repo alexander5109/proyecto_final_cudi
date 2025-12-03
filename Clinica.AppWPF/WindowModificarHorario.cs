@@ -1,5 +1,4 @@
 ﻿using Clinica.AppWPF.ViewModels;
-using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows;
 
 namespace Clinica.AppWPF.Ventanas;

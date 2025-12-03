@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
+﻿using System.Data;
 using Clinica.Dominio.Comun;
 using Clinica.Infrastructure.DataAccess;
 using Microsoft.Data.SqlClient;

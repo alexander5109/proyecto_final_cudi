@@ -1,7 +1,5 @@
 ﻿using System.Security.Claims;
 using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.IRepositorios;
 using Clinica.Infrastructure.DataAccess;
 
 namespace Clinica.WebAPI.Servicios;
