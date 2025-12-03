@@ -1,5 +1,4 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.Entidades;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
@@ -11,7 +10,7 @@ namespace Clinica.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class PacientesController(
-	IRepositorio repositorio, 
+	IRepositorioPacientes repositorio, 
 	ILogger<PacientesController> logger
 ) : ControllerBase {
 
@@ -58,7 +57,7 @@ public class PacientesController(
 	[HttpPut("{id:int}")]
 	public Task<IActionResult> UpdatePaciente(int id, [FromBody] PacienteDbModel dto)
 	=> this.SafeExecuteWithDomain(
-		PermisoSistema.UpdatePacientes,
+		PermisoSistema.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
 		paciente => repositorio.UpdatePacienteWhereId(paciente),

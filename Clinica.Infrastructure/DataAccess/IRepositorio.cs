@@ -19,6 +19,7 @@ public static class IRepositorioInterfaces {
 		Task<Result<Unit>> DeletePacienteWhereId(PacienteId id);
 		Task<Result<PacienteId>> InsertPacienteReturnId(Paciente2025 instance);
 		Task<Result<IEnumerable<PacienteDbModel>>> SelectPacientes();
+		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWherePacienteId(PacienteId id);
 		Task<Result<PacienteDbModel?>> SelectPacienteWhereId(PacienteId id);
 		Task<Result<Unit>> UpdatePacienteWhereId(Paciente2025 instance);
 	}
@@ -27,6 +28,7 @@ public static class IRepositorioInterfaces {
 		Task<Result<Unit>> DeleteMedicoWhereId(MedicoId id);
 		Task<Result<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
 		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicos();
+		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id);
 		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code);
 		Task<Result<MedicoDbModel?>> SelectMedicoWhereId(MedicoId id);
 		Task<Result<Unit>> UpdateMedicoWhereId(Medico2025 instance);
@@ -36,8 +38,6 @@ public static class IRepositorioInterfaces {
 		Task<Result<Unit>> DeleteTurnoWhereId(TurnoId id);
 		Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance);
 		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnos();
-		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id);
-		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWherePacienteId(PacienteId id);
 		Task<Result<TurnoDbModel?>> SelectTurnoWhereId(TurnoId id);
 		Task<Result<Unit>> UpdateTurnoWhereId(Turno2025 instance);
 	}
@@ -48,8 +48,6 @@ public static class IRepositorioInterfaces {
 		Task<Result<UsuarioDbModel?>> SelectUsuarioWhereId(UsuarioId id);
 		Task<Result<Unit>> UpdateUsuarioWhereId(Usuario2025 instance);
 	}
-
-
 
 
 	public interface IRepositorioHorarioMedicos {

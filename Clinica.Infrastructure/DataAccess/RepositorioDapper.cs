@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Reflection;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;

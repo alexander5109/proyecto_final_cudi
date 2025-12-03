@@ -2,13 +2,16 @@
 	VerPacientes,
 	VerTurnos,
 	VerMedicos,
+	VerUsuarios,
 	CrearPacientes,
-
-	CrearTurno,
+	CrearMedicos,
+	CrearTurnos,
+	CrearUsuarios,
 	CancelarTurno,
 	ReprogramarTurno,
+
 	DeleteEntidades,
-	UpdatePacientes
+	UpdateEntidades
 
 	// más adelante: editar paciente, etc.
 }
@@ -19,23 +22,26 @@ public static class PermisosPorRol {
 		[UsuarioEnumRole.Nivel1Admin] = [
             PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
+			PermisoSistema.VerUsuarios,
 			PermisoSistema.VerMedicos,
-			PermisoSistema.CrearTurno,
+			PermisoSistema.CrearTurnos,
 			PermisoSistema.CancelarTurno,
 			PermisoSistema.ReprogramarTurno,
 			PermisoSistema.CrearPacientes,
-			PermisoSistema.UpdatePacientes,
-			PermisoSistema.DeleteEntidades
+			PermisoSistema.UpdateEntidades,
+			PermisoSistema.CrearMedicos,
+			PermisoSistema.DeleteEntidades,
+			PermisoSistema.CrearUsuarios
 		],
 
 		[UsuarioEnumRole.Nivel2Secretaria] = [
             PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerMedicos,
-			PermisoSistema.CrearTurno,
+			PermisoSistema.CrearTurnos,
 			PermisoSistema.CancelarTurno,
 			PermisoSistema.CrearPacientes,
-			PermisoSistema.UpdatePacientes,
+			PermisoSistema.UpdateEntidades,
 
 		],
 

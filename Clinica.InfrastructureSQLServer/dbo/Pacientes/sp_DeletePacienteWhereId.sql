@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[sp_DeletePaciente]
+﻿CREATE PROCEDURE [dbo].sp_DeletePacienteWhereId
     @Id INT
 AS
 BEGIN
