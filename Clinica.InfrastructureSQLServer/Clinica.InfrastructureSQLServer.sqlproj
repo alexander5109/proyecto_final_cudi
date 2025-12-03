@@ -67,7 +67,7 @@
     <PostDeploy Include="dbo\Script.PostDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PreDeploy Include="dbo\Script.PreDeployment.sql" />
+    <None Include="dbo\Script.PreDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\HorariosMedicos\sp_CreateHorarioMedico.sql" />
@@ -81,7 +81,7 @@
     <Build Include="dbo\Medicos\sp_CreateMedico.sql" />
     <Build Include="dbo\Medicos\sp_CreateMedicoWithHorarios.sql" />
     <Build Include="dbo\Medicos\sp_SelectMedicos.sql" />
-    <Build Include="dbo\Medicos\sp_SelectMedicosWhereEspecialidadCode.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicosIdWhereEspecialidadCode.sql" />
     <Build Include="dbo\Medicos\sp_UpdateMedico.sql" />
     <Build Include="dbo\Medicos\sp_UpdateMedicoWithHorarios.sql" />
     <Build Include="dbo\Medicos\table_Medico.sql" />

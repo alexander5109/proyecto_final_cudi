@@ -12,11 +12,11 @@ using static Clinica.Shared.Dtos.DbModels;
 namespace Clinica.Infrastructure.DataAccess;
 
 public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositorio {
-	private async Task<Result<T>> TryAsync<T>(Func<IDbConnection, Task<T>> action) {
+
+	private async Task<Result<T>> TryResultAsync<T>(Func<IDbConnection, Task<Result<T>>> action) {
 		try {
 			using IDbConnection conn = factory.CrearConexion();
-			T? result = await action(conn);
-			return new Result<T>.Ok(result);
+			return await action(conn);
 		} catch (SqlException ex) {
 			return new Result<T>.Error($"Error SQL: {ex.Message}");
 		} catch (Exception ex) {
@@ -24,46 +24,58 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 		}
 	}
 
+
+	private async Task<Result<T>> TryAsync<T>(Func<IDbConnection, Task<T>> action) {
+		try {
+			using IDbConnection conn = factory.CrearConexion();
+			T result = await action(conn);
+			return new Result<T>.Ok(result);
+		} catch (SqlException ex) when (ex.Number == 547) {
+			return new Result<T>.Error("No se puede eliminar porque tiene referencias asociadas.");
+		} catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601) {
+			return new Result<T>.Error("Duplicado: ya existe un registro con estos valores.");
+		} catch (SqlException ex) {
+			return new Result<T>.Error($"Error SQL: {ex.Message}");
+		} catch (Exception ex) {
+			return new Result<T>.Error($"Error inesperado: {ex.Message}");
+		}
+	}
+
+	private async Task<Result<TDomain>> TryAsyncAndMap<TDto, TDomain>(
+		Func<IDbConnection, Task<TDto?>> query,
+		Func<TDto?, Result<TDomain>> mapper
+	) {
+		try {
+			using IDbConnection conn = factory.CrearConexion();
+			TDto? dto = await query(conn);
+			return mapper(dto);
+		} catch (SqlException ex) when (ex.Number == 547) {
+			return new Result<TDomain>.Error("No se puede eliminar porque tiene referencias asociadas.");
+		} catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601) {
+			return new Result<TDomain>.Error("Duplicado: ya existe un registro con estos valores.");
+		} catch (SqlException ex) {
+			return new Result<TDomain>.Error($"Error SQL ({ex.Number}): {ex.Message}");
+		} catch (Exception ex) {
+			return new Result<TDomain>.Error($"Error inesperado: {ex.Message}");
+		}
+	}
+
+
 	private async Task<Result<Unit>> TryAsyncVoid(Func<IDbConnection, Task> action) {
 		try {
 			using IDbConnection conn = factory.CrearConexion();
 			await action(conn);
 			return new Result<Unit>.Ok(Unit.Valor);
+		} catch (SqlException ex) when (ex.Number == 547) {
+			return new Result<Unit>.Error("No se puede eliminar porque tiene referencias asociadas.");
+		} catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601) {
+			return new Result<Unit>.Error("Duplicado: ya existe un registro con estos valores.");
 		} catch (SqlException ex) {
-			return new Result<Unit>.Error($"Error SQL: {ex.Message}");
+			return new Result<Unit>.Error($"Error SQL ({ex.Number}): {ex.Message}");
 		} catch (Exception ex) {
 			return new Result<Unit>.Error($"Error inesperado: {ex.Message}");
 		}
 	}
-
-
-	Task<Result<Usuario2025>> IRepositorioDomainServiciosPrivados.SelectUsuarioWhereIdAsDomain(UsuarioId id)
-		=> TryAsync(async conn => {
-			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
-				"sp_SelectUsuarioWhereId",
-				new { Id = id.Valor },
-				commandType: CommandType.StoredProcedure
-			) ?? throw new Exception($"Usuario con Id={id.Valor} no encontrado.");
-			Result<Usuario2025> map = dto.ToDomain();
-			if (map.IsError)
-				throw new Exception($"Error creando Usuario2025 desde DTO (Id={id.Valor}): {map.UnwrapAsError()}");
-			return map.UnwrapAsOk();
-		});
-
-
-	Task<Result<Usuario2025>> IRepositorioDomainServiciosPrivados.SelectUsuarioWhereNombreAsDomain(NombreUsuario nombre)
-		=> TryAsync(async conn => {
-			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
-				"sp_SelectUsuarioWhereNombre",
-				new { NombreUsuario = nombre.Valor },
-				commandType: CommandType.StoredProcedure
-			) ?? throw new Exception($"Usuario con NombreUsuario={nombre.Valor} no encontrado.");
-			Result<Usuario2025> map = dto.ToDomain();
-			if (map.IsError)
-				throw new Exception($"Error creando Usuario2025 desde UsuarioDbModel (NombreUsuario={nombre.Valor}): {map.UnwrapAsError()}");
-
-			return map.UnwrapAsOk();
-		});
 
 
 
@@ -356,7 +368,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-    Task<Result<Unit>> IRepositorioHorarios.DeleteHorarioWhereId(HorarioId id) 
+	Task<Result<Unit>> IRepositorioHorarios.DeleteHorarioWhereId(HorarioId id)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_DeleteHorarioWhereId",
@@ -365,7 +377,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			);
 		});
 
-    Task<Result<HorarioId>> IRepositorioHorarios.InsertHorarioReturnId(Horario2025 instance) 
+	Task<Result<HorarioId>> IRepositorioHorarios.InsertHorarioReturnId(Horario2025 instance)
 		=> TryAsync(async conn => {
 			DynamicParameters parameters = new(instance.ToModel());
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
@@ -378,7 +390,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			return new HorarioId(newId);   // ← solo devolvés el valor
 		});
 
-    Task<Result<IEnumerable<HorarioDbModel>>> IRepositorioHorarios.SelectHorarios() 
+	Task<Result<IEnumerable<HorarioDbModel>>> IRepositorioHorarios.SelectHorarios()
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<HorarioDbModel>(
 				"sp_SelectHorarios",
@@ -386,7 +398,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			);
 		});
 
-    Task<Result<HorarioDbModel?>> IRepositorioHorarios.SelectHorarioWhereId(HorarioId id)
+	Task<Result<HorarioDbModel?>> IRepositorioHorarios.SelectHorarioWhereId(HorarioId id)
 		=> TryAsync(async conn => {
 			return await conn.QuerySingleOrDefaultAsync<HorarioDbModel>(
 				"sp_SelectHorarioWhereId",
@@ -395,7 +407,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			);
 		});
 
-    Task<Result<Unit>> IRepositorioHorarios.UpdateHorarioWhereId(Horario2025 instance) 
+	Task<Result<Unit>> IRepositorioHorarios.UpdateHorarioWhereId(Horario2025 instance)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_UpdateHorarioWhereId",
@@ -404,5 +416,67 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			);
 		});
 
+
+	Task<Result<Usuario2025>> IRepositorioDomainServiciosPrivados.SelectUsuarioWhereIdAsDomain(UsuarioId id)
+		=> TryAsync(async conn => {
+			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
+				"sp_SelectUsuarioWhereId",
+				new { Id = id.Valor },
+				commandType: CommandType.StoredProcedure
+			) ?? throw new Exception($"Usuario con Id={id.Valor} no encontrado.");
+			Result<Usuario2025> map = dto.ToDomain();
+			if (map.IsError)
+				throw new Exception($"Error creando Usuario2025 desde DTO (Id={id.Valor}): {map.UnwrapAsError()}");
+			return map.UnwrapAsOk();
+		});
+
+
+	Task<Result<Usuario2025>> IRepositorioDomainServiciosPrivados.SelectUsuarioWhereNombreAsDomain(NombreUsuario nombre)
+		=> TryAsync(async conn => {
+			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
+				"sp_SelectUsuarioWhereNombre",
+				new { NombreUsuario = nombre.Valor },
+				commandType: CommandType.StoredProcedure
+			) ?? throw new Exception($"Usuario con NombreUsuario={nombre.Valor} no encontrado.");
+			Result<Usuario2025> map = dto.ToDomain();
+			if (map.IsError)
+				throw new Exception($"Error creando Usuario2025 desde UsuarioDbModel (NombreUsuario={nombre.Valor}): {map.UnwrapAsError()}");
+
+			return map.UnwrapAsOk();
+		});
+
+
+	Task<Result<Turno2025>> IRepositorioDomainServiciosPrivados.SelectTurnoWhereIdAsDomain(TurnoId id)
+		=> TryAsyncAndMap<TurnoDbModel, Turno2025>(
+			query: conn => conn.QuerySingleOrDefaultAsync<TurnoDbModel>(
+				"sp_SelectTurnoWhereId",
+				new { Id = id.Valor },
+				commandType: CommandType.StoredProcedure
+			),
+			mapper: dto => {
+				return dto is null ? new Result<Turno2025>.Error($"Turno con id {id} no encontrado.") : dto.ToDomain();
+			}
+		);
+
+
+	//if (dto is null)
+	//return new Result<Turno2025?>.Ok(null);
+	//Result<Turno2025> map = dto.ToDomain();
+	// 4. Si falló la construcción del dominio, devolvemos el ERROR directamente
+	//if (map.IsError)
+	//return new Result<Turno2025?>.Error(map.UnwrapAsError());
+
+	//Turno2025? result = map.UnwrapAsOk();
+	// 5. Caso OK
+	//return new Result<Turno2025?>.Ok(result);
+
+
+	//	=> TryAsync(async conn => {
+	//	return await conn.QuerySingleOrDefaultAsync<HorarioDbModel>(
+	//		"sp_SelectHorarioWhereId",
+	//		new { Id = id.Valor },
+	//		commandType: CommandType.StoredProcedure
+	//	);
+	//});
 
 }

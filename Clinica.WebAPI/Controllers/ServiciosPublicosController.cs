@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
@@ -34,39 +35,53 @@ public record SolicitarTurnoPrimeraDispDto(
 
 
 
-[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class ServiciosPublicosController(IRepositorio repositorio, ILogger<ServiciosPublicosController> logger) : ControllerBase {
 
+
+
+	[HttpGet("Turnos/Disponibilidades")]
+	public async Task<IActionResult> VerDisponibilidades(
+		[FromQuery] EspecialidadCodigo especialidadCodigoInterno,
+		[FromQuery] int cuantos,
+		[FromQuery, DefaultValue("2025-12-03T00:00:00")]
+		DateTime? aPartirDeCuando
+	) {
+		DateTime desde = aPartirDeCuando ?? DateTime.Now; // default real acá
+
+		var result = await ServiciosPublicos.SolicitarDisponibilidadesPara(
+			especialidadCodigoInterno,
+			desde,
+			cuantos,
+			repositorio
+		);
+
+		return result switch {
+			Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok ok =>
+				Ok(ok.Valor.Select(d => d.ATexto()).ToList()),
+
+			Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error err =>
+				BadRequest(new { error = err.Mensaje }),
+
+			_ => StatusCode(500)
+		};
+	}
+
+
+
+
+
+
 	[HttpPost("turnos/cancelar")]
-	public async Task<IActionResult> SolicitarCancelacion([FromBody] SolicitarCancelacionDto dto) {
+	public async Task<IActionResult> SolicitarCancelacion(
+		[FromBody] SolicitarCancelacionDto dto
+	) {
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
 
-
-
-
-
-		Result<TurnoDbModel?> turnoResult = await repositorio.SelectTurnoWhereId(dto.TurnoId);
-		if (turnoResult.IsError)
-			return Problem($"Error interno: {turnoResult.UnwrapAsError()}");
-		if (turnoResult.UnwrapAsOk() is null) {
-			return NotFound("No se encontró un turno con esa Id");
-		}
-		Result<Turno2025> turnoOriginalResult = turnoResult.UnwrapAsOk()!.ToDomain();
-		if (turnoOriginalResult.IsError)
-			return Problem($"No se pudo validar el turno existente. Contactar un admin: {turnoOriginalResult.UnwrapAsError()}");
-		if (turnoResult.UnwrapAsOk() is null) {
-			return NotFound("No se encontró un turno con esa Id");
-		}
-		Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
-
-
-
-
 		Result<Turno2025> result = await ServiciosPublicos.SolicitarCancelacion(
-			turnoOriginal,
+			dto.TurnoId,
 			dto.OutcomeFecha,
 			dto.OutcomeComentario,
 			repositorio
@@ -82,30 +97,14 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 
 
 	[HttpPost("turnos/reprogramar")]
-	public async Task<IActionResult> SolicitarReprogramacion([FromBody] SolicitarReprogramacionDto dto) {
+	public async Task<IActionResult> SolicitarReprogramacion(
+		[FromBody] SolicitarReprogramacionDto dto
+	) {
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
 
-
-
-		Result<TurnoDbModel?> turnoResult = await repositorio.SelectTurnoWhereId(dto.TurnoId);
-		if (turnoResult.IsError)
-			return Problem($"Error interno: {turnoResult.UnwrapAsError()}");
-		if (turnoResult.UnwrapAsOk() is null) {
-			return NotFound("No se encontró un turno con esa Id");
-		}
-		Result<Turno2025> turnoOriginalResult = turnoResult.UnwrapAsOk()!.ToDomain();
-		if (turnoOriginalResult.IsError)
-			return Problem($"No se pudo validar el turno existente. Contactar un admin: {turnoOriginalResult.UnwrapAsError()}");
-		if (turnoResult.UnwrapAsOk() is null) {
-			return NotFound("No se encontró un turno con esa Id");
-		}
-		Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
-
-
-
-		var result = await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
-			turnoOriginal,
+        Result<Turno2025> result = await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
+			dto.TurnoId,
 			dto.OutcomeFecha,
 			dto.OutcomeComentario,
 			repositorio
@@ -161,7 +160,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 
 	// GET: api/<MedicosController>
 	// [HttpGet]
-	// public async Task<ActionResult<IEnumerable<TurnoDbModel>>> Get() {
+	// public async Task<ActionResult<IEnumerable<TurnoDbModel>>> VerDisponibilidades() {
 	// try {
 	// IEnumerable<TurnoDbModel> instances = await repositorio.SelectTurnos();
 	// return Ok(instances);

@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.sp_SelectMedicosWhereEspecialidadCode
+﻿CREATE PROCEDURE dbo.sp_SelectMedicosIdWhereEspecialidadCode
     @EspecialidadCodigoInterno INT
 AS
 BEGIN
