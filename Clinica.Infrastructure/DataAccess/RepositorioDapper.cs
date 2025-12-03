@@ -98,7 +98,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 		});
 
 
-	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code)
+	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicosWhereEspecialidadCode(EspecialidadCodigo code)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<MedicoDbModel>(
 				"sp_SelectMedicosWhereEspecialidadCode",
@@ -220,7 +220,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-	Task<Result<IEnumerable<MedicoId>>> IRepositorioDomainServiciosPrivados.SelectMedicosIdWhereEspecialidadCode(EspecialidadCodigo2025 code)
+	Task<Result<IEnumerable<MedicoId>>> IRepositorioDomainServiciosPrivados.SelectMedicosIdWhereEspecialidadCode(EspecialidadCodigo code)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<MedicoId>(
 				"sp_SelectMedicosIdWhereEspecialidadCode",

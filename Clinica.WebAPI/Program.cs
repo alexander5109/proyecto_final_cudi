@@ -27,7 +27,7 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 );
 
 builder.Services.AddSingleton<RepositorioDapper>(sp => {
-    var factory = sp.GetRequiredService<SQLServerConnectionFactory>();
+    SQLServerConnectionFactory factory = sp.GetRequiredService<SQLServerConnectionFactory>();
     return new RepositorioDapper(factory);
 });
 

@@ -29,7 +29,7 @@ public record Medico2025(
 
 	MedicoId Id,
 	NombreCompleto2025 NombreCompleto,
-	EspecialidadMedica2025 EspecialidadUnica,
+	Especialidad2025 EspecialidadUnica,
 	DniArgentino2025 Dni,
 	DomicilioArgentino2025 Domicilio,
 	ContactoTelefono2025 Telefono,
@@ -41,7 +41,7 @@ public record Medico2025(
 	public static Result<Medico2025> Crear(
 		Result<MedicoId> idResult,
 		Result<NombreCompleto2025> nombreResult,
-		Result<EspecialidadMedica2025> especialidadResult,
+		Result<Especialidad2025> especialidadResult,
 		//Result<ListaEspecialidadesMedicas2025> especialidadResult,
 		Result<DniArgentino2025> dniResult,
 		Result<DomicilioArgentino2025> domicilioResult,

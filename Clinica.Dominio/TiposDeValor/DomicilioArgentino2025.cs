@@ -139,7 +139,7 @@ public readonly record struct ProvinciaArgentina2025(ProvinciaCodigo2025 CodigoI
 			return new Result<ProvinciaArgentina2025>.Error("La provincia no puede estar vacía.");
 
 		var normalizado = input.Trim().ToLowerInvariant();
-		if (_codigoPorNombre.TryGetValue(normalizado, out var codigo))
+		if (_codigoPorNombre.TryGetValue(normalizado, out ProvinciaCodigo2025 codigo))
 			return CrearPorCodigo(codigo);
 
 		return new Result<ProvinciaArgentina2025>.Error($"Provincia inválida: '{input}'.");

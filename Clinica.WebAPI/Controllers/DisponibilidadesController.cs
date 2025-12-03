@@ -16,13 +16,13 @@ public class DisponibilidadesController(IRepositorio repositorio, ILogger<Dispon
 
 	[HttpGet(Name = "GetDisponibilidades")]
 	public async Task<IActionResult> Get(
-		[FromQuery] EspecialidadCodigo2025 especialidadCodigoInterno,
+		[FromQuery] EspecialidadCodigo especialidadCodigoInterno,
 		[FromQuery] int cuantos = 10) {
-		Result<EspecialidadMedica2025> especialidadResult = EspecialidadMedica2025.CrearPorCodigoInterno(especialidadCodigoInterno);
+		Result<Especialidad2025> especialidadResult = Especialidad2025.CrearPorCodigoInterno(especialidadCodigoInterno);
 		if (especialidadResult.IsError) {
 			return BadRequest($"Especialidad inválida: {especialidadResult}");
 		}
-		EspecialidadMedica2025 especialidad = especialidadResult.GetOrRaise();
+		Especialidad2025 especialidad = especialidadResult.GetOrRaise();
 
 		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> result = await ServiciosPublicos.SolicitarDisponibilidadesPara(
 			especialidad,

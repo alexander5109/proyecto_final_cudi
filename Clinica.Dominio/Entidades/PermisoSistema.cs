@@ -13,7 +13,10 @@
 	DeleteEntidades,
 	UpdateEntidades,
 	CrearHorarios,
-	VerHorarios
+	VerHorarios,
+
+
+	SolicitarTurno
 
 	// más adelante: editar paciente, etc.
 }
@@ -22,7 +25,7 @@
 public static class PermisosPorRol {
 	private static readonly Dictionary<UsuarioEnumRole, HashSet<PermisoSistema>> tabla = new() {
 		[UsuarioEnumRole.Nivel1Admin] = [
-            PermisoSistema.VerPacientes,
+			PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerUsuarios,
 			PermisoSistema.VerMedicos,
@@ -39,7 +42,7 @@ public static class PermisosPorRol {
 		],
 
 		[UsuarioEnumRole.Nivel2Secretaria] = [
-            PermisoSistema.VerPacientes,
+			PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerMedicos,
 			PermisoSistema.CrearTurnos,
@@ -47,24 +50,27 @@ public static class PermisosPorRol {
 			PermisoSistema.CrearPacientes,
 			PermisoSistema.UpdateEntidades,
 			PermisoSistema.CrearHorarios,
-			PermisoSistema.VerHorarios
+			PermisoSistema.VerHorarios,
+			PermisoSistema.SolicitarTurno
 
 		],
 
 		[UsuarioEnumRole.Nivel3Medico] = [
-            PermisoSistema.VerPacientes,
+			PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerMedicos,
-			PermisoSistema.VerHorarios
+			PermisoSistema.VerHorarios,
+			PermisoSistema.SolicitarTurno
 		],
 
 		[UsuarioEnumRole.Nivel4Paciente] = [
-			PermisoSistema.VerHorarios
+			PermisoSistema.VerHorarios,
+			PermisoSistema.SolicitarTurno
 		],
 	};
 
 	public static bool Tiene(UsuarioEnumRole rol, PermisoSistema permiso) =>
-		tabla.TryGetValue(rol, out var set) && set.Contains(permiso);
+		tabla.TryGetValue(rol, out HashSet<PermisoSistema>? set) && set.Contains(permiso);
 }
 
 

@@ -30,7 +30,7 @@ public static class IRepositorioInterfaces {
 		Task<Result<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
 		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicos();
 		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id);
-		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code);
+		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo code);
 		Task<Result<MedicoDbModel?>> SelectMedicoWhereId(MedicoId id);
 		Task<Result<Unit>> UpdateMedicoWhereId(Medico2025 instance);
 	}

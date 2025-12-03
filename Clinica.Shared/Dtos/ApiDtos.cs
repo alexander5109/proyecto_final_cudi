@@ -17,7 +17,7 @@ public static class ApiDtos {
 		TurnoId Id,
 		TimeSpan Hora,
 		DateTime Fecha,
-		EspecialidadCodigo2025 EspecialidadCodigoInterno,
+		EspecialidadCodigo EspecialidadCodigoInterno,
 		TurnoOutcomeEstadoCodigo2025 Estado,
 		MedicoId MedicoId
 	);
@@ -26,7 +26,7 @@ public static class ApiDtos {
 		string Dni,
 		string Nombre,
 		string Apellido,
-		EspecialidadCodigo2025 EspecialidadCodigoInterno
+		EspecialidadCodigo EspecialidadCodigoInterno
 	);
 
 
@@ -50,7 +50,7 @@ public static class ApiDtos {
 	public record CrearTurnoRequestDto(
 		PacienteId PacienteId,
 		MedicoId MedicoId,
-		EspecialidadCodigo2025 EspecialidadCodigo,
+		EspecialidadCodigo EspecialidadCodigo,
 		DateTime Desde,
 		DateTime Hasta
 	);
@@ -64,7 +64,7 @@ public static class ApiDtos {
 		MedicoId MedicoId,
 		DateTime FechaInicio,
 		DateTime FechaFin,
-		EspecialidadCodigo2025 EspecialidadCodigoInterno
+		EspecialidadCodigo EspecialidadCodigoInterno
 	);
 
 

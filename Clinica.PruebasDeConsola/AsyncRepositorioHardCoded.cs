@@ -11,10 +11,10 @@ public static class AsyncRepositorioHardCoded  {
 		Medico2025.Crear(
 				MedicoId.Crear(1),
 				NombreCompleto2025.Crear("Carlos Alfredo", "Markier"),
-				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Gastroenterologo.CodigoInternoValor),
+				Especialidad2025.CrearPorCodigoInterno(Especialidad2025.Gastroenterologo.CodigoInternoValor),
 				//ListaEspecialidadesMedicas2025.Crear([
-				//	EspecialidadMedica2025.Gastroenterologo,
-				//	EspecialidadMedica2025.ClinicoGeneral
+				//	Especialidad2025.Gastroenterologo,
+				//	Especialidad2025.ClinicoGeneral
 				//]),
 				DniArgentino2025.Crear("15350996"),
 				DomicilioArgentino2025.Crear(
@@ -52,10 +52,10 @@ public static class AsyncRepositorioHardCoded  {
 			Medico2025.Crear(
 				MedicoId.Crear(2),
 				NombreCompleto2025.Crear("Jorge", "Pereyra"),
-				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Ginecologo.CodigoInternoValor),
+				Especialidad2025.CrearPorCodigoInterno(Especialidad2025.Ginecologo.CodigoInternoValor),
 				//ListaEspecialidadesMedicas2025.Crear([
-				//	EspecialidadMedica2025.Pediatra,
-				//	EspecialidadMedica2025.Ginecologo
+				//	Especialidad2025.Pediatra,
+				//	Especialidad2025.Ginecologo
 				//]),
 				DniArgentino2025.Crear("20350996"),
 				DomicilioArgentino2025.Crear(
@@ -93,10 +93,10 @@ public static class AsyncRepositorioHardCoded  {
 			Medico2025.Crear(
 				MedicoId.Crear(3),
 				NombreCompleto2025.Crear("Marta", "Algerich"),
-				EspecialidadMedica2025.CrearPorCodigoInterno(EspecialidadMedica2025.Neurologo.CodigoInternoValor),
+				Especialidad2025.CrearPorCodigoInterno(Especialidad2025.Neurologo.CodigoInternoValor),
 				//ListaEspecialidadesMedicas2025.Crear([
-					//new Result.Ok<EspecialidadMedica2025>(EspecialidadMedica2025.Neurologo),
-					//EspecialidadMedica2025.Osteopata
+					//new Result.Ok<Especialidad2025>(Especialidad2025.Neurologo),
+					//Especialidad2025.Osteopata
 				//]),
 				DniArgentino2025.Crear("10350996"),
 				DomicilioArgentino2025.Crear(

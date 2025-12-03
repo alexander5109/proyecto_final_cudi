@@ -14,7 +14,7 @@ public class ServiciosPublicos {
     //public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> Crear(
 
 
-    //Task<Result<Turno2025>> AgendarTurnoAsync(PacienteId pacienteId, MedicoId medicoId, EspecialidadCodigo2025 especialidadCodigo, DateTime desde, DateTime hasta);
+    //Task<Result<Turno2025>> AgendarTurnoAsync(PacienteId pacienteId, MedicoId medicoId, EspecialidadCodigo especialidadCodigo, DateTime desde, DateTime hasta);
 
     //Task<Result<Turno2025>> CancelarTurnoAsync(TurnoId id, Option<string> motivo);
 
@@ -122,41 +122,11 @@ public class ServiciosPublicos {
         };
     }
 
-    public static async Task<Result<Turno2025>> SolicitarCancelacion(
-        Result<Turno2025> turnoOriginalResult,
-        DateTime outcomeFecha,
-        string outcomeComentario,
-        IRepositorioDomainServiciosPrivados repositorio
-    ) {
-        if (turnoOriginalResult.IsError) { return turnoOriginalResult; }
-        Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
-        // 1. Aplicar regla de dominio para cancelar
-        Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
-            TurnoOutcomeEstado2025.Cancelado,
-            outcomeFecha,
-            outcomeComentario
-        );
-
-        if (canceladoResult is Result<Turno2025>.Error e1)
-            return new Result<Turno2025>.Error(e1.Mensaje);
-
-        Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
-
-        // 2. Guardar cambios (IO)
-        Result<Unit> updateResult = await repositorio.UpdateTurnoWhereId(turnoCancelado);
-
-        if (updateResult is Result<Unit>.Error e2)
-            return new Result<Turno2025>.Error(
-                $"Error al persistir la cancelación del turno: {e2.Mensaje}"
-            );
-
-        return new Result<Turno2025>.Ok(turnoCancelado);
-    }
 
 
     public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>>
         SolicitarDisponibilidadesPara(
-            EspecialidadMedica2025 solicitudEspecialidad,
+            Especialidad2025 solicitudEspecialidad,
             DateTime solicitudFechaCreacion,
             int cuantos,
             IRepositorioDomainServiciosPrivados repositorio) {
@@ -192,7 +162,7 @@ public class ServiciosPublicos {
 
     public static async Task<Result<Turno2025>> SolicitarTurnoEnLaPrimeraDisponibilidad(
         PacienteId pacienteId,
-        EspecialidadMedica2025 solicitudEspecialidad,
+        Especialidad2025 solicitudEspecialidad,
         FechaRegistro2025 solicitudFechaCreacion,
         IRepositorioDomainServiciosPrivados repositorio
     ) {
@@ -237,13 +207,13 @@ public class ServiciosPublicos {
 
 
     public static async Task<Result<Turno2025>> SolicitarReprogramacionALaPrimeraDisponibilidad(
-        Result<Turno2025> turnoOriginalResult,
+        Turno2025 turnoOriginal,
         DateTime outcomeFecha,
         string outcomeComentario,
         IRepositorioDomainServiciosPrivados repositorio
     ) {
-        if (turnoOriginalResult.IsError) return turnoOriginalResult;
-        Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
+        //if (turnoOriginalResult.IsError) return turnoOriginalResult;
+        //Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
 
         Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
             TurnoOutcomeEstado2025.Reprogramado,

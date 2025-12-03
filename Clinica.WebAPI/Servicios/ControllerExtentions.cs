@@ -74,7 +74,7 @@ public static class ControllerExtentions {
 			return controller.BadRequest(new { error = dom.UnwrapAsError() });
 		}
 
-		var result = await action(dom.UnwrapAsOk());
+        Result<TResult> result = await action(dom.UnwrapAsOk());
 
 		if (result.IsError) {
 			logger.LogError("Error en acción de dominio: {Error}", result.UnwrapAsError());
