@@ -11,8 +11,8 @@ public class JwtService(string jwtKey) {
 
 		List<Claim> claims =
 		[
-			new("userid", usuario.UserId.Valor.ToString()),
-			new("username", usuario.UserName.Valor),
+			new("userid", usuario.Id.Valor.ToString()),
+			new("username", usuario.NombreUsuario.Valor),
 			new("role", usuario.EnumRole.ToString())
 		];
 

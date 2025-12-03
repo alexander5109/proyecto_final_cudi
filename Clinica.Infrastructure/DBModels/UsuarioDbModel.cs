@@ -18,6 +18,6 @@ public static partial class DbModels {
 		=> Usuario2025.Crear(usuario.Id, usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole);
 
 	public static UsuarioDbModel ToModel(this Usuario2025 entidad) {
-		return new UsuarioDbModel(entidad.UserId, entidad.UserName.Valor, entidad.UserPassword.Valor, entidad.EnumRole);
+		return new UsuarioDbModel(entidad.Id, entidad.NombreUsuario.Valor, entidad.PasswordHash.Valor, entidad.EnumRole);
 	}
 }

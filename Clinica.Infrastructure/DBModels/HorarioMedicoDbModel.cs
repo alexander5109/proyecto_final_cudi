@@ -7,7 +7,7 @@ namespace Clinica.Shared.Dtos;
 
 public static partial class DbModels {
 	public record HorarioMedicoDbModel(
-		int Id,
+		HorarioId Id,
 		MedicoId MedicoId,
 		DayOfWeek DiaSemana,
 		TimeSpan HoraDesde,
@@ -21,6 +21,7 @@ public static partial class DbModels {
 
 	public static Result<HorarioMedico2025> ToDomain(this HorarioMedicoDbModel horarioDto) {
 		return HorarioMedico2025.Crear(
+			horarioDto.Id,
 			new DiaSemana2025(horarioDto.DiaSemana),
 			new HorarioHora2025(TimeOnly.FromTimeSpan(horarioDto.HoraDesde)),
 			new HorarioHora2025(TimeOnly.FromTimeSpan(horarioDto.HoraHasta)),

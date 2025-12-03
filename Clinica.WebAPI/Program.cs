@@ -4,6 +4,7 @@ using Clinica.Infrastructure.DataAccess;
 using Clinica.WebAPI.Servicios;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -25,9 +26,9 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	)
 );
 
-builder.Services.AddTransient<IPacientesRepositorio, PacientesRepositorioDapper>();
-//builder.Services.AddTransient<IMedicosRepositorio, MedicosRepositorioDapper>();
-//builder.Services.AddTransient<ITurnosRepositorio, TurnosRepositorioDapper>();
+builder.Services.AddSingleton<IRepositorio, RepositorioDapper>();
+//builder.Services.AddTransient<IRepositorioMedicos, RepositorioDapperMedicos>();
+//builder.Services.AddTransient<IRepositorioTurnos, TurnosRepositorioDapper>();
 
 // JwtService (singleton)
 builder.Services.AddSingleton<JwtService>(sp => {

@@ -18,7 +18,7 @@ public class UsuarioMiddleware {
 		if (user.Identity is { IsAuthenticated: true }) {
 			string? idClaim = user.FindFirst("userid")?.Value;
 			if (int.TryParse(idClaim, out int id)) {
-				Result<Usuario2025> result = await repo.SelectUsuarioWhereId(new UsuarioId(id));
+				Result<Usuario2025> result = await (repo.SelectUsuarioWhereIdAsDomain(new UsuarioId(id)));
 
 				if (result.IsOk) {
 					context.Items["Usuario"] = result.UnwrapAsOk();

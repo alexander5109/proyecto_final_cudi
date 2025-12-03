@@ -66,7 +66,7 @@ public readonly record struct HorarioMedico2025(
 		   hastaResult.Bind(hastaOk =>
 		   vigenteDesdeResult.Bind(vigenteDesde =>
 		   vigenteHastaResult.Bind(vigenteHasta =>
-			   Crear(idOk, diaOk, desdeOk, hastaOk, vigenteDesde, vigenteHasta))))));
+			   Crear(idOk, diaOk, desdeOk, hastaOk, vigenteDesde, vigenteHasta)))))));
 
 	// ✅ Versión “desde strings” — útil para tests, carga desde BD, o CSV
 	public static Result<HorarioMedico2025> Crear(int id, string dia, string desde, string hasta, string vigenteDesde, string vigenteHasta)
@@ -76,5 +76,5 @@ public readonly record struct HorarioMedico2025(
 		   HorarioHora2025.Crear(hasta).Bind(hastaOk =>
 		   VigenciaHorario2025.Crear(vigenteDesde).Bind(vigenteDesdeOk =>
 		   VigenciaHorario2025.Crear(vigenteHasta).Bind(vigenteHastaOk =>
-			   Crear(idOk, diaOk, desdeOk, hastaOk, vigenteDesdeOk, vigenteHastaOk))))));
+			   Crear(idOk, diaOk, desdeOk, hastaOk, vigenteDesdeOk, vigenteHastaOk)))))));
 }

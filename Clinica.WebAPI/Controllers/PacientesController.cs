@@ -3,6 +3,7 @@ using Clinica.Dominio.Entidades;
 using Clinica.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.WebAPI.Controllers;
@@ -10,7 +11,20 @@ namespace Clinica.WebAPI.Controllers;
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class PacientesController(RepositorioDapper repositorio, ILogger<PacientesController> logger) : ControllerBase {
+public class PacientesController(IRepositorio repositorio, ILogger<PacientesController> logger) : ControllerBase {
+
+	[HttpGet]
+	public async Task<ActionResult<IEnumerable<PacienteDbModel>>> GetPacientes() {
+		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+			return Unauthorized();
+
+		if (!usuario.HasPermission(PermisoSistema.VerPacientes))
+			return Forbid();
+
+		Result<IEnumerable<PacienteDbModel>> pacientes = await repositorio.SelectPacientes(); //VOLVER A CMABIAR ESTO....
+		return Ok(pacientes);
+	}
+
 
 	[HttpGet("{id:int}")]
 	public async Task<IActionResult> GetPacientePorId(int id) {
@@ -98,17 +112,6 @@ public class PacientesController(RepositorioDapper repositorio, ILogger<Paciente
 	}
 
 
-	[HttpGet]
-	public async Task<ActionResult<IEnumerable<PacienteDbModel>>> GetPacientes() {
-		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
-			return Unauthorized();
-
-		if (!usuario.HasPermission(PermisoSistema.VerPacientes))
-			return Forbid();
-
-		Result<IEnumerable<PacienteDbModel>> pacientes = await repositorio.SelectPacientes(); //VOLVER A CMABIAR ESTO....
-		return Ok(pacientes);
-	}
 
 	[HttpPost]
 	public async Task<IActionResult> CrearPaciente([FromBody] PacienteDbModel dto) {

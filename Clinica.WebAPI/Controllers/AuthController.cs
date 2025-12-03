@@ -2,13 +2,15 @@
 using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.Servicios;
 using Clinica.Infrastructure.DataAccess;
+using Clinica.WebAPI.Controllers;
 using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Mvc;
+using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.Dtos.ApiDtos;
 
 [ApiController]
 [Route("auth")]
-public class AuthController(RepositorioDapper repositorio, JwtService jwtService)
+public class AuthController(IRepositorio repositorio, JwtService jwtService, ILogger<AuthController> logger)
 	: ControllerBase {
 	[HttpPost("login")]
 	public async Task<IActionResult> Login([FromBody] LoginRequestDto dto) {
@@ -18,7 +20,7 @@ public class AuthController(RepositorioDapper repositorio, JwtService jwtService
 		return resultado switch {
 			Result<Usuario2025>.Ok ok =>
 				Ok(new LoginResponseDto(
-					ok.Valor.UserName.Valor,
+					ok.Valor.NombreUsuario.Valor,
 					ok.Valor.EnumRole.ToString(),
 					jwtService.EmitirJwt(ok.Valor)
 				)),

@@ -28,9 +28,9 @@ public enum UsuarioEnumRole : byte {
 }
 
 public sealed record Usuario2025(
-	UsuarioId UserId,
-	NombreUsuario UserName,
-	ContraseñaHasheada UserPassword,
+	UsuarioId Id,
+	NombreUsuario NombreUsuario,
+	ContraseñaHasheada PasswordHash,
 	UsuarioEnumRole EnumRole
 ) {
     public static Result<Usuario2025> Crear(UsuarioId id, string? nombreUsuario, string? passwordHash, UsuarioEnumRole enumRole) {
@@ -43,5 +43,5 @@ public sealed record Usuario2025(
 		return new Result<Usuario2025>.Ok(new Usuario2025(id, new NombreUsuario(nombreUsuario), new ContraseñaHasheada(passwordHash), enumRole));
 	}
 
-    public bool PasswordMatch(string raw) => UserPassword.IgualA(raw);
+    public bool PasswordMatch(string raw) => PasswordHash.IgualA(raw);
 }

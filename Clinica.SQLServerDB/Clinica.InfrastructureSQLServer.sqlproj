@@ -99,6 +99,9 @@
     <Build Include="Dto\Tables\Usuarios\sp_SelectUsuarioWhereId.sql" />
     <Build Include="Dto\Tables\Usuarios\sp_SelectUsuarioWhereNombre.sql" />
     <Build Include="Dto\Tables\Usuarios\table_Usuario.sql" />
+    <Build Include="Dto\Tables\Usuarios\sp_DeleteUsuarioWhereId.sql" />
+    <Build Include="Dto\Tables\Usuarios\sp_SelectUsuarios.sql" />
+    <Build Include="Dto\Tables\Usuarios\sp_UpdateUsuarioWhereId.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Dto\PostDeployInserts\Script.PostDeployment.sql" />

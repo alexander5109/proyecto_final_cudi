@@ -1,25 +1,13 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.IRepositorios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-
-using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.DomainDtos;
-
-
+using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 namespace Clinica.WebAPI.Controllers;
-
-
 
 
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class TurnosController(IRepositorioDomain repositorio, ILogger<TurnosController> logger) : ControllerBase {
+public class TurnosController(IRepositorio repositorio, ILogger<TurnosController> logger) : ControllerBase {
 
 	// GET: api/<MedicosController>
 	// [HttpGet]
