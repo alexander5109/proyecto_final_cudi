@@ -4,7 +4,7 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Dominio.ListasOrganizadoras;
 
 public readonly record struct ListaHorarioMedicos2025(
-	IReadOnlyList<HorarioMedico2025> Valores
+	IReadOnlyList<Horario2025> Valores
 ) : IComoTexto {
 	public string ATexto() {
 		if (Valores.Count == 0)
@@ -15,7 +15,7 @@ public readonly record struct ListaHorarioMedicos2025(
 	}
 
 	public static Result<ListaHorarioMedicos2025> Crear(
-		IEnumerable<Result<HorarioMedico2025>> horariosResult)
+		IEnumerable<Result<Horario2025>> horariosResult)
 		=> horariosResult.Bind(horariosOk =>
 			new Result<ListaHorarioMedicos2025>.Ok(new ListaHorarioMedicos2025(horariosOk))
 		);

@@ -11,7 +11,9 @@
 	ReprogramarTurno,
 
 	DeleteEntidades,
-	UpdateEntidades
+	UpdateEntidades,
+	CrearHorarios,
+	VerHorarios
 
 	// más adelante: editar paciente, etc.
 }
@@ -31,7 +33,9 @@ public static class PermisosPorRol {
 			PermisoSistema.UpdateEntidades,
 			PermisoSistema.CrearMedicos,
 			PermisoSistema.DeleteEntidades,
-			PermisoSistema.CrearUsuarios
+			PermisoSistema.CrearUsuarios,
+			PermisoSistema.CrearHorarios,
+
 		],
 
 		[UsuarioEnumRole.Nivel2Secretaria] = [
@@ -42,6 +46,8 @@ public static class PermisosPorRol {
 			PermisoSistema.CancelarTurno,
 			PermisoSistema.CrearPacientes,
 			PermisoSistema.UpdateEntidades,
+			PermisoSistema.CrearHorarios,
+			PermisoSistema.VerHorarios
 
 		],
 
@@ -49,10 +55,11 @@ public static class PermisosPorRol {
             PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerMedicos,
+			PermisoSistema.VerHorarios
 		],
 
 		[UsuarioEnumRole.Nivel4Paciente] = [
-            PermisoSistema.VerTurnos,
+			PermisoSistema.VerHorarios
 		],
 	};
 

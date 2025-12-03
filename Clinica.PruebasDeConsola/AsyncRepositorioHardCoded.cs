@@ -27,14 +27,14 @@ public static class AsyncRepositorioHardCoded  {
 				ContactoTelefono2025.Crear("1133832021"),
 				ContactoEmail2025.Crear("carlosmerkeir@gmail.com"),
 				ListaHorarioMedicos2025.Crear([
-					HorarioMedico2025.Crear(
+					Horario2025.Crear(
 						DiaSemana2025.Lunes,
 						new HorarioHora2025(TimeOnly.Parse("09:00")),
 						new HorarioHora2025(TimeOnly.Parse("15:00")),
 						new VigenciaHorario2025(new DateOnly(2024, 1, 1)),
 						new VigenciaHorario2025(new DateOnly(2026, 1, 1))
 					),
-					HorarioMedico2025.Crear(
+					Horario2025.Crear(
 						DiaSemana2025.Miercoles,
 						new HorarioHora2025(TimeOnly.Parse("09:00")),
 						new HorarioHora2025(TimeOnly.Parse("15:00")),
@@ -68,14 +68,14 @@ public static class AsyncRepositorioHardCoded  {
 				ContactoTelefono2025.Crear("1163632071"),
 				ContactoEmail2025.Crear("jorgepereiyra@gmail.com"),
 				ListaHorarioMedicos2025.Crear([
-					HorarioMedico2025.Crear(
+					Horario2025.Crear(
 						DiaSemana2025.Martes,
 						new HorarioHora2025(new TimeOnly(08, 0)),
 						new HorarioHora2025(new TimeOnly(18, 00)),
 						new VigenciaHorario2025(new DateOnly(2024, 1, 12)),
 						new VigenciaHorario2025(new DateOnly(2026, 1, 12))
 					),
-					HorarioMedico2025.Crear(
+					Horario2025.Crear(
 						DiaSemana2025.Jueves,
 						new HorarioHora2025(new TimeOnly(08,00)),
 						new HorarioHora2025(new TimeOnly(18,0)),
@@ -109,21 +109,21 @@ public static class AsyncRepositorioHardCoded  {
 				ContactoTelefono2025.Crear("1149920537"),
 				ContactoEmail2025.Crear("martaalgerich@gmail.com"),
 				ListaHorarioMedicos2025.Crear([
-					HorarioMedico2025.Crear(
+					Horario2025.Crear(
 						DiaSemana2025.Lunes,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),
 						new HorarioHora2025(TimeOnly.Parse("12:00")),
 						new VigenciaHorario2025(new DateOnly(2022, 1, 12)),
 						new VigenciaHorario2025(new DateOnly(2024, 1, 12))
 					),
-					HorarioMedico2025.Crear(
+					Horario2025.Crear(
 						DiaSemana2025.Miercoles,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),
 						new HorarioHora2025(TimeOnly.Parse("12:00")),
 						new VigenciaHorario2025(new DateOnly(2022, 1, 12)),
 						new VigenciaHorario2025(new DateOnly(2024, 1, 12))
 					),
-					HorarioMedico2025.Crear(
+					Horario2025.Crear(
 						DiaSemana2025.Viernes,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),
 						new HorarioHora2025(TimeOnly.Parse("12:00")),

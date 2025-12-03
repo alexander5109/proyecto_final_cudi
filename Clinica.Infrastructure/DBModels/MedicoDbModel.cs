@@ -29,7 +29,7 @@ public static partial class DbModels {
 
 	public static Result<Medico2025> ToDomain(this MedicoDbModel medicoDto) {
 		string json = string.IsNullOrWhiteSpace(medicoDto.HorariosJson) ? "[]" : medicoDto.HorariosJson;
-		List<HorarioMedicoDbModel> horariosDto = JsonSerializer.Deserialize<List<HorarioMedicoDbModel>>(json)
+		List<HorarioDbModel> horariosDto = JsonSerializer.Deserialize<List<HorarioDbModel>>(json)
 			?? [];
 		return Medico2025.Crear(
 			MedicoId.Crear(medicoDto.Id.Valor),

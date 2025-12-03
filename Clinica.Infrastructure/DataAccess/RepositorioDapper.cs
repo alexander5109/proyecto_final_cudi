@@ -347,4 +347,62 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			);
 		});
 
+
+
+
+
+
+
+
+
+
+    Task<Result<Unit>> IRepositorioHorarios.DeleteHorarioWhereId(HorarioId id) 
+		=> TryAsyncVoid(async conn => {
+			await conn.ExecuteAsync(
+				"sp_DeleteHorarioWhereId",
+				new { Id = id.Valor, },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+    Task<Result<HorarioId>> IRepositorioHorarios.InsertHorarioReturnId(Horario2025 instance) 
+		=> TryAsync(async conn => {
+			DynamicParameters parameters = new(instance.ToModel());
+			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
+			await conn.ExecuteAsync(
+				"sp_InsertHorarioReturnId",
+				parameters,
+				commandType: CommandType.StoredProcedure
+			);
+			int newId = parameters.Get<int>("@NewId");
+			return new HorarioId(newId);   // ← solo devolvés el valor
+		});
+
+    Task<Result<IEnumerable<HorarioDbModel>>> IRepositorioHorarios.SelectHorarios() 
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<HorarioDbModel>(
+				"sp_SelectHorarios",
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+    Task<Result<HorarioDbModel?>> IRepositorioHorarios.SelectHorarioWhereId(HorarioId id)
+		=> TryAsync(async conn => {
+			return await conn.QuerySingleOrDefaultAsync<HorarioDbModel>(
+				"sp_SelectHorarioWhereId",
+				new { Id = id.Valor },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+    Task<Result<Unit>> IRepositorioHorarios.UpdateHorarioWhereId(Horario2025 instance) 
+		=> TryAsyncVoid(async conn => {
+			await conn.ExecuteAsync(
+				"sp_UpdateHorarioWhereId",
+				instance.ToModel(),
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
 }

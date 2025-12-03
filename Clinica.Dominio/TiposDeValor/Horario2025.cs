@@ -1,4 +1,5 @@
 ﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.Dominio.TiposDeValor;
 
@@ -20,8 +21,9 @@ public record struct HorarioId(int Valor) {
 }
 
 
-public readonly record struct HorarioMedico2025(
+public readonly record struct Horario2025(
 	HorarioId Id,
+	MedicoId MedicoId,
 	DiaSemana2025 DiaSemana,
 	HorarioHora2025 HoraDesde,
 	HorarioHora2025 HoraHasta,
@@ -31,8 +33,9 @@ public readonly record struct HorarioMedico2025(
 	public string ATexto()
 		=> $"{DiaSemana.ATexto()}: {HoraDesde.ATexto()} — {HoraHasta.ATexto()} (vigencia {VigenteDesde.ATexto()} → {VigenteHasta.ATexto()}";
 
-	public static Result<HorarioMedico2025> Crear(
+	public static Result<Horario2025> Crear(
 		HorarioId id,
+		MedicoId medicoId,
 		DiaSemana2025 dia,
 		HorarioHora2025 desde,
 		HorarioHora2025 hasta,
@@ -40,20 +43,19 @@ public readonly record struct HorarioMedico2025(
 		VigenciaHorario2025 vigenteHasta
 	) {
 		if (desde.Valor >= hasta.Valor)
-			return new Result<HorarioMedico2025>.Error("La hora de inicio debe ser anterior a la hora de fin.");
+			return new Result<Horario2025>.Error("La hora de inicio debe ser anterior a la hora de fin.");
 
 		if (vigenteDesde.Valor >= vigenteHasta.Valor)
-			return new Result<HorarioMedico2025>.Error("La fecha de inicio de vigencia debe ser anterior a la fecha de fin.");
+			return new Result<Horario2025>.Error("La fecha de inicio de vigencia debe ser anterior a la fecha de fin.");
 
-		return new Result<HorarioMedico2025>.Ok(
-			new HorarioMedico2025(id, dia, desde, hasta, vigenteDesde, vigenteHasta)
+		return new Result<Horario2025>.Ok(
+			new Horario2025(id, medicoId, dia, desde, hasta, vigenteDesde, vigenteHasta)
 		);
 	}
 
-
-	// ✅ Versión que toma los Result<SubTipo> — ideal para los mappers
-	public static Result<HorarioMedico2025> Crear(
+	public static Result<Horario2025> Crear(
 		Result<HorarioId> idResult,
+		Result<MedicoId> medicoIdResult,
 		Result<DiaSemana2025> diaResult,
 		Result<HorarioHora2025> desdeResult,
 		Result<HorarioHora2025> hastaResult,
@@ -61,20 +63,11 @@ public readonly record struct HorarioMedico2025(
 		Result<VigenciaHorario2025> vigenteHastaResult
 		)
 		=> idResult.Bind(idOk =>
+		   medicoIdResult.Bind(medicoIdOk =>
 		   diaResult.Bind(diaOk =>
 		   desdeResult.Bind(desdeOk =>
 		   hastaResult.Bind(hastaOk =>
 		   vigenteDesdeResult.Bind(vigenteDesde =>
 		   vigenteHastaResult.Bind(vigenteHasta =>
-			   Crear(idOk, diaOk, desdeOk, hastaOk, vigenteDesde, vigenteHasta)))))));
-
-	// ✅ Versión “desde strings” — útil para tests, carga desde BD, o CSV
-	public static Result<HorarioMedico2025> Crear(int id, string dia, string desde, string hasta, string vigenteDesde, string vigenteHasta)
-		=> DiaSemana2025.Crear(dia).Bind(diaOk =>
-		   HorarioId.Crear(id).Bind(idOk =>
-		   HorarioHora2025.Crear(desde).Bind(desdeOk =>
-		   HorarioHora2025.Crear(hasta).Bind(hastaOk =>
-		   VigenciaHorario2025.Crear(vigenteDesde).Bind(vigenteDesdeOk =>
-		   VigenciaHorario2025.Crear(vigenteHasta).Bind(vigenteHastaOk =>
-			   Crear(idOk, diaOk, desdeOk, hastaOk, vigenteDesdeOk, vigenteHastaOk)))))));
+			   Crear(idOk, medicoIdOk, diaOk, desdeOk, hastaOk, vigenteDesde, vigenteHasta))))))));
 }

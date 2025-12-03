@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Clinica.WebAPI.Controllers;
+namespace Clinica.WebAPI.Servicios;
 
 public static class ControllerExtentions {
 	public static async Task<IActionResult> SafeExecute<T>(
