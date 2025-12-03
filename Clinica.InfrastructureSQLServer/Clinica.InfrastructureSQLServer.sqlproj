@@ -86,7 +86,7 @@
     <Build Include="dbo\Medicos\sp_UpdateMedicoWithHorarios.sql" />
     <Build Include="dbo\Medicos\table_Medico.sql" />
     <Build Include="dbo\Pacientes\sp_CreatePaciente.sql" />
-    <Build Include="dbo\Pacientes\sp_DeletePaciente.sql" />
+    <Build Include="dbo\Pacientes\sp_DeletePacienteWhereId.sql" />
     <Build Include="dbo\Pacientes\sp_SelectPacientes.sql" />
     <Build Include="dbo\Pacientes\sp_SelectPacientesListView.sql" />
     <Build Include="dbo\Pacientes\sp_SelectPacienteWhereId.sql" />

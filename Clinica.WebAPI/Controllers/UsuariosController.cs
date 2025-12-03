@@ -15,6 +15,7 @@ public class UsuariosController(
 	[HttpGet]
 	public Task<IActionResult> GetUsuarios()
 	=> this.SafeExecute(
+		logger,
 		PermisoSistema.VerUsuarios,
 		() => repositorio.SelectUsuarios()
 	);
@@ -24,6 +25,7 @@ public class UsuariosController(
 	[HttpGet("{id:int}")]
 	public Task<IActionResult> GetUsuarioPorId(int id)
 		=> this.SafeExecute(
+			logger,
 			PermisoSistema.VerUsuarios,
 			() => repositorio.SelectUsuarioWhereId(new UsuarioId(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
@@ -33,6 +35,7 @@ public class UsuariosController(
 	[HttpDelete("{id:int}")]
 	public Task<IActionResult> DeleteUsuario(int id)
 		=> this.SafeExecute(
+			logger,
 			PermisoSistema.DeleteEntidades,
 			() => repositorio.DeleteUsuarioWhereId(new UsuarioId(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
@@ -43,6 +46,7 @@ public class UsuariosController(
 	[HttpPut("{id:int}")]
 	public Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioDbModel dto)
 	=> this.SafeExecuteWithDomain(
+		logger,
 		PermisoSistema.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
@@ -55,6 +59,7 @@ public class UsuariosController(
 	[HttpPost]
 	public Task<IActionResult> CrearUsuario([FromBody] UsuarioDbModel dto)
 	=> this.SafeExecuteWithDomain(
+		logger,
 		PermisoSistema.CrearUsuarios,
 		dto,
 		x => x.ToDomain(),

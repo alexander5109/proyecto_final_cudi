@@ -18,6 +18,7 @@ public class MedicosController(
 	[HttpGet]
 	public Task<IActionResult> GetMedicos()
 	=> this.SafeExecute(
+		logger,
 		PermisoSistema.VerMedicos,
 		() => repositorio.SelectMedicos()
 	);
@@ -27,6 +28,7 @@ public class MedicosController(
 	[HttpGet("{id:int}")]
 	public Task<IActionResult> GetMedicoPorId(int id)
 		=> this.SafeExecute(
+			logger,
 			PermisoSistema.VerMedicos,
 			() => repositorio.SelectMedicoWhereId(new MedicoId(id)),
 			notFoundMessage: $"No existe medico con id {id}"
@@ -37,6 +39,7 @@ public class MedicosController(
 	[HttpGet("{id}/turnos")]
 	public Task<IActionResult> GetTurnosPorMedico([FromRoute] int id)
 		=> this.SafeExecute(
+			logger,
 			PermisoSistema.VerTurnos,
 			() => repositorio.SelectTurnosWhereMedicoId(new MedicoId(id)),
 			notFoundMessage: $"No existen turnos con medicoid {id}"
@@ -47,6 +50,7 @@ public class MedicosController(
 	[HttpDelete("{id:int}")]
 	public Task<IActionResult> DeleteMedico(int id)
 		=> this.SafeExecute(
+			logger,
 			PermisoSistema.DeleteEntidades,
 			() => repositorio.DeleteMedicoWhereId(new MedicoId(id)),
 			notFoundMessage: $"No existe medico con id {id}"
@@ -57,6 +61,7 @@ public class MedicosController(
 	[HttpPut("{id:int}")]
 	public Task<IActionResult> UpdateMedico(int id, [FromBody] MedicoDbModel dto)
 	=> this.SafeExecuteWithDomain(
+		logger,
 		PermisoSistema.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
@@ -69,6 +74,7 @@ public class MedicosController(
 	[HttpPost]
 	public Task<IActionResult> CrearMedico([FromBody] MedicoDbModel dto)
 	=> this.SafeExecuteWithDomain(
+		logger,
 		PermisoSistema.CrearMedicos,
 		dto,
 		x => x.ToDomain(),

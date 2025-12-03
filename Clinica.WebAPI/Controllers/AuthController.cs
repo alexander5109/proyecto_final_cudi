@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.Dtos.ApiDtos;
 
+namespace Clinica.WebAPI.Controllers;
+
 [ApiController]
 [Route("auth")]
 public class AuthController(IRepositorio repositorio, JwtService jwtService, ILogger<AuthController> logger)

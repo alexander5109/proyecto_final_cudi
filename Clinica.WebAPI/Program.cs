@@ -1,4 +1,5 @@
 using System.Text;
+using Clinica.Dominio.IRepositorios;
 using Clinica.Infrastructure.DataAccess;
 using Clinica.WebAPI.Servicios;
 using Microsoft.IdentityModel.Tokens;
@@ -25,10 +26,18 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	)
 );
 
-builder.Services.AddSingleton<IRepositorio>(sp => {
-	var factory = sp.GetRequiredService<SQLServerConnectionFactory>();
-	return new RepositorioDapper(factory);
+builder.Services.AddSingleton<RepositorioDapper>(sp => {
+    var factory = sp.GetRequiredService<SQLServerConnectionFactory>();
+    return new RepositorioDapper(factory);
 });
+
+// Registrar cada interfaz como alias de la instancia principal
+builder.Services.AddSingleton<IRepositorio>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorioPacientes>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorioMedicos>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorioTurnos>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorioUsuarios>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorioDomain>(sp => sp.GetRequiredService<RepositorioDapper>());
 
 
 // JwtService (singleton)
