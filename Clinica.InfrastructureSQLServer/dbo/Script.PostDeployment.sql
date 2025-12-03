@@ -9,6 +9,7 @@
 */
 
 
+PRINT 'Ejecutando Post-Deployment...Haciendo unos inserts... incluyendo usuarios';
 ----------------------------------------------------
 -- Cargar datos de ejemplo en Usuario
 ----------------------------------------------------
@@ -117,3 +118,4 @@ BEGIN
         ('2025-11-21 15:30', 10, 10, 10, '2026-02-01 12:00', '2026-02-01 12:30', 1, NULL, NULL);
 END;
 GO
+PRINT 'POST DEPLOY COMPLETO';

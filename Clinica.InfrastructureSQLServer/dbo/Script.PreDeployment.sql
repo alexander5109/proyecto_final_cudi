@@ -12,12 +12,12 @@
 
     PRINT 'Ejecutando Pre-Deployment... Limpiando tablas existentes';
     IF OBJECT_ID('Turno', 'U') IS NOT NULL
-        DROP TABLE Turno;
+        DROP TABLE dbo.Turno;
     IF OBJECT_ID('Paciente', 'U') IS NOT NULL
-        DROP TABLE Paciente;
+        DROP TABLE dbo.Paciente;
     IF OBJECT_ID('HorarioMedico', 'U') IS NOT NULL
-        DROP TABLE HorarioMedico;
+        DROP TABLE dbo.HorarioMedico;
     IF OBJECT_ID('Medico', 'U') IS NOT NULL
-        DROP TABLE Medico;
+        DROP TABLE dbo.Medico;
 
     PRINT 'TABLAS ELIMINADAS';

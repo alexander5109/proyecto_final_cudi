@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE sp_UpdateUsuarioWhereId
+﻿CREATE PROCEDURE dbo.sp_UpdateUsuarioWhereId
     @Id INT,
     @NombreUsuario NVARCHAR(100),
     @PasswordHash NVARCHAR(255),
@@ -7,7 +7,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    UPDATE Usuario
+    UPDATE dbo.Usuario
     SET
         NombreUsuario = @NombreUsuario,
         PasswordHash  = @PasswordHash,

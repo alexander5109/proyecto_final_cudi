@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Dominio", "Clinica.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.AppWPF", "Clinica.AppWPF\Clinica.AppWPF.csproj", "{AF250A07-7397-425B-8B10-CEA8ADED733D}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Clinica.InfrastructureSQLServer", "Clinica.SQLServerDB\Clinica.InfrastructureSQLServer.sqlproj", "{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.WebAPI", "Clinica.WebAPI\Clinica.WebAPI.csproj", "{7A7F2C4B-8210-4C00-92A3-905C80A6EA8F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.PruebasDeConsola", "Clinica.PruebasDeConsola\Clinica.PruebasDeConsola.csproj", "{97DEE575-2007-44B1-8399-7445DB9A9824}"
@@ -16,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Infrastructure", "Clinica.Infrastructure\Clinica.Infrastructure.csproj", "{11E847E5-98C7-0CFD-CB8D-DA8635B704BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clinica.Shared", "Clinica.Shared\Clinica.Shared.csproj", "{D28B6D4C-A0B8-4DAF-B807-9B170319DC29}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Clinica.InfrastructureSQLServer", "Clinica.InfrastructureSQLServer\Clinica.InfrastructureSQLServer.sqlproj", "{0703A34C-E7AF-4DB6-9624-09D15EB4168C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,12 +31,6 @@ Global
 		{AF250A07-7397-425B-8B10-CEA8ADED733D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF250A07-7397-425B-8B10-CEA8ADED733D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF250A07-7397-425B-8B10-CEA8ADED733D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F5455DF7-82AA-46F8-B35B-13FC441ACD2D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{7A7F2C4B-8210-4C00-92A3-905C80A6EA8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7A7F2C4B-8210-4C00-92A3-905C80A6EA8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A7F2C4B-8210-4C00-92A3-905C80A6EA8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,6 +47,12 @@ Global
 		{D28B6D4C-A0B8-4DAF-B807-9B170319DC29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D28B6D4C-A0B8-4DAF-B807-9B170319DC29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D28B6D4C-A0B8-4DAF-B807-9B170319DC29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0703A34C-E7AF-4DB6-9624-09D15EB4168C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0703A34C-E7AF-4DB6-9624-09D15EB4168C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0703A34C-E7AF-4DB6-9624-09D15EB4168C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{0703A34C-E7AF-4DB6-9624-09D15EB4168C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0703A34C-E7AF-4DB6-9624-09D15EB4168C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0703A34C-E7AF-4DB6-9624-09D15EB4168C}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
