@@ -16,7 +16,7 @@ public static partial class DbModels {
 		ProvinciaCodigo2025 ProvinciaCodigo,
 		string Telefono,
 		string Email,
-		DateTime FechaNacimiento
+		DateOnly FechaNacimiento
 	) {
 		public PacienteDbModel()
 			: this(default!, "", "", "", default, "", "", default, "", "", default) { }
@@ -53,7 +53,7 @@ public static partial class DbModels {
 			ProvinciaCodigo = paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
 			Telefono = paciente.Contacto.Telefono.Valor,
 			Email = paciente.Contacto.Email.Valor,
-			FechaNacimiento = paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MinValue)
+			FechaNacimiento = paciente.FechaNacimiento.Valor
 		};
 	}
 }

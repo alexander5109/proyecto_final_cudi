@@ -25,9 +25,11 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	)
 );
 
-builder.Services.AddSingleton<IRepositorio, RepositorioDapper>();
-//builder.Services.AddTransient<IRepositorioMedicos, RepositorioDapperMedicos>();
-//builder.Services.AddTransient<IRepositorioTurnos, TurnosRepositorioDapper>();
+builder.Services.AddSingleton<IRepositorio>(sp => {
+	var factory = sp.GetRequiredService<SQLServerConnectionFactory>();
+	return new RepositorioDapper(factory);
+});
+
 
 // JwtService (singleton)
 builder.Services.AddSingleton<JwtService>(sp => {

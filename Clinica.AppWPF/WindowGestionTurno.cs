@@ -17,11 +17,11 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 
 	//private readonly HorarioMedicoViewModel _agendaService;
 
-	public ObservableCollection<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = new();
-	public ObservableCollection<MedicoSimpleDto> MedicosEspecialistas { get; } = new();
-	public ObservableCollection<DiaDeSemanaViewModel> DiasSemana { get; } = new();
-	public ObservableCollection<int> Horas { get; } = new();
-	public ObservableCollection<DisponibilidadDto> Disponibilidades { get; } = new();
+	public ObservableCollection<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = [];
+	public ObservableCollection<MedicoSimpleDto> MedicosEspecialistas { get; } = [];
+	public ObservableCollection<DiaDeSemanaViewModel> DiasSemana { get; } = [];
+	public ObservableCollection<int> Horas { get; } = [];
+	public ObservableCollection<DisponibilidadDto> Disponibilidades { get; } = [];
 
 	// Selecteds / filtros
 	private string? _selectedEspecialidadUId;

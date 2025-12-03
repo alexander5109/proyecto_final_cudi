@@ -16,9 +16,8 @@
 
 public static class PermisosPorRol {
 	private static readonly Dictionary<UsuarioEnumRole, HashSet<PermisoSistema>> tabla = new() {
-		[UsuarioEnumRole.Nivel1Admin] = new()
-		{
-			PermisoSistema.VerPacientes,
+		[UsuarioEnumRole.Nivel1Admin] = [
+            PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerMedicos,
 			PermisoSistema.CrearTurno,
@@ -27,30 +26,28 @@ public static class PermisosPorRol {
 			PermisoSistema.CrearPacientes,
 			PermisoSistema.EditarPacientes,
 			PermisoSistema.EliminarEntidad
-		},
+		],
 
-		[UsuarioEnumRole.Nivel2Secretaria] = new()
-		{
-			PermisoSistema.VerPacientes,
+		[UsuarioEnumRole.Nivel2Secretaria] = [
+            PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerMedicos,
 			PermisoSistema.CrearTurno,
 			PermisoSistema.CancelarTurno,
 			PermisoSistema.CrearPacientes,
 			PermisoSistema.EditarPacientes,
-		},
 
-		[UsuarioEnumRole.Nivel3Medico] = new()
-		{
-			PermisoSistema.VerPacientes,
+		],
+
+		[UsuarioEnumRole.Nivel3Medico] = [
+            PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerMedicos,
-		},
+		],
 
-		[UsuarioEnumRole.Nivel4Paciente] = new()
-		{
-			PermisoSistema.VerTurnos,
-		},
+		[UsuarioEnumRole.Nivel4Paciente] = [
+            PermisoSistema.VerTurnos,
+		],
 	};
 
 	public static bool Tiene(UsuarioEnumRole rol, PermisoSistema permiso) =>
