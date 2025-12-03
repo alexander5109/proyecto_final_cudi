@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>Clinica.InfrastructureSQLServer</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{0703a34c-e7af-4db6-9624-09d15eb4168c}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>Clinica.InfrastructureSQLServer</RootNamespace>
+    <AssemblyName>Clinica.InfrastructureSQLServer</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="dbo" />
+    <Folder Include="dbo\Usuarios" />
+    <Folder Include="dbo\Turnos" />
+    <Folder Include="dbo\Pacientes" />
+    <Folder Include="dbo\Medicos" />
+    <Folder Include="dbo\HorariosMedicos" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="dbo\Script.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PreDeploy Include="dbo\Script.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\HorariosMedicos\sp_CreateHorarioMedico.sql" />
+    <Build Include="dbo\HorariosMedicos\sp_DeleteHorarioMedico.sql" />
+    <Build Include="dbo\HorariosMedicos\sp_ReadHorariosMedicosAll.sql" />
+    <Build Include="dbo\HorariosMedicos\sp_SelectHorariosVigentesBetweenFechasWhereMedicoId.sql" />
+    <Build Include="dbo\HorariosMedicos\sp_UpdateHorarioMedico.sql" />
+    <Build Include="dbo\HorariosMedicos\table_HorarioMedico.sql" />
+    <Build Include="dbo\HorariosMedicos\udtt_HorarioMedicoTable.sql" />
+    <Build Include="dbo\HorariosMedicos\udtt_ListTable.sql" />
+    <Build Include="dbo\Medicos\sp_CreateMedico.sql" />
+    <Build Include="dbo\Medicos\sp_CreateMedicoWithHorarios.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicos.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicosWhereEspecialidadCode.sql" />
+    <Build Include="dbo\Medicos\sp_UpdateMedico.sql" />
+    <Build Include="dbo\Medicos\sp_UpdateMedicoWithHorarios.sql" />
+    <Build Include="dbo\Medicos\table_Medico.sql" />
+    <Build Include="dbo\Pacientes\sp_CreatePaciente.sql" />
+    <Build Include="dbo\Pacientes\sp_DeletePacienteWhereId.sql" />
+    <Build Include="dbo\Pacientes\sp_SelectPacientes.sql" />
+    <Build Include="dbo\Pacientes\sp_SelectPacientesListView.sql" />
+    <Build Include="dbo\Pacientes\sp_SelectPacienteWhereId.sql" />
+    <Build Include="dbo\Pacientes\sp_UpdatePaciente.sql" />
+    <Build Include="dbo\Pacientes\table_Paciente.sql" />
+    <Build Include="dbo\Pacientes\view_PacienteListView.sql" />
+    <Build Include="dbo\Turnos\sp_InsertTurnoReturnId.sql" />
+    <Build Include="dbo\Turnos\sp_SelectTurnos.sql" />
+    <Build Include="dbo\Turnos\sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId.sql" />
+    <Build Include="dbo\Turnos\sp_SelectTurnosWhereMedicoId.sql" />
+    <Build Include="dbo\Turnos\sp_SelectTurnosWhereMedicosIds.sql" />
+    <Build Include="dbo\Turnos\sp_SelectTurnosWherePacienteId.sql" />
+    <Build Include="dbo\Turnos\sp_UpdateTurnoWhereId.sql" />
+    <Build Include="dbo\Turnos\table_Turno.sql" />
+    <Build Include="dbo\Usuarios\sp_DeleteUsuarioWhereId.sql" />
+    <Build Include="dbo\Usuarios\sp_InsertUsuarioReturnId.sql" />
+    <Build Include="dbo\Usuarios\sp_SelectUsuarios.sql" />
+    <Build Include="dbo\Usuarios\sp_SelectUsuarioWhereId.sql" />
+    <Build Include="dbo\Usuarios\sp_SelectUsuarioWhereNombre.sql" />
+    <Build Include="dbo\Usuarios\sp_UpdateUsuarioWhereId.sql" />
+    <Build Include="dbo\Usuarios\table_Usuario.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicoWhereId.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Clinica.InfrastructureSQLServer.publish.xml" />
+  </ItemGroup>
+</Project>

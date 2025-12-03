@@ -5,13 +5,13 @@ using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.TiposDeValor;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Tokens;
-using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.DomainDtos;
+using static Clinica.Dominio.IRepositorios.QueryModels;
+using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
+using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.Infrastructure.DataAccess;
 
-public class RepositorioDapper(SQLServerConnectionFactory factory) : RepositorioInterface {
+public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositorio {
 	private async Task<Result<T>> TryAsync<T>(Func<IDbConnection, Task<T>> action) {
 		try {
 			using IDbConnection conn = factory.CrearConexion();
@@ -36,131 +36,139 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 		}
 	}
 
-	//public Task<Result<IEnumerable<PacienteListDto>>> SelectPacientesList() => TryAsync(conn => conn.QueryAsync<PacienteListDto>("sp_SelectPacientesListView", commandType: CommandType.StoredProcedure));
 
-
-	//-----------------------SELECT one ------------------
-	public Task<Result<UsuarioBase2025>> SelectUsuarioWhereName(NombreUsuario nombre)
+	Task<Result<Usuario2025>> IRepositorioDomain.SelectUsuarioWhereIdAsDomain(UsuarioId id)
 		=> TryAsync(async conn => {
-			UsuarioDto? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDto>(
-				"sp_SelectUsuarioWhereNombre",
-				new { NombreUsuario = nombre.Valor },
-				commandType: CommandType.StoredProcedure
-			) ?? throw new Exception("Usuario no encontrado");
-			Result<UsuarioBase2025> r = dto.ToDomain();
-			if (r.IsError)
-				throw new Exception($"Error creando UsuarioBase2025 desde DTO: {r.UnwrapAsError()}");
-
-			return r.UnwrapAsOk(); // <- T = UsuarioBase2025
-		});
-
-
-	public Task<Result<UsuarioBase2025>> SelectUsuarioWhereId(UsuarioId id)
-		=> TryAsync(async conn => {
-			UsuarioDto? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDto>(
+			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
 				"sp_SelectUsuarioWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure
-			);
-
-			if (dto is null)
-				throw new Exception("Usuario no encontrado");
-
-			Result<UsuarioBase2025> r = dto.ToDomain();
-			if (r.IsError)
-				throw new Exception($"Error creando UsuarioBase2025 desde DTO: {r.UnwrapAsError()}");
-			return r.UnwrapAsOk(); // devuelve el valor crudo (UsuarioBase2025)
+			) ?? throw new Exception($"Usuario con Id={id.Valor} no encontrado.");
+			Result<Usuario2025> map = dto.ToDomain();
+			if (map.IsError)
+				throw new Exception($"Error creando Usuario2025 desde DTO (Id={id.Valor}): {map.UnwrapAsError()}");
+			return map.UnwrapAsOk();
 		});
 
-	public Task<Result<Medico2025>> SelectMedicoWhereId(MedicoId id)
+
+	Task<Result<Usuario2025>> IRepositorioDomain.SelectUsuarioWhereNombreAsDomain(NombreUsuario nombre)
 		=> TryAsync(async conn => {
-			MedicoDto? dto = await conn.QuerySingleOrDefaultAsync<MedicoDto>(
+			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
+				"sp_SelectUsuarioWhereNombre",
+				new { NombreUsuario = nombre.Valor },
+				commandType: CommandType.StoredProcedure
+			) ?? throw new Exception($"Usuario con NombreUsuario={nombre.Valor} no encontrado.");
+			Result<Usuario2025> map = dto.ToDomain();
+			if (map.IsError)
+				throw new Exception($"Error creando Usuario2025 desde UsuarioDbModel (NombreUsuario={nombre.Valor}): {map.UnwrapAsError()}");
+
+			return map.UnwrapAsOk();
+		});
+
+
+
+
+
+
+
+	Task<Result<Unit>> IRepositorioMedicos.DeleteMedicoWhereId(MedicoId id)
+		=> TryAsyncVoid(async conn => {
+			await conn.ExecuteAsync(
+				"sp_DeleteMedicoWhereId",
+				new { Id = id.Valor },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+	Task<Result<MedicoId>> IRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance)
+		=> TryAsync(async conn => {
+			return new MedicoId(await conn.ExecuteScalarAsync<int>(
+				"sp_InsertMedicoReturnId",
+				instance.ToModel(),
+				commandType: CommandType.StoredProcedure
+			));
+		});
+
+	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicos()
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<MedicoDbModel>(
+				"sp_SelectMedicos",
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
+	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<MedicoDbModel>(
+				"sp_SelectMedicosWhereEspecialidadCode",
+				new { EspecialidadCodigoInterno = code },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+	Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWhereId(MedicoId id)
+		=> TryAsync(async conn => {
+			return await conn.QuerySingleOrDefaultAsync<MedicoDbModel>(
 				"sp_SelectMedicoWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure
 			);
-
-			if (dto is null)
-				throw new Exception("Medico no encontrado");
-
-			Result<Medico2025> r = dto.ToDomain();
-			if (r.IsError)
-				throw new Exception($"Error creando MedicoDto desde DTO: {r.UnwrapAsError()}");
-			return r.UnwrapAsOk(); // devuelve el valor crudo (MedicoDto)
 		});
 
-	public Task<Result<Paciente2025>> SelectPacienteWhereId(PacienteId id)
+	Task<Result<Unit>> IRepositorioMedicos.UpdateMedicoWhereId(Medico2025 instance)
+		=> TryAsyncVoid(async conn => {
+			await conn.ExecuteAsync(
+				"sp_UpdateMedico",
+				instance.ToModel(),
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
+	Task<Result<IEnumerable<PacienteDbModel>>> IRepositorioPacientes.SelectPacientes()
 		=> TryAsync(async conn => {
-			PacienteDto? dto = await conn.QuerySingleOrDefaultAsync<PacienteDto>(
+			return await conn.QueryAsync<PacienteDbModel>(
+				"sp_SelectPacientes",
+				commandType: CommandType.StoredProcedure
+			);
+		});
+	Task<Result<PacienteDbModel?>> IRepositorioPacientes.SelectPacienteWhereId(PacienteId id)
+		=> TryAsync(async conn => {
+			return await conn.QuerySingleOrDefaultAsync<PacienteDbModel>(
 				"sp_SelectPacienteWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure
 			);
-
-			if (dto is null)
-				throw new Exception("Paciente no encontrado");
-
-			Result<Paciente2025> r = dto.ToDomain();
-			if (r.IsError)
-				throw new Exception($"Error creando PacienteDto desde DTO: {r.UnwrapAsError()}");
-			return r.UnwrapAsOk(); // devuelve el valor crudo (PacienteDto)
 		});
 
-	public Task<Result<Turno2025>> SelectTurnoWhereId(TurnoId id)
+
+	Task<Result<PacienteId>> IRepositorioPacientes.InsertPacienteReturnId(Paciente2025 instance)
 		=> TryAsync(async conn => {
-			TurnoDto? dto = await conn.QuerySingleOrDefaultAsync<TurnoDto>(
-				"sp_SelectTurnoWhereId",
+			return new PacienteId(await conn.ExecuteScalarAsync<int>(
+				"sp_InsertPacienteReturnId",
+				instance.ToModel(),
+				commandType: CommandType.StoredProcedure
+			));
+		});
+
+	Task<Result<Unit>> IRepositorioPacientes.UpdatePacienteWhereId(Paciente2025 instance)
+		=> TryAsyncVoid(async conn => {
+			await conn.ExecuteAsync(
+				"sp_UpdatePaciente",
+				instance.ToModel(),
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
+	Task<Result<Unit>> IRepositorioPacientes.DeletePacienteWhereId(PacienteId id)
+		=> TryAsyncVoid(async conn => {
+			await conn.ExecuteAsync(
+				"sp_DeletePacienteWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure
 			);
-
-			if (dto is null)
-				throw new Exception("Turno no encontrado");
-
-			Result<Turno2025> r = dto.ToDomain();
-			if (r.IsError)
-				throw new Exception($"Error creando TurnoDto desde DTO: {r.UnwrapAsError()}");
-			return r.UnwrapAsOk(); // devuelve el valor crudo (TurnoDto)
-		});
-
-
-
-	//-----------------------SELECT * ------------------
-	public Task<Result<IEnumerable<Paciente2025>>> SelectPacientes()
-		=> TryAsync(async conn => {
-			IEnumerable<PacienteDto> dtos = await conn.QueryAsync<PacienteDto>("sp_SelectPacientes", commandType: CommandType.StoredProcedure);
-			List<Paciente2025> instances = [];
-			foreach (var dto in dtos) {
-				Result<Paciente2025> r = dto.ToDomain();
-				if (r.IsError)
-					throw new Exception($"Error creando Paciente2025 desde DTO: {r.UnwrapAsError()}");
-				instances.Add(r.UnwrapAsOk());
-			}
-			return (IEnumerable<Paciente2025>)instances;
-		});
-	public Task<Result<IEnumerable<Medico2025>>> SelectMedicos()
-		=> TryAsync(async conn => {
-			IEnumerable<MedicoDto> dtos = await conn.QueryAsync<MedicoDto>("sp_SelectMedicos", commandType: CommandType.StoredProcedure);
-			List<Medico2025> instances = [];
-			foreach (var dto in dtos) {
-				Result<Medico2025> r = dto.ToDomain();
-				if (r.IsError)
-					throw new Exception($"Error creando Medico2025 desde DTO: {r.UnwrapAsError()}");
-				instances.Add(r.UnwrapAsOk());
-			}
-			return (IEnumerable<Medico2025>)instances;
-		});
-	public Task<Result<IEnumerable<Medico2025>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code)
-		=> TryAsync(async conn => {
-			IEnumerable<MedicoDto> dtos = await conn.QueryAsync<MedicoDto>("sp_SelectMedicosWhereEspecialidadCode", new { EspecialidadCodigoInterno = code }, commandType: CommandType.StoredProcedure);
-			List<Medico2025> instances = [];
-			foreach (var dto in dtos) {
-				Result<Medico2025> r = dto.ToDomain();
-				if (r.IsError)
-					throw new Exception($"Error creando Medico2025 desde DTO: {r.UnwrapAsError()}");
-				instances.Add(r.UnwrapAsOk());
-			}
-			return (IEnumerable<Medico2025>)instances;
 		});
 
 
@@ -168,155 +176,36 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 
 
-	public Task<Result<IEnumerable<HorarioMedico2025>>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
-		=> TryAsync(async conn => {
-			IEnumerable<HorarioMedicoDto> dtos = await conn.QueryAsync<HorarioMedicoDto>(
-				"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId",
-				new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde.Date, FechaHasta = fechaHasta.Date },
-				commandType: CommandType.StoredProcedure
-			);
-			List<HorarioMedico2025> instances = [];
-			foreach (HorarioMedicoDto dto in dtos) {
-				Result<HorarioMedico2025> r = dto.ToDomain();
-				if (r.IsError)
-					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
-				instances.Add(r.UnwrapAsOk());
-			}
-			return (IEnumerable<HorarioMedico2025>)instances;
-		});
+	Task<Result<Unit>> IRepositorioDomain.UpdateTurnoWhereId(Turno2025 instance) => ((IRepositorioTurnos)this).UpdateTurnoWhereId(instance);
 
-
-	public Task<Result<IEnumerable<Turno2025>>> SelectTurnos()
-		=> TryAsync(async conn => {
-			IEnumerable<TurnoDto> dtos = await conn.QueryAsync<TurnoDto>("sp_SelectPacientes", commandType: CommandType.StoredProcedure);
-			List<Turno2025> instances = [];
-			foreach (var dto in dtos) {
-				Result<Turno2025> r = dto.ToDomain();
-				if (r.IsError)
-					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
-				instances.Add(r.UnwrapAsOk());
-			}
-			return (IEnumerable<Turno2025>)instances;
-		});
-
-	public Task<Result<IEnumerable<Turno2025>>> SelectTurnosWherePacienteId(PacienteId id)
-		=> TryAsync(async conn => {
-			IEnumerable<TurnoDto> dtos = await conn.QueryAsync<TurnoDto>("sp_SelectTurnosWherePacienteId",
-			new { PacienteId = id.Valor }, commandType: CommandType.StoredProcedure);
-			List<Turno2025> instances = [];
-			foreach (var dto in dtos) {
-				Result<Turno2025> r = dto.ToDomain();
-				if (r.IsError)
-					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
-				instances.Add(r.UnwrapAsOk());
-			}
-			return (IEnumerable<Turno2025>)instances;
-		});
-
-	public Task<Result<IEnumerable<Turno2025>>> SelectTurnosWhereMedicoId(MedicoId id)
-		=> TryAsync(async conn => {
-			IEnumerable<TurnoDto> dtos = await conn.QueryAsync<TurnoDto>("sp_SelectTurnosWhereMedicoIdId",
-			new { PacienteId = id }, commandType: CommandType.StoredProcedure);
-			List<Turno2025> instances = [];
-			foreach (var dto in dtos) {
-				Result<Turno2025> r = dto.ToDomain();
-				if (r.IsError)
-					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
-				instances.Add(r.UnwrapAsOk());
-			}
-			return (IEnumerable<Turno2025>)instances;
-		});
-
-
-	public Task<Result<IEnumerable<Turno2025>>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
-		=> TryAsync(async conn => {
-			IEnumerable<TurnoDto> dtos = await conn.QueryAsync<TurnoDto>("sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId",
-			new { MedicoId = medicoId.Valor, FechaDesde = fechaDesde, FechaHasta = fechaHasta }, commandType: CommandType.StoredProcedure);
-			List<Turno2025> instances = [];
-			foreach (var dto in dtos) {
-				Result<Turno2025> r = dto.ToDomain();
-				if (r.IsError)
-					throw new Exception($"Error creando Turno2025 desde DTO: {r.UnwrapAsError()}");
-				instances.Add(r.UnwrapAsOk());
-			}
-			return (IEnumerable<Turno2025>)instances;
-		});
-
-
-
-
-
-
-
-	public Task<Result<MedicoId>> InsertMedicoReturnId(Medico2025 medico)
-		=> TryAsync(async conn => {
-			var parameters = new {
-				Nombre = medico.NombreCompleto.NombreValor,
-				Apellido = medico.NombreCompleto.ApellidoValor,
-				Dni = medico.Dni.Valor,
-				ProvinciaCodigo = medico.Domicilio.Localidad.Provincia.CodigoInternoValor,
-				Domicilio = medico.Domicilio.DireccionValor,
-				Localidad = medico.Domicilio.Localidad.NombreValor,
-				EspecialidadCodigoInterno = medico.EspecialidadUnica.CodigoInternoValor,
-				Telefono = medico.Telefono.Valor,
-				Email = medico.Email.Valor,
-				Guardia = medico.HaceGuardiasValor,
-				FechaIngreso = medico.FechaIngreso.Valor
-			};
-			return new MedicoId(await conn.ExecuteScalarAsync<int>(
-				"sp_InsertMedicoReturnId",
-				parameters,
-				commandType: CommandType.StoredProcedure
-			));
-		});
-
-
-	public Task<Result<PacienteId>> InsertPacienteReturnId(Paciente2025 paciente)
-		=> TryAsync(async conn => {
-			var parameters = new {
-				Dni = paciente.Dni.Valor,
-				Nombre = paciente.NombreCompleto.NombreValor,
-				Apellido = paciente.NombreCompleto.ApellidoValor,
-				FechaIngreso = paciente.FechaIngreso.Valor,
-				Email = paciente.Contacto.Email.Valor,
-				Telefono = paciente.Contacto.Telefono.Valor,
-				FechaNacimiento = paciente.FechaNacimiento.Valor,
-				Domicilio = paciente.Domicilio.DireccionValor,
-				Localidad = paciente.Domicilio.Localidad.NombreValor,
-				ProvinciaCodigo = paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
-			};
-			return new PacienteId(await conn.ExecuteScalarAsync<int>(
-				"sp_InsertPacienteReturnId",
-				parameters,
-				commandType: CommandType.StoredProcedure
-			));
-		});
-
-	public async Task<Result<UsuarioId>> InsertUsuarioReturnId(UsuarioBase2025 usuario)
-		=> await TryAsync(async conn => {
-			DynamicParameters parameters = new();
-			parameters.Add("@NombreUsuario", usuario.UserName.Valor);
-			parameters.Add("@PasswordHash", usuario.UserPassword.Valor);
-			parameters.Add("@EnumRole", usuario.EnumRole);
-			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
+	Task<Result<Unit>> IRepositorioTurnos.UpdateTurnoWhereId(Turno2025 instance)
+		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
-				"sp_InsertUsuarioReturnId",
-				parameters,
+				"sp_UpdateTurnoWhereId",
+				instance.ToModel(),
 				commandType: CommandType.StoredProcedure
 			);
-			int newId = parameters.Get<int>("@NewId");
-			return new UsuarioId(newId);   // ← solo devolvés el valor
 		});
 
-	public async Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 turno)
-		=> await TryAsync(async conn => {
-			DynamicParameters parameters = new();
-			parameters.Add("@FechaDeCreacion", turno.FechaDeCreacion.Valor);
-			parameters.Add("@PacienteId", turno.PacienteId.Valor);
-			parameters.Add("@MedicoId", turno.MedicoId.Valor);
-			parameters.Add("@EspecialidadCodigo", turno.Especialidad.CodigoInternoValor);
-			parameters.Add("@FechaHoraAsignadaDesde", turno.FechaHoraAsignadaDesdeValor);
-			parameters.Add("@FechaHoraAsignadaHasta", turno.FechaHoraAsignadaHastaValor);
+
+
+	Task<Result<Unit>> IRepositorioUsuarios.UpdateUsuarioWhereId(Usuario2025 instance)
+		=> TryAsyncVoid(async conn => {
+			await conn.ExecuteAsync(
+				"sp_UpdateUsuarioWhereId",
+				instance.ToModel(),
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
+
+
+	Task<Result<TurnoId>> IRepositorioDomain.InsertTurnoReturnId(Turno2025 instance) => ((IRepositorioTurnos)this).InsertTurnoReturnId(instance);
+
+	Task<Result<TurnoId>> IRepositorioTurnos.InsertTurnoReturnId(Turno2025 instance)
+		=> TryAsync(async conn => {
+			DynamicParameters parameters = new(instance.ToModel());
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 			await conn.ExecuteAsync(
 				"sp_InsertTurnoReturnId",
@@ -331,132 +220,131 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : Repositorio
 
 
 
-	public Task<Result<Unit>> DeleteTurnoWhereId(TurnoId id)
+	Task<Result<IEnumerable<MedicoId>>> IRepositorioDomain.SelectMedicosIdWhereEspecialidadCode(EspecialidadCodigo2025 code)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<MedicoId>(
+				"sp_SelectMedicosIdWhereEspecialidadCode",
+				new { EspecialidadCodigoInterno = code },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
+
+	Task<Result<IEnumerable<TurnoQM>>> IRepositorioDomain.SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<TurnoQM>(
+				"sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId",
+				new {
+					MedicoId = medicoId.Valor,
+					FechaDesde = fechaDesde,
+					FechaHasta = fechaHasta
+				},
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
+
+	Task<Result<IEnumerable<HorarioMedicoQM>>> IRepositorioDomain.SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<HorarioMedicoQM>(
+				"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId",
+				new {
+					MedicoId = medicoId.Valor,
+					FechaDesde = fechaDesde.Date,
+					FechaHasta = fechaHasta.Date
+				},
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
+	Task<Result<TurnoDbModel?>> IRepositorioTurnos.SelectTurnoWhereId(TurnoId id)
+		=> TryAsync(async conn => {
+			return await conn.QuerySingleOrDefaultAsync<TurnoDbModel>(
+				"sp_SelectTurnoWhereId",
+				new { Id = id.Valor },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+	Task<Result<Unit>> IRepositorioTurnos.DeleteTurnoWhereId(TurnoId id)
 		=> TryAsyncVoid(async conn => {
-			var parameters = new {
-				Id = id.Valor,
-			};
 			await conn.ExecuteAsync(
 				"sp_DeleteTurnoWhereId",
-				parameters,
+				new { Id = id.Valor, },
 				commandType: CommandType.StoredProcedure
 			);
 		});
 
-	public Task<Result<Unit>> DeletePacienteWhereId(PacienteId id)
-		=> TryAsyncVoid(async conn => {
-			var parameters = new {
-				Id = id.Valor,
-			};
-			await conn.ExecuteAsync(
-				"sp_DeletePacienteWhereId",
-				parameters,
-				commandType: CommandType.StoredProcedure
-			);
-		});
 
-	public Task<Result<Unit>> DeleteMedicoWhereId(MedicoId id)
+	Task<Result<Unit>> IRepositorioUsuarios.DeleteUsuarioWhereId(UsuarioId id)
 		=> TryAsyncVoid(async conn => {
-			var parameters = new {
-				Id = id.Valor,
-			};
-			await conn.ExecuteAsync(
-				"sp_DeleteMedicoWhereId",
-				parameters,
-				commandType: CommandType.StoredProcedure
-			);
-		});
-
-	public Task<Result<Unit>> DeleteUsuarioWhereId(UsuarioId id)
-		=> TryAsyncVoid(async conn => {
-			var parameters = new {
-				Id = id.Valor,
-			};
 			await conn.ExecuteAsync(
 				"sp_DeleteUsuarioWhereId",
-				parameters,
+				new { Id = id.Valor, },
 				commandType: CommandType.StoredProcedure
 			);
 		});
 
 
 
-	public Task<Result<Unit>> UpdateTurnoWhereId(Turno2025 turno)
-		=> TryAsyncVoid(async conn => {
-			var parameters = new {
-				Id = turno.Id.Valor,
-				OutcomeEstado = turno.OutcomeEstado.Codigo,
-				OutcomeFecha = turno.OutcomeFechaOption.Valor,
-				OutcomeComentario = turno.OutcomeComentarioOption.Valor
-			};
+	Task<Result<IEnumerable<TurnoDbModel>>> IRepositorioPacientes.SelectTurnosWherePacienteId(PacienteId id)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<TurnoDbModel>(
+				"sp_SelectTurnosWherePacienteId",
+				new { PacienteId = id.Valor },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
+	Task<Result<IEnumerable<TurnoDbModel>>> IRepositorioTurnos.SelectTurnos()
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<TurnoDbModel>(
+				"sp_SelectTurnos",
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+	Task<Result<IEnumerable<TurnoDbModel>>> IRepositorioMedicos.SelectTurnosWhereMedicoId(MedicoId id)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<TurnoDbModel>(
+				"sp_SelectTurnosWhereMedicoId",
+				new { Id = id.Valor, },
+				commandType: CommandType.StoredProcedure);
+		});
+
+	Task<Result<UsuarioDbModel?>> IRepositorioUsuarios.SelectUsuarioWhereId(UsuarioId id)
+		=> TryAsync(async conn => {
+			return await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
+				"sp_SelectUsuarioWhereId",
+				new { Id = id.Valor },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+	Task<Result<UsuarioId>> IRepositorioUsuarios.InsertUsuarioReturnId(Usuario2025 instance)
+		=> TryAsync(async conn => {
+			DynamicParameters parameters = new(instance.ToModel());
+			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 			await conn.ExecuteAsync(
-				"sp_UpdateTurnoWhereId",
+				"sp_InsertUsuarioReturnId",
 				parameters,
 				commandType: CommandType.StoredProcedure
 			);
+			int newId = parameters.Get<int>("@NewId");
+			return new UsuarioId(newId);   // ← solo devolvés el valor
 		});
-	public Task<Result<Unit>> UpdateMedicoWhereId(Medico2025 medico)
-		=> TryAsyncVoid(async conn => {
-			var parameters = new {
-				Id = medico.Id.Valor,
-				Nombre = medico.NombreCompleto.NombreValor,
-				Apellido = medico.NombreCompleto.ApellidoValor,
-				Dni = medico.Dni.Valor,
-				ProvinciaCodigo = medico.Domicilio.Localidad.Provincia.CodigoInternoValor,
-				Domicilio = medico.Domicilio.DireccionValor,
-				Localidad = medico.Domicilio.Localidad.NombreValor,
-				EspecialidadCodigoInterno = medico.EspecialidadUnica.CodigoInternoValor,
-				Telefono = medico.Telefono.Valor,
-				Email = medico.Email.Valor,
-				Guardia = medico.HaceGuardiasValor,
-				FechaIngreso = medico.FechaIngreso.Valor
-			};
 
-			await conn.ExecuteAsync(
-				"sp_UpdateMedico",
-				parameters,
+
+	Task<Result<IEnumerable<UsuarioDbModel>>> IRepositorioUsuarios.SelectUsuarios()
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<UsuarioDbModel>(
+				"sp_SelectUsuarios",
 				commandType: CommandType.StoredProcedure
 			);
 		});
 
-	public Task<Result<Unit>> UpdatePacienteWhereId(Paciente2025 paciente)
-		=> TryAsyncVoid(async conn => {
-			var parameters = new {
-				Id = paciente.Id.Valor,
-				Dni = paciente.Dni.Valor,
-				Nombre = paciente.NombreCompleto.NombreValor,
-				Apellido = paciente.NombreCompleto.ApellidoValor,
-				FechaIngreso = paciente.FechaIngreso.Valor,
-				Email = paciente.Contacto.Email.Valor,
-				Telefono = paciente.Contacto.Telefono.Valor,
-				FechaNacimiento = paciente.FechaNacimiento.Valor,
-				Domicilio = paciente.Domicilio.DireccionValor,
-				Localidad = paciente.Domicilio.Localidad.NombreValor,
-				ProvinciaCodigo = paciente.Domicilio.Localidad.Provincia.CodigoInternoValor
-			};
-
-			await conn.ExecuteAsync(
-				"sp_UpdatePaciente",
-				parameters,
-				commandType: CommandType.StoredProcedure
-			);
-		});
-	public static async Task<Result<Unit>> UpdatePacienteWhereId(UsuarioBase2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
-		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
-			return new Result<Unit>.Error("No cuenta con permisos para actualizar pacientes.");
-		}
-		return await repositorio.UpdatePacienteWhereId(paciente);
-	}
-	public static async Task<Result<PacienteId>> InsertPaciente(UsuarioBase2025 usuario, RepositorioInterface repositorio, Paciente2025 paciente) {
-		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
-			return new Result<PacienteId>.Error("No cuenta con permisos para crear pacientes.");
-		}
-		return await repositorio.InsertPacienteReturnId(paciente);
-	}
-	public static async Task<Result<Unit>> DeletePacienteWhereId(UsuarioBase2025 usuario, RepositorioInterface repositorio, PacienteId id) {
-		if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
-			return new Result<Unit>.Error("No cuenta con permisos para eliminar pacientes.");
-		}
-		return await repositorio.DeletePacienteWhereId(id);
-	}
 }

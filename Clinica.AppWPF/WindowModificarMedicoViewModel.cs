@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.ListasOrganizadoras;
-using Clinica.Dominio.TiposDeValor;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Clinica.AppWPF.ViewModels;

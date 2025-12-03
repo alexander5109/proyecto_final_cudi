@@ -1,20 +1,24 @@
 using System.Text;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Infrastructure.DataAccess;
-using Clinica.WebAPI.Controllers;
-using Clinica.WebAPI.RouteConstraint;
 using Clinica.WebAPI.Servicios;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
+using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
+
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IConfiguration config = builder.Configuration;
 builder.Services.AddControllers();
 
-// Swagger
+
+
+builder.Services.AddOpenApi();
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	new SQLServerConnectionFactory(
 		builder.Configuration.GetConnectionString("ClinicaMedica")
@@ -22,11 +26,18 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	)
 );
 
-// RepositorioDapper (singleton)
-builder.Services.AddSingleton<RepositorioInterface>(sp => {
-	var factory = sp.GetRequiredService<SQLServerConnectionFactory>();
-	return new RepositorioDapper(factory);
+builder.Services.AddSingleton<RepositorioDapper>(sp => {
+    var factory = sp.GetRequiredService<SQLServerConnectionFactory>();
+    return new RepositorioDapper(factory);
 });
+
+// Registrar cada interfaz como alias de la instancia principal
+builder.Services.AddSingleton<IRepositorio>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorioPacientes>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorioMedicos>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorioTurnos>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorioUsuarios>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorioDomain>(sp => sp.GetRequiredService<RepositorioDapper>());
 
 
 // JwtService (singleton)
@@ -37,14 +48,6 @@ builder.Services.AddSingleton<JwtService>(sp => {
 	return new JwtService(jwtKey);
 });
 
-
-
-builder.Services.Configure<RouteOptions>(options => {
-	options.ConstraintMap["PacienteId"] = typeof(PacienteIdRouteConstraint);
-	options.ConstraintMap["MedicoId"] = typeof(MedicoIdRouteConstraint);
-	options.ConstraintMap["TurnoId"] = typeof(TurnoIdRouteConstraint);
-	options.ConstraintMap["UsuarioId"] = typeof(UsuarioIdRouteConstraint);
-});
 
 builder.Services.AddCors(options => {
 	options.AddPolicy("AllowAll", policy => {
@@ -69,33 +72,24 @@ builder.Services.AddAuthentication("Bearer")
 builder.Services.AddAuthorization();
 
 
-
-
-builder.Services.AddSwaggerGen(c => {
-	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme() {
-		Name = "Authorization",
+builder.Services.AddSwaggerGen(options => {
+	options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme {
 		Type = SecuritySchemeType.Http,
-		Scheme = "Bearer",
+		Scheme = "bearer",
 		BearerFormat = "JWT",
-		In = ParameterLocation.Header,
 		Description = "Ingrese 'Bearer <token>'"
 	});
-
-	c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-	{
-		new OpenApiSecurityScheme {
-			Reference = new OpenApiReference {
-				Type = ReferenceType.SecurityScheme,
-				Id = "Bearer"
-			}
-		},
-		Array.Empty<string>()
-	}});
+	options.AddSecurityRequirement(document => new OpenApiSecurityRequirement {
+		[new OpenApiSecuritySchemeReference("bearer", document)] = []
+	});
 });
+
+
 
 WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment()) {
+	app.MapOpenApi();
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }

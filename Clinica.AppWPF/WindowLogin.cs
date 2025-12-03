@@ -1,8 +1,6 @@
-﻿using System.Net.Http.Headers;
-using System.Windows;
+﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
 
 
 namespace Clinica.AppWPF;

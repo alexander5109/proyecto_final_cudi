@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.IRepositorios;
+using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 
 namespace Clinica.WebAPI.Servicios;
 
@@ -11,13 +10,13 @@ public class UsuarioMiddleware {
 	public UsuarioMiddleware(RequestDelegate next)
 		=> _next = next;
 
-	public async Task Invoke(HttpContext context, RepositorioInterface repo) {
+	public async Task Invoke(HttpContext context, IRepositorio repo) {
 		ClaimsPrincipal user = context.User;
 
 		if (user.Identity is { IsAuthenticated: true }) {
 			string? idClaim = user.FindFirst("userid")?.Value;
 			if (int.TryParse(idClaim, out int id)) {
-				Result<UsuarioBase2025> result = await repo.SelectUsuarioWhereId(new UsuarioId(id));
+				Result<Usuario2025> result = await (repo.SelectUsuarioWhereIdAsDomain(new UsuarioId(id)));
 
 				if (result.IsOk) {
 					context.Items["Usuario"] = result.UnwrapAsOk();

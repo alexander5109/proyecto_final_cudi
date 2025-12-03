@@ -2,9 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.ViewModels;
-using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.DomainDtos;
 
 namespace Clinica.AppWPF;
 

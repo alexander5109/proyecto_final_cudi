@@ -1,11 +1,9 @@
 using Clinica.Dominio.Comun;
-using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeValor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.DomainDtos;
+using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 
 
 namespace Clinica.WebAPI.Controllers;
@@ -13,7 +11,7 @@ namespace Clinica.WebAPI.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class DisponibilidadesController(RepositorioInterface repositorio, ILogger<DisponibilidadesController> logger) : ControllerBase {
+public class DisponibilidadesController(IRepositorio repositorio, ILogger<DisponibilidadesController> logger) : ControllerBase {
 
 
 	[HttpGet(Name = "GetDisponibilidades")]

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Net;
 using System.Net.Http.Json;
-using System.Text;
 using Clinica.Dominio.Comun;
 using static Clinica.Shared.Dtos.ApiDtos;
 
@@ -16,8 +14,15 @@ public static class AuthService {
 			var response = await api.Cliente.PostAsJsonAsync("/auth/login",
 				new { username = user, password = pass });
 
-			if (!response.IsSuccessStatusCode)
-				return new Result<UsuarioLogueadoDTO>.Error("Credenciales incorrectas.");
+			if (!response.IsSuccessStatusCode) {
+				if (response.StatusCode == HttpStatusCode.Unauthorized)
+					return new Result<UsuarioLogueadoDTO>.Error("Credenciales incorrectas.");
+
+				var serverError = await response.Content.ReadAsStringAsync();
+				return new Result<UsuarioLogueadoDTO>.Error(
+					$"Error del servidor ({(int)response.StatusCode}):\n{serverError}"
+				);
+			}
 
 			var data = await response.Content.ReadFromJsonAsync<UsuarioLogueadoDTO>();
 			if (data is null)

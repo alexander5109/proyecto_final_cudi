@@ -1,35 +1,12 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using Clinica.Dominio.Comun;
 
-namespace Clinica.Dominio.Entidades;
 
-public record struct UsuarioId(int Valor) {
-	public static Result<UsuarioId> Crear(int? id) =>
-		id is int idGood
-		? new Result<UsuarioId>.Ok(new UsuarioId(idGood))
-		: new Result<UsuarioId>.Error("El id no puede ser nulo.");
-	public static bool TryParse(string? s, out UsuarioId id) {
-		if (int.TryParse(s, out int value)) {
-			id = new UsuarioId(value);
-			return true;
-		}
 
-		id = default;
-		return false;
-	}
-	public override string ToString() {
-		return Valor.ToString();
-	}
-}
-public enum UsuarioEnumRole : byte {
-	Nivel1Admin = 1,
-	Nivel2Secretaria = 2,
-	Nivel3Medico = 3,
-	Nivel4Paciente = 4,
-}
+public readonly record struct UsuarioId(int Valor);
 public readonly record struct NombreUsuario(string Valor);
+
 public readonly record struct ContraseñaHasheada(string Valor) {
 	public static ContraseñaHasheada CrearFromRaw(string raw) {
 		var hash = SHA256.HashData(Encoding.UTF8.GetBytes(raw));
@@ -38,61 +15,33 @@ public readonly record struct ContraseñaHasheada(string Valor) {
 
 	public bool IgualA(string raw) {
 		byte[] rawHash = SHA256.HashData(Encoding.UTF8.GetBytes(raw));
-		byte[] stored = Convert.FromHexString(Valor);
-		return CryptographicOperations.FixedTimeEquals(rawHash, stored);
+		byte[] storedHash = Convert.FromHexString(Valor);
+		return CryptographicOperations.FixedTimeEquals(rawHash, storedHash);
 	}
 }
 
-public abstract record UsuarioBase2025(
-	UsuarioId UserId,
-	NombreUsuario UserName,
-	ContraseñaHasheada UserPassword,
+public enum UsuarioEnumRole : byte {
+	Nivel1Admin = 1,
+	Nivel2Secretaria = 2,
+	Nivel3Medico = 3,
+	Nivel4Paciente = 4
+}
+
+public sealed record Usuario2025(
+	UsuarioId Id,
+	NombreUsuario NombreUsuario,
+	ContraseñaHasheada PasswordHash,
 	UsuarioEnumRole EnumRole
 ) {
-	public Result<UsuarioBase2025> PasswordMatch(string raw) {
-		return UserPassword.IgualA(raw)
-			? new Result<UsuarioBase2025>.Ok(this)
-			: new Result<UsuarioBase2025>.Error("Usuario o contraseña incorrectos");
+    public static Result<Usuario2025> Crear(UsuarioId id, string? nombreUsuario, string? passwordHash, UsuarioEnumRole enumRole) {
+		if (string.IsNullOrEmpty(nombreUsuario)) {
+			return new Result<Usuario2025>.Error("No se puede crear un usuario con el nombre vacio");
+		}
+		if (string.IsNullOrEmpty(passwordHash)) {
+			return new Result<Usuario2025>.Error("No se puede crear un usuario sin contraseña");
+		}
+		return new Result<Usuario2025>.Ok(new Usuario2025(id, new NombreUsuario(nombreUsuario), new ContraseñaHasheada(passwordHash), enumRole));
 	}
 
-	public static Result<UsuarioBase2025> Crear(UsuarioId id, string nombreUsuario, string passwordHash, UsuarioEnumRole enumrole ) {
-		NombreUsuario nombre = new(nombreUsuario);
-		ContraseñaHasheada password = new(passwordHash);
-
-		return enumrole switch {
-			UsuarioEnumRole.Nivel1Admin =>new Result<UsuarioBase2025>.Ok(new Usuario2025Nivel1Admin(id, nombre, password, enumrole)),
-			UsuarioEnumRole.Nivel2Secretaria => new Result<UsuarioBase2025>.Ok(new Usuario2025Nivel2Secretaria(id, nombre, password, enumrole)),
-			UsuarioEnumRole.Nivel3Medico => new Result<UsuarioBase2025>.Ok(new Usuario2025Nivel2Secretaria(id, nombre, password, enumrole)),
-			UsuarioEnumRole.Nivel4Paciente => new Result<UsuarioBase2025>.Ok(new Usuario2025Nivel2Secretaria(id, nombre, password, enumrole)),
-			_ => new Result<UsuarioBase2025>.Error($"Rol desconocido: {enumrole}")
-		};
-	}
+    public bool PasswordMatch(string raw) => PasswordHash.IgualA(raw);
 }
-
-public sealed record Usuario2025Nivel1Admin(
-	UsuarioId UserId,
-	NombreUsuario UserName,
-	ContraseñaHasheada UserPassword,
-	UsuarioEnumRole EnumRole
-) : UsuarioBase2025(UserId, UserName, UserPassword, EnumRole);
-
-public sealed record Usuario2025Nivel2Secretaria(
-	UsuarioId UserId,
-	NombreUsuario UserName,
-	ContraseñaHasheada UserPassword,
-	UsuarioEnumRole EnumRole
-) : UsuarioBase2025(UserId, UserName, UserPassword, EnumRole);
-
-
-
-//public sealed record UsuarioNivel3Medico(
-//	UsuarioId UserId,
-//	NombreUsuario UserName,
-//	MedicoId MedicoRelacionado
-//) : UsuarioBase2025(UserId, UserName);
-
-//public sealed record UsuarioNivel4Paciente(
-//	UsuarioId UserId,
-//	NombreUsuario UserName,
-//	PacienteId PacienteRelacionado
-//) : UsuarioBase2025(UserId, UserName);

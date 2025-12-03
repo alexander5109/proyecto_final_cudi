@@ -1,37 +1,32 @@
 ﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.Servicios;
-using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Mvc;
+using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.DomainDtos;
 
 namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("auth")]
-public class AuthController(RepositorioInterface repository, JwtService jwtService) : ControllerBase {
+public class AuthController(IRepositorio repositorio, JwtService jwtService, ILogger<AuthController> logger)
+	: ControllerBase {
 	[HttpPost("login")]
 	public async Task<IActionResult> Login([FromBody] LoginRequestDto dto) {
-		Result<UsuarioBase2025> resultado = await ServiciosPublicos.ValidarCredenciales(dto.Username, dto.Password, repository);
+		Result<Usuario2025> resultado =
+			await ServiciosPublicos.ValidarCredenciales(dto.Username, dto.Password, repositorio);
 
-		if (resultado.IsError) {
-			return Unauthorized(new { error = ((Result<UsuarioBase2025>.Error)resultado).Mensaje });
-		}
+		return resultado switch {
+			Result<Usuario2025>.Ok ok =>
+				Ok(new LoginResponseDto(
+					ok.Valor.NombreUsuario.Valor,
+					ok.Valor.EnumRole.ToString(),
+					jwtService.EmitirJwt(ok.Valor)
+				)),
 
-		UsuarioBase2025 usuario = ((Result<UsuarioBase2025>.Ok)resultado).Valor;
+			Result<Usuario2025>.Error err =>
+				Unauthorized(new { error = err.Mensaje }),
 
-		string token = jwtService.EmitirJwt(usuario);
-
-		return Ok(new LoginResponseDto(
-			usuario.UserName.Valor,
-			usuario switch {
-				Usuario2025Nivel1Admin => "Admin",
-				Usuario2025Nivel2Secretaria => "Secretaria",
-				_ => "Desconocido"
-			},
-			token
-		));
+			_ => Problem("Error desconocido")
+		};
 	}
 }

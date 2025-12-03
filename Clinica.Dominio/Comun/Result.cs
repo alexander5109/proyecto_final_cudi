@@ -40,7 +40,82 @@ public abstract class Result<T> {
 // ==========================================
 //  EXTENSIONES FUNCIONALES
 // ==========================================
+public static class ResultExtensionsASync {
+
+
+
+	public static async Task<Result<U>> BindAsync<T, U>(
+	this Task<Result<T>> task,
+	Func<T, Task<Result<U>>> func) {
+		var result = await task;
+		return result is Result<T>.Ok ok
+			? await func(ok.Valor)
+			: new Result<U>.Error(((Result<T>.Error)result).Mensaje);
+	}
+
+	public static async Task<Result<U>> MapAsync<T, U>(
+	this Task<Result<T>> task,
+	Func<T, U> map) {
+		var result = await task;
+		return result is Result<T>.Ok ok
+			? new Result<U>.Ok(map(ok.Valor))
+			: new Result<U>.Error(((Result<T>.Error)result).Mensaje);
+	}
+	public static async Task<Result<T>> RequireOkAsync<T>(
+	this Task<Result<T>> task) {
+		var result = await task;
+		return result;
+	}
+	public static async Task<Result<T>> OrFailAsync<T>(
+	this Task<Result<T>> task,
+	string? overrideMessage = null) {
+		var result = await task;
+
+		return result switch {
+			Result<T>.Ok ok => ok,
+			Result<T>.Error err => new Result<T>.Error(
+				overrideMessage ?? err.Mensaje
+			),
+			_ => throw new InvalidOperationException()
+		};
+	}
+	public static async IAsyncEnumerable<T> SelectOk<T>(
+	this IAsyncEnumerable<Result<T>> stream) {
+		await foreach (var r in stream) {
+			switch (r) {
+				case Result<T>.Ok ok:
+					yield return ok.Valor;
+					break;
+
+				case Result<T>.Error err:
+					throw new Exception(err.Mensaje); // o devolver Result<...>
+			}
+		}
+	}
+
+
+}
 public static class ResultExtensions {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	public static Result<T> PrintAndContinue<T>(this Result<T> result, string? label = null) {
 		string prefix = label is null ? "" : $"{label}: ";
@@ -83,7 +158,7 @@ public static class ResultExtensions {
 	public static T GetOrRaise<T>(this Result<T> result) =>
 		result.Match(
 			ok => {
-				Console.WriteLine($"Succesfully asserting {typeof(T)}");
+				Console.WriteLine($"Succesfully asserting {typeof(T).Name}");
 				return ok;
 			},
 			mensaje => {

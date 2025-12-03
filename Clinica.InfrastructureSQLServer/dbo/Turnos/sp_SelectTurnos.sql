@@ -1,0 +1,7 @@
+﻿CREATE PROCEDURE dbo.sp_SelectTurnos
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT * FROM dbo.[Turno];
+END;
+GO
