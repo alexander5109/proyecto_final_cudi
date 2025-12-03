@@ -1,8 +1,9 @@
-﻿CREATE PROCEDURE dbo.sp_SelectMedicos
+﻿CREATE PROCEDURE dbo.sp_SelectMedicoWhereId
+    @Id INT
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT 
+    SELECT TOP 1
         M.Id,
         M.EspecialidadCodigoInterno,
         M.Dni,

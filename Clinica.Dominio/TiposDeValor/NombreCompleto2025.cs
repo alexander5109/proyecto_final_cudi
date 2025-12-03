@@ -8,7 +8,7 @@ public readonly record struct NombreCompleto2025(
 ): IComoTexto {
 	public string ATexto() => $"{ApellidoValor} {NombreValor}";
 
-	static readonly int MaxLongitud = 100; // razonable, pero configurable
+    private static readonly int MaxLongitud = 100; // razonable, pero configurable
 	public static Result<NombreCompleto2025> Crear(string? nombre, string? apellido) {
 		if (string.IsNullOrWhiteSpace(nombre))
 			return new Result<NombreCompleto2025>.Error("El nombre no puede estar vacío.");

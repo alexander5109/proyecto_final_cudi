@@ -7,8 +7,8 @@
 	CrearTurno,
 	CancelarTurno,
 	ReprogramarTurno,
-	EliminarEntidad,
-	EditarPacientes
+	DeleteEntidades,
+	UpdatePacientes
 
 	// más adelante: editar paciente, etc.
 }
@@ -24,8 +24,8 @@ public static class PermisosPorRol {
 			PermisoSistema.CancelarTurno,
 			PermisoSistema.ReprogramarTurno,
 			PermisoSistema.CrearPacientes,
-			PermisoSistema.EditarPacientes,
-			PermisoSistema.EliminarEntidad
+			PermisoSistema.UpdatePacientes,
+			PermisoSistema.DeleteEntidades
 		],
 
 		[UsuarioEnumRole.Nivel2Secretaria] = [
@@ -35,7 +35,7 @@ public static class PermisosPorRol {
 			PermisoSistema.CrearTurno,
 			PermisoSistema.CancelarTurno,
 			PermisoSistema.CrearPacientes,
-			PermisoSistema.EditarPacientes,
+			PermisoSistema.UpdatePacientes,
 
 		],
 

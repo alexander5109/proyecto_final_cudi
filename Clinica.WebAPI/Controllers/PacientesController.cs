@@ -48,7 +48,7 @@ public class PacientesController(
 	[HttpDelete("{id:int}")]
 	public Task<IActionResult> DeletePaciente(int id)
 		=> this.SafeExecute(
-			PermisoSistema.EliminarEntidad,
+			PermisoSistema.DeleteEntidades,
 			() => repositorio.DeletePacienteWhereId(new PacienteId(id)),
 			notFoundMessage: $"No existe paciente con id {id}"
 		);
@@ -58,7 +58,7 @@ public class PacientesController(
 	[HttpPut("{id:int}")]
 	public Task<IActionResult> UpdatePaciente(int id, [FromBody] PacienteDbModel dto)
 	=> this.SafeExecuteWithDomain(
-		PermisoSistema.EditarPacientes,
+		PermisoSistema.UpdatePacientes,
 		dto,
 		x => x.ToDomain(),
 		paciente => repositorio.UpdatePacienteWhereId(paciente),

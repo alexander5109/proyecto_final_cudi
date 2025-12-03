@@ -108,6 +108,7 @@
     <Build Include="dbo\Usuarios\sp_SelectUsuarioWhereNombre.sql" />
     <Build Include="dbo\Usuarios\sp_UpdateUsuarioWhereId.sql" />
     <Build Include="dbo\Usuarios\table_Usuario.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicoWhereId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Clinica.InfrastructureSQLServer.publish.xml" />

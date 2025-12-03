@@ -16,37 +16,37 @@ public static class IRepositorioInterfaces {
 	}
 
 	public interface IRepositorioPacientes {
-		public Task<Result<Unit>> DeletePacienteWhereId(PacienteId id);
-		public Task<Result<PacienteId>> InsertPacienteReturnId(Paciente2025 instance);
-		public Task<Result<IEnumerable<PacienteDbModel>>> SelectPacientes();
-		public Task<Result<PacienteDbModel?>> SelectPacienteWhereId(PacienteId id);
-		public Task<Result<Unit>> UpdatePacienteWhereId(Paciente2025 instance);
+		Task<Result<Unit>> DeletePacienteWhereId(PacienteId id);
+		Task<Result<PacienteId>> InsertPacienteReturnId(Paciente2025 instance);
+		Task<Result<IEnumerable<PacienteDbModel>>> SelectPacientes();
+		Task<Result<PacienteDbModel?>> SelectPacienteWhereId(PacienteId id);
+		Task<Result<Unit>> UpdatePacienteWhereId(Paciente2025 instance);
 	}
 
 	public interface IRepositorioMedicos {
-		public Task<Result<Unit>> DeleteMedicoWhereId(MedicoId id);
-		public Task<Result<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
-		public Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicos();
-		public Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code);
-		public Task<Result<MedicoDbModel?>> SelectMedicoWhereId(MedicoId id);
-		public Task<Result<Unit>> UpdateMedicoWhereId(Medico2025 instance);
+		Task<Result<Unit>> DeleteMedicoWhereId(MedicoId id);
+		Task<Result<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
+		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicos();
+		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code);
+		Task<Result<MedicoDbModel?>> SelectMedicoWhereId(MedicoId id);
+		Task<Result<Unit>> UpdateMedicoWhereId(Medico2025 instance);
 	}
 
 	public interface IRepositorioTurnos {
-		public Task<Result<Unit>> DeleteTurnoWhereId(TurnoId id);
-		public Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance);
-		public Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnos();
-		public Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id);
-		public Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWherePacienteId(PacienteId id);
-		public Task<Result<TurnoDbModel?>> SelectTurnoWhereId(TurnoId id);
-		public Task<Result<Unit>> UpdateTurnoWhereId(Turno2025 instance);
+		Task<Result<Unit>> DeleteTurnoWhereId(TurnoId id);
+		Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance);
+		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnos();
+		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id);
+		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWherePacienteId(PacienteId id);
+		Task<Result<TurnoDbModel?>> SelectTurnoWhereId(TurnoId id);
+		Task<Result<Unit>> UpdateTurnoWhereId(Turno2025 instance);
 	}
 	public interface IRepositorioUsuarios {
-		public Task<Result<Unit>> DeleteUsuarioWhereId(UsuarioId id);
-		public Task<Result<UsuarioId>> InsertUsuarioReturnId(Usuario2025 instance);
-		public Task<Result<IEnumerable<UsuarioDbModel>>> SelectUsuarios();
-		public Task<Result<UsuarioDbModel?>> SelectUsuarioWhereId(UsuarioId id);
-		public Task<Result<Unit>> UpdateUsuarioWhereId(Usuario2025 instance);
+		Task<Result<Unit>> DeleteUsuarioWhereId(UsuarioId id);
+		Task<Result<UsuarioId>> InsertUsuarioReturnId(Usuario2025 instance);
+		Task<Result<IEnumerable<UsuarioDbModel>>> SelectUsuarios();
+		Task<Result<UsuarioDbModel?>> SelectUsuarioWhereId(UsuarioId id);
+		Task<Result<Unit>> UpdateUsuarioWhereId(Usuario2025 instance);
 	}
 
 

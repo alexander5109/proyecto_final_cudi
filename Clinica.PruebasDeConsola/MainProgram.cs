@@ -12,7 +12,7 @@ public static class MainProgram {
 
 
 
-	static void CifrarContraseña() {
+    private static void CifrarContraseña() {
 		string? rawPassword = null;
 		while (string.IsNullOrWhiteSpace(rawPassword)) {
 			Console.Write("Ingrese contraseña directamente: ");
@@ -27,7 +27,7 @@ public static class MainProgram {
 
 
 
-	static async Task Main() {
+    private static async Task Main() {
 
 		//CifrarContraseña();
 
