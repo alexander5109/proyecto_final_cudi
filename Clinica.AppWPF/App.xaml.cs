@@ -2,13 +2,13 @@
 using System.Windows;
 using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
+using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
 
 namespace Clinica.AppWPF;
 
 public partial class App : Application {
-	public static BaseDeDatosInterface BaseDeDatos;
+	public static IWPFRepositorio BaseDeDatos;
 	public static ApiHelper Api;
-
 
 	protected override void OnStartup(StartupEventArgs e) {
 		base.OnStartup(e);
@@ -18,16 +18,16 @@ public partial class App : Application {
 		System.Diagnostics.PresentationTraceSources.Refresh();
 		System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
 		Api = new ApiHelper();
-		BaseDeDatos = new BaseDeDatosWebAPI();
+		BaseDeDatos = new WPFRepositorioApi(Api);
 
 
 	}
 
 	public static void UpdateLabelDataBaseModo(Label label) {
-		if (App.BaseDeDatos is BaseDeDatosWebAPI) {
+		if (App.BaseDeDatos is WPFRepositorioApi) {
 			//if (App.BaseDeDatos is BaseDeDatosJSON) {
 			//label.Content = "Modo JSON";
-			//} else if (App.BaseDeDatos is BaseDeDatosWebAPI) {
+			//} else if (App.BaseDeDatos is RepositorioApi) {
 			label.Content = "Modo API";
 		} else {
 			label.Content = "Elegir DB Modo";

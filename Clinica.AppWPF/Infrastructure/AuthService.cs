@@ -29,7 +29,7 @@ public static class AuthService {
 			if (data is null)
 				return new Result<UsuarioLogueadoDTO>.Error("Error inesperado del servidor.");
 
-			// acá queda guardado en el ApiHelper
+			// acá queda guardado en el Api
 			api.SetUsuario(data);
 
 			return new Result<UsuarioLogueadoDTO>.Ok(data);

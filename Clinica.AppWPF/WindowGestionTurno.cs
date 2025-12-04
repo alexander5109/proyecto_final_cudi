@@ -2,12 +2,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using Clinica.AppWPF.ViewModels;
+using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF;
 
 
 public record EspecialidadMedicaDto(string UId, string Titulo);
-public record MedicoSimpleDto(int Id, string Displayear);
 public record DisponibilidadDto(DateTime Fecha, string Hora, string Medico);
 
 
@@ -18,7 +18,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 	//private readonly HorarioMedicoViewModel _agendaService;
 
 	public ObservableCollection<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = [];
-	public ObservableCollection<MedicoSimpleDto> MedicosEspecialistas { get; } = [];
+	public ObservableCollection<MedicoDto> MedicosEspecialistas { get; } = [];
 	public ObservableCollection<DiaDeSemanaViewModel> DiasSemana { get; } = [];
 	public ObservableCollection<int> Horas { get; } = [];
 	public ObservableCollection<DisponibilidadDto> Disponibilidades { get; } = [];
@@ -47,7 +47,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 	public WindowGestionTurno() {
 		InitializeComponent();
 
-        WindowGestionTurnoViewModel viewmodel = new();
+        //WindowGestionTurnoViewModel viewmodel = new();
 
 
 		DataContext = this;
@@ -75,10 +75,10 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 
 	private void OnEspecialidadChanged() {
 		MedicosEspecialistas.Clear();
-		if (!string.IsNullOrEmpty(SelectedEspecialidadUId)) {
+		//if (!string.IsNullOrEmpty(SelectedEspecialidadUId)) {
 			//foreach (var m in _agendaService.GetMedicosByEspecialidad(SelectedEspecialidadUId)) MedicosEspecialistas.Add(m);
-			SelectedMedicoId = MedicosEspecialistas.FirstOrDefault()?.Id;
-		}
+			//SelectedMedicoId = MedicosEspecialistas.FirstOrDefault()?.Id;
+		//}
 		RefreshDisponibilidades();
 	}
 

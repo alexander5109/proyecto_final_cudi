@@ -1,12 +1,9 @@
 using System.ComponentModel;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Shared.Dtos;
-using Clinica.WebAPI.Servicios;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.Dtos.DbModels;

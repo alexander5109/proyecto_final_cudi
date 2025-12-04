@@ -223,29 +223,29 @@ public static class ApiDtos {
 	}
 
 
-	public record PacienteListDto(
-		PacienteId Id,
-		string Dni,
-		string Nombre,
-		string Apellido,
-		string Email,
-		string Telefono
-	);
-	public record TurnoListDto(
-		TurnoId Id,
-		TimeSpan Hora,
-		DateTime Fecha,
-		EspecialidadCodigo EspecialidadCodigoInterno,
-		TurnoOutcomeEstadoCodigo2025 Estado,
-		MedicoId MedicoId
-	);
+	//public record PacienteListDto(
+	//	PacienteId Id,
+	//	string Dni,
+	//	string Nombre,
+	//	string Apellido,
+	//	string Email,
+	//	string Telefono
+	//);
+	//public record TurnoListDto(
+	//	TurnoId Id,
+	//	TimeSpan Hora,
+	//	DateTime Fecha,
+	//	EspecialidadCodigo EspecialidadCodigoInterno,
+	//	TurnoOutcomeEstadoCodigo2025 Estado,
+	//	MedicoId MedicoId
+	//);
 
-	public record MedicoListDto(
-		string Dni,
-		string Nombre,
-		string Apellido,
-		EspecialidadCodigo EspecialidadCodigoInterno
-	);
+	//public record MedicoListDto(
+	//	string Dni,
+	//	string Nombre,
+	//	string Apellido,
+	//	EspecialidadCodigo EspecialidadCodigoInterno
+	//);
 
 
 

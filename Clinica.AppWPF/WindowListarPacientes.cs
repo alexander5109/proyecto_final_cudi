@@ -7,45 +7,33 @@ using static Clinica.Shared.Dtos.ApiDtos;
 namespace Clinica.AppWPF;
 
 public partial class WindowListarPacientes : Window {
-	private TurnoDto? SelectedTurno; // instead of PacienteListDto?
-	private PacienteDto? SelectedPaciente; // instead of WindowModificarPacienteViewModel?
-	private MedicoDto? MedicoRelacionado; // instead of WindowModificarPacienteViewModel?
-	private bool _isLoadingPacientes = false;
-	//private bool IsBusy = false;
+	private TurnoDto? SelectedTurno;
+	private PacienteDto? SelectedPaciente;
+	private MedicoDto? MedicoRelacionado;
+	private bool pacientesCargados = false;
 	public WindowListarPacientes() {
 		InitializeComponent();
 	}
 	//----------------------ActualizarSecciones-------------------//
 	private async Task UpdatePacienteUIAsync() {
-		if (_isLoadingPacientes) return; // evita reentrada
-		_isLoadingPacientes = true;
+		if (pacientesCargados) return; // evita reentrada
 		try {
-			//IsBusy = true;
-			//List<WindowModificarPacienteViewModel> pacientes = await App.BaseDeDatos.ReadPacientes();
-			List<PacienteDto>? pacientes = await App.Api.Cliente.GetFromJsonAsync<List<PacienteDto>>("api/pacientes");
-			//List<PacienteListDto> pacientes = await ApiHelper.Cliente.GetFromJsonAsync<List<PacienteListDto>>("api/pacientes/list");
-			pacientesListView.ItemsSource = pacientes;
-
-			// Actualizar enabled/selected depende del ItemsSource y SelectedPaciente
+			pacientesListView.ItemsSource = await App.BaseDeDatos.SelectPacientes();
 			buttonModificarPaciente.IsEnabled = SelectedPaciente != null;
-		} catch (Exception ex) {
-			// Manejo de errores centralizado: log / MessageBox
-			MessageBox.Show($"Error cargando pacientes: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-		} finally {
-			//IsBusy = false;
-			_isLoadingPacientes = false;
+			pacientesCargados = true;
+		} catch (Exception) {
+			pacientesCargados = false;
 		}
 	}
 	private async Task UpdateTurnosUIAsync() {
 		if (pacientesListView.SelectedItem is PacienteDto paciente) {
-			turnosListView.ItemsSource = await App.Api.Cliente.GetFromJsonAsync<List<TurnoDto>>($"api/pacientes/{paciente.Id.Valor}/turnos");
+			turnosListView.ItemsSource = await App.BaseDeDatos.SelectTurnosWherePacienteId(paciente.Id);
 		}
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 	private async Task UpdateMedicoUIAsync() {
 		if (turnosListView.SelectedItem is TurnoDto turno) {
-			MedicoRelacionado = await App.Api.Cliente.GetFromJsonAsync<MedicoDto>($"api/medicos/{turno.MedicoId}");
-
+			MedicoRelacionado = await App.BaseDeDatos.SelectMedicoWhereId(turno.MedicoId);
 			txtMedicoDni.Text = MedicoRelacionado?.Dni;
 			txtMedicoNombre.Text = MedicoRelacionado?.Nombre;
 			txtMedicoApellido.Text = MedicoRelacionado?.Apellido;

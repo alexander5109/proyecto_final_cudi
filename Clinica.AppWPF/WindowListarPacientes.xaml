@@ -21,7 +21,7 @@
         </Grid.Background>
         <ContentControl
 			Style="{StaticResource ContentControlLindo}"
-			Margin="512,17,22,180">
+			Margin="606,17,22,180">
             <StackPanel
 				Orientation="Vertical"
 				Background="Transparent">
@@ -47,28 +47,28 @@
                             <GridViewColumn
 								Header="Id"
 								DisplayMemberBinding="{Binding Id}"
-								Width="25" />
+								Width="auto" />
                             <GridViewColumn
 								Header="Dni"
 								DisplayMemberBinding="{Binding Dni}"
-								Width="50" />
+								Width="auto" />
                             <!-- Name Column -->
                             <GridViewColumn
 								Header="Nombre"
 								DisplayMemberBinding="{Binding Nombre}"
-								Width="60" />
+								Width="auto" />
                             <GridViewColumn
 								Header="Apellido"
 								DisplayMemberBinding="{Binding Apellido}"
-								Width="70" />
+								Width="auto" />
                             <GridViewColumn
 								Header="Email"
 								DisplayMemberBinding="{Binding Email}"
-								Width="120" />
+								Width="auto" />
                             <GridViewColumn
 								Header="Teléfono"
 								DisplayMemberBinding="{Binding Telefono}"
-								Width="90" />
+								Width="auto" />
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -137,7 +137,7 @@
 			FontFamily="Baskerville Old Face" />
         <ContentControl
 			Style="{StaticResource ContentControlLindo}"
-			Margin="164,17,534,210">
+			Margin="278,17,444,210">
             <StackPanel
 				Orientation="Vertical"
 				Background="Transparent">
@@ -160,19 +160,19 @@
                             <GridViewColumn
 								Header="FechaAsignada"
 								DisplayMemberBinding="{Binding FechaHoraAsignadaDesde}"
-								Width="25" />
+								Width="auto" />
                             <GridViewColumn
 								Header="EspecialidadId"
 								DisplayMemberBinding="{Binding EspecialidadCodigo}"
-								Width="73" />
+								Width="auto" />
                             <GridViewColumn
 								Header="MedicoId"
 								DisplayMemberBinding="{Binding MedicoId}"
-								Width="63" />
+								Width="auto" />
                             <GridViewColumn
 								Header="Estado"
 								DisplayMemberBinding="{Binding OutcomeEstado}"
-								Width="63" />
+								Width="auto" />
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -201,7 +201,7 @@
         </ContentControl>
         <ContentControl
 			Style="{StaticResource ContentControlLindo}"
-			Margin="-63,47,877,180">
+			Margin="30,17,784,210">
             <!-- </Expander> -->
             <!-- <Expander Header="Información del Médico" IsExpanded="True" Background="Transparent" BorderThickness="0"> -->
             <StackPanel

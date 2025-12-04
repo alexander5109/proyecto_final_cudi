@@ -27,14 +27,13 @@ public class MedicosController(
 
 
 	[HttpGet("{id:int}")]
-	public Task<IActionResult> GetMedicoPorId(int id)
+	public Task<IActionResult> GetMedicoWhereId(int id)
 		=> this.SafeExecute(
 			logger,
 			PermisoSistema.VerMedicos,
 			() => repositorio.SelectMedicoWhereId(new MedicoId(id)),
 			notFoundMessage: $"No existe medico con id {id}"
 		);
-
 
 
 	[HttpGet("{id}/turnos")]
