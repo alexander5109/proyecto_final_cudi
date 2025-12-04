@@ -40,18 +40,18 @@ public static class MainProgram {
 			.AddJsonFile("appsettings.Development.json")
 			.Build();
 
-		//RepositorioDapper repositorio = new(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
-		var repodonomio = new RepositorioDapper(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!))
+        //RepositorioDapper repositorio = new(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
+        RepositorioDapper repositorio = new RepositorioDapper(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!))
 
 		//var response = await http.GetAsync($"/disponibilidades?especialidadCodigoInterno=3&cuantos=10");
 
 		NombreUsuario nombreUsuario = new ("admin1");
-		var usuarioFakeResult = await repositorio.SelectUsuarioWhereNombre(nombreUsuario);
-		if (usuarioFakeResult.IsError) {
-			Console.WriteLine($"No se encontro el usuario {nombreUsuario}");
-			return;
-		}
-        Usuario2025 usuarioFake = usuarioFakeResult.UnwrapAsOk();
+		//var usuarioFakeResult = await repositorio.SelectUsuarioWhereNombre(nombreUsuario);
+		//if (usuarioFakeResult.IsError) {
+		//	Console.WriteLine($"No se encontro el usuario {nombreUsuario}");
+		//	return;
+		//}
+        //Usuario2025 usuarioFake = usuarioFakeResult.UnwrapAsOk();
 
 
 		//CRUD TESTS

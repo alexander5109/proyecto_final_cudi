@@ -67,50 +67,60 @@
     <PostDeploy Include="dbo\Script.PostDeployment.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="dbo\Script.PreDeployment.sql" />
+    <None Include="dbo\Script.EliminarTodasLasTablas.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\HorariosMedicos\sp_CreateHorarioMedico.sql" />
-    <Build Include="dbo\HorariosMedicos\sp_DeleteHorarioMedico.sql" />
-    <Build Include="dbo\HorariosMedicos\sp_ReadHorariosMedicosAll.sql" />
-    <Build Include="dbo\HorariosMedicos\sp_SelectHorariosVigentesBetweenFechasWhereMedicoId.sql" />
-    <Build Include="dbo\HorariosMedicos\sp_UpdateHorarioMedico.sql" />
+    <Build Include="dbo\HorariosMedicos\sp_InsertHorarioReturnId.sql" />
+    <Build Include="dbo\HorariosMedicos\sp_DeleteHorarioWhereId.sql" />
+    <Build Include="dbo\HorariosMedicos\sp_SelectHorarios.sql" />
+    <Build Include="dbo\HorariosMedicos\sp_UpdateHorarioWhereId.sql" />
     <Build Include="dbo\HorariosMedicos\table_HorarioMedico.sql" />
     <Build Include="dbo\HorariosMedicos\udtt_HorarioMedicoTable.sql" />
     <Build Include="dbo\HorariosMedicos\udtt_ListTable.sql" />
-    <Build Include="dbo\Medicos\sp_CreateMedico.sql" />
-    <Build Include="dbo\Medicos\sp_CreateMedicoWithHorarios.sql" />
+    <Build Include="dbo\Medicos\sp_InsertMedicoReturnId.sql" />
     <Build Include="dbo\Medicos\sp_SelectMedicos.sql" />
-    <Build Include="dbo\Medicos\sp_SelectMedicosIdWhereEspecialidadCode.sql" />
-    <Build Include="dbo\Medicos\sp_UpdateMedico.sql" />
-    <Build Include="dbo\Medicos\sp_UpdateMedicoWithHorarios.sql" />
+    <Build Include="dbo\Medicos\sp_UpdateMedicoWhereId.sql" />
     <Build Include="dbo\Medicos\table_Medico.sql" />
-    <Build Include="dbo\Pacientes\sp_CreatePaciente.sql" />
+    <Build Include="dbo\Pacientes\sp_InsertPacienteReturnId.sql" />
     <Build Include="dbo\Pacientes\sp_DeletePacienteWhereId.sql" />
     <Build Include="dbo\Pacientes\sp_SelectPacientes.sql" />
-    <Build Include="dbo\Pacientes\sp_SelectPacientesListView.sql" />
     <Build Include="dbo\Pacientes\sp_SelectPacienteWhereId.sql" />
-    <Build Include="dbo\Pacientes\sp_UpdatePaciente.sql" />
+    <Build Include="dbo\Pacientes\sp_UpdatePacienteWhereId.sql" />
     <Build Include="dbo\Pacientes\table_Paciente.sql" />
-    <Build Include="dbo\Pacientes\view_PacienteListView.sql" />
-    <Build Include="dbo\Turnos\sp_InsertTurnoReturnId.sql" />
     <Build Include="dbo\Turnos\sp_SelectTurnos.sql" />
-    <Build Include="dbo\Turnos\sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId.sql" />
-    <Build Include="dbo\Turnos\sp_SelectTurnosWhereMedicoId.sql" />
-    <Build Include="dbo\Turnos\sp_SelectTurnosWhereMedicosIds.sql" />
-    <Build Include="dbo\Turnos\sp_SelectTurnosWherePacienteId.sql" />
     <Build Include="dbo\Turnos\sp_UpdateTurnoWhereId.sql" />
     <Build Include="dbo\Turnos\table_Turno.sql" />
     <Build Include="dbo\Usuarios\sp_DeleteUsuarioWhereId.sql" />
     <Build Include="dbo\Usuarios\sp_InsertUsuarioReturnId.sql" />
     <Build Include="dbo\Usuarios\sp_SelectUsuarios.sql" />
     <Build Include="dbo\Usuarios\sp_SelectUsuarioWhereId.sql" />
-    <Build Include="dbo\Usuarios\sp_SelectUsuarioWhereNombre.sql" />
     <Build Include="dbo\Usuarios\sp_UpdateUsuarioWhereId.sql" />
     <Build Include="dbo\Usuarios\table_Usuario.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicoWithHorariosWhereId.sql" />
+    <Build Include="dbo\Turnos\sp_DeleteTurnoWhereId.sql" />
+    <Build Include="dbo\Medicos\sp_DeleteMedicoWhereId.sql" />
+    <Build Include="dbo\Turnos\sp_InsertTurnoReturnId.sql" />
+    <Build Include="dbo\Turnos\sp_SelectTurnoWhereId.sql" />
+    <Build Include="dbo\HorariosMedicos\sp_SelectHorarioWhereId.sql" />
+    <Build Include="dbo\Medicos\sp_UpdateMedicoWithHorariosWhereId.sql" />
+    <Build Include="dbo\Medicos\sp_InsertMedicoWithHorariosReturnId.sql" />
+    <Build Include="dbo\Medicos\sp_DeleteMedicoWithHorariosWhereId.sql" />
     <Build Include="dbo\Medicos\sp_SelectMedicoWhereId.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicosWithHorario.sql" />
+    <Build Include="dbo\Pacientes\sp_SelectPacientesListView.sql" />
+    <Build Include="dbo\Pacientes\view_PacienteListView.sql" />
+    <Build Include="dbo\HorariosMedicos\sp_SelectHorariosVigentesBetweenFechasWhereMedicoId.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicosIdWhereEspecialidadCode.sql" />
+    <Build Include="dbo\Turnos\sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId.sql" />
+    <Build Include="dbo\Turnos\sp_SelectTurnosWhereMedicoId.sql" />
+    <Build Include="dbo\Turnos\sp_SelectTurnosWhereMedicosIds.sql" />
+    <Build Include="dbo\Turnos\sp_SelectTurnosWherePacienteId.sql" />
+    <Build Include="dbo\Usuarios\sp_SelectUsuarioWhereNombre.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Clinica.InfrastructureSQLServer.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="Clinica.InfrastructureSQLServer.refactorlog" />
   </ItemGroup>
 </Project>

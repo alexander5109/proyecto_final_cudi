@@ -1,0 +1,7 @@
+﻿CREATE PROCEDURE dbo.sp_SelectHorarios
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT * FROM dbo.Horario;
+END;
+GO

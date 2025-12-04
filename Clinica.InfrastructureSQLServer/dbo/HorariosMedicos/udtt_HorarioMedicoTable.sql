@@ -1,6 +1,8 @@
 ﻿CREATE TYPE dbo.HorarioMedicoTableType AS TABLE(
-    DiaSemana INT,
-    HoraDesde TIME(7),
-    HoraHasta TIME(7)
+    DiaSemana      TINYINT,
+    HoraDesde      TIME(0),
+    HoraHasta      TIME(0),
+    VigenteDesde   DATE,
+    VigenteHasta   DATE NULL
 );
 GO

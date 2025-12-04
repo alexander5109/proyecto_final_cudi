@@ -49,9 +49,9 @@ GO
 ----------------------------------------------------
 
 
-IF NOT EXISTS (SELECT 1 FROM dbo.HorarioMedico)
+IF NOT EXISTS (SELECT 1 FROM dbo.Horario)
 BEGIN
-    INSERT INTO dbo.HorarioMedico 
+    INSERT INTO dbo.Horario 
         (MedicoId, DiaSemana, HoraDesde, HoraHasta, VigenteDesde, VigenteHasta)
     VALUES
         (1, 3, '12:00', '17:00', '2025-01-01', NULL),

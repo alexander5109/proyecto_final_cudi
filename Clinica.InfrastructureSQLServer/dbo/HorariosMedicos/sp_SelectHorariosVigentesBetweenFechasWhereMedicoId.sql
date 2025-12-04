@@ -14,7 +14,7 @@ BEGIN
         HoraHasta
         -- VigenteDesde,
         -- VigenteHasta
-    FROM dbo.HorarioMedico
+    FROM dbo.Horario
     WHERE MedicoId = @MedicoId
       AND VigenteDesde <= @FechaHasta
       AND (VigenteHasta IS NULL OR VigenteHasta >= @FechaDesde)

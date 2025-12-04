@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[sp_UpdateMedicoWithHorarios]
+﻿CREATE PROCEDURE [dbo].sp_UpdateMedicoWithHorariosWhereId
     @Id INT,
     @Nombre NVARCHAR(100),
     @Apellido NVARCHAR(100),
@@ -36,12 +36,12 @@ BEGIN
 
 
         -- 2) Eliminar horarios anteriores
-        DELETE FROM dbo.HorarioMedico
+        DELETE FROM dbo.Horario
         WHERE MedicoId = @Id;
 
 
         -- 3) Insertar horarios nuevos
-        INSERT INTO dbo.HorarioMedico (MedicoId, DiaSemana, HoraDesde, HoraHasta)
+        INSERT INTO dbo.Horario (MedicoId, DiaSemana, HoraDesde, HoraHasta)
         SELECT @Id, DiaSemana, HoraDesde, HoraHasta
         FROM @Horarios;
 

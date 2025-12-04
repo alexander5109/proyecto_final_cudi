@@ -10,8 +10,24 @@
 --------------------------------------------------------------------------------------
 */
 
+USE master;
+GO
+
+PRINT 'Terminando conexiones para poder eliminar la base...';
+
+-- Forzar que nadie más use la BD
+ALTER DATABASE ClinicaMedica SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+GO
+
+PRINT 'Eliminando base ClinicaMedica...';
+
+DROP DATABASE ClinicaMedica;
+GO
+
+PRINT 'Base ClinicaMedica eliminada correctamente.';
 
 /*
+
     PRINT 'Ejecutando Pre-Deployment... Limpiando tablas existentes';
     IF OBJECT_ID('Turno', 'U') IS NOT NULL
         DROP TABLE dbo.Turno;

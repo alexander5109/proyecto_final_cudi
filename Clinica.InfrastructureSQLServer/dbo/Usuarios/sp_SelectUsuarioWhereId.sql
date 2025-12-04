@@ -6,4 +6,5 @@ BEGIN
     SELECT TOP 1 *
     FROM dbo.Usuario
     WHERE Id = @Id;
-END
+END;
+GO
