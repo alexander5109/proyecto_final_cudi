@@ -11,8 +11,8 @@ namespace Clinica.AppWPF;
 public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	public WindowModificarMedicoViewModel _selectedMedico = WindowModificarMedicoViewModel.NewEmpty();
-	public WindowModificarMedicoViewModel SelectedMedico { get => _selectedMedico; set { _selectedMedico = value; OnPropertyChanged(nameof(SelectedMedico)); } }
+	public MedicoViewModel _selectedMedico = MedicoViewModel.NewEmpty();
+	public MedicoViewModel SelectedMedico { get => _selectedMedico; set { _selectedMedico = value; OnPropertyChanged(nameof(SelectedMedico)); } }
 
 	//---------------------constructor-------------------//
 	public WindowModificarMedico() {
@@ -20,9 +20,10 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 		DataContext = this;
 	}
 
-	public WindowModificarMedico(WindowModificarMedicoViewModel selectedMedico) {
+	public WindowModificarMedico(MedicoViewModel medicoDto) {
+
 		InitializeComponent();
-		SelectedMedico = selectedMedico;
+		//SelectedMedico = medicoDto.ToViewModel();
 		DataContext = this;
 	}
 	//---------------------botones.GuardarCambios-------------------//

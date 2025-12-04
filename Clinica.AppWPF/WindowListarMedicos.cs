@@ -5,7 +5,7 @@ using System.Windows.Controls;
 namespace Clinica.AppWPF;
 
 public partial class WindowListarMedicos : Window {
-	private static WindowModificarMedicoViewModel? SelectedMedico = null;
+	private static MedicoViewModel? SelectedMedico = null;
 	private static WindowModificarTurnoViewModel? SelectedTurno = null;
 	public WindowListarMedicos() {
 		InitializeComponent();
@@ -47,7 +47,7 @@ public partial class WindowListarMedicos : Window {
 		UpdatePacienteUI();
 	}
 	private void medicosListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedMedico = (WindowModificarMedicoViewModel)medicosListView.SelectedItem;
+		SelectedMedico = (MedicoViewModel)medicosListView.SelectedItem;
 		UpdateMedicoUI();
 		UpdateTurnoUI();
 		UpdatePacienteUI();

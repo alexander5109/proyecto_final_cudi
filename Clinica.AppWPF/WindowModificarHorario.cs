@@ -7,13 +7,13 @@ namespace Clinica.AppWPF.Ventanas;
 public partial class WindowModificarHorario : Window {
 	public WindowModificarHorarioViewModel VM { get; }
 
-	public WindowModificarHorario(WindowModificarMedicoViewModel medico, HorarioMedicoViewModel horario, bool esNuevo) {
+	public WindowModificarHorario(MedicoViewModel medico, HorarioMedicoViewModel horario, bool esNuevo) {
 		InitializeComponent();
 		VM = new WindowModificarHorarioViewModel(medico, horario, esNuevo);
 		DataContext = VM;
 	}
 
-	private bool ValidarHorario(WindowModificarMedicoViewModel medico, HorarioMedicoViewModel nuevo) {
+	private bool ValidarHorario(MedicoViewModel medico, HorarioMedicoViewModel nuevo) {
 		return !medico.Horarios.Any(h =>
 			h != nuevo &&
 			h.DiaSemana == nuevo.DiaSemana &&

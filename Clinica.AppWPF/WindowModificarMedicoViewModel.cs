@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Clinica.AppWPF.ViewModels;
 
 
-public partial class WindowModificarMedicoViewModel : ObservableObject {
+public partial class MedicoViewModel : ObservableObject {
 
 	[ObservableProperty] private ObservableCollection<HorarioMedicoViewModel> horarios = [];
 
@@ -72,7 +72,7 @@ public partial class WindowModificarMedicoViewModel : ObservableObject {
 	//}
 
 
-	public static WindowModificarMedicoViewModel NewEmpty() => new(
+	public static MedicoViewModel NewEmpty() => new(
 		[],
 		default,   // id
 		string.Empty,   // nombre
@@ -91,7 +91,7 @@ public partial class WindowModificarMedicoViewModel : ObservableObject {
 
 
 
-	public WindowModificarMedicoViewModel(
+	public MedicoViewModel(
 		ObservableCollection<HorarioMedicoViewModel> horarios,
 		int? id,
 		string? name,

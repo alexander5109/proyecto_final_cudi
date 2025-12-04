@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Clinica.AppWPF.Ventanas;
 
 public partial class WindowModificarHorarioViewModel : ObservableObject {
-	public WindowModificarMedicoViewModel Medico { get; }
+	public MedicoViewModel Medico { get; }
 
 	[ObservableProperty]
 	private HorarioMedicoViewModel horario;
@@ -14,7 +14,7 @@ public partial class WindowModificarHorarioViewModel : ObservableObject {
 
 	public bool EsNuevo { get; }
 
-	public WindowModificarHorarioViewModel(WindowModificarMedicoViewModel medico, HorarioMedicoViewModel horario, bool esNuevo) {
+	public WindowModificarHorarioViewModel(MedicoViewModel medico, HorarioMedicoViewModel horario, bool esNuevo) {
 		Medico = medico;
 		Horario = horario;
 		EsNuevo = esNuevo;

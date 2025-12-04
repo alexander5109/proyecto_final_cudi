@@ -12,7 +12,7 @@ namespace Clinica.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class MedicosController(
-	IRepositorioMedicos repositorio, 
+	IRepositorioMedicos repositorio,
 	ILogger<AuthController> logger
 ) : ControllerBase {
 

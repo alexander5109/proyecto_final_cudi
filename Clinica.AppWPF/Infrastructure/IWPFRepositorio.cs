@@ -48,33 +48,33 @@ public static class IWPFRepositorioInterfaces {
 //Task<List<EspecialidadMedicaViewModel>> ReadDistinctEspecialidades();  //WORTH CACHE-ING
 
 //// Get methods
-//Task<WindowModificarMedicoViewModel> GetMedicoById(int id);
+//Task<MedicoViewModel> GetMedicoById(int id);
 //Task<WindowModificarPacienteViewModel> GetPacienteById(int id);
 //Task<WindowModificarTurnoViewModel> GetTurnoById(int id);
 //Task<EspecialidadMedicaViewModel> GetEspecialidadById(int id);
 
 
 //// Create methods
-//Task<bool> CreateMedico(WindowModificarMedicoViewModel instance);
+//Task<bool> CreateMedico(MedicoViewModel instance);
 //Task<bool> CreatePaciente(WindowModificarPacienteViewModel instance);
 //Task<bool> CreateTurno(WindowModificarTurnoViewModel instance);
 ////public abstract bool CreateEspecialidad(WindowModificarEspecialidadViewModel instance);
 
 //// Update methods
-//Task<bool> UpdateMedico(WindowModificarMedicoViewModel instance);
+//Task<bool> UpdateMedico(MedicoViewModel instance);
 //Task<bool> UpdatePaciente(WindowModificarPacienteViewModel instance);
 //Task<bool> UpdateTurno(WindowModificarTurnoViewModel instance);
 ////public abstract bool UpdateEspecialidad(WindowModificarEspecialidadViewModel instance);
 
 //// Delete methods
-//Task<bool> DeleteMedico(WindowModificarMedicoViewModel instance);
+//Task<bool> DeleteMedico(MedicoViewModel instance);
 //Task<bool> DeletePaciente(WindowModificarPacienteViewModel instance);
 //Task<bool> DeleteTurno(WindowModificarTurnoViewModel instance);
 
 //// Filtros
 //Task<List<WindowModificarTurnoViewModel>> ReadTurnosWhereMedicoId(int? medicoId);
 //Task<List<WindowModificarTurnoViewModel>> ReadTurnosWherePacienteId(int? pacienteId);
-//Task<List<WindowModificarMedicoViewModel>> ReadMedicosWhereEspecialidad(int? especialidadCodigoInterno);
+//Task<List<MedicoViewModel>> ReadMedicosWhereEspecialidad(int? especialidadCodigoInterno);
 
 //}
 

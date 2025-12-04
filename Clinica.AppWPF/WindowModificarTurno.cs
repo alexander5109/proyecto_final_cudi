@@ -17,7 +17,7 @@ public partial class WindowModificarTurno : Window, INotifyPropertyChanged {
 
 	// Colecciones para los ComboBoxes
 	public IEnumerable<WindowModificarPacienteViewModel> PacientesDisponibles { get; private set; } = System.Linq.Enumerable.Empty<WindowModificarPacienteViewModel>();
-	public IEnumerable<WindowModificarMedicoViewModel> MedicosDisponibles { get; private set; } = System.Linq.Enumerable.Empty<WindowModificarMedicoViewModel>();
+	public IEnumerable<MedicoViewModel> MedicosDisponibles { get; private set; } = System.Linq.Enumerable.Empty<MedicoViewModel>();
 
 	//public List<EspecialidadMedicaViewModel> EspecialidadesDisponibles { get; } = App.BaseDeDatos.ReadDistinctEspecialidades();
 
@@ -48,7 +48,7 @@ public partial class WindowModificarTurno : Window, INotifyPropertyChanged {
 			//MedicosDisponibles = App.BaseDeDatos.ReadMedicos();
 		} catch {
 			PacientesDisponibles = System.Linq.Enumerable.Empty<WindowModificarPacienteViewModel>();
-			MedicosDisponibles = System.Linq.Enumerable.Empty<WindowModificarMedicoViewModel>();
+			MedicosDisponibles = System.Linq.Enumerable.Empty<MedicoViewModel>();
 		}
 		OnPropertyChanged(nameof(PacientesDisponibles));
 		OnPropertyChanged(nameof(MedicosDisponibles));
