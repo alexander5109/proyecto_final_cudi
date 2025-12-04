@@ -18,7 +18,7 @@ public record struct PacienteId(int Valor) {
 		id = default;
 		return false;
 	}
-	public override string ToString() {
+	public readonly override string ToString() {
 		return Valor.ToString();
 	}
 
@@ -32,7 +32,7 @@ public record Paciente2025(
 	DomicilioArgentino2025 Domicilio,
 	FechaDeNacimiento2025 FechaNacimiento,
 	FechaRegistro2025 FechaIngreso
-) {
+): IComoTexto {
 	public static Result<Paciente2025> Crear(
 		Result<PacienteId> idResult,
 		Result<NombreCompleto2025> nombreResult,
@@ -87,6 +87,17 @@ public record Paciente2025(
 		};
 	}
 
+    public string ATexto() {
+		return @$"
+			Id: {Id.Valor}\n
+			NombreCompleto: {NombreCompleto.ATexto()}\n
+			Dni: {Dni.Valor}\n
+			Contacto: {Contacto.ATexto()}\n
+			Domicilio: {Domicilio.ATexto()}\n
+			FechaNacimiento: {FechaNacimiento.ATexto()}\n
+			FechaIngreso: {FechaIngreso.ATexto()}\n
+		";
+    }
 
 
 	//public static Result<Paciente2025> Crear(

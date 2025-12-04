@@ -69,7 +69,7 @@ public static class MainProgram {
 
 		// Caso de uso 1
 		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidadesPara(
-			EspecialidadMedica2025.ClinicoGeneral,
+			Especialidad2025.ClinicoGeneral,
 			DateTime.Now,
 			4,
 			repositorio
@@ -82,7 +82,7 @@ public static class MainProgram {
 		// Caso de uso 2
 		Result<Turno2025> turno = (await ServiciosPublicos.SolicitarTurnoEnLaPrimeraDisponibilidad(
 			new PacienteId(1),
-			EspecialidadMedica2025.ClinicoGeneral,
+			Especialidad2025.ClinicoGeneral,
 			new FechaRegistro2025(DateTime.Now),
 			repositorio
 		));

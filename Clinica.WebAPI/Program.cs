@@ -27,7 +27,7 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 );
 
 builder.Services.AddSingleton<RepositorioDapper>(sp => {
-    var factory = sp.GetRequiredService<SQLServerConnectionFactory>();
+    SQLServerConnectionFactory factory = sp.GetRequiredService<SQLServerConnectionFactory>();
     return new RepositorioDapper(factory);
 });
 
@@ -37,8 +37,8 @@ builder.Services.AddSingleton<IRepositorioPacientes>(sp => sp.GetRequiredService
 builder.Services.AddSingleton<IRepositorioMedicos>(sp => sp.GetRequiredService<RepositorioDapper>());
 builder.Services.AddSingleton<IRepositorioTurnos>(sp => sp.GetRequiredService<RepositorioDapper>());
 builder.Services.AddSingleton<IRepositorioUsuarios>(sp => sp.GetRequiredService<RepositorioDapper>());
-builder.Services.AddSingleton<IRepositorioDomain>(sp => sp.GetRequiredService<RepositorioDapper>());
-
+builder.Services.AddSingleton<IRepositorioDomainServiciosPrivados>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorioHorarios>(sp => sp.GetRequiredService<RepositorioDapper>());
 
 // JwtService (singleton)
 builder.Services.AddSingleton<JwtService>(sp => {

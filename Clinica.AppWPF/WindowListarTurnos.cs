@@ -23,7 +23,7 @@ public partial class WindowListarTurnos : Window {
 		//txtMedicoDni.Text = SelectedTurno?.MedicoRelacionado?.Dni;
 		//txtMedicoNombre.Text = SelectedTurno?.MedicoRelacionado?.Name;
 		//txtMedicoApellido.Text = SelectedTurno?.MedicoRelacionado?.LastName;
-		//txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado?.EspecialidadCodigo2025.ToString();
+		//txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado?.EspecialidadCodigo.ToString();
 		//buttonModificarMedico.IsEnabled = SelectedTurno?.MedicoRelacionado != null;
 	}
 	private void UpdatePacienteUI() {

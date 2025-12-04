@@ -13,7 +13,7 @@ public static class MappingExtensions {
 		this IEnumerable<TDbModel> source,
 		Func<TDbModel, Result<TDomain>> map
 	) {
-		foreach (var row in source)
+		foreach (TDbModel? row in source)
 			yield return map(row);
 	}
 }

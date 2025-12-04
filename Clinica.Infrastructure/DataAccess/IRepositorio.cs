@@ -8,11 +8,12 @@ namespace Clinica.Infrastructure.DataAccess;
 
 public static class IRepositorioInterfaces {
 	public interface IRepositorio :
-		IRepositorioDomain,
+		IRepositorioDomainServiciosPrivados,
 		IRepositorioUsuarios,
 		IRepositorioTurnos,
 		IRepositorioPacientes,
-		IRepositorioMedicos {
+		IRepositorioMedicos,
+		IRepositorioHorarios {
 	}
 
 	public interface IRepositorioPacientes {
@@ -29,7 +30,7 @@ public static class IRepositorioInterfaces {
 		Task<Result<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
 		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicos();
 		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id);
-		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo2025 code);
+		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo code);
 		Task<Result<MedicoDbModel?>> SelectMedicoWhereId(MedicoId id);
 		Task<Result<Unit>> UpdateMedicoWhereId(Medico2025 instance);
 	}
@@ -50,11 +51,11 @@ public static class IRepositorioInterfaces {
 	}
 
 
-	public interface IRepositorioHorarioMedicos {
-		Task<Result<Unit>> DeleteHorarioMedicoWhereId(HorarioId id);
-		Task<Result<HorarioId>> InsertHorarioMedicoReturnId(HorarioMedico2025 instance);
-		Task<Result<IEnumerable<HorarioMedicoDbModel>>> SelectHorarioMedicos();
-		Task<Result<HorarioMedicoDbModel?>> SelectHorarioMedicoWhereId(HorarioId id);
-		Task<Result<Unit>> UpdateHorarioMedicoWhereId(HorarioMedico2025 instance);
+	public interface IRepositorioHorarios {
+		Task<Result<Unit>> DeleteHorarioWhereId(HorarioId id);
+		Task<Result<HorarioId>> InsertHorarioReturnId(Horario2025 instance);
+		Task<Result<IEnumerable<HorarioDbModel>>> SelectHorarios();
+		Task<Result<HorarioDbModel?>> SelectHorarioWhereId(HorarioId id);
+		Task<Result<Unit>> UpdateHorarioWhereId(Horario2025 instance);
 	}
 }

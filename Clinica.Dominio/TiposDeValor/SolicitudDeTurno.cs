@@ -15,13 +15,13 @@ public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 
 //public readonly record struct SolicitudDeTurno(
 //	PacienteId PacienteId,
-//	EspecialidadMedica2025 Especialidad,
+//	Especialidad2025 Especialidad,
 //	DateTime FechaCreacion
 //) : IComoTexto {
 
 //	public static Result<SolicitudDeTurno> CrearFromStrings(
 //		PacienteId pacienteId,
-//		EspecialidadMedica2025 especialidad,
+//		Especialidad2025 especialidad,
 //		DateTime fechaSolicitada
 //	) {
 //		return new Result<SolicitudDeTurno>.Ok(new SolicitudDeTurno(pacienteId, especialidad, fechaSolicitada));
@@ -58,7 +58,7 @@ public readonly record struct SolicitudDeTurnoPreferencias(
 //	SolicitudDeTurnoPreferencias Preferencias
 //) : IComoTexto {
 //	public Paciente2025 Nivel4Paciente => Basica.Nivel4Paciente;
-//	public EspecialidadMedica2025 Especialidad => Basica.Especialidad;
+//	public Especialidad2025 Especialidad => Basica.Especialidad;
 //	public DateTime FechaCreacion => Basica.FechaCreacion;
 
 //	public string ATexto() {

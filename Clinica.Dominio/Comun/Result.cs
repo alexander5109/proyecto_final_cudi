@@ -47,7 +47,7 @@ public static class ResultExtensionsASync {
 	public static async Task<Result<U>> BindAsync<T, U>(
 	this Task<Result<T>> task,
 	Func<T, Task<Result<U>>> func) {
-		var result = await task;
+        Result<T> result = await task;
 		return result is Result<T>.Ok ok
 			? await func(ok.Valor)
 			: new Result<U>.Error(((Result<T>.Error)result).Mensaje);
@@ -56,20 +56,20 @@ public static class ResultExtensionsASync {
 	public static async Task<Result<U>> MapAsync<T, U>(
 	this Task<Result<T>> task,
 	Func<T, U> map) {
-		var result = await task;
+        Result<T> result = await task;
 		return result is Result<T>.Ok ok
 			? new Result<U>.Ok(map(ok.Valor))
 			: new Result<U>.Error(((Result<T>.Error)result).Mensaje);
 	}
 	public static async Task<Result<T>> RequireOkAsync<T>(
 	this Task<Result<T>> task) {
-		var result = await task;
+        Result<T> result = await task;
 		return result;
 	}
 	public static async Task<Result<T>> OrFailAsync<T>(
 	this Task<Result<T>> task,
 	string? overrideMessage = null) {
-		var result = await task;
+        Result<T> result = await task;
 
 		return result switch {
 			Result<T>.Ok ok => ok,
@@ -81,7 +81,7 @@ public static class ResultExtensionsASync {
 	}
 	public static async IAsyncEnumerable<T> SelectOk<T>(
 	this IAsyncEnumerable<Result<T>> stream) {
-		await foreach (var r in stream) {
+		await foreach (Result<T> r in stream) {
 			switch (r) {
 				case Result<T>.Ok ok:
 					yield return ok.Valor;

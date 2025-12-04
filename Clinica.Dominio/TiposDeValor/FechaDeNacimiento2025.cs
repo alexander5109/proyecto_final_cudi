@@ -48,9 +48,8 @@ public record FechaDeNacimiento2025(DateOnly Valor) : IComoTexto {
 
 	// --- Edad aproximada ---
 	public static int Edad(FechaDeNacimiento2025 fecha) {
-		DateOnly hoy = DateOnly.FromDateTime(DateTime.Now);
-		int edad = hoy.Year - fecha.Valor.Year;
-		if (hoy < fecha.Valor.AddYears(edad)) edad--;
+		int edad = Hoy.Year - fecha.Valor.Year;
+		if (Hoy < fecha.Valor.AddYears(edad)) edad--;
 		return edad;
 	}
 }

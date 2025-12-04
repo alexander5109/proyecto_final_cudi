@@ -1,17 +1,163 @@
-using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel;
+using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
+using Clinica.Dominio.Servicios;
+using Clinica.Dominio.TiposDeValor;
+using Clinica.Shared.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
+using static Clinica.Shared.Dtos.DbModels;
 namespace Clinica.WebAPI.Controllers;
 
 
-[Authorize]
+public record SolicitarCancelacionDto(
+	TurnoId TurnoId,
+	DateTime OutcomeFecha,
+	string OutcomeComentario
+);
+public record SolicitarReprogramacionDto(
+	TurnoId TurnoId,
+	DateTime OutcomeFecha,
+	string OutcomeComentario
+);
+
+public record SolicitarTurnoPrimeraDispDto(
+	PacienteId PacienteId,
+	EspecialidadCodigo Especialidad,
+	DateTime FechaCreacion
+);
+
+
+
+
+
+
 [ApiController]
 [Route("[controller]")]
-public class DomainController(IRepositorio repositorio, ILogger<DomainController> logger) : ControllerBase {
+public class ServiciosPublicosController(IRepositorio repositorio, ILogger<ServiciosPublicosController> logger) : ControllerBase {
+
+
+
+	[HttpGet("Turnos/Disponibilidades")]
+	public async Task<IActionResult> VerDisponibilidades(
+		[FromQuery] EspecialidadCodigo especialidadCodigoInterno,
+		[FromQuery] int cuantos,
+		[FromQuery, DefaultValue("2025-12-03T00:00:00")]
+		DateTime? aPartirDeCuando
+	) {
+		DateTime desde = aPartirDeCuando ?? DateTime.Now; // default real acá
+
+		var result = await ServiciosPublicos.SolicitarDisponibilidadesPara(
+			especialidadCodigoInterno,
+			desde,
+			cuantos,
+			repositorio
+		);
+
+		return result switch {
+			Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok ok =>
+				Ok(ok.Valor.Select(d => d.ATexto()).ToList()),
+
+			Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error err =>
+				BadRequest(new { error = err.Mensaje }),
+
+			_ => StatusCode(500)
+		};
+	}
+
+
+
+
+
+
+	[HttpPost("turnos/cancelar")]
+	public async Task<IActionResult> SolicitarCancelacion(
+		[FromBody] SolicitarCancelacionDto dto
+	) {
+		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+			return Unauthorized();
+
+		Result<Turno2025> result = await ServiciosPublicos.SolicitarCancelacion(
+			dto.TurnoId,
+			dto.OutcomeFecha,
+			dto.OutcomeComentario,
+			repositorio
+		);
+		return result.Match<IActionResult>(
+			ok => Ok(ok.ToModel()),
+			err => Problem(err)
+		);
+	}
+
+
+
+
+
+	[HttpPost("turnos/reprogramar")]
+	public async Task<IActionResult> SolicitarReprogramacion(
+		[FromBody] SolicitarReprogramacionDto dto
+	) {
+		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
+			return Unauthorized();
+
+        Result<Turno2025> result = await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
+			dto.TurnoId,
+			dto.OutcomeFecha,
+			dto.OutcomeComentario,
+			repositorio
+		);
+
+		return result.Match<IActionResult>(
+			ok => Ok(ok.ToModel()),
+			err => Problem(err)
+		);
+	}
+
+
+
+
+
+
+	//[HttpPut("{id:int}")] // ejemplo
+	//public Task<IActionResult> UpdateTurno(int id, [FromBody] TurnoDbModel dto)
+	//=> this.SafeExecuteWithDomain(
+	//	logger,
+	//	PermisoSistema.UpdateEntidades,
+	//	dto,
+	//	x => x.ToDomain(),
+	//	turno => repositorio.UpdateTurnoWhereId(turno),
+	//	notFoundMessage: $"No existe turno con id {id}"
+	//);
+
+
+
+
+
+	//[HttpPost("turnos/solicitar")]
+	//public async Task<IActionResult> SolicitarTurnoPrimeraDisponibilidad([FromBody] SolicitarTurnoPrimeraDispDto dto) {
+	//	return await this.SafeExecuteWithDomain<SolicitarTurnoPrimeraDispDto,PacienteId,Turno2025>(
+	//		logger,
+	//		PermisoSistema.SolicitarTurno,
+	//		dto,
+	//		d => Result.Ok(d.PacienteId), // mapping simple
+	//		async pacienteId => await ServiciosPublicos.SolicitarTurnoEnLaPrimeraDisponibilidad(
+	//			pacienteId,
+	//			dto.Especialidad,
+	//			new FechaRegistro2025(dto.FechaCreacion),
+	//			repositorio
+	//		)
+	//	);
+	//}
+
+
+
+
+
+
 
 	// GET: api/<MedicosController>
 	// [HttpGet]
-	// public async Task<ActionResult<IEnumerable<TurnoDbModel>>> Get() {
+	// public async Task<ActionResult<IEnumerable<TurnoDbModel>>> VerDisponibilidades() {
 	// try {
 	// IEnumerable<TurnoDbModel> instances = await repositorio.SelectTurnos();
 	// return Ok(instances);
@@ -44,12 +190,12 @@ public class DomainController(IRepositorio repositorio, ILogger<DomainController
 	// --------------------------------------------------------
 	// [HttpPost]
 	// public async Task<IActionResult> Crear([FromBody] CrearTurnoRequestDto dto) {
-	// Result<EspecialidadMedica2025> espResult = EspecialidadMedica2025.CrearPorCodigoInterno(dto.EspecialidadCodigo);
+	// Result<Especialidad2025> espResult = Especialidad2025.CrearPorCodigoInterno(dto.EspecialidadCodigo);
 
 	// if (espResult.IsError)
 	// return BadRequest($"Especialidad inválida: {dto.EspecialidadCodigo}");
 
-	// EspecialidadMedica2025 especialidad = espResult.GetOrRaise();
+	// Especialidad2025 especialidad = espResult.GetOrRaise();
 
 	// Result<Turno2025> result = await repositorio.AgendarTurnoAsync(
 	// dto.PacienteId,

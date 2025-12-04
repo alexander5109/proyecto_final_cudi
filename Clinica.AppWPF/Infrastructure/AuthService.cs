@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http;
 using System.Net.Http.Json;
 using Clinica.Dominio.Comun;
 using static Clinica.Shared.Dtos.ApiDtos;
@@ -11,7 +12,7 @@ public static class AuthService {
 			return new Result<UsuarioLogueadoDTO>.Error("Debe completar usuario y contraseña.");
 
 		try {
-			var response = await api.Cliente.PostAsJsonAsync("/auth/login",
+            HttpResponseMessage response = await api.Cliente.PostAsJsonAsync("/auth/login",
 				new { username = user, password = pass });
 
 			if (!response.IsSuccessStatusCode) {
@@ -24,11 +25,11 @@ public static class AuthService {
 				);
 			}
 
-			var data = await response.Content.ReadFromJsonAsync<UsuarioLogueadoDTO>();
+            UsuarioLogueadoDTO? data = await response.Content.ReadFromJsonAsync<UsuarioLogueadoDTO>();
 			if (data is null)
 				return new Result<UsuarioLogueadoDTO>.Error("Error inesperado del servidor.");
 
-			// acá queda guardado en el ApiHelper
+			// acá queda guardado en el Api
 			api.SetUsuario(data);
 
 			return new Result<UsuarioLogueadoDTO>.Ok(data);

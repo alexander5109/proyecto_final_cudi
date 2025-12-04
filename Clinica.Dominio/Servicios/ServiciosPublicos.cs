@@ -6,331 +6,237 @@ using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.Servicios;
 
-public static class ServiciosPublicos {
+public class ServiciosPublicos {
 
-	//CRUD paciente
-	//CRUD medico
-	//CRUD turno
-	//public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> Crear(
+    //Task<Result<Turno2025>> AgendarTurnoAsync(PacienteId pacienteId, MedicoId medicoId, EspecialidadCodigo especialidadCodigo, DateTime desde, DateTime hasta);
 
+    //Task<Result<Turno2025>> CancelarTurnoAsync(TurnoId id, Option<string> motivo);
 
-	//Task<Result<Turno2025>> AgendarTurnoAsync(PacienteId pacienteId, MedicoId medicoId, EspecialidadCodigo2025 especialidadCodigo, DateTime desde, DateTime hasta);
+    //Task<Result<Turno2025>> ReprogramarTurnoAsync(TurnoId id, DateTime nuevaFechaDesde, DateTime nuevaFechaHasta);
 
-	//Task<Result<Turno2025>> CancelarTurnoAsync(TurnoId id, Option<string> motivo);
-
-	//Task<Result<Turno2025>> ReprogramarTurnoAsync(TurnoId id, DateTime nuevaFechaDesde, DateTime nuevaFechaHasta);
-
-	//Task<Result<Turno2025>> MarcarComoAusente(TurnoId id, Option<string> motivo);
-	//Task<Result<Turno2025>> MarcarComoConcretado(TurnoId id, Option<string> motivo);
+    //Task<Result<Turno2025>> MarcarComoAusente(TurnoId id, Option<string> motivo);
+    //Task<Result<Turno2025>> MarcarComoConcretado(TurnoId id, Option<string> motivo);
 
 
-
-	//public static async Task<Result<PacienteId>> InsertPaciente(Usuario2025 usuario, IRepositorioDomain repositorio, Paciente2025 paciente) {
-	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
-	//		return new Result<PacienteId>.Error("No cuenta con permisos para crear pacientes.");
-	//	}
-	//	return await repositorio.InsertPacienteReturnId(paciente);
-	//}
-	//public static async Task<Result<Unit>> UpdatePacienteWhereId(Usuario2025 usuario, IRepositorioDomain repositorio, Paciente2025 paciente) {
-	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
-	//		return new Result<Unit>.Error("No cuenta con permisos para actualizar pacientes.");
-	//	}
-	//	return await repositorio.UpdatePacienteWhereId(paciente);
-	//}
-	//public static async Task<Result<Unit>> DeletePacienteWhereId(Usuario2025 usuario, IRepositorioDomain repositorio, PacienteId id) {
-	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin) {
-	//		return new Result<Unit>.Error("No cuenta con permisos para eliminar pacientes.");
-	//	}
-	//	return await repositorio.DeletePacienteWhereId(id);
-	//}
-
-	//public static async Task<Result<Medico2025>> SelectMedicoWhereId(Usuario2025 usuario, IRepositorioDomain repositorio, MedicoId id
-	//) {
-	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
-	//		return new Result<Medico2025>.Error("No cuenta con permisos para ver esta entidad");
-	//	}
-
-	//	// --- Delegar la obtención de datos ---
-	//	return await repositorio.SelectMedicoWhereId(id);
-	//}
-
-	//public static async Task<Result<IEnumerable<Paciente2025>>> SelectPacientes(Usuario2025 usuario,
-	//	IRepositorioDomain repositorio
-	//) {
-	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
-	//		return new Result<IEnumerable<Paciente2025>>.Error("No cuenta con permisos para ver esta entidad");
-	//	}
-	//	return await repositorio.SelectPacientes();
-	//}
-
-
-
-	//public static async Task<Result<IEnumerable<Medico2025>>> SelectMedicos(
-	//	Usuario2025 usuario,
-	//	IRepositorioDomain repositorio
-	//) {
-	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
-	//		return new Result<IEnumerable<Medico2025>>.Error("No cuenta con permisos para ver esta entidad");
-	//	}
-	//	return await repositorio.SelectMedicos();
-	//}
-
-	//public static async Task<Result<IEnumerable<Turno2025>>> SelectTurnosWherePacienteId(
-	//	Usuario2025 usuario,
-	//	IRepositorioDomain repositorio,
-	//	PacienteId id
-	//) {
-	//	if (usuario.EnumRole is not UsuarioEnumRole.Nivel1Admin and not UsuarioEnumRole.Nivel2Secretaria) {
-	//		return new Result<IEnumerable<Turno2025>>.Error("No cuenta con permisos para ver esta entidad");
-	//	}
-	//	return await repositorio.SelectTurnosWherePacienteId(id);
-	//}
-	//public static async Task<Result<IEnumerable<Result<Turno2025>>>> SelectTurnosWherePacienteId(
-	//	Usuario2025 usuario,
-	//	IRepositorioDomain repositorio,
-	//	PacienteId id
-	//) {
-	//	if (usuario.EnumRole is not (UsuarioEnumRole.Nivel1Admin or UsuarioEnumRole.Nivel2Secretaria)) {
-	//		return new Result<IEnumerable<Result<Turno2025>>>.Error(
-	//			"No cuenta con permisos para ver esta entidad"
-	//		);
-	//	}
-	//	return await repositorio.SelectTurnosWherePacienteId(id);
-	//}
-
-
-
-
-	public static async Task<Result<Usuario2025>> ValidarCredenciales(
-		string username,
-		string password,
-		IRepositorioDomain repositorio
-	) {
+    public static async Task<Result<Usuario2025>> ValidarCredenciales(
+        string username,
+        string password,
+        IRepositorioDomainServiciosPrivados repositorio
+    ) {
         Result<Usuario2025> resultadoUsuario =
-			await repositorio.SelectUsuarioWhereNombreAsDomain(new NombreUsuario(username));
+            await repositorio.SelectUsuarioWhereNombreAsDomain(new NombreUsuario(username));
 
-		return resultadoUsuario switch {
-			Result<Usuario2025>.Ok ok =>
-				ok.Valor.PasswordMatch(password)
-					? new Result<Usuario2025>.Ok(ok.Valor)
-					: new Result<Usuario2025>.Error("Usuario o contraseña incorrectos"),
+        return resultadoUsuario switch {
+            Result<Usuario2025>.Ok ok =>
+                ok.Valor.PasswordMatch(password)
+                    ? new Result<Usuario2025>.Ok(ok.Valor)
+                    : new Result<Usuario2025>.Error("Usuario o contraseña incorrectos"),
 
-			Result<Usuario2025>.Error err =>
-				err, // devolvemos el error tal cual
-			_ =>
-				new Result<Usuario2025>.Error("Error inesperado validando credenciales")
-		};
-	}
-
-	public static async Task<Result<Turno2025>> SolicitarCancelacion(
-		Result<Turno2025> turnoOriginalResult,
-		DateTime outcomeFecha,
-		string outcomeComentario,
-		IRepositorioDomain repositorio
-	) {
-		if (turnoOriginalResult.IsError) { return turnoOriginalResult; }
-		Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
-		// 1. Aplicar regla de dominio para cancelar
-		Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
-			TurnoOutcomeEstado2025.Cancelado,
-			outcomeFecha,
-			outcomeComentario
-		);
-
-		if (canceladoResult is Result<Turno2025>.Error e1)
-			return new Result<Turno2025>.Error(e1.Mensaje);
-
-		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
-
-		// 2. Guardar cambios (IO)
-		Result<Unit> updateResult = await repositorio.UpdateTurnoWhereId(turnoCancelado);
-
-		if (updateResult is Result<Unit>.Error e2)
-			return new Result<Turno2025>.Error(
-				$"Error al persistir la cancelación del turno: {e2.Mensaje}"
-			);
-
-		return new Result<Turno2025>.Ok(turnoCancelado);
-	}
+            Result<Usuario2025>.Error err =>
+                err, // devolvemos el error tal cual
+            _ =>
+                new Result<Usuario2025>.Error("Error inesperado validando credenciales")
+        };
+    }
 
 
-	public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>>
-		SolicitarDisponibilidadesPara(
-			EspecialidadMedica2025 solicitudEspecialidad,
-			DateTime solicitudFechaCreacion,
-			int cuantos,
-			IRepositorioDomain repositorio) {
-		List<DisponibilidadEspecialidad2025> lista = new(capacity: cuantos);
 
-		await foreach (Result<DisponibilidadEspecialidad2025> dispResult in
-			ServiciosPrivados.GenerarDisponibilidades(
-				solicitudEspecialidad,
-				solicitudFechaCreacion,
-				repositorio)) {
-			if (dispResult.IsError) {
-				// Propagamos el error aguas arriba
-				return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>
-					.Error(dispResult.UnwrapAsError());
-			}
+    public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> SolicitarDisponibilidadesPara(
+            EspecialidadCodigo solicitudEspecialidadCodigo,
+            DateTime aPartirDeCuando,
+            int cuantos,
+            IRepositorioDomainServiciosPrivados repositorio
+        ) {
 
-			lista.Add(dispResult.UnwrapAsOk());
-
-			if (lista.Count >= cuantos)
-				break;
+		if (cuantos > 50) {
+			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error("No vamos a producir tantas disponibilidades. Si quiere, adelante la fecha");
 		}
 
-		if (lista.Count > 0) {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>
-				.Ok(lista);
-		}
-
-		return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>
-			.Error("No se encontraron disponibilidades.");
-	}
+		Result<Especialidad2025> solicitudEspecialidadResult = Especialidad2025.CrearPorCodigoInterno(solicitudEspecialidadCodigo);
+        if (solicitudEspecialidadResult.IsError) return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error(solicitudEspecialidadResult.UnwrapAsError());
+        Especialidad2025 solicitudEspecialidad = solicitudEspecialidadResult.UnwrapAsOk();
 
 
+        List<DisponibilidadEspecialidad2025> lista = new(capacity: cuantos);
 
-	public static async Task<Result<Turno2025>> SolicitarTurnoEnLaPrimeraDisponibilidad(
-		PacienteId pacienteId,
-		EspecialidadMedica2025 solicitudEspecialidad,
-		FechaRegistro2025 solicitudFechaCreacion,
-		IRepositorioDomain repositorio
-	) {
-		// 1. Buscar próxima disponibilidad
-		Result<DisponibilidadEspecialidad2025> dispResult =
-			await ServiciosPrivados.EncontrarProximaDisponibilidad(
-				solicitudEspecialidad,
-				solicitudFechaCreacion.Valor,
-				repositorio
-			);
+        await foreach (Result<DisponibilidadEspecialidad2025> dispResult in
+            ServiciosPrivados.GenerarDisponibilidades(
+                solicitudEspecialidad,
+                aPartirDeCuando,
+                repositorio)) {
+            if (dispResult.IsError) {
+                // Propagamos el error aguas arriba
+                return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>
+                    .Error(dispResult.UnwrapAsError());
+            }
 
-		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error errDisp)
-			return new Result<Turno2025>.Error(errDisp.Mensaje);
+            lista.Add(dispResult.UnwrapAsOk());
 
-		DisponibilidadEspecialidad2025 disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
+            if (lista.Count >= cuantos)
+                break;
+        }
 
-		// 2. Crear turno provisorio desde el dominio
-		Result<Turno2025> turnoResult = Turno2025.ProgramarNuevo(
-			new TurnoId(-1),            // provisional
-			pacienteId,
-			solicitudFechaCreacion,
-			disp
-		);
+        if (lista.Count > 0) {
+            return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok(lista);
+        }
 
-		if (turnoResult is Result<Turno2025>.Error errTurno)
-			return new Result<Turno2025>.Error(errTurno.Mensaje);
-
-		Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)turnoResult).Valor;
-
-		// 3. Persistir en la BD (insert que devuelve el TurnoId)
-		Result<TurnoId> insertResult = await repositorio.InsertTurnoReturnId(turnoProvisorio);
-
-		if (insertResult is Result<TurnoId>.Error errPersist)
-			return new Result<Turno2025>.Error($"Error al persistir el nuevo turno: {errPersist.Mensaje}");
-
-		TurnoId idReal = ((Result<TurnoId>.Ok)insertResult).Valor;
-
-		// 4. Devolver el turno ya con su ID real seteado
-		return new Result<Turno2025>.Ok(turnoProvisorio with { Id = idReal });
-	}
+        return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error("No se encontraron disponibilidades.");
+    }
 
 
 
-	public static async Task<Result<Turno2025>> SolicitarReprogramacionALaPrimeraDisponibilidad(
-		Result<Turno2025> turnoOriginalResult,
-		DateTime outcomeFecha,
-		string outcomeComentario,
-		IRepositorioDomain repositorio
-	) {
-		if (turnoOriginalResult.IsError) return turnoOriginalResult;
-		Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
+    public static async Task<Result<Turno2025>> SolicitarTurnoEnLaPrimeraDisponibilidad(
+        PacienteId pacienteId,
+        EspecialidadCodigo solicitudEspecialidadCodigo,
+        DateTime solicitudFechaCreacionRaw,
+        IRepositorioDomainServiciosPrivados repositorio
+    ) {
 
-		Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
-			TurnoOutcomeEstado2025.Reprogramado,
-			outcomeFecha,
-			outcomeComentario
-		);
-
-		if (canceladoResult is Result<Turno2025>.Error e1)
-			return new Result<Turno2025>.Error(e1.Mensaje);
-
-		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
-
-
-		Result<Unit> updateResult = await repositorio.UpdateTurnoWhereId(turnoCancelado);
-
-		if (updateResult is Result<Unit>.Error e2)
-			return new Result<Turno2025>.Error(
-				$"Error al persistir la cancelación del turno: {e2.Mensaje}"
-			);
-
-
-		Result<DisponibilidadEspecialidad2025> dispResult = await ServiciosPrivados.EncontrarProximaDisponibilidad(
-			turnoOriginal.Especialidad,
-			outcomeFecha,
-			repositorio
-		);
-
-		if (dispResult is Result<DisponibilidadEspecialidad2025>.Error e3)
-			return new Result<Turno2025>.Error(e3.Mensaje);
-
-		DisponibilidadEspecialidad2025 disponibilidad = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
-
-
-		Result<Turno2025> provResult = turnoCancelado.Reprogramar(
-			disponibilidad,
-			new TurnoId(-1) // placeholder hasta persistencia
-		);
-
-		if (provResult is Result<Turno2025>.Error e4)
-			return new Result<Turno2025>.Error(e4.Mensaje);
-
-		Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)provResult).Valor;
-
-
-		Result<TurnoId> insertResult = await repositorio.InsertTurnoReturnId(turnoProvisorio);
-
-		if (insertResult is Result<TurnoId>.Error e5)
-			return new Result<Turno2025>.Error(
-				$"Error al persistir el nuevo turno reprogramado: {e5.Mensaje}"
-			);
-
-		TurnoId idReal = ((Result<TurnoId>.Ok)insertResult).Valor;
-
-
-		return new Result<Turno2025>.Ok(
-			turnoProvisorio with { Id = idReal }
-		);
-	}
+        Result<FechaRegistro2025> fechaRresult = FechaRegistro2025.Crear(solicitudFechaCreacionRaw);
+        if (fechaRresult.IsError) return new Result<Turno2025>.Error(fechaRresult.UnwrapAsError());
+        FechaRegistro2025 solicitudFechaCreacion = fechaRresult.UnwrapAsOk();
 
 
 
-	public static async Task<Result<Turno2025>> SolicitarCancelacion(
-		Turno2025 turnoOriginal,
-		DateTime outcomeFecha,
-		string outcomeComentario,
-		IRepositorioDomain repositorio
-	) {
-		// 1. Aplicar regla de dominio para cancelar
-		Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
-			TurnoOutcomeEstado2025.Cancelado,
-			outcomeFecha,
-			outcomeComentario
-		);
 
-		if (canceladoResult is Result<Turno2025>.Error e1)
-			return new Result<Turno2025>.Error(e1.Mensaje);
+        Result<Especialidad2025> solicitudEspecialidadResult = Especialidad2025.CrearPorCodigoInterno(solicitudEspecialidadCodigo);
+        if (solicitudEspecialidadResult.IsError) return new Result<Turno2025>.Error(solicitudEspecialidadResult.UnwrapAsError());
+        Especialidad2025 solicitudEspecialidad = solicitudEspecialidadResult.UnwrapAsOk();
 
-		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
 
-		// 2. Guardar cambios (IO)
-		Result<Unit> updateResult = await repositorio.UpdateTurnoWhereId(turnoCancelado);
+        // 1. Buscar próxima disponibilidad
+        Result<DisponibilidadEspecialidad2025> dispResult =
+            await ServiciosPrivados.EncontrarProximaDisponibilidad(
+                solicitudEspecialidad,
+                solicitudFechaCreacion.Valor,
+                repositorio
+            );
 
-		if (updateResult is Result<Unit>.Error e2)
-			return new Result<Turno2025>.Error(
-				$"Error al persistir la cancelación del turno: {e2.Mensaje}"
-			);
+        if (dispResult is Result<DisponibilidadEspecialidad2025>.Error errDisp)
+            return new Result<Turno2025>.Error(errDisp.Mensaje);
 
-		return new Result<Turno2025>.Ok(turnoCancelado);
-	}
+        DisponibilidadEspecialidad2025 disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
+
+        // 2. Crear turno provisorio desde el dominio
+        Result<Turno2025> turnoResult = Turno2025.ProgramarNuevo(
+            new TurnoId(-1),            // provisional
+            pacienteId,
+            solicitudFechaCreacion,
+            disp
+        );
+
+        if (turnoResult is Result<Turno2025>.Error errTurno)
+            return new Result<Turno2025>.Error(errTurno.Mensaje);
+
+        Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)turnoResult).Valor;
+
+        // 3. Persistir en la BD (insert que devuelve el TurnoId)
+        Result<TurnoId> insertResult = await repositorio.InsertTurnoReturnId(turnoProvisorio);
+
+        if (insertResult is Result<TurnoId>.Error errPersist)
+            return new Result<Turno2025>.Error($"Error al persistir el nuevo turno: {errPersist.Mensaje}");
+
+        TurnoId idReal = ((Result<TurnoId>.Ok)insertResult).Valor;
+
+        // 4. Devolver el turno ya con su ID real seteado
+        return new Result<Turno2025>.Ok(turnoProvisorio with { Id = idReal });
+    }
+
+
+
+    public static async Task<Result<Turno2025>> SolicitarReprogramacionALaPrimeraDisponibilidad(
+        TurnoId turnoOriginalId,
+        DateTime outcomeFecha,
+        string outcomeComentario,
+        IRepositorioDomainServiciosPrivados repositorio
+    ) {
+        Result<Turno2025> turnoOriginalResult = await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId);
+        if (turnoOriginalResult.IsError) return turnoOriginalResult;
+        //if (turnoOriginalResult.IsError) return new Result<Turno2025>.Error($"No se encontró el turno original: {turnoOriginalResult.UnwrapAsError()}");
+        Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
+
+
+        Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(TurnoOutcomeEstado2025.Reprogramado, outcomeFecha, outcomeComentario);
+        if (canceladoResult.IsError) return canceladoResult;
+        //if (canceladoResult.IsError) return new Result<Turno2025>.Error($"No se puede cancelar el turno: {canceladoResult.UnwrapAsError()}");
+        Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
+
+
+        Result<Unit> updateResult = await repositorio.UpdateTurnoWhereId(turnoCancelado);
+        if (updateResult.IsError) return new Result<Turno2025>.Error($"Error al persistir la cancelación del turno: \n\t{updateResult.UnwrapAsError()}");
+
+
+        Result<DisponibilidadEspecialidad2025> dispResult = await ServiciosPrivados.EncontrarProximaDisponibilidad(
+            turnoOriginal.Especialidad,
+            outcomeFecha,
+            repositorio
+        );
+
+        if (dispResult is Result<DisponibilidadEspecialidad2025>.Error e3)
+            return new Result<Turno2025>.Error(e3.Mensaje);
+
+        DisponibilidadEspecialidad2025 disponibilidad = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
+
+
+        Result<Turno2025> provResult = turnoCancelado.Reprogramar(
+            disponibilidad,
+            new TurnoId(-1) // placeholder hasta persistencia
+        );
+
+        if (provResult is Result<Turno2025>.Error e4)
+            return new Result<Turno2025>.Error(e4.Mensaje);
+
+        Turno2025 turnoProvisorio = ((Result<Turno2025>.Ok)provResult).Valor;
+
+
+        Result<TurnoId> insertResult = await repositorio.InsertTurnoReturnId(turnoProvisorio);
+
+        if (insertResult is Result<TurnoId>.Error e5)
+            return new Result<Turno2025>.Error(
+                $"Error al persistir el nuevo turno reprogramado: {e5.Mensaje}"
+            );
+
+        TurnoId idReal = ((Result<TurnoId>.Ok)insertResult).Valor;
+
+
+        return new Result<Turno2025>.Ok(
+            turnoProvisorio with { Id = idReal }
+        );
+    }
+
+
+
+    public static async Task<Result<Turno2025>> SolicitarCancelacion(
+        TurnoId turnoOriginalId,
+        DateTime outcomeFecha,
+        string outcomeComentario,
+        IRepositorioDomainServiciosPrivados repositorio
+    ) {
+        Result<Turno2025> turnoOriginalResult = await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId);
+        if (turnoOriginalResult.IsError) return turnoOriginalResult;
+        //if (turnoOriginalResult.IsError) return new Result<Turno2025>.Error($"No se encontró el turno original: {turnoOriginalResult.UnwrapAsError()}");
+        Turno2025 turnoOriginal = turnoOriginalResult.UnwrapAsOk();
+
+        // 1. Aplicar regla de dominio para cancelar
+        Result<Turno2025> canceladoResult = turnoOriginal.SetOutcome(
+            TurnoOutcomeEstado2025.Cancelado,
+            outcomeFecha,
+            outcomeComentario
+        );
+
+        if (canceladoResult is Result<Turno2025>.Error e1)
+            return new Result<Turno2025>.Error(e1.Mensaje);
+
+        Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
+
+        // 2. Guardar cambios (IO)
+        Result<Unit> updateResult = await repositorio.UpdateTurnoWhereId(turnoCancelado);
+
+        if (updateResult is Result<Unit>.Error e2)
+            return new Result<Turno2025>.Error(
+                $"Error al persistir la cancelación del turno: {e2.Mensaje}"
+            );
+
+        return new Result<Turno2025>.Ok(turnoCancelado);
+    }
 }

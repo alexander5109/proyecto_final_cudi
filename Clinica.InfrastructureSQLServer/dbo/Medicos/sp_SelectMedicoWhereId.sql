@@ -23,10 +23,11 @@ BEGIN
                 H.DiaSemana,
                 H.HoraDesde,
                 H.HoraHasta
-            FROM HorarioMedico H
+            FROM dbo.HorarioMedico H
             WHERE H.MedicoId = M.Id
             FOR JSON PATH
         ) AS HorariosJson    -- <--- cambiar nombre del alias
-    FROM dbo.Medico M;
+    FROM dbo.Medico M
+    WHERE M.Id = @Id;
 END;
 GO

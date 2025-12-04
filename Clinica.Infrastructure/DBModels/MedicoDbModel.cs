@@ -9,7 +9,7 @@ namespace Clinica.Shared.Dtos;
 public static partial class DbModels {
 	public record MedicoDbModel(
 		MedicoId Id,
-		EspecialidadCodigo2025 EspecialidadCodigoInterno,
+		EspecialidadCodigo EspecialidadCodigoInterno,
 		string Dni,
 		string Nombre,
 		string Apellido,
@@ -29,13 +29,13 @@ public static partial class DbModels {
 
 	public static Result<Medico2025> ToDomain(this MedicoDbModel medicoDto) {
 		string json = string.IsNullOrWhiteSpace(medicoDto.HorariosJson) ? "[]" : medicoDto.HorariosJson;
-		List<HorarioMedicoDbModel> horariosDto = JsonSerializer.Deserialize<List<HorarioMedicoDbModel>>(json)
+		List<HorarioDbModel> horariosDto = JsonSerializer.Deserialize<List<HorarioDbModel>>(json)
 			?? [];
 		return Medico2025.Crear(
 			MedicoId.Crear(medicoDto.Id.Valor),
 			NombreCompleto2025.Crear(medicoDto.Nombre, medicoDto.Apellido),
 			//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
-			EspecialidadMedica2025.CrearPorCodigoInterno(medicoDto.EspecialidadCodigoInterno),
+			Especialidad2025.CrearPorCodigoInterno(medicoDto.EspecialidadCodigoInterno),
 			DniArgentino2025.Crear(medicoDto.Dni),
 			DomicilioArgentino2025.Crear(
 				LocalidadDeProvincia2025.Crear(

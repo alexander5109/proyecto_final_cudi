@@ -4,7 +4,7 @@ using Clinica.Dominio.Entidades;
 namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct DisponibilidadEspecialidad2025(
-	EspecialidadMedica2025 Especialidad,
+	Especialidad2025 Especialidad,
 	MedicoId MedicoId,
 	DateTime FechaHoraDesde,
 	DateTime FechaHoraHasta

@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.Comun;
+using Clinica.Shared.Dtos;
 
 
 namespace Clinica.AppWPF;
@@ -16,7 +17,7 @@ public partial class WindowLogin : Window {
 			return;
 		}
 
-		var result = await AuthService.LoginAsync(App.Api, guiUsuario.Text, guiPassword.Password);
+        Result<ApiDtos.UsuarioLogueadoDTO> result = await AuthService.LoginAsync(App.Api, guiUsuario.Text, guiPassword.Password);
 
 		if (result.IsError) {
 			MessageBox.Show(result.UnwrapAsError(), "Error", MessageBoxButton.OK);

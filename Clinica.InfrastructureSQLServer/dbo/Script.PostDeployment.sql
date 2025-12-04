@@ -47,8 +47,6 @@ END;
 GO
 
 ----------------------------------------------------
--- Cargar datos de ejemplo en HorarioMedico
-----------------------------------------------------
 
 
 IF NOT EXISTS (SELECT 1 FROM dbo.HorarioMedico)
