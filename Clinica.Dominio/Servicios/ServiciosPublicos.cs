@@ -52,7 +52,7 @@ public class ServiciosPublicos {
 			return new Result<IReadOnlyList<Disponibilidad2025>>.Error("No vamos a producir tantas disponibilidades. Si quiere, adelante la fecha");
 		}
 
-		Result<Especialidad2025> solicitudEspecialidadResult = Especialidad2025.CrearPorCodigoInterno(solicitudEspecialidadCodigo);
+		Result<Especialidad2025> solicitudEspecialidadResult = Especialidad2025.CrearResultPorCodigoInterno(solicitudEspecialidadCodigo);
         if (solicitudEspecialidadResult.IsError) return new Result<IReadOnlyList<Disponibilidad2025>>.Error(solicitudEspecialidadResult.UnwrapAsError());
         Especialidad2025 solicitudEspecialidad = solicitudEspecialidadResult.UnwrapAsOk();
 
@@ -92,14 +92,14 @@ public class ServiciosPublicos {
         IRepositorioDomainServiciosPrivados repositorio
     ) {
 
-        Result<FechaRegistro2025> fechaRresult = FechaRegistro2025.Crear(solicitudFechaCreacionRaw);
+        Result<FechaRegistro2025> fechaRresult = FechaRegistro2025.CrearResult(solicitudFechaCreacionRaw);
         if (fechaRresult.IsError) return new Result<Turno2025>.Error(fechaRresult.UnwrapAsError());
         FechaRegistro2025 solicitudFechaCreacion = fechaRresult.UnwrapAsOk();
 
 
 
 
-        Result<Especialidad2025> solicitudEspecialidadResult = Especialidad2025.CrearPorCodigoInterno(solicitudEspecialidadCodigo);
+        Result<Especialidad2025> solicitudEspecialidadResult = Especialidad2025.CrearResultPorCodigoInterno(solicitudEspecialidadCodigo);
         if (solicitudEspecialidadResult.IsError) return new Result<Turno2025>.Error(solicitudEspecialidadResult.UnwrapAsError());
         Especialidad2025 solicitudEspecialidad = solicitudEspecialidadResult.UnwrapAsOk();
 

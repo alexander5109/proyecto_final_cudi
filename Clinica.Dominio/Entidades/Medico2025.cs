@@ -5,10 +5,11 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Dominio.Entidades;
 
 public record struct MedicoId(int Valor) {
-	public static Result<MedicoId> Crear(int? id) =>
+	public static Result<MedicoId> CrearResult(int? id) =>
 		id is int idGood
 		? new Result<MedicoId>.Ok(new MedicoId(idGood))
 		: new Result<MedicoId>.Error("El id no puede ser nulo.");
+	public static MedicoId Crear(int id) => new(id);
 	public static bool TryParse(string? s, out MedicoId id) {
 		if (int.TryParse(s, out int value)) {
 			id = new MedicoId(value);
@@ -38,7 +39,7 @@ public record Medico2025(
 	FechaRegistro2025 FechaIngreso,
 	bool HaceGuardiasValor
 ) {
-	public static Result<Medico2025> Crear(
+	public static Result<Medico2025> CrearResult(
 		Result<MedicoId> idResult,
 		Result<NombreCompleto2025> nombreResult,
 		Result<Especialidad2025> especialidadResult,

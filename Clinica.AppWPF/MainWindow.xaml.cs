@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.Pacientes;
 
 namespace Clinica.AppWPF {
 	public partial class MainWindow : Window {
@@ -13,33 +14,33 @@ namespace Clinica.AppWPF {
 		}
 		private void MetodoBotonMedicos(object sender, RoutedEventArgs e) {
 			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				this.NavegarA<WindowListarMedicos>();
+				//this.NavegarA<WindowListarMedicos>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
 				if (App.Api.UsuarioActual?.RolEnum < 2) {
-					this.NavegarA<WindowListarMedicos>();
+					//this.NavegarA<WindowListarMedicos>();
 				}
 			}
 		}
 
 		private void MetodoBotonPacientes(object sender, RoutedEventArgs e) {
 			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				this.NavegarA<WindowListarPacientes>();
+				this.NavegarA<PacientesVer>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
 				if (App.Api.UsuarioActual?.RolEnum < 2) {
-					this.NavegarA<WindowListarPacientes>();
+					this.NavegarA<PacientesVer>();
 				}
 			}
 		}
 
 		private void MetodoBotonTurnos(object sender, RoutedEventArgs e) {
 			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				this.NavegarA<WindowListarTurnos>();
+				//this.NavegarA<WindowListarTurnos>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
 				if (App.Api.UsuarioActual?.RolEnum < 2) {
-					this.NavegarA<WindowListarTurnos>();
+					//this.NavegarA<WindowListarTurnos>();
 				}
 			}
 		}
@@ -58,11 +59,11 @@ namespace Clinica.AppWPF {
 
 		private void MetodoBotonTurnos2025(object sender, RoutedEventArgs e) {
 			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				this.NavegarA<WindowGestionTurno>();
+				//this.NavegarA<WindowGestionTurno>();
 			} else {
 				this.AbrirComoDialogo<WindowLogin>();
 				if (App.Api.UsuarioActual?.RolEnum < 2) {
-					this.NavegarA<WindowGestionTurno>();
+					//this.NavegarA<WindowGestionTurno>();
 				}
 			}
 

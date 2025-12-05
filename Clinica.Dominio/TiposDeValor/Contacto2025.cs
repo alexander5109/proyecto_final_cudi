@@ -10,7 +10,7 @@ public readonly record struct ContactoEmail2025(
 	public string ATexto() {
 		return Valor;
 	}
-	public static Result<ContactoEmail2025> Crear(string? input) {
+	public static Result<ContactoEmail2025> CrearResult(string? input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<ContactoEmail2025>.Error("El correo no puede estar vacío.");
 
@@ -28,7 +28,7 @@ public readonly record struct ContactoTelefono2025(
 	public string ATexto() {
 		return Valor;
 	}
-	public static Result<ContactoTelefono2025> Crear(string? input){
+	public static Result<ContactoTelefono2025> CrearResult(string? input){
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<ContactoTelefono2025>.Error("El teléfono no puede estar vacío.");
 
@@ -53,6 +53,6 @@ public record struct Contacto2025(
 			$"  • Email: {Email.ATexto()}\n" +
 			$"  • Teléfono: {Telefono.ATexto()}";
 	}
-	public static Result<Contacto2025> Crear(Result<ContactoEmail2025> emailResult, Result<ContactoTelefono2025> telResult)
+	public static Result<Contacto2025> CrearResult(Result<ContactoEmail2025> emailResult, Result<ContactoTelefono2025> telResult)
 		=> emailResult.Bind(emailOk => telResult.Map(telOk => new Contacto2025(emailOk, telOk)));
 }

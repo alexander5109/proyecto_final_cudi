@@ -85,13 +85,13 @@ public partial class WindowListarMedicos : Window {
 	// Botones de modificar
 	//=============================================================
 	private void ButtonModificarTurno(object sender, RoutedEventArgs e) {
-		if (SelectedTurno != null)
-			this.AbrirComoDialogo<WindowModificarTurno>(SelectedTurno);
+		//if (SelectedTurno != null)
+		//	this.AbrirComoDialogo<WindowModificarTurno>(SelectedTurno);
 	}
 
 	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
-		if (SelectedMedico != null)
-			this.AbrirComoDialogo<WindowModificarMedico>(SelectedMedico);
+		//if (SelectedMedico != null)
+		//	this.AbrirComoDialogo<WindowModificarMedico>(SelectedMedico);
 	}
 
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
@@ -102,9 +102,9 @@ public partial class WindowListarMedicos : Window {
 	//=============================================================
 	// Botones de crear
 	//=============================================================
-	private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarMedico>();
+	//private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarMedico>();
 	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarPaciente>();
-	private void ButtonAgregarTurno(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarTurno>();
+	//private void ButtonAgregarTurno(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarTurno>();
 
 	//=============================================================
 	// Botones de navegación

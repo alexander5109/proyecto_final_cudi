@@ -32,7 +32,7 @@ public static partial class DbModels {
 	}
 
 	public static Result<Horario2025> ToDomain(this HorarioDbModel horarioDto) {
-		return Horario2025.Crear(
+		return Horario2025.CrearResult(
 			horarioDto.Id,
 			horarioDto.MedicoId,
 			new DiaSemana2025(horarioDto.DiaSemana, horarioDto.DiaSemana.AEspañol()),

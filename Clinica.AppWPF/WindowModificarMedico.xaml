@@ -110,7 +110,8 @@
 				<Label Content="Horarios de atención" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,5"/>
 				<TreeView 
 					x:Name="treeViewHorarios"
-					ItemsSource="{Binding SelectedMedico.HorariosAgrupados}">
+					ItemsSource="{Binding SelectedMedico.HorariosAgrupados}"
+					Height="100">
 					<TreeView.Resources>
 
 						<!-- Grupo (día) -->

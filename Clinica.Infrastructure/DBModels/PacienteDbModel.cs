@@ -22,22 +22,22 @@ public static partial class DbModels {
 			: this(default!, "", "", "", default, "", "", default, "", "", default) { }
 	}
 	public static Result<Paciente2025> ToDomain(this PacienteDbModel pacientedto) {
-		return Paciente2025.Crear(
-			PacienteId.Crear(pacientedto.Id.Valor),
-			NombreCompleto2025.Crear(pacientedto.Nombre, pacientedto.Apellido),
-			DniArgentino2025.Crear(pacientedto.Dni),
-			Contacto2025.Crear(
-			ContactoEmail2025.Crear(pacientedto.Email),
-			ContactoTelefono2025.Crear(pacientedto.Telefono)),
-			DomicilioArgentino2025.Crear(
-			LocalidadDeProvincia2025.Crear(
+		return Paciente2025.CrearResult(
+			PacienteId.CrearResult(pacientedto.Id.Valor),
+			NombreCompleto2025.CrearResult(pacientedto.Nombre, pacientedto.Apellido),
+			DniArgentino2025.CrearResult(pacientedto.Dni),
+			Contacto2025.CrearResult(
+			ContactoEmail2025.CrearResult(pacientedto.Email),
+			ContactoTelefono2025.CrearResult(pacientedto.Telefono)),
+			DomicilioArgentino2025.CrearResult(
+			LocalidadDeProvincia2025.CrearResult(
 				pacientedto.Localidad,
-				ProvinciaArgentina2025.CrearPorCodigo(
+				ProvinciaArgentina2025.CrearResultPorCodigo(
 					pacientedto.ProvinciaCodigo)
 				)
 			, pacientedto.Domicilio),
-			FechaDeNacimiento2025.Crear(pacientedto.FechaNacimiento),
-			FechaRegistro2025.Crear(pacientedto.FechaIngreso)
+			FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
+			FechaRegistro2025.CrearResult(pacientedto.FechaIngreso)
 		);
 	}
 

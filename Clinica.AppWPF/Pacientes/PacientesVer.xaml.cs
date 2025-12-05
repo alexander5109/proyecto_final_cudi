@@ -3,14 +3,14 @@ using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
 using static Clinica.Shared.Dtos.ApiDtos;
 
-namespace Clinica.AppWPF;
+namespace Clinica.AppWPF.Pacientes;
 
-public partial class WindowListarPacientes : Window {
+public partial class PacientesVer : Window {
 	private TurnoDto? SelectedTurno;
 	private PacienteDto? SelectedPaciente;
 	private MedicoDto? MedicoRelacionado;
 
-	public WindowListarPacientes() {
+	public PacientesVer() {
 		InitializeComponent();
 		_ = CargaInicialAsync();
 	}
@@ -84,28 +84,28 @@ public partial class WindowListarPacientes : Window {
 	//=============================================================
 	private void ButtonModificarTurno(object sender, RoutedEventArgs e) {
 		if (SelectedTurno != null) {
-			this.AbrirComoDialogo<WindowModificarTurno>(SelectedTurno);
+			//this.AbrirComoDialogo<WindowModificarTurno>(SelectedTurno);
 		}
 	}
 
 	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
 		if (MedicoRelacionado != null) {
-			this.AbrirComoDialogo<WindowModificarMedico>(MedicoRelacionado);
+			//this.AbrirComoDialogo<WindowModificarMedico>(MedicoRelacionado);
 		}
 	}
 
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
 		if (SelectedPaciente != null) {
-			this.AbrirComoDialogo<WindowModificarPaciente>(SelectedPaciente);
+			this.AbrirComoDialogo<PacienteUpdate>(SelectedPaciente.Id);
 		}
 	}
 
 	//=============================================================
 	// Botones de crear
 	//=============================================================
-	private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarMedico>();
-	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarPaciente>();
-	private void ButtonAgregarTurno(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarTurno>();
+	//private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarMedico>();
+	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<PacienteUpdate>();
+	//private void ButtonAgregarTurno(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarTurno>();
 
 	//=============================================================
 	// Botones de navegación

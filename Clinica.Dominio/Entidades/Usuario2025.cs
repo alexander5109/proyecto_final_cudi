@@ -33,7 +33,7 @@ public sealed record Usuario2025(
 	ContraseñaHasheada PasswordHash,
 	UsuarioEnumRole EnumRole
 ) {
-    public static Result<Usuario2025> Crear(UsuarioId id, string? nombreUsuario, string? passwordHash, UsuarioEnumRole enumRole) {
+    public static Result<Usuario2025> CrearResult(UsuarioId id, string? nombreUsuario, string? passwordHash, UsuarioEnumRole enumRole) {
 		if (string.IsNullOrEmpty(nombreUsuario)) {
 			return new Result<Usuario2025>.Error("No se puede crear un usuario con el nombre vacio");
 		}

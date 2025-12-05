@@ -19,28 +19,5 @@ public sealed record ListaEspecialidadesMedicas2025(
 
 		return sb.ToString();
 	}
-	// Factory 1: desde una lista de Result<Especialidad>
-	public static Result<ListaEspecialidadesMedicas2025> Crear(IReadOnlyList<Result<Especialidad2025>> results)
-		=> results.Bind(list =>
-			new Result<ListaEspecialidadesMedicas2025>.Ok(
-				new ListaEspecialidadesMedicas2025(list)
-			)
-		);
-
-	// Factory 2: desde una lista ya validada de Especialidad2025
-	public static Result<ListaEspecialidadesMedicas2025> Crear(IReadOnlyList<Especialidad2025> okList)
-		=> new Result<ListaEspecialidadesMedicas2025>.Ok(
-			new ListaEspecialidadesMedicas2025(okList)
-		);
-
-	// Factory 3: desde una sola especialidad
-	public static Result<ListaEspecialidadesMedicas2025> CrearConUnicaEspecialidad(Especialidad2025 unaSola)
-		=> new Result<ListaEspecialidadesMedicas2025>
-		.Ok(new ListaEspecialidadesMedicas2025([unaSola])
-	);
-	public static Result<ListaEspecialidadesMedicas2025> CrearConUnicaEspecialidad(Result<Especialidad2025> unaSolaResult) 
-		=> unaSolaResult.Bind(unaSola => new
-			Result<ListaEspecialidadesMedicas2025>.Ok(new ListaEspecialidadesMedicas2025([unaSola]))
-		);
 }
 

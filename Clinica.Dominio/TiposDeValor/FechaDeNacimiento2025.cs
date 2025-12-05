@@ -11,7 +11,7 @@ public record FechaDeNacimiento2025(DateOnly Valor) : IComoTexto {
 
 	public static readonly DateOnly Hoy = DateOnly.FromDateTime(DateTime.Now);
 
-	public static Result<FechaDeNacimiento2025> Crear(DateOnly fecha) {
+	public static Result<FechaDeNacimiento2025> CrearResult(DateOnly fecha) {
 		if (fecha > Hoy)
 			return new Result<FechaDeNacimiento2025>.Error("La fecha de nacimiento no puede ser futura.");
 		if (fecha < Hoy.AddYears(-120))
@@ -20,15 +20,15 @@ public record FechaDeNacimiento2025(DateOnly Valor) : IComoTexto {
 		return new Result<FechaDeNacimiento2025>.Ok(new(fecha));
 	}
 
-	public static Result<FechaDeNacimiento2025> Crear(DateTime? fecha) {
+	public static Result<FechaDeNacimiento2025> CrearResult(DateTime? fecha) {
 		if (fecha is null) {
 			return new Result<FechaDeNacimiento2025>.Error("La fecha de ingreso no puede estar vacía.");
 		}
 		DateOnly dateOnly = DateOnly.FromDateTime(fecha.Value);
-		return Crear(dateOnly);
+		return CrearResult(dateOnly);
 	}
 
-	public static Result<FechaDeNacimiento2025> Crear(string? input) {
+	public static Result<FechaDeNacimiento2025> CrearResult(string? input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<FechaDeNacimiento2025>.Error("La fecha de nacimiento no puede estar vacía.");
 
@@ -38,10 +38,10 @@ public record FechaDeNacimiento2025(DateOnly Valor) : IComoTexto {
 		];
 
 		if (DateTime.TryParseExact(input.Trim(), formatos, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
-			return Crear(dt);
+			return CrearResult(dt);
 
 		if (DateTime.TryParse(input.Trim(), CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime dt2))
-			return Crear(dt2);
+			return CrearResult(dt2);
 
 		return new Result<FechaDeNacimiento2025>.Error("Formato de fecha inválido.");
 	}

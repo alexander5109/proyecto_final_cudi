@@ -5,11 +5,12 @@ using static Clinica.Dominio.Comun.ValidatedExtensions;
 namespace Clinica.Dominio.Entidades;
 
 
-public record struct PacienteId(int Valor) {
-	public static Result<PacienteId> Crear(int? id) =>
+public readonly record struct PacienteId(int Valor) {
+	public static Result<PacienteId> CrearResult(int? id) =>
 		id is int idGood
 		? new Result<PacienteId>.Ok(new PacienteId(idGood))
 		: new Result<PacienteId>.Error("El id no puede ser nulo.");
+	public static PacienteId Crear(int id) => new(id);
 	public static bool TryParse(string? s, out PacienteId id) {
 		if (int.TryParse(s, out int value)) {
 			id = new PacienteId(value);
@@ -33,7 +34,7 @@ public record Paciente2025(
 	FechaDeNacimiento2025 FechaNacimiento,
 	FechaRegistro2025 FechaIngreso
 ): IComoTexto {
-	public static Result<Paciente2025> Crear(
+	public static Result<Paciente2025> CrearResult(
 		Result<PacienteId> idResult,
 		Result<NombreCompleto2025> nombreResult,
 		Result<DniArgentino2025> dniResult,

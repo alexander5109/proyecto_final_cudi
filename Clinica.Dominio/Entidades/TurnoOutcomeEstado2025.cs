@@ -35,12 +35,12 @@ public sealed record TurnoOutcomeEstado2025(
 		Reprogramado
 	];
 
-	public static Result<TurnoOutcomeEstado2025> CrearPorCodigo(TurnoOutcomeEstadoCodigo2025? codigo) {
-		if (codigo is null) {
-			return new Result<TurnoOutcomeEstado2025>.Error(
-				"El código del Outcome no puede ser nulo."
-			);
-		}
+	public static Result<TurnoOutcomeEstado2025> CrearPorCodigo(TurnoOutcomeEstadoCodigo2025 codigo) {
+		//if (codigo is null) {
+		//	return new Result<TurnoOutcomeEstado2025>.Error(
+		//		"El código del Outcome no puede ser nulo."
+		//	);
+		//}
 
 		TurnoOutcomeEstado2025? estado = Todos.FirstOrDefault(e => e.Codigo == codigo);
 

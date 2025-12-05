@@ -2,9 +2,9 @@
 using Clinica.Dominio.Entidades;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Clinica.AppWPF.ViewModels;
+namespace Clinica.AppWPF.Dtos;
 //---------------------------------Tablas.WindowListarTurnos-------------------------------//
-public partial class WindowModificarTurnoViewModel : ObservableObject {
+public partial class WindowModificarTurnoDto : ObservableObject {
 	[ObservableProperty] private int? id = default;
 	[ObservableProperty] private int? pacienteId = default;
 	[ObservableProperty] private int? medicoId = default;
@@ -12,9 +12,9 @@ public partial class WindowModificarTurnoViewModel : ObservableObject {
 	[ObservableProperty] private string? hora = null;
 	[ObservableProperty] private int? duracionMinutos = null;
 	//public MedicoViewModel MedicoRelacionado => App.BaseDeDatos.GetMedicoById(MedicoId ?? throw new Exception("El ID del médico es nulo."));
-	//public WindowModificarPacienteViewModel PacienteRelacionado => App.BaseDeDatos.GetPacienteById(PacienteId ?? throw new Exception("El ID del paciente es nulo."));
+	//public WindowModificarPacienteDto PacienteRelacionado => App.BaseDeDatos.GetPacienteById(PacienteId ?? throw new Exception("El ID del paciente es nulo."));
 
-	public static WindowModificarTurnoViewModel NewEmpty() => new(
+	public static WindowModificarTurnoDto NewEmpty() => new(
 		id: default,
 		pacienteId: default,
 		medicoId: default,
@@ -27,7 +27,7 @@ public partial class WindowModificarTurnoViewModel : ObservableObject {
         throw new NotImplementedException();
     }
 
-    public WindowModificarTurnoViewModel(
+    public WindowModificarTurnoDto(
 		int? id,
 		int? pacienteId,
 		int? medicoId,

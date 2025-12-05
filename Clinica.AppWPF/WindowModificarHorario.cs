@@ -1,19 +1,19 @@
-﻿using Clinica.AppWPF.ViewModels;
-using System.Windows;
+﻿using System.Windows;
+using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF.Ventanas;
 
 
 public partial class WindowModificarHorario : Window {
-	public WindowModificarHorarioViewModel VM { get; }
+	public WindowModificarHorarioDto VM { get; }
 
-	public WindowModificarHorario(MedicoViewModel medico, HorarioMedicoViewModel horario, bool esNuevo) {
+	public WindowModificarHorario(MedicoDto medico, HorarioMedicoDto horario, bool esNuevo) {
 		InitializeComponent();
-		VM = new WindowModificarHorarioViewModel(medico, horario, esNuevo);
+		VM = new WindowModificarHorarioDto(medico, horario, esNuevo);
 		DataContext = VM;
 	}
 
-	private bool ValidarHorario(MedicoViewModel medico, HorarioMedicoViewModel nuevo) {
+	private bool ValidarHorario(MedicoDto medico, HorarioMedicoDto nuevo) {
 		return !medico.Horarios.Any(h =>
 			h != nuevo &&
 			h.DiaSemana == nuevo.DiaSemana &&

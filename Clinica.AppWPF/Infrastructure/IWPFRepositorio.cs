@@ -54,38 +54,38 @@ public static class IWPFRepositorioInterfaces {
 
 
 // Read methods
-//Task<List<MedicoDto>> ReadMedicos();
+//Task<List<MedicoViewModel>> ReadMedicos();
 //Task<List<PacienteDto>> ReadPacientes();
 //Task<List<TurnoDto>> ReadTurnos();
 //Task<List<EspecialidadMedicaViewModel>> ReadDistinctEspecialidades();  //WORTH CACHE-ING
 
 //// Get methods
 //Task<MedicoViewModel> GetMedicoById(int id);
-//Task<WindowModificarPacienteViewModel> GetPacienteById(int id);
+//Task<PacienteUpdateViewModel> GetPacienteById(int id);
 //Task<WindowModificarTurnoViewModel> GetTurnoById(int id);
 //Task<EspecialidadMedicaViewModel> GetEspecialidadById(int id);
 
 
 //// Create methods
 //Task<bool> CreateMedico(MedicoViewModel instance);
-//Task<bool> CreatePaciente(WindowModificarPacienteViewModel instance);
+//Task<bool> CreatePaciente(PacienteUpdateViewModel instance);
 //Task<bool> CreateTurno(WindowModificarTurnoViewModel instance);
 ////public abstract bool CreateEspecialidad(WindowModificarEspecialidadViewModel instance);
 
 //// Update methods
 //Task<bool> UpdateMedico(MedicoViewModel instance);
-//Task<bool> UpdatePaciente(WindowModificarPacienteViewModel instance);
+//Task<bool> UpdatePaciente(PacienteUpdateViewModel instance);
 //Task<bool> UpdateTurno(WindowModificarTurnoViewModel instance);
 ////public abstract bool UpdateEspecialidad(WindowModificarEspecialidadViewModel instance);
 
 //// Delete methods
 //Task<bool> DeleteMedico(MedicoViewModel instance);
-//Task<bool> DeletePaciente(WindowModificarPacienteViewModel instance);
+//Task<bool> DeletePaciente(PacienteUpdateViewModel instance);
 //Task<bool> DeleteTurno(WindowModificarTurnoViewModel instance);
 
 //// Filtros
 //Task<List<WindowModificarTurnoViewModel>> ReadTurnosWhereMedicoId(int? medicoId);
-//Task<List<WindowModificarTurnoViewModel>> ReadTurnosWherePacienteId(int? pacienteId);
+//Task<List<WindowModificarTurnoViewModel>> ReadTurnosWherePacienteId(int? PacienteId);
 //Task<List<MedicoViewModel>> ReadMedicosWhereEspecialidad(int? EspecialidadCodigo);
 
 //}

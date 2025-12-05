@@ -2,7 +2,7 @@
 using System.Media;
 using System.Windows;
 
-namespace Clinica.AppWPF;
+namespace Clinica.AppWPF.Infrastructure;
 
 public static class SoundsService {
 	public static bool SoundOn = true;

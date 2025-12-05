@@ -1,4 +1,4 @@
-﻿using Clinica.AppWPF.ViewModels;
+﻿using Clinica.AppWPF.Dtos;
 using Clinica.AppWPF.Ventanas;
 using System.ComponentModel;
 using System.Windows;
@@ -11,8 +11,8 @@ namespace Clinica.AppWPF;
 public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	public MedicoViewModel _selectedMedico = MedicoViewModel.NewEmpty();
-	public MedicoViewModel SelectedMedico { get => _selectedMedico; set { _selectedMedico = value; OnPropertyChanged(nameof(SelectedMedico)); } }
+	public MedicoDto _selectedMedico = MedicoDto.NewEmpty();
+	public MedicoDto SelectedMedico { get => _selectedMedico; set { _selectedMedico = value; OnPropertyChanged(nameof(SelectedMedico)); } }
 
 	//---------------------constructor-------------------//
 	public WindowModificarMedico() {
@@ -20,10 +20,10 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 		DataContext = this;
 	}
 
-	public WindowModificarMedico(MedicoViewModel medicoDto) {
+	public WindowModificarMedico(MedicoDto medicoDto) {
 
 		InitializeComponent();
-		//SelectedMedico = medicoDto.ToViewModel();
+		//SelectedMedico = medicoDto.ToDto();
 		DataContext = this;
 	}
 	//---------------------botones.GuardarCambios-------------------//
@@ -78,18 +78,18 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	private void BtnAgregarHorarioFranja_Click(object sender, RoutedEventArgs e) {
         object? selected = GetSelectedTreeItem();
 
-		DiaDeSemanaViewModel dia;
+		DiaDeSemanaDto dia;
 
-		if (selected is ViewModelHorariosAgrupados grupo) {
+		if (selected is DtoHorariosAgrupados grupo) {
 			dia = grupo.DiaSemana;
-		} else if (selected is HorarioMedicoViewModel horario) {
+		} else if (selected is HorarioMedicoDto horario) {
 			dia = horario.DiaSemana;
 		} else {
 			MessageBox.Show("Seleccione un día en el árbol para agregar un horario.");
 			return;
 		}
 
-		HorarioMedicoViewModel nuevoHorario = new() {
+		HorarioMedicoDto nuevoHorario = new() {
 			DiaSemana = dia,
 			Desde = new TimeOnly(8, 0),
 			Hasta = new TimeOnly(12, 0)
@@ -107,7 +107,7 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
         object? selected = GetSelectedTreeItem();
 
-		if (selected is not HorarioMedicoViewModel horario) {
+		if (selected is not HorarioMedicoDto horario) {
 			MessageBox.Show("Seleccione un horario para editar.");
 			return;
 		}
@@ -123,7 +123,7 @@ public partial class WindowModificarMedico : Window, INotifyPropertyChanged {
 	private void BtnEliminarHorario_Click(object sender, RoutedEventArgs e) {
         object? selected = GetSelectedTreeItem();
 
-		if (selected is not HorarioMedicoViewModel horario) {
+		if (selected is not HorarioMedicoDto horario) {
 			MessageBox.Show("Seleccione un horario para eliminar.");
 			return;
 		}

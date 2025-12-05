@@ -189,7 +189,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 	// --------------------------------------------------------
 	// [HttpPost]
 	// public async Task<IActionResult> CrearResult([FromBody] CrearTurnoRequestDto dto) {
-	// Result<Especialidad2025> espResult = Especialidad2025.CrearPorCodigoInterno(dto.EspecialidadCodigo);
+	// Result<Especialidad2025> espResult = Especialidad2025.CrearResultPorCodigoInterno(dto.EspecialidadCodigo);
 
 	// if (espResult.IsError)
 	// return BadRequest($"Especialidad inválida: {dto.EspecialidadCodigo}");

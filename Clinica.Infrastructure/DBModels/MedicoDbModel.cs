@@ -31,22 +31,22 @@ public static partial class DbModels {
 		string json = string.IsNullOrWhiteSpace(medicoDto.HorariosJson) ? "[]" : medicoDto.HorariosJson;
 		List<HorarioDbModel> horariosDto = JsonSerializer.Deserialize<List<HorarioDbModel>>(json)
 			?? [];
-		return Medico2025.Crear(
-			MedicoId.Crear(medicoDto.Id.Valor),
-			NombreCompleto2025.Crear(medicoDto.Nombre, medicoDto.Apellido),
+		return Medico2025.CrearResult(
+			MedicoId.CrearResult(medicoDto.Id.Valor),
+			NombreCompleto2025.CrearResult(medicoDto.Nombre, medicoDto.Apellido),
 			//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
-			Especialidad2025.CrearPorCodigoInterno(medicoDto.EspecialidadCodigo),
-			DniArgentino2025.Crear(medicoDto.Dni),
-			DomicilioArgentino2025.Crear(
-				LocalidadDeProvincia2025.Crear(
+			Especialidad2025.CrearResultPorCodigoInterno(medicoDto.EspecialidadCodigo),
+			DniArgentino2025.CrearResult(medicoDto.Dni),
+			DomicilioArgentino2025.CrearResult(
+				LocalidadDeProvincia2025.CrearResult(
 					medicoDto.Localidad,
-					ProvinciaArgentina2025.CrearPorCodigo(medicoDto.ProvinciaCodigo)),
+					ProvinciaArgentina2025.CrearResultPorCodigo(medicoDto.ProvinciaCodigo)),
 				medicoDto.Domicilio
 			),
-			ContactoTelefono2025.Crear(medicoDto.Telefono),
-			ContactoEmail2025.Crear(medicoDto.Email),
-			ListaHorarioMedicos2025.Crear(horariosDto.Select(x => x.ToDomain())),
-			FechaRegistro2025.Crear(medicoDto.FechaIngreso),
+			ContactoTelefono2025.CrearResult(medicoDto.Telefono),
+			ContactoEmail2025.CrearResult(medicoDto.Email),
+			ListaHorarioMedicos2025.CrearResult(horariosDto.Select(x => x.ToDomain())),
+			FechaRegistro2025.CrearResult(medicoDto.FechaIngreso),
 			medicoDto.HaceGuardias
 		);
 	}

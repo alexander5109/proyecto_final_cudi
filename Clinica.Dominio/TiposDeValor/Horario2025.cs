@@ -33,7 +33,7 @@ public readonly record struct Horario2025(
 	public string ATexto()
 		=> $"{DiaSemana.ATexto()}: {HoraDesde.ATexto()} — {HoraHasta.ATexto()} (vigencia {VigenteDesde.ATexto()} → {VigenteHasta.ATexto()}";
 
-	public static Result<Horario2025> Crear(
+	public static Result<Horario2025> CrearResult(
 		HorarioId id,
 		MedicoId medicoId,
 		DiaSemana2025 dia,
@@ -53,7 +53,7 @@ public readonly record struct Horario2025(
 		);
 	}
 
-	public static Result<Horario2025> Crear(
+	public static Result<Horario2025> CrearResult(
 		Result<HorarioId> idResult,
 		Result<MedicoId> medicoIdResult,
 		Result<DiaSemana2025> diaResult,
@@ -69,5 +69,5 @@ public readonly record struct Horario2025(
 		   hastaResult.Bind(hastaOk =>
 		   vigenteDesdeResult.Bind(vigenteDesde =>
 		   vigenteHastaResult.Bind(vigenteHasta =>
-			   Crear(idOk, medicoIdOk, diaOk, desdeOk, hastaOk, vigenteDesde, vigenteHasta))))))));
+			   CrearResult(idOk, medicoIdOk, diaOk, desdeOk, hastaOk, vigenteDesde, vigenteHasta))))))));
 }

@@ -8,20 +8,20 @@ namespace Clinica.AppWPF.ViewModels;
 
 public partial class MedicoViewModel : ObservableObject {
 
-	[ObservableProperty] private ObservableCollection<HorarioMedicoViewModel> horarios = [];
+	[ObservableProperty] private ObservableCollection<HorarioMedicoDto> horarios = [];
 
-	public ObservableCollection<ViewModelHorariosAgrupados> HorariosAgrupados {
+	public ObservableCollection<DtoHorariosAgrupados> HorariosAgrupados {
 		get {
-			ObservableCollection<ViewModelHorariosAgrupados> lista = [];
+			ObservableCollection<DtoHorariosAgrupados> lista = [];
 
 			// _ValidarRepositorios los 7 días vacíos
-			foreach (DiaDeSemanaViewModel dia in DiaDeSemanaViewModel.Los7DiasDeLaSemana) {
-				lista.Add(new ViewModelHorariosAgrupados(dia));
+			foreach (DiaDeSemanaDto dia in DiaDeSemanaDto.Los7DiasDeLaSemana) {
+				lista.Add(new DtoHorariosAgrupados(dia));
 			}
 
 			// Mapear horarios existentes
-			foreach (HorarioMedicoViewModel horario in Horarios) {
-				ViewModelHorariosAgrupados grupo = lista.First(g => g.DiaSemana == horario.DiaSemana);
+			foreach (HorarioMedicoDto horario in Horarios) {
+				DtoHorariosAgrupados grupo = lista.First(g => g.DiaSemana == horario.DiaSemana);
 				grupo.Horarios.Add(horario);
 			}
 
@@ -52,12 +52,12 @@ public partial class MedicoViewModel : ObservableObject {
 
 
 
-	//public ViewModelEspecialidadMedica EspecialidadRelacionada {
+	//public DtoEspecialidadMedica EspecialidadRelacionada {
 	//	get {
 	//		try {
 	//			if (EspecialidadCodigo is null)
 	//				throw new Exception("El ID del paciente es nulo.");
-	//			return Especialidad2025.CrearPorCodigoInterno(EspecialidadCodigo);
+	//			return Especialidad2025.CrearResultPorCodigoInterno(EspecialidadCodigo);
 	//			return App.BaseDeDatos.DictEspecialidades[(int)EspecialidadCodigo];
 	//		} catch (Exception ex) {
 	//			MessageBox.Show(
@@ -66,7 +66,7 @@ public partial class MedicoViewModel : ObservableObject {
 	//				MessageBoxButton.OK,
 	//				MessageBoxImage.Error
 	//			);
-	//			return PacienteViewModel.NewEmpty();
+	//			return PacienteDto.NewEmpty();
 	//		}
 	//	}
 	//}
@@ -92,7 +92,7 @@ public partial class MedicoViewModel : ObservableObject {
 
 
 	public MedicoViewModel(
-		ObservableCollection<HorarioMedicoViewModel> horarios,
+		ObservableCollection<HorarioMedicoDto> horarios,
 		int? id,
 		string? name,
 		string? lastName,
@@ -129,7 +129,7 @@ public partial class MedicoViewModel : ObservableObject {
 		throw new NotImplementedException("Implementar Medico2025 ToDomain");
 		//return Medico2025.CrearResult(
 		//	NombreCompleto2025.CrearResult(this.Name, this.LastName),
-		//	Especialidad2025.CrearPorCodigoInterno(
+		//	Especialidad2025.CrearResultPorCodigoInterno(
 		//		this.EspecialidadCodigo
 		//	//Especialidad2025.RamasDisponibles.First()
 		//	),
