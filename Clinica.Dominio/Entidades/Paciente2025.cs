@@ -100,7 +100,7 @@ public record Paciente2025(
     }
 
 
-	//public static Result<Paciente2025> Crear(
+	//public static Result<Paciente2025> CrearResult(
 	//	Result<PacienteId> idResult,
 	//	Result<NombreCompleto2025> nombreResult,
 	//	Result<DniArgentino2025> dniResult,

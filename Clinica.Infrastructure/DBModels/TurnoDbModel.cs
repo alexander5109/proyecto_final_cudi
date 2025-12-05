@@ -27,7 +27,7 @@ public static partial class DbModels {
 			turno.FechaDeCreacion.Valor,
 			turno.PacienteId,
 			turno.MedicoId,
-			turno.Especialidad.CodigoInternoValor,
+			turno.Especialidad.Codigo,
 			turno.FechaHoraAsignadaDesdeValor,
 			turno.FechaHoraAsignadaHastaValor,
 			turno.OutcomeEstado.Codigo,

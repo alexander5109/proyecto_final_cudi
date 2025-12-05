@@ -43,7 +43,7 @@ public static class MainProgram {
         //RepositorioDapper repositorio = new(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
         RepositorioDapper repositorio = new RepositorioDapper(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!))
 
-		//var response = await http.GetAsync($"/disponibilidades?especialidadCodigoInterno=3&cuantos=10");
+		//var response = await http.GetAsync($"/disponibilidades?EspecialidadCodigo=3&cuantos=10");
 
 		NombreUsuario nombreUsuario = new ("admin1");
 		//var usuarioFakeResult = await repositorio.SelectUsuarioWhereNombre(nombreUsuario);
@@ -62,21 +62,21 @@ public static class MainProgram {
 		//	return;
 		//}
 		//foreach (var turno2025 in responseResult.UnwrapAsOk()) {
-		//	Console.Write(turno2025.UnwrapAsOk().ATexto());
+		//	Console.Write(turno2025.UnwrapAsOk().AEspañol());
 		//	break;
 		//}
 
 
 		// Caso de uso 1
-		Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidadesPara(
+		Result<IReadOnlyList<Disponibilidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidadesPara(
 			Especialidad2025.ClinicoGeneral,
 			DateTime.Now,
 			4,
 			repositorio
 		));
 		//disponibilidades.PrintAndContinue("Disponbiildiades encontradas::");
-		IReadOnlyList<DisponibilidadEspecialidad2025> lista = disponibilidades.GetOrRaise();
-		foreach (DisponibilidadEspecialidad2025 d in lista)
+		IReadOnlyList<Disponibilidad2025> lista = disponibilidades.GetOrRaise();
+		foreach (Disponibilidad2025 d in lista)
 			Console.WriteLine(d.ATexto());
 
 		// Caso de uso 2

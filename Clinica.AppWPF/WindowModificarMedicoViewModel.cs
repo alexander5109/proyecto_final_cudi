@@ -37,8 +37,8 @@ public partial class MedicoViewModel : ObservableObject {
 	[ObservableProperty] private string telefono = string.Empty;
 	[ObservableProperty] private string dni = string.Empty;
 	[ObservableProperty] private string localidad = string.Empty;
-	[ObservableProperty] private int? especialidadCodigoInterno = default;
-	//[ObservableProperty] private string especialidadCodigoInterno = string.Empty;
+	[ObservableProperty] private int? EspecialidadCodigo = default;
+	//[ObservableProperty] private string EspecialidadCodigo = string.Empty;
 	[ObservableProperty] private double? sueldoMinimoGarantizado;
 	[ObservableProperty] private string provincia = string.Empty;
 	[ObservableProperty] private string domicilio = string.Empty;
@@ -48,7 +48,7 @@ public partial class MedicoViewModel : ObservableObject {
 
 
 	//public List<string> EspecialidadesDisponibles { get; } = Especialidad2025.EspecialidadesDisponibles;
-	public string Displayear => $"{Id}: {EspecialidadCodigoInterno} - {Name} {LastName}";
+	public string Displayear => $"{Id}: {EspecialidadCodigo} - {Name} {LastName}";
 
 
 
@@ -81,7 +81,7 @@ public partial class MedicoViewModel : ObservableObject {
 		string.Empty,   // provinciaCodigo
 		string.Empty,   // domicilio
 		string.Empty,   // localidad
-		default,   // especialidadCodigoInterno
+		default,   // EspecialidadCodigo
 		string.Empty,   // telefono
 		false,          // guardia
 		DateTime.Today, // fechaIngreso
@@ -100,7 +100,7 @@ public partial class MedicoViewModel : ObservableObject {
 		string? provincia,
 		string? domicilio,
 		string? localidad,
-		int? especialidadCodigoInterno,
+		int? EspecialidadCodigo,
 		string? telefono,
 		bool? guardia,
 		DateTime? fechaIngreso,
@@ -114,7 +114,7 @@ public partial class MedicoViewModel : ObservableObject {
 		Provincia = provincia ?? string.Empty;
 		Domicilio = domicilio ?? string.Empty;
 		Localidad = localidad ?? string.Empty;
-		EspecialidadCodigoInterno = especialidadCodigoInterno;
+		EspecialidadCodigo = EspecialidadCodigo;
 		Telefono = telefono ?? string.Empty;
 		Guardia = guardia ?? false;
 		FechaIngreso = fechaIngreso ?? DateTime.Today;
@@ -127,22 +127,22 @@ public partial class MedicoViewModel : ObservableObject {
 
 	public Result<Medico2025> ToDomain() {
 		throw new NotImplementedException("Implementar Medico2025 ToDomain");
-		//return Medico2025.Crear(
-		//	NombreCompleto2025.Crear(this.Name, this.LastName),
+		//return Medico2025.CrearResult(
+		//	NombreCompleto2025.CrearResult(this.Name, this.LastName),
 		//	Especialidad2025.CrearPorCodigoInterno(
 		//		this.EspecialidadCodigo
 		//	//Especialidad2025.RamasDisponibles.First()
 		//	),
-		//	DniArgentino2025.Crear(this.Dni),
-		//	DomicilioArgentino2025.Crear(
-		//	LocalidadDeProvincia2025.Crear(this.Localidad, ProvinciaArgentina2025.Crear(this.Provincia)),
+		//	DniArgentino2025.CrearResult(this.Dni),
+		//	DomicilioArgentino2025.CrearResult(
+		//	LocalidadDeProvincia2025.CrearResult(this.Localidad, ProvinciaArgentina2025.CrearResult(this.Provincia)),
 		//	this.Domicilio
 		//),
-		//	ContactoTelefono2025.Crear(this.Telefono),
-		//	ListaHorarioMedicos2025.Crear(
+		//	ContactoTelefono2025.CrearResult(this.Telefono),
+		//	ListaHorarioMedicos2025.CrearResult(
 		//	this.Horarios.Select(h =>
 		//	),
-		//	FechaRegistro2025.Crear(this.FechaIngreso),
+		//	FechaRegistro2025.CrearResult(this.FechaIngreso),
 		//	this.Guardia ?? false
 		//);
 	}

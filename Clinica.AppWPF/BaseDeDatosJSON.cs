@@ -289,7 +289,7 @@ public class BaseDeDatosJSON : BaseDeDatosAbstracta {
 					jsonElement.GetProperty(nameof(ViewModelMedico.Provincia)).GetString() ?? string.Empty,
 					jsonElement.GetProperty(nameof(ViewModelMedico.Domicilio)).GetString() ?? string.Empty,
 					jsonElement.GetProperty(nameof(ViewModelMedico.Localidad)).GetString() ?? string.Empty,
-					jsonElement.GetProperty(nameof(ViewModelMedico.EspecialidadCodigoInterno)).GetString() ?? string.Empty,
+					jsonElement.GetProperty(nameof(ViewModelMedico.EspecialidadCodigo)).GetString() ?? string.Empty,
 					jsonElement.GetProperty(nameof(ViewModelMedico.Telefono)).GetString() ?? string.Empty,
 					jsonElement.TryGetProperty(nameof(ViewModelMedico.Guardia), out var guardiaProp) && guardiaProp.ValueKind == System.Text.Json.JsonValueKind.True,
 					DateTime.TryParse(

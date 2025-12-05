@@ -31,7 +31,7 @@ public static class QueryModels {
 public interface IRepositorioDomainServiciosPrivados {
 	Task<Result<IEnumerable<TurnoQM>>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta);
 	Task<Result<IEnumerable<HorarioMedicoQM>>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta);
-	Task<Result<IEnumerable<MedicoId>>> SelectMedicosIdWhereEspecialidadCode(EspecialidadCodigo code);
+	Task<Result<IEnumerable<MedicoId>>> SelectMedicosIdWhereEspecialidadCodigo(EspecialidadCodigo code);
 	Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance); //this 2 can stay cause doesnt ask a model
 	Task<Result<Unit>> UpdateTurnoWhereId(Turno2025 instance); //this 2 can stay cause doesnt ask a model
 	Task<Result<Usuario2025>> SelectUsuarioWhereIdAsDomain(UsuarioId id); //need domain entitiy because this is not really data to query, it's data that immediatly needs domain methods.

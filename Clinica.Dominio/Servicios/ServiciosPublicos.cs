@@ -41,7 +41,7 @@ public class ServiciosPublicos {
 
 
 
-    public static async Task<Result<IReadOnlyList<DisponibilidadEspecialidad2025>>> SolicitarDisponibilidadesPara(
+    public static async Task<Result<IReadOnlyList<Disponibilidad2025>>> SolicitarDisponibilidadesPara(
             EspecialidadCodigo solicitudEspecialidadCodigo,
             DateTime aPartirDeCuando,
             int cuantos,
@@ -49,24 +49,24 @@ public class ServiciosPublicos {
         ) {
 
 		if (cuantos > 50) {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error("No vamos a producir tantas disponibilidades. Si quiere, adelante la fecha");
+			return new Result<IReadOnlyList<Disponibilidad2025>>.Error("No vamos a producir tantas disponibilidades. Si quiere, adelante la fecha");
 		}
 
 		Result<Especialidad2025> solicitudEspecialidadResult = Especialidad2025.CrearPorCodigoInterno(solicitudEspecialidadCodigo);
-        if (solicitudEspecialidadResult.IsError) return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error(solicitudEspecialidadResult.UnwrapAsError());
+        if (solicitudEspecialidadResult.IsError) return new Result<IReadOnlyList<Disponibilidad2025>>.Error(solicitudEspecialidadResult.UnwrapAsError());
         Especialidad2025 solicitudEspecialidad = solicitudEspecialidadResult.UnwrapAsOk();
 
 
-        List<DisponibilidadEspecialidad2025> lista = new(capacity: cuantos);
+        List<Disponibilidad2025> lista = new(capacity: cuantos);
 
-        await foreach (Result<DisponibilidadEspecialidad2025> dispResult in
+        await foreach (Result<Disponibilidad2025> dispResult in
             ServiciosPrivados.GenerarDisponibilidades(
                 solicitudEspecialidad,
                 aPartirDeCuando,
                 repositorio)) {
             if (dispResult.IsError) {
                 // Propagamos el error aguas arriba
-                return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>
+                return new Result<IReadOnlyList<Disponibilidad2025>>
                     .Error(dispResult.UnwrapAsError());
             }
 
@@ -77,10 +77,10 @@ public class ServiciosPublicos {
         }
 
         if (lista.Count > 0) {
-            return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok(lista);
+            return new Result<IReadOnlyList<Disponibilidad2025>>.Ok(lista);
         }
 
-        return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error("No se encontraron disponibilidades.");
+        return new Result<IReadOnlyList<Disponibilidad2025>>.Error("No se encontraron disponibilidades.");
     }
 
 
@@ -105,19 +105,19 @@ public class ServiciosPublicos {
 
 
         // 1. Buscar próxima disponibilidad
-        Result<DisponibilidadEspecialidad2025> dispResult =
+        Result<Disponibilidad2025> dispResult =
             await ServiciosPrivados.EncontrarProximaDisponibilidad(
                 solicitudEspecialidad,
                 solicitudFechaCreacion.Valor,
                 repositorio
             );
 
-        if (dispResult is Result<DisponibilidadEspecialidad2025>.Error errDisp)
+        if (dispResult is Result<Disponibilidad2025>.Error errDisp)
             return new Result<Turno2025>.Error(errDisp.Mensaje);
 
-        DisponibilidadEspecialidad2025 disp = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
+        Disponibilidad2025 disp = ((Result<Disponibilidad2025>.Ok)dispResult).Valor;
 
-        // 2. Crear turno provisorio desde el dominio
+        // 2. CrearResult turno provisorio desde el dominio
         Result<Turno2025> turnoResult = Turno2025.ProgramarNuevo(
             new TurnoId(-1),            // provisional
             pacienteId,
@@ -166,16 +166,16 @@ public class ServiciosPublicos {
         if (updateResult.IsError) return new Result<Turno2025>.Error($"Error al persistir la cancelación del turno: \n\t{updateResult.UnwrapAsError()}");
 
 
-        Result<DisponibilidadEspecialidad2025> dispResult = await ServiciosPrivados.EncontrarProximaDisponibilidad(
+        Result<Disponibilidad2025> dispResult = await ServiciosPrivados.EncontrarProximaDisponibilidad(
             turnoOriginal.Especialidad,
             outcomeFecha,
             repositorio
         );
 
-        if (dispResult is Result<DisponibilidadEspecialidad2025>.Error e3)
+        if (dispResult is Result<Disponibilidad2025>.Error e3)
             return new Result<Turno2025>.Error(e3.Mensaje);
 
-        DisponibilidadEspecialidad2025 disponibilidad = ((Result<DisponibilidadEspecialidad2025>.Ok)dispResult).Valor;
+        Disponibilidad2025 disponibilidad = ((Result<Disponibilidad2025>.Ok)dispResult).Valor;
 
 
         Result<Turno2025> provResult = turnoCancelado.Reprogramar(

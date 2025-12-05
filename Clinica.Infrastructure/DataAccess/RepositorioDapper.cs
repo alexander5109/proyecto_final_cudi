@@ -95,6 +95,12 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
+
+
+
+
+
+
 	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicos()
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<MedicoDbModel>(
@@ -104,14 +110,26 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 		});
 
 
-	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicosWhereEspecialidadCode(EspecialidadCodigo code)
+	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<MedicoDbModel>(
-				"sp_SelectMedicosWhereEspecialidadCode",
-				new { EspecialidadCodigoInterno = code },
+				"sp_SelectMedicosWhereEspecialidadCodigo",
+				new { EspecialidadCodigo = code },
 				commandType: CommandType.StoredProcedure
 			);
 		});
+
+
+	Task<Result<IEnumerable<MedicoId>>> IRepositorioDomainServiciosPrivados.SelectMedicosIdWhereEspecialidadCodigo(EspecialidadCodigo code)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<MedicoId>(
+				"sp_SelectMedicosIdWhereEspecialidadCodigo",
+				new { EspecialidadCodigo = code },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+
 
 	Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWhereId(MedicoId id)
 		=> TryAsync(async conn => {
@@ -139,7 +157,14 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			);
 		});
 
-
+	//Task<Result<PacienteDbModel?>> IRepositorioPacientes.SelectPacienteWhereTurnoId(TurnoId id)
+	//	=> TryAsync(async conn => {
+	//		return await conn.QuerySingleOrDefaultAsync<PacienteDbModel>(
+	//			"sp_SelectPacienteWhereTurnoId",
+	//			new { Id = id.Valor },
+	//			commandType: CommandType.StoredProcedure
+	//		);
+	//	});
 
 
 
@@ -240,16 +265,6 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-	Task<Result<IEnumerable<MedicoId>>> IRepositorioDomainServiciosPrivados.SelectMedicosIdWhereEspecialidadCode(EspecialidadCodigo code)
-		=> TryAsync(async conn => {
-			return await conn.QueryAsync<MedicoId>(
-				"sp_SelectMedicosIdWhereEspecialidadCode",
-				new { EspecialidadCodigoInterno = code },
-				commandType: CommandType.StoredProcedure
-			);
-		});
-
-
 
 	Task<Result<IEnumerable<TurnoQM>>> IRepositorioDomainServiciosPrivados.SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
 		=> TryAsync(async conn => {
@@ -332,7 +347,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<TurnoDbModel>(
 				"sp_SelectTurnosWhereMedicoId",
-				new { Id = id.Valor, },
+				new { MedicoId = id.Valor, },
 				commandType: CommandType.StoredProcedure);
 		});
 
@@ -523,24 +538,25 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 		);
 
 
-	//if (dto is null)
-	//return new Result<Turno2025?>.Ok(null);
-	//Result<Turno2025> map = dto.ToDomain();
-	// 4. Si falló la construcción del dominio, devolvemos el ERROR directamente
-	//if (map.IsError)
-	//return new Result<Turno2025?>.Error(map.UnwrapAsError());
 
-	//Turno2025? result = map.UnwrapAsOk();
-	// 5. Caso OK
-	//return new Result<Turno2025?>.Ok(result);
+    //if (dto is null)
+    //return new Result<Turno2025?>.Ok(null);
+    //Result<Turno2025> map = dto.ToDomain();
+    // 4. Si falló la construcción del dominio, devolvemos el ERROR directamente
+    //if (map.IsError)
+    //return new Result<Turno2025?>.Error(map.UnwrapAsError());
+
+    //Turno2025? result = map.UnwrapAsOk();
+    // 5. Caso OK
+    //return new Result<Turno2025?>.Ok(result);
 
 
-	//	=> TryAsync(async conn => {
-	//	return await conn.QuerySingleOrDefaultAsync<HorarioDbModel>(
-	//		"sp_SelectHorarioWhereId",
-	//		new { Id = id.Valor },
-	//		commandType: CommandType.StoredProcedure
-	//	);
-	//});
+    //	=> TryAsync(async conn => {
+    //	return await conn.QuerySingleOrDefaultAsync<HorarioDbModel>(
+    //		"sp_SelectHorarioWhereId",
+    //		new { Id = id.Valor },
+    //		commandType: CommandType.StoredProcedure
+    //	);
+    //});
 
 }

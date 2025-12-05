@@ -23,7 +23,22 @@ public enum EspecialidadCodigo : byte {
 	Dermatologo = 17
 }
 
-public sealed record Especialidad2025(EspecialidadCodigo CodigoInternoValor, string Titulo, int DuracionConsultaMinutos) : IComoTexto {
+//public static class EnumExtentions {
+//	public string ToDomain(this EspecialidadCodigo code) {
+
+//		return Especialidad2025.
+
+//	}
+
+
+//}
+
+
+public sealed record Especialidad2025(
+	EspecialidadCodigo Codigo,
+	string Titulo,
+	int DuracionConsultaMinutos
+) : IComoTexto {
 	public string ATexto() => $"{Titulo} (Duración de consulta: {DuracionConsultaMinutos} min)";
 
 	// Especialidades predefinidas
@@ -46,24 +61,24 @@ public sealed record Especialidad2025(EspecialidadCodigo CodigoInternoValor, str
 	public static readonly Especialidad2025 Dermatologo = new(EspecialidadCodigo.Dermatologo, "Dermatólogo", 20);
 
 	// Lista de todas
-	public static readonly IReadOnlyList<Especialidad2025> Todas = new[]{
+	public static readonly IReadOnlyList<Especialidad2025> Todas = [
 		ClinicoGeneral, Cardiologo, Oftalmologo, Otorrinolaringologo, Psiquiatra, Psicologo, Cirujano,
 		Kinesiologo, Nutricionista, Gastroenterologo, Osteopata, Proctologo, Pediatra, Ginecologo,
 		Traumatologo, Neurologo, Dermatologo
-	};
+	];
 
 	// Lookup seguro por código interno
 	public static Result<Especialidad2025> CrearPorCodigoInterno(EspecialidadCodigo codigo) {
-        Especialidad2025? esp = Todas.FirstOrDefault(e => e.CodigoInternoValor == codigo);
+		Especialidad2025? esp = Todas.FirstOrDefault(e => e.Codigo == codigo);
 		return esp is not null
 			? new Result<Especialidad2025>.Ok(esp)
-			: new Result<Especialidad2025>.Error($"No existe la especialidad con CodigoInternoValor = {codigo}");
+			: new Result<Especialidad2025>.Error($"No existe la especialidad con Codigo = {codigo}");
 	}
 
 	// Para facilitar conversion desde DTOs que usen byte
 	//public static Result<Especialidad2025> CrearPorCodigoInterno(byte? codigo) {
 	//	if (codigo is null)
-	//		return new Result<Especialidad2025>.Error("El CodigoInternoValor no puede ser nulo.");
+	//		return new Result<Especialidad2025>.Error("El Codigo no puede ser nulo.");
 
 	//	if (!Enum.IsDefined(typeof(EspecialidadCodigo), codigo.Value))
 	//		return new Result<Especialidad2025>.Error($"Valor inválido de EspecialidadCodigo: {codigo.Value}");

@@ -1,5 +1,4 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.Entidades;
 using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,30 +23,42 @@ public class PacientesController(
 		PermisoSistema.VerPacientes,
 		() => repositorio.SelectPacientes()
 	);
-	
-	[HttpGet("AsDomain")]
-	public async Task<IActionResult> GetPacientesAsDomain() {
 
 
-        //Result<Turno2025> result = await ServiciosPublicos.SolicitarCancelacion(
-        //	dto.TurnoId,
-        //	dto.OutcomeFecha,
-        //	dto.OutcomeComentario,
-        //	repositorio
-        //);
-        //return result.Match<IActionResult>(
-        //	ok => Ok(ok.ToModel()),
-        //	err => Problem(err)
-        //);
-
-        IEnumerable<PacienteDbModel> vasdfr = (await repositorio.SelectPacientes()).UnwrapAsOk();
-        IEnumerable<Result<Paciente2025>> resulttt = vasdfr.Select(x => x.ToDomain());
-        IEnumerable<Paciente2025> resultt222t = resulttt.Select(x => x.UnwrapAsOk());
-		return Ok(resultt222t);
+	//tonto.
+	//[HttpGet("por-turnos/{id:int}")]
+	//public Task<IActionResult> GetPacientePorTurnoId(int id)
+	//	=> this.SafeExecute(
+	//		logger,
+	//		PermisoSistema.VerPacientes,
+	//		() => repositorio.SelectPacienteWhereTurnoId(new TurnoId(id)),
+	//		notFoundMessage: $"No existe paciente con id {id}"
+	//	);
 
 
-	}
-	
+	//[HttpGet("AsDomain")]
+	//public async Task<IActionResult> GetPacientesAsDomain() {
+
+
+	//Result<Turno2025> result = await ServiciosPublicos.SolicitarCancelacion(
+	//	dto.TurnoId,
+	//	dto.OutcomeFecha,
+	//	dto.OutcomeComentario,
+	//	repositorio
+	//);
+	//return result.Match<IActionResult>(
+	//	ok => Ok(ok.ToModel()),
+	//	err => Problem(err)
+	//);
+
+	//       IEnumerable<PacienteDbModel> vasdfr = (await repositorio.SelectPacientes()).UnwrapAsOk();
+	//       IEnumerable<Result<Paciente2025>> resulttt = vasdfr.Select(x => x.ToDomain());
+	//       IEnumerable<Paciente2025> resultt222t = resulttt.Select(x => x.UnwrapAsOk());
+	//	return Ok(resultt222t);
+
+
+	//}
+
 
 
 	[HttpGet("{id:int}")]
@@ -58,6 +69,7 @@ public class PacientesController(
 			() => repositorio.SelectPacienteWhereId(new PacienteId(id)),
 			notFoundMessage: $"No existe paciente con id {id}"
 		);
+
 
 
 

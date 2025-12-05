@@ -1,9 +1,8 @@
-using System.Text;
+﻿using System.Text;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Infrastructure.DataAccess;
 using Clinica.WebAPI.Servicios;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 
 
@@ -13,7 +12,7 @@ builder.Services.AddControllers();
 
 
 
-builder.Services.AddOpenApi();
+//builder.Services.AddOpenApi();
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -42,10 +41,10 @@ builder.Services.AddSingleton<IRepositorioHorarios>(sp => sp.GetRequiredService<
 
 // JwtService (singleton)
 builder.Services.AddSingleton<JwtService>(sp => {
-	string? jwtKey = builder.Configuration["Jwt:Key"];
-	if (string.IsNullOrWhiteSpace(jwtKey))
-		throw new InvalidOperationException("Falta la clave JWT en configuraci�n: 'Jwt:Key'");
-	return new JwtService(jwtKey);
+	// string? jwtKey = builder.Configuration["Jwt:Key"];
+	// if (string.IsNullOrWhiteSpace(jwtKey))
+	// throw new InvalidOperationException("Falta la clave JWT en configuración: 'Jwt:Key'");
+	return new JwtService("ESTA_ES_UNA_LLAVE_DE_DESARROLLO_CAMBIAR_EN_PRODUCCION_123456789");
 });
 
 
@@ -64,7 +63,7 @@ builder.Services.AddAuthentication("Bearer")
 			ValidateAudience = false,
 			ValidateIssuerSigningKey = true,
 			IssuerSigningKey = new SymmetricSecurityKey(
-				Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"])
+				Encoding.ASCII.GetBytes("ESTA_ES_UNA_LLAVE_DE_DESARROLLO_CAMBIAR_EN_PRODUCCION_123456789")
 			)
 		};
 	});
@@ -72,29 +71,70 @@ builder.Services.AddAuthentication("Bearer")
 builder.Services.AddAuthorization();
 
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+
+//builder.Services.AddSwaggerGen(options => {
+//	options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme {
+//		Type = SecuritySchemeType.Http,
+//		Scheme = "bearer",
+//		BearerFormat = "JWT",
+//		Description = "Ingrese 'Bearer <token>'"
+//	});
+//	options.AddSecurityRequirement(document => new OpenApiSecurityRequirement {
+//		[new OpenApiSecuritySchemeReference("bearer", document)] = []
+//	});
+//});
+//DESABILADO EN NET 8.0. TOTAL NO VOY A USAR SWAGGER AHORA.
 builder.Services.AddSwaggerGen(options => {
-	options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme {
-		Type = SecuritySchemeType.Http,
-		Scheme = "bearer",
-		BearerFormat = "JWT",
-		Description = "Ingrese 'Bearer <token>'"
+	options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo {
+		Title = "Clinica Web API",
+		Version = "v1"
 	});
-	options.AddSecurityRequirement(document => new OpenApiSecurityRequirement {
-		[new OpenApiSecuritySchemeReference("bearer", document)] = []
+
+	// 🔒 Definición de autenticación con JWT (Bearer)
+	options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme {
+		Description = "Ingrese el token JWT así: **Bearer {token}**",
+		Name = "Authorization",
+		In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+		Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+		Scheme = "bearer",
+		BearerFormat = "JWT"
+	});
+
+	// 🔑 Requerimiento global: Swagger enviará el token si lo cargás una vez
+	options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+	{
+		{
+			new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+			{
+				Reference = new Microsoft.OpenApi.Models.OpenApiReference
+				{
+					Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+					Id = "Bearer"
+				}
+			},
+			Array.Empty<string>()
+		}
 	});
 });
 
-
-
 WebApplication app = builder.Build();
 
-if (app.Environment.IsDevelopment()) {
-	app.MapOpenApi();
-	app.UseSwagger();
-	app.UseSwaggerUI();
+//if (app.Environment.IsDevelopment()) {
+//app.MapOpenApi();
+app.UseSwagger();
+app.UseSwaggerUI();
+//}
+
+if (app.Environment.IsDevelopment() == false) {
+	// NO llamar a app.UseHttpsRedirection();
+} else {
+	app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
+
 
 app.UseCors("AllowAll");
 app.UseAuthentication();
@@ -103,6 +143,7 @@ app.UseMiddleware<UsuarioMiddleware>();
 
 app.MapControllers();
 
-Console.WriteLine("JWT Key cargada: " + builder.Configuration["Jwt:Key"]);
+Console.WriteLine("JWT Key cargada: " + "ESTA_ES_UNA_LLAVE_DE_DESARROLLO_CAMBIAR_EN_PRODUCCION_123456789");
+Console.WriteLine("Environment: " + app.Environment.EnvironmentName);
 
 app.Run();

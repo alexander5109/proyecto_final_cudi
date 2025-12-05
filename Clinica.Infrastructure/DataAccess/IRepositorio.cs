@@ -22,6 +22,7 @@ public static class IRepositorioInterfaces {
 		Task<Result<IEnumerable<PacienteDbModel>>> SelectPacientes();
 		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWherePacienteId(PacienteId id);
 		Task<Result<PacienteDbModel?>> SelectPacienteWhereId(PacienteId id);
+		//Task<Result<PacienteDbModel?>> SelectPacienteWhereTurnoId(TurnoId id);
 		Task<Result<Unit>> UpdatePacienteWhereId(Paciente2025 instance);
 	}
 
@@ -30,7 +31,7 @@ public static class IRepositorioInterfaces {
 		Task<Result<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
 		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicos();
 		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id);
-		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo code);
+		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code);
 		Task<Result<MedicoDbModel?>> SelectMedicoWhereId(MedicoId id);
 		Task<Result<Unit>> UpdateMedicoWhereId(Medico2025 instance);
 	}

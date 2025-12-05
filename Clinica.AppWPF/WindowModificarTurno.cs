@@ -62,7 +62,7 @@ public partial class WindowModificarTurno : Window, INotifyPropertyChanged {
 		//txtMedicos.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 	}
 	//private void txtEspecialidades_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		//txtMedicos.SelectedValuePath = "CodigoInternoValor";
+		//txtMedicos.SelectedValuePath = "Codigo";
 		//txtMedicos.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 		//txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicosWhereEspecialidad(txtEspecialidades.SelectedItem.ToString());
 	//}

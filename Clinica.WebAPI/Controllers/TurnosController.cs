@@ -9,7 +9,7 @@ namespace Clinica.WebAPI.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class TurnosController(
 	IRepositorioTurnos repositorio, 
 	ILogger<TurnosController> logger

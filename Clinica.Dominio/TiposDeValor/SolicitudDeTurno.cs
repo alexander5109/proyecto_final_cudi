@@ -27,10 +27,10 @@ public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 //		return new Result<SolicitudDeTurno>.Ok(new SolicitudDeTurno(pacienteId, especialidad, fechaSolicitada));
 //	}
 
-//	public string ATexto() =>
+//	public string AEspañol() =>
 //		$"Solicitud básica:\n" +
 //		$"  • Nivel4Paciente: {PacienteId}\n" +
-//		$"  • Especialidad: {Especialidad.ATexto()}\n" +
+//		$"  • Especialidad: {Especialidad.AEspañol()}\n" +
 //		$"  • Solicitado en: {FechaCreacion:G}";
 //}
 
@@ -61,10 +61,10 @@ public readonly record struct SolicitudDeTurnoPreferencias(
 //	public Especialidad2025 Especialidad => Basica.Especialidad;
 //	public DateTime FechaCreacion => Basica.FechaCreacion;
 
-//	public string ATexto() {
+//	public string AEspañol() {
 //		return
 //			"Solicitud de turno:\n" +
-//			Basica.ATexto() + "\n" +
-//			Preferencias.ATexto();
+//			Basica.AEspañol() + "\n" +
+//			Preferencias.AEspañol();
 //	}
 //}

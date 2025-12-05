@@ -1,4 +1,5 @@
 ﻿using Clinica.Dominio.Entidades;
+using Clinica.Dominio.TiposDeValor;
 using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,15 @@ public class MedicosController(
 		PermisoSistema.VerMedicos,
 		() => repositorio.SelectMedicos()
 	);
+
+
+	[HttpGet("por-especialidad/{code}")]
+	public Task<IActionResult> GetMedicosWhereEspecialidadCodigo([FromRoute] EspecialidadCodigo code)
+		=> this.SafeExecute(
+			logger,
+			PermisoSistema.VerMedicos,
+			() => repositorio.SelectMedicosWhereEspecialidadCodigo(code)
+		);
 
 
 

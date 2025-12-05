@@ -7,27 +7,27 @@ using static Clinica.Dominio.IRepositorios.QueryModels;
 namespace Clinica.Dominio.Servicios;
 
 internal static class ServiciosPrivados {
-	internal static Result<DisponibilidadEspecialidad2025> TomarPrimera(this Result<IReadOnlyList<DisponibilidadEspecialidad2025>> listadoResult) {
-		return listadoResult.Match<Result<DisponibilidadEspecialidad2025>>(
+	internal static Result<Disponibilidad2025> TomarPrimera(this Result<IReadOnlyList<Disponibilidad2025>> listadoResult) {
+		return listadoResult.Match<Result<Disponibilidad2025>>(
 			ok => {
 				// la lista existe, ahora chequeamos si tiene elementos
 				if (ok.Count == 0)
-					return new Result<DisponibilidadEspecialidad2025>.Error(
+					return new Result<Disponibilidad2025>.Error(
 						"No hay disponibilidades para seleccionar."
 					);
-				return new Result<DisponibilidadEspecialidad2025>.Ok(ok[0]);
+				return new Result<Disponibilidad2025>.Ok(ok[0]);
 			},
 			mensajeError =>
-				new Result<DisponibilidadEspecialidad2025>.Error(mensajeError)
+				new Result<Disponibilidad2025>.Error(mensajeError)
 		);
 	}
 
-	internal static Result<IReadOnlyList<DisponibilidadEspecialidad2025>> AplicarFiltrosOpcionales(this Result<IReadOnlyList<DisponibilidadEspecialidad2025>> disponibilidadesResult, SolicitudDeTurnoPreferencias preferencias) {
-		if (disponibilidadesResult is Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error err)
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error(err.Mensaje);
+	internal static Result<IReadOnlyList<Disponibilidad2025>> AplicarFiltrosOpcionales(this Result<IReadOnlyList<Disponibilidad2025>> disponibilidadesResult, SolicitudDeTurnoPreferencias preferencias) {
+		if (disponibilidadesResult is Result<IReadOnlyList<Disponibilidad2025>>.Error err)
+			return new Result<IReadOnlyList<Disponibilidad2025>>.Error(err.Mensaje);
 
-		IReadOnlyList<DisponibilidadEspecialidad2025> lista = ((Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok)disponibilidadesResult).Valor;
-		IEnumerable<DisponibilidadEspecialidad2025> filtradas = lista;
+		IReadOnlyList<Disponibilidad2025> lista = ((Result<IReadOnlyList<Disponibilidad2025>>.Ok)disponibilidadesResult).Valor;
+		IEnumerable<Disponibilidad2025> filtradas = lista;
 		if (preferencias.DiaPreferido is DiaSemana2025 dia)
 			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia.Valor);
 
@@ -35,36 +35,36 @@ internal static class ServiciosPrivados {
 			filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));
 
 		if (filtradas.Any()) {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok([.. filtradas]);
+			return new Result<IReadOnlyList<Disponibilidad2025>>.Ok([.. filtradas]);
 		} else {
-			return new Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error("No se encontraron disponibilidades");
+			return new Result<IReadOnlyList<Disponibilidad2025>>.Error("No se encontraron disponibilidades");
 		}
 	}
 
 
-	internal static async Task<Result<DisponibilidadEspecialidad2025>> EncontrarProximaDisponibilidad(
+	internal static async Task<Result<Disponibilidad2025>> EncontrarProximaDisponibilidad(
 			Especialidad2025 solicitudEspecialidad,
 			DateTime aPartirDeCuando,
 			IRepositorioDomainServiciosPrivados repositorio
 	) {
-		await foreach (Result<DisponibilidadEspecialidad2025> disp in GenerarDisponibilidades(
+		await foreach (Result<Disponibilidad2025> disp in GenerarDisponibilidades(
 			solicitudEspecialidad,
 			aPartirDeCuando,
 			repositorio)) {
 			return disp;
 		}
-		return new Result<DisponibilidadEspecialidad2025>.Error("No se encontró ninguna disponibilidad.");
+		return new Result<Disponibilidad2025>.Error("No se encontró ninguna disponibilidad.");
 	}
 
 
-	internal static async IAsyncEnumerable<Result<DisponibilidadEspecialidad2025>>GenerarDisponibilidades(
+	internal static async IAsyncEnumerable<Result<Disponibilidad2025>>GenerarDisponibilidades(
 		Especialidad2025 especialidad,
 		DateTime aPartirDeCuando,
 		IRepositorioDomainServiciosPrivados repo
 	) {
-        Result<IEnumerable<MedicoId>> medicosResult = await repo.SelectMedicosIdWhereEspecialidadCode(especialidad.CodigoInternoValor);
+        Result<IEnumerable<MedicoId>> medicosResult = await repo.SelectMedicosIdWhereEspecialidadCodigo(especialidad.Codigo);
 		if (medicosResult is Result<IEnumerable<MedicoId>>.Error errMed) {
-			yield return new Result<DisponibilidadEspecialidad2025>.Error(errMed.Mensaje);
+			yield return new Result<Disponibilidad2025>.Error(errMed.Mensaje);
 			yield break;
 		}
         IEnumerable<MedicoId> medicos = ((Result<IEnumerable<MedicoId>>.Ok)medicosResult).Valor;
@@ -72,13 +72,13 @@ internal static class ServiciosPrivados {
 		foreach (MedicoId medico in medicos) {
             Result<DateTime> primero = await CalcularPrimerSlotDisponible(medico, especialidad, aPartirDeCuando, repo);
 			if (primero is Result<DateTime>.Error errSlot) {
-				yield return new Result<DisponibilidadEspecialidad2025>.Error(errSlot.Mensaje);
+				yield return new Result<Disponibilidad2025>.Error(errSlot.Mensaje);
 				yield break;
 			}
 			ordenados.Add((medico, ((Result<DateTime>.Ok)primero).Valor));
 		}
 		foreach ((MedicoId medico, DateTime slot) x in ordenados.OrderBy(t => t.slot)) {
-			await foreach (Result<DisponibilidadEspecialidad2025> disp in GenerarDisponibilidadesDeMedico(
+			await foreach (Result<Disponibilidad2025> disp in GenerarDisponibilidadesDeMedico(
 				especialidad, aPartirDeCuando, x.medico, repo)) {
 				yield return disp;
 			}
@@ -87,7 +87,7 @@ internal static class ServiciosPrivados {
 
 
 
-	private static async IAsyncEnumerable<Result<DisponibilidadEspecialidad2025>> GenerarDisponibilidadesDeMedico(
+	private static async IAsyncEnumerable<Result<Disponibilidad2025>> GenerarDisponibilidadesDeMedico(
 		Especialidad2025 solicitudEspecialidad,
 		DateTime aPartirDeCuando,
 		MedicoId medicoId,
@@ -103,7 +103,7 @@ internal static class ServiciosPrivados {
 			medicoId, aPartirDeCuando, hastaBusqueda));
 
 		if (turnosResult.IsError) {
-			yield return new Result<DisponibilidadEspecialidad2025>.Error(turnosResult.UnwrapAsError());
+			yield return new Result<Disponibilidad2025>.Error(turnosResult.UnwrapAsError());
 			yield break;
 		}
         IEnumerable<TurnoQM> turnos = turnosResult.UnwrapAsOk();
@@ -113,7 +113,7 @@ internal static class ServiciosPrivados {
 			medicoId, aPartirDeCuando, hastaBusqueda));
 
 		if (franjasResult.IsError) {
-			yield return new Result<DisponibilidadEspecialidad2025>.Error(franjasResult.UnwrapAsError());
+			yield return new Result<Disponibilidad2025>.Error(franjasResult.UnwrapAsError());
 			yield break;
 		}
         IEnumerable<HorarioMedicoQM> franjas = franjasResult.UnwrapAsOk();
@@ -132,13 +132,17 @@ internal static class ServiciosPrivados {
 					continue;
 
 				for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
-					var disp = new DisponibilidadEspecialidad2025(
-						solicitudEspecialidad, medicoId,
-						slot, slot.AddMinutes(duracion));
+					var disp = new Disponibilidad2025(
+						solicitudEspecialidad, 
+						medicoId,
+						slot, 
+						slot.AddMinutes(duracion),
+						DiaSemana2025.Crear(slot.DayOfWeek)
+					);
 
 					bool solapa = false;
 					foreach (TurnoQM? t in turnos) {
-						if (t.EspecialidadCodigo == disp.Especialidad.CodigoInternoValor &&
+						if (t.EspecialidadCodigo == disp.Especialidad.Codigo &&
 							t.OutcomeEstado == TurnoOutcomeEstado2025.Programado.Codigo &&
 							t.FechaHoraAsignadaDesde < disp.FechaHoraHasta &&
 							disp.FechaHoraDesde < t.FechaHoraAsignadaHasta) {
@@ -148,7 +152,7 @@ internal static class ServiciosPrivados {
 					}
 
 					if (!solapa)
-						yield return new Result<DisponibilidadEspecialidad2025>.Ok(disp);
+						yield return new Result<Disponibilidad2025>.Ok(disp);
 				}
 			}
 		}
@@ -203,7 +207,7 @@ internal static class ServiciosPrivados {
 					bool solapa = false;
 
 					foreach (TurnoQM t in turnos) {
-						if (t.EspecialidadCodigo == especialidad.CodigoInternoValor &&
+						if (t.EspecialidadCodigo == especialidad.Codigo &&
 							t.OutcomeEstado == TurnoOutcomeEstado2025.Programado.Codigo &&
 							t.FechaHoraAsignadaDesde < slotHasta &&
 							slot < t.FechaHoraAsignadaHasta) {

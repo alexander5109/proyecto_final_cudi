@@ -9,7 +9,9 @@ namespace Clinica.AppWPF.Infrastructure;
 public static class IWPFRepositorioInterfaces {
 	public interface IWPFRepositorio :
 		IWPFRepositorioMedicos,
-		IWPFRepositorioPacientes {
+		IWPFRepositorioPacientes,
+		IWPFRepositorioDominio,
+		IWPFRepositorioTurnos {
 	}
 
 	public interface IWPFRepositorioMedicos {
@@ -17,8 +19,7 @@ public static class IWPFRepositorioInterfaces {
 		Task<Result<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
 		Task<Result<Unit>> UpdateMedicoWhereId(Medico2025 instance);
 		Task<List<MedicoDto>> SelectMedicos();
-		Task<List<TurnoDto>> SelectTurnosWhereMedicoId(MedicoId id);
-		Task<List<MedicoDto>> SelectMedicosWhereEspecialidadCode(EspecialidadCodigo code);
+		Task<List<MedicoDto>> SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code);
 		Task<MedicoDto?> SelectMedicoWhereId(MedicoId id);
 	}
 
@@ -26,12 +27,23 @@ public static class IWPFRepositorioInterfaces {
 		Task<Result<Unit>> DeletePacienteWhereId(PacienteId id);
 		Task<Result<PacienteId>> InsertPacienteReturnId(Paciente2025 instance);
 		Task<List<PacienteDto>> SelectPacientes();
-		Task<List<TurnoDto>> SelectTurnosWherePacienteId(PacienteId id);
 		Task<PacienteDto?> SelectPacienteWhereId(PacienteId id);
 		Task<Result<Unit>> UpdatePacienteWhereId(Paciente2025 instance);
 	}
 
+	public interface IWPFRepositorioDominio {
+		Task<List<Disponibilidad2025>> SelectDisponibilidades(EspecialidadCodigo especialidad, int cuantos, DateTime apartirDeCuando);
+
+	}
+
+	public interface IWPFRepositorioTurnos {
+		Task<List<TurnoDto>> SelectTurnos();
+		Task<List<TurnoDto>> SelectTurnosWherePacienteId(PacienteId id);
+		Task<List<TurnoDto>> SelectTurnosWhereMedicoId(MedicoId id);
+
+	}
 }
+
 
 
 //public interface IRepositorio {
@@ -74,7 +86,7 @@ public static class IWPFRepositorioInterfaces {
 //// Filtros
 //Task<List<WindowModificarTurnoViewModel>> ReadTurnosWhereMedicoId(int? medicoId);
 //Task<List<WindowModificarTurnoViewModel>> ReadTurnosWherePacienteId(int? pacienteId);
-//Task<List<MedicoViewModel>> ReadMedicosWhereEspecialidad(int? especialidadCodigoInterno);
+//Task<List<MedicoViewModel>> ReadMedicosWhereEspecialidad(int? EspecialidadCodigo);
 
 //}
 

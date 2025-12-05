@@ -35,7 +35,7 @@ public static partial class DbModels {
 		return Horario2025.Crear(
 			horarioDto.Id,
 			horarioDto.MedicoId,
-			new DiaSemana2025(horarioDto.DiaSemana),
+			new DiaSemana2025(horarioDto.DiaSemana, horarioDto.DiaSemana.AEspañol()),
 			new HorarioHora2025(TimeOnly.FromTimeSpan(horarioDto.HoraDesde)),
 			new HorarioHora2025(TimeOnly.FromTimeSpan(horarioDto.HoraHasta)),
 			new VigenciaHorario2025(new DateOnly(2014, 1, 1)),

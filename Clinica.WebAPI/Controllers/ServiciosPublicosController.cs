@@ -33,32 +33,31 @@ public record SolicitarTurnoPrimeraDispDto(
 
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ServiciosPublicosController(IRepositorio repositorio, ILogger<ServiciosPublicosController> logger) : ControllerBase {
 
 
 
 	[HttpGet("Turnos/Disponibilidades")]
 	public async Task<IActionResult> VerDisponibilidades(
-		[FromQuery] EspecialidadCodigo especialidadCodigoInterno,
+		[FromQuery] EspecialidadCodigo EspecialidadCodigo,
 		[FromQuery] int cuantos,
-		[FromQuery, DefaultValue("2025-12-03T00:00:00")]
-		DateTime? aPartirDeCuando
+		[FromQuery, DefaultValue("2025-12-03T00:00:00")] DateTime? aPartirDeCuando
 	) {
 		DateTime desde = aPartirDeCuando ?? DateTime.Now; // default real acá
 
 		var result = await ServiciosPublicos.SolicitarDisponibilidadesPara(
-			especialidadCodigoInterno,
+			EspecialidadCodigo,
 			desde,
 			cuantos,
 			repositorio
 		);
 
 		return result switch {
-			Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Ok ok =>
-				Ok(ok.Valor.Select(d => d.ATexto()).ToList()),
+			Result<IReadOnlyList<Disponibilidad2025>>.Ok ok =>
+				Ok(ok.Valor),
 
-			Result<IReadOnlyList<DisponibilidadEspecialidad2025>>.Error err =>
+			Result<IReadOnlyList<Disponibilidad2025>>.Error err =>
 				BadRequest(new { error = err.Mensaje }),
 
 			_ => StatusCode(500)
@@ -189,7 +188,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 	// POST /turnos   (crear / agendar)
 	// --------------------------------------------------------
 	// [HttpPost]
-	// public async Task<IActionResult> Crear([FromBody] CrearTurnoRequestDto dto) {
+	// public async Task<IActionResult> CrearResult([FromBody] CrearTurnoRequestDto dto) {
 	// Result<Especialidad2025> espResult = Especialidad2025.CrearPorCodigoInterno(dto.EspecialidadCodigo);
 
 	// if (espResult.IsError)

@@ -84,7 +84,7 @@ public static class ApiDtos {
 			turno.FechaDeCreacion.Valor,
 			turno.PacienteId,
 			turno.MedicoId,
-			turno.Especialidad.CodigoInternoValor,
+			turno.Especialidad.Codigo,
 			turno.FechaHoraAsignadaDesdeValor,
 			turno.FechaHoraAsignadaHastaValor,
 			turno.OutcomeEstado.Codigo,
@@ -151,7 +151,7 @@ public static class ApiDtos {
 		return Horario2025.Crear(
 			horarioDto.Id,
 			horarioDto.MedicoId,
-			new DiaSemana2025(horarioDto.DiaSemana),
+			new DiaSemana2025(horarioDto.DiaSemana, horarioDto.DiaSemana.AEspañol()),
 			new HorarioHora2025(TimeOnly.FromTimeSpan(horarioDto.HoraDesde)),
 			new HorarioHora2025(TimeOnly.FromTimeSpan(horarioDto.HoraHasta)),
 			new VigenciaHorario2025(new DateOnly(2014, 1, 1)),
@@ -161,7 +161,7 @@ public static class ApiDtos {
 
 	public record MedicoDto(
 		MedicoId Id,
-		EspecialidadCodigo EspecialidadCodigoInterno,
+		EspecialidadCodigo EspecialidadCodigo,
 		string Dni,
 		string Nombre,
 		string Apellido,
@@ -187,7 +187,7 @@ public static class ApiDtos {
 			MedicoId.Crear(medicoDto.Id.Valor),
 			NombreCompleto2025.Crear(medicoDto.Nombre, medicoDto.Apellido),
 			//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
-			Especialidad2025.CrearPorCodigoInterno(medicoDto.EspecialidadCodigoInterno),
+			Especialidad2025.CrearPorCodigoInterno(medicoDto.EspecialidadCodigo),
 			DniArgentino2025.Crear(medicoDto.Dni),
 			DomicilioArgentino2025.Crear(
 				LocalidadDeProvincia2025.Crear(
@@ -207,7 +207,7 @@ public static class ApiDtos {
 	public static MedicoDto ToDto(this Medico2025 medico) {
 		return new MedicoDto {
 			Id = medico.Id,
-			EspecialidadCodigoInterno = medico.EspecialidadUnica.CodigoInternoValor,
+			EspecialidadCodigo = medico.EspecialidadUnica.Codigo,
 			Dni = medico.Dni.Valor,
 			Nombre = medico.NombreCompleto.NombreValor,
 			Apellido = medico.NombreCompleto.ApellidoValor,
@@ -235,7 +235,7 @@ public static class ApiDtos {
 	//	TurnoId Id,
 	//	TimeSpan Hora,
 	//	DateTime Fecha,
-	//	EspecialidadCodigo EspecialidadCodigoInterno,
+	//	EspecialidadCodigo EspecialidadCodigo,
 	//	TurnoOutcomeEstadoCodigo2025 Estado,
 	//	MedicoId MedicoId
 	//);
@@ -244,7 +244,7 @@ public static class ApiDtos {
 	//	string Dni,
 	//	string Nombre,
 	//	string Apellido,
-	//	EspecialidadCodigo EspecialidadCodigoInterno
+	//	EspecialidadCodigo EspecialidadCodigo
 	//);
 
 
@@ -278,12 +278,12 @@ public static class ApiDtos {
 		string OutcomeComentario
 	);
 
-	public record DisponibilidadDTO(
-		MedicoId MedicoId,
-		DateTime FechaInicio,
-		DateTime FechaFin,
-		EspecialidadCodigo EspecialidadCodigoInterno
-	);
+	//public record DisponibilidadDTO(
+	//	MedicoId MedicoId,
+	//	DateTime FechaInicio,
+	//	DateTime FechaFin,
+	//	EspecialidadCodigo EspecialidadCodigo
+	//);
 
 
 	public record ReprogramarTurnoRequest(

@@ -116,11 +116,9 @@
     <Build Include="dbo\Turnos\sp_SelectTurnosWhereMedicosIds.sql" />
     <Build Include="dbo\Turnos\sp_SelectTurnosWherePacienteId.sql" />
     <Build Include="dbo\Usuarios\sp_SelectUsuarioWhereNombre.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicosWhereEspecialidadCode.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Clinica.InfrastructureSQLServer.publish.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <RefactorLog Include="Clinica.InfrastructureSQLServer.refactorlog" />
   </ItemGroup>
 </Project>

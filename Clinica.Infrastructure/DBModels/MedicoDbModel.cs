@@ -9,7 +9,7 @@ namespace Clinica.Shared.Dtos;
 public static partial class DbModels {
 	public record MedicoDbModel(
 		MedicoId Id,
-		EspecialidadCodigo EspecialidadCodigoInterno,
+		EspecialidadCodigo EspecialidadCodigo,
 		string Dni,
 		string Nombre,
 		string Apellido,
@@ -35,7 +35,7 @@ public static partial class DbModels {
 			MedicoId.Crear(medicoDto.Id.Valor),
 			NombreCompleto2025.Crear(medicoDto.Nombre, medicoDto.Apellido),
 			//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
-			Especialidad2025.CrearPorCodigoInterno(medicoDto.EspecialidadCodigoInterno),
+			Especialidad2025.CrearPorCodigoInterno(medicoDto.EspecialidadCodigo),
 			DniArgentino2025.Crear(medicoDto.Dni),
 			DomicilioArgentino2025.Crear(
 				LocalidadDeProvincia2025.Crear(
@@ -55,7 +55,7 @@ public static partial class DbModels {
 	public static MedicoDbModel ToModel(this Medico2025 medico) {
 		return new MedicoDbModel {
 			Id = medico.Id,
-			EspecialidadCodigoInterno = medico.EspecialidadUnica.CodigoInternoValor,
+			EspecialidadCodigo = medico.EspecialidadUnica.Codigo,
 			Dni = medico.Dni.Valor,
 			Nombre = medico.NombreCompleto.NombreValor,
 			Apellido = medico.NombreCompleto.ApellidoValor,

@@ -133,7 +133,7 @@ public record Turno2025(
 		TurnoId turnoId,
 		PacienteId pacienteId,
 		FechaRegistro2025 solicitadoEn,
-		DisponibilidadEspecialidad2025 disp
+		Disponibilidad2025 disp
 	) {
 		if (disp.FechaHoraDesde >= disp.FechaHoraHasta)
 			return new Result<Turno2025>.Error(
@@ -173,7 +173,7 @@ public record Turno2025(
 	}
 
 	public Result<Turno2025> Reprogramar(
-		DisponibilidadEspecialidad2025 nuevaDisp,
+		Disponibilidad2025 nuevaDisp,
 		TurnoId nuevoId
 	) {
 		if (OutcomeEstado == TurnoOutcomeEstado2025.Programado)
