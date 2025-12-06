@@ -5,12 +5,12 @@ using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
-public partial class Pacientes : Window {
+public partial class SecretariaPacientes : Window {
 	private TurnoDto? SelectedTurno;
 	private PacienteDto? SelectedPaciente;
 	private MedicoDto? MedicoRelacionado;
 
-	public Pacientes() {
+	public SecretariaPacientes() {
 		InitializeComponent();
 		_ = CargaInicialAsync();
 	}
@@ -39,22 +39,6 @@ public partial class Pacientes : Window {
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 
-	private async Task ActualizarMedicoUIAsync() {
-		if (SelectedTurno != null) {
-			MedicoRelacionado = await App.Repositorio.SelectMedicoWhereId(SelectedTurno.MedicoId);
-
-			txtMedicoDni.Text = MedicoRelacionado?.Dni ?? string.Empty;
-			txtMedicoNombre.Text = MedicoRelacionado?.Nombre ?? string.Empty;
-			txtMedicoApellido.Text = MedicoRelacionado?.Apellido ?? string.Empty;
-			txtMedicoEspecialidad.Text = MedicoRelacionado?.EspecialidadCodigo.ToString();
-
-			buttonModificarMedico.IsEnabled = MedicoRelacionado != null;
-		} else {
-			MedicoRelacionado = null;
-			txtMedicoDni.Text = txtMedicoNombre.Text = txtMedicoApellido.Text = txtMedicoEspecialidad.Text = string.Empty;
-			buttonModificarMedico.IsEnabled = false;
-		}
-	}
 
 	//=============================================================
 	// Eventos de ventana
@@ -63,19 +47,16 @@ public partial class Pacientes : Window {
 		//App.UpdateLabelDataBaseModo(labelBaseDeDatosModo);
 		ActualizarPacienteUI();
 		await ActualizarTurnosUIAsync();
-		await ActualizarMedicoUIAsync();
 	}
 
 	private async void ListViewPacientes_SelectionChangedAsync(object sender, SelectionChangedEventArgs e) {
 		SelectedPaciente = pacientesListView.SelectedItem as PacienteDto;
 		await ActualizarTurnosUIAsync();
-		await ActualizarMedicoUIAsync();
 		ActualizarPacienteUI();
 	}
 
 	private async void ListViewTurnos_SelectionChangedAsync(object sender, SelectionChangedEventArgs e) {
 		SelectedTurno = turnosListView.SelectedItem as TurnoDto;
-		await ActualizarMedicoUIAsync();
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 
@@ -96,7 +77,7 @@ public partial class Pacientes : Window {
 
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
 		if (SelectedPaciente != null) {
-			this.AbrirComoDialogo<PacienteModificar>(SelectedPaciente.Id);
+			this.AbrirComoDialogo<SecretariaPacienteModificar>(SelectedPaciente.Id);
 		}
 	}
 
@@ -104,7 +85,7 @@ public partial class Pacientes : Window {
 	// Botones de crear
 	//=============================================================
 	//private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<MedicoModificar>();
-	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<PacienteModificar>();
+	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<SecretariaPacienteModificar>();
 	//private void ButtonAgregarTurno(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarTurno>();
 
 	//=============================================================

@@ -61,26 +61,26 @@ public static class IWPFRepositorioInterfaces {
 
 //// Get methods
 //Task<MedicoViewModel2025> GetMedicoById(int id);
-//Task<Paciente> GetPacienteById(int id);
+//Task<PacienteUpdateViewModel> GetPacienteById(int id);
 //Task<WindowModificarTurnoViewModel> GetTurnoById(int id);
 //Task<EspecialidadMedicaViewModel> GetEspecialidadById(int id);
 
 
 //// Create methods
 //Task<bool> CreateMedico(MedicoViewModel2025 instance);
-//Task<bool> CreatePaciente(Paciente instance);
+//Task<bool> CreatePaciente(PacienteUpdateViewModel instance);
 //Task<bool> CreateTurno(WindowModificarTurnoViewModel instance);
 ////public abstract bool CreateEspecialidad(WindowModificarEspecialidadViewModel instance);
 
 //// Update methods
 //Task<bool> UpdateMedico(MedicoViewModel2025 instance);
-//Task<bool> UpdatePaciente(Paciente instance);
+//Task<bool> UpdatePaciente(PacienteUpdateViewModel instance);
 //Task<bool> UpdateTurno(WindowModificarTurnoViewModel instance);
 ////public abstract bool UpdateEspecialidad(WindowModificarEspecialidadViewModel instance);
 
 //// Delete methods
 //Task<bool> DeleteMedico(MedicoViewModel2025 instance);
-//Task<bool> DeletePaciente(Paciente instance);
+//Task<bool> DeletePaciente(PacienteUpdateViewModel instance);
 //Task<bool> DeleteTurno(WindowModificarTurnoViewModel instance);
 
 //// Filtros

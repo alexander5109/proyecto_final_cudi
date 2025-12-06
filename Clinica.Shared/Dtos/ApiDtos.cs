@@ -7,6 +7,20 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Shared.Dtos;
 
 public static class ApiDtos {
+
+
+	public record UsuarioLoginRequestDto(string Username, string UserPassword);
+	public record UsuarioLoginResponseDto(string Username, UsuarioEnumRole EnumRole, string Token);
+
+
+
+
+
+
+
+
+
+
 	public record PacienteDto(
 		PacienteId Id,
 		string Dni,
@@ -226,7 +240,7 @@ public static class ApiDtos {
 	//public record PacienteListDto(
 	//	PacienteId Id,
 	//	string Dni,
-	//	string Nombre,
+	//	string Username,
 	//	string Apellido,
 	//	string Email,
 	//	string Telefono
@@ -242,7 +256,7 @@ public static class ApiDtos {
 
 	//public record MedicoListDto(
 	//	string Dni,
-	//	string Nombre,
+	//	string Username,
 	//	string Apellido,
 	//	EspecialidadCodigo EspecialidadCodigo
 	//);
@@ -252,7 +266,6 @@ public static class ApiDtos {
 
 
 
-	public record UsuarioLogueadoDTO(string Nombre, byte RolEnum, string Token);
 
 
 
@@ -261,8 +274,6 @@ public static class ApiDtos {
 		DateTime NuevaFechaDesde,
 		DateTime NuevaFechaHasta
 	);
-	public record LoginRequestDto(string Username, string Password);
-	public record LoginResponseDto(string Nombre, string Rol, string Token);
 
 
 	public record CrearTurnoRequestDto(

@@ -1,4 +1,5 @@
 ﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
@@ -11,15 +12,15 @@ namespace Clinica.WebAPI.Controllers;
 public class AuthController(IRepositorio repositorio, JwtService jwtService, ILogger<AuthController> logger)
 	: ControllerBase {
 	[HttpPost("login")]
-	public async Task<IActionResult> Login([FromBody] LoginRequestDto dto) {
+	public async Task<IActionResult> Login([FromBody] UsuarioLoginRequestDto dto) {
 		Result<Usuario2025> resultado =
-			await ServiciosPublicos.ValidarCredenciales(dto.Username, dto.Password, repositorio);
+			await ServiciosPublicos.ValidarCredenciales(dto.Username, dto.UserPassword, repositorio);
 
 		return resultado switch {
 			Result<Usuario2025>.Ok ok =>
-				Ok(new LoginResponseDto(
+				Ok(new UsuarioLoginResponseDto(
 					ok.Valor.NombreUsuario.Valor,
-					ok.Valor.EnumRole.ToString(),
+					ok.Valor.EnumRole,
 					jwtService.EmitirJwt(ok.Valor)
 				)),
 

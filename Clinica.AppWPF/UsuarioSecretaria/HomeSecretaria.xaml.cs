@@ -1,14 +1,16 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
-public partial class HomeSecretaria : Window {
+public partial class SecretariaHome : Window {
 
-	public HomeSecretaria() {
+	public SecretariaHome() {
 		InitializeComponent();
 		soundCheckBox.IsChecked = SoundsService.SoundOn;
 	}
+	/*
 	public void MetodoBotonLogin(object sender, RoutedEventArgs e) {
 		this.AbrirComoDialogo<WindowLogin>();
 	}
@@ -23,16 +25,6 @@ public partial class HomeSecretaria : Window {
 		}
 	}
 
-	private void MetodoBotonPacientes(object sender, RoutedEventArgs e) {
-		if (App.Api.UsuarioActual?.RolEnum < 2) {
-			this.NavegarA<Pacientes>();
-		} else {
-			this.AbrirComoDialogo<WindowLogin>();
-			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				this.NavegarA<Pacientes>();
-			}
-		}
-	}
 
 	private void MetodoBotonTurnos(object sender, RoutedEventArgs e) {
 		if (App.Api.UsuarioActual?.RolEnum < 2) {
@@ -44,32 +36,27 @@ public partial class HomeSecretaria : Window {
 			}
 		}
 	}
+	*/
 
 	private void Window_Activated(object sender, EventArgs e) {
 		//App.UpdateLabelDataBaseModo(this.labelBaseDeDatosModo);
 	}
 
-	private void ButtonSalir(object sender, RoutedEventArgs e) {
-		this.Salir();
+	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
+
+	private void soundCheckBox_Checked(object sender, RoutedEventArgs e) => SoundsService.ToggleSound(this.soundCheckBox.IsChecked);
+
+	private void MetodoBotonLogout(object sender, RoutedEventArgs e) {
+		//App.UsuarioActual = null;
+		this.AbrirComoDialogo<MainWindow>();
 	}
 
-	private void soundCheckBox_Checked(object sender, RoutedEventArgs e) {
-		SoundsService.ToggleSound(this.soundCheckBox.IsChecked);
-	}
 
-	private void MetodoBotonTurnos2025(object sender, RoutedEventArgs e) {
-		if (App.Api.UsuarioActual?.RolEnum < 2) {
-			//this.NavegarA<SecretariaGestorTurnos>();
-		} else {
-			this.AbrirComoDialogo<WindowLogin>();
-			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				//this.NavegarA<SecretariaGestorTurnos>();
-			}
-		}
 
-	}
 
-    private void MetodoBotonLogout(object sender, RoutedEventArgs e) {
+	private void MetodoBotonPacientes(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientes>();
 
-	}
+	private void MetodoBotonTurnos2025(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaGestorTurnos>();
+
+    private void MetodoBotonTurnos(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaTurnosDelDia>();
 }

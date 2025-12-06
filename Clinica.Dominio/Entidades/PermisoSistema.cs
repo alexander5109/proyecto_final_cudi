@@ -1,4 +1,11 @@
-﻿public enum PermisoSistema {
+﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.TiposDeValor;
+using static Clinica.Dominio.Comun.ValidatedExtensions;
+
+namespace Clinica.Dominio.Entidades;
+
+
+public enum PermisoSistema {
 	VerPacientes,
 	VerTurnos,
 	VerMedicos,
@@ -24,7 +31,7 @@
 
 public static class PermisosPorRol {
 	private static readonly Dictionary<UsuarioEnumRole, HashSet<PermisoSistema>> tabla = new() {
-		[UsuarioEnumRole.Nivel1Admin] = [
+		[UsuarioEnumRole.Nivel1Superadmin] = [
 			PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerUsuarios,
@@ -41,7 +48,7 @@ public static class PermisosPorRol {
 
 		],
 
-		[UsuarioEnumRole.Nivel2Secretaria] = [
+		[UsuarioEnumRole.Nivel2Administrativo] = [
 			PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerMedicos,
@@ -55,7 +62,7 @@ public static class PermisosPorRol {
 
 		],
 
-		[UsuarioEnumRole.Nivel3Medico] = [
+		[UsuarioEnumRole.Nivel3Secretaria] = [
 			PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerMedicos,
@@ -63,7 +70,7 @@ public static class PermisosPorRol {
 			PermisoSistema.SolicitarTurno
 		],
 
-		[UsuarioEnumRole.Nivel4Paciente] = [
+		[UsuarioEnumRole.Nivel4Medico] = [
 			PermisoSistema.VerHorarios,
 			PermisoSistema.SolicitarTurno
 		],

@@ -40,8 +40,8 @@ public static class MainProgram {
 			.AddJsonFile("appsettings.Development.json")
 			.Build();
 
-        //RepositorioDapper repositorio = new(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
-        RepositorioDapper repositorio = new RepositorioDapper(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!))
+		//RepositorioDapper repositorio = new(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
+		RepositorioDapper repositorio = new RepositorioDapper(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
 
 		//var response = await http.GetAsync($"/disponibilidades?EspecialidadCodigo=3&cuantos=10");
 
@@ -69,7 +69,7 @@ public static class MainProgram {
 
 		// Caso de uso 1
 		Result<IReadOnlyList<Disponibilidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidadesPara(
-			Especialidad2025.ClinicoGeneral,
+			Especialidad2025.ClinicoGeneral.Codigo,
 			DateTime.Now,
 			4,
 			repositorio
@@ -82,15 +82,15 @@ public static class MainProgram {
 		// Caso de uso 2
 		Result<Turno2025> turno = (await ServiciosPublicos.SolicitarTurnoEnLaPrimeraDisponibilidad(
 			new PacienteId(1),
-			Especialidad2025.ClinicoGeneral,
-			new FechaRegistro2025(DateTime.Now),
+			Especialidad2025.ClinicoGeneral.Codigo,
+			DateTime.Now,
 			repositorio
 		));
 		turno.PrintAndContinue("Turno asignado:");
 
 		// Caso de uso 3
 		Result<Turno2025> reprogramado = (await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
-			turno,
+			turno.UnwrapAsOk().Id,
 			DateTime.Now.AddDays(1),
 			"Reprogramación",
 			repositorio
@@ -99,7 +99,7 @@ public static class MainProgram {
 
 		// Caso de uso 4
 		Result<Turno2025> cancelado = (await ServiciosPublicos.SolicitarCancelacion(
-			reprogramado,
+			reprogramado.UnwrapAsOk().Id,
 			DateTime.Now.AddDays(2),
 			"Cancelación definitiva",
 			repositorio

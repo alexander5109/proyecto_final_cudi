@@ -7,7 +7,7 @@ namespace Clinica.AppWPF.Infrastructure;
 public class ApiHelper {
 	private readonly HttpClient _cliente;
 
-	public UsuarioLogueadoDTO? UsuarioActual { get; private set; }
+	public UsuarioLoginResponseDto? UsuarioActual { get; private set; }
 
 	public ApiHelper() {
 		string? baseUrl = AppConfig.Config["Api:BaseUrl"]
@@ -30,7 +30,7 @@ public class ApiHelper {
 			new AuthenticationHeaderValue("Bearer", token);
 	}
 
-	public void SetUsuario(UsuarioLogueadoDTO usuario) {
+	public void SetUsuario(UsuarioLoginResponseDto usuario) {
 		UsuarioActual = usuario;
 		SetToken(usuario.Token);
 	}

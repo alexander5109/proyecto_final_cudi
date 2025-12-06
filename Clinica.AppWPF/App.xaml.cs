@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows;
-using Clinica.AppWPF.Clinica2024;
+//using Clinica.AppWPF.Clinica2024;
 using Clinica.AppWPF.Infrastructure;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
 
@@ -9,7 +9,7 @@ namespace Clinica.AppWPF;
 public partial class App : Application {
 	public static IWPFRepositorio Repositorio;
 	public static ApiHelper Api;
-	public static Repositorio2024 BaseDeDatos;
+	//public static Repositorio2024 BaseDeDatos;
 
 	protected override void OnStartup(StartupEventArgs e) {
 		base.OnStartup(e);

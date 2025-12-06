@@ -96,7 +96,7 @@ public partial class SecretariaGestorTurnos : Window, INotifyPropertyChanged {
 		MedicosEspecialistas.Clear();
 		var codigo = SelectedEspecialidadUId ?? EspecialidadesDisponibles.First().Codigo;
 
-		foreach (var m in await App.BaseDeDatos.SelectMedicosWhereEspecialidadCodigo(codigo))
+		foreach (var m in await App.Repositorio.SelectMedicosWhereEspecialidadCodigo(codigo))
 			MedicosEspecialistas.Add(m);
 
 		// Días
@@ -126,7 +126,7 @@ public partial class SecretariaGestorTurnos : Window, INotifyPropertyChanged {
 		MedicosEspecialistas.Clear();
 
 		var items =
-			await App.BaseDeDatos.SelectMedicosWhereEspecialidadCodigo(SelectedEspecialidadUId.Value);
+			await App.Repositorio.SelectMedicosWhereEspecialidadCodigo(SelectedEspecialidadUId.Value);
 
 		foreach (var m in items)
 			MedicosEspecialistas.Add(m);
@@ -149,7 +149,7 @@ public partial class SecretariaGestorTurnos : Window, INotifyPropertyChanged {
 		// ¿Cuántas disponibilidades pedir? Suponemos 20 para ejemplo
 		int cuantos = 20;
 
-		var items = await App.BaseDeDatos.SelectDisponibilidades(
+		var items = await App.Repositorio.SelectDisponibilidades(
 			SelectedEspecialidadUId.Value,
 			cuantos,
 			DateTime.Now

@@ -1,4 +1,5 @@
 ﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 
 namespace Clinica.Shared.Dtos;
 

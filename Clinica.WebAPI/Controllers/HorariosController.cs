@@ -1,4 +1,5 @@
-﻿using Clinica.Dominio.TiposDeValor;
+﻿using Clinica.Dominio.Entidades;
+using Clinica.Dominio.TiposDeValor;
 using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
