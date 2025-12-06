@@ -1,8 +1,4 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.TiposDeValor;
-using static Clinica.Dominio.Comun.ValidatedExtensions;
-
-namespace Clinica.Dominio.Entidades;
+﻿namespace Clinica.Dominio.Entidades;
 
 
 public enum PermisoSistema {

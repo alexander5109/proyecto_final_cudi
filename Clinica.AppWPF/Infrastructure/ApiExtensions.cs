@@ -13,14 +13,14 @@ public static class ApiExtensions {
 		string errorTitle = "Error ejecutando operación"
 	) {
 		try {
-			var response = await httpCall();
+            HttpResponseMessage response = await httpCall();
 
 			if (response.IsSuccessStatusCode) {
 				if (onOk is not null)
 					return new Result<T>.Ok(onOk());
 
-				// Si es OK pero no hay onOk, intentamos deserializar
-				var data = await response.Content.ReadFromJsonAsync<T>();
+                // Si es OK pero no hay onOk, intentamos deserializar
+                T? data = await response.Content.ReadFromJsonAsync<T>();
 				return new Result<T>.Ok(data!);
 			}
 
@@ -36,7 +36,7 @@ public static class ApiExtensions {
 		T defaultValue
 	) {
 		try {
-			var result = await api.Cliente.GetFromJsonAsync<T>(url);
+            T? result = await api.Cliente.GetFromJsonAsync<T>(url);
 			return result ?? defaultValue;
 		} catch (Exception ex) {
 			MessageBox.Show(
@@ -55,7 +55,7 @@ public static class ApiExtensions {
 		string url
 	) {
 		try {
-			var response = await api.Cliente.GetAsync(url);
+            HttpResponseMessage response = await api.Cliente.GetAsync(url);
 
 			if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
 				return default;

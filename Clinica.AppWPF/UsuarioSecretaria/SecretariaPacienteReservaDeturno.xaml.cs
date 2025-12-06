@@ -10,10 +10,30 @@ namespace Clinica.AppWPF.UsuarioSecretaria;
 
 //public record DisponibilidadDto(DateTime Fecha, string Hora, string Medico);
 
-public partial class SecretariaGestorTurnos : Window, INotifyPropertyChanged {
+public partial class SecretariaPacienteReservaDeTurno : Window, INotifyPropertyChanged {
+	public SecretariaPacienteReservaDeTurno() {
+		InitializeComponent();
+		DataContext = this;
+		SelectedPaciente = null;
+		LoadInitialData();
+	}
+
+	public SecretariaPacienteReservaDeTurno(Paciente2025 paciente) {
+		InitializeComponent();
+		DataContext = this;
+		SelectedPaciente = paciente;
+		LoadInitialData();
+	}
+	//props
+
+
+
 	public event PropertyChangedEventHandler? PropertyChanged;
 	protected void OnPropertyChanged(string name)
 		=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+
+	public required Paciente2025? SelectedPaciente;
 
 	public ObservableCollection<Especialidad2025> EspecialidadesDisponibles { get; } = [];
 	public ObservableCollection<MedicoDto> MedicosEspecialistas { get; } = [];
@@ -73,38 +93,28 @@ public partial class SecretariaGestorTurnos : Window, INotifyPropertyChanged {
 	public bool FiltroHoraEnabled { get; set; }
 
 	// ---------------------------
-	// Constructor
-	// ---------------------------
-
-	public SecretariaGestorTurnos() {
-		InitializeComponent();
-		DataContext = this;
-		LoadInitialData();
-	}
-
-	// ---------------------------
 	// Carga inicial
 	// ---------------------------
 
 	private async void LoadInitialData() {
 		// Especialidades
 		EspecialidadesDisponibles.Clear();
-		foreach (var e in Especialidad2025.Todas)
+		foreach (Especialidad2025 e in Especialidad2025.Todas)
 			EspecialidadesDisponibles.Add(e);
 
 		// Médicos por especialidad inicial
 		MedicosEspecialistas.Clear();
-		var codigo = SelectedEspecialidadUId ?? EspecialidadesDisponibles.First().Codigo;
+        EspecialidadCodigo codigo = SelectedEspecialidadUId ?? EspecialidadesDisponibles.First().Codigo;
 
-		foreach (var m in await App.Repositorio.SelectMedicosWhereEspecialidadCodigo(codigo))
+		foreach (MedicoDto m in await App.Repositorio.SelectMedicosWhereEspecialidadCodigo(codigo))
 			MedicosEspecialistas.Add(m);
 
 		// Días
 		DiasSemana.Clear();
-		foreach (var d in DiaSemana2025.Todos)
+		foreach (DiaSemana2025 d in DiaSemana2025.Todos)
 			DiasSemana.Add(d);
 
-		// Horas (si tenés un método real para obtenerlas, lo pongo acá)
+		// HorasItemsSource (si tenés un método real para obtenerlas, lo pongo acá)
 		// por ahora lo dejo vacío hasta que definamos de dónde vienen:
 		// HoursAdd(8); HoursAdd(9); etc.
 
@@ -125,10 +135,10 @@ public partial class SecretariaGestorTurnos : Window, INotifyPropertyChanged {
 
 		MedicosEspecialistas.Clear();
 
-		var items =
+        List<MedicoDto> items =
 			await App.Repositorio.SelectMedicosWhereEspecialidadCodigo(SelectedEspecialidadUId.Value);
 
-		foreach (var m in items)
+		foreach (MedicoDto m in items)
 			MedicosEspecialistas.Add(m);
 
 		SelectedMedicoId = MedicosEspecialistas.FirstOrDefault()?.Id;
@@ -149,13 +159,13 @@ public partial class SecretariaGestorTurnos : Window, INotifyPropertyChanged {
 		// ¿Cuántas disponibilidades pedir? Suponemos 20 para ejemplo
 		int cuantos = 20;
 
-		var items = await App.Repositorio.SelectDisponibilidades(
+        List<Disponibilidad2025> items = await App.Repositorio.SelectDisponibilidades(
 			SelectedEspecialidadUId.Value,
 			cuantos,
 			DateTime.Now
 		);
 
-		foreach (var d in items)
+		foreach (Disponibilidad2025 d in items)
 			Disponibilidades.Add(d);
 	}
 

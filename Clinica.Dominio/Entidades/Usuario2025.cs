@@ -10,7 +10,7 @@ public readonly record struct NombreUsuario(string Valor);
 
 public readonly record struct ContraseñaHasheada(string Valor) {
 	public static ContraseñaHasheada CrearFromRaw(string raw) {
-		var hash = SHA256.HashData(Encoding.UTF8.GetBytes(raw));
+        byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes(raw));
 		return new(Convert.ToHexString(hash));
 	}
 

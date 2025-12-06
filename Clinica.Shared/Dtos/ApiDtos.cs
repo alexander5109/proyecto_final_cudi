@@ -9,6 +9,25 @@ namespace Clinica.Shared.Dtos;
 public static class ApiDtos {
 
 
+	public record SolicitarCancelacionDto(
+		TurnoId TurnoId,
+		DateTime OutcomeFecha,
+		string OutcomeComentario
+	);
+	public record SolicitarReprogramacionDto(
+		TurnoId TurnoId,
+		DateTime OutcomeFecha,
+		string OutcomeComentario
+	);
+
+	public record SolicitarTurnoPrimeraDispDto(
+		PacienteId PacienteId,
+		EspecialidadCodigo Especialidad,
+		DateTime FechaCreacion
+	);
+
+
+
 	public record UsuarioLoginRequestDto(string Username, string UserPassword);
 	public record UsuarioLoginResponseDto(string Username, UsuarioEnumRole EnumRole, string Token);
 
@@ -153,7 +172,7 @@ public static class ApiDtos {
 		return new HorarioDto {
 			Id = instance.Id,
 			MedicoId = instance.MedicoId,
-			DiaSemana = instance.DiaSemana.Valor,
+			DiaSemana = instance.DiaSemana.EnumValor,
 			HoraDesde = instance.HoraDesde.Valor.ToTimeSpan(),
 			HoraHasta = instance.HoraHasta.Valor.ToTimeSpan(),
 			VigenteDesde = instance.VigenteDesde.Valor.ToDateTime(TimeOnly.MaxValue),

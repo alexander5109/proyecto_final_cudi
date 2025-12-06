@@ -1,9 +1,6 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.UsuarioSecretaria;
 using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Shared.Dtos;
 using static Clinica.Shared.Dtos.ApiDtos;
 
 
@@ -26,7 +23,7 @@ public partial class MainWindow : Window {
 		result.Match(
 			loggedUser => {
 				App.Api.SetUsuario(loggedUser);
-				RedirigirAUsuarioHome(loggedUser);
+				this.VolverAHome();
 			},
 			errorMsg => {
 				MessageBox.Show(errorMsg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -34,26 +31,6 @@ public partial class MainWindow : Window {
 		);
 	}
 
-
-	private void RedirigirAUsuarioHome(UsuarioLoginResponseDto user) {
-		switch (user.EnumRole) {
-			//case UsuarioEnumRole.Nivel1Superadmin:
-			//	this.NavegarA<SuperaadminHome>();
-			//	break;
-			//case UsuarioEnumRole.Nivel2Administrativo:
-			//	this.NavegarA<AdministrativoHome>();
-			//	break;
-			case UsuarioEnumRole.Nivel3Secretaria:
-				this.NavegarA<SecretariaHome>();
-				break;
-			//case UsuarioEnumRole.Nivel4Medico:
-			//	this.NavegarA<MedicoHome>();
-			//	break;
-			default:
-				MessageBox.Show($"Rol de usuario >>{App.Api.UsuarioActual!.EnumRole}<<no reconocido o no soportado todavia.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				break;
-		}
-	}
 
 
 

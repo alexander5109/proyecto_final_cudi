@@ -15,16 +15,10 @@ public partial class SecretariaPacientes : Window {
 		_ = CargaInicialAsync();
 	}
 
-	//=============================================================
-	// Carga Inicial de datos
-	//=============================================================
 	private async Task CargaInicialAsync() {
 		pacientesListView.ItemsSource = await App.Repositorio.SelectPacientes();
 	}
 
-	//=============================================================
-	// Actualización de UI
-	//=============================================================
 	private void ActualizarPacienteUI() {
 		buttonModificarPaciente.IsEnabled = SelectedPaciente != null;
 	}
@@ -35,14 +29,8 @@ public partial class SecretariaPacientes : Window {
 		} else {
 			turnosListView.ItemsSource = null;
 		}
-
-		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 
-
-	//=============================================================
-	// Eventos de ventana
-	//=============================================================
 	private async void Window_ActivatedAsync(object sender, EventArgs e) {
 		//App.UpdateLabelDataBaseModo(labelBaseDeDatosModo);
 		ActualizarPacienteUI();
@@ -55,42 +43,21 @@ public partial class SecretariaPacientes : Window {
 		ActualizarPacienteUI();
 	}
 
-	private async void ListViewTurnos_SelectionChangedAsync(object sender, SelectionChangedEventArgs e) {
-		SelectedTurno = turnosListView.SelectedItem as TurnoDto;
-		buttonModificarTurno.IsEnabled = SelectedTurno != null;
-	}
 
-	//=============================================================
-	// Botones de modificar
-	//=============================================================
-	private void ButtonModificarTurno(object sender, RoutedEventArgs e) {
-		if (SelectedTurno != null) {
-			//this.AbrirComoDialogo<WindowModificarTurno>(SelectedTurno);
-		}
-	}
-
-	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
-		if (MedicoRelacionado != null) {
-			//this.AbrirComoDialogo<MedicoModificar>(MedicoRelacionado);
-		}
-	}
 
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
 		if (SelectedPaciente != null) {
-			this.AbrirComoDialogo<SecretariaPacienteModificar>(SelectedPaciente.Id);
+			this.AbrirComoDialogo<SecretariaPacientesModificar>(SelectedPaciente.Id);
 		}
 	}
 
-	//=============================================================
-	// Botones de crear
-	//=============================================================
-	//private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<MedicoModificar>();
-	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<SecretariaPacienteModificar>();
-	//private void ButtonAgregarTurno(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarTurno>();
-
-	//=============================================================
-	// Botones de navegación
-	//=============================================================
+	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<SecretariaPacientesModificar>();
 	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.VolverAHome();
+
+	private void ButtonReservarTurno(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<SecretariaPacienteReservaDeTurno>(SelectedPaciente);
+
+    private void ButtonReservarTurn2(object sender, RoutedEventArgs e) {
+
+	}
 }

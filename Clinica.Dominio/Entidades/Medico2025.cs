@@ -39,7 +39,7 @@ public record Medico2025(
 	FechaRegistro2025 FechaIngreso,
 	bool HaceGuardiasValor
 ) {
-	public static Result<Medico2025> CrearResult(
+    public static Result<Medico2025> CrearResult(
 		Result<MedicoId> idResult,
 		Result<NombreCompleto2025> nombreResult,
 		Result<Especialidad2025> especialidadResult,

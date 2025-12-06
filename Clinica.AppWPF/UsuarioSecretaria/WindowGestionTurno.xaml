@@ -1,0 +1,152 @@
+<Window
+	x:Class="Clinica.AppWPF.UsuarioSecretaria.WindowGestionTurno"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Alta de turno"
+	Height="520"
+	Width="820"
+	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
+	WindowStartupLocation="CenterScreen"
+	Padding="10">
+	<Grid
+		Margin="4">
+		<Label
+			Content="Alta de turno"
+			HorizontalAlignment="Left"
+			Margin="20,6,0,0"
+			VerticalAlignment="Top"
+			FontSize="28"
+			FontFamily="Ringbearer"
+			Foreground="#FF03050A" />
+		<Label
+			Content="Especialidad"
+			HorizontalAlignment="Left"
+			Margin="20,62,0,0"
+			VerticalAlignment="Top"
+			FontWeight="Bold" />
+		<ComboBox
+			x:Name="txtEspecialidades"
+			ItemsSource="{Binding EspecialidadesDisponiblesItemsSource}"
+			DisplayMemberPath="Titulo"
+			SelectedValuePath="UId"
+			SelectedValue="{Binding SelectedEspecialidadUId, Mode=TwoWay}"
+			HorizontalAlignment="Left"
+			Margin="150,60,0,0"
+			VerticalAlignment="Top"
+			Width="300" />
+		<Label
+			Content="Medicos especialistas"
+			HorizontalAlignment="Left"
+			Margin="20,110,0,0"
+			VerticalAlignment="Top"
+			FontWeight="Bold" />
+		<ComboBox
+			x:Name="txtMedicosEspecialistas"
+			ItemsSource="{Binding MedicosEspecialistasItemsSource}"
+			DisplayMemberPath="Displayear"
+			SelectedValuePath="Id"
+			SelectedValue="{Binding SelectedMedicoId, Mode=TwoWay}"
+			HorizontalAlignment="Left"
+			Margin="150,108,0,0"
+			VerticalAlignment="Top"
+			Width="300" />
+		<Label
+			Content="Dia semana"
+			HorizontalAlignment="Left"
+			Margin="20,158,0,0"
+			VerticalAlignment="Top"
+			FontWeight="Bold" />
+		<CheckBox
+			Content="Usar filtro dia"
+			IsChecked="{Binding FiltroDiaEnabled, Mode=TwoWay}"
+			HorizontalAlignment="Left"
+			Margin="460,156,0,0"
+			VerticalAlignment="Top" />
+		<ComboBox
+			x:Name="txtDiaSemana"
+			ItemsSource="{Binding DiasSemanaItemsSource}"
+			DisplayMemberPath="NombreDia"
+			SelectedValuePath="EnumValor"
+			SelectedValue="{Binding SelectedDiaValue, Mode=TwoWay}"
+			IsEnabled="{Binding FiltroDiaEnabled}"
+			HorizontalAlignment="Left"
+			Margin="150,156,0,0"
+			VerticalAlignment="Top"
+			Width="300" />
+		<Label
+			Content="Hora"
+			HorizontalAlignment="Left"
+			Margin="20,206,0,0"
+			VerticalAlignment="Top"
+			FontWeight="Bold" />
+		<CheckBox
+			Content="Usar filtro hora"
+			IsChecked="{Binding FiltroHoraEnabled, Mode=TwoWay}"
+			HorizontalAlignment="Left"
+			Margin="460,204,0,0"
+			VerticalAlignment="Top" />
+		<ComboBox
+			x:Name="txtHora"
+			ItemsSource="{Binding HorasItemsSource}"
+			SelectedValue="{Binding SelectedHora, Mode=TwoWay}"
+			IsEnabled="{Binding FiltroHoraEnabled}"
+			HorizontalAlignment="Left"
+			Margin="150,204,0,0"
+			VerticalAlignment="Top"
+			Width="120" />
+		<Label
+			Content="Disponibilidades"
+			HorizontalAlignment="Left"
+			Margin="20,254,0,0"
+			VerticalAlignment="Top"
+			FontWeight="Bold" />
+		<ListView
+			x:Name="txtDisponibilidades"
+			ItemsSource="{Binding DisponibilidadesItemsSource}"
+			HorizontalAlignment="Left"
+			Margin="20,280,0,0"
+			VerticalAlignment="Top"
+			Width="760"
+			Height="170"
+			SelectionMode="Single">
+			<ListView.View>
+				<GridView>
+					<GridViewColumn
+						Header="Fecha"
+						Width="200"
+						DisplayMemberBinding="{Binding Fecha, StringFormat=d}" />
+					<GridViewColumn
+						Header="Hora"
+						Width="120"
+						DisplayMemberBinding="{Binding Hora}" />
+					<GridViewColumn
+						Header="DiaSemana"
+						Width="120"
+						DisplayMemberBinding="{Binding NombreDiaSemana}" />
+					<GridViewColumn
+						Header="Medico"
+						Width="300"
+						DisplayMemberBinding="{Binding Medico}" />
+				</GridView>
+			</ListView.View>
+		</ListView>
+		<Button
+			Content="Cancelar"
+			Style="{StaticResource BotonRedondeado}"
+			HorizontalAlignment="Left"
+			Margin="660,133,0,0"
+			VerticalAlignment="Top"
+			Height="40"
+			Width="120"
+			Click="ButtonCancelar" />
+		<Button
+			Content="Reservar"
+			Style="{StaticResource BotonRedondeado}"
+			HorizontalAlignment="Right"
+			Margin="0,75,32,0"
+			VerticalAlignment="Top"
+			Height="40"
+			Width="120"
+			Click="ButtonReservar" />
+	</Grid>
+</Window>

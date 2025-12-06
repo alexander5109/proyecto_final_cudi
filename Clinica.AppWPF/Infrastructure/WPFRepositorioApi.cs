@@ -22,7 +22,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return await Api.TryApiCallAsync(
 			() => Api.Cliente.PostAsJsonAsync("api/pacientes", instance.ToDto()),
 			onOk: () => {
-				var newId = Api.Cliente
+                int newId = Api.Cliente
 					.PostAsJsonAsync("api/pacientes", instance.ToDto())
 					.Result.Content.ReadFromJsonAsync<int>().Result;
 				return new PacienteId(newId);
@@ -121,7 +121,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		DateTime apartirDeCuando
 	) {
 		string url =
-			$"api/ServiciosPublicos/Turnos/Disponibilidades" +
+			$"api/ServiciosPublicos/Turnos/DisponibilidadesItemsSource" +
 			$"?EspecialidadCodigo={(byte)especialidad}" +
 			$"&cuantos={cuantos}" +
 			$"&aPartirDeCuando={apartirDeCuando:O}";

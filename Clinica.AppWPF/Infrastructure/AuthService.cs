@@ -15,7 +15,7 @@ public static class AuthService {
 				if (response.StatusCode == HttpStatusCode.Unauthorized)
 					return new Result<UsuarioLoginResponseDto>.Error("Credenciales incorrectas.");
 
-				var serverError = await response.Content.ReadAsStringAsync();
+                string serverError = await response.Content.ReadAsStringAsync();
 				return new Result<UsuarioLoginResponseDto>.Error(
 					$"Error del servidor ({(int)response.StatusCode}):\n{serverError}"
 				);

@@ -32,7 +32,7 @@ public enum ProvinciaCodigo2025 : byte {
 public static class ProvinciaExtentions {
 
 	public static string ATexto(this ProvinciaCodigo2025 codigo) {
-		var resultado = ProvinciaArgentina2025.CrearResultPorCodigo(codigo);
+        Result<ProvinciaArgentina2025> resultado = ProvinciaArgentina2025.CrearResultPorCodigo(codigo);
 		if (resultado is Result<ProvinciaArgentina2025>.Ok ok)
 			return ok.Valor.NombreValor;
 		return "Código de provincia inválido";
@@ -80,7 +80,7 @@ public record struct ProvinciaArgentina2025(ProvinciaCodigo2025 CodigoInternoVal
 
 	// ---------------- FACTORY POR CÓDIGO ----------------
 	public static Result<ProvinciaArgentina2025> CrearResultPorCodigo(ProvinciaCodigo2025 codigo) {
-		if (_nombresPorCodigo.TryGetValue(codigo, out var nombre))
+		if (_nombresPorCodigo.TryGetValue(codigo, out string? nombre))
 			return new Result<ProvinciaArgentina2025>.Ok(new ProvinciaArgentina2025(codigo, nombre));
 
 		return new Result<ProvinciaArgentina2025>.Error($"Código de provincia inválido: {codigo}");
@@ -101,7 +101,7 @@ public record struct ProvinciaArgentina2025(ProvinciaCodigo2025 CodigoInternoVal
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<ProvinciaArgentina2025>.Error("La provincia no puede estar vacía.");
 
-		var normalizado = input.Trim().ToLowerInvariant();
+        string normalizado = input.Trim().ToLowerInvariant();
 		if (_codigoPorNombre.TryGetValue(normalizado, out ProvinciaCodigo2025 codigo))
 			return CrearResultPorCodigo(codigo);
 

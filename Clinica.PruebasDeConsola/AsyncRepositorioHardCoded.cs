@@ -9,7 +9,7 @@ public static class AsyncRepositorioHardCoded  {
 	public static Task<List<Medico2025>> GetMedicos()
 		=> Task.FromResult(new List<Medico2025> {
 		Medico2025.CrearResult(
-				MedicoId.Crear(1),
+				MedicoId.CrearResult(1),
 				NombreCompleto2025.CrearResult("Carlos Alfredo", "Markier"),
 				Especialidad2025.CrearResultPorCodigoInterno(Especialidad2025.Gastroenterologo.Codigo),
 				//ListaEspecialidadesMedicas2025.CrearResult([
@@ -27,14 +27,18 @@ public static class AsyncRepositorioHardCoded  {
 				ContactoTelefono2025.CrearResult("1133832021"),
 				ContactoEmail2025.CrearResult("carlosmerkeir@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
-					Horario2025.Crear(
+					Horario2025.CrearResult(
+						new HorarioId(238416),
+						new MedicoId(2341456),
 						DiaSemana2025.Lunes,
 						new HorarioHora2025(TimeOnly.Parse("09:00")),
 						new HorarioHora2025(TimeOnly.Parse("15:00")),
 						new VigenciaHorario2025(new DateOnly(2024, 1, 1)),
 						new VigenciaHorario2025(new DateOnly(2026, 1, 1))
 					),
-					Horario2025.Crear(
+					Horario2025.CrearResult(
+						new HorarioId(238516),
+						new MedicoId(2311056),
 						DiaSemana2025.Miercoles,
 						new HorarioHora2025(TimeOnly.Parse("09:00")),
 						new HorarioHora2025(TimeOnly.Parse("15:00")),
@@ -50,7 +54,7 @@ public static class AsyncRepositorioHardCoded  {
 			,
 
 			Medico2025.CrearResult(
-				MedicoId.Crear(2),
+				MedicoId.CrearResult(2),
 				NombreCompleto2025.CrearResult("Jorge", "Pereyra"),
 				Especialidad2025.CrearResultPorCodigoInterno(Especialidad2025.Ginecologo.Codigo),
 				//ListaEspecialidadesMedicas2025.CrearResult([
@@ -68,14 +72,18 @@ public static class AsyncRepositorioHardCoded  {
 				ContactoTelefono2025.CrearResult("1163632071"),
 				ContactoEmail2025.CrearResult("jorgepereiyra@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
-					Horario2025.Crear(
+					Horario2025.CrearResult(
+						new HorarioId(23516),
+						new MedicoId(231156),
 						DiaSemana2025.Martes,
 						new HorarioHora2025(new TimeOnly(08, 0)),
 						new HorarioHora2025(new TimeOnly(18, 00)),
 						new VigenciaHorario2025(new DateOnly(2024, 1, 12)),
 						new VigenciaHorario2025(new DateOnly(2026, 1, 12))
 					),
-					Horario2025.Crear(
+					Horario2025.CrearResult(
+						new HorarioId(2356),
+						new MedicoId(23156),
 						DiaSemana2025.Jueves,
 						new HorarioHora2025(new TimeOnly(08,00)),
 						new HorarioHora2025(new TimeOnly(18,0)),
@@ -91,7 +99,7 @@ public static class AsyncRepositorioHardCoded  {
 			,
 
 			Medico2025.CrearResult(
-				MedicoId.Crear(3),
+				MedicoId.CrearResult(3),
 				NombreCompleto2025.CrearResult("Marta", "Algerich"),
 				Especialidad2025.CrearResultPorCodigoInterno(Especialidad2025.Neurologo.Codigo),
 				//ListaEspecialidadesMedicas2025.CrearResult([
@@ -109,21 +117,27 @@ public static class AsyncRepositorioHardCoded  {
 				ContactoTelefono2025.CrearResult("1149920537"),
 				ContactoEmail2025.CrearResult("martaalgerich@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
-					Horario2025.Crear(
+					Horario2025.CrearResult(
+						new HorarioId(11516),
+						new MedicoId(156),
 						DiaSemana2025.Lunes,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),
 						new HorarioHora2025(TimeOnly.Parse("12:00")),
 						new VigenciaHorario2025(new DateOnly(2022, 1, 12)),
 						new VigenciaHorario2025(new DateOnly(2024, 1, 12))
 					),
-					Horario2025.Crear(
+					Horario2025.CrearResult(
+						new HorarioId(115216),
+						new MedicoId(1256),
 						DiaSemana2025.Miercoles,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),
 						new HorarioHora2025(TimeOnly.Parse("12:00")),
 						new VigenciaHorario2025(new DateOnly(2022, 1, 12)),
 						new VigenciaHorario2025(new DateOnly(2024, 1, 12))
 					),
-					Horario2025.Crear(
+					Horario2025.CrearResult(
+						new HorarioId(116716),
+						new MedicoId(12756),
 						DiaSemana2025.Viernes,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),
 						new HorarioHora2025(TimeOnly.Parse("12:00")),
@@ -142,8 +156,8 @@ public static class AsyncRepositorioHardCoded  {
 
 	public static Task<List<Result<Paciente2025>>> GetPacientes()
 		=> Task.FromResult(new List<Result<Paciente2025>> {
-		Paciente2025.Crear(
-				PacienteId.Crear(1),
+		Paciente2025.CrearResult(
+				PacienteId.CrearResult(1),
 				NombreCompleto2025.CrearResult("Juan", "Diaz"),
 				DniArgentino2025.CrearResult("44444444"),
 				Contacto2025.CrearResult(
@@ -161,8 +175,8 @@ public static class AsyncRepositorioHardCoded  {
 				FechaRegistro2025.CrearResult(DateTime.Parse("2022/01/10"))
 			).PrintAndContinue("Creando a Juan: "),
 
-			Paciente2025.Crear(
-				PacienteId.Crear(2),
+			Paciente2025.CrearResult(
+				PacienteId.CrearResult(2),
 				NombreCompleto2025.CrearResult("Pedro", "Fernandez"),
 				DniArgentino2025.CrearResult("30350123"),
 				Contacto2025.CrearResult(
@@ -180,8 +194,8 @@ public static class AsyncRepositorioHardCoded  {
 				FechaRegistro2025.CrearResult(DateTime.Parse("2024/01/10"))
 			).PrintAndContinue("Creando a Pedro: "),
 
-			Paciente2025.Crear(
-				PacienteId.Crear(3),
+			Paciente2025.CrearResult(
+				PacienteId.CrearResult(3),
 				NombreCompleto2025.CrearResult("Herminda", "Gutierrez Lopez"),
 				DniArgentino2025.CrearResult("44444444"),
 				Contacto2025.CrearResult(

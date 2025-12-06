@@ -3,11 +3,11 @@
 namespace Clinica.Dominio.TiposDeValor;
 
 public sealed record DiaSemana2025(
-	DayOfWeek Valor,
-	string NombreEspañol
+	DayOfWeek EnumValor,
+	string NombreDia
 ) : IComoTexto {
 	public string ATexto() {
-		return Valor.AEspañol();
+		return EnumValor.AEspañol();
 	}
 
 	public static readonly DiaSemana2025 Lunes = new(DayOfWeek.Monday, DayOfWeek.Monday.AEspañol());

@@ -3,29 +3,11 @@ using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Shared.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
-using static Clinica.Shared.Dtos.DbModels;
+using static Clinica.Shared.Dtos.ApiDtos;
 namespace Clinica.WebAPI.Controllers;
 
-
-public record SolicitarCancelacionDto(
-	TurnoId TurnoId,
-	DateTime OutcomeFecha,
-	string OutcomeComentario
-);
-public record SolicitarReprogramacionDto(
-	TurnoId TurnoId,
-	DateTime OutcomeFecha,
-	string OutcomeComentario
-);
-
-public record SolicitarTurnoPrimeraDispDto(
-	PacienteId PacienteId,
-	EspecialidadCodigo Especialidad,
-	DateTime FechaCreacion
-);
 
 
 
@@ -46,7 +28,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 	) {
 		DateTime desde = aPartirDeCuando ?? DateTime.Now; // default real acá
 
-		var result = await ServiciosPublicos.SolicitarDisponibilidadesPara(
+        Result<IReadOnlyList<Disponibilidad2025>> result = await ServiciosPublicos.SolicitarDisponibilidadesPara(
 			EspecialidadCodigo,
 			desde,
 			cuantos,
@@ -83,7 +65,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 			repositorio
 		);
 		return result.Match<IActionResult>(
-			ok => Ok(ok.ToModel()),
+			ok => Ok(ok),
 			err => Problem(err)
 		);
 	}
@@ -99,7 +81,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
 
-        Result<Turno2025> result = await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
+		Result<Turno2025> result = await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
 			dto.TurnoId,
 			dto.OutcomeFecha,
 			dto.OutcomeComentario,
@@ -107,7 +89,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 		);
 
 		return result.Match<IActionResult>(
-			ok => Ok(ok.ToModel()),
+			ok => Ok(ok),
 			err => Problem(err)
 		);
 	}

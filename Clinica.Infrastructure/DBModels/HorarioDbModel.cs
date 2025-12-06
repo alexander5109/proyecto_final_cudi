@@ -23,7 +23,7 @@ public static partial class DbModels {
 		return new HorarioDbModel {
 			Id = instance.Id,
 			MedicoId = instance.MedicoId,
-			DiaSemana = instance.DiaSemana.Valor,
+			DiaSemana = instance.DiaSemana.EnumValor,
 			HoraDesde = instance.HoraDesde.Valor.ToTimeSpan(),
 			HoraHasta = instance.HoraHasta.Valor.ToTimeSpan(),
 			VigenteDesde = instance.VigenteDesde.Valor.ToDateTime(TimeOnly.MaxValue),
