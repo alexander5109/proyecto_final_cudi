@@ -1,0 +1,220 @@
+﻿<Window
+	x:Class="Clinica.AppWPF.UsuarioSecretaria.Pacientes"
+	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioSecretaria"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	Title="Clinica Medica - Pacientes"
+	Height="600"
+	Width="1024"
+	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
+	WindowStartupLocation="CenterScreen"
+	Activated="Window_ActivatedAsync">
+	<Grid
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch">
+		<Grid.Background>
+			<ImageBrush
+				ImageSource="pack://application:,,,/PublishedResources/images/falopa.jpg" />
+		</Grid.Background>
+		<ContentControl
+			Style="{StaticResource ContentControlLindo}"
+			Margin="606,17,22,180">
+			<StackPanel
+				Orientation="Vertical"
+				Background="Transparent">
+				<Label
+					Content="Pacientes"
+					HorizontalAlignment="Center"
+					FontSize="72"
+					Height="125"
+					FontFamily="Ringbearer"
+					FontWeight="Bold"
+					HorizontalContentAlignment="Center"
+					VerticalAlignment="Center" />
+				<ListView
+					Name="pacientesListView"
+					ItemsSource="{Binding PacientesList}"
+					Width="Auto"
+					Height="167"
+					SelectionChanged="ListViewPacientes_SelectionChangedAsync"
+					d:ItemsSource="{d:SampleData ItemCount=5}">
+					<ListView.View>
+						<GridView>
+							<!-- Dni Column -->
+							<GridViewColumn
+								Header="Id"
+								DisplayMemberBinding="{Binding Id}"
+								Width="auto" />
+							<GridViewColumn
+								Header="Dni"
+								DisplayMemberBinding="{Binding Dni}"
+								Width="auto" />
+							<!-- Name Column -->
+							<GridViewColumn
+								Header="Nombre"
+								DisplayMemberBinding="{Binding Nombre}"
+								Width="auto" />
+							<GridViewColumn
+								Header="Apellido"
+								DisplayMemberBinding="{Binding Apellido}"
+								Width="auto" />
+							<GridViewColumn
+								Header="Email"
+								DisplayMemberBinding="{Binding Email}"
+								Width="auto" />
+							<GridViewColumn
+								Header="Teléfono"
+								DisplayMemberBinding="{Binding Telefono}"
+								Width="auto" />
+						</GridView>
+					</ListView.View>
+				</ListView>
+				<StackPanel
+					Orientation="Horizontal"
+					Background="Transparent"
+					Margin="5,5,5,5"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center">
+					<Button
+						Content="Agregar nuevo"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Top"
+						Height="35"
+						Width="150"
+						Click="ButtonAgregarPaciente"
+						FontSize="20"
+						Style="{StaticResource BotonRedondeado}"
+						FontWeight="Bold"
+						BorderBrush="#FF0E0D0D"
+						FontFamily="Baskerville Old Face"
+						Margin="25,0,25,5"></Button>
+					<Button
+						x:Name="buttonModificarPaciente"
+						Content="Modificar"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Top"
+						Height="35"
+						Click="ButtonModificarPaciente"
+						FontSize="20"
+						Style="{StaticResource BotonRedondeado}"
+						FontWeight="Bold"
+						BorderBrush="#FF0E0D0D"
+						FontFamily="Baskerville Old Face"
+						IsEnabled="False"
+						Margin="25,0,25,0"
+						Width="150" />
+				</StackPanel>
+			</StackPanel>
+		</ContentControl>
+		<Button
+			Content="Home"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Top"
+			Height="37"
+			Width="170"
+			Click="ButtonHome"
+			FontSize="20"
+			Style="{StaticResource BotonRedondeado}"
+			FontWeight="Bold"
+			BorderBrush="#FF0E0D0D"
+			Margin="810,446,0,0"
+			FontFamily="Baskerville Old Face" />
+		<Button
+			Content="Salir"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Top"
+			Height="37"
+			Width="170"
+			Click="ButtonSalir"
+			FontSize="20"
+			Style="{StaticResource BotonRedondeado}"
+			FontWeight="Bold"
+			BorderBrush="#FF0E0D0D"
+			Margin="810,501,0,0"
+			FontFamily="Baskerville Old Face" />
+		<ContentControl
+			Style="{StaticResource ContentControlLindo}"
+			Margin="49,17,444,210">
+			<StackPanel
+				Margin="5"
+				Orientation="Vertical"
+				Background="Transparent">
+				<Label
+					Content="Turnos"
+					FontSize="35"
+					FontFamily="Ringbearer"
+					FontWeight="Bold"
+					HorizontalAlignment="Center" />
+				<ListView
+					x:Name="turnosListView"
+					Background="Transparent"
+					BorderThickness="0"
+					SelectionChanged="ListViewTurnos_SelectionChangedAsync"
+					Height="195"
+					Margin="5"
+					Width="auto"
+					HorizontalContentAlignment="Center"
+					HorizontalAlignment="Center">
+					<ListView.View>
+						<GridView>
+							<GridViewColumn
+								Header="FechaAsignada"
+								DisplayMemberBinding="{Binding FechaHoraAsignadaDesde}"
+								Width="auto" />
+							<GridViewColumn
+								Header="EspecialidadId"
+								DisplayMemberBinding="{Binding EspecialidadCodigo}"
+								Width="auto" />
+							<GridViewColumn
+								Header="MedicoId"
+								DisplayMemberBinding="{Binding MedicoId}"
+								Width="auto" />
+							<GridViewColumn
+								Header="Estado"
+								DisplayMemberBinding="{Binding OutcomeEstado}"
+								Width="auto" />
+						</GridView>
+					</ListView.View>
+				</ListView>
+				<StackPanel
+					Orientation="Horizontal"
+					Background="Transparent"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center">
+					<Button
+						x:Name="buttonModificarTurno"
+						Content="Modificar"
+						VerticalAlignment="Center"
+						Height="30"
+						Click="ButtonModificarTurno"
+						FontSize="20"
+						Style="{StaticResource BotonRedondeado}"
+						FontWeight="Bold"
+						BorderBrush="#FF0E0D0D"
+						FontFamily="Baskerville Old Face"
+						IsEnabled="False"
+						Margin="25,10,25,25"
+						Width="120"
+						HorizontalAlignment="Center" />
+				</StackPanel>
+			</StackPanel>
+		</ContentControl>
+		<Label
+			Style="{StaticResource LabelLindo}"
+			x:Name="labelBaseDeDatosModo"
+			Content="Elegir DB Modo"
+			Margin="49,471,0,0"
+			FontSize="35"
+			HorizontalAlignment="Left"
+			FontFamily="Palatino Linotype"
+			VerticalAlignment="Top"
+			Foreground="#FF0F0A2B"
+			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
+			Padding="10,10,10,10"
+			Width="316" />
+	</Grid>
+</Window>

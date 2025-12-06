@@ -12,35 +12,12 @@
 
   <!-- Embed everything except sounds and JSON -->
   <ItemGroup>
-    <Resource Include="PublishedResources\**\*" Exclude="PublishedResources\sonidos\**\*;PublishedResources\json_database\**\*" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="BaseDeDatosJSON.cs" />
-    <Compile Remove="WindowGestionTurno.cs" />
-    <Compile Remove="WindowGestionTurnoViewModel.xaml.cs" />
-    <Compile Remove="WindowListarMedicos.cs" />
-    <Compile Remove="WindowListarTurnos.cs" />
-    <Compile Remove="WindowListarTurnosViewModel.cs" />
-    <Compile Remove="WindowModificarHorario.cs" />
-    <Compile Remove="WindowModificarHorarioViewModel.cs" />
-    <Compile Remove="WindowModificarMedico.cs" />
-    <Compile Remove="WindowModificarMedicoViewModel.cs" />
-    <Compile Remove="WindowModificarTurno.cs" />
-    <Compile Remove="WindowModificarTurnoViewModel.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Remove="WindowGestionTurno.xaml" />
-    <Page Remove="WindowListarMedicos.xaml" />
-    <Page Remove="WindowListarTurnos.xaml" />
-    <Page Remove="WindowModificarHorario.xaml" />
-    <Page Remove="WindowModificarMedico.xaml" />
-    <Page Remove="WindowModificarTurno.xaml" />
+    <Resource Include="PublishedResources\**\*" Exclude="PublishedResources\sonidos\**\*" />
   </ItemGroup>
 
   <!-- Copy sounds and JSON to output -->
   <ItemGroup>
     <None Update="PublishedResources\sonidos\**\*" CopyToOutputDirectory="PreserveNewest" />
-    <None Update="PublishedResources\json_database\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

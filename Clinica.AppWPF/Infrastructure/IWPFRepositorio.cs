@@ -54,39 +54,39 @@ public static class IWPFRepositorioInterfaces {
 
 
 // Read methods
-//Task<List<MedicoViewModel>> ReadMedicos();
+//Task<List<MedicoViewModel2025>> ReadMedicos();
 //Task<List<PacienteDto>> ReadPacientes();
-//Task<List<TurnoDto>> ReadTurnos();
+//Task<List<TurnoViewModel2025>> ReadTurnos();
 //Task<List<EspecialidadMedicaViewModel>> ReadDistinctEspecialidades();  //WORTH CACHE-ING
 
 //// Get methods
-//Task<MedicoViewModel> GetMedicoById(int id);
-//Task<PacienteUpdateViewModel> GetPacienteById(int id);
+//Task<MedicoViewModel2025> GetMedicoById(int id);
+//Task<Paciente> GetPacienteById(int id);
 //Task<WindowModificarTurnoViewModel> GetTurnoById(int id);
 //Task<EspecialidadMedicaViewModel> GetEspecialidadById(int id);
 
 
 //// Create methods
-//Task<bool> CreateMedico(MedicoViewModel instance);
-//Task<bool> CreatePaciente(PacienteUpdateViewModel instance);
+//Task<bool> CreateMedico(MedicoViewModel2025 instance);
+//Task<bool> CreatePaciente(Paciente instance);
 //Task<bool> CreateTurno(WindowModificarTurnoViewModel instance);
 ////public abstract bool CreateEspecialidad(WindowModificarEspecialidadViewModel instance);
 
 //// Update methods
-//Task<bool> UpdateMedico(MedicoViewModel instance);
-//Task<bool> UpdatePaciente(PacienteUpdateViewModel instance);
+//Task<bool> UpdateMedico(MedicoViewModel2025 instance);
+//Task<bool> UpdatePaciente(Paciente instance);
 //Task<bool> UpdateTurno(WindowModificarTurnoViewModel instance);
 ////public abstract bool UpdateEspecialidad(WindowModificarEspecialidadViewModel instance);
 
 //// Delete methods
-//Task<bool> DeleteMedico(MedicoViewModel instance);
-//Task<bool> DeletePaciente(PacienteUpdateViewModel instance);
+//Task<bool> DeleteMedico(MedicoViewModel2025 instance);
+//Task<bool> DeletePaciente(Paciente instance);
 //Task<bool> DeleteTurno(WindowModificarTurnoViewModel instance);
 
 //// Filtros
 //Task<List<WindowModificarTurnoViewModel>> ReadTurnosWhereMedicoId(int? medicoId);
 //Task<List<WindowModificarTurnoViewModel>> ReadTurnosWherePacienteId(int? PacienteId);
-//Task<List<MedicoViewModel>> ReadMedicosWhereEspecialidad(int? EspecialidadCodigo);
+//Task<List<MedicoViewModel2025>> ReadMedicosWhereEspecialidad(int? EspecialidadCodigo);
 
 //}
 
