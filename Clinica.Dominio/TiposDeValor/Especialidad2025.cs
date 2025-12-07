@@ -39,7 +39,7 @@ public sealed record Especialidad2025(
 	string Titulo,
 	int DuracionConsultaMinutos
 ) : IComoTexto {
-	public string ATexto() => $"{Titulo} (Duración de consulta: {DuracionConsultaMinutos} min)";
+	public string ATexto() => $"{Titulo} (Consulta: {DuracionConsultaMinutos} mins)";
 
 	// Especialidades predefinidas
 	public static readonly Especialidad2025 ClinicoGeneral = new(EspecialidadCodigo.ClinicoGeneral, "Clínico General", 30);
@@ -68,7 +68,7 @@ public sealed record Especialidad2025(
 	];
 
 	// Lookup seguro por código interno
-	public static Result<Especialidad2025> CrearPorCodigoInterno(EspecialidadCodigo codigo) {
+	public static Result<Especialidad2025> CrearResultPorCodigoInterno(EspecialidadCodigo codigo) {
 		Especialidad2025? esp = Todas.FirstOrDefault(e => e.Codigo == codigo);
 		return esp is not null
 			? new Result<Especialidad2025>.Ok(esp)
@@ -76,13 +76,13 @@ public sealed record Especialidad2025(
 	}
 
 	// Para facilitar conversion desde DTOs que usen byte
-	//public static Result<Especialidad2025> CrearPorCodigoInterno(byte? codigo) {
+	//public static Result<Especialidad2025> CrearResultPorCodigoInterno(byte? codigo) {
 	//	if (codigo is null)
 	//		return new Result<Especialidad2025>.Error("El Codigo no puede ser nulo.");
 
 	//	if (!Enum.IsDefined(typeof(EspecialidadCodigo), codigo.Value))
 	//		return new Result<Especialidad2025>.Error($"Valor inválido de EspecialidadCodigo: {codigo.Value}");
 
-	//	return CrearPorCodigoInterno((EspecialidadCodigo)codigo.Value);
+	//	return CrearResultPorCodigoInterno((EspecialidadCodigo)codigo.Value);
 	//}
 }

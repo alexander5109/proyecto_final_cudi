@@ -36,12 +36,12 @@ public static partial class DbModels {
 		);
 	}
 	public static Result<Turno2025> ToDomain(this TurnoDbModel turnoDto) {
-		return Turno2025.Crear(
-			TurnoId.Crear(turnoDto.Id.Valor),
-			FechaRegistro2025.Crear(turnoDto.FechaDeCreacion),
-			PacienteId.Crear(turnoDto.PacienteId.Valor),
-			MedicoId.Crear(turnoDto.MedicoId.Valor),
-			Especialidad2025.CrearPorCodigoInterno(turnoDto.EspecialidadCodigo),
+		return Turno2025.CrearResult(
+			TurnoId.CrearResult(turnoDto.Id.Valor),
+			FechaRegistro2025.CrearResult(turnoDto.FechaDeCreacion),
+			PacienteId.CrearResult(turnoDto.PacienteId.Valor),
+			MedicoId.CrearResult(turnoDto.MedicoId.Valor),
+			Especialidad2025.CrearResultPorCodigoInterno(turnoDto.EspecialidadCodigo),
 			turnoDto.FechaHoraAsignadaDesde,
 			turnoDto.FechaHoraAsignadaHasta,
 			TurnoOutcomeEstado2025.CrearPorCodigo(turnoDto.OutcomeEstado),

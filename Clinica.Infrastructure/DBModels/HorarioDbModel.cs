@@ -6,7 +6,7 @@ namespace Clinica.Shared.Dtos;
 
 public static partial class DbModels {
 	public record HorarioDbModel(
-		HorarioId Id,
+		HorarioMedicoId Id,
 		MedicoId MedicoId,
 		DayOfWeek DiaSemana,
 		TimeSpan HoraDesde,
@@ -23,7 +23,7 @@ public static partial class DbModels {
 		return new HorarioDbModel {
 			Id = instance.Id,
 			MedicoId = instance.MedicoId,
-			DiaSemana = instance.DiaSemana.Valor,
+			DiaSemana = instance.DiaSemana.EnumValor,
 			HoraDesde = instance.HoraDesde.Valor.ToTimeSpan(),
 			HoraHasta = instance.HoraHasta.Valor.ToTimeSpan(),
 			VigenteDesde = instance.VigenteDesde.Valor.ToDateTime(TimeOnly.MaxValue),
@@ -32,7 +32,7 @@ public static partial class DbModels {
 	}
 
 	public static Result<Horario2025> ToDomain(this HorarioDbModel horarioDto) {
-		return Horario2025.Crear(
+		return Horario2025.CrearResult(
 			horarioDto.Id,
 			horarioDto.MedicoId,
 			new DiaSemana2025(horarioDto.DiaSemana, horarioDto.DiaSemana.AEspañol()),

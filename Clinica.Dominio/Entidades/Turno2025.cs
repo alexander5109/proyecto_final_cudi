@@ -5,7 +5,8 @@ namespace Clinica.Dominio.Entidades;
 
 
 public record struct TurnoId(int Valor) {
-	public static Result<TurnoId> Crear(int? id) =>
+	public static TurnoId Crear(int id) => new(id);
+	public static Result<TurnoId> CrearResult(int? id) =>
 		id is int idGood
 		? new Result<TurnoId>.Ok(new TurnoId(idGood))
 		: new Result<TurnoId>.Error("El id no puede ser nulo.");
@@ -49,7 +50,7 @@ public record Turno2025(
 			$"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
 			$"  • OutcomeEstado: {OutcomeEstado.Nombre}\n";
 	}
-	public static Result<Turno2025> Crear(
+	public static Result<Turno2025> CrearResult(
 		Result<TurnoId> idResult,
 		Result<FechaRegistro2025> fechaCreacionResult,
 		Result<PacienteId> pacienteIdResult,

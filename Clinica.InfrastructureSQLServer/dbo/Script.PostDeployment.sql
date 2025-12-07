@@ -18,8 +18,10 @@ BEGIN
     INSERT INTO dbo.Usuario 
         (NombreUsuario, PasswordHash, EnumRole)
     VALUES
-        ('admin1', '240BE518FABD2724DDB6F04EEB1DA5967448D7E831C08C8FA822809F74C720A9', 1), --password: admin123
-        ('secret1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 2) --password: 123
+        ('super1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 1), --password: 123
+        ('admin1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 2), --password: 123
+        ('secret1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 3), --password: 123
+        ('medico1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 4) --password: 123
 END;
 GO
 
@@ -30,7 +32,7 @@ IF NOT EXISTS (SELECT 1 FROM dbo.Medico)
 BEGIN
     SET IDENTITY_INSERT dbo.Medico ON;
     INSERT INTO dbo.Medico 
-        (Id, Email, Nombre, Apellido, ProvinciaCodigo, Domicilio, Localidad, EspecialidadCodigoInterno, Telefono, Guardia, FechaIngreso, Dni)
+        (Id, Email, Nombre, Apellido, ProvinciaCodigo, Domicilio, Localidad, EspecialidadCodigo, Telefono, Guardia, FechaIngreso, Dni)
     VALUES 
         (1, 'Ricardo@gmail.com', 'Dr. Ricardo', 'Arjona', 1, 'Av. Siempre Viva 123', 'Capital Federal', 1, '1234567890', 1, '20220115', '12345678'),
         (2, 'TocandoShells@gmail.com', 'Dr. Tocando', 'Shells', 2, 'Calle Falsa 456', 'Villa Carlos Paz', 9, '2345678901', 0, '20210520', '87654321'),

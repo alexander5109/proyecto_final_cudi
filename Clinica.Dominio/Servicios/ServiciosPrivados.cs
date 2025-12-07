@@ -29,7 +29,7 @@ internal static class ServiciosPrivados {
 		IReadOnlyList<Disponibilidad2025> lista = ((Result<IReadOnlyList<Disponibilidad2025>>.Ok)disponibilidadesResult).Valor;
 		IEnumerable<Disponibilidad2025> filtradas = lista;
 		if (preferencias.DiaPreferido is DiaSemana2025 dia)
-			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia.Valor);
+			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia.EnumValor);
 
 		if (preferencias.MomentoPreferido is TardeOMañana momento)
 			filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));

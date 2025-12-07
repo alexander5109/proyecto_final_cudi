@@ -5,7 +5,7 @@ BEGIN
     SET NOCOUNT ON;
     SELECT TOP 1
         M.Id,
-        M.EspecialidadCodigoInterno,
+        M.EspecialidadCodigo,
         M.Dni,
         M.Nombre AS Nombre,
         M.Apellido AS Apellido,

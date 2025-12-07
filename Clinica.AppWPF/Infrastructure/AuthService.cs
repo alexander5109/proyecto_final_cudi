@@ -7,34 +7,28 @@ using static Clinica.Shared.Dtos.ApiDtos;
 namespace Clinica.AppWPF.Infrastructure;
 
 public static class AuthService {
-	public static async Task<Result<UsuarioLogueadoDTO>> LoginAsync(ApiHelper api, string user, string pass) {
-		if (string.IsNullOrWhiteSpace(user) || string.IsNullOrWhiteSpace(pass))
-			return new Result<UsuarioLogueadoDTO>.Error("Debe completar usuario y contraseña.");
-
+	public static async Task<Result<UsuarioLoginResponseDto>> LoginAsync(ApiHelper api, UsuarioLoginRequestDto request) {
 		try {
-            HttpResponseMessage response = await api.Cliente.PostAsJsonAsync("/auth/login",
-				new { username = user, password = pass });
+            HttpResponseMessage response = await api.Cliente.PostAsJsonAsync("/auth/login", request);
 
 			if (!response.IsSuccessStatusCode) {
 				if (response.StatusCode == HttpStatusCode.Unauthorized)
-					return new Result<UsuarioLogueadoDTO>.Error("Credenciales incorrectas.");
+					return new Result<UsuarioLoginResponseDto>.Error("Credenciales incorrectas.");
 
-				var serverError = await response.Content.ReadAsStringAsync();
-				return new Result<UsuarioLogueadoDTO>.Error(
+                string serverError = await response.Content.ReadAsStringAsync();
+				return new Result<UsuarioLoginResponseDto>.Error(
 					$"Error del servidor ({(int)response.StatusCode}):\n{serverError}"
 				);
 			}
 
-            UsuarioLogueadoDTO? data = await response.Content.ReadFromJsonAsync<UsuarioLogueadoDTO>();
+            UsuarioLoginResponseDto? data = await response.Content.ReadFromJsonAsync<UsuarioLoginResponseDto>();
 			if (data is null)
-				return new Result<UsuarioLogueadoDTO>.Error("Error inesperado del servidor.");
+				return new Result<UsuarioLoginResponseDto>.Error("Error inesperado del servidor.");
 
-			// acá queda guardado en el Api
-			api.SetUsuario(data);
 
-			return new Result<UsuarioLogueadoDTO>.Ok(data);
+			return new Result<UsuarioLoginResponseDto>.Ok(data);
 		} catch (Exception ex) {
-			return new Result<UsuarioLogueadoDTO>.Error(
+			return new Result<UsuarioLoginResponseDto>.Error(
 				$"Error de conexión:\n{ex}");
 		}
 	}

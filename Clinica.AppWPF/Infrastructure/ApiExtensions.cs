@@ -1,5 +1,6 @@
-using System.Net.Http;
+Ôªøusing System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Windows;
 using Clinica.Dominio.Comun;
 
@@ -9,26 +10,31 @@ public static class ApiExtensions {
 	public static async Task<Result<T>> TryApiCallAsync<T>(
 		this ApiHelper api,
 		Func<Task<HttpResponseMessage>> httpCall,
-		Func<T>? onOk = null,
-		string errorTitle = "Error ejecutando operaciÛn"
+		Func<HttpResponseMessage, Task<T>>? onOk = null,
+		string errorTitle = "Error ejecutando operaci√≥n"
 	) {
 		try {
-			var response = await httpCall();
+			HttpResponseMessage response = await httpCall();
 
 			if (response.IsSuccessStatusCode) {
-				if (onOk is not null)
-					return new Result<T>.Ok(onOk());
 
-				// Si es OK pero no hay onOk, intentamos deserializar
-				var data = await response.Content.ReadFromJsonAsync<T>();
+				if (onOk is not null) {
+					T mapped = await onOk(response);
+					return new Result<T>.Ok(mapped);
+				}
+
+				// Modo autom√°tico: intenta deserializar el body a T
+				T? data = await response.Content.ReadFromJsonAsync<T>();
 				return new Result<T>.Ok(data!);
 			}
 
 			return await HandleHttpError<T>(response, errorTitle);
+
 		} catch (Exception ex) {
 			return HandleException<T>(ex, errorTitle);
 		}
 	}
+
 
 	public static async Task<T> TryGetJsonAsync<T>(
 		this ApiHelper api,
@@ -36,18 +42,50 @@ public static class ApiExtensions {
 		T defaultValue
 	) {
 		try {
-			var result = await api.Cliente.GetFromJsonAsync<T>(url);
-			return result ?? defaultValue;
+			MessageBox.Show($"Solicitando <{url}>...");
+			HttpResponseMessage response = await api.Cliente.GetAsync(url);
+
+			if (response.IsSuccessStatusCode) {
+				T? data = await response.Content.ReadFromJsonAsync<T>();
+				return data ?? defaultValue;
+			} else {
+				// ‚ùó Leer texto crudo del servidor
+				string raw = await response.Content.ReadAsStringAsync();
+
+				string? errorMessage = ExtractErrorMessage(raw)
+									   ?? raw; // fallback
+
+				MessageBox.Show(
+					$"Error al obtener datos:\n{errorMessage}\n\nURL: {url}",
+					"Error de API",
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning
+				);
+
+				return defaultValue;
+			}
 		} catch (Exception ex) {
 			MessageBox.Show(
-				$"Error obteniendo datos:\n{ex.Message}",
-				"Error de conexiÛn",
+				$"Error de conexi√≥n:\n{ex.Message}\n\nURL: {url}",
+				"Error de red",
 				MessageBoxButton.OK,
 				MessageBoxImage.Error
 			);
 			return defaultValue;
 		}
 	}
+	private static string? ExtractErrorMessage(string raw) {
+		try {
+			using var doc = JsonDocument.Parse(raw);
+			if (doc.RootElement.TryGetProperty("error", out var prop))
+				return prop.GetString();
+		} catch {
+			// No era JSON
+		}
+
+		return null;
+	}
+
 
 
 	public static async Task<T?> TryGetJsonOrNullAsync<T>(
@@ -55,7 +93,7 @@ public static class ApiExtensions {
 		string url
 	) {
 		try {
-			var response = await api.Cliente.GetAsync(url);
+			HttpResponseMessage response = await api.Cliente.GetAsync(url);
 
 			if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
 				return default;
@@ -69,7 +107,7 @@ public static class ApiExtensions {
 		} catch (Exception ex) {
 			MessageBox.Show(
 				$"Error obteniendo datos:\n{ex.Message}",
-				"Error de conexiÛn",
+				"Error de conexi√≥n",
 				MessageBoxButton.OK,
 				MessageBoxImage.Error
 			);
@@ -80,7 +118,7 @@ public static class ApiExtensions {
 	static Result<T> HandleException<T>(Exception ex, string title) {
 		MessageBox.Show(
 			$"{title}:\n{ex.Message}",
-			"Error de conexiÛn",
+			"Error de conexi√≥n",
 			MessageBoxButton.OK,
 			MessageBoxImage.Error
 		);
@@ -97,11 +135,11 @@ public static class ApiExtensions {
 
 		switch (response.StatusCode) {
 			case System.Net.HttpStatusCode.Unauthorized:
-				MessageBox.Show("No est·s autenticado.", "401", MessageBoxButton.OK, MessageBoxImage.Warning);
+				MessageBox.Show("No est√°s autenticado.", "401", MessageBoxButton.OK, MessageBoxImage.Warning);
 				return new Result<T>.Error("No autenticado");
 
 			case System.Net.HttpStatusCode.Forbidden:
-				MessageBox.Show("No tenÈs permisos.", "403", MessageBoxButton.OK, MessageBoxImage.Warning);
+				MessageBox.Show("No ten√©s permisos.", "403", MessageBoxButton.OK, MessageBoxImage.Warning);
 				return new Result<T>.Error("Sin permiso");
 
 			case System.Net.HttpStatusCode.NotFound:
@@ -110,7 +148,7 @@ public static class ApiExtensions {
 
 			case System.Net.HttpStatusCode.BadRequest:
 				MessageBox.Show($"{detalle}", "400", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return new Result<T>.Error("Solicitud inv·lida");
+				return new Result<T>.Error("Solicitud inv√°lida");
 		}
 
 		MessageBox.Show(

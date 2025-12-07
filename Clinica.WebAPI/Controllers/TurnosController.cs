@@ -28,6 +28,7 @@ public class TurnosController(
 
 
 
+
 	[HttpGet("{id:int}")]
 	public Task<IActionResult> GetTurnoPorId(int id)
 	=> this.SafeExecute(
@@ -72,6 +73,15 @@ public class TurnosController(
 		x => x.ToDomain(),
 		turno => repositorio.InsertTurnoReturnId(turno)
 	);
+
+	//[HttpGet]
+	//public Task<IActionResult> GetTurnosWithPacienteMedicoNames()
+	//=> this.SafeExecute(
+	//	logger,
+	//	PermisoSistema.VerTurnos,
+	//	x => x.ToDto(),
+	//	() => repositorio.SelectTurnos()
+	//);
 
 
 

@@ -7,6 +7,39 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Shared.Dtos;
 
 public static class ApiDtos {
+
+
+	public record SolicitarCancelacionDto(
+		TurnoId TurnoId,
+		DateTime OutcomeFecha,
+		string OutcomeComentario
+	);
+	public record SolicitarReprogramacionDto(
+		TurnoId TurnoId,
+		DateTime OutcomeFecha,
+		string OutcomeComentario
+	);
+
+	public record SolicitarTurnoPrimeraDispDto(
+		PacienteId PacienteId,
+		EspecialidadCodigo Especialidad,
+		DateTime FechaCreacion
+	);
+
+
+
+	public record UsuarioLoginRequestDto(string Username, string UserPassword);
+	public record UsuarioLoginResponseDto(string Username, UsuarioEnumRole EnumRole, string Token);
+
+
+
+
+
+
+
+
+
+
 	public record PacienteDto(
 		PacienteId Id,
 		string Dni,
@@ -24,22 +57,22 @@ public static class ApiDtos {
 			: this(default!, "", "", "", default, "", "", default, "", "", default) { }
 	}
 	public static Result<Paciente2025> ToDomain(this PacienteDto pacientedto) {
-		return Paciente2025.Crear(
-			PacienteId.Crear(pacientedto.Id.Valor),
-			NombreCompleto2025.Crear(pacientedto.Nombre, pacientedto.Apellido),
-			DniArgentino2025.Crear(pacientedto.Dni),
-			Contacto2025.Crear(
-			ContactoEmail2025.Crear(pacientedto.Email),
-			ContactoTelefono2025.Crear(pacientedto.Telefono)),
-			DomicilioArgentino2025.Crear(
-			LocalidadDeProvincia2025.Crear(
+		return Paciente2025.CrearResult(
+			PacienteId.CrearResult(pacientedto.Id.Valor),
+			NombreCompleto2025.CrearResult(pacientedto.Nombre, pacientedto.Apellido),
+			DniArgentino2025.CrearResult(pacientedto.Dni),
+			Contacto2025.CrearResult(
+			ContactoEmail2025.CrearResult(pacientedto.Email),
+			ContactoTelefono2025.CrearResult(pacientedto.Telefono)),
+			DomicilioArgentino2025.CrearResult(
+			LocalidadDeProvincia2025.CrearResult(
 				pacientedto.Localidad,
-				ProvinciaArgentina2025.CrearPorCodigo(
+				ProvinciaArgentina2025.CrearResultPorCodigo(
 					pacientedto.ProvinciaCodigo)
 				)
 			, pacientedto.Domicilio),
-			FechaDeNacimiento2025.Crear(pacientedto.FechaNacimiento),
-			FechaRegistro2025.Crear(pacientedto.FechaIngreso)
+			FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
+			FechaRegistro2025.CrearResult(pacientedto.FechaIngreso)
 		);
 	}
 
@@ -64,7 +97,7 @@ public static class ApiDtos {
 
 	public record TurnoDto(
 		TurnoId Id,
-		DateTime FechaDeCreacion,
+		DateTime FechaCreacionSolicitud,
 		PacienteId PacienteId,
 		MedicoId MedicoId,
 		EspecialidadCodigo EspecialidadCodigo,
@@ -93,12 +126,12 @@ public static class ApiDtos {
 		);
 	}
 	public static Result<Turno2025> ToDomain(this TurnoDto turnoDto) {
-		return Turno2025.Crear(
-			TurnoId.Crear(turnoDto.Id.Valor),
-			FechaRegistro2025.Crear(turnoDto.FechaDeCreacion),
-			PacienteId.Crear(turnoDto.PacienteId.Valor),
-			MedicoId.Crear(turnoDto.MedicoId.Valor),
-			Especialidad2025.CrearPorCodigoInterno(turnoDto.EspecialidadCodigo),
+		return Turno2025.CrearResult(
+			TurnoId.CrearResult(turnoDto.Id.Valor),
+			FechaRegistro2025.CrearResult(turnoDto.FechaCreacionSolicitud),
+			PacienteId.CrearResult(turnoDto.PacienteId.Valor),
+			MedicoId.CrearResult(turnoDto.MedicoId.Valor),
+			Especialidad2025.CrearResultPorCodigoInterno(turnoDto.EspecialidadCodigo),
 			turnoDto.FechaHoraAsignadaDesde,
 			turnoDto.FechaHoraAsignadaHasta,
 			TurnoOutcomeEstado2025.CrearPorCodigo(turnoDto.OutcomeEstado),
@@ -116,7 +149,7 @@ public static class ApiDtos {
 		public UsuarioDto() : this(default!, "", "", default) { }
 	}
 	public static Result<Usuario2025> ToDomain(this UsuarioDto usuario)
-		=> Usuario2025.Crear(usuario.Id, usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole);
+		=> Usuario2025.CrearResult(usuario.Id, usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole);
 
 	public static UsuarioDto ToDto(this Usuario2025 entidad) {
 		return new UsuarioDto(entidad.Id, entidad.NombreUsuario.Valor, entidad.PasswordHash.Valor, entidad.EnumRole);
@@ -124,7 +157,7 @@ public static class ApiDtos {
 
 
 	public record HorarioDto(
-		HorarioId Id,
+		HorarioMedicoId Id,
 		MedicoId MedicoId,
 		DayOfWeek DiaSemana,
 		TimeSpan HoraDesde,
@@ -139,7 +172,7 @@ public static class ApiDtos {
 		return new HorarioDto {
 			Id = instance.Id,
 			MedicoId = instance.MedicoId,
-			DiaSemana = instance.DiaSemana.Valor,
+			DiaSemana = instance.DiaSemana.EnumValor,
 			HoraDesde = instance.HoraDesde.Valor.ToTimeSpan(),
 			HoraHasta = instance.HoraHasta.Valor.ToTimeSpan(),
 			VigenteDesde = instance.VigenteDesde.Valor.ToDateTime(TimeOnly.MaxValue),
@@ -148,7 +181,7 @@ public static class ApiDtos {
 	}
 
 	public static Result<Horario2025> ToDomain(this HorarioDto horarioDto) {
-		return Horario2025.Crear(
+		return Horario2025.CrearResult(
 			horarioDto.Id,
 			horarioDto.MedicoId,
 			new DiaSemana2025(horarioDto.DiaSemana, horarioDto.DiaSemana.AEspañol()),
@@ -183,22 +216,22 @@ public static class ApiDtos {
 		string json = string.IsNullOrWhiteSpace(medicoDto.HorariosJson) ? "[]" : medicoDto.HorariosJson;
 		List<HorarioDto> horariosDto = JsonSerializer.Deserialize<List<HorarioDto>>(json)
 			?? [];
-		return Medico2025.Crear(
-			MedicoId.Crear(medicoDto.Id.Valor),
-			NombreCompleto2025.Crear(medicoDto.Nombre, medicoDto.Apellido),
+		return Medico2025.CrearResult(
+			MedicoId.CrearResult(medicoDto.Id.Valor),
+			NombreCompleto2025.CrearResult(medicoDto.Nombre, medicoDto.Apellido),
 			//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
-			Especialidad2025.CrearPorCodigoInterno(medicoDto.EspecialidadCodigo),
-			DniArgentino2025.Crear(medicoDto.Dni),
-			DomicilioArgentino2025.Crear(
-				LocalidadDeProvincia2025.Crear(
+			Especialidad2025.CrearResultPorCodigoInterno(medicoDto.EspecialidadCodigo),
+			DniArgentino2025.CrearResult(medicoDto.Dni),
+			DomicilioArgentino2025.CrearResult(
+				LocalidadDeProvincia2025.CrearResult(
 					medicoDto.Localidad,
-					ProvinciaArgentina2025.CrearPorCodigo(medicoDto.ProvinciaCodigo)),
+					ProvinciaArgentina2025.CrearResultPorCodigo(medicoDto.ProvinciaCodigo)),
 				medicoDto.Domicilio
 			),
-			ContactoTelefono2025.Crear(medicoDto.Telefono),
-			ContactoEmail2025.Crear(medicoDto.Email),
-			ListaHorarioMedicos2025.Crear(horariosDto.Select(x => x.ToDomain())),
-			FechaRegistro2025.Crear(medicoDto.FechaIngreso),
+			ContactoTelefono2025.CrearResult(medicoDto.Telefono),
+			ContactoEmail2025.CrearResult(medicoDto.Email),
+			ListaHorarioMedicos2025.CrearResult(horariosDto.Select(x => x.ToDomain())),
+			FechaRegistro2025.CrearResult(medicoDto.FechaIngreso),
 			medicoDto.HaceGuardias
 		);
 	}
@@ -226,7 +259,7 @@ public static class ApiDtos {
 	//public record PacienteListDto(
 	//	PacienteId Id,
 	//	string Dni,
-	//	string Nombre,
+	//	string Username,
 	//	string Apellido,
 	//	string Email,
 	//	string Telefono
@@ -242,7 +275,7 @@ public static class ApiDtos {
 
 	//public record MedicoListDto(
 	//	string Dni,
-	//	string Nombre,
+	//	string Username,
 	//	string Apellido,
 	//	EspecialidadCodigo EspecialidadCodigo
 	//);
@@ -252,7 +285,6 @@ public static class ApiDtos {
 
 
 
-	public record UsuarioLogueadoDTO(string Nombre, byte RolEnum, string Token);
 
 
 
@@ -261,8 +293,6 @@ public static class ApiDtos {
 		DateTime NuevaFechaDesde,
 		DateTime NuevaFechaHasta
 	);
-	public record LoginRequestDto(string Username, string Password);
-	public record LoginResponseDto(string Nombre, string Rol, string Token);
 
 
 	public record CrearTurnoRequestDto(

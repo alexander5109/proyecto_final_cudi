@@ -5,9 +5,9 @@ namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct HorarioHora2025(
 	TimeOnly Valor
-): IComoTexto {
+) : IComoTexto {
 	public string ATexto() => Valor.ToString("HH:mm");
-	public static Result<HorarioHora2025> Crear(string input) {
+	public static Result<HorarioHora2025> CrearResult(string input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<HorarioHora2025>.Error("La hora no puede estar vacía.");
 
@@ -22,7 +22,6 @@ public readonly record struct HorarioHora2025(
 		return new Result<HorarioHora2025>.Error($"'{input}' no es una hora válida.");
 	}
 
-	public static Result<HorarioHora2025> Crear(TimeOnly value)
-		=> new Result<HorarioHora2025>.Ok(new HorarioHora2025(value));
+	public static HorarioHora2025 Crear(TimeOnly value) => new HorarioHora2025(value);
 
 }

@@ -8,14 +8,14 @@ public record FechaRegistro2025(DateTime Valor) : IComoTexto {
 	public string ATexto() {
 		return Valor.ToString("dd/MM/yyyy");
 	}
-	public static Result<FechaRegistro2025> Crear(DateTime? fecha) {
+	public static Result<FechaRegistro2025> CrearResult(DateTime? fecha) {
 		if (fecha is DateTime fechagud){
 			return new Result<FechaRegistro2025>.Ok(new FechaRegistro2025(fechagud));
 		}
 		return new Result<FechaRegistro2025>.Error("La fecha de registro en el sistema no puede estar vacía.");
 
 	}
-	public static Result<FechaRegistro2025> CrearDesdeTexto(string? input) {
+	public static Result<FechaRegistro2025> CrearResult(string? input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<FechaRegistro2025>.Error("La fecha de registro en el sistema no puede estar vacía.");
 
@@ -46,7 +46,7 @@ public record FechaRegistro2025(DateTime Valor) : IComoTexto {
 				CultureInfo.InvariantCulture,
 				DateTimeStyles.None,
 				out DateTime dtExact)) {
-			return Crear(dtExact);
+			return CrearResult(dtExact);
 		}
 
 		// Intento 2: parseo flexible según cultura del usuario
@@ -55,7 +55,7 @@ public record FechaRegistro2025(DateTime Valor) : IComoTexto {
 				CultureInfo.CurrentCulture,
 				DateTimeStyles.AssumeLocal,
 				out DateTime dtCulture)) {
-			return Crear(dtCulture);
+			return CrearResult(dtCulture);
 		}
 
 		return new Result<FechaRegistro2025>.Error("Formato de fecha inválido.");

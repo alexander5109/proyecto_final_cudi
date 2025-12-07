@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE dbo.sp_UpdateMedicoWhereId
     @Id INT,
-    @EspecialidadCodigoInterno TINYINT,
+    @EspecialidadCodigo TINYINT,
     @Dni CHAR(8),
     @Nombre VARCHAR(50),
     @Apellido VARCHAR(50),
@@ -31,7 +31,7 @@ BEGIN
 
     UPDATE dbo.Medico
     SET 
-        EspecialidadCodigoInterno = @EspecialidadCodigoInterno,
+        EspecialidadCodigo = @EspecialidadCodigo,
         Dni            = @Dni,
         Nombre         = @Nombre,
         Apellido       = @Apellido,

@@ -6,7 +6,7 @@ namespace Clinica.Dominio.TiposDeValor;
 public readonly record struct DniArgentino2025(
 	string Valor
 ) {
-	public static Result<DniArgentino2025> Crear(string? input) {
+	public static Result<DniArgentino2025> CrearResult(string? input) {
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<DniArgentino2025>.Error("El DNI no puede estar vacío.");
         string normalized = input.Trim();
