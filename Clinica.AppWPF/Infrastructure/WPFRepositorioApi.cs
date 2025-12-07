@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Json;
-using System.Windows;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;

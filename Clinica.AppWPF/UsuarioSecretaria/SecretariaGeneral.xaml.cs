@@ -1,183 +1,66 @@
-﻿using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
+﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.TiposDeValor;
-using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
-
-
-public sealed class TurnoVM {
-	public TurnoId Id { get; }
-	public string Fecha { get; }
-	public string HoraDesde { get; }
-	public string HoraHasta { get; }
-	public TurnoOutcomeEstadoCodigo2025 EstadoCodigo { get; }
-
-	public TurnoVM(TurnoDto dto) {
-		Id = dto.Id;
-		Fecha = dto.FechaHoraAsignadaDesde.AFechaArgentina();
-		HoraDesde = dto.FechaHoraAsignadaDesde.AHorasArgentina();
-		HoraHasta = dto.FechaHoraAsignadaHasta.AHorasArgentina();
-		EstadoCodigo = dto.OutcomeEstado;
-	}
-}
-
-
-
-
-
-
-
-
-
-
 public partial class SecretariaGeneral : Window {
-
-	private PacienteDto? SelectedPaciente;
-	private TurnoDto? SelectedTurno;
-
-	private ICollectionView? pacientesView;
+	public SecretariaGeneralViewModel VM { get; }
 
 	public SecretariaGeneral() {
 		InitializeComponent();
-		_ = CargaInicialAsync();
+		VM = new SecretariaGeneralViewModel();
+		DataContext = VM;
+
+		//Loaded += async (_, __) => await VM.CargaInicialAsync();
 	}
 
+	private void ButtonHome(object sender, RoutedEventArgs e)
+		=> this.VolverARespectivoHome();
 
-
-	private async void CambiarEstadoTurno_Click(object sender, RoutedEventArgs e) {
-		if (turnosListView.SelectedItem is not TurnoVM turnoVm)
-			return;
-		if (txtEstadosComboBox.SelectedItem is not TurnoOutcomeEstado2025 estadoVm)
-			return;
-
-		//var dto = new ActualizarEstadoTurnoDto(
-		//	turnoVm.Id,
-		//	estadoVm.Codigo,
-		//	comentarioTextBox.Text ?? ""
-		//);
-
-		var result = await App.Repositorio.ActualizarEstadoTurno(dto);
-
-		if (result.IsError) {
-			MessageBox.Show(result.Error);
-			return;
-		}
-
-		// REFRESH:
-		await ActualizarTurnosUIAsync();
-	}
-
-
-
-	// ---------------------------------------------------------
-	//  CARGA INICIAL
-	// ---------------------------------------------------------
-	private async Task CargaInicialAsync() {
-		var pacientes = await App.Repositorio.SelectPacientes();
-		pacientesView = CollectionViewSource.GetDefaultView(pacientes);
-		pacientesView.Filter = PacientesFilter;
-
-		txtEstadosComboBox.ItemsSource = TurnoOutcomeEstado2025.Todos.ToList();
-
-		pacientesListView.ItemsSource = pacientesView;
-	}
-
-	// ---------------------------------------------------------
-	//  FILTRADO
-	// ---------------------------------------------------------
-	private bool PacientesFilter(object obj) {
-		if (obj is not PacienteDto p) return false;
-		string filtroApellido = txtFilterApellido.Text.Trim().ToLower();
-		string filtroNombre = txtFilterNombre.Text.Trim().ToLower();
-		string filtroDni = txtFilterDni.Text.Trim().ToLower();
-		//string filtroEmail = txtFilterEmail.Text.Trim().ToLower();
-		//string filtroTelefono = txtFilterTelefono.Text.Trim().ToLower();
-
-		bool c1 = string.IsNullOrEmpty(filtroApellido) || p.Apellido.ToLower().Contains(filtroApellido);
-		bool c2 = string.IsNullOrEmpty(filtroNombre) || p.Nombre.ToLower().Contains(filtroNombre);
-		bool c3 = string.IsNullOrEmpty(filtroDni) || p.Dni.Contains(filtroDni);
-		//bool c4 = string.IsNullOrEmpty(filtroEmail) || p.Email.Contains(filtroEmail);
-		//bool c5 = string.IsNullOrEmpty(filtroTelefono) || p.Telefono.Contains(filtroTelefono);
-
-		return c1 && c2 && c3; // && c4 && c5;
-	}
-
-	private void FilterTextChanged(object sender, TextChangedEventArgs e) {
-		pacientesView?.Refresh();
-	}
-
-	// ---------------------------------------------------------
-	//  SELECCIÓN DE PACIENTES Y TURNOS
-	// ---------------------------------------------------------
-	private async void ListViewPacientes_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedPaciente = pacientesListView.SelectedItem as PacienteDto;
-		await ActualizarTurnosUIAsync();
-		ActualizarBotonesPaciente();
-	}
-
-	private async Task ActualizarTurnosUIAsync() {
-		if (SelectedPaciente != null) {
-			var turnoDbList = await App.Repositorio
-				.SelectTurnosWherePacienteId(SelectedPaciente.Id);
-
-			var vmList = turnoDbList
-				.Select(t => new TurnoVM(t))
-				.ToList();
-
-			turnosListView.ItemsSource = vmList;
-		} else {
-			turnosListView.ItemsSource = null;
-		}
-	}
-
-	private void turnosListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedTurno = turnosListView.SelectedItem as TurnoDto;
-	}
-
-	// ---------------------------------------------------------
-	//  ACTUALIZACIONES DE UI
-	// ---------------------------------------------------------
-	private void ActualizarBotonesPaciente() {
-		buttonModificarPaciente.IsEnabled = SelectedPaciente != null;
-		buttonReservarTurno.IsEnabled = SelectedPaciente != null;
-	}
-
-	private async void Window_Activated(object sender, EventArgs e) {
-		// Cada vez que vuelves de una ventana de edición, se refrescan datos
-		await ActualizarTurnosUIAsync();
-		pacientesView?.Refresh();
-		ActualizarBotonesPaciente();
-	}
-
-	// ---------------------------------------------------------
-	//  BOTONES
-	// ---------------------------------------------------------
-
-	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
-	private void ButtonHome(object sender, RoutedEventArgs e) => this.VolverARespectivoHome();
+	private void ButtonSalir(object sender, RoutedEventArgs e)
+		=> this.Salir();
 
 	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
 		this.AbrirComoDialogo<SecretariaPacientesModificar>();
+		//_ = VM.RefrescarPacientesAsync();
 	}
 
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
-		if (SelectedPaciente is null) return;
-		this.AbrirComoDialogo<SecretariaPacientesModificar>(SelectedPaciente.Id);
+		if (VM.SelectedPaciente is null) return;
+		this.AbrirComoDialogo<SecretariaPacientesModificar>(VM.SelectedPaciente.Id);
+		//_ = VM.RefrescarPacientesAsync();
 	}
 
 	private void ButtonReservarTurno(object sender, RoutedEventArgs e) {
-		if (SelectedPaciente is null) return;
-		this.AbrirComoDialogo<SecretariaConsultaDisponibilidades>(SelectedPaciente);
+		if (VM.SelectedPaciente is null) return;
+		this.AbrirComoDialogo<SecretariaConsultaDisponibilidades>(VM.SelectedPaciente);
+		//_ = VM.RefrescarTurnosAsync();
 	}
 
+    private void Button_ConfirmarTurnoAsistencia(object sender, RoutedEventArgs e) {
 
+	}
 
+    private void Button_MarcarTurnoAusente(object sender, RoutedEventArgs e) {
 
+	}
 
+    private void Button_ReprogramarTurno(object sender, RoutedEventArgs e) {
+
+		VM.IndicarAccionRequiereComentario(true);
+
+		if (VM.ComentarioObligatorio && string.IsNullOrWhiteSpace(comentarioTextBox.Text)) {
+			MessageBox.Show("Debe completar un comentario para reprogramar el turno.");
+			return;
+		}
+
+		// Lógica API:
+		// await App.Repositorio.ReprogramarTurno(...);
+
+		//await ActualizarTurnosUIAsync();
+	}
+
+    private void Button_CancelarTurno(object sender, RoutedEventArgs e) {
+
+	}
 }
