@@ -37,15 +37,15 @@ public static class Comodidades {
 
 	public static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDto dto) {
 		return new MedicoSimpleViewModel(
-			Id: dto.Id, 
-			EspecialidadCodigo: dto.EspecialidadCodigo, 
+			Id: dto.Id,
+			EspecialidadCodigo: dto.EspecialidadCodigo,
 			Displayear: $"{dto.Nombre} {dto.Apellido}"
 		);
 	}
 
 	public static EspecialidadViewModel ToSimpleViewModel(this Especialidad2025 instance) {
 		return new EspecialidadViewModel(
-			Codigo: instance.Codigo, 
+			Codigo: instance.Codigo,
 			Displayear: $"{instance.Titulo} --- (Duración consulta: {instance.DuracionConsultaMinutos})"
 		);
 	}
@@ -53,9 +53,9 @@ public static class Comodidades {
 	async public static Task<DisponibilidadEspecialidadModelView> ToSimpleViewModel(this Disponibilidad2025 domainValue) {
 		MedicoDto medico = await domainValue.MedicoId.RespectivoMedico();
 		return new DisponibilidadEspecialidadModelView(
-			Fecha: domainValue.FechaHoraDesde.AFechaArgentina(), 
-			Hora: domainValue.FechaHoraDesde.AHorasArgentina(), 
-			Medico: $"{medico.Nombre}{medico.Apellido}", 
+			Fecha: domainValue.FechaHoraDesde.AFechaArgentina(),
+			Hora: domainValue.FechaHoraDesde.AHorasArgentina(),
+			Medico: $"{medico.Nombre}{medico.Apellido}",
 			DiaSemana: domainValue.DiaSemana
 		);
 	}
@@ -160,7 +160,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 		set {
 			if (_preferedFechaValue == value) return;
 			_preferedFechaValue = value;
-			MessageBox.Show(value.ToString());
+			//MessageBox.Show(value.ToString());
 			OnPropertyChanged(nameof(PreferedFechaValue));
 		}
 	}
@@ -190,6 +190,18 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 		}
 	}
 
+	private bool _filtroHoraEnabled = false;
+	public bool FiltroHoraEnabled {
+		get => _filtroHoraEnabled;
+		set {
+			if (_filtroHoraEnabled == value)
+				return; _filtroHoraEnabled = value;
+			if (value == false)
+				SelectedHoraValue = ClinicaNegocio.Atencion.DesdeHs;
+			OnPropertyChanged(nameof(FiltroHoraEnabled));
+		}
+	}
+
 
 	//-------------- Elegir dia semana que prefiere la cita:
 	public ObservableCollection<DiaSemana2025> DiasSemanaItemsSource { get; } = [.. DiaSemana2025.Todos];
@@ -200,8 +212,21 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 		set {
 			if (_selectedDiaValue == value) return;
 			_selectedDiaValue = value;
-			MessageBox.Show(value.ToString());
+			//MessageBox.Show(value.ToString());
 			OnPropertyChanged(nameof(SelectedDiaValue));
+		}
+	}
+
+	private bool _filtroDiaEnabled = false;
+	public bool FiltroDiaEnabled {
+		get => _filtroDiaEnabled;
+		set {
+			if (_filtroDiaEnabled == value)
+				return;
+			if (value == false)
+				SelectedDiaValue = null;
+			_filtroDiaEnabled = value;
+			OnPropertyChanged(nameof(FiltroDiaEnabled));
 		}
 	}
 
@@ -249,26 +274,6 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 
 
 
-
-	private bool _filtroDiaEnabled = false;
-	public bool FiltroDiaEnabled {
-		get => _filtroDiaEnabled;
-		set {
-			if (_filtroDiaEnabled == value)
-				return; _filtroDiaEnabled = value;
-			OnPropertyChanged(nameof(FiltroDiaEnabled));
-		}
-	}
-
-	private bool _filtroHoraEnabled = false;
-	public bool FiltroHoraEnabled {
-		get => _filtroHoraEnabled;
-		set {
-			if (_filtroHoraEnabled == value)
-				return; _filtroHoraEnabled = value;
-			OnPropertyChanged(nameof(FiltroHoraEnabled));
-		}
-	}
 
 
 
@@ -333,4 +338,6 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 			this.Close();
 		}
 	}
+
+	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
 }
