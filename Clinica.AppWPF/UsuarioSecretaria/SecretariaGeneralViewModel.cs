@@ -8,60 +8,88 @@ namespace Clinica.AppWPF.UsuarioSecretaria;
 
 public sealed class TurnoVM {
 	public TurnoId Id { get; }
-	public string Fecha { get; }
-	public string HoraDesde { get; }
-	public string HoraHasta { get; }
-	public TurnoOutcomeEstadoCodigo2025 EstadoCodigo { get; }
-	public string? Comentario { get; set; }
-
+	public string PacienteDisplayear { get; }
+	public string PacienteDni { get; }
+	public string MedicoDisplayear { get; }
+	public EspecialidadCodigo EspecialidadCodigo { get; }
+	public string FechaSolicitud { get; }
+	public string FechaAsignada { get; }
+	public string HoraAsignada { get; }
+	public TurnoOutcomeEstadoCodigo2025 OutcomeEstadoCodigo { get; }
+	public DateTime? OutcomeFecha { get; set; }
+	public string? OutcomeComentario { get; set; }
 	public TurnoVM(TurnoDto dto) {
+
 		Id = dto.Id;
-		Fecha = dto.FechaHoraAsignadaDesde.AFechaArgentina();
-		HoraDesde = dto.FechaHoraAsignadaDesde.AHorasArgentina();
-		HoraHasta = dto.FechaHoraAsignadaHasta.AHorasArgentina();
-		EstadoCodigo = dto.OutcomeEstado;
-		Comentario = dto.OutcomeComentario;
+		PacienteDisplayear = "(await dto.PacienteId.RespectivoPaciente()).Nombre+Apellido";
+		PacienteDni = "(await dto.PacienteId.RespectivoPaciente()).Dni";
+		MedicoDisplayear = "(await dto.MedicoId.RespectivoMedico()).Nombre + Apellido";
+		FechaSolicitud = dto.FechaHoraAsignadaDesde.AFechaArgentina();
+		FechaAsignada = dto.FechaHoraAsignadaDesde.AFechaArgentina();
+		HoraAsignada = dto.FechaHoraAsignadaHasta.AHorasArgentina();
+		EspecialidadCodigo = dto.EspecialidadCodigo;
+		OutcomeEstadoCodigo = dto.OutcomeEstadoCodigo;
+		OutcomeFecha = dto.OutcomeFecha;
+		OutcomeComentario = dto.OutcomeComentario;
 	}
 }
-
 public sealed class SecretariaGeneralViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	private PacienteDto? _pacienteSeleccionado;
-	private TurnoVM? _turnoSeleccionado;
+	// ==== PACIENTES ====
+	private List<PacienteDto> _pacientes = [];
+	public List<PacienteDto> PacientesList {
+		get => _pacientes;
+		set { _pacientes = value; OnPropertyChanged(nameof(PacientesList)); }
+	}
 
+	private PacienteDto? _selectedPaciente;
 	public PacienteDto? SelectedPaciente {
-		get => _pacienteSeleccionado;
+		get => _selectedPaciente;
 		set {
-			if (_pacienteSeleccionado != value) {
-				_pacienteSeleccionado = value;
+			if (_selectedPaciente != value) {
+				_selectedPaciente = value;
 				OnPropertyChanged(nameof(SelectedPaciente));
 				OnPropertyChanged(nameof(HayPacienteSeleccionado));
 			}
 		}
 	}
-	public TurnoVM? TurnoSeleccionado {
+
+	public bool HayPacienteSeleccionado => SelectedPaciente is not null;
+
+
+	// ==== TURNOS ====
+	private List<TurnoVM> _turnos = [];
+	public List<TurnoVM> TurnosList {
+		get => _turnos;
+		set { _turnos = value; OnPropertyChanged(nameof(TurnosList)); }
+	}
+
+	private TurnoVM? _turnoSeleccionado;
+	public TurnoVM? SelectedTurno {
 		get => _turnoSeleccionado;
 		set {
 			if (_turnoSeleccionado != value) {
 				_turnoSeleccionado = value;
-				OnPropertyChanged(nameof(TurnoSeleccionado));
+				OnPropertyChanged(nameof(SelectedTurno));
 				OnPropertyChanged(nameof(HayTurnoSeleccionado));
 				OnPropertyChanged(nameof(BotonesEstadoHabilitados));
 				OnPropertyChanged(nameof(ComentarioObligatorio));
 			}
 		}
 	}
-	public bool HayPacienteSeleccionado => SelectedPaciente is not null;
-	public bool HayTurnoSeleccionado => TurnoSeleccionado is not null;
+
+	public bool HayTurnoSeleccionado => SelectedTurno is not null;
 	public bool BotonesEstadoHabilitados =>
-		TurnoSeleccionado?.EstadoCodigo == TurnoOutcomeEstadoCodigo2025.Programado;
+		SelectedTurno?.OutcomeEstadoCodigo == TurnoOutcomeEstadoCodigo2025.Programado;
+
 	public bool ComentarioObligatorio { get; private set; }
 
 	public void IndicarAccionRequiereComentario(bool requiere) {
 		ComentarioObligatorio = requiere;
 		OnPropertyChanged(nameof(ComentarioObligatorio));
 	}
+
 	private void OnPropertyChanged(string propertyName) =>
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		PropertyChanged?.Invoke(this, new(propertyName));
 }

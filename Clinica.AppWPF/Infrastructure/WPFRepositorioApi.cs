@@ -263,4 +263,25 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return result;
 	}
 
+
+
+    Task<Result<TurnoDto>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad) {
+        throw new NotImplementedException();
+    }
+
+    Task<Result<TurnoDto>> IWPFRepositorioTurnos.CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+        throw new NotImplementedException();
+    }
+
+    Task<Result<TurnoDto>> IWPFRepositorioTurnos.ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+        throw new NotImplementedException();
+    }
+
+    Task<Result<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+        throw new NotImplementedException();
+    }
+
+    Task<Result<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome) {
+        throw new NotImplementedException();
+    }
 }
