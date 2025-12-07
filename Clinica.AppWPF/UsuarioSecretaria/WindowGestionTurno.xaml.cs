@@ -80,6 +80,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 		SelectedPaciente = paciente;
 		UpdatePacienteUI(paciente);
 		Loaded += WindowGestionTurno_Loaded;
+		CargarHoras();
 	}
 
 	private async void WindowGestionTurno_Loaded(object sender, RoutedEventArgs e) {
@@ -164,18 +165,6 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 		}
 	}
 	//-------------- Elegir hora minima que prefiere la cita:
-	public ObservableCollection<TimeOnly> HorasItemsSource { get; } = [];
-
-	private TimeOnly _selectedHoraValue = ClinicaNegocio.Atencion.DesdeHs;
-	public TimeOnly SelectedHoraValue {
-		get => _selectedHoraValue;
-		set {
-			if (_selectedHoraValue == value) return;
-			_selectedHoraValue = value;
-			OnPropertyChanged(nameof(SelectedHoraValue));
-		}
-	}
-
 	private void CargarHoras() {
 		HorasItemsSource.Clear();
 
@@ -189,6 +178,17 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 		if (HorasItemsSource.Count > 0)
 			SelectedHoraValue = HorasItemsSource[0];
 	}
+	public ObservableCollection<TimeOnly> HorasItemsSource { get; } = [];
+
+	private TimeOnly _selectedHoraValue = ClinicaNegocio.Atencion.DesdeHs;
+	public TimeOnly SelectedHoraValue {
+		get => _selectedHoraValue;
+		set {
+			if (_selectedHoraValue == value) return;
+			_selectedHoraValue = value;
+			OnPropertyChanged(nameof(SelectedHoraValue));
+		}
+	}
 
 
 	//-------------- Elegir dia semana que prefiere la cita:
@@ -200,6 +200,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 		set {
 			if (_selectedDiaValue == value) return;
 			_selectedDiaValue = value;
+			MessageBox.Show(value.ToString());
 			OnPropertyChanged(nameof(SelectedDiaValue));
 		}
 	}

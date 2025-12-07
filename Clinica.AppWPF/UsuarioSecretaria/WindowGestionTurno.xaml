@@ -86,7 +86,6 @@
 			x:Name="txtDiaSemana"
 			ItemsSource="{Binding DiasSemanaItemsSource}"
 			DisplayMemberPath="DiaNombre"
-			SelectedValuePath="EnumValor"
 			SelectedValue="{Binding SelectedDiaValue, Mode=TwoWay}"
 			IsEnabled="{Binding FiltroDiaEnabled}"
 			HorizontalAlignment="Left"
