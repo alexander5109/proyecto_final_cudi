@@ -2,6 +2,8 @@
 
 namespace Clinica.Dominio.Entidades;
 
+
+
 public enum TurnoOutcomeEstadoCodigo2025 : byte {
 	Programado = 1,
 	Ausente = 2,
@@ -9,6 +11,12 @@ public enum TurnoOutcomeEstadoCodigo2025 : byte {
 	Concretado = 4,
 	Reprogramado = 5
 }
+
+//public static class TurnoOutcomeEstadoCodigo2025Extentions {
+//	public static string AFechaArgentina(this TurnoOutcomeEstadoCodigo2025 codigo) => dia.ToString("dd/MM/yyyy");
+//	public static string AHorasArgentina(this TurnoOutcomeEstadoCodigo2025 codigo) => dia.ToString("HH:mm");
+//}
+
 
 public sealed record TurnoOutcomeEstado2025(
 	TurnoOutcomeEstadoCodigo2025 Codigo,
@@ -35,15 +43,10 @@ public sealed record TurnoOutcomeEstado2025(
 		Reprogramado
 	];
 
+
+
 	public static Result<TurnoOutcomeEstado2025> CrearPorCodigo(TurnoOutcomeEstadoCodigo2025 codigo) {
-		//if (codigo is null) {
-		//	return new Result<TurnoOutcomeEstado2025>.Error(
-		//		"El código del Outcome no puede ser nulo."
-		//	);
-		//}
-
 		TurnoOutcomeEstado2025? estado = Todos.FirstOrDefault(e => e.Codigo == codigo);
-
 		return estado is not null
 			? new Result<TurnoOutcomeEstado2025>.Ok(estado)
 			: new Result<TurnoOutcomeEstado2025>.Error(

@@ -3,9 +3,38 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.Dominio.Entidades;
+using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
+
+
+
+public sealed class TurnoVM {
+	public TurnoId Id { get; }
+	public string Fecha { get; }
+	public string HoraDesde { get; }
+	public string HoraHasta { get; }
+	public TurnoOutcomeEstadoCodigo2025 EstadoCodigo { get; }
+
+	public TurnoVM(TurnoDto dto) {
+		Id = dto.Id;
+		Fecha = dto.FechaHoraAsignadaDesde.AFechaArgentina();
+		HoraDesde = dto.FechaHoraAsignadaDesde.AHorasArgentina();
+		HoraHasta = dto.FechaHoraAsignadaHasta.AHorasArgentina();
+		EstadoCodigo = dto.OutcomeEstado;
+	}
+}
+
+
+
+
+
+
+
+
+
 
 public partial class SecretariaGeneral : Window {
 
@@ -19,6 +48,33 @@ public partial class SecretariaGeneral : Window {
 		_ = CargaInicialAsync();
 	}
 
+
+
+	private async void CambiarEstadoTurno_Click(object sender, RoutedEventArgs e) {
+		if (turnosListView.SelectedItem is not TurnoVM turnoVm)
+			return;
+		if (txtEstadosComboBox.SelectedItem is not TurnoOutcomeEstado2025 estadoVm)
+			return;
+
+		//var dto = new ActualizarEstadoTurnoDto(
+		//	turnoVm.Id,
+		//	estadoVm.Codigo,
+		//	comentarioTextBox.Text ?? ""
+		//);
+
+		var result = await App.Repositorio.ActualizarEstadoTurno(dto);
+
+		if (result.IsError) {
+			MessageBox.Show(result.Error);
+			return;
+		}
+
+		// REFRESH:
+		await ActualizarTurnosUIAsync();
+	}
+
+
+
 	// ---------------------------------------------------------
 	//  CARGA INICIAL
 	// ---------------------------------------------------------
@@ -26,6 +82,8 @@ public partial class SecretariaGeneral : Window {
 		var pacientes = await App.Repositorio.SelectPacientes();
 		pacientesView = CollectionViewSource.GetDefaultView(pacientes);
 		pacientesView.Filter = PacientesFilter;
+
+		txtEstadosComboBox.ItemsSource = TurnoOutcomeEstado2025.Todos.ToList();
 
 		pacientesListView.ItemsSource = pacientesView;
 	}
@@ -64,13 +122,18 @@ public partial class SecretariaGeneral : Window {
 	}
 
 	private async Task ActualizarTurnosUIAsync() {
-		if (SelectedPaciente is null) {
-			turnosListView.ItemsSource = null;
-			return;
-		}
+		if (SelectedPaciente != null) {
+			var turnoDbList = await App.Repositorio
+				.SelectTurnosWherePacienteId(SelectedPaciente.Id);
 
-		var turnos = await App.Repositorio.SelectTurnosWherePacienteId(SelectedPaciente.Id);
-		turnosListView.ItemsSource = CollectionViewSource.GetDefaultView(turnos);
+			var vmList = turnoDbList
+				.Select(t => new TurnoVM(t))
+				.ToList();
+
+			turnosListView.ItemsSource = vmList;
+		} else {
+			turnosListView.ItemsSource = null;
+		}
 	}
 
 	private void turnosListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -112,4 +175,9 @@ public partial class SecretariaGeneral : Window {
 		if (SelectedPaciente is null) return;
 		this.AbrirComoDialogo<SecretariaConsultaDisponibilidades>(SelectedPaciente);
 	}
+
+
+
+
+
 }
