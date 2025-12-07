@@ -15,7 +15,5 @@ public partial class SecretariaHome : Window {
 
 	private void MetodoBotonLogout(object sender, RoutedEventArgs e) => this.CerrarSesion();
 
-	private void MetodoBotonPacientes(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientes>();
-
-	private void MetodoBotonTurnosDelDia(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaTurnos>();
+	private void MetodoBotonSecretariaGeneral(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaGeneral>();
 }

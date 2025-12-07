@@ -15,7 +15,7 @@ public partial class Login : Window {
 	//}
 
 	private async void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
-		SoundsService.PlayClickSound();
+		//SoundsService.PlayClickSound();
 		if (string.IsNullOrEmpty(guiUsuario.Text) || string.IsNullOrEmpty(guiPassword.Password)) {
 			MessageBox.Show("Complete todos los campos");
 			return;
