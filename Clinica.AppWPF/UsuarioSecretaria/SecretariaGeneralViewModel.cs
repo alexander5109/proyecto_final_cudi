@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Windows;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.Dtos.ApiDtos;
@@ -15,7 +16,7 @@ public sealed class TurnoVM {
 	public string FechaSolicitud { get; }
 	public string FechaAsignada { get; }
 	public string HoraAsignada { get; }
-	public TurnoOutcomeEstadoCodigo2025 OutcomeEstadoCodigo { get; }
+	public TurnoOutcomeEstadoCodigo2025 OutcomeEstado { get; }
 	public DateTime? OutcomeFecha { get; set; }
 	public string? OutcomeComentario { get; set; }
 	public TurnoVM(TurnoDto dto) {
@@ -28,7 +29,8 @@ public sealed class TurnoVM {
 		FechaAsignada = dto.FechaHoraAsignadaDesde.AFechaArgentina();
 		HoraAsignada = dto.FechaHoraAsignadaHasta.AHorasArgentina();
 		EspecialidadCodigo = dto.EspecialidadCodigo;
-		OutcomeEstadoCodigo = dto.OutcomeEstadoCodigo;
+		OutcomeEstado = dto.OutcomeEstado;
+		//MessageBox.Show($"{EspecialidadCodigo} {OutcomeEstado.ToString()}");
 		OutcomeFecha = dto.OutcomeFecha;
 		OutcomeComentario = dto.OutcomeComentario;
 	}
@@ -72,16 +74,15 @@ public sealed class SecretariaGeneralViewModel : INotifyPropertyChanged {
 			if (_turnoSeleccionado != value) {
 				_turnoSeleccionado = value;
 				OnPropertyChanged(nameof(SelectedTurno));
+				OnPropertyChanged(nameof(PuedeModificarTurnoSeleccionado));
 				OnPropertyChanged(nameof(HayTurnoSeleccionado));
-				OnPropertyChanged(nameof(BotonesEstadoHabilitados));
 				OnPropertyChanged(nameof(ComentarioObligatorio));
 			}
 		}
 	}
 
 	public bool HayTurnoSeleccionado => SelectedTurno is not null;
-	public bool BotonesEstadoHabilitados =>
-		SelectedTurno?.OutcomeEstadoCodigo == TurnoOutcomeEstadoCodigo2025.Programado;
+	public bool PuedeModificarTurnoSeleccionado => SelectedTurno?.OutcomeEstado == TurnoOutcomeEstadoCodigo2025.Programado;
 
 	public bool ComentarioObligatorio { get; private set; }
 

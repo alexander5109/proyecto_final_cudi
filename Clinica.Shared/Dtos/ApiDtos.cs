@@ -103,7 +103,7 @@ public static class ApiDtos {
 		EspecialidadCodigo EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
-		TurnoOutcomeEstadoCodigo2025 OutcomeEstadoCodigo,
+		TurnoOutcomeEstadoCodigo2025 OutcomeEstado,
 		DateTime? OutcomeFecha,
 		string? OutcomeComentario
 	) {
@@ -134,7 +134,7 @@ public static class ApiDtos {
 			Especialidad2025.CrearResultPorCodigoInterno(turnoDto.EspecialidadCodigo),
 			turnoDto.FechaHoraAsignadaDesde,
 			turnoDto.FechaHoraAsignadaHasta,
-			TurnoOutcomeEstado2025.CrearPorCodigo(turnoDto.OutcomeEstadoCodigo),
+			TurnoOutcomeEstado2025.CrearPorCodigo(turnoDto.OutcomeEstado),
 			turnoDto.OutcomeFecha.ToOption(),
 			turnoDto.OutcomeComentario.ToOption()
 		);
