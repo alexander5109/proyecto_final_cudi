@@ -8,6 +8,7 @@ namespace Clinica.Dominio.Servicios;
 
 public class ServiciosPublicos {
 
+
 	//Task<Result<Turno2025>> AgendarTurnoAsync(PacienteId pacienteId, MedicoId medicoId, EspecialidadCodigo especialidadCodigo, DateTime desde, DateTime hasta);
 
 	//Task<Result<Turno2025>> CancelarTurnoAsync(TurnoId id, Option<string> motivo);
@@ -16,7 +17,6 @@ public class ServiciosPublicos {
 
 	//Task<Result<Turno2025>> MarcarComoAusente(TurnoId id, Option<string> motivo);
 	//Task<Result<Turno2025>> MarcarComoConcretado(TurnoId id, Option<string> motivo);
-
 
 	public static async Task<Result<Usuario2025>> ValidarCredenciales(
 		string username,

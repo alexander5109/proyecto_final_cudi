@@ -40,7 +40,6 @@ public sealed class SecretariaGeneralViewModel : INotifyPropertyChanged {
 			}
 		}
 	}
-
 	public TurnoVM? TurnoSeleccionado {
 		get => _turnoSeleccionado;
 		set {
@@ -53,28 +52,16 @@ public sealed class SecretariaGeneralViewModel : INotifyPropertyChanged {
 			}
 		}
 	}
-
 	public bool HayPacienteSeleccionado => SelectedPaciente is not null;
 	public bool HayTurnoSeleccionado => TurnoSeleccionado is not null;
-
-	/// <summary>
-	/// Botones habilitados solo cuando el turno está en estado Programado.
-	/// </summary>
 	public bool BotonesEstadoHabilitados =>
 		TurnoSeleccionado?.EstadoCodigo == TurnoOutcomeEstadoCodigo2025.Programado;
-
-	/// <summary>
-	/// El comentario es obligatorio solo cuando se cancela o reprograma.
-	/// (El "tipo de acción" lo define el code-behind al presionar cada botón).
-	/// </summary>
 	public bool ComentarioObligatorio { get; private set; }
 
 	public void IndicarAccionRequiereComentario(bool requiere) {
 		ComentarioObligatorio = requiere;
 		OnPropertyChanged(nameof(ComentarioObligatorio));
 	}
-
-	// Helpers
 	private void OnPropertyChanged(string propertyName) =>
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

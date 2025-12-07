@@ -47,8 +47,11 @@ public static class IWPFRepositorioInterfaces {
 		Task<List<TurnoDto>> SelectTurnos();
 		Task<List<TurnoDto>> SelectTurnosWherePacienteId(PacienteId id);
 		Task<List<TurnoDto>> SelectTurnosWhereMedicoId(MedicoId id);
-		//Task<TurnoDto> SelectTurnoWhereId(TurnoId id);
-
+		Task<Result<TurnoDto>> AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad);
+		Task<Result<TurnoDto>> CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);
+		Task<Result<TurnoDto>> ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);
+		Task<Result<TurnoDto>> MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason);
+		Task<Result<TurnoDto>> MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome);
 	}
 }
 
