@@ -174,6 +174,27 @@
 				Property="BorderThickness"
 				Value="0" />
 			<Setter
+				Property="FontSize"
+				Value="20" />
+			<Setter
+				Property="FontFamily"
+				Value="Baskerville Old Face" />
+			<Setter
+				Property="FontWeight"
+				Value="Bold" />
+			<Setter
+				Property="Height"
+				Value="37" />
+			<Setter
+				Property="BorderBrush"
+				Value="#FF0E0D0D" />
+			<Setter
+				Property="Width"
+				Value="170" />
+			<Setter
+				Property="Margin"
+				Value="5,5,5,5" />
+			<Setter
 				Property="RenderTransformOrigin"
 				Value="0.5,0.5" />
 			<Setter

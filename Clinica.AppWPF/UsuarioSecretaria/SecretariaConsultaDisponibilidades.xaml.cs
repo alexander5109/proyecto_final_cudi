@@ -65,8 +65,8 @@ public static class Comodidades {
 
 
 //DiaSemana2025
-public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
-	//public WindowGestionTurno() {
+public partial class SecretariaConsultaDisponibilidades : Window, INotifyPropertyChanged {
+	//public SecretariaConsultaDisponibilidades() {
 	//	InitializeComponent();
 	//	DataContext = this;
 	//	CargarHoras();
@@ -74,7 +74,7 @@ public partial class WindowGestionTurno : Window, INotifyPropertyChanged {
 	//	DisponibilidadesItemsSource.Clear();
 	//	Loaded += WindowGestionTurno_Loaded;
 	//}
-	public WindowGestionTurno(PacienteDto paciente) {
+	public SecretariaConsultaDisponibilidades(PacienteDto paciente) {
 		InitializeComponent();
 		DataContext = this;
 		SelectedPaciente = paciente;

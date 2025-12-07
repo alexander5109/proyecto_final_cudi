@@ -71,7 +71,7 @@ public partial class SecretariaPacientes : Window {
 
 		//MessageBox.Show($"Gestionando turno para el paciente: {SelectedPaciente.Nombre} {SelectedPaciente.Apellido}", "Gestión de Turno", MessageBoxButton.OK, MessageBoxImage.Information);
 
-		this.AbrirComoDialogo<WindowGestionTurno>(SelectedPaciente);
+		this.AbrirComoDialogo<SecretariaConsultaDisponibilidades>(SelectedPaciente);
 	}
 
 	private void ButtonReservarTurn2(object sender, RoutedEventArgs e) {
