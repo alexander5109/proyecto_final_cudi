@@ -6,9 +6,12 @@ using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
 
 namespace Clinica.AppWPF;
 
+
+
+
 public partial class App : Application {
-	public static IWPFRepositorio Repositorio;
-	public static ApiHelper Api;
+	public static ApiHelper Api = new();
+	public static IWPFRepositorio Repositorio = new WPFRepositorioApi(Api);
 	//public static Repositorio2024 BaseDeDatos;
 
 	protected override void OnStartup(StartupEventArgs e) {
@@ -18,8 +21,8 @@ public partial class App : Application {
 		PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Error;
 		System.Diagnostics.PresentationTraceSources.Refresh();
 		System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
-		Api = new ApiHelper();
-		Repositorio = new WPFRepositorioApi(Api);
+		//Api = new ApiHelper();
+		//Repositorio = new WPFRepositorioApi(Api);
 
 
 	}

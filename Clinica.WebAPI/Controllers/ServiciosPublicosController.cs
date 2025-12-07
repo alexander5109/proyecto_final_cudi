@@ -51,7 +51,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 
 
 
-	[HttpPost("turnos/cancelar")]
+	[HttpPost("Turnos/cancelar")]
 	public async Task<IActionResult> SolicitarCancelacion(
 		[FromBody] SolicitarCancelacionDto dto
 	) {

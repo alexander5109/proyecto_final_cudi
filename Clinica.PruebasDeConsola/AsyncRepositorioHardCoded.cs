@@ -28,7 +28,7 @@ public static class AsyncRepositorioHardCoded  {
 				ContactoEmail2025.CrearResult("carlosmerkeir@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
 					Horario2025.CrearResult(
-						new HorarioId(238416),
+						new HorarioMedicoId(238416),
 						new MedicoId(2341456),
 						DiaSemana2025.Lunes,
 						new HorarioHora2025(TimeOnly.Parse("09:00")),
@@ -37,7 +37,7 @@ public static class AsyncRepositorioHardCoded  {
 						new VigenciaHorario2025(new DateOnly(2026, 1, 1))
 					),
 					Horario2025.CrearResult(
-						new HorarioId(238516),
+						new HorarioMedicoId(238516),
 						new MedicoId(2311056),
 						DiaSemana2025.Miercoles,
 						new HorarioHora2025(TimeOnly.Parse("09:00")),
@@ -73,7 +73,7 @@ public static class AsyncRepositorioHardCoded  {
 				ContactoEmail2025.CrearResult("jorgepereiyra@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
 					Horario2025.CrearResult(
-						new HorarioId(23516),
+						new HorarioMedicoId(23516),
 						new MedicoId(231156),
 						DiaSemana2025.Martes,
 						new HorarioHora2025(new TimeOnly(08, 0)),
@@ -82,7 +82,7 @@ public static class AsyncRepositorioHardCoded  {
 						new VigenciaHorario2025(new DateOnly(2026, 1, 12))
 					),
 					Horario2025.CrearResult(
-						new HorarioId(2356),
+						new HorarioMedicoId(2356),
 						new MedicoId(23156),
 						DiaSemana2025.Jueves,
 						new HorarioHora2025(new TimeOnly(08,00)),
@@ -118,7 +118,7 @@ public static class AsyncRepositorioHardCoded  {
 				ContactoEmail2025.CrearResult("martaalgerich@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
 					Horario2025.CrearResult(
-						new HorarioId(11516),
+						new HorarioMedicoId(11516),
 						new MedicoId(156),
 						DiaSemana2025.Lunes,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),
@@ -127,7 +127,7 @@ public static class AsyncRepositorioHardCoded  {
 						new VigenciaHorario2025(new DateOnly(2024, 1, 12))
 					),
 					Horario2025.CrearResult(
-						new HorarioId(115216),
+						new HorarioMedicoId(115216),
 						new MedicoId(1256),
 						DiaSemana2025.Miercoles,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),
@@ -136,7 +136,7 @@ public static class AsyncRepositorioHardCoded  {
 						new VigenciaHorario2025(new DateOnly(2024, 1, 12))
 					),
 					Horario2025.CrearResult(
-						new HorarioId(116716),
+						new HorarioMedicoId(116716),
 						new MedicoId(12756),
 						DiaSemana2025.Viernes,
 						new HorarioHora2025(TimeOnly.Parse("08:00")),

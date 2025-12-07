@@ -1,5 +1,5 @@
 ﻿<Window
-	x:Class="Clinica.AppWPF.MainWindow"
+	x:Class="Clinica.AppWPF.Login"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Clinica Medica - Login"

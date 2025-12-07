@@ -110,13 +110,13 @@
     <Build Include="dbo\Pacientes\sp_SelectPacientesListView.sql" />
     <Build Include="dbo\Pacientes\view_PacienteListView.sql" />
     <Build Include="dbo\HorariosMedicos\sp_SelectHorariosVigentesBetweenFechasWhereMedicoId.sql" />
-    <Build Include="dbo\Medicos\sp_SelectMedicosIdWhereEspecialidadCode.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicosIdWhereEspecialidadCodigo.sql" />
     <Build Include="dbo\Turnos\sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId.sql" />
     <Build Include="dbo\Turnos\sp_SelectTurnosWhereMedicoId.sql" />
     <Build Include="dbo\Turnos\sp_SelectTurnosWhereMedicosIds.sql" />
     <Build Include="dbo\Turnos\sp_SelectTurnosWherePacienteId.sql" />
     <Build Include="dbo\Usuarios\sp_SelectUsuarioWhereNombre.sql" />
-    <Build Include="dbo\Medicos\sp_SelectMedicosWhereEspecialidadCode.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicosWhereEspecialidadCodigo.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Clinica.InfrastructureSQLServer.publish.xml" />

@@ -6,10 +6,13 @@ using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF;
 
-public partial class MainWindow : Window {
-	public MainWindow() {
+public partial class Login : Window {
+	public Login() {
 		InitializeComponent();
 	}
+	//public Login(Window previousWindow) {
+	//	InitializeComponent();
+	//}
 
 	private async void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
@@ -23,7 +26,7 @@ public partial class MainWindow : Window {
 		result.Match(
 			loggedUser => {
 				App.Api.SetUsuario(loggedUser);
-				this.VolverAHome();
+				this.IrARespectivaHome(loggedUser);
 			},
 			errorMsg => {
 				MessageBox.Show(errorMsg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);

@@ -6,7 +6,14 @@ using static Clinica.Shared.Dtos.ApiDtos;
 namespace Clinica.AppWPF.Infrastructure;
 
 
+
 public static class IWPFRepositorioInterfaces {
+
+
+
+	
+
+
 	public interface IWPFRepositorio :
 		IWPFRepositorioMedicos,
 		IWPFRepositorioPacientes,
@@ -40,6 +47,7 @@ public static class IWPFRepositorioInterfaces {
 		Task<List<TurnoDto>> SelectTurnos();
 		Task<List<TurnoDto>> SelectTurnosWherePacienteId(PacienteId id);
 		Task<List<TurnoDto>> SelectTurnosWhereMedicoId(MedicoId id);
+		//Task<TurnoDto> SelectTurnoWhereId(TurnoId id);
 
 	}
 }

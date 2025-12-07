@@ -39,7 +39,7 @@ public sealed record Especialidad2025(
 	string Titulo,
 	int DuracionConsultaMinutos
 ) : IComoTexto {
-	public string ATexto() => $"{Titulo} (Duración de consulta: {DuracionConsultaMinutos} min)";
+	public string ATexto() => $"{Titulo} (Consulta: {DuracionConsultaMinutos} mins)";
 
 	// Especialidades predefinidas
 	public static readonly Especialidad2025 ClinicoGeneral = new(EspecialidadCodigo.ClinicoGeneral, "Clínico General", 30);

@@ -173,7 +173,7 @@ public partial class SecretariaPacienteReservaDeTurno : Window, INotifyPropertyC
 	// Botones
 	// ---------------------------
 
-	private void ButtonCancelar(object sender, RoutedEventArgs e) => this.VolverAHome();
+	private void ButtonCancelar(object sender, RoutedEventArgs e) => this.VolverARespectivoHome();
 
 	private void ButtonReservar(object sender, RoutedEventArgs e) {
 		Disponibilidad2025? seleccionado =

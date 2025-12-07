@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Medico](
     Id INT IDENTITY(1,1) PRIMARY KEY,
-    [EspecialidadCodigoInterno] TINYINT NOT NULL,
+    [EspecialidadCodigo] TINYINT NOT NULL,
     Dni CHAR(8) NOT NULL UNIQUE,
     Nombre VARCHAR(50) NOT NULL,
     Apellido VARCHAR(50) NOT NULL,

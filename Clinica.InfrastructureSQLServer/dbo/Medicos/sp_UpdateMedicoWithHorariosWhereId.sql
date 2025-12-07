@@ -6,7 +6,7 @@
     @ProvinciaCodigo NVARCHAR(100),
     @Domicilio NVARCHAR(200),
     @Localidad NVARCHAR(100),
-    @EspecialidadCodigoInterno INT,
+    @EspecialidadCodigo INT,
     @Telefono NVARCHAR(50),
     @Guardia BIT,
     @FechaIngreso DATE,
@@ -28,7 +28,7 @@ BEGIN
             [ProvinciaCodigo] = @ProvinciaCodigo,
             [Domicilio] = @Domicilio,
             [Localidad] = @Localidad,
-            EspecialidadCodigoInterno = @EspecialidadCodigoInterno,
+            EspecialidadCodigo = @EspecialidadCodigo,
             [Telefono] = @Telefono,
             [Guardia] = @Guardia,
             [FechaIngreso] = @FechaIngreso

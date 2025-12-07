@@ -6,7 +6,7 @@ namespace Clinica.Shared.Dtos;
 
 public static partial class DbModels {
 	public record HorarioDbModel(
-		HorarioId Id,
+		HorarioMedicoId Id,
 		MedicoId MedicoId,
 		DayOfWeek DiaSemana,
 		TimeSpan HoraDesde,

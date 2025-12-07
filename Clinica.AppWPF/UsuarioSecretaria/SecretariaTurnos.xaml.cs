@@ -19,14 +19,6 @@ public partial class SecretariaTurnos : Window {
 		//txtCalendario.SelectedDate = SelectedTurno?.Fecha;
 		//txtCalendario.DisplayDate = SelectedTurno?.Fecha ?? DateTime.Today;
 	}
-	private void UpdatePacienteUI() {
-		//txtPacienteDni.Text = SelectedTurno?.PacienteRelacionado.Dni;
-		//txtPacienteNombre.Text = SelectedTurno?.PacienteRelacionado.Name;
-		//txtPacienteApellido.Text = SelectedTurno?.PacienteRelacionado.LastName;
-		//txtPacienteEmail.Text = SelectedTurno?.PacienteRelacionado.Email;
-		//txtPacienteTelefono.Text = SelectedTurno?.PacienteRelacionado.Telefono;
-		//buttonModificarPaciente.IsEnabled = SelectedTurno?.PacienteRelacionado != null;
-	}
 
 
 
@@ -35,12 +27,12 @@ public partial class SecretariaTurnos : Window {
 	private void Window_Activated(object sender, EventArgs e) {
 		//App.UpdateLabelDataBaseModo(this.labelBaseDeDatosModo);
 		UpdateTurnoUI();
-		UpdatePacienteUI();
+		//UpdatePacienteUI();
 	}
 	private void listViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 		//SelectedTurno = (Turno)turnosListView.SelectedItem;
 		UpdateTurnoUI();
-		UpdatePacienteUI();
+		//UpdatePacienteUI();
 	}
 
 
@@ -85,7 +77,7 @@ public partial class SecretariaTurnos : Window {
 		this.Salir();
 	}
 	private void ButtonHome(object sender, RoutedEventArgs e) {
-		this.VolverAHome();
+		this.VolverARespectivoHome();
 	}
 	//------------------------Fin.Turnos----------------------//
 }

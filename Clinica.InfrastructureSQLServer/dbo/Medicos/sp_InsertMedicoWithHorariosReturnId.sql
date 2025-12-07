@@ -8,7 +8,7 @@
     @ProvinciaCodigo        TINYINT,
     @Telefono               CHAR(10),
     @Email                  VARCHAR(320),
-    @EspecialidadCodigoInterno TINYINT,
+    @EspecialidadCodigo TINYINT,
     @Guardia                BIT,
     @Horarios               dbo.HorarioMedicoTableType READONLY
 AS
@@ -32,7 +32,7 @@ BEGIN
         -- INSERT MÉDICO
         ------------------------------------
         INSERT INTO dbo.Medico (
-            EspecialidadCodigoInterno,
+            EspecialidadCodigo,
             Dni,
             Nombre,
             Apellido,
@@ -45,7 +45,7 @@ BEGIN
             Guardia
         )
         VALUES (
-            @EspecialidadCodigoInterno,
+            @EspecialidadCodigo,
             @Dni,
             @Nombre,
             @Apellido,

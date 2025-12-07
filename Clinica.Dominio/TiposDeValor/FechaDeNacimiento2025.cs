@@ -53,3 +53,10 @@ public record FechaDeNacimiento2025(DateOnly Valor) : IComoTexto {
 		return edad;
 	}
 }
+
+public static class DateTimExtensiones {
+
+
+	public static string AFechaArgentina(this DateTime dia) => dia.ToString("dd/MM/yyyy");
+	public static string AHorasArgentina(this DateTime dia) => dia.ToString("HH:mm");
+}

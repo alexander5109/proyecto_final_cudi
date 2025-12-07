@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE dbo.sp_InsertMedicoReturnId
-    @EspecialidadCodigoInterno TINYINT,
+    @EspecialidadCodigo TINYINT,
     @Dni CHAR(8),
     @Nombre VARCHAR(50),
     @Apellido VARCHAR(50),
@@ -21,12 +21,12 @@ BEGIN
     END
 
     INSERT INTO dbo.Medico (
-        EspecialidadCodigoInterno, Dni, Nombre, Apellido,
+        EspecialidadCodigo, Dni, Nombre, Apellido,
         FechaIngreso, Domicilio, Localidad, ProvinciaCodigo,
         Telefono, Email, Guardia
     )
     VALUES (
-        @EspecialidadCodigoInterno, @Dni, @Nombre, @Apellido,
+        @EspecialidadCodigo, @Dni, @Nombre, @Apellido,
         @FechaIngreso, @Domicilio, @Localidad, @ProvinciaCodigo,
         @Telefono, @Email, @Guardia
     );

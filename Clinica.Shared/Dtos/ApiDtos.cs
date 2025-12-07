@@ -157,7 +157,7 @@ public static class ApiDtos {
 
 
 	public record HorarioDto(
-		HorarioId Id,
+		HorarioMedicoId Id,
 		MedicoId MedicoId,
 		DayOfWeek DiaSemana,
 		TimeSpan HoraDesde,
