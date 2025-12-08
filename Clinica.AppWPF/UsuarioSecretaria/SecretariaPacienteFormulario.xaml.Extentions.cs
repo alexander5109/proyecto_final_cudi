@@ -18,7 +18,7 @@ public static class SecretariaPacienteMiniViewModels {
 	public static ProvinciaVmItem ToViewModel(this ProvinciaArgentina2025 domain) => new(Codigo: domain.CodigoInternoValor, Nombre: domain.NombreValor);
 
 
-	public static SecretariaPacienteFormularioViewModel ToViewModel(this PacienteDto dto)
+	public static SecretariaPacienteFormularioViewModel ToViewModel(this PacienteApiDto dto)
 		=> new SecretariaPacienteFormularioViewModel {
 			Id = dto.Id,
 			Dni = dto.Dni,

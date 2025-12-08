@@ -15,10 +15,21 @@ public class SecretariaPacienteFormularioViewModel : INotifyPropertyChanged {
 	// -----------------------------
 	// PROPIEDADES
 	// -----------------------------
+
+	public bool EstaCreando => Id is null;
+	public bool EstaEditando => Id is not null;
+	public bool PuedeGuardarCambios => true;
+	//public bool PuedeGuardarCambios => true;
+
+
 	private PacienteId? _id;
 	public PacienteId? Id {
 		get => _id;
-		set { _id = value; Notify(nameof(Id)); }
+		set { _id = value; 
+			Notify(nameof(Id));
+			Notify(nameof(EstaCreando));
+			Notify(nameof(EstaEditando));
+		}
 	}
 
 	private string _dni = "";

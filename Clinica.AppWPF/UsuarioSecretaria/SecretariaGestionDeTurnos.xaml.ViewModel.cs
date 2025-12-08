@@ -39,8 +39,8 @@ public sealed class SecretariaGestionDeTurnosViewModel : INotifyPropertyChanged 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	// ==== PACIENTES ====
-	private List<PacienteDto> _pacientes = [];
-	public List<PacienteDto> PacientesList {
+	private List<PacienteApiDto> _pacientes = [];
+	public List<PacienteApiDto> PacientesList {
 		get => _pacientes;
 		set { _pacientes = value; OnPropertyChanged(nameof(PacientesList)); }
 	}
@@ -48,8 +48,8 @@ public sealed class SecretariaGestionDeTurnosViewModel : INotifyPropertyChanged 
 
 	public bool ModificarPacienteCommand => SelectedPaciente is not null;
 
-	private PacienteDto? _selectedPaciente;
-	public PacienteDto? SelectedPaciente {
+	private PacienteApiDto? _selectedPaciente;
+	public PacienteApiDto? SelectedPaciente {
 		get => _selectedPaciente;
 		set {
 			if (_selectedPaciente != value) {

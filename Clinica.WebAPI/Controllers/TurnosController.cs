@@ -58,7 +58,7 @@ public class TurnosController(
 		PermisoSistema.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
-		turno => repositorio.UpdateTurnoWhereId(turno),
+		turno => repositorio.UpdateTurnoWhereId(new TurnoId(id), turno),
 		notFoundMessage: $"No existe turno con id {id}"
 	);
 

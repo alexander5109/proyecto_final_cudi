@@ -31,7 +31,19 @@ public readonly record struct PacienteId(int Valor) {
 public record Paciente2025Agg(
 	PacienteId Id,
 	Paciente2025 Paciente
-);
+) {
+	public static Result<Paciente2025Agg> CrearResult(
+		Result<PacienteId> idResult,
+		Result<Paciente2025> pacienteResult
+	)
+		=> from id in idResult
+		   from paciente in pacienteResult
+		   select new Paciente2025Agg(
+			   id,
+			   paciente
+		   );
+
+}
 
 public record Paciente2025(
 	//PacienteId Id,

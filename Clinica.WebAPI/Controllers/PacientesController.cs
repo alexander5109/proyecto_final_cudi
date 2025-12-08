@@ -3,6 +3,7 @@ using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
+using static Clinica.Shared.Dtos.ApiDtos;
 using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.WebAPI.Controllers;
@@ -46,7 +47,7 @@ public class PacientesController(
 	//	dto.OutcomeComentario,
 	//	repositorio
 	//);
-	//return result.Match<IActionResult>(
+	//return result.MatchAndSet<IActionResult>(
 	//	ok => Ok(ok.ToModel()),
 	//	err => Problem(err)
 	//);
@@ -96,20 +97,20 @@ public class PacientesController(
 
 
 	[HttpPut("{id:int}")]
-	public Task<IActionResult> UpdatePaciente(int id, [FromBody] PacienteDbModel dto)
+	public Task<IActionResult> UpdatePaciente(int id, [FromBody] PacienteApiDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisoSistema.UpdateEntidades,
+		PermisoSistema.UpdatePacientes,
 		dto,
 		x => x.ToDomain(),
-		paciente => repositorio.UpdatePacienteWhereId(paciente),
+		paciente => repositorio.UpdatePacienteWhereId(new PacienteId(id), paciente),
 		notFoundMessage: $"No existe paciente con id {id}"
 	);
 
 
 
 	[HttpPost]
-	public Task<IActionResult> CrearPaciente([FromBody] PacienteDbModel dto)
+	public Task<IActionResult> CrearPaciente([FromBody] PacienteApiDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisoSistema.CrearPacientes,

@@ -33,7 +33,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 	}
 	private async Task RefrescarPacientesAsync() {
 		try {
-            List<PacienteDto> pacientes = await App.Repositorio.SelectPacientes();
+            List<PacienteApiDto> pacientes = await App.Repositorio.SelectPacientes();
 			VM.PacientesList = pacientes.ToList();
 		} catch (Exception ex) {
 			MessageBox.Show("Error cargando pacientes: " + ex.Message);

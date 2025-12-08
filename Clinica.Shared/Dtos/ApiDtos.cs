@@ -40,7 +40,7 @@ public static class ApiDtos {
 
 
 
-	public record PacienteDto(
+	public record PacienteApiDto(
 		PacienteId Id,
 		string Dni,
 		string Nombre,
@@ -53,10 +53,31 @@ public static class ApiDtos {
 		string Email,
 		DateTime FechaNacimiento
 	) {
-		public PacienteDto()
+		public PacienteApiDto()
 			: this(default!, "", "", "", default, "", "", default, "", "", default) { }
 	}
-	public static Result<Paciente2025> ToDomain(this PacienteDto pacientedto) {
+	public static Result<Paciente2025Agg> ToDomainAgg(this PacienteApiDto pacientedto) {
+		return Paciente2025Agg.CrearResult(
+			PacienteId.CrearResult(pacientedto.Id.Valor),
+			Paciente2025.CrearResult(
+				NombreCompleto2025.CrearResult(pacientedto.Nombre, pacientedto.Apellido),
+				DniArgentino2025.CrearResult(pacientedto.Dni),
+				Contacto2025.CrearResult(
+				ContactoEmail2025.CrearResult(pacientedto.Email),
+				ContactoTelefono2025.CrearResult(pacientedto.Telefono)),
+				DomicilioArgentino2025.CrearResult(
+				LocalidadDeProvincia2025.CrearResult(
+					pacientedto.Localidad,
+					ProvinciaArgentina2025.CrearResultPorCodigo(
+						pacientedto.ProvinciaCodigo)
+					)
+				, pacientedto.Domicilio),
+				FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
+				FechaRegistro2025.CrearResult(pacientedto.FechaIngreso)
+			)
+		);
+	}
+	public static Result<Paciente2025> ToDomain(this PacienteApiDto pacientedto) {
 		return Paciente2025.CrearResult(
 			//PacienteId.CrearResult(pacientedto.Id.Valor),
 			NombreCompleto2025.CrearResult(pacientedto.Nombre, pacientedto.Apellido),
@@ -76,8 +97,8 @@ public static class ApiDtos {
 		);
 	}
 
-	public static PacienteDto ToDto(this Paciente2025 paciente) {
-		return new PacienteDto {
+	public static PacienteApiDto ToDto(this Paciente2025 paciente) {
+		return new PacienteApiDto {
 			Dni = paciente.Dni.Valor,
 			Nombre = paciente.NombreCompleto.NombreValor,
 			Apellido = paciente.NombreCompleto.ApellidoValor,
@@ -90,8 +111,8 @@ public static class ApiDtos {
 			FechaNacimiento = paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MaxValue),
 		};
 	}
-	public static PacienteDto ToDto(this Paciente2025Agg agg) {
-		return new PacienteDto {
+	public static PacienteApiDto ToDto(this Paciente2025Agg agg) {
+		return new PacienteApiDto {
 			Id = agg.Id,
 			Dni = agg.Paciente.Dni.Valor,
 			Nombre = agg.Paciente.NombreCompleto.NombreValor,
@@ -110,7 +131,7 @@ public static class ApiDtos {
 
 
 	public record TurnoDto(
-		TurnoId Id,
+		//TurnoId Id,
 		DateTime FechaCreacionSolicitud,
 		PacienteId PacienteId,
 		MedicoId MedicoId,
@@ -122,12 +143,11 @@ public static class ApiDtos {
 		string? OutcomeComentario
 	) {
 		// Constructor sin parámetros requerido por algunos ORMs/serializadores
-		public TurnoDto() : this(default!, default, default!, default!, default!, default, default, default!, default, default) { }
+		public TurnoDto() : this(default, default!, default!, default!, default, default, default!, default, default) { }
 	};
 
 	public static TurnoDto ToDto(this Turno2025 turno) {
 		return new TurnoDto(
-			turno.Id,
 			turno.FechaDeCreacion.Valor,
 			turno.PacienteId,
 			turno.MedicoId,
@@ -141,7 +161,7 @@ public static class ApiDtos {
 	}
 	public static Result<Turno2025> ToDomain(this TurnoDto turnoDto) {
 		return Turno2025.CrearResult(
-			TurnoId.CrearResult(turnoDto.Id.Valor),
+			//TurnoId.CrearResult(turnoDto.Id.Valor),
 			FechaRegistro2025.CrearResult(turnoDto.FechaCreacionSolicitud),
 			PacienteId.CrearResult(turnoDto.PacienteId.Valor),
 			MedicoId.CrearResult(turnoDto.MedicoId.Valor),
@@ -171,7 +191,6 @@ public static class ApiDtos {
 
 
 	public record HorarioDto(
-		HorarioMedicoId Id,
 		MedicoId MedicoId,
 		DayOfWeek DiaSemana,
 		TimeSpan HoraDesde,
@@ -180,11 +199,10 @@ public static class ApiDtos {
 		DateTime VigenteHasta
 	) {
 		public HorarioDto()
-			: this(default, default, default, default, default, default, default) { }
+			: this(default, default, default, default, default, default) { }
 	}
 	public static HorarioDto ToDto(this Horario2025 instance) {
 		return new HorarioDto {
-			Id = instance.Id,
 			MedicoId = instance.MedicoId,
 			DiaSemana = instance.DiaSemana.EnumValor,
 			HoraDesde = instance.HoraDesde.Valor.ToTimeSpan(),
@@ -196,7 +214,6 @@ public static class ApiDtos {
 
 	public static Result<Horario2025> ToDomain(this HorarioDto horarioDto) {
 		return Horario2025.CrearResult(
-			horarioDto.Id,
 			horarioDto.MedicoId,
 			new DiaSemana2025(horarioDto.DiaSemana, horarioDto.DiaSemana.AEspañol()),
 			new HorarioHora2025(TimeOnly.FromTimeSpan(horarioDto.HoraDesde)),

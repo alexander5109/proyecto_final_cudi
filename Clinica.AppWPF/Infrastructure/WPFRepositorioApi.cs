@@ -13,7 +13,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		await EnsureMedicosLoaded();
 		return [.. DictCacheMedicos.Values];
 	}
-	async Task<List<PacienteDto>> IWPFRepositorioPacientes.SelectPacientes() {
+	async Task<List<PacienteApiDto>> IWPFRepositorioPacientes.SelectPacientes() {
 		await EnsurePacientesLoaded();
 		return [.. DictCachePacientes.Values];
 	}
@@ -46,12 +46,12 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<PacienteDto?> IWPFRepositorioPacientes.SelectPacienteWhereId(PacienteId id) {
+	async Task<PacienteApiDto?> IWPFRepositorioPacientes.SelectPacienteWhereId(PacienteId id) {
 		await EnsurePacientesLoaded();
 
-		if (DictCachePacientes.TryGetValue(id, out PacienteDto? dto))
+		if (DictCachePacientes.TryGetValue(id, out PacienteApiDto? dto))
 			return dto;
-        PacienteDto? res = await Api.TryGetJsonOrNullAsync<PacienteDto>($"api/pacientes/{id.Valor}");
+        PacienteApiDto? res = await Api.TryGetJsonOrNullAsync<PacienteApiDto>($"api/pacientes/{id.Valor}");
 		if (res is not null) {
 			DictCachePacientes[id] = res; // update cache
 		}
@@ -63,7 +63,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 	private Dictionary<MedicoId, MedicoDto> DictCacheMedicos = [];
-	private Dictionary<PacienteId, PacienteDto> DictCachePacientes = [];
+	private Dictionary<PacienteId, PacienteApiDto> DictCachePacientes = [];
 
 
 
@@ -87,7 +87,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		if (_pacientesLoaded)
 			return;
 
-        List<PacienteDto> list = await Api.TryGetJsonAsync<List<PacienteDto>>("api/pacientes", defaultValue: []);
+        List<PacienteApiDto> list = await Api.TryGetJsonAsync<List<PacienteApiDto>>("api/pacientes", defaultValue: []);
 
 		DictCachePacientes = list.ToDictionary(x => x.Id, x => x);
 		_pacientesLoaded = true;

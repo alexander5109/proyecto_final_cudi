@@ -32,8 +32,8 @@ public static class IWPFRepositorioInterfaces {
 	public interface IWPFRepositorioPacientes {
 		Task<ResultWpf<UnitWpf>> DeletePacienteWhereId(PacienteId id);
 		Task<ResultWpf<PacienteId>> InsertPacienteReturnId(Paciente2025 instance);
-		Task<List<PacienteDto>> SelectPacientes();
-		Task<PacienteDto?> SelectPacienteWhereId(PacienteId id);
+		Task<List<PacienteApiDto>> SelectPacientes();
+		Task<PacienteApiDto?> SelectPacienteWhereId(PacienteId id);
 		Task<ResultWpf<UnitWpf>> UpdatePacienteWhereId(Paciente2025Agg instance);
 	}
 
@@ -65,7 +65,7 @@ public static class IWPFRepositorioInterfaces {
 
 // Read methods
 //Task<List<MedicoViewModel2025>> ReadMedicos();
-//Task<List<PacienteDto>> ReadPacientes();
+//Task<List<PacienteApiDto>> ReadPacientes();
 //Task<List<TurnoViewModel2025>> ReadTurnos();
 //Task<List<EspecialidadMedicaViewModel>> ReadDistinctEspecialidades();  //WORTH CACHE-ING
 

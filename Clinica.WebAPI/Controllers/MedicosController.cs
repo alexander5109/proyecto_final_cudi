@@ -4,6 +4,7 @@ using Clinica.WebAPI.Servicios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
+using static Clinica.Shared.Dtos.ApiDtos;
 using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.WebAPI.Controllers;
@@ -69,20 +70,20 @@ public class MedicosController(
 
 
 	[HttpPut("{id:int}")]
-	public Task<IActionResult> UpdateMedico(int id, [FromBody] MedicoDbModel dto)
+	public Task<IActionResult> UpdateMedico(int id, [FromBody] MedicoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisoSistema.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
-		medico => repositorio.UpdateMedicoWhereId(medico),
+		medico => repositorio.UpdateMedicoWhereId(new MedicoId(id), medico),
 		notFoundMessage: $"No existe medico con id {id}"
 	);
 
 
 
 	[HttpPost]
-	public Task<IActionResult> CrearMedico([FromBody] MedicoDbModel dto)
+	public Task<IActionResult> CrearMedico([FromBody] MedicoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisoSistema.CrearMedicos,

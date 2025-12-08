@@ -44,7 +44,7 @@ public static class OptionExtensions {
 //	public sealed record Some(T Valor) : Option<T>;
 //	public sealed record None : Option<T>;
 
-//	public R Match<R>(Func<T, R> onSome, Func<R> onNone) =>
+//	public R MatchAndSet<R>(Func<T, R> onSome, Func<R> onNone) =>
 //		this switch {
 //			Some s => onSome(s.Valor),
 //			None => onNone(),

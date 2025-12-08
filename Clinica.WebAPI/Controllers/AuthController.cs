@@ -13,21 +13,21 @@ public class AuthController(IRepositorio repositorio, JwtService jwtService, ILo
 	: ControllerBase {
 	[HttpPost("login")]
 	public async Task<IActionResult> Login([FromBody] UsuarioLoginRequestDto dto) {
-		Result<Usuario2025> resultado =
-			await ServiciosPublicos.ValidarCredenciales(dto.Username, dto.UserPassword, repositorio);
-
-		return resultado switch {
-			Result<Usuario2025>.Ok ok =>
-				Ok(new UsuarioLoginResponseDto(
-					ok.Valor.NombreUsuario.Valor,
-					ok.Valor.EnumRole,
-					jwtService.EmitirJwt(ok.Valor)
-				)),
-
-			Result<Usuario2025>.Error err =>
-				Unauthorized(new { error = err.Mensaje }),
-
-			_ => Problem("Error desconocido")
-		};
+		Result<Usuario2025Agg> resultado = await ServiciosPublicos.ValidarCredenciales(
+			dto.Username,
+			dto.UserPassword,
+			repositorio
+		);
+		IActionResult response = null!;
+		resultado.MatchAndDo(
+			okContent => response = Ok(new UsuarioLoginResponseDto(
+				okContent.Usuario.NombreUsuario.Valor,
+				okContent.Usuario.EnumRole,
+				jwtService.EmitirJwt(okContent.Usuario)
+			)),
+			errMsj => response = Unauthorized(new { error = errMsj })
+		);
+		return response;
 	}
+
 }

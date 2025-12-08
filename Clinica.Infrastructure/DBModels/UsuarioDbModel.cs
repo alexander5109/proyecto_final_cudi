@@ -15,8 +15,24 @@ public static partial class DbModels {
 	}
 	public static Result<Usuario2025> ToDomain(this UsuarioDbModel usuario)
 		=> Usuario2025.CrearResult(usuario.Id, usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole);
+	//public static Result<Usuario2025Agg> ToDomainAgg(this UsuarioDbModel usuario)
+	//	=> Usuario2025Agg.CrearResult(usuario.Id, Usuario2025.CrearResult(usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole));
 
-	public static UsuarioDbModel ToModel(this Usuario2025 entidad) {
-		return new UsuarioDbModel(entidad.Id, entidad.NombreUsuario.Valor, entidad.PasswordHash.Valor, entidad.EnumRole);
+	public static UsuarioDbModel ToModel(this Usuario2025Agg aggrg) {
+		return new UsuarioDbModel(
+			aggrg.Id,
+			aggrg.Usuario.NombreUsuario.Valor,
+			aggrg.Usuario.PasswordHash.Valor,
+			aggrg.Usuario.EnumRole
+		);
+	}
+
+	public static UsuarioDbModel ToModel(this Usuario2025 usuario) {
+		return new UsuarioDbModel(
+			default,
+			usuario.NombreUsuario.Valor,
+			usuario.PasswordHash.Valor,
+			usuario.EnumRole
+		);
 	}
 }

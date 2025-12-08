@@ -21,29 +21,68 @@ public static partial class DbModels {
 		public PacienteDbModel()
 			: this(default!, "", "", "", default, "", "", default, "", "", default) { }
 	}
-	public static Result<Paciente2025> ToDomain(this PacienteDbModel pacientedto) {
-		return Paciente2025.CrearResult(
+	public static Result<Paciente2025Agg> ToDomain(this PacienteDbModel pacientedto) {
+		return Paciente2025Agg.CrearResult(
 			PacienteId.CrearResult(pacientedto.Id.Valor),
-			NombreCompleto2025.CrearResult(pacientedto.Nombre, pacientedto.Apellido),
-			DniArgentino2025.CrearResult(pacientedto.Dni),
-			Contacto2025.CrearResult(
-			ContactoEmail2025.CrearResult(pacientedto.Email),
-			ContactoTelefono2025.CrearResult(pacientedto.Telefono)),
-			DomicilioArgentino2025.CrearResult(
-			LocalidadDeProvincia2025.CrearResult(
-				pacientedto.Localidad,
-				ProvinciaArgentina2025.CrearResultPorCodigo(
-					pacientedto.ProvinciaCodigo)
-				)
-			, pacientedto.Domicilio),
-			FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
-			FechaRegistro2025.CrearResult(pacientedto.FechaIngreso)
+			Paciente2025.CrearResult(
+				NombreCompleto2025.CrearResult(pacientedto.Nombre, pacientedto.Apellido),
+				DniArgentino2025.CrearResult(pacientedto.Dni),
+				Contacto2025.CrearResult(
+				ContactoEmail2025.CrearResult(pacientedto.Email),
+				ContactoTelefono2025.CrearResult(pacientedto.Telefono)),
+				DomicilioArgentino2025.CrearResult(
+				LocalidadDeProvincia2025.CrearResult(
+					pacientedto.Localidad,
+					ProvinciaArgentina2025.CrearResultPorCodigo(
+						pacientedto.ProvinciaCodigo)
+					)
+				, pacientedto.Domicilio),
+				FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
+				FechaRegistro2025.CrearResult(pacientedto.FechaIngreso)
+			)
 		);
+	}
+
+
+	//public static Result<Paciente2025> ToDomain(this PacienteDbModel pacientedto) {
+	//	return Paciente2025.CrearResult(
+	//		//PacienteId.CrearResult(pacientedto.Id.Valor),
+	//		NombreCompleto2025.CrearResult(pacientedto.Nombre, pacientedto.Apellido),
+	//		DniArgentino2025.CrearResult(pacientedto.Dni),
+	//		Contacto2025.CrearResult(
+	//		ContactoEmail2025.CrearResult(pacientedto.Email),
+	//		ContactoTelefono2025.CrearResult(pacientedto.Telefono)),
+	//		DomicilioArgentino2025.CrearResult(
+	//		LocalidadDeProvincia2025.CrearResult(
+	//			pacientedto.Localidad,
+	//			ProvinciaArgentina2025.CrearResultPorCodigo(
+	//				pacientedto.ProvinciaCodigo)
+	//			)
+	//		, pacientedto.Domicilio),
+	//		FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
+	//		FechaRegistro2025.CrearResult(pacientedto.FechaIngreso)
+	//	);
+	//}
+
+	public static PacienteDbModel ToModel(this Paciente2025Agg aggrg) {
+		return new PacienteDbModel {
+			Id = aggrg.Id,
+			Dni = aggrg.Paciente.Dni.Valor,
+			Nombre = aggrg.Paciente.NombreCompleto.NombreValor,
+			Apellido = aggrg.Paciente.NombreCompleto.ApellidoValor,
+			FechaIngreso = aggrg.Paciente.FechaIngreso.Valor,
+			Domicilio = aggrg.Paciente.Domicilio.DireccionValor,
+			Localidad = aggrg.Paciente.Domicilio.Localidad.NombreValor,
+			ProvinciaCodigo = aggrg.Paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
+			Telefono = aggrg.Paciente.Contacto.Telefono.Valor,
+			Email = aggrg.Paciente.Contacto.Email.Valor,
+			FechaNacimiento = aggrg.Paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MaxValue),
+		};
 	}
 
 	public static PacienteDbModel ToModel(this Paciente2025 paciente) {
 		return new PacienteDbModel {
-			Id = paciente.Id,
+			Id = default,
 			Dni = paciente.Dni.Valor,
 			Nombre = paciente.NombreCompleto.NombreValor,
 			Apellido = paciente.NombreCompleto.ApellidoValor,

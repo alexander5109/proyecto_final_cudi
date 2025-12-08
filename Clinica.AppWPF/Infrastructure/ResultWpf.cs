@@ -60,7 +60,7 @@ public static class WpfResultExtensions {
 		};
 	}
 
-	//public static void Match<T>(
+	//public static void MatchAndSet<T>(
 	//this ResultWpf<T> result,
 	//Action<T> ok,
 	//Action<ErrorInfo> error) {
@@ -79,9 +79,10 @@ public static class WpfResultExtensions {
 	//}
 
 	public static void MatchAndDo<T>(
-	this ResultWpf<T> result,
-	Action<T> ok,
-	Action<ErrorInfo> error) {
+		this ResultWpf<T> result,
+		Action<T> ok,
+		Action<ErrorInfo> error
+	) {
 		switch (result) {
 			case ResultWpf<T>.Ok o:
 				ok(o.Valor);
@@ -94,9 +95,10 @@ public static class WpfResultExtensions {
 	}
 
 	public static TResult MatchAndSet<T, TResult>(
-	this ResultWpf<T> result,
-	Func<T, TResult> ok,
-	Func<ErrorInfo, TResult> error) {
+		this ResultWpf<T> result,
+		Func<T, TResult> ok,
+		Func<ErrorInfo, TResult> error
+	) {
 		return result switch {
 			ResultWpf<T>.Ok o => ok(o.Valor),
 			ResultWpf<T>.Error e => error(e.Info),

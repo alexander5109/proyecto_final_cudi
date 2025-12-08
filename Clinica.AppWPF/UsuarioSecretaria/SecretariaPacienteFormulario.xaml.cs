@@ -22,7 +22,7 @@ public partial class SecretariaPacienteFormulario : Window {
 	}
 
 	private async Task CargaInicialAsync(PacienteId id) {
-		PacienteDto? dto = await App.Repositorio.SelectPacienteWhereId(id);
+		PacienteApiDto? dto = await App.Repositorio.SelectPacienteWhereId(id);
 		//MessageBox.Show(dto.ToString());
 		if (dto == null) {
 			MessageBox.Show("Paciente no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -48,12 +48,20 @@ public partial class SecretariaPacienteFormulario : Window {
 	}
 
 	private async void ButtonEliminar(object sender, RoutedEventArgs e) {
-		if (MessageBox.Show("¿Eliminar paciente?",
-			"Confirmación", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
-			return;
+		if (
+			ViewModel.Id is not PacienteId idGood || (
+			MessageBox.Show("¿Esta seguro que desea eliminar este paciente?",
+			"Confirmación", MessageBoxButton.YesNo) == MessageBoxResult.No)
+		) return;
 
-		//await App.Repositorio.DeletePacienteWhereId(ViewModel.Id);
-		Close();
+		ResultWpf<UnitWpf> result = await App.Repositorio.DeletePacienteWhereId(idGood);
+		result.MatchAndDo(
+			caseOk => {
+				MessageBox.Show("Paciente eliminado.", "Éxito", MessageBoxButton.OK);
+				Close();
+			},
+			caseError => caseError.ShowMessageBox()
+		);
 	}
 
 	private void ButtonSolicitarTurno(object sender, RoutedEventArgs e) {

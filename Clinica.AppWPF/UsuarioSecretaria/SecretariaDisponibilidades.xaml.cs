@@ -26,8 +26,8 @@ public static class Comodidades {
 		MessageBox.Show(error);
 		throw new InvalidOperationException(error);
 	}
-	public static async Task<PacienteDto> RespectivoPaciente(this PacienteId id) {
-        PacienteDto? instance = await App.Repositorio.SelectPacienteWhereId(id);
+	public static async Task<PacienteApiDto> RespectivoPaciente(this PacienteId id) {
+        PacienteApiDto? instance = await App.Repositorio.SelectPacienteWhereId(id);
 		if (instance is not null) return instance;
 		string error = $"No existe el médico con ID {id.Valor}";
 		MessageBox.Show(error);
@@ -96,7 +96,7 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 	//------------------------------//
 	private void UpdatePacienteUI(PacienteId paciente) {
 
-		//Task<PacienteDto>? paciente = await pacienteId.RespectivoPaciente();
+		//Task<PacienteApiDto>? paciente = await pacienteId.RespectivoPaciente();
 
 		//txtPacienteDni.Text = paciente.Dni;
 		//txtPacienteNombre.Text = paciente.Nombre;
@@ -106,7 +106,7 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 		//buttonModificarPaciente.IsEnabled = paciente != null;
 	}
 
-	public required PacienteDto SelectedPaciente { get; set; }
+	public required PacienteApiDto SelectedPaciente { get; set; }
 
 
 

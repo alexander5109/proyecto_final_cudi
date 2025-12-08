@@ -30,7 +30,7 @@ public class HorariosController(
 		=> this.SafeExecute(
 			logger,
 			PermisoSistema.VerHorarios,
-			() => repositorio.SelectHorarioWhereId(new HorarioMedicoId(id)),
+			() => repositorio.SelectHorarioWhereId(new HorarioId(id)),
 			notFoundMessage: $"No existe horario con id {id}"
 		);
 
@@ -40,7 +40,7 @@ public class HorariosController(
 		=> this.SafeExecute(
 			logger,
 			PermisoSistema.DeleteEntidades,
-			() => repositorio.DeleteHorarioWhereId(new HorarioMedicoId(id)),
+			() => repositorio.DeleteHorarioWhereId(new HorarioId(id)),
 			notFoundMessage: $"No existe horario con id {id}"
 		);
 
@@ -50,10 +50,10 @@ public class HorariosController(
 	public Task<IActionResult> UpdateHorario(int id, [FromBody] HorarioDbModel dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisoSistema.UpdateEntidades,
+		PermisoSistema.UpdateHorarios,
 		dto,
 		x => x.ToDomain(),
-		horario => repositorio.UpdateHorarioWhereId(horario),
+		horario => repositorio.UpdateHorarioWhereId(dto.Id, horario),
 		notFoundMessage: $"No existe horario con id {id}"
 	);
 
