@@ -34,7 +34,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 	}
 	private async Task RefrescarPacientesAsync() {
 		try {
-			var pacientes = await App.Repositorio.SelectPacientes();
+            List<PacienteDto> pacientes = await App.Repositorio.SelectPacientes();
 			VM.PacientesList = pacientes.ToList();
 		} catch (Exception ex) {
 			MessageBox.Show("Error cargando pacientes: " + ex.Message);
@@ -56,12 +56,12 @@ public partial class SecretariaGestionDeTurnos : Window {
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.VolverARespectivoHome();
 	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
 	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<SecretariaPacientesModificar>();
+		this.AbrirComoDialogo<SecretariaPacienteFormulario>();
 		//_ = VM.RefrescarPacientesAsync();
 	}
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is null) return;
-		this.AbrirComoDialogo<SecretariaPacientesModificar>(VM.SelectedPaciente.Id);
+		this.AbrirComoDialogo<SecretariaPacienteFormulario>(VM.SelectedPaciente.Id);
 		//_ = VM.RefrescarPacientesAsync();
 	}
 	private void ButtonReservarTurno(object sender, RoutedEventArgs e) {
@@ -72,11 +72,11 @@ public partial class SecretariaGestionDeTurnos : Window {
 	private async void Button_ConfirmarTurnoAsistencia(object sender, RoutedEventArgs e) {
 		if (VM.SelectedTurno is null) return;
 
-		var turno = VM.SelectedTurno;
+        TurnoVM turno = VM.SelectedTurno;
 
 		VM.IndicarAccionRequiereComentario(false);
 
-		var result = await App.Repositorio.MarcarTurnoComoConcretado(
+        Result<TurnoDto> result = await App.Repositorio.MarcarTurnoComoConcretado(
 			turno.Id,
 			DateTime.Now
 		);
@@ -93,9 +93,9 @@ public partial class SecretariaGestionDeTurnos : Window {
 
 		VM.IndicarAccionRequiereComentario(false);
 
-		//Aca no es obligatorio el comentario.
+        //Aca no es obligatorio el comentario.
 
-		var result = await App.Repositorio.MarcarTurnoComoAusente(
+        Result<TurnoDto> result = await App.Repositorio.MarcarTurnoComoAusente(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text
@@ -118,7 +118,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 			return;
 		}
 
-		var result = await App.Repositorio.ReprogramarTurno(
+        Result<TurnoDto> result = await App.Repositorio.ReprogramarTurno(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text
@@ -141,7 +141,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 			return;
 		}
 
-		var result = await App.Repositorio.CancelarTurno(
+        Result<TurnoDto> result = await App.Repositorio.CancelarTurno(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text

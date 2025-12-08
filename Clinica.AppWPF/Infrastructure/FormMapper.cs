@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,7 +15,7 @@ namespace GestorDeTecnicatura {
 		) {
 			view.Filter = instance => {
 				if (instance is T model) {
-					foreach (var control in GetLogicalChildren<TextBox>(root)) {
+					foreach (TextBox control in GetLogicalChildren<TextBox>(root)) {
 						if (string.IsNullOrWhiteSpace(control.Name) || !control.Name.StartsWith(filterPrefix))
 							continue;
 
@@ -31,7 +32,7 @@ namespace GestorDeTecnicatura {
 							if (value == null)
 								break;
 
-							var prop = value.GetType().GetProperty(segment);
+                            PropertyInfo? prop = value.GetType().GetProperty(segment);
 							if (prop == null) {
 								value = null;
 								break;
@@ -69,7 +70,7 @@ namespace GestorDeTecnicatura {
 					yield return typedChild;
 
 				if (child is DependencyObject depChild) {
-					foreach (var descendant in GetLogicalChildren<T>(depChild))
+					foreach (T descendant in GetLogicalChildren<T>(depChild))
 						yield return descendant;
 				}
 			}
@@ -79,8 +80,8 @@ namespace GestorDeTecnicatura {
 				if (string.IsNullOrWhiteSpace(input))
 					return null;
 
-				// Handle nullable types
-				var underlyingType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+                // Handle nullable types
+                Type underlyingType = Nullable.GetUnderlyingType(targetType) ?? targetType;
 
 				if (underlyingType.IsEnum)
 					return Enum.Parse(underlyingType, input);
@@ -93,12 +94,12 @@ namespace GestorDeTecnicatura {
 
 
 		public static void ModelToForm<T>(T model, DependencyObject root, string suffix) {
-			foreach (var control in GetLogicalChildren<FrameworkElement>(root)) {
+			foreach (FrameworkElement control in GetLogicalChildren<FrameworkElement>(root)) {
 				if (string.IsNullOrEmpty(control.Name) || !control.Name.StartsWith(suffix))
 					continue;
 
 				string propName = control.Name.Substring(suffix.Length);
-				var prop = typeof(T).GetProperty(propName);
+                PropertyInfo? prop = typeof(T).GetProperty(propName);
 				if (prop == null)
 					continue;
 
@@ -140,12 +141,12 @@ namespace GestorDeTecnicatura {
 
 
 		public static void FormToModel<T>(T model, DependencyObject root, string suffix) {
-			foreach (var control in GetLogicalChildren<FrameworkElement>(root)) {
+			foreach (FrameworkElement control in GetLogicalChildren<FrameworkElement>(root)) {
 				if (string.IsNullOrEmpty(control.Name) || !control.Name.StartsWith(suffix))
 					continue;
 
 				string propName = control.Name.Substring(suffix.Length);
-				var prop = typeof(T).GetProperty(propName);
+                PropertyInfo? prop = typeof(T).GetProperty(propName);
 				if (prop == null || !prop.CanWrite)
 					continue;
 

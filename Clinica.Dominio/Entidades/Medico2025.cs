@@ -25,6 +25,8 @@ public record struct MedicoId(int Valor) {
 
 //public struct HaceGuardia(bool Valor);
 
+public record Medico2025Agg(MedicoId Id, Medico2025 Medico);
+
 public record Medico2025(
 	//ListaEspecialidadesMedicas2025 Especialidades,
 

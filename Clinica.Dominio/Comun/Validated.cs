@@ -60,6 +60,70 @@ public static class ValidatedExtensions {
 }
 
 public static class ValidatedCombine {
+
+
+
+	public static Validated<(T1, T2, T3, T4, T5, T6)> Combine<T1, T2, T3, T4, T5, T6>(
+		Validated<T1> v1,
+		Validated<T2> v2,
+		Validated<T3> v3,
+		Validated<T4> v4,
+		Validated<T5> v5,
+		Validated<T6> v6) {
+		var errors = new List<string>();
+
+		T1? t1 = default;
+		T2? t2 = default;
+		T3? t3 = default;
+		T4? t4 = default;
+		T5? t5 = default;
+		T6? t6 = default;
+
+		// v1
+		if (v1 is Validated<T1>.Valid ok1)
+			t1 = ok1.Value;
+		else if (v1 is Validated<T1>.Invalid e1)
+			errors.AddRange(e1.Errors);
+
+		// v2
+		if (v2 is Validated<T2>.Valid ok2)
+			t2 = ok2.Value;
+		else if (v2 is Validated<T2>.Invalid e2)
+			errors.AddRange(e2.Errors);
+
+		// v3
+		if (v3 is Validated<T3>.Valid ok3)
+			t3 = ok3.Value;
+		else if (v3 is Validated<T3>.Invalid e3)
+			errors.AddRange(e3.Errors);
+
+		// v4
+		if (v4 is Validated<T4>.Valid ok4)
+			t4 = ok4.Value;
+		else if (v4 is Validated<T4>.Invalid e4)
+			errors.AddRange(e4.Errors);
+
+		// v5
+		if (v5 is Validated<T5>.Valid ok5)
+			t5 = ok5.Value;
+		else if (v5 is Validated<T5>.Invalid e5)
+			errors.AddRange(e5.Errors);
+
+		// v6
+		if (v6 is Validated<T6>.Valid ok6)
+			t6 = ok6.Value;
+		else if (v6 is Validated<T6>.Invalid e6)
+			errors.AddRange(e6.Errors);
+
+		if (errors.Count > 0)
+			return new Validated<(T1, T2, T3, T4, T5, T6)>.Invalid(errors);
+
+		return new Validated<(T1, T2, T3, T4, T5, T6)>.Valid(
+			(t1!, t2!, t3!, t4!, t5!, t6!)
+		);
+	}
+
+
 	public static Validated<(T1, T2, T3, T4, T5, T6, T7)> Combine<T1, T2, T3, T4, T5, T6, T7>(
 		Validated<T1> v1,
 		Validated<T2> v2,

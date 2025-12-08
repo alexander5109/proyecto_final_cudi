@@ -58,7 +58,7 @@ public static class ApiDtos {
 	}
 	public static Result<Paciente2025> ToDomain(this PacienteDto pacientedto) {
 		return Paciente2025.CrearResult(
-			PacienteId.CrearResult(pacientedto.Id.Valor),
+			//PacienteId.CrearResult(pacientedto.Id.Valor),
 			NombreCompleto2025.CrearResult(pacientedto.Nombre, pacientedto.Apellido),
 			DniArgentino2025.CrearResult(pacientedto.Dni),
 			Contacto2025.CrearResult(
@@ -78,7 +78,6 @@ public static class ApiDtos {
 
 	public static PacienteDto ToDto(this Paciente2025 paciente) {
 		return new PacienteDto {
-			Id = paciente.Id,
 			Dni = paciente.Dni.Valor,
 			Nombre = paciente.NombreCompleto.NombreValor,
 			Apellido = paciente.NombreCompleto.ApellidoValor,
@@ -89,6 +88,21 @@ public static class ApiDtos {
 			Telefono = paciente.Contacto.Telefono.Valor,
 			Email = paciente.Contacto.Email.Valor,
 			FechaNacimiento = paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MaxValue),
+		};
+	}
+	public static PacienteDto ToDto(this Paciente2025Agg agg) {
+		return new PacienteDto {
+			Id = agg.Id,
+			Dni = agg.Paciente.Dni.Valor,
+			Nombre = agg.Paciente.NombreCompleto.NombreValor,
+			Apellido = agg.Paciente.NombreCompleto.ApellidoValor,
+			FechaIngreso = agg.Paciente.FechaIngreso.Valor,
+			Domicilio = agg.Paciente.Domicilio.DireccionValor,
+			Localidad = agg.Paciente.Domicilio.Localidad.NombreValor,
+			ProvinciaCodigo = agg.Paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
+			Telefono = agg.Paciente.Contacto.Telefono.Valor,
+			Email = agg.Paciente.Contacto.Email.Valor,
+			FechaNacimiento = agg.Paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MaxValue),
 		};
 	}
 
@@ -236,6 +250,24 @@ public static class ApiDtos {
 		);
 	}
 
+
+	public static MedicoDto ToDto(this Medico2025Agg aggrg) {
+		return new MedicoDto {
+			Id = aggrg.Medico.Id,
+			EspecialidadCodigo = aggrg.Medico.EspecialidadUnica.Codigo,
+			Dni = aggrg.Medico.Dni.Valor,
+			Nombre = aggrg.Medico.NombreCompleto.NombreValor,
+			Apellido = aggrg.Medico.NombreCompleto.ApellidoValor,
+			FechaIngreso = aggrg.Medico.FechaIngreso.Valor,
+			Domicilio = aggrg.Medico.Domicilio.DireccionValor,
+			Localidad = aggrg.Medico.Domicilio.Localidad.NombreValor,
+			ProvinciaCodigo = aggrg.Medico.Domicilio.Localidad.Provincia.CodigoInternoValor,
+			Telefono = aggrg.Medico.Telefono.Valor,
+			Email = aggrg.Medico.Email.Valor,
+			HaceGuardias = aggrg.Medico.HaceGuardiasValor,
+			HorariosJson = JsonSerializer.Serialize(aggrg.Medico.ToDto())
+		};
+	}
 
 	public static MedicoDto ToDto(this Medico2025 medico) {
 		return new MedicoDto {

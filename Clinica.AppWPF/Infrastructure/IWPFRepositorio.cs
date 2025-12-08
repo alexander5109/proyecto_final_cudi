@@ -24,7 +24,7 @@ public static class IWPFRepositorioInterfaces {
 	public interface IWPFRepositorioMedicos {
 		Task<Result<Unit>> DeleteMedicoWhereId(MedicoId id);
 		Task<Result<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
-		Task<Result<Unit>> UpdateMedicoWhereId(Medico2025 instance);
+		Task<Result<Unit>> UpdateMedicoWhereId(Medico2025Agg instance);
 		Task<List<MedicoDto>> SelectMedicos();
 		Task<List<MedicoDto>> SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code);
 		Task<MedicoDto?> SelectMedicoWhereId(MedicoId id);
@@ -35,7 +35,7 @@ public static class IWPFRepositorioInterfaces {
 		Task<Result<PacienteId>> InsertPacienteReturnId(Paciente2025 instance);
 		Task<List<PacienteDto>> SelectPacientes();
 		Task<PacienteDto?> SelectPacienteWhereId(PacienteId id);
-		Task<Result<Unit>> UpdatePacienteWhereId(Paciente2025 instance);
+		Task<Result<Unit>> UpdatePacienteWhereId(Paciente2025Agg instance);
 	}
 
 	public interface IWPFRepositorioDominio {
@@ -72,31 +72,31 @@ public static class IWPFRepositorioInterfaces {
 
 //// Get methods
 //Task<MedicoViewModel2025> GetMedicoById(int id);
-//Task<PacienteUpdateViewModel> GetPacienteById(int id);
+//Task<SecretariaPacienteFormularioViewModel> GetPacienteById(int id);
 //Task<WindowModificarTurnoViewModel> GetTurnoById(int id);
 //Task<EspecialidadMedicaViewModel> GetEspecialidadById(int id);
 
 
 //// Create methods
 //Task<bool> CreateMedico(MedicoViewModel2025 instance);
-//Task<bool> CreatePaciente(PacienteUpdateViewModel instance);
+//Task<bool> CreatePaciente(SecretariaPacienteFormularioViewModel instance);
 //Task<bool> CreateTurno(WindowModificarTurnoViewModel instance);
 ////public abstract bool CreateEspecialidad(WindowModificarEspecialidadViewModel instance);
 
 //// Update methods
 //Task<bool> UpdateMedico(MedicoViewModel2025 instance);
-//Task<bool> UpdatePaciente(PacienteUpdateViewModel instance);
+//Task<bool> UpdatePaciente(SecretariaPacienteFormularioViewModel instance);
 //Task<bool> UpdateTurno(WindowModificarTurnoViewModel instance);
 ////public abstract bool UpdateEspecialidad(WindowModificarEspecialidadViewModel instance);
 
 //// Delete methods
 //Task<bool> DeleteMedico(MedicoViewModel2025 instance);
-//Task<bool> DeletePaciente(PacienteUpdateViewModel instance);
+//Task<bool> DeletePaciente(SecretariaPacienteFormularioViewModel instance);
 //Task<bool> DeleteTurno(WindowModificarTurnoViewModel instance);
 
 //// Filtros
 //Task<List<WindowModificarTurnoViewModel>> ReadTurnosWhereMedicoId(int? medicoId);
-//Task<List<WindowModificarTurnoViewModel>> ReadTurnosWherePacienteId(int? PacienteId);
+//Task<List<WindowModificarTurnoViewModel>> ReadTurnosWherePacienteId(int? SelectedPacienteId);
 //Task<List<MedicoViewModel2025>> ReadMedicosWhereEspecialidad(int? EspecialidadCodigo);
 
 //}

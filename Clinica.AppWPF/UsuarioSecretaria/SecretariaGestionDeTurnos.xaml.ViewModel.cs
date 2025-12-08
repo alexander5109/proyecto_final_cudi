@@ -22,8 +22,8 @@ public sealed class TurnoVM {
 	public TurnoVM(TurnoDto dto) {
 
 		Id = dto.Id;
-		PacienteDisplayear = "(await dto.PacienteId.RespectivoPaciente()).Nombre+Apellido";
-		PacienteDni = "(await dto.PacienteId.RespectivoPaciente()).Dni";
+		PacienteDisplayear = "(await dto.SelectedPacienteId.RespectivoPaciente()).Nombre+Apellido";
+		PacienteDni = "(await dto.SelectedPacienteId.RespectivoPaciente()).Dni";
 		MedicoDisplayear = "(await dto.MedicoId.RespectivoMedico()).Nombre + Apellido";
 		FechaSolicitud = dto.FechaHoraAsignadaDesde.AFechaArgentina();
 		FechaAsignada = dto.FechaHoraAsignadaDesde.AFechaArgentina();

@@ -34,9 +34,9 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	async Task<MedicoDto?> IWPFRepositorioMedicos.SelectMedicoWhereId(MedicoId id) {
 		await EnsureMedicosLoaded();
 
-		if (DictCacheMedicos.TryGetValue(id, out var dto))
+		if (DictCacheMedicos.TryGetValue(id, out MedicoDto? dto))
 			return dto;
-		var res = await Api.TryGetJsonOrNullAsync<MedicoDto>($"api/medicos/{id.Valor}");
+        MedicoDto? res = await Api.TryGetJsonOrNullAsync<MedicoDto>($"api/medicos/{id.Valor}");
 		if (res is not null) {
 			DictCacheMedicos[id] = res; // update cache
 		}
@@ -50,9 +50,9 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	async Task<PacienteDto?> IWPFRepositorioPacientes.SelectPacienteWhereId(PacienteId id) {
 		await EnsurePacientesLoaded();
 
-		if (DictCachePacientes.TryGetValue(id, out var dto))
+		if (DictCachePacientes.TryGetValue(id, out PacienteDto? dto))
 			return dto;
-		var res = await Api.TryGetJsonOrNullAsync<PacienteDto>($"api/pacientes/{id.Valor}");
+        PacienteDto? res = await Api.TryGetJsonOrNullAsync<PacienteDto>($"api/pacientes/{id.Valor}");
 		if (res is not null) {
 			DictCachePacientes[id] = res; // update cache
 		}
@@ -73,10 +73,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		if (_medicosLoaded)
 			return;
 
-		var list = await Api.TryGetJsonAsync<List<MedicoDto>>("api/medicos", defaultValue: []);
+        List<MedicoDto> list = await Api.TryGetJsonAsync<List<MedicoDto>>("api/medicos", defaultValue: []);
 
 		DictCacheMedicos = list.ToDictionary(m => m.Id, m => m);
-		foreach ( var m in DictCacheMedicos ) {
+		foreach (KeyValuePair<MedicoId, MedicoDto> m in DictCacheMedicos ) {
 			Console.WriteLine($"Medico cache loaded: {m.Key} -> {m.Value.Nombre} {m.Value.Apellido}");
 		}
 		_medicosLoaded = true;
@@ -88,7 +88,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		if (_pacientesLoaded)
 			return;
 
-		var list = await Api.TryGetJsonAsync<List<PacienteDto>>("api/pacientes", defaultValue: []);
+        List<PacienteDto> list = await Api.TryGetJsonAsync<List<PacienteDto>>("api/pacientes", defaultValue: []);
 
 		DictCachePacientes = list.ToDictionary(x => x.Id, x => x);
 		_pacientesLoaded = true;
@@ -109,7 +109,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 	async Task<Result<PacienteId>> IWPFRepositorioPacientes.InsertPacienteReturnId(Paciente2025 instance) {
-		var response = await Api.TryApiCallAsync(
+        Result<PacienteId> response = await Api.TryApiCallAsync(
 			() => Api.Cliente.PostAsJsonAsync(
 				"api/pacientes", 
 				instance.ToDto()
@@ -124,7 +124,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return response;
 	}
 	async Task<Result<MedicoId>> IWPFRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance) {
-		var result = await Api.TryApiCallAsync(
+        Result<MedicoId> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PostAsJsonAsync(
 				"api/medicos", 
 				instance.ToDto()
@@ -142,28 +142,28 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<Result<Unit>> IWPFRepositorioPacientes.UpdatePacienteWhereId(Paciente2025 instance) {
-		var result = await Api.TryApiCallAsync(
+	async Task<Result<Unit>> IWPFRepositorioPacientes.UpdatePacienteWhereId(Paciente2025Agg aggrg) {
+        Result<Unit> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PutAsJsonAsync(
-				$"api/pacientes/{instance.Id.Valor}",
-				instance.ToDto()
+				$"api/pacientes/{aggrg.Id.Valor}",
+				aggrg.ToDto()
 			),
 			onOk: async response => new Unit(),
-			errorTitle: $"Error actualizando paciente {instance.Id.Valor}"
+			errorTitle: $"Error actualizando el agregado {aggrg.Id.Valor}"
 		);
 
 		_ = RefreshPacientes();
 
 		return result;
 	}
-	async Task<Result<Unit>> IWPFRepositorioMedicos.UpdateMedicoWhereId(Medico2025 instance) {
-		var result = await Api.TryApiCallAsync(
+	async Task<Result<Unit>> IWPFRepositorioMedicos.UpdateMedicoWhereId(Medico2025Agg aggrg) {
+        Result<Unit> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PutAsJsonAsync(
-				$"api/medicos/{instance.Id.Valor}",
-				instance.ToDto()
+				$"api/medicos/{aggrg.Id.Valor}",
+				aggrg.ToDto()
 			),
 			onOk: async response => new Unit(),   // Se ignora el body, pero se respeta la firma
-			errorTitle: $"Error actualizando médico {instance.Id.Valor}"
+			errorTitle: $"Error actualizando médico {aggrg.Id.Valor}"
 		);
 
 		_ = RefreshMedicos();
@@ -240,7 +240,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 	async Task<Result<Unit>> IWPFRepositorioPacientes.DeletePacienteWhereId(PacienteId id) {
-		var result = await Api.TryApiCallAsync(
+        Result<Unit> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.DeleteAsync($"api/pacientes/{id.Valor}"),
 			onOk: async response => new Unit(),
 			errorTitle: $"Error eliminando paciente {id.Valor}"
@@ -252,7 +252,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	}
 
 	async Task<Result<Unit>> IWPFRepositorioMedicos.DeleteMedicoWhereId(MedicoId id) {
-		var result = await Api.TryApiCallAsync(
+        Result<Unit> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.DeleteAsync($"api/medicos/{id.Valor}"),
 			onOk: async response => new Unit(),
 			errorTitle: $"Error eliminando médico {id.Valor}"

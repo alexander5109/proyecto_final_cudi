@@ -20,14 +20,14 @@ public static class Comodidades {
 
 
 	public static async Task<MedicoDto> RespectivoMedico(this MedicoId id) {
-		var instance = await App.Repositorio.SelectMedicoWhereId(id);
+        MedicoDto? instance = await App.Repositorio.SelectMedicoWhereId(id);
 		if (instance is not null) return instance;
 		string error = $"No existe el médico con ID {id.Valor}";
 		MessageBox.Show(error);
 		throw new InvalidOperationException(error);
 	}
 	public static async Task<PacienteDto> RespectivoPaciente(this PacienteId id) {
-		var instance = await App.Repositorio.SelectPacienteWhereId(id);
+        PacienteDto? instance = await App.Repositorio.SelectPacienteWhereId(id);
 		if (instance is not null) return instance;
 		string error = $"No existe el médico con ID {id.Valor}";
 		MessageBox.Show(error);
@@ -73,17 +73,19 @@ public partial class SecretariaBuscadorDeDisponibilidades : Window, INotifyPrope
 	//	DisponibilidadesItemsSource.Clear();
 	//	Loaded += WindowGestionTurno_Loaded;
 	//}
-	public SecretariaBuscadorDeDisponibilidades(PacienteDto paciente) {
+	public SecretariaBuscadorDeDisponibilidades(PacienteId pacienteId) {
 		InitializeComponent();
 		DataContext = this;
-		SelectedPaciente = paciente;
-		UpdatePacienteUI(paciente);
+		//SelectedPaciente = paciente;
+
+        //_ = LoadPacienteAsync(pacienteId);
+		UpdatePacienteUI(pacienteId);
 		Loaded += WindowGestionTurno_Loaded;
 		CargarHoras();
 	}
 
 	private async void WindowGestionTurno_Loaded(object sender, RoutedEventArgs e) {
-		var medicos = await App.Repositorio.SelectMedicos();
+        List<MedicoDto> medicos = await App.Repositorio.SelectMedicos();
 		MedicosTodos = [.. medicos.Select(x => x.ToSimpleViewModel())];
 		OnPropertyChanged(nameof(MedicosTodos));
 	}
@@ -92,10 +94,13 @@ public partial class SecretariaBuscadorDeDisponibilidades : Window, INotifyPrope
 
 
 	//------------------------------//
-	private void UpdatePacienteUI(PacienteDto paciente) {
-		txtPacienteDni.Text = paciente.Dni;
-		txtPacienteNombre.Text = paciente.Nombre;
-		txtPacienteApellido.Text = paciente.Apellido;
+	private void UpdatePacienteUI(PacienteId paciente) {
+
+		//Task<PacienteDto>? paciente = await pacienteId.RespectivoPaciente();
+
+		//txtPacienteDni.Text = paciente.Dni;
+		//txtPacienteNombre.Text = paciente.Nombre;
+		//txtPacienteApellido.Text = paciente.Apellido;
 		//txtPacienteEmail.Text = paciente.Email;
 		//txtPacienteTelefono.Text = paciente.Telefono;
 		//buttonModificarPaciente.IsEnabled = paciente != null;
@@ -292,10 +297,10 @@ public partial class SecretariaBuscadorDeDisponibilidades : Window, INotifyPrope
 		//MessageBox.Show("Cargando medicos especialistas...", "Cargando", MessageBoxButton.OK, MessageBoxImage.Information);
 		IEnumerable<MedicoSimpleViewModel> found = [];
 		if (MedicosTodos is null) {
-			var medicos = await App.Repositorio.SelectMedicos();
+            List<MedicoDto> medicos = await App.Repositorio.SelectMedicos();
 			MedicosTodos = [.. medicos.Select(x => x.ToSimpleViewModel())];
 		}
-		foreach (var item in MedicosTodos.Where(m => m.EspecialidadCodigo == especialidadCodigo)) {
+		foreach (MedicoSimpleViewModel? item in MedicosTodos.Where(m => m.EspecialidadCodigo == especialidadCodigo)) {
 			MedicosEspecialistasItemsSource.Add(item);
 			//MessageBox.Show("{item}", "Medico encontrado", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
@@ -319,7 +324,7 @@ public partial class SecretariaBuscadorDeDisponibilidades : Window, INotifyPrope
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 		if (SelectedPaciente != null) {
-			this.AbrirComoDialogo<SecretariaPacientesModificar>(SelectedPaciente.Id);
+			this.AbrirComoDialogo<SecretariaPacienteFormulario>(SelectedPaciente.Id);
 		}
 	}
 	// Botones

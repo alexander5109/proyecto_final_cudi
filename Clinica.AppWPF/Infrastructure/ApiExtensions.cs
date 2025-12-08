@@ -77,7 +77,7 @@ public static class ApiExtensions {
 	private static string? ExtractErrorMessage(string raw) {
 		try {
 			using var doc = JsonDocument.Parse(raw);
-			if (doc.RootElement.TryGetProperty("error", out var prop))
+			if (doc.RootElement.TryGetProperty("error", out JsonElement prop))
 				return prop.GetString();
 		} catch {
 			// No era JSON
