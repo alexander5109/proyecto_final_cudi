@@ -93,6 +93,13 @@ public partial class SecretariaPacientesModificar : Window {
 	private void Window_Activated(object sender, EventArgs e) {
 
 	}
+
+
+	private void ButtonSolicitarTurno(object sender, RoutedEventArgs e) {
+		if (VM.SelectedPaciente is not null) {
+			this.AbrirComoDialogo<SecretariaBuscadorDeDisponibilidades>(VM.SelectedPaciente);
+		}
+	}
 	//------------------------Fin----------------------//
 }
 

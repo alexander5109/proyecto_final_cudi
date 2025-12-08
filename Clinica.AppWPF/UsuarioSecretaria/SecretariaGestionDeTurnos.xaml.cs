@@ -42,7 +42,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 	}
 	private async Task RefrescarTurnosAsync() {
 		try {
-            List<TurnoDto> turnosDto = await App.Repositorio.SelectTurnos();
+			List<TurnoDto> turnosDto = await App.Repositorio.SelectTurnos();
 
 			VM.TurnosList = turnosDto
 				.Select(dto => new TurnoVM(dto))
@@ -153,7 +153,9 @@ public partial class SecretariaGestionDeTurnos : Window {
 		await RefrescarTurnosAsync();
 	}
 
-    private void ButtonSolicitarTurno(object sender, RoutedEventArgs e) {
-
-    }
+	private void ButtonSolicitarTurno(object sender, RoutedEventArgs e) {
+		if (VM.SelectedPaciente is not null) {
+			this.AbrirComoDialogo<SecretariaBuscadorDeDisponibilidades>(VM.SelectedPaciente);
+		}
+	}
 }

@@ -98,7 +98,7 @@ public partial class SecretariaBuscadorDeDisponibilidades : Window, INotifyPrope
 		txtPacienteApellido.Text = paciente.Apellido;
 		//txtPacienteEmail.Text = paciente.Email;
 		//txtPacienteTelefono.Text = paciente.Telefono;
-		buttonModificarPaciente.IsEnabled = paciente != null;
+		//buttonModificarPaciente.IsEnabled = paciente != null;
 	}
 
 	public required PacienteDto SelectedPaciente { get; set; }
