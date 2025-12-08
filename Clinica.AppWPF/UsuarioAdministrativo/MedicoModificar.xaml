@@ -212,12 +212,12 @@
 					FontWeight="Bold"
 					HorizontalAlignment="Center"
 					Margin="0,0,0,5" />
-				<TreeView
+				<!-- <TreeView
 					x:Name="treeViewHorarios"
 					ItemsSource="{Binding SelectedMedico.HorariosAgrupados}"
 					Height="100">
 					<TreeView.Resources>
-						<!-- Grupo (día) -->
+						
 						<HierarchicalDataTemplate
 							DataType="{x:Type local:ViewModelHorariosAgrupados}"
 							ItemsSource="{Binding Horarios}">
@@ -225,7 +225,6 @@
 								Text="{Binding DiaSemanaNombre}"
 								FontWeight="Bold" />
 						</HierarchicalDataTemplate>
-						<!-- Ítem (horario) -->
 						<DataTemplate
 							DataType="{x:Type local:HorarioMedicoViewModel}">
 							<StackPanel
@@ -242,7 +241,8 @@
 							</StackPanel>
 						</DataTemplate>
 					</TreeView.Resources>
-				</TreeView>
+					
+				</TreeView-->
 				<StackPanel
 					Orientation="Horizontal"
 					HorizontalAlignment="Center"

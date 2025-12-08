@@ -62,7 +62,8 @@ public partial class SecretariaGestionDeTurnos : Window {
 
         ResultWpf<TurnoDto> result = await App.Repositorio.MarcarTurnoComoConcretado(
 			turno.Id,
-			DateTime.Now
+			DateTime.Now,
+			comentarioTextBox.Text
 		);
 
 		if (MostrarErrorSiCorresponde(result))

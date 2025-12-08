@@ -187,7 +187,7 @@ public static class TurnoExtentions {
 
 
 
-	public static Result<Turno2025> SetOutcome(
+	internal static Result<Turno2025> SetOutcome(
 		this Turno2025 turnoOriginal,
 		TurnoOutcomeEstado2025 outcomeEstado,
 		DateTime outcomeFecha,

@@ -68,7 +68,7 @@ public static class MainProgram {
 
 
 		// Caso de uso 1
-		Result<IReadOnlyList<Disponibilidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidadesPara(
+		Result<IReadOnlyList<Disponibilidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidades(
 			Especialidad2025.ClinicoGeneral.Codigo,
 			DateTime.Now,
 			4,

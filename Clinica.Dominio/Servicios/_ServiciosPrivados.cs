@@ -6,7 +6,7 @@ using static Clinica.Dominio.IRepositorios.QueryModels;
 
 namespace Clinica.Dominio.Servicios;
 
-internal static class ServiciosPrivados {
+internal static class _ServiciosPrivados {
 	//internal static Result<Disponibilidad2025> TomarPrimera(this Result<IReadOnlyList<Disponibilidad2025>> listadoResult) {
 	//	return listadoResult.MatchAndSet(
 	//		ok => {

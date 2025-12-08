@@ -16,9 +16,7 @@ namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ServiciosPublicosController(IRepositorio repositorio, ILogger<ServiciosPublicosController> logger) : ControllerBase {
-
-
+public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPublicos servicios, ILogger<ServiciosPublicosController> logger) : ControllerBase {
 
 	[HttpGet("Turnos/Disponibilidades")]
 	public async Task<IActionResult> VerDisponibilidades(
@@ -28,7 +26,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 	) {
 		DateTime desde = aPartirDeCuando ?? DateTime.Now; // default real acá
 
-        Result<IReadOnlyList<Disponibilidad2025>> result = await ServiciosPublicos.SolicitarDisponibilidadesPara(
+		Result<IReadOnlyList<Disponibilidad2025>> result = await ServiciosPublicos.SolicitarDisponibilidades(
 			EspecialidadCodigo,
 			desde,
 			cuantos,
@@ -58,7 +56,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
 
-		Result<Unit> result = await ServiciosPublicos.SolicitarCancelacion(
+		Result<Unit> result = await ServiciosPublicos.CancelarTurnoAsync(
 			dto.TurnoId,
 			dto.OutcomeFecha,
 			dto.OutcomeComentario,
@@ -81,8 +79,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 	) {
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
-
-		Result<Turno2025Agg> result = await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
+		Result<Turno2025Agg> result = await servicios.ReprogramarTurnoAsync(
 			dto.TurnoId,
 			dto.OutcomeFecha,
 			dto.OutcomeComentario,

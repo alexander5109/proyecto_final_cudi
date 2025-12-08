@@ -173,23 +173,6 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<List<Disponibilidad2025>> IWPFRepositorioDominio.SelectDisponibilidades(
-		EspecialidadCodigo especialidad,
-		int cuantos,
-		DateTime apartirDeCuando
-	) {
-
-		//[HttpGet("Turnos/Disponibilidades")]
-		string url =
-			$"api/ServiciosPublicos/Turnos/Disponibilidades" +
-			$"?EspecialidadCodigo={(byte)especialidad}" +
-			$"&cuantos={cuantos}" +
-			$"&aPartirDeCuando={apartirDeCuando:O}";
-
-		return await Api.TryGetJsonAsync<List<Disponibilidad2025>>(url, defaultValue: []);
-	}
-
-
 
 
 
@@ -210,7 +193,6 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		) ?? [];
 	}
 
-
 	async Task<List<TurnoDbModel>> IWPFRepositorioTurnos.SelectTurnosWhereMedicoId(MedicoId id) {
 		return await Api.TryGetJsonOrNullAsync<List<TurnoDbModel>>(
 			$"api/medicos/{id.Valor}/turnos"
@@ -222,22 +204,6 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			$"api/turnos"
 		) ?? [];
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	async Task<ResultWpf<UnitWpf>> IWPFRepositorioPacientes.DeletePacienteWhereId(PacienteId id) {
         ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.DeleteAsync($"api/pacientes/{id.Valor}"),
@@ -264,7 +230,23 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad) {
+
+
+	async Task<List<Disponibilidad2025>> IWPFRepositorioDominio.SelectDisponibilidades(
+		EspecialidadCodigo especialidad,
+		int cuantos,
+		DateTime apartirDeCuando
+	) {
+		string url =
+			$"api/ServiciosPublicos/Turnos/Disponibilidades" +
+			$"?EspecialidadCodigo={(byte)especialidad}" +
+			$"&cuantos={cuantos}" +
+			$"&aPartirDeCuando={apartirDeCuando:O}";
+
+		return await Api.TryGetJsonAsync<List<Disponibilidad2025>>(url, defaultValue: []);
+	}
+
+	Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad) {
         throw new NotImplementedException();
     }
 
@@ -280,7 +262,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
         throw new NotImplementedException();
     }
 
-    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome) {
+    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome, string? reason) {
         throw new NotImplementedException();
     }
 }

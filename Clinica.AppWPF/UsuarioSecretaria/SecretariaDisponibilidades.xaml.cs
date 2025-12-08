@@ -56,7 +56,7 @@ public static class Comodidades {
 			Fecha: domainValue.FechaHoraDesde.AFechaArgentina(),
 			Hora: domainValue.FechaHoraDesde.AHorasArgentina(),
 			Medico: $"{medico.Nombre}{medico.Apellido}",
-			DiaSemana: domainValue.DiaSemana
+			DiaSemana: DiaSemana2025.Crear(domainValue.FechaHoraDesde.DayOfWeek)
 		);
 	}
 
@@ -317,7 +317,7 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 		foreach (Disponibilidad2025 dispo in disponibilidades) {
 			DisponibilidadesItemsSource.Add(await dispo.ToSimpleViewModel());
 		}
-		buttonReservar.IsEnabled = SelectedDisponibilidad != null;
+		//buttonReservar.IsEnabled = SelectedDisponibilidad != null;
 	}
 
 
@@ -334,7 +334,10 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 		this.Close();
 	}
 
-	private void ButtonReservar(object sender, RoutedEventArgs e) {
+
+	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
+
+    private void Click_AgendarNuevoTurno(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 		if (SelectedDisponibilidad is not DisponibilidadEspecialidadModelView seleccionada) {
 			MessageBox.Show("No hay una disponibilidad seleccionada.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -342,7 +345,7 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 			MessageBox.Show($"Reservando turno: {seleccionada.Fecha:d} {seleccionada.Hora} - {seleccionada.Medico}", "Reservar", MessageBoxButton.OK, MessageBoxImage.Information);
 			this.Close();
 		}
-	}
 
-	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
+
+	}
 }
