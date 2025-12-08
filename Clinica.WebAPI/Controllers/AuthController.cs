@@ -23,7 +23,7 @@ public class AuthController(IRepositorio repositorio, JwtService jwtService, ILo
 			okContent => response = Ok(new UsuarioLoginResponseDto(
 				okContent.Usuario.NombreUsuario.Valor,
 				okContent.Usuario.EnumRole,
-				jwtService.EmitirJwt(okContent.Usuario)
+				jwtService.EmitirJwt(okContent)
 			)),
 			errMsj => response = Unauthorized(new { error = errMsj })
 		);

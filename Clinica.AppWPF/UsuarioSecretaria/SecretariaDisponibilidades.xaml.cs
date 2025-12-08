@@ -6,6 +6,7 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.AppWPF.UsuarioSecretaria.Comodidades;
 using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
@@ -19,26 +20,26 @@ public static class Comodidades {
 	//public record ModelViewDiaSemana(int Value, string NombreDia);
 
 
-	public static async Task<MedicoDto> RespectivoMedico(this MedicoId id) {
-        MedicoDto? instance = await App.Repositorio.SelectMedicoWhereId(id);
+	public static async Task<MedicoDbModel> RespectivoMedico(this MedicoId id) {
+        MedicoDbModel? instance = await App.Repositorio.SelectMedicoWhereId(id);
 		if (instance is not null) return instance;
 		string error = $"No existe el médico con ID {id.Valor}";
 		MessageBox.Show(error);
 		throw new InvalidOperationException(error);
 	}
-	public static async Task<PacienteApiDto> RespectivoPaciente(this PacienteId id) {
-        PacienteApiDto? instance = await App.Repositorio.SelectPacienteWhereId(id);
+	public static async Task<PacienteDbModel> RespectivoPaciente(this PacienteId id) {
+		PacienteDbModel? instance = await App.Repositorio.SelectPacienteWhereId(id);
 		if (instance is not null) return instance;
 		string error = $"No existe el médico con ID {id.Valor}";
 		MessageBox.Show(error);
 		throw new InvalidOperationException(error);
 	}
 
-	public static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDto dto) {
+	public static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDbModel model) {
 		return new MedicoSimpleViewModel(
-			Id: dto.Id,
-			EspecialidadCodigo: dto.EspecialidadCodigo,
-			Displayear: $"{dto.Nombre} {dto.Apellido}"
+			Id: model.Id,
+			EspecialidadCodigo: model.EspecialidadCodigo,
+			Displayear: $"{model.Nombre} {model.Apellido}"
 		);
 	}
 
@@ -50,7 +51,7 @@ public static class Comodidades {
 	}
 
 	async public static Task<DisponibilidadEspecialidadModelView> ToSimpleViewModel(this Disponibilidad2025 domainValue) {
-		MedicoDto medico = await domainValue.MedicoId.RespectivoMedico();
+		MedicoDbModel medico = await domainValue.MedicoId.RespectivoMedico();
 		return new DisponibilidadEspecialidadModelView(
 			Fecha: domainValue.FechaHoraDesde.AFechaArgentina(),
 			Hora: domainValue.FechaHoraDesde.AHorasArgentina(),
@@ -85,7 +86,7 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 	}
 
 	private async void WindowGestionTurno_Loaded(object sender, RoutedEventArgs e) {
-        List<MedicoDto> medicos = await App.Repositorio.SelectMedicos();
+        List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
 		MedicosTodos = [.. medicos.Select(x => x.ToSimpleViewModel())];
 		OnPropertyChanged(nameof(MedicosTodos));
 	}
@@ -106,7 +107,7 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 		//buttonModificarPaciente.IsEnabled = paciente != null;
 	}
 
-	public required PacienteApiDto SelectedPaciente { get; set; }
+	public required PacienteDbModel SelectedPaciente { get; set; }
 
 
 
@@ -297,7 +298,7 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 		//MessageBox.Show("Cargando medicos especialistas...", "Cargando", MessageBoxButton.OK, MessageBoxImage.Information);
 		IEnumerable<MedicoSimpleViewModel> found = [];
 		if (MedicosTodos is null) {
-            List<MedicoDto> medicos = await App.Repositorio.SelectMedicos();
+            List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
 			MedicosTodos = [.. medicos.Select(x => x.ToSimpleViewModel())];
 		}
 		foreach (MedicoSimpleViewModel? item in MedicosTodos.Where(m => m.EspecialidadCodigo == especialidadCodigo)) {

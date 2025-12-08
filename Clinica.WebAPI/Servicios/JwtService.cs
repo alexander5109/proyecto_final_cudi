@@ -5,16 +5,16 @@ using Clinica.Dominio.Entidades;
 using Microsoft.IdentityModel.Tokens;
 
 public class JwtService(string jwtKey) {
-	public string EmitirJwt(Usuario2025 usuario) {
+	public string EmitirJwt(Usuario2025Agg aggrg) {
 		JwtSecurityTokenHandler handler = new();
 
 		byte[] key = Encoding.ASCII.GetBytes(jwtKey);
 
 		List<Claim> claims =
 		[
-			new("userid", usuario.Id.Valor.ToString()),
-			new("username", usuario.NombreUsuario.Valor),
-			new("role", usuario.EnumRole.ToString())
+			new("userid", aggrg.Id.Valor.ToString()),
+			new("username", aggrg.Usuario.NombreUsuario.Valor),
+			new("role", aggrg.Usuario.EnumRole.ToString())
 		];
 
 		SecurityTokenDescriptor descriptor = new() {

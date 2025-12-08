@@ -4,6 +4,7 @@ using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.UsuarioSecretaria;
 using Clinica.Dominio.Entidades;
 using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
@@ -22,7 +23,7 @@ public partial class SecretariaPacienteFormulario : Window {
 	}
 
 	private async Task CargaInicialAsync(PacienteId id) {
-		PacienteApiDto? dto = await App.Repositorio.SelectPacienteWhereId(id);
+		PacienteDbModel? dto = await App.Repositorio.SelectPacienteWhereId(id);
 		//MessageBox.Show(dto.ToString());
 		if (dto == null) {
 			MessageBox.Show("Paciente no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);

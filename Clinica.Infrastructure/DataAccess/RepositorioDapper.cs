@@ -145,8 +145,8 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 	Task<Result<IEnumerable<PacienteDbModel>>> IRepositorioPacientes.SelectPacientes()
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<PacienteDbModel>(
-				"sp_SelectPacientes",
-				commandType: CommandType.StoredProcedure
+			"sp_SelectPacientes",
+			commandType: CommandType.StoredProcedure
 			);
 		});
 	Task<Result<PacienteDbModel?>> IRepositorioPacientes.SelectPacienteWhereId(PacienteId id)
@@ -221,8 +221,8 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 	Task<Result<Unit>> IRepositorioPacientes.UpdatePacienteWhereId(PacienteId id, Paciente2025 instance)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
-				"sp_UpdatePaciente",
-				instance.ToModel(),
+				"sp_UpdatePacienteWhereId",
+				instance.ToModel(id),
 				commandType: CommandType.StoredProcedure
 			);
 		});
@@ -232,7 +232,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_UpdateUsuarioWhereId",
-				instance.ToModel(),
+				instance.ToModel(id),
 				commandType: CommandType.StoredProcedure
 			);
 		});
@@ -395,7 +395,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 			await conn.ExecuteScalarAsync<int>(
 				"sp_InsertMedicoReturnId",
-				instance.ToModel(),
+				parameters,
 				commandType: CommandType.StoredProcedure
 			);
 			int newId = parameters.Get<int>("@NewId");
@@ -409,7 +409,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 			await conn.ExecuteScalarAsync<int>(
 				"sp_InsertPacienteReturnId",
-				instance.ToModel(),
+				parameters,
 				commandType: CommandType.StoredProcedure
 			);
 			int newId = parameters.Get<int>("@NewId");

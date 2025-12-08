@@ -5,6 +5,7 @@ using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
@@ -18,19 +19,19 @@ public static class SecretariaPacienteMiniViewModels {
 	public static ProvinciaVmItem ToViewModel(this ProvinciaArgentina2025 domain) => new(Codigo: domain.CodigoInternoValor, Nombre: domain.NombreValor);
 
 
-	public static SecretariaPacienteFormularioViewModel ToViewModel(this PacienteApiDto dto)
+	public static SecretariaPacienteFormularioViewModel ToViewModel(this PacienteDbModel model)
 		=> new SecretariaPacienteFormularioViewModel {
-			Id = dto.Id,
-			Dni = dto.Dni,
-			Nombre = dto.Nombre,
-			Apellido = dto.Apellido,
-			FechaIngreso = dto.FechaIngreso,
-			Email = dto.Email,
-			Telefono = dto.Telefono,
-			FechaNacimiento = dto.FechaNacimiento,
-			Domicilio = dto.Domicilio,
-			Localidad = dto.Localidad,
-			Provincia = dto.ProvinciaCodigo.ToViewModel()
+			Id = model.Id,
+			Dni = model.Dni,
+			Nombre = model.Nombre,
+			Apellido = model.Apellido,
+			FechaIngreso = model.FechaIngreso,
+			Email = model.Email,
+			Telefono = model.Telefono,
+			FechaNacimiento = model.FechaNacimiento,
+			Domicilio = model.Domicilio,
+			Localidad = model.Localidad,
+			Provincia = model.ProvinciaCodigo.ToViewModel()
 		};
 	public static ResultWpf<Paciente2025> ToDomain(this SecretariaPacienteFormularioViewModel viewModel) {
 		return Paciente2025.CrearResult(

@@ -2,6 +2,7 @@
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Shared.Dtos;
 using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
@@ -33,19 +34,17 @@ public partial class SecretariaGestionDeTurnos : Window {
 	}
 	private async Task RefrescarPacientesAsync() {
 		try {
-            List<PacienteApiDto> pacientes = await App.Repositorio.SelectPacientes();
-			VM.PacientesList = pacientes.ToList();
+            List<PacienteDbModel> pacientes = await App.Repositorio.SelectPacientes();
+			VM.PacientesList = [.. pacientes];
 		} catch (Exception ex) {
 			MessageBox.Show("Error cargando pacientes: " + ex.Message);
 		}
 	}
 	private async Task RefrescarTurnosAsync() {
 		try {
-			List<TurnoDto> turnosDto = await App.Repositorio.SelectTurnos();
+			List<TurnoDbModel> turnosDto = await App.Repositorio.SelectTurnos();
 
-			VM.TurnosList = turnosDto
-				.Select(dto => new TurnoVM(dto))
-				.ToList();
+			VM.TurnosList = [.. turnosDto.Select(dto => new TurnoVM(dto))];
 		} catch (Exception ex) {
 			MessageBox.Show("Error cargando turnos: " + ex.Message);
 		}

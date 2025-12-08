@@ -64,19 +64,19 @@ public record Usuario2025Agg(Usuario2025 Usuario, UsuarioId Id) {
 
 
 public sealed record Usuario2025(
-	UsuarioId Id,
+	//UsuarioId Id,
 	NombreUsuario NombreUsuario,
 	ContraseñaHasheada PasswordHash,
 	UsuarioEnumRole EnumRole
 ) {
-	public static Result<Usuario2025> CrearResult(UsuarioId id, string? nombreUsuario, string? passwordHash, UsuarioEnumRole enumRole) {
+	public static Result<Usuario2025> CrearResult(string? nombreUsuario, string? passwordHash, UsuarioEnumRole enumRole) {
 		if (string.IsNullOrEmpty(nombreUsuario)) {
 			return new Result<Usuario2025>.Error("No se puede crear un usuario con el nombre vacio");
 		}
 		if (string.IsNullOrEmpty(passwordHash)) {
 			return new Result<Usuario2025>.Error("No se puede crear un usuario sin contraseña");
 		}
-		return new Result<Usuario2025>.Ok(new Usuario2025(id, new NombreUsuario(nombreUsuario), new ContraseñaHasheada(passwordHash), enumRole));
+		return new Result<Usuario2025>.Ok(new Usuario2025(new NombreUsuario(nombreUsuario), new ContraseñaHasheada(passwordHash), enumRole));
 	}
 
 	public bool PasswordMatch(string raw) => PasswordHash.IgualA(raw);

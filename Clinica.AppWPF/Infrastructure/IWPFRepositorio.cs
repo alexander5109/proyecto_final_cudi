@@ -1,6 +1,7 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.Infrastructure;
 
@@ -24,16 +25,16 @@ public static class IWPFRepositorioInterfaces {
 		Task<ResultWpf<UnitWpf>> DeleteMedicoWhereId(MedicoId id);
 		Task<ResultWpf<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
 		Task<ResultWpf<UnitWpf>> UpdateMedicoWhereId(Medico2025Agg instance);
-		Task<List<MedicoDto>> SelectMedicos();
-		Task<List<MedicoDto>> SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code);
-		Task<MedicoDto?> SelectMedicoWhereId(MedicoId id);
+		Task<List<MedicoDbModel>> SelectMedicos();
+		Task<List<MedicoDbModel>> SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code);
+		Task<MedicoDbModel?> SelectMedicoWhereId(MedicoId id);
 	}
 
 	public interface IWPFRepositorioPacientes {
 		Task<ResultWpf<UnitWpf>> DeletePacienteWhereId(PacienteId id);
 		Task<ResultWpf<PacienteId>> InsertPacienteReturnId(Paciente2025 instance);
-		Task<List<PacienteApiDto>> SelectPacientes();
-		Task<PacienteApiDto?> SelectPacienteWhereId(PacienteId id);
+		Task<List<PacienteDbModel>> SelectPacientes();
+		Task<PacienteDbModel?> SelectPacienteWhereId(PacienteId id);
 		Task<ResultWpf<UnitWpf>> UpdatePacienteWhereId(Paciente2025Agg instance);
 	}
 
@@ -43,9 +44,9 @@ public static class IWPFRepositorioInterfaces {
 	}
 
 	public interface IWPFRepositorioTurnos {
-		Task<List<TurnoDto>> SelectTurnos();
-		Task<List<TurnoDto>> SelectTurnosWherePacienteId(PacienteId id);
-		Task<List<TurnoDto>> SelectTurnosWhereMedicoId(MedicoId id);
+		Task<List<TurnoDbModel>> SelectTurnos();
+		Task<List<TurnoDbModel>> SelectTurnosWherePacienteId(PacienteId id);
+		Task<List<TurnoDbModel>> SelectTurnosWhereMedicoId(MedicoId id);
 		Task<ResultWpf<TurnoDto>> AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad);
 		Task<ResultWpf<TurnoDto>> CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);
 		Task<ResultWpf<TurnoDto>> ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);

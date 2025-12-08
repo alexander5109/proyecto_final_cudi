@@ -174,19 +174,19 @@ public static class ApiDtos {
 		);
 	}
 	public record UsuarioDto(
-		UsuarioId Id,
+		//UsuarioId Id,
 		string NombreUsuario,
 		string PasswordHash,
 		UsuarioEnumRole EnumRole
 	) {
 		// Constructor sin parámetros requerido por Dapper / serializadores
-		public UsuarioDto() : this(default!, "", "", default) { }
+		public UsuarioDto() : this("", "", default) { }
 	}
 	public static Result<Usuario2025> ToDomain(this UsuarioDto usuario)
-		=> Usuario2025.CrearResult(usuario.Id, usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole);
+		=> Usuario2025.CrearResult(usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole);
 
 	public static UsuarioDto ToDto(this Usuario2025 entidad) {
-		return new UsuarioDto(entidad.Id, entidad.NombreUsuario.Valor, entidad.PasswordHash.Valor, entidad.EnumRole);
+		return new UsuarioDto(entidad.NombreUsuario.Valor, entidad.PasswordHash.Valor, entidad.EnumRole);
 	}
 
 
