@@ -35,7 +35,7 @@ public sealed class TurnoVM {
 		OutcomeComentario = dto.OutcomeComentario;
 	}
 }
-public sealed class SecretariaGeneralViewModel : INotifyPropertyChanged {
+public sealed class SecretariaGestionDeTurnosViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	// ==== PACIENTES ====

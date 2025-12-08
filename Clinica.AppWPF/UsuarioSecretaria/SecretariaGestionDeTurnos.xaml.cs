@@ -6,12 +6,12 @@ using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
-public partial class SecretariaGeneral : Window {
-	public SecretariaGeneralViewModel VM { get; }
+public partial class SecretariaGestionDeTurnos : Window {
+	public SecretariaGestionDeTurnosViewModel VM { get; }
 
-	public SecretariaGeneral() {
+	public SecretariaGestionDeTurnos() {
 		InitializeComponent();
-		VM = new SecretariaGeneralViewModel();
+		VM = new SecretariaGestionDeTurnosViewModel();
 		DataContext = VM;
 
 		Loaded += async (_, __) => await CargaInicialAsync();
@@ -66,7 +66,7 @@ public partial class SecretariaGeneral : Window {
 	}
 	private void ButtonReservarTurno(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is null) return;
-		this.AbrirComoDialogo<SecretariaConsultaDisponibilidades>(VM.SelectedPaciente);
+		this.AbrirComoDialogo<SecretariaBuscadorDeDisponibilidades>(VM.SelectedPaciente);
 		//_ = VM.RefrescarTurnosAsync();
 	}
 	private async void Button_ConfirmarTurnoAsistencia(object sender, RoutedEventArgs e) {
@@ -152,4 +152,8 @@ public partial class SecretariaGeneral : Window {
 
 		await RefrescarTurnosAsync();
 	}
+
+    private void ButtonSolicitarTurno(object sender, RoutedEventArgs e) {
+
+    }
 }

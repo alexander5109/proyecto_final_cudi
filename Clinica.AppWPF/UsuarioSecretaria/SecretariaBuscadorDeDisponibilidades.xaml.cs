@@ -64,8 +64,8 @@ public static class Comodidades {
 
 
 //DiaSemana2025
-public partial class SecretariaConsultaDisponibilidades : Window, INotifyPropertyChanged {
-	//public SecretariaConsultaDisponibilidades() {
+public partial class SecretariaBuscadorDeDisponibilidades : Window, INotifyPropertyChanged {
+	//public SecretariaBuscadorDeDisponibilidades() {
 	//	InitializeComponent();
 	//	DataContext = this;
 	//	CargarHoras();
@@ -73,7 +73,7 @@ public partial class SecretariaConsultaDisponibilidades : Window, INotifyPropert
 	//	DisponibilidadesItemsSource.Clear();
 	//	Loaded += WindowGestionTurno_Loaded;
 	//}
-	public SecretariaConsultaDisponibilidades(PacienteDto paciente) {
+	public SecretariaBuscadorDeDisponibilidades(PacienteDto paciente) {
 		InitializeComponent();
 		DataContext = this;
 		SelectedPaciente = paciente;
@@ -96,8 +96,8 @@ public partial class SecretariaConsultaDisponibilidades : Window, INotifyPropert
 		txtPacienteDni.Text = paciente.Dni;
 		txtPacienteNombre.Text = paciente.Nombre;
 		txtPacienteApellido.Text = paciente.Apellido;
-		txtPacienteEmail.Text = paciente.Email;
-		txtPacienteTelefono.Text = paciente.Telefono;
+		//txtPacienteEmail.Text = paciente.Email;
+		//txtPacienteTelefono.Text = paciente.Telefono;
 		buttonModificarPaciente.IsEnabled = paciente != null;
 	}
 
