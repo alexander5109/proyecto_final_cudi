@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.TiposDeValor;
 
@@ -28,14 +29,13 @@ public record Turno2025Agg(TurnoId Id, Turno2025 Turno) {
 	public static Turno2025Agg Crear(TurnoId id, Turno2025 turno) => new(id, turno);
 }
 public record Turno2025(
-	//TurnoId Id,
 	FechaRegistro2025 FechaDeCreacion,
 	PacienteId PacienteId,
 	MedicoId MedicoId,
 	Especialidad2025 Especialidad,
 	DateTime FechaHoraAsignadaDesdeValor,
 	DateTime FechaHoraAsignadaHastaValor,
-	TurnoOutcomeEstado2025 OutcomeEstado,
+	TurnoEstadoCodigo OutcomeEstado,
 	Option<DateTime> OutcomeFechaOption,
 	Option<string> OutcomeComentarioOption
 ) : IComoTexto {
@@ -51,8 +51,34 @@ public record Turno2025(
 			$"  • Médico asignado: {MedicoId}\n" +
 			$"  • Fecha: {fecha}\n" +
 			$"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
-			$"  • OutcomeEstado: {OutcomeEstado.Nombre}\n";
+			$"  • OutcomeEstado: {OutcomeEstado}\n";
 	}
+
+	public static Turno2025 Representar(
+		DateTime fechaCreacion,
+		PacienteId pacienteId,
+		MedicoId medicoId,
+		EspecialidadCodigo especialidadCododigo,
+		DateTime desde,
+		DateTime hasta,
+		TurnoEstadoCodigo outcomeEstado,
+		DateTime? outcomeFecha,
+		string? outcomeComentario
+	) {
+		return new(
+			FechaDeCreacion: FechaRegistro2025.Representar(fechaCreacion),
+			PacienteId: pacienteId,
+			MedicoId: medicoId,
+			Especialidad: Especialidad2025.Representar(especialidadCododigo),
+			FechaHoraAsignadaDesdeValor: desde,
+			FechaHoraAsignadaHastaValor: hasta,
+			OutcomeEstado: outcomeEstado,
+			OutcomeFechaOption: outcomeFecha is DateTime fechagud ? Option<DateTime>.Some(fechagud) : Option<DateTime>.None,
+			OutcomeComentarioOption: outcomeComentario is null ? Option<string>.None : Option<string>.Some(outcomeComentario)
+		);
+	}
+
+
 	public static Result<Turno2025> CrearResult(
 		//Result<TurnoId> idResult,
 		Result<FechaRegistro2025> fechaCreacionResult,
@@ -61,7 +87,7 @@ public record Turno2025(
 		Result<Especialidad2025> especialidadResult,
 		DateTime desde,
 		DateTime hasta,
-		Result<TurnoOutcomeEstado2025> outcomeEstadoResult,
+		Result<TurnoEstadoCodigo> outcomeEstadoResult,
 		Option<DateTime> outcomeFecha,
 		Option<string> outcomeComentario
 	) {
@@ -72,7 +98,6 @@ public record Turno2025(
 			from medicoId in medicoIdResult
 			from especialidad in especialidadResult
 			from estado in outcomeEstadoResult
-			from _ in ValidarOutcome(estado, outcomeFecha, outcomeComentario)
 			select new Turno2025(
 				//id,
 				fechaCreacion,
@@ -89,60 +114,7 @@ public record Turno2025(
 
 
 
-
-	private static Result<Unit> ValidarOutcome(
-		//TurnoId id,
-		TurnoOutcomeEstado2025 estado,
-		Option<DateTime> fecha,
-		Option<string> comentario
-	) {
-		bool programado = estado == TurnoOutcomeEstado2025.Programado;
-		bool tieneFecha = fecha.HasValor;
-		bool tieneComentario = comentario.HasValor;
-
-		// ------------------------
-		// CASO 1 — Programado
-		// ------------------------
-		if (programado) {
-			if (tieneFecha || tieneComentario) {
-				return new Result<Unit>.Error(
-					$"Turno está Programado y no debe tener Fecha ni Comentario. " +
-					$"Recibido: Fecha={(tieneFecha ? fecha.Valor.ToString() : "—")}, " +
-					$"Comentario={(tieneComentario ? comentario.Valor : "—")}."
-				);
-			}
-
-			return new Result<Unit>.Ok(Unit.Valor);
-		}
-
-		// ------------------------
-		// CASO 2 — NO programado
-		// ------------------------
-		// Estados 2, 3, 4, 5: requieren AMBOS fecha y comentario
-		if (!tieneFecha || !tieneComentario) {
-			string faltantes =
-				(!tieneFecha && !tieneComentario) ? "Fecha y Comentario" :
-				(!tieneFecha) ? "Fecha" :
-				"Comentario";
-
-			return new Result<Unit>.Error(
-				$"Turno en estado '{estado}' debe tener {faltantes}. " +
-				$"Recibido: Fecha={(tieneFecha ? fecha.Valor.ToString() : "—")}, " +
-				$"Comentario={(tieneComentario ? comentario.Valor : "—")}."
-			);
-		}
-
-		return new Result<Unit>.Ok(Unit.Valor);
-	}
-
-
-
-
-
-
-	public static Result<Turno2025> ProgramarNuevo(
-		//this Turno2025 turnoOriginal,
-		//TurnoId turnoId,
+	public static Result<Turno2025> Programar(
 		PacienteId pacienteId,
 		FechaRegistro2025 solicitadoEn,
 		Disponibilidad2025 disp
@@ -151,6 +123,10 @@ public record Turno2025(
 			return new Result<Turno2025>.Error(
 				"La hora de inicio debe ser anterior a la hora de fin."
 			);
+
+		//we cant check this unless disponibildiad richness includes a whole doctor. Let's trust the disponibilidad maker
+		//if (disp.Medico.EspecialidadUnica != disp.Especialidad)
+		//	return new Result<Turno2025>.Error($"El medico {disp.Medico.NombreCompleto.ATexto()} tentativo no es especialidad en {disp.Especialidad.ATexto()}");
 
 		if (disp.FechaHoraDesde.Date != disp.FechaHoraHasta.Date)
 			return new Result<Turno2025>.Error(
@@ -165,11 +141,14 @@ public record Turno2025(
 			Especialidad: disp.Especialidad,
 			FechaHoraAsignadaDesdeValor: disp.FechaHoraDesde,
 			FechaHoraAsignadaHastaValor: disp.FechaHoraHasta,
-			OutcomeEstado: TurnoOutcomeEstado2025.Programado,
+			OutcomeEstado: TurnoEstadoCodigo.Programado,
 			OutcomeFechaOption: Option<DateTime>.None,
 			OutcomeComentarioOption: Option<string>.None
 		));
 	}
+
+
+
 
 
 }
@@ -181,83 +160,103 @@ public record Turno2025(
 
 public static class TurnoExtentions {
 
-
-
-
-
-
-
-	internal static Result<Turno2025> SetOutcome(
+	public static Result<Turno2025> MarcarComoAusente(
 		this Turno2025 turnoOriginal,
-		TurnoOutcomeEstado2025 outcomeEstado,
-		DateTime outcomeFecha,
-		string outcomeComentario
+		DateTime fechaEvento,
+		string comentario
 	) {
-		if (turnoOriginal.OutcomeEstado != TurnoOutcomeEstado2025.Programado)
-			return new Result<Turno2025>.Error("El turno ya tiene un estado final. No puede modificarse.");
+		//if (comentario is null)
+		//	return new Result<Turno2025>.Error("El comentario es obligatorio al marcar como ausente un turno.");
+
+		if (turnoOriginal.OutcomeEstado == TurnoEstadoCodigo.Programado&& !turnoOriginal.OutcomeFechaOption.HasValor)
+			return new Result<Turno2025>.Error("Solo puede marcarse como ausente un turno que esté programado.");
 
 		return new Result<Turno2025>.Ok(
 			turnoOriginal with {
-				OutcomeEstado = outcomeEstado,
-				OutcomeComentarioOption = Option<string>.Some(outcomeComentario),
-				OutcomeFechaOption = Option<DateTime>.Some(outcomeFecha)
+				OutcomeEstado = TurnoEstadoCodigo.Ausente,
+				OutcomeFechaOption = Option<DateTime>.Some(fechaEvento),
+				OutcomeComentarioOption = Option<string>.Some(comentario)
 			}
 		);
 	}
 
-	public static Result<Turno2025> Reprogramar(
+	public static Result<Turno2025> MarcarComoConcretado(
 		this Turno2025 turnoOriginal,
-		Disponibilidad2025 nuevaDisp
+		DateTime fechaEvento,
+		string? comentario
 	) {
-		if (turnoOriginal.OutcomeEstado == TurnoOutcomeEstado2025.Programado)
-			return new Result<Turno2025>.Error("No puede reprogramarse un turno que todavía está programado.");
+		//comentario totalmente opcional
+		//if (comentario is null)
+		//	return new Result<Turno2025>.Error("El comentario es obligatorio al concretar un turno.");
 
-		if (!turnoOriginal.OutcomeFechaOption.HasValor)
-			return new Result<Turno2025>.Error("No se puede reprogramar un turno sin fecha de finalización del estado anterior.");
+		if (turnoOriginal.OutcomeEstado == TurnoEstadoCodigo.Programado&& !turnoOriginal.OutcomeFechaOption.HasValor)
+			return new Result<Turno2025>.Error("Solo puede concretarse un turno que esté programado.");
 
-		if (nuevaDisp.FechaHoraDesde >= nuevaDisp.FechaHoraHasta)
-			return new Result<Turno2025>.Error("La disponibilidad nueva es inválida: fechaDesde >= fechaHasta.");
+		if (fechaEvento.DayOfWeek < turnoOriginal.FechaHoraAsignadaDesdeValor.DayOfWeek)
+			return new Result<Turno2025>.Error("No puede confirmarse un turno uno o mas dias antes de la fecha de la cita");
 
 		return new Result<Turno2025>.Ok(
 			turnoOriginal with {
-				FechaDeCreacion = new FechaRegistro2025(turnoOriginal.OutcomeFechaOption.Valor),
-				FechaHoraAsignadaDesdeValor = nuevaDisp.FechaHoraDesde,
-				FechaHoraAsignadaHastaValor = nuevaDisp.FechaHoraHasta,
-				OutcomeEstado = TurnoOutcomeEstado2025.Programado,
-				OutcomeFechaOption = Option<DateTime>.None,
-				OutcomeComentarioOption = Option<string>.None
+				OutcomeEstado = TurnoEstadoCodigo.Concretado,
+				OutcomeFechaOption = Option<DateTime>.Some(fechaEvento),
+				OutcomeComentarioOption = comentario is null ? Option<string>.None : Option<string>.Some(comentario)
 			}
 		);
 	}
-	//public static Result<Turno2025Agg> Reprogramar(
-	//	this Turno2025 turnoOriginal,
-	//	Disponibilidad2025 nuevaDisp,
-	//	TurnoId nuevoId
-	//) {
-	//	if (turnoOriginal.Turno.OutcomeEstado == TurnoOutcomeEstado2025.Programado)
-	//		return new Result<Turno2025Agg>.Error("No puede reprogramarse un turno que todavía está programado.");
+	public static Result<Turno2025> MarcarComoCancelado(
+		this Turno2025 turnoOriginal,
+		DateTime fechaEvento,
+		string comentario
+	) {
+		//if (comentario is null) 
+		//	return new Result<Turno2025>.Error("El comentario es obligatorio al cancelar un turno.");
+		
+		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado || turnoOriginal.OutcomeFechaOption.HasValor) 
+			return new Result<Turno2025>.Error("Solo puede cancelarse un turno que todavía esté programado.");
+		
+		if (fechaEvento < turnoOriginal.FechaDeCreacion.Valor) 
+			return new Result<Turno2025>.Error("La fecha del evento no puede ser anterior a la fecha de creación del turno.");
+		
+		if (fechaEvento >= turnoOriginal.FechaHoraAsignadaHastaValor) 
+			return new Result<Turno2025>.Error("No puede cancelarse un turno después de la cita.");
+		
+		if (fechaEvento.Date == turnoOriginal.FechaHoraAsignadaDesdeValor.Date)
+			return new Result<Turno2025>.Error("No puede cancelarse el mismo dia de la cita. Por favor marcar como ausente por no avisar antes.");
 
-	//	if (!turnoOriginal.Turno.OutcomeFechaOption.HasValor)
-	//		return new Result<Turno2025Agg>.Error("No se puede reprogramar un turno sin fecha de finalización del estado anterior.");
+		return new Result<Turno2025>.Ok(
+			turnoOriginal with {
+				OutcomeEstado = TurnoEstadoCodigo.Cancelado,
+				OutcomeFechaOption = Option<DateTime>.Some(fechaEvento),
+				OutcomeComentarioOption = Option<string>.Some(comentario)
+			}
+		);
+	}
 
-	//	if (nuevaDisp.FechaHoraDesde >= nuevaDisp.FechaHoraHasta)
-	//		return new Result<Turno2025Agg>.Error("La disponibilidad nueva es inválida: fechaDesde >= fechaHasta.");
+	public static Result<Turno2025> MarcarComoReprogramado(
+		this Turno2025 turnoOriginal,
+		DateTime fechaEvento,
+		string comentario
+	) {
+		//if (comentario is null)
+		//	return new Result<Turno2025>.Error("El comentario es obligatorio al reporogranar un turno.");
 
-	//	return new Result<Turno2025Agg>.Ok(new Turno2025Agg(
-	//		Id: nuevoId,
-	//		Turno: new Turno2025(
-	//			FechaDeCreacion: new FechaRegistro2025(turnoOriginal.Turno.OutcomeFechaOption.Valor),
-	//			PacienteId: turnoOriginal.Turno.PacienteId,
-	//			MedicoId: turnoOriginal.Turno.MedicoId,
-	//			Especialidad: turnoOriginal.Turno.Especialidad,
-	//			FechaHoraAsignadaDesdeValor: nuevaDisp.FechaHoraDesde,
-	//			FechaHoraAsignadaHastaValor: nuevaDisp.FechaHoraHasta,
-	//			OutcomeEstado: TurnoOutcomeEstado2025.Programado,
-	//			OutcomeFechaOption: Option<DateTime>.None,
-	//			OutcomeComentarioOption: Option<string>.None
-	//	)));
-	//}
+		if (
+			turnoOriginal.OutcomeEstado == TurnoEstadoCodigo.Programado
+			&& !turnoOriginal.OutcomeFechaOption.HasValor
+		)
+			return new Result<Turno2025>.Error("Solo puede reprogramarse un turno que todavía esté programado.");
 
+		if (fechaEvento > turnoOriginal.FechaHoraAsignadaHastaValor)
+			return new Result<Turno2025>.Error("No puede reprogramarse un turno despues de la cita");
+
+		return new Result<Turno2025>.Ok(
+			turnoOriginal with {
+				OutcomeEstado = TurnoEstadoCodigo.Reprogramado,
+				OutcomeFechaOption = Option<DateTime>.Some(fechaEvento),
+				OutcomeComentarioOption = Option<string>.Some(comentario)
+			}
+		);
+	}
 
 
 

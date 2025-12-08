@@ -17,7 +17,7 @@ public sealed class TurnoVM(Shared.Dtos.DbModels.TurnoDbModel model) {
     public string FechaSolicitud { get; } = model.FechaHoraAsignadaDesde.AFechaArgentina();
     public string FechaAsignada { get; } = model.FechaHoraAsignadaDesde.AFechaArgentina();
     public string HoraAsignada { get; } = model.FechaHoraAsignadaHasta.AHorasArgentina();
-    public TurnoOutcomeEstadoCodigo2025 OutcomeEstado { get; } = model.OutcomeEstado;
+    public TurnoEstadoCodigo OutcomeEstado { get; } = model.OutcomeEstado;
     public DateTime? OutcomeFecha { get; set; } = model.OutcomeFecha;
     public string? OutcomeComentario { get; set; } = model.OutcomeComentario;
 }
@@ -71,7 +71,7 @@ public sealed class SecretariaGestionDeTurnosViewModel : INotifyPropertyChanged 
 	}
 
 	public bool HayTurnoSeleccionado => SelectedTurno is not null;
-	public bool PuedeModificarTurnoSeleccionado => SelectedTurno?.OutcomeEstado == TurnoOutcomeEstadoCodigo2025.Programado;
+	public bool PuedeModificarTurnoSeleccionado => SelectedTurno?.OutcomeEstado == TurnoEstadoCodigo.Programado;
 
 	public bool ComentarioObligatorio { get; private set; }
 

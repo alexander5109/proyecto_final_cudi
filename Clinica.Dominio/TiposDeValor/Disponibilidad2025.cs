@@ -19,6 +19,7 @@ public record Disponibilidad2025(
 		return
 			$"Disponibilidad de {Especialidad.ATexto()}\n" +
 			$"  • Médico: {MedicoId}\n" +
+			//$"  • Médico: {Medico.NombreCompleto.ATexto()}\n" +
 			$"  • Fecha: {fecha}\n" +
 			$"  • Horario: {desde}–{hasta}";
 	}

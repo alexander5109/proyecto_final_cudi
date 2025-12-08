@@ -41,7 +41,7 @@ public class PacientesController(
 	//public async Task<IActionResult> GetPacientesAsDomain() {
 
 
-	//Result<Turno2025> result = await ServiciosPublicos.CancelarTurnoAsync(
+	//Result<Turno2025> result = await ServiciosPublicos.PersistirComoCanceladoAsync(
 	//	dto.TurnoId,
 	//	dto.OutcomeFecha,
 	//	dto.OutcomeComentario,

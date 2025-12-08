@@ -13,7 +13,7 @@ public static partial class DbModels {
 		EspecialidadCodigo EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
-		TurnoOutcomeEstadoCodigo2025 OutcomeEstado,
+		TurnoEstadoCodigo OutcomeEstado,
 		DateTime? OutcomeFecha,
 		string? OutcomeComentario
 	) {
@@ -58,7 +58,7 @@ public static partial class DbModels {
 			FechaRegistro2025.CrearResult(turnoDto.FechaDeCreacion),
 			PacienteId.CrearResult(turnoDto.PacienteId.Valor),
 			MedicoId.CrearResult(turnoDto.MedicoId.Valor),
-			Especialidad2025.CrearResultPorCodigoInterno(turnoDto.EspecialidadCodigo),
+			Especialidad2025.CrearResult(turnoDto.EspecialidadCodigo),
 			turnoDto.FechaHoraAsignadaDesde,
 			turnoDto.FechaHoraAsignadaHasta,
 			TurnoOutcomeEstado2025.CrearPorCodigo(turnoDto.OutcomeEstado),

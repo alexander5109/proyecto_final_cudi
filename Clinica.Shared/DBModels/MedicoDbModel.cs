@@ -35,7 +35,7 @@ public static partial class DbModels {
 			MedicoId.CrearResult(medicoDto.Id.Valor),
 			NombreCompleto2025.CrearResult(medicoDto.Nombre, medicoDto.Apellido),
 			//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
-			Especialidad2025.CrearResultPorCodigoInterno(medicoDto.EspecialidadCodigo),
+			Especialidad2025.CrearResult(medicoDto.EspecialidadCodigo),
 			DniArgentino2025.CrearResult(medicoDto.Dni),
 			DomicilioArgentino2025.CrearResult(
 				LocalidadDeProvincia2025.CrearResult(

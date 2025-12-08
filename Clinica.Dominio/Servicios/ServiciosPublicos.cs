@@ -27,7 +27,7 @@ public class ServiciosPublicos : IServiciosPublicos {
 			return new Result<IReadOnlyList<Disponibilidad2025>>.Error("No vamos a producir tantas disponibilidades. Si quiere, adelante la fecha");
 		}
 
-		Result<Especialidad2025> solicitudEspecialidadResult = Especialidad2025.CrearResultPorCodigoInterno(solicitudEspecialidadCodigo);
+		Result<Especialidad2025> solicitudEspecialidadResult = Especialidad2025.CrearResult(solicitudEspecialidadCodigo);
 		if (solicitudEspecialidadResult.IsError) return new Result<IReadOnlyList<Disponibilidad2025>>.Error(solicitudEspecialidadResult.UnwrapAsError());
 		Especialidad2025 solicitudEspecialidad = solicitudEspecialidadResult.UnwrapAsOk();
 
@@ -63,50 +63,25 @@ public class ServiciosPublicos : IServiciosPublicos {
 
 
 
-	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.CancelarTurnoAsync(
+
+
+
+
+
+
+	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoReprogramadoYPersistirProgramarTurnoAsync(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
 		string outcomeComentario,
 		IRepositorioDomainServiciosPrivados repositorio
 	) {
-		Result<Turno2025Agg> turnoOriginalResult = await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId);
-		if (turnoOriginalResult.IsError) return new Result<Turno2025Agg>.Error(turnoOriginalResult.UnwrapAsError());
-		Turno2025Agg agggrgOriginal = turnoOriginalResult.UnwrapAsOk();
-		// 1. Aplicar regla de dominio para cancelar
-		Result<Turno2025> canceladoResult = agggrgOriginal.Turno.SetOutcome(
-			TurnoOutcomeEstado2025.Cancelado,
-			outcomeFecha,
-			outcomeComentario
-		);
-		if (canceladoResult.IsError)
-			return new Result<Turno2025Agg>.Error(canceladoResult.UnwrapAsError());
-		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
-
-		// 2. Guardar cambios (IO)
-		Result<Turno2025Agg> updateResult = await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoCancelado);
-		if (updateResult.IsError)
-			return new Result<Turno2025Agg>.Error($"Error al persistir la cancelación del turno: {updateResult.UnwrapAsError()}");
-
-		return new Result<Turno2025Agg>.Ok(updateResult.UnwrapAsOk());
-	}
-
-
-
-
-
-
-
-	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.ReprogramarTurnoAsync(
-		TurnoId turnoOriginalId,
-		DateTime outcomeFecha,
-		string outcomeComentario,
-		IRepositorioDomainServiciosPrivados repositorio
-	) {
+		throw new NotImplementedException();
+		/*
 		Result<Turno2025Agg> turnoOriginalResult = await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId);
 		if (turnoOriginalResult.IsError) return turnoOriginalResult;
 		//if (turnoOriginalResult.IsError) return new Result<Turno2025>.Error($"No se encontró el turno original: {turnoOriginalResult.UnwrapAsError()}");
 		Turno2025Agg aggrgOriginal = turnoOriginalResult.UnwrapAsOk();
-		Result<Turno2025> canceladoResult = aggrgOriginal.Turno.SetOutcome(TurnoOutcomeEstado2025.Reprogramado, outcomeFecha, outcomeComentario);
+		Result<Turno2025> canceladoResult = aggrgOriginal.Turno.MarcarComoCancelado(outcomeFecha, outcomeComentario);
 		if (canceladoResult.IsError) return new Result<Turno2025Agg>.Error($"Error de dominio:: \n\t{canceladoResult.UnwrapAsError()}");
 		//if (canceladoResult.IsError) return new Result<Turno2025>.Error($"No se puede cancelar el turno: {canceladoResult.UnwrapAsError()}");
 		Turno2025 turnoCancelado = ((Result<Turno2025>.Ok)canceladoResult).Valor;
@@ -115,13 +90,14 @@ public class ServiciosPublicos : IServiciosPublicos {
 		Result<Disponibilidad2025> dispResult = await _ServiciosPrivados.EncontrarProximaDisponibilidad(aggrgOriginal.Turno.Especialidad, outcomeFecha, repositorio);
 		if (dispResult is Result<Disponibilidad2025>.Error e3) return new Result<Turno2025Agg>.Error(e3.Mensaje);
 		Disponibilidad2025 disponibilidad = ((Result<Disponibilidad2025>.Ok)dispResult).Valor;
-		Result<Turno2025> provResult = aggrgOriginal.Turno.Reprogramar(disponibilidad);
+		Result<Turno2025> provResult = aggrgOriginal.Turno.MarcarComoReprogramado(disponibilidad);
 		if (provResult.IsError) return new Result<Turno2025Agg>.Error(provResult.UnwrapAsError());
 		Turno2025 turnoTentativo = provResult.UnwrapAsOk();
 		Result<TurnoId> turnoConfirmado = await repositorio.InsertTurnoReturnId(turnoTentativo);
 		if (turnoConfirmado.IsError) return new Result<Turno2025Agg>.Error($"Error al persistir el nuevo turno reprogramado: {turnoConfirmado.UnwrapAsError()}");
 		TurnoId idReal = ((Result<TurnoId>.Ok)turnoConfirmado).Valor;
 		return new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(idReal, turnoTentativo));
+		*/
 	}
 
 
@@ -134,7 +110,27 @@ public class ServiciosPublicos : IServiciosPublicos {
 
 
 
-	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.MarcarComoAusente(
+	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoCanceladoAsync(
+		TurnoId turnoOriginalId,
+		DateTime outcomeFecha,
+		string outcomeComentario,
+		IRepositorioDomainServiciosPrivados repositorio
+	) {
+		Result<Turno2025Agg> turnoOriginalResult = await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId);
+		if (turnoOriginalResult.IsError) return new Result<Turno2025Agg>.Error(turnoOriginalResult.UnwrapAsError());
+		Turno2025Agg agggrgOriginal = turnoOriginalResult.UnwrapAsOk();
+		Result<Turno2025> canceladoResult = agggrgOriginal.Turno.MarcarComoCancelado(outcomeFecha, outcomeComentario);
+		if (canceladoResult.IsError)
+			return new Result<Turno2025Agg>.Error(canceladoResult.UnwrapAsError());
+		Turno2025 turnoCancelado = canceladoResult.UnwrapAsOk();
+		Result<Unit> updateResult = await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoCancelado);
+		if (updateResult.IsError)
+			return new Result<Turno2025Agg>.Error($"Error al persistir la cancelación del turno: {updateResult.UnwrapAsError()}");
+
+		return new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(turnoOriginalId, turnoCancelado));
+	}
+
+	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoAusenteAsync(
 		TurnoId turnoOriginalId, 
 		DateTime outcomeFecha, 
 		string outcomeComentario, 
@@ -150,19 +146,6 @@ public class ServiciosPublicos : IServiciosPublicos {
 
 
 
-	async Task<Result<Turno2025Agg>> IServiciosDisponibilidades.AgendarTurnoAsync(
-		PacienteId pacienteId,
-		DateTime fechaSolicitud,
-		Disponibilidad2025 disponibilidad,
-		IRepositorioDomainServiciosPrivados repositorio
-	) {
-		Turno2025 turno = Turno2025.ProgramarNuevo(
-			pacienteId,
-			FechaRegistro2025.Crear(fechaSolicitud),
-			disponibilidad
-		).UnwrapAsOk();
-
-	}
 
 
 
@@ -173,20 +156,20 @@ public class ServiciosPublicos : IServiciosPublicos {
 
 
 
-
-
-	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.MarcarComoConcretado(
+	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoConcretadoAsync(
 		TurnoId turnoOriginalId, 
 		DateTime outcomeFecha, 
 		string? outcomeComentario, 
 		IRepositorioDomainServiciosPrivados repositorio
 	) {
+		throw new NotImplementedException();
+
 		Result<Turno2025Agg> turnoOriginalResult = await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId);
 		if (turnoOriginalResult.IsError) return new Result<Turno2025Agg>.Error(turnoOriginalResult.UnwrapAsError());
 		Turno2025Agg agggrgOriginal = turnoOriginalResult.UnwrapAsOk();
 
 
-
+		//agggrgOriginal.Turno.
 
 
 
@@ -194,4 +177,18 @@ public class ServiciosPublicos : IServiciosPublicos {
 
 	}
 
+
+	Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirProgramarTurnoAsync(PacienteId pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad, IRepositorioDomainServiciosPrivados repositorio) {
+
+        Result<Turno2025> resultTurno = Turno2025.Programar(
+			pacienteId,
+			FechaRegistro2025.Representar(fechaSolicitud),
+			disponibilidad
+		);
+
+        Task<Result<TurnoId>> result = repositorio.InsertTurnoReturnId(resultTurno.UnwrapAsOk());
+
+
+
+	}
 }

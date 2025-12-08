@@ -138,7 +138,7 @@ public static class ApiDtos {
 		EspecialidadCodigo EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
-		TurnoOutcomeEstadoCodigo2025 OutcomeEstado,
+		TurnoEstadoCodigo OutcomeEstado,
 		DateTime? OutcomeFecha,
 		string? OutcomeComentario
 	) {
@@ -165,7 +165,7 @@ public static class ApiDtos {
 			FechaRegistro2025.CrearResult(turnoDto.FechaCreacionSolicitud),
 			PacienteId.CrearResult(turnoDto.PacienteId.Valor),
 			MedicoId.CrearResult(turnoDto.MedicoId.Valor),
-			Especialidad2025.CrearResultPorCodigoInterno(turnoDto.EspecialidadCodigo),
+			Especialidad2025.CrearResult(turnoDto.EspecialidadCodigo),
 			turnoDto.FechaHoraAsignadaDesde,
 			turnoDto.FechaHoraAsignadaHasta,
 			TurnoOutcomeEstado2025.CrearPorCodigo(turnoDto.OutcomeEstado),
@@ -251,7 +251,7 @@ public static class ApiDtos {
 			MedicoId.CrearResult(medicoDto.Id.Valor),
 			NombreCompleto2025.CrearResult(medicoDto.Nombre, medicoDto.Apellido),
 			//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
-			Especialidad2025.CrearResultPorCodigoInterno(medicoDto.EspecialidadCodigo),
+			Especialidad2025.CrearResult(medicoDto.EspecialidadCodigo),
 			DniArgentino2025.CrearResult(medicoDto.Dni),
 			DomicilioArgentino2025.CrearResult(
 				LocalidadDeProvincia2025.CrearResult(
@@ -318,7 +318,7 @@ public static class ApiDtos {
 	//	TimeSpan Hora,
 	//	DateTime Fecha,
 	//	EspecialidadCodigo EspecialidadCodigo,
-	//	TurnoOutcomeEstadoCodigo2025 Estado,
+	//	TurnoEstadoCodigo Estado,
 	//	MedicoId MedicoId
 	//);
 

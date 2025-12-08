@@ -56,7 +56,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
 
-		Result<Turno2025Agg> result = await servicios.CancelarTurnoAsync(
+		Result<Turno2025Agg> result = await servicios.PersistirComoCanceladoAsync(
 			dto.TurnoId,
 			dto.OutcomeFecha,
 			dto.OutcomeComentario,
@@ -79,7 +79,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 	) {
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
-		Result<Turno2025Agg> result = await servicios.ReprogramarTurnoAsync(
+		Result<Turno2025Agg> result = await servicios.PersistirComoReprogramadoYPersistirProgramarTurnoAsync(
 			dto.TurnoId,
 			dto.OutcomeFecha,
 			dto.OutcomeComentario,
@@ -169,14 +169,14 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 	// --------------------------------------------------------
 	// [HttpPost]
 	// public async Task<IActionResult> CrearResult([FromBody] CrearTurnoRequestDto dto) {
-	// Result<Especialidad2025> espResult = Especialidad2025.CrearResultPorCodigoInterno(dto.EspecialidadCodigo);
+	// Result<Especialidad2025> espResult = Especialidad2025.CrearResult(dto.EspecialidadCodigo);
 
 	// if (espResult.IsError)
 	// return BadRequest($"Especialidad inválida: {dto.EspecialidadCodigo}");
 
 	// Especialidad2025 especialidad = espResult.GetOrRaise();
 
-	// Result<Turno2025> result = await repositorio.AgendarTurnoAsync(
+	// Result<Turno2025> result = await repositorio.PersistirProgramarTurnoAsync(
 	// dto.PacienteId,
 	// dto.MedicoId,
 	// especialidad,
@@ -203,8 +203,8 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 	// PUT /turnos/{id}/reprogramar
 	// --------------------------------------------------------
 	// [HttpPut("{id:TurnoId}/reprogramar")]
-	// public async Task<IActionResult> Reprogramar([FromRoute] TurnoId id, [FromBody] ReprogramarTurnoRequestDto dto) {
-	// Result<Turno2025> result = await repositorio.ReprogramarTurnoAsync(
+	// public async Task<IActionResult> MarcarComoReprogramado([FromRoute] TurnoId id, [FromBody] ReprogramarTurnoRequestDto dto) {
+	// Result<Turno2025> result = await repositorio.PersistirComoReprogramadoYPersistirProgramarTurnoAsync(
 	// id,
 	// dto.NuevaFechaDesde,
 	// dto.NuevaFechaHasta
@@ -221,11 +221,11 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 	// PUT /turnos/{id}/cancelar
 	// --------------------------------------------------------
 	// [HttpPut("{id:TurnoId}/cancelar")]
-	// public async Task<IActionResult> Cancelar(
+	// public async Task<IActionResult> MarcarComoCancelado(
 	// [FromRoute] TurnoId id,
 	// [FromBody] string? comentario) {
 	// Result<Turno2025> result =
-	// await repositorio.CancelarTurnoAsync(id, comentario.ToOption());
+	// await repositorio.PersistirComoCanceladoAsync(id, comentario.ToOption());
 
 	// return result switch {
 	// Result<Turno2025>.Ok ok => Ok(ok.Valor.ToDomain()),

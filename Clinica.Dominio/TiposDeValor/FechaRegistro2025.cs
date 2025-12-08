@@ -10,7 +10,7 @@ public record FechaRegistro2025(DateTime Valor) : IComoTexto {
 	public string ATexto() {
 		return Valor.ToString("dd/MM/yyyy");
 	}
-	public static FechaRegistro2025 Crear(DateTime fecha) {
+	public static FechaRegistro2025 Representar(DateTime fecha) {
 		return new(fecha);
 
 	}
