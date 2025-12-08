@@ -45,6 +45,9 @@ public sealed class SecretariaGestionDeTurnosViewModel : INotifyPropertyChanged 
 		set { _pacientes = value; OnPropertyChanged(nameof(PacientesList)); }
 	}
 
+
+	public bool ModificarPacienteCommand => SelectedPaciente is not null;
+
 	private PacienteDto? _selectedPaciente;
 	public PacienteDto? SelectedPaciente {
 		get => _selectedPaciente;
@@ -90,6 +93,7 @@ public sealed class SecretariaGestionDeTurnosViewModel : INotifyPropertyChanged 
 		ComentarioObligatorio = requiere;
 		OnPropertyChanged(nameof(ComentarioObligatorio));
 	}
+
 
 	private void OnPropertyChanged(string propertyName) =>
 		PropertyChanged?.Invoke(this, new(propertyName));

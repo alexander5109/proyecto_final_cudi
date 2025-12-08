@@ -1,5 +1,4 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.Entidades;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Clinica.AppWPF.Dtos;
@@ -23,7 +22,7 @@ public partial class TurnoViewModel2025 : ObservableObject {
 		duracionMinutos: null
 	);
 
-    internal Result<Turno2025> ToDomain() {
+    internal ResultWpf<Turno2025> ToDomain() {
         throw new NotImplementedException();
     }
 

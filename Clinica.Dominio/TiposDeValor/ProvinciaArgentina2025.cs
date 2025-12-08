@@ -1,6 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 
 namespace Clinica.Dominio.TiposDeValor;
+
 public enum ProvinciaCodigo2025 : byte {
 	BuenosAires = 1,
 	CiudadAutonomaBuenosAires = 2,
@@ -30,9 +31,8 @@ public enum ProvinciaCodigo2025 : byte {
 
 
 public static class ProvinciaExtentions {
-
 	public static string ATexto(this ProvinciaCodigo2025 codigo) {
-        Result<ProvinciaArgentina2025> resultado = ProvinciaArgentina2025.CrearResultPorCodigo(codigo);
+		Result<ProvinciaArgentina2025> resultado = ProvinciaArgentina2025.CrearResultPorCodigo(codigo);
 		if (resultado is Result<ProvinciaArgentina2025>.Ok ok)
 			return ok.Valor.NombreValor;
 		return "Código de provincia inválido";
@@ -43,6 +43,7 @@ public static class ProvinciaExtentions {
 
 public record struct ProvinciaArgentina2025(ProvinciaCodigo2025 CodigoInternoValor, string NombreValor) : IComoTexto {
 	public string ATexto() => NombreValor;
+	public static IReadOnlyList<ProvinciaArgentina2025> Todas() => [.. _nombresPorCodigo.Select(kvp => new ProvinciaArgentina2025(kvp.Key, kvp.Value))];
 
 	// Diccionario privado para lookup rápido
 	private static readonly IReadOnlyDictionary<ProvinciaCodigo2025, string> _nombresPorCodigo = new Dictionary<ProvinciaCodigo2025, string>
@@ -79,7 +80,10 @@ public record struct ProvinciaArgentina2025(ProvinciaCodigo2025 CodigoInternoVal
 	//public static IReadOnlyCollection<string> ProvinciasValidas => _nombresPorCodigo.Values;
 
 	// ---------------- FACTORY POR CÓDIGO ----------------
-	public static Result<ProvinciaArgentina2025> CrearResultPorCodigo(ProvinciaCodigo2025 codigo) {
+	public static Result<ProvinciaArgentina2025> CrearResultPorCodigo(ProvinciaCodigo2025? codigoNulled) {
+		if (codigoNulled is not ProvinciaCodigo2025 codigo) {
+			return new Result<ProvinciaArgentina2025>.Error($"Código de provincia vacío");
+		}
 		if (_nombresPorCodigo.TryGetValue(codigo, out string? nombre))
 			return new Result<ProvinciaArgentina2025>.Ok(new ProvinciaArgentina2025(codigo, nombre));
 
@@ -98,10 +102,11 @@ public record struct ProvinciaArgentina2025(ProvinciaCodigo2025 CodigoInternoVal
 
 	// ---------------- FACTORY POR NOMBRE ----------------
 	public static Result<ProvinciaArgentina2025> CrearResult(string? input) {
+		
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<ProvinciaArgentina2025>.Error("La provincia no puede estar vacía.");
 
-        string normalizado = input.Trim().ToLowerInvariant();
+		string normalizado = input.Trim().ToLowerInvariant();
 		if (_codigoPorNombre.TryGetValue(normalizado, out ProvinciaCodigo2025 codigo))
 			return CrearResultPorCodigo(codigo);
 

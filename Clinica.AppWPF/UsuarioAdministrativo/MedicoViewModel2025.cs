@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -125,7 +124,7 @@ public partial class MedicoViewModel2025 : ObservableObject {
 
 
 
-	public Result<Medico2025> ToDomain() {
+	public ResultWpf<Medico2025> ToDomain() {
 		throw new NotImplementedException("Implementar Medico2025 ToDomain");
 		//return Medico2025.CrearResult(
 		//	NombreCompleto2025.CrearResult(this.Name, this.LastName),

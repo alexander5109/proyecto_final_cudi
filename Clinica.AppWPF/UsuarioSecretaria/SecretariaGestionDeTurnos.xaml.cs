@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.Comun;
 using Clinica.Shared.Dtos;
 using static Clinica.Shared.Dtos.ApiDtos;
 
@@ -17,15 +16,15 @@ public partial class SecretariaGestionDeTurnos : Window {
 		Loaded += async (_, __) => await CargaInicialAsync();
 	}
 
+	private bool MostrarErrorSiCorresponde<T>(ResultWpf<T> result)
+		=> result.MatchAndSet(
+			ok => true,
+			error => {
+				error.ShowMessageBox();
+				return false;
+			}
+		);
 
-	private bool MostrarErrorSiCorresponde<T>(Result<T> result)
-	=> result.Match(
-		ok => true,
-		error => {
-			MessageBox.Show(error ?? "Error desconocido.", "Error");
-			return false;
-		}
-	);
 
 
 	private async Task CargaInicialAsync() {
@@ -55,20 +54,6 @@ public partial class SecretariaGestionDeTurnos : Window {
 
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.VolverARespectivoHome();
 	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
-	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<SecretariaPacienteFormulario>();
-		//_ = VM.RefrescarPacientesAsync();
-	}
-	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
-		if (VM.SelectedPaciente is null) return;
-		this.AbrirComoDialogo<SecretariaPacienteFormulario>(VM.SelectedPaciente.Id);
-		//_ = VM.RefrescarPacientesAsync();
-	}
-	private void ButtonReservarTurno(object sender, RoutedEventArgs e) {
-		if (VM.SelectedPaciente is null) return;
-		this.AbrirComoDialogo<SecretariaBuscadorDeDisponibilidades>(VM.SelectedPaciente);
-		//_ = VM.RefrescarTurnosAsync();
-	}
 	private async void Button_ConfirmarTurnoAsistencia(object sender, RoutedEventArgs e) {
 		if (VM.SelectedTurno is null) return;
 
@@ -76,7 +61,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 
 		VM.IndicarAccionRequiereComentario(false);
 
-        Result<TurnoDto> result = await App.Repositorio.MarcarTurnoComoConcretado(
+        ResultWpf<TurnoDto> result = await App.Repositorio.MarcarTurnoComoConcretado(
 			turno.Id,
 			DateTime.Now
 		);
@@ -95,7 +80,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 
         //Aca no es obligatorio el comentario.
 
-        Result<TurnoDto> result = await App.Repositorio.MarcarTurnoComoAusente(
+        ResultWpf<TurnoDto> result = await App.Repositorio.MarcarTurnoComoAusente(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text
@@ -118,7 +103,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 			return;
 		}
 
-        Result<TurnoDto> result = await App.Repositorio.ReprogramarTurno(
+        ResultWpf<TurnoDto> result = await App.Repositorio.ReprogramarTurno(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text
@@ -141,7 +126,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 			return;
 		}
 
-        Result<TurnoDto> result = await App.Repositorio.CancelarTurno(
+        ResultWpf<TurnoDto> result = await App.Repositorio.CancelarTurno(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text
@@ -153,9 +138,18 @@ public partial class SecretariaGestionDeTurnos : Window {
 		await RefrescarTurnosAsync();
 	}
 
-	private void ButtonSolicitarTurno(object sender, RoutedEventArgs e) {
-		if (VM.SelectedPaciente is not null) {
-			this.AbrirComoDialogo<SecretariaBuscadorDeDisponibilidades>(VM.SelectedPaciente);
-		}
+	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
+		this.AbrirComoDialogo<SecretariaPacienteFormulario>();
+		//_ = VM.RefrescarPacientesAsync();
+	}
+	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
+		if (VM.SelectedPaciente is null) return;
+		this.AbrirComoDialogo<SecretariaPacienteFormulario>(VM.SelectedPaciente.Id);
+		//_ = VM.RefrescarPacientesAsync();
+	}
+	private void ButtonBuscarDisponibilidades(object sender, RoutedEventArgs e) {
+		if (VM.SelectedPaciente is null) return;
+		this.AbrirComoDialogo<SecretariaDisponibilidades>(VM.SelectedPaciente.Id);
+		//_ = VM.RefrescarTurnosAsync();
 	}
 }

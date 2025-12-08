@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Comun;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
@@ -29,7 +28,7 @@ public partial class MedicoModificar : Window, INotifyPropertyChanged {
 	//---------------------botones.GuardarCambios-------------------//
 	private void ButtonGuardar(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
-		Result<Medico2025> resultado = SelectedMedico.ToDomain();
+		ResultWpf<Medico2025> resultado = SelectedMedico.ToDomain();
 
 		resultado.Switch(
 			ok => {

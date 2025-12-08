@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using System.Runtime.CompilerServices;
+using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.Comun;
 using static Clinica.Shared.Dtos.ApiDtos;
 
 
@@ -21,15 +21,17 @@ public partial class Login : Window {
 			return;
 		}
 		UsuarioLoginRequestDto loginRequest = new (guiUsuario.Text, guiPassword.Password);
-		Result<UsuarioLoginResponseDto> result = await AuthService.LoginAsync(App.Api, loginRequest);
+		ResultWpf<UsuarioLoginResponseDto> result = await AuthService.LoginAsync(App.Api, loginRequest);
 
-		result.Match(
+		result.MatchAndDo(
 			loggedUser => {
 				App.Api.SetUsuario(loggedUser);
 				this.IrARespectivaHome(loggedUser);
+				return;
 			},
 			errorMsg => {
-				MessageBox.Show(errorMsg, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				errorMsg.ShowMessageBox();
+				return;
 			}
 		);
 	}

@@ -1,35 +1,79 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using Clinica.Dominio.Comun;
+using System.Windows;
 using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF.Infrastructure;
 
 public static class AuthService {
-	public static async Task<Result<UsuarioLoginResponseDto>> LoginAsync(ApiHelper api, UsuarioLoginRequestDto request) {
+	public static async Task<ResultWpf<UsuarioLoginResponseDto>> LoginAsync(
+		ApiHelper api,
+		UsuarioLoginRequestDto request) {
 		try {
-            HttpResponseMessage response = await api.Cliente.PostAsJsonAsync("/auth/login", request);
+			HttpResponseMessage response =
+				await api.Cliente.PostAsJsonAsync("/auth/login", request);
 
+			// ------------------------------
+			// ❌ Caso: error HTTP
+			// ------------------------------
 			if (!response.IsSuccessStatusCode) {
-				if (response.StatusCode == HttpStatusCode.Unauthorized)
-					return new Result<UsuarioLoginResponseDto>.Error("Credenciales incorrectas.");
+				string serverError = await response.Content.ReadAsStringAsync();
 
-                string serverError = await response.Content.ReadAsStringAsync();
-				return new Result<UsuarioLoginResponseDto>.Error(
-					$"Error del servidor ({(int)response.StatusCode}):\n{serverError}"
-				);
+				return response.StatusCode switch {
+					HttpStatusCode.Unauthorized =>
+						new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
+							Mensaje: "Credenciales incorrectas.",
+							Icono: MessageBoxImage.Warning,
+							Detalle: serverError,
+							HttpStatus: 401
+						)),
+
+					HttpStatusCode.Forbidden =>
+						new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
+							Mensaje: "No tenés permisos para acceder.",
+							Icono: MessageBoxImage.Warning,
+							Detalle: serverError,
+							HttpStatus: 403
+						)),
+
+					_ =>
+						new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
+							Mensaje: $"Error del servidor ({(int)response.StatusCode}).",
+							Icono: MessageBoxImage.Error,
+							Detalle: serverError,
+							HttpStatus: (int)response.StatusCode
+						))
+				};
 			}
 
-            UsuarioLoginResponseDto? data = await response.Content.ReadFromJsonAsync<UsuarioLoginResponseDto>();
-			if (data is null)
-				return new Result<UsuarioLoginResponseDto>.Error("Error inesperado del servidor.");
+			// ------------------------------
+			// ❌ Caso: ok pero no se pudo leer JSON
+			// ------------------------------
+			UsuarioLoginResponseDto? data =
+				await response.Content.ReadFromJsonAsync<UsuarioLoginResponseDto>();
 
+			if (data is null) {
+				return new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
+					Mensaje: "Error inesperado: el servidor no devolvió datos válidos.",
+					Icono: MessageBoxImage.Error,
+					Detalle: "El cuerpo JSON vino vacío o mal formado."
+				));
+			}
 
-			return new Result<UsuarioLoginResponseDto>.Ok(data);
+			// ------------------------------
+			// ✔ OK
+			// ------------------------------
+			return new ResultWpf<UsuarioLoginResponseDto>.Ok(data);
 		} catch (Exception ex) {
-			return new Result<UsuarioLoginResponseDto>.Error(
-				$"Error de conexión:\n{ex}");
+			// ------------------------------
+			// ❌ Error de red/excepción
+			// ------------------------------
+			return new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
+				Mensaje: "Error de conexión con el servidor.",
+				Icono: MessageBoxImage.Error,
+				Detalle: ex.ToString()
+			));
 		}
 	}
 }

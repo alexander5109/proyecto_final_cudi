@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Json;
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
@@ -108,8 +107,8 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<Result<PacienteId>> IWPFRepositorioPacientes.InsertPacienteReturnId(Paciente2025 instance) {
-        Result<PacienteId> response = await Api.TryApiCallAsync(
+	async Task<ResultWpf<PacienteId>> IWPFRepositorioPacientes.InsertPacienteReturnId(Paciente2025 instance) {
+        ResultWpf<PacienteId> response = await Api.TryApiCallAsync(
 			() => Api.Cliente.PostAsJsonAsync(
 				"api/pacientes", 
 				instance.ToDto()
@@ -123,8 +122,8 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		_ = RefreshPacientes();
 		return response;
 	}
-	async Task<Result<MedicoId>> IWPFRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance) {
-        Result<MedicoId> result = await Api.TryApiCallAsync(
+	async Task<ResultWpf<MedicoId>> IWPFRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance) {
+        ResultWpf<MedicoId> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PostAsJsonAsync(
 				"api/medicos", 
 				instance.ToDto()
@@ -142,13 +141,13 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<Result<Unit>> IWPFRepositorioPacientes.UpdatePacienteWhereId(Paciente2025Agg aggrg) {
-        Result<Unit> result = await Api.TryApiCallAsync(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioPacientes.UpdatePacienteWhereId(Paciente2025Agg aggrg) {
+        ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PutAsJsonAsync(
 				$"api/pacientes/{aggrg.Id.Valor}",
 				aggrg.ToDto()
 			),
-			onOk: async response => new Unit(),
+			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error actualizando el agregado {aggrg.Id.Valor}"
 		);
 
@@ -156,13 +155,13 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 		return result;
 	}
-	async Task<Result<Unit>> IWPFRepositorioMedicos.UpdateMedicoWhereId(Medico2025Agg aggrg) {
-        Result<Unit> result = await Api.TryApiCallAsync(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereId(Medico2025Agg aggrg) {
+        ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PutAsJsonAsync(
 				$"api/medicos/{aggrg.Id.Valor}",
 				aggrg.ToDto()
 			),
-			onOk: async response => new Unit(),   // Se ignora el body, pero se respeta la firma
+			onOk: async response => UnitWpf.Valor,   // Se ignora el body, pero se respeta la firma
 			errorTitle: $"Error actualizando médico {aggrg.Id.Valor}"
 		);
 
@@ -239,10 +238,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<Result<Unit>> IWPFRepositorioPacientes.DeletePacienteWhereId(PacienteId id) {
-        Result<Unit> result = await Api.TryApiCallAsync(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioPacientes.DeletePacienteWhereId(PacienteId id) {
+        ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.DeleteAsync($"api/pacientes/{id.Valor}"),
-			onOk: async response => new Unit(),
+			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error eliminando paciente {id.Valor}"
 		);
 
@@ -251,10 +250,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return result;
 	}
 
-	async Task<Result<Unit>> IWPFRepositorioMedicos.DeleteMedicoWhereId(MedicoId id) {
-        Result<Unit> result = await Api.TryApiCallAsync(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.DeleteMedicoWhereId(MedicoId id) {
+        ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.DeleteAsync($"api/medicos/{id.Valor}"),
-			onOk: async response => new Unit(),
+			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error eliminando médico {id.Valor}"
 		);
 
@@ -265,23 +264,23 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-    Task<Result<TurnoDto>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad) {
+    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad) {
         throw new NotImplementedException();
     }
 
-    Task<Result<TurnoDto>> IWPFRepositorioTurnos.CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
         throw new NotImplementedException();
     }
 
-    Task<Result<TurnoDto>> IWPFRepositorioTurnos.ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
         throw new NotImplementedException();
     }
 
-    Task<Result<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason) {
         throw new NotImplementedException();
     }
 
-    Task<Result<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome) {
+    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome) {
         throw new NotImplementedException();
     }
 }

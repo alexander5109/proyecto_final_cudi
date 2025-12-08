@@ -2,7 +2,6 @@
 using Clinica.AppWPF;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.UsuarioSecretaria;
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using static Clinica.Shared.Dtos.ApiDtos;
 
@@ -10,7 +9,6 @@ namespace Clinica.AppWPF.UsuarioSecretaria;
 
 public partial class SecretariaPacienteFormulario : Window {
 	public SecretariaPacienteFormularioViewModel ViewModel { get; private set; } = new();
-	//private PacienteId? SelectedPacienteId = null;
 
 	public SecretariaPacienteFormulario() {
 		InitializeComponent();
@@ -25,7 +23,7 @@ public partial class SecretariaPacienteFormulario : Window {
 
 	private async Task CargaInicialAsync(PacienteId id) {
 		PacienteDto? dto = await App.Repositorio.SelectPacienteWhereId(id);
-
+		//MessageBox.Show(dto.ToString());
 		if (dto == null) {
 			MessageBox.Show("Paciente no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			Close();
@@ -38,35 +36,11 @@ public partial class SecretariaPacienteFormulario : Window {
 	}
 
 	private async void ButtonGuardar(object sender, RoutedEventArgs e) {
-		if (ViewModel.Id is PacienteId pacienteId) {
-			//do update:
-			Result<Paciente2025> pacienteUpdateValidation = ViewModel.ToDomain();
-			if (pacienteUpdateValidation.IsError) {
-				MessageBox.Show(pacienteUpdateValidation.UnwrapAsError(), "Error", MessageBoxButton.OK);
-				return;
-			}
-            Paciente2025Agg aggregate = new(pacienteId, pacienteUpdateValidation.UnwrapAsOk());
-			Result<Unit> persistenciaValidation = await App.Repositorio.UpdatePacienteWhereId(aggregate);
-			if (persistenciaValidation.IsError) {
-				MessageBox.Show("No se pudo guardar.", "Error", MessageBoxButton.OK);
-				return;
-			}
-		} else {
-			// create new:
-			Result<Paciente2025> pacienteCreateValidation = ViewModel.ToDomain();
-			if (pacienteCreateValidation.IsError) {
-				MessageBox.Show(pacienteCreateValidation.UnwrapAsError(), "Error", MessageBoxButton.OK);
-				return;
-			}
-			Paciente2025 domainEntity = pacienteCreateValidation.UnwrapAsOk();
-            Result<PacienteId> resultado = await App.Repositorio.InsertPacienteReturnId(domainEntity);
-			resultado.Match(
-				ok => ViewModel.Id = ok,
-				error => MessageBox.Show("No se pudo guardar: " + error, "Error", MessageBoxButton.OK)
-			);
-		}
-		MessageBox.Show("Cambios guardados.");
-		Close();
+		ResultWpf<UnitWpf> result = await ViewModel.GuardarAsync();
+		result.MatchAndDo(
+			caseOk => MessageBox.Show("Cambios guardados.", "Éxito", MessageBoxButton.OK),
+			caseError => caseError.ShowMessageBox()
+		);
 	}
 
 	private void ButtonCancelar(object sender, RoutedEventArgs e) {
@@ -84,7 +58,7 @@ public partial class SecretariaPacienteFormulario : Window {
 
 	private void ButtonSolicitarTurno(object sender, RoutedEventArgs e) {
 		//if (ViewModel.Id is int notNullId) {
-		//	this.AbrirComoDialogo<SecretariaBuscadorDeDisponibilidades>(SelectedPacienteId.Crear(notNullId));
+		//	this.AbrirComoDialogo<SecretariaDisponibilidades>(SelectedPacienteId.Crear(notNullId));
 		//}
 	}
 }

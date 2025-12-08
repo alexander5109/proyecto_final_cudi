@@ -1,4 +1,3 @@
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.Dtos.ApiDtos;
@@ -22,20 +21,20 @@ public static class IWPFRepositorioInterfaces {
 	}
 
 	public interface IWPFRepositorioMedicos {
-		Task<Result<Unit>> DeleteMedicoWhereId(MedicoId id);
-		Task<Result<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
-		Task<Result<Unit>> UpdateMedicoWhereId(Medico2025Agg instance);
+		Task<ResultWpf<UnitWpf>> DeleteMedicoWhereId(MedicoId id);
+		Task<ResultWpf<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
+		Task<ResultWpf<UnitWpf>> UpdateMedicoWhereId(Medico2025Agg instance);
 		Task<List<MedicoDto>> SelectMedicos();
 		Task<List<MedicoDto>> SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code);
 		Task<MedicoDto?> SelectMedicoWhereId(MedicoId id);
 	}
 
 	public interface IWPFRepositorioPacientes {
-		Task<Result<Unit>> DeletePacienteWhereId(PacienteId id);
-		Task<Result<PacienteId>> InsertPacienteReturnId(Paciente2025 instance);
+		Task<ResultWpf<UnitWpf>> DeletePacienteWhereId(PacienteId id);
+		Task<ResultWpf<PacienteId>> InsertPacienteReturnId(Paciente2025 instance);
 		Task<List<PacienteDto>> SelectPacientes();
 		Task<PacienteDto?> SelectPacienteWhereId(PacienteId id);
-		Task<Result<Unit>> UpdatePacienteWhereId(Paciente2025Agg instance);
+		Task<ResultWpf<UnitWpf>> UpdatePacienteWhereId(Paciente2025Agg instance);
 	}
 
 	public interface IWPFRepositorioDominio {
@@ -47,11 +46,11 @@ public static class IWPFRepositorioInterfaces {
 		Task<List<TurnoDto>> SelectTurnos();
 		Task<List<TurnoDto>> SelectTurnosWherePacienteId(PacienteId id);
 		Task<List<TurnoDto>> SelectTurnosWhereMedicoId(MedicoId id);
-		Task<Result<TurnoDto>> AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad);
-		Task<Result<TurnoDto>> CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);
-		Task<Result<TurnoDto>> ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);
-		Task<Result<TurnoDto>> MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason);
-		Task<Result<TurnoDto>> MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome);
+		Task<ResultWpf<TurnoDto>> AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad);
+		Task<ResultWpf<TurnoDto>> CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);
+		Task<ResultWpf<TurnoDto>> ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);
+		Task<ResultWpf<TurnoDto>> MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason);
+		Task<ResultWpf<TurnoDto>> MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome);
 	}
 }
 

@@ -1,7 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
+using Clinica.AppWPF;
+using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.UsuarioSecretaria;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
+using static Clinica.AppWPF.UsuarioSecretaria.SecretariaPacienteMiniViewModels;
+
 
 public class SecretariaPacienteFormularioViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
@@ -52,13 +57,14 @@ public class SecretariaPacienteFormularioViewModel : INotifyPropertyChanged {
 		set { _localidad = value; Notify(nameof(Localidad)); }
 	}
 
-	private ProvinciaCodigo2025 _provinciaCodigo;
-	public ProvinciaCodigo2025 ProvinciaCodigo {
-		get => _provinciaCodigo;
-		set { _provinciaCodigo = value; Notify(nameof(ProvinciaCodigo)); Notify(nameof(Provincia)); }
+	private ProvinciaVmItem? _provincia;
+	public ProvinciaVmItem? Provincia {
+		get => _provincia;
+		set { _provincia = value; Notify(nameof(Provincia)); Notify(nameof(Provincias)); }
 	}
 
-	public string Provincia => ProvinciaCodigo.ATexto();
+	public IReadOnlyList<ProvinciaVmItem> Provincias { get; } = [.. ProvinciaArgentina2025.Todas().Select(p => p.ToViewModel())];
+
 
 	private string _telefono = "";
 	public string Telefono {
@@ -79,4 +85,30 @@ public class SecretariaPacienteFormularioViewModel : INotifyPropertyChanged {
 	}
 
 	public string Displayear => $"{Id}: {Nombre} {Apellido}";
+
+
+
+	public async Task<ResultWpf<UnitWpf>> GuardarAsync() {
+		return await this.ToDomain().Bind(async paciente =>
+		{
+			if (Id is PacienteId idExistente) {
+				Paciente2025Agg agg = new(idExistente, paciente);
+				return await App.Repositorio.UpdatePacienteWhereId(agg);
+			} else {
+				return (await App.Repositorio.InsertPacienteReturnId(paciente))
+					.MatchTo<PacienteId, UnitWpf>(
+						ok => {
+							Id = ok;
+							return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
+						},
+						error => new ResultWpf<UnitWpf>.Error(error)
+					);
+			}
+		});
+	}
+
+
+
+
+
 }
