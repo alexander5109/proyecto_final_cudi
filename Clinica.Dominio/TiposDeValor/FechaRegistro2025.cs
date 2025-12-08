@@ -3,6 +3,8 @@ using Clinica.Dominio.Comun;
 
 namespace Clinica.Dominio.TiposDeValor;
 
+
+
 public record FechaRegistro2025(DateTime Valor) : IComoTexto {
 	public static readonly DateTime Ahora = DateTime.Now;
 	public string ATexto() {

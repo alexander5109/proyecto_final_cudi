@@ -26,7 +26,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 	) {
 		DateTime desde = aPartirDeCuando ?? DateTime.Now; // default real acá
 
-		Result<IReadOnlyList<Disponibilidad2025>> result = await ServiciosPublicos.SolicitarDisponibilidades(
+		Result<IReadOnlyList<Disponibilidad2025>> result = await servicios.SolicitarDisponibilidades(
 			EspecialidadCodigo,
 			desde,
 			cuantos,
@@ -56,7 +56,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
 
-		Result<Unit> result = await ServiciosPublicos.CancelarTurnoAsync(
+		Result<Turno2025Agg> result = await servicios.CancelarTurnoAsync(
 			dto.TurnoId,
 			dto.OutcomeFecha,
 			dto.OutcomeComentario,

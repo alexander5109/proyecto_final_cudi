@@ -135,8 +135,8 @@ internal static class _ServiciosPrivados {
 						solicitudEspecialidad, 
 						medicoId,
 						slot, 
-						slot.AddMinutes(duracion),
-						DiaSemana2025.Crear(slot.DayOfWeek)
+						slot.AddMinutes(duracion)
+						//DiaSemana2025.Crear(slot.DayOfWeek)
 					);
 
 					bool solapa = false;

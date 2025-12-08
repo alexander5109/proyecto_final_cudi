@@ -6,7 +6,7 @@ namespace Clinica.Dominio.TiposDeValor;
 
 public record Disponibilidad2025(
 	Especialidad2025 Especialidad,
-	PacienteId Paciente,
+	//PacienteId Paciente,
 	MedicoId MedicoId,
 	DateTime FechaHoraDesde,
 	DateTime FechaHoraHasta
