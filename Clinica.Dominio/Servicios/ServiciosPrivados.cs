@@ -7,20 +7,19 @@ using static Clinica.Dominio.IRepositorios.QueryModels;
 namespace Clinica.Dominio.Servicios;
 
 internal static class ServiciosPrivados {
-	internal static Result<Disponibilidad2025> TomarPrimera(this Result<IReadOnlyList<Disponibilidad2025>> listadoResult) {
-		return listadoResult.Match<Result<Disponibilidad2025>>(
-			ok => {
-				// la lista existe, ahora chequeamos si tiene elementos
-				if (ok.Count == 0)
-					return new Result<Disponibilidad2025>.Error(
-						"No hay disponibilidades para seleccionar."
-					);
-				return new Result<Disponibilidad2025>.Ok(ok[0]);
-			},
-			mensajeError =>
-				new Result<Disponibilidad2025>.Error(mensajeError)
-		);
-	}
+	//internal static Result<Disponibilidad2025> TomarPrimera(this Result<IReadOnlyList<Disponibilidad2025>> listadoResult) {
+	//	return listadoResult.MatchAndSet(
+	//		ok => {
+	//			if (ok.Count == 0)
+	//				return new Result<Disponibilidad2025>.Error(
+	//					"No hay disponibilidades para seleccionar."
+	//				);
+	//			return new Result<Disponibilidad2025>.Ok(ok[0]);
+	//		},
+	//		mensajeError =>
+	//			new Result<Disponibilidad2025>.Error(mensajeError)
+	//	);
+	//}
 
 	internal static Result<IReadOnlyList<Disponibilidad2025>> AplicarFiltrosOpcionales(this Result<IReadOnlyList<Disponibilidad2025>> disponibilidadesResult, SolicitudDeTurnoPreferencias preferencias) {
 		if (disponibilidadesResult is Result<IReadOnlyList<Disponibilidad2025>>.Error err)

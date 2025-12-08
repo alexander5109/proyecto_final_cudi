@@ -58,13 +58,14 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
 
-		Result<Turno2025> result = await ServiciosPublicos.SolicitarCancelacion(
+		Result<Unit> result = await ServiciosPublicos.SolicitarCancelacion(
 			dto.TurnoId,
 			dto.OutcomeFecha,
 			dto.OutcomeComentario,
 			repositorio
 		);
-		return result.Match<IActionResult>(
+
+		return result.MatchAndSet(
 			ok => Ok(ok),
 			err => Problem(err)
 		);
@@ -81,14 +82,14 @@ public class ServiciosPublicosController(IRepositorio repositorio, ILogger<Servi
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
 
-		Result<Turno2025> result = await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
+		Result<Turno2025Agg> result = await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
 			dto.TurnoId,
 			dto.OutcomeFecha,
 			dto.OutcomeComentario,
 			repositorio
 		);
 
-		return result.Match<IActionResult>(
+		return result.MatchAndSet(
 			ok => Ok(ok),
 			err => Problem(err)
 		);

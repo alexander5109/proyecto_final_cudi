@@ -15,112 +15,118 @@ public abstract class Result<T> {
 
 	public bool IsOk => this is Ok;
 	public bool IsError => this is Error;
-	public void Match(Action<T> ok, Action<string> error) {
-		switch (this) {
-			case Ok o: ok(o.Valor); break;
-			case Error e: error(e.Mensaje); break;
-		}
-	}
-	public TOut Match<TOut>(Func<T, TOut> ok, Func<string, TOut> error)
-		=> this switch {
-			Ok o => ok(o.Valor),
-			Error e => error(e.Mensaje),
-			_ => throw new InvalidOperationException()
-		};
-
-	public void Switch(Action<T> ok, Action<string> error) {
-		switch (this) {
-			case Ok o: ok(o.Valor); break;
-			case Error e: error(e.Mensaje); break;
-			default: throw new InvalidOperationException();
-		}
-	}
+	//public void MatchAndDo(Action<T> ok, Action<string> error) {
+	//	switch (this) {
+	//		case Ok o: ok(o.Valor); break;
+	//		case Error e: error(e.Mensaje); break;
+	//	}
+	//}
+	//public TOut MatchAndSet<TOut>(Func<T, TOut> ok, Func<string, TOut> error)
+	//	=> this switch {
+	//		Ok o => ok(o.Valor),
+	//		Error e => error(e.Mensaje),
+	//		_ => throw new InvalidOperationException()
+	//	};
 }
 //
 // ==========================================
 //  EXTENSIONES FUNCIONALES
 // ==========================================
-public static class ResultExtensionsASync {
+public static class ResultExtensions {
 
-
-
-	public static async Task<Result<U>> BindAsync<T, U>(
-	this Task<Result<T>> task,
-	Func<T, Task<Result<U>>> func) {
-        Result<T> result = await task;
-		return result is Result<T>.Ok ok
-			? await func(ok.Valor)
-			: new Result<U>.Error(((Result<T>.Error)result).Mensaje);
-	}
-
-	public static async Task<Result<U>> MapAsync<T, U>(
-	this Task<Result<T>> task,
-	Func<T, U> map) {
-        Result<T> result = await task;
-		return result is Result<T>.Ok ok
-			? new Result<U>.Ok(map(ok.Valor))
-			: new Result<U>.Error(((Result<T>.Error)result).Mensaje);
-	}
-	public static async Task<Result<T>> RequireOkAsync<T>(
-	this Task<Result<T>> task) {
-        Result<T> result = await task;
-		return result;
-	}
-	public static async Task<Result<T>> OrFailAsync<T>(
-	this Task<Result<T>> task,
-	string? overrideMessage = null) {
-        Result<T> result = await task;
-
-		return result switch {
-			Result<T>.Ok ok => ok,
-			Result<T>.Error err => new Result<T>.Error(
-				overrideMessage ?? err.Mensaje
-			),
-			_ => throw new InvalidOperationException()
-		};
-	}
-	public static async IAsyncEnumerable<T> SelectOk<T>(
-	this IAsyncEnumerable<Result<T>> stream) {
-		await foreach (Result<T> r in stream) {
-			switch (r) {
-				case Result<T>.Ok ok:
-					yield return ok.Valor;
-					break;
-
-				case Result<T>.Error err:
-					throw new Exception(err.Mensaje); // o devolver Result<...>
-			}
+	public static Result<T> MapError<T>(this Result<T> self, Func<string, string> mapError) {
+		switch (self) {
+			case Result<T>.Ok ok:
+				return ok; // OK se devuelve tal cual
+			case Result<T>.Error e:
+				return new Result<T>.Error(mapError(e.Mensaje)); // Error se transforma
+			default:
+				throw new InvalidOperationException();
 		}
 	}
 
 
-}
-public static class ResultExtensions {
+	public static Result<U> BindWithPrefix<T, U>(
+		this Result<T> r,
+		Func<T, Result<U>> ok,
+		string prefix
+	) {
+		return r switch {
+			Result<T>.Ok o =>
+				ok(o.Valor),
+
+			Result<T>.Error e =>
+				new Result<U>.Error($"{prefix}{e.Mensaje}"),
+
+			_ => throw new InvalidOperationException()
+		};
+	}
+	public static async Task<Result<U>> BindWithPrefix<T, U>(
+	this Task<Result<T>> taskSelf,
+	Func<T, Result<U>> binder,
+	string prefix
+) {
+		var self = await taskSelf;
+		return self.BindWithPrefix(binder, prefix);
+	}
+
+	public static async Task<Result<U>> BindWithPrefixAsync<T, U>(
+		this Result<T> self,
+		Func<T, Task<Result<U>>> binder,
+		string prefix
+	) {
+		switch (self) {
+			case Result<T>.Ok ok:
+				// Llamamos al binder async y devolvemos su resultado
+				return await binder(ok.Valor);
+			case Result<T>.Error err:
+				// Propagamos el error, anteponiendo el prefijo
+				return new Result<U>.Error($"{prefix}{err.Mensaje}");
+			default:
+				throw new InvalidOperationException("Resultado inválido en BindWithPrefixAsync.");
+		}
+	}
 
 
+	public static async Task<Result<U>> BindWithPrefixAsync<T, U>(
+		this Task<Result<T>> taskSelf,
+		Func<T, Task<Result<U>>> binder,
+		string prefix
+	) {
+		var self = await taskSelf;
+		return await self.BindWithPrefixAsync(binder, prefix);
+	}
 
+	public static void MatchAndDo<T>(
+		this Result<T> self,
+		Action<T> ok,
+		Action<string> error) {
+		switch (self) {
+			case Result<T>.Ok o:
+				ok(o.Valor);
+				break;
 
+			case Result<T>.Error e:
+				error(e.Mensaje);
+				break;
+		}
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	public static TOut MatchAndSet<T, TOut>(
+		this Result<T> self,
+		Func<T, TOut> ok,
+		Func<string, TOut> error) {
+		return self switch {
+			Result<T>.Ok o => ok(o.Valor),
+			Result<T>.Error e => error(e.Mensaje),
+			_ => throw new InvalidOperationException()
+		};
+	}
 
 	public static Result<T> PrintAndContinue<T>(this Result<T> result, string? label = null) {
 		string prefix = label is null ? "" : $"{label}: ";
 
-		result.Match(
+		result.MatchAndDo(
 			ok => {
 				Console.ForegroundColor = ConsoleColor.Green;
 				Console.WriteLine($"{prefix}OK → {typeof(T).Name} succeded");
@@ -140,7 +146,7 @@ public static class ResultExtensions {
 
 	//UNSAFE
 	public static string UnwrapAsError<T>(this Result<T> result) =>
-		result.Match(
+		result.MatchAndSet(
 			ok => throw new InvalidOperationException(
 				$"Expected Error result but got Ok({ok})"
 			),
@@ -150,13 +156,13 @@ public static class ResultExtensions {
 
 	//UNSAFE
 	public static T UnwrapAsOk<T>(this Result<T> result) =>
-		result.Match(
+		result.MatchAndSet(
 			ok => ok,
 			mensaje => throw new InvalidOperationException(mensaje)
 		);
 
 	public static T GetOrRaise<T>(this Result<T> result) =>
-		result.Match(
+		result.MatchAndSet(
 			ok => {
 				Console.WriteLine($"Succesfully asserting {typeof(T).Name}");
 				return ok;
@@ -170,13 +176,6 @@ public static class ResultExtensions {
 		);
 
 
-	// Map: Result<T> → Result<U>
-	public static Result<U> Map<T, U>(this Result<T> r, Func<T, U> f) =>
-		r switch {
-			Result<T>.Ok ok => new Result<U>.Ok(f(ok.Valor)),
-			Result<T>.Error e => new Result<U>.Error(e.Mensaje),
-			_ => throw new InvalidOperationException()
-		};
 
 	// Bind: Result<T> → Result<U>
 	public static Result<U> Bind<T, U>(this Result<T> r, Func<T, Result<U>> f) =>
@@ -220,7 +219,13 @@ public static class ResultExtensions {
 	}
 
 
-	// SELECT MANY (equivalente a Bind)
+
+	public static Result<U> Map<T, U>(this Result<T> r, Func<T, U> f) =>
+		r switch {
+			Result<T>.Ok ok => new Result<U>.Ok(f(ok.Valor)),
+			Result<T>.Error e => new Result<U>.Error(e.Mensaje),
+			_ => throw new InvalidOperationException()
+		};
 	public static Result<V> SelectMany<T, U, V>(
 		this Result<T> r,
 		Func<T, Result<U>> bind,
@@ -230,5 +235,85 @@ public static class ResultExtensions {
 		return r.Bind(t =>
 			bind(t).Map(u => project(t, u))
 		);
+	}
+
+	public static async Task<Result<V>> SelectManyAsync<T, U, V>(
+	this Result<T> r,
+	Func<T, Task<Result<U>>> bindAsync,
+	Func<T, U, V> project
+) {
+		switch (r) {
+			case Result<T>.Ok ok:
+				var uResult = await bindAsync(ok.Valor);
+				switch (uResult) {
+					case Result<U>.Ok uOk:
+						return new Result<V>.Ok(project(ok.Valor, uOk.Valor));
+					case Result<U>.Error uErr:
+						return new Result<V>.Error(uErr.Mensaje);
+					default:
+						throw new InvalidOperationException();
+				}
+			case Result<T>.Error e:
+				return new Result<V>.Error(e.Mensaje);
+			default:
+				throw new InvalidOperationException();
+		}
+	}
+}
+
+
+
+public static class ResultExtensionsASync {
+
+
+
+
+	public static async Task<Result<U>> BindAsync<T, U>(
+	this Task<Result<T>> task,
+	Func<T, Task<Result<U>>> func) {
+		Result<T> result = await task;
+		return result is Result<T>.Ok ok
+			? await func(ok.Valor)
+			: new Result<U>.Error(((Result<T>.Error)result).Mensaje);
+	}
+
+	public static async Task<Result<U>> MapAsync<T, U>(
+	this Task<Result<T>> task,
+	Func<T, U> map) {
+		Result<T> result = await task;
+		return result is Result<T>.Ok ok
+			? new Result<U>.Ok(map(ok.Valor))
+			: new Result<U>.Error(((Result<T>.Error)result).Mensaje);
+	}
+	public static async Task<Result<T>> RequireOkAsync<T>(
+	this Task<Result<T>> task) {
+		Result<T> result = await task;
+		return result;
+	}
+	public static async Task<Result<T>> OrFailAsync<T>(
+	this Task<Result<T>> task,
+	string? overrideMessage = null) {
+		Result<T> result = await task;
+
+		return result switch {
+			Result<T>.Ok ok => ok,
+			Result<T>.Error err => new Result<T>.Error(
+				overrideMessage ?? err.Mensaje
+			),
+			_ => throw new InvalidOperationException()
+		};
+	}
+	public static async IAsyncEnumerable<T> SelectOk<T>(
+	this IAsyncEnumerable<Result<T>> stream) {
+		await foreach (Result<T> r in stream) {
+			switch (r) {
+				case Result<T>.Ok ok:
+					yield return ok.Valor;
+					break;
+
+				case Result<T>.Error err:
+					throw new Exception(err.Mensaje); // o devolver Result<...>
+			}
+		}
 	}
 }

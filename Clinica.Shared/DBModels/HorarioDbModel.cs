@@ -6,7 +6,7 @@ namespace Clinica.Shared.Dtos;
 
 public static partial class DbModels {
 	public record HorarioDbModel(
-		HorarioMedicoId Id,
+		HorarioId Id,
 		MedicoId MedicoId,
 		DayOfWeek DiaSemana,
 		TimeSpan HoraDesde,
@@ -19,21 +19,33 @@ public static partial class DbModels {
 	}
 
 
-	public static HorarioDbModel ToModel(this Horario2025 instance) {
+	public static HorarioDbModel ToModel(this Horario2025Agg aggrg) {
 		return new HorarioDbModel {
-			Id = instance.Id,
-			MedicoId = instance.MedicoId,
-			DiaSemana = instance.DiaSemana.EnumValor,
-			HoraDesde = instance.HoraDesde.Valor.ToTimeSpan(),
-			HoraHasta = instance.HoraHasta.Valor.ToTimeSpan(),
-			VigenteDesde = instance.VigenteDesde.Valor.ToDateTime(TimeOnly.MaxValue),
-			VigenteHasta = instance.VigenteHasta.Valor.ToDateTime(TimeOnly.MaxValue)
+			Id = aggrg.Id,
+			MedicoId = aggrg.Horario.MedicoId,
+			DiaSemana = aggrg.Horario.DiaSemana.EnumValor,
+			HoraDesde = aggrg.Horario.HoraDesde.Valor.ToTimeSpan(),
+			HoraHasta = aggrg.Horario.HoraHasta.Valor.ToTimeSpan(),
+			VigenteDesde = aggrg.Horario.VigenteDesde.Valor.ToDateTime(TimeOnly.MaxValue),
+			VigenteHasta = aggrg.Horario.VigenteHasta.Valor.ToDateTime(TimeOnly.MaxValue)
 		};
+	}
+
+	public static HorarioDbModel ToModel(this Horario2025 horario, HorarioId id) {
+		return new HorarioDbModel(
+			Id : id,
+			MedicoId : horario.MedicoId,
+			DiaSemana : horario.DiaSemana.EnumValor,
+			HoraDesde : horario.HoraDesde.Valor.ToTimeSpan(),
+			HoraHasta : horario.HoraHasta.Valor.ToTimeSpan(),
+			VigenteDesde : horario.VigenteDesde.Valor.ToDateTime(TimeOnly.MaxValue),
+			VigenteHasta : horario.VigenteHasta.Valor.ToDateTime(TimeOnly.MaxValue)
+		);
 	}
 
 	public static Result<Horario2025> ToDomain(this HorarioDbModel horarioDto) {
 		return Horario2025.CrearResult(
-			horarioDto.Id,
+			//horarioDto.Id,
 			horarioDto.MedicoId,
 			new DiaSemana2025(horarioDto.DiaSemana, horarioDto.DiaSemana.AEspañol()),
 			new HorarioHora2025(TimeOnly.FromTimeSpan(horarioDto.HoraDesde)),

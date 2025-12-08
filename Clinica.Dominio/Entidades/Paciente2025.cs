@@ -6,6 +6,10 @@ namespace Clinica.Dominio.Entidades;
 
 
 public readonly record struct PacienteId(int Valor) {
+	public static Result<PacienteId> CrearResult(PacienteId? id) =>
+		(id is PacienteId idGood && idGood.Valor >= 0)
+		? new Result<PacienteId>.Ok(idGood)
+		: new Result<PacienteId>.Error("El id no puede ser nulo o negativo.");
 	public static Result<PacienteId> CrearResult(int? id) =>
 		id is int idGood
 		? new Result<PacienteId>.Ok(new PacienteId(idGood))
@@ -24,9 +28,25 @@ public readonly record struct PacienteId(int Valor) {
 	}
 
 }
+public record Paciente2025Agg(
+	PacienteId Id,
+	Paciente2025 Paciente
+) {
+	public static Result<Paciente2025Agg> CrearResult(
+		Result<PacienteId> idResult,
+		Result<Paciente2025> pacienteResult
+	)
+		=> from id in idResult
+		   from paciente in pacienteResult
+		   select new Paciente2025Agg(
+			   id,
+			   paciente
+		   );
+
+}
 
 public record Paciente2025(
-	PacienteId Id,
+	//PacienteId Id,
 	NombreCompleto2025 NombreCompleto,
 	DniArgentino2025 Dni,
 	Contacto2025 Contacto,
@@ -35,7 +55,7 @@ public record Paciente2025(
 	FechaRegistro2025 FechaIngreso
 ): IComoTexto {
 	public static Result<Paciente2025> CrearResult(
-		Result<PacienteId> idResult,
+		//Result<PacienteId> idResult,
 		Result<NombreCompleto2025> nombreResult,
 		Result<DniArgentino2025> dniResult,
 		Result<Contacto2025> contactoResult,
@@ -43,9 +63,11 @@ public record Paciente2025(
 		Result<FechaDeNacimiento2025> fechaNacimientoResult,
 		Result<FechaRegistro2025> fechaIngresoResult
 	) {
-		Validated<(PacienteId, NombreCompleto2025, DniArgentino2025, Contacto2025, DomicilioArgentino2025, FechaDeNacimiento2025, FechaRegistro2025)> validado =
+		Validated<(
+			//PacienteId, 
+			NombreCompleto2025, DniArgentino2025, Contacto2025, DomicilioArgentino2025, FechaDeNacimiento2025, FechaRegistro2025)> validado =
 			ValidatedCombine.Combine(
-				idResult.ToValidated(),
+				//idResult.ToValidated(),
 				nombreResult.ToValidated(),
 				dniResult.ToValidated(),
 				contactoResult.ToValidated(),
@@ -55,7 +77,8 @@ public record Paciente2025(
 			);
 
 		return validado switch {
-			Validated<(PacienteId,
+			Validated<(
+						//PacienteId,
 					   NombreCompleto2025,
 					   DniArgentino2025,
 					   Contacto2025,
@@ -69,12 +92,13 @@ public record Paciente2025(
 							v.Value.Item3,
 							v.Value.Item4,
 							v.Value.Item5,
-							v.Value.Item6,
-							v.Value.Item7
+							v.Value.Item6
+							//v.Value.Item7
 						)
 					),
 
-			Validated<(PacienteId,
+			Validated<(
+				//PacienteId,
 					   NombreCompleto2025,
 					   DniArgentino2025,
 					   Contacto2025,
@@ -89,8 +113,8 @@ public record Paciente2025(
 	}
 
     public string ATexto() {
+		//Id: { Id.Valor}\n
 		return @$"
-			Id: {Id.Valor}\n
 			NombreCompleto: {NombreCompleto.ATexto()}\n
 			Dni: {Dni.Valor}\n
 			Contacto: {Contacto.ATexto()}\n

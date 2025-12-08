@@ -15,6 +15,8 @@ public enum PermisoSistema {
 
 	DeleteEntidades,
 	UpdateEntidades,
+	UpdateHorarios,
+	UpdatePacientes,
 	CrearHorarios,
 	VerHorarios,
 
@@ -32,15 +34,20 @@ public static class PermisosPorRol {
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerUsuarios,
 			PermisoSistema.VerMedicos,
-			PermisoSistema.CrearTurnos,
-			PermisoSistema.CancelarTurno,
-			PermisoSistema.ReprogramarTurno,
+			PermisoSistema.VerHorarios,
+
 			PermisoSistema.CrearPacientes,
-			PermisoSistema.UpdateEntidades,
+			PermisoSistema.CrearTurnos,
 			PermisoSistema.CrearMedicos,
-			PermisoSistema.DeleteEntidades,
 			PermisoSistema.CrearUsuarios,
 			PermisoSistema.CrearHorarios,
+
+			PermisoSistema.CancelarTurno,
+			PermisoSistema.ReprogramarTurno,
+			PermisoSistema.SolicitarTurno,
+
+			PermisoSistema.UpdateEntidades,
+			PermisoSistema.DeleteEntidades,
 
 		],
 
@@ -48,27 +55,48 @@ public static class PermisosPorRol {
 			PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerMedicos,
-			PermisoSistema.CrearTurnos,
-			PermisoSistema.CancelarTurno,
-			PermisoSistema.CrearPacientes,
-			PermisoSistema.UpdateEntidades,
-			PermisoSistema.CrearHorarios,
 			PermisoSistema.VerHorarios,
-			PermisoSistema.SolicitarTurno
+
+			PermisoSistema.CrearPacientes,
+			PermisoSistema.CrearTurnos,
+			PermisoSistema.CrearMedicos,
+			PermisoSistema.CrearHorarios,
+
+			PermisoSistema.CancelarTurno,
+			PermisoSistema.ReprogramarTurno,
+			PermisoSistema.SolicitarTurno,
+
+			PermisoSistema.UpdateEntidades,
+            // No borra entidades sensibles
 
 		],
 
 		[UsuarioEnumRole.Nivel3Secretaria] = [
-			PermisoSistema.VerPacientes,
+            // Puede operar turnos y datos básicos, pero no estructura
+            PermisoSistema.VerPacientes,
 			PermisoSistema.VerTurnos,
 			PermisoSistema.VerMedicos,
 			PermisoSistema.VerHorarios,
-			PermisoSistema.SolicitarTurno
+
+			PermisoSistema.UpdatePacientes,
+			PermisoSistema.CrearPacientes,
+			PermisoSistema.CrearTurnos,
+
+			PermisoSistema.CancelarTurno,
+			PermisoSistema.SolicitarTurno,
+
+			PermisoSistema.UpdateEntidades, // ← Puede modificar pacientes
+            // No puede reprogramar turnos (opcional: lo podés habilitar)
+            // No puede crear médicos/usuarios/horarios
+            // No borra entidades
 		],
 
 		[UsuarioEnumRole.Nivel4Medico] = [
+			PermisoSistema.VerPacientes,  // opcional
+            PermisoSistema.VerTurnos,
 			PermisoSistema.VerHorarios,
 			PermisoSistema.SolicitarTurno
+            // No modifica nada
 		],
 	};
 

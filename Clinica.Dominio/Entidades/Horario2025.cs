@@ -1,16 +1,16 @@
 ﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Dominio.TiposDeValor;
+namespace Clinica.Dominio.Entidades;
 
-public record struct HorarioMedicoId(int Valor) {
-	public static Result<HorarioMedicoId> Crear(int? id) =>
+public record struct HorarioId(int Valor) {
+	public static Result<HorarioId> Crear(int? id) =>
 		id is int idGood
-		? new Result<HorarioMedicoId>.Ok(new HorarioMedicoId(idGood))
-		: new Result<HorarioMedicoId>.Error("El id no puede ser nulo.");
-	public static bool TryParse(string? s, out HorarioMedicoId id) {
+		? new Result<HorarioId>.Ok(new HorarioId(idGood))
+		: new Result<HorarioId>.Error("El id no puede ser nulo.");
+	public static bool TryParse(string? s, out HorarioId id) {
 		if (int.TryParse(s, out int value)) {
-			id = new HorarioMedicoId(value);
+			id = new HorarioId(value);
 			return true;
 		}
 
@@ -20,25 +20,25 @@ public record struct HorarioMedicoId(int Valor) {
 	public override string ToString() => Valor.ToString();
 }
 //public readonly record HorarioMedico2025(
-//	HorarioMedicoId Id,
+//	HorarioId Id,
 //	MedicoId MedicoId,
 //	Horario2025 Horario
 //);
-
+public readonly record struct Horario2025Agg(HorarioId Id, Horario2025 Horario);
 public readonly record struct Horario2025(
-	HorarioMedicoId Id,
-	MedicoId MedicoId,
-	DiaSemana2025 DiaSemana,
-	HorarioHora2025 HoraDesde,
-	HorarioHora2025 HoraHasta,
-	VigenciaHorario2025 VigenteDesde,
-	VigenciaHorario2025 VigenteHasta
+   //HorarioId Id,
+   MedicoId MedicoId,
+   DiaSemana2025 DiaSemana,
+   HorarioHora2025 HoraDesde,
+   HorarioHora2025 HoraHasta,
+   VigenciaHorario2025 VigenteDesde,
+   VigenciaHorario2025 VigenteHasta
 ) : IComoTexto {
 	public string ATexto()
 		=> $"{DiaSemana.ATexto()}: {HoraDesde.ATexto()} — {HoraHasta.ATexto()} (vigencia {VigenteDesde.ATexto()} → {VigenteHasta.ATexto()}";
 
 	public static Result<Horario2025> CrearResult(
-		HorarioMedicoId id,
+		//HorarioId id,
 		MedicoId medicoId,
 		DiaSemana2025 dia,
 		HorarioHora2025 desde,
@@ -53,12 +53,12 @@ public readonly record struct Horario2025(
 			return new Result<Horario2025>.Error("La fecha de inicio de vigencia debe ser anterior a la fecha de fin.");
 
 		return new Result<Horario2025>.Ok(
-			new Horario2025(id, medicoId, dia, desde, hasta, vigenteDesde, vigenteHasta)
+			new Horario2025(medicoId, dia, desde, hasta, vigenteDesde, vigenteHasta)
 		);
 	}
 
 	public static Result<Horario2025> CrearResult(
-		Result<HorarioMedicoId> idResult,
+		Result<HorarioId> idResult,
 		Result<MedicoId> medicoIdResult,
 		Result<DiaSemana2025> diaResult,
 		Result<HorarioHora2025> desdeResult,
@@ -66,12 +66,13 @@ public readonly record struct Horario2025(
 		Result<VigenciaHorario2025> vigenteDesdeResult,
 		Result<VigenciaHorario2025> vigenteHastaResult
 		)
-		=> idResult.Bind(idOk =>
+		=> 
+			//idResult.Bind(idOk =>
 		   medicoIdResult.Bind(medicoIdOk =>
 		   diaResult.Bind(diaOk =>
 		   desdeResult.Bind(desdeOk =>
 		   hastaResult.Bind(hastaOk =>
 		   vigenteDesdeResult.Bind(vigenteDesde =>
 		   vigenteHastaResult.Bind(vigenteHasta =>
-			   CrearResult(idOk, medicoIdOk, diaOk, desdeOk, hastaOk, vigenteDesde, vigenteHasta))))))));
+			   CrearResult(medicoIdOk, diaOk, desdeOk, hastaOk, vigenteDesde, vigenteHasta)))))));
 }

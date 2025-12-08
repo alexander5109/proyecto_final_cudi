@@ -7,6 +7,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using static Clinica.Dominio.IRepositorios.QueryModels;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
+using static Clinica.Shared.Dtos.ApiDtos;
 using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.Infrastructure.DataAccess;
@@ -144,8 +145,8 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 	Task<Result<IEnumerable<PacienteDbModel>>> IRepositorioPacientes.SelectPacientes()
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<PacienteDbModel>(
-				"sp_SelectPacientes",
-				commandType: CommandType.StoredProcedure
+			"sp_SelectPacientes",
+			commandType: CommandType.StoredProcedure
 			);
 		});
 	Task<Result<PacienteDbModel?>> IRepositorioPacientes.SelectPacienteWhereId(PacienteId id)
@@ -188,9 +189,9 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-	Task<Result<Unit>> IRepositorioDomainServiciosPrivados.UpdateTurnoWhereId(Turno2025 instance) => ((IRepositorioTurnos)this).UpdateTurnoWhereId(instance);
+	Task<Result<Unit>> IRepositorioDomainServiciosPrivados.UpdateTurnoWhereId(TurnoId id, Turno2025 instance) => ((IRepositorioTurnos)this).UpdateTurnoWhereId(id, instance);
 
-	Task<Result<Unit>> IRepositorioTurnos.UpdateTurnoWhereId(Turno2025 instance)
+	Task<Result<Unit>> IRepositorioTurnos.UpdateTurnoWhereId(TurnoId id, Turno2025 instance)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_UpdateTurnoWhereId",
@@ -199,7 +200,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			);
 		});
 
-	Task<Result<Unit>> IRepositorioMedicos.UpdateMedicoWhereId(Medico2025 instance)
+	Task<Result<Unit>> IRepositorioMedicos.UpdateMedicoWhereId(MedicoId id, Medico2025 instance)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_UpdateMedico",
@@ -208,30 +209,30 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			);
 		});
 
-	Task<Result<Unit>> IRepositorioHorarios.UpdateHorarioWhereId(Horario2025 instance)
+	Task<Result<Unit>> IRepositorioHorarios.UpdateHorarioWhereId(HorarioId id, Horario2025 instance)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_UpdateHorarioWhereId",
-				instance.ToModel(),
+				instance.ToModel(id),
 				commandType: CommandType.StoredProcedure
 			);
 		});
 
-	Task<Result<Unit>> IRepositorioPacientes.UpdatePacienteWhereId(Paciente2025 instance)
+	Task<Result<Unit>> IRepositorioPacientes.UpdatePacienteWhereId(PacienteId id, Paciente2025 instance)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
-				"sp_UpdatePaciente",
-				instance.ToModel(),
+				"sp_UpdatePacienteWhereId",
+				instance.ToModel(id),
 				commandType: CommandType.StoredProcedure
 			);
 		});
 
 
-	Task<Result<Unit>> IRepositorioUsuarios.UpdateUsuarioWhereId(Usuario2025 instance)
+	Task<Result<Unit>> IRepositorioUsuarios.UpdateUsuarioWhereId(UsuarioId id, Usuario2025 instance)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_UpdateUsuarioWhereId",
-				instance.ToModel(),
+				instance.ToModel(id),
 				commandType: CommandType.StoredProcedure
 			);
 		});
@@ -375,7 +376,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 	Task<Result<TurnoId>> IRepositorioTurnos.InsertTurnoReturnId(Turno2025 instance)
 		=> TryAsync(async conn => {
-			DynamicParameters parameters = new(instance.ToModel());
+			DynamicParameters parameters = new(instance.ToDto());
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 			await conn.ExecuteScalarAsync<int>(
 				"sp_InsertTurnoReturnId",
@@ -390,11 +391,11 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 	Task<Result<MedicoId>> IRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance)
 		=> TryAsync(async conn => {
-			DynamicParameters parameters = new(instance.ToModel());
+			DynamicParameters parameters = new(instance.ToDto());
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 			await conn.ExecuteScalarAsync<int>(
 				"sp_InsertMedicoReturnId",
-				instance.ToModel(),
+				parameters,
 				commandType: CommandType.StoredProcedure
 			);
 			int newId = parameters.Get<int>("@NewId");
@@ -404,11 +405,11 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 	Task<Result<PacienteId>> IRepositorioPacientes.InsertPacienteReturnId(Paciente2025 instance)
 		=> TryAsync(async conn => {
-			DynamicParameters parameters = new(instance.ToModel());
+			DynamicParameters parameters = new(instance.ToDto());
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 			await conn.ExecuteScalarAsync<int>(
 				"sp_InsertPacienteReturnId",
-				instance.ToModel(),
+				parameters,
 				commandType: CommandType.StoredProcedure
 			);
 			int newId = parameters.Get<int>("@NewId");
@@ -416,7 +417,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 		});
 	Task<Result<UsuarioId>> IRepositorioUsuarios.InsertUsuarioReturnId(Usuario2025 instance)
 		=> TryAsync(async conn => {
-			DynamicParameters parameters = new(instance.ToModel());
+			DynamicParameters parameters = new(instance.ToDto());
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 			await conn.ExecuteAsync(
 				"sp_InsertUsuarioReturnId",
@@ -427,9 +428,10 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			return new UsuarioId(newId);   // ← solo devolvés el valor
 		});
 
-	Task<Result<HorarioMedicoId>> IRepositorioHorarios.InsertHorarioReturnId(Horario2025 instance)
+	Task<Result<HorarioId>> IRepositorioHorarios.InsertHorarioReturnId(Horario2025 instance)
 		=> TryAsync(async conn => {
-			DynamicParameters parameters = new(instance.ToModel());
+			//horarioDto
+			DynamicParameters parameters = new(instance.ToDto());
 			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 			await conn.ExecuteAsync(
 				"sp_InsertHorarioReturnId",
@@ -437,7 +439,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 				commandType: CommandType.StoredProcedure
 			);
 			int newId = parameters.Get<int>("@NewId");
-			return new HorarioMedicoId(newId);   // ← solo devolvés el valor
+			return new HorarioId(newId);   // ← solo devolvés el valor
 		});
 
 	Task<Result<IEnumerable<UsuarioDbModel>>> IRepositorioUsuarios.SelectUsuarios()
@@ -463,7 +465,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-	Task<Result<Unit>> IRepositorioHorarios.DeleteHorarioWhereId(HorarioMedicoId id)
+	Task<Result<Unit>> IRepositorioHorarios.DeleteHorarioWhereId(HorarioId id)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_DeleteHorarioWhereId",
@@ -481,7 +483,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			);
 		});
 
-	Task<Result<HorarioDbModel?>> IRepositorioHorarios.SelectHorarioWhereId(HorarioMedicoId id)
+	Task<Result<HorarioDbModel?>> IRepositorioHorarios.SelectHorarioWhereId(HorarioId id)
 		=> TryAsync(async conn => {
 			return await conn.QuerySingleOrDefaultAsync<HorarioDbModel>(
 				"sp_SelectHorarioWhereId",
@@ -496,7 +498,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-	Task<Result<Usuario2025>> IRepositorioDomainServiciosPrivados.SelectUsuarioWhereIdAsDomain(UsuarioId id)
+	Task<Result<Usuario2025Agg>> IRepositorioDomainServiciosPrivados.SelectUsuarioWhereIdAsDomain(UsuarioId id)
 		=> TryAsync(async conn => {
 			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
 				"sp_SelectUsuarioWhereId",
@@ -505,12 +507,12 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			) ?? throw new Exception($"Usuario con Id={id.Valor} no encontrado.");
 			Result<Usuario2025> map = dto.ToDomain();
 			if (map.IsError)
-				throw new Exception($"Error creando Usuario2025 desde DTO (Id={id.Valor}): {map.UnwrapAsError()}");
-			return map.UnwrapAsOk();
+				throw new Exception($"Erro de dominio: Usuario con Id={id.Valor} no cumple las reglas del dominio: \n{map.UnwrapAsError()}");
+			return Usuario2025Agg.Crear(id, map.UnwrapAsOk());
 		});
 
 
-	Task<Result<Usuario2025>> IRepositorioDomainServiciosPrivados.SelectUsuarioWhereNombreAsDomain(NombreUsuario nombre)
+	Task<Result<Usuario2025Agg>> IRepositorioDomainServiciosPrivados.SelectUsuarioWhereNombreAsDomain(NombreUsuario nombre)
 		=> TryAsync(async conn => {
 			UsuarioDbModel? dto = await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
 				"sp_SelectUsuarioWhereNombre",
@@ -519,44 +521,33 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 			) ?? throw new Exception($"Usuario con NombreUsuario={nombre.Valor} no encontrado.");
 			Result<Usuario2025> map = dto.ToDomain();
 			if (map.IsError)
-				throw new Exception($"Error creando Usuario2025 desde UsuarioDbModel (NombreUsuario={nombre.Valor}): {map.UnwrapAsError()}");
-
-			return map.UnwrapAsOk();
+				throw new Exception($"Erro de dominio:Usuario con NombreUsuario={nombre.Valor} no cumple las reglas del dominio: \n{map.UnwrapAsError()}");
+			return Usuario2025Agg.Crear(dto.Id, map.UnwrapAsOk());
 		});
 
 
-	Task<Result<Turno2025>> IRepositorioDomainServiciosPrivados.SelectTurnoWhereIdAsDomain(TurnoId id)
-		=> TryAsyncAndMap<TurnoDbModel, Turno2025>(
+	Task<Result<Turno2025Agg>> IRepositorioDomainServiciosPrivados
+		.SelectTurnoWhereIdAsDomain(TurnoId id)
+		=> TryAsyncAndMap<TurnoDbModel, Turno2025Agg>(
 			query: conn => conn.QuerySingleOrDefaultAsync<TurnoDbModel>(
 				"sp_SelectTurnoWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure
 			),
+
 			mapper: dto => {
-				return dto is null ? new Result<Turno2025>.Error($"Turno con id {id} no encontrado.") : dto.ToDomain();
+				if (dto is null)
+					return new Result<Turno2025Agg>.Error(
+						$"Turno con id {id} no encontrado."
+					);
+
+				// ToDomain() → Result<Turno2025>
+				return dto.ToDomain().BindWithPrefix(
+					turnoOk => new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(id, turnoOk)),
+					$"Error de dominio en turno {id}: "
+				);
 			}
 		);
 
-
-
-    //if (dto is null)
-    //return new Result<Turno2025?>.Ok(null);
-    //Result<Turno2025> map = dto.ToDomain();
-    // 4. Si falló la construcción del dominio, devolvemos el ERROR directamente
-    //if (map.IsError)
-    //return new Result<Turno2025?>.Error(map.UnwrapAsError());
-
-    //Turno2025? result = map.UnwrapAsOk();
-    // 5. Caso OK
-    //return new Result<Turno2025?>.Ok(result);
-
-
-    //	=> TryAsync(async conn => {
-    //	return await conn.QuerySingleOrDefaultAsync<HorarioDbModel>(
-    //		"sp_SelectHorarioWhereId",
-    //		new { Id = id.Valor },
-    //		commandType: CommandType.StoredProcedure
-    //	);
-    //});
 
 }

@@ -3,6 +3,7 @@ using System.Windows;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DbModels;
 
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
@@ -19,34 +20,36 @@ public sealed class TurnoVM {
 	public TurnoOutcomeEstadoCodigo2025 OutcomeEstado { get; }
 	public DateTime? OutcomeFecha { get; set; }
 	public string? OutcomeComentario { get; set; }
-	public TurnoVM(TurnoDto dto) {
-
-		Id = dto.Id;
-		PacienteDisplayear = "(await dto.PacienteId.RespectivoPaciente()).Nombre+Apellido";
-		PacienteDni = "(await dto.PacienteId.RespectivoPaciente()).Dni";
-		MedicoDisplayear = "(await dto.MedicoId.RespectivoMedico()).Nombre + Apellido";
-		FechaSolicitud = dto.FechaHoraAsignadaDesde.AFechaArgentina();
-		FechaAsignada = dto.FechaHoraAsignadaDesde.AFechaArgentina();
-		HoraAsignada = dto.FechaHoraAsignadaHasta.AHorasArgentina();
-		EspecialidadCodigo = dto.EspecialidadCodigo;
-		OutcomeEstado = dto.OutcomeEstado;
+	public TurnoVM(TurnoDbModel model) {
+		Id = model.Id;
+		PacienteDisplayear = "(await model.SelectedPacienteId.RespectivoPaciente()).Nombre+Apellido";
+		PacienteDni = "(await model.SelectedPacienteId.RespectivoPaciente()).Dni";
+		MedicoDisplayear = "(await model.MedicoId.RespectivoMedico()).Nombre + Apellido";
+		FechaSolicitud = model.FechaHoraAsignadaDesde.AFechaArgentina();
+		FechaAsignada = model.FechaHoraAsignadaDesde.AFechaArgentina();
+		HoraAsignada = model.FechaHoraAsignadaHasta.AHorasArgentina();
+		EspecialidadCodigo = model.EspecialidadCodigo;
+		OutcomeEstado = model.OutcomeEstado;
 		//MessageBox.Show($"{EspecialidadCodigo} {OutcomeEstado.ToString()}");
-		OutcomeFecha = dto.OutcomeFecha;
-		OutcomeComentario = dto.OutcomeComentario;
+		OutcomeFecha = model.OutcomeFecha;
+		OutcomeComentario = model.OutcomeComentario;
 	}
 }
-public sealed class SecretariaGeneralViewModel : INotifyPropertyChanged {
+public sealed class SecretariaGestionDeTurnosViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	// ==== PACIENTES ====
-	private List<PacienteDto> _pacientes = [];
-	public List<PacienteDto> PacientesList {
+	private List<PacienteDbModel> _pacientes = [];
+	public List<PacienteDbModel> PacientesList {
 		get => _pacientes;
 		set { _pacientes = value; OnPropertyChanged(nameof(PacientesList)); }
 	}
 
-	private PacienteDto? _selectedPaciente;
-	public PacienteDto? SelectedPaciente {
+
+	public bool ModificarPacienteCommand => SelectedPaciente is not null;
+
+	private PacienteDbModel? _selectedPaciente;
+	public PacienteDbModel? SelectedPaciente {
 		get => _selectedPaciente;
 		set {
 			if (_selectedPaciente != value) {
@@ -90,6 +93,7 @@ public sealed class SecretariaGeneralViewModel : INotifyPropertyChanged {
 		ComentarioObligatorio = requiere;
 		OnPropertyChanged(nameof(ComentarioObligatorio));
 	}
+
 
 	private void OnPropertyChanged(string propertyName) =>
 		PropertyChanged?.Invoke(this, new(propertyName));

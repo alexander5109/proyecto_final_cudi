@@ -52,9 +52,28 @@ public static partial class DbModels {
 	}
 
 
+	public static MedicoDbModel ToModel(this Medico2025Agg aggrg) {
+		return new MedicoDbModel {
+			Id = aggrg.Id,
+			EspecialidadCodigo = aggrg.Medico.EspecialidadUnica.Codigo,
+			Dni = aggrg.Medico.Dni.Valor,
+			Nombre = aggrg.Medico.NombreCompleto.NombreValor,
+			Apellido = aggrg.Medico.NombreCompleto.ApellidoValor,
+			FechaIngreso = aggrg.Medico.FechaIngreso.Valor,
+			Domicilio = aggrg.Medico.Domicilio.DireccionValor,
+			Localidad = aggrg.Medico.Domicilio.Localidad.NombreValor,
+			ProvinciaCodigo = aggrg.Medico.Domicilio.Localidad.Provincia.CodigoInternoValor,
+			Telefono = aggrg.Medico.Telefono.Valor,
+			Email = aggrg.Medico.Email.Valor,
+			HaceGuardias = aggrg.Medico.HaceGuardiasValor,
+			//HorariosJson = JsonSerializer.Serialize(aggrg.Medico.ToModel()) //Cualquier cosa estaba haciedno aca.
+		};
+	}
+
+
 	public static MedicoDbModel ToModel(this Medico2025 medico) {
 		return new MedicoDbModel {
-			Id = medico.Id,
+			//Id = aggrg.Id,
 			EspecialidadCodigo = medico.EspecialidadUnica.Codigo,
 			Dni = medico.Dni.Valor,
 			Nombre = medico.NombreCompleto.NombreValor,
@@ -66,7 +85,15 @@ public static partial class DbModels {
 			Telefono = medico.Telefono.Valor,
 			Email = medico.Email.Valor,
 			HaceGuardias = medico.HaceGuardiasValor,
-			HorariosJson = JsonSerializer.Serialize(medico.ToModel())
+			//HorariosJson = JsonSerializer.Serialize(aggrg.Medico.ToModel()) //Cualquier cosa estaba haciedno aca.
 		};
 	}
+
+
+
+
+
+
+
+
 }

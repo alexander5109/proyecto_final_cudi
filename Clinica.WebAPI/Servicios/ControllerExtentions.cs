@@ -13,15 +13,15 @@ public static class ControllerExtentions {
 		string? notFoundMessage = null
 	) {
 		// Validación de usuario
-		if (controller.HttpContext.Items["Usuario"] is not Usuario2025 usuario) {
+		if (controller.HttpContext.Items["Usuario"] is not Usuario2025Agg aggrgg) {
 			logger.LogWarning("Token válido pero no se encontró Usuario en HttpContext.");
 			return controller.Unauthorized();
 		}
 
 		// Validación de permisos
-		if (!usuario.HasPermission(permiso)) {
+		if (!aggrgg.Usuario.HasPermission(permiso)) {
 			logger.LogWarning("Usuario {UserId} intentó acceder sin permiso {Permiso}.",
-				usuario.Id.Valor, permiso);
+				aggrgg.Id.Valor, permiso);
 			return controller.Forbid();
 		}
 
@@ -57,14 +57,14 @@ public static class ControllerExtentions {
 		Func<TDomain, Task<Result<TResult>>> action,
 		string? notFoundMessage = null
 	) {
-		if (controller.HttpContext.Items["Usuario"] is not Usuario2025 usuario) {
+		if (controller.HttpContext.Items["Usuario"] is not Usuario2025Agg aggrg) {
 			logger.LogWarning("Token válido pero no se encontró Usuario en HttpContext.");
 			return controller.Unauthorized();
 		}
 
-		if (!usuario.HasPermission(permiso)) {
+		if (!aggrg.Usuario.HasPermission(permiso)) {
 			logger.LogWarning("Usuario {UserId} intentó acceder sin permiso {Permiso}.",
-				usuario.Id.Valor, permiso);
+				aggrg.Id.Valor, permiso);
 			return controller.Forbid();
 		}
 

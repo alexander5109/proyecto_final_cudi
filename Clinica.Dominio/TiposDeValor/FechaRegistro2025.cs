@@ -8,6 +8,10 @@ public record FechaRegistro2025(DateTime Valor) : IComoTexto {
 	public string ATexto() {
 		return Valor.ToString("dd/MM/yyyy");
 	}
+	public static FechaRegistro2025 Crear(DateTime fecha) {
+		return new(fecha);
+
+	}
 	public static Result<FechaRegistro2025> CrearResult(DateTime? fecha) {
 		if (fecha is DateTime fechagud){
 			return new Result<FechaRegistro2025>.Ok(new FechaRegistro2025(fechagud));

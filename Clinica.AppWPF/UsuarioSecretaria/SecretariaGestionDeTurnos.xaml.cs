@@ -1,31 +1,31 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.Comun;
 using Clinica.Shared.Dtos;
 using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
-public partial class SecretariaGeneral : Window {
-	public SecretariaGeneralViewModel VM { get; }
+public partial class SecretariaGestionDeTurnos : Window {
+	public SecretariaGestionDeTurnosViewModel VM { get; }
 
-	public SecretariaGeneral() {
+	public SecretariaGestionDeTurnos() {
 		InitializeComponent();
-		VM = new SecretariaGeneralViewModel();
+		VM = new SecretariaGestionDeTurnosViewModel();
 		DataContext = VM;
 
 		Loaded += async (_, __) => await CargaInicialAsync();
 	}
 
+	private bool MostrarErrorSiCorresponde<T>(ResultWpf<T> result)
+		=> result.MatchAndSet(
+			ok => true,
+			error => {
+				error.ShowMessageBox();
+				return false;
+			}
+		);
 
-	private bool MostrarErrorSiCorresponde<T>(Result<T> result)
-	=> result.Match(
-		ok => true,
-		error => {
-			MessageBox.Show(error ?? "Error desconocido.", "Error");
-			return false;
-		}
-	);
 
 
 	private async Task CargaInicialAsync() {
@@ -34,19 +34,17 @@ public partial class SecretariaGeneral : Window {
 	}
 	private async Task RefrescarPacientesAsync() {
 		try {
-			var pacientes = await App.Repositorio.SelectPacientes();
-			VM.PacientesList = pacientes.ToList();
+            List<PacienteDbModel> pacientes = await App.Repositorio.SelectPacientes();
+			VM.PacientesList = [.. pacientes];
 		} catch (Exception ex) {
 			MessageBox.Show("Error cargando pacientes: " + ex.Message);
 		}
 	}
 	private async Task RefrescarTurnosAsync() {
 		try {
-            List<TurnoDto> turnosDto = await App.Repositorio.SelectTurnos();
+			List<TurnoDbModel> turnosDto = await App.Repositorio.SelectTurnos();
 
-			VM.TurnosList = turnosDto
-				.Select(dto => new TurnoVM(dto))
-				.ToList();
+			VM.TurnosList = [.. turnosDto.Select(dto => new TurnoVM(dto))];
 		} catch (Exception ex) {
 			MessageBox.Show("Error cargando turnos: " + ex.Message);
 		}
@@ -55,28 +53,14 @@ public partial class SecretariaGeneral : Window {
 
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.VolverARespectivoHome();
 	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
-	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<SecretariaPacientesModificar>();
-		//_ = VM.RefrescarPacientesAsync();
-	}
-	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
-		if (VM.SelectedPaciente is null) return;
-		this.AbrirComoDialogo<SecretariaPacientesModificar>(VM.SelectedPaciente.Id);
-		//_ = VM.RefrescarPacientesAsync();
-	}
-	private void ButtonReservarTurno(object sender, RoutedEventArgs e) {
-		if (VM.SelectedPaciente is null) return;
-		this.AbrirComoDialogo<SecretariaConsultaDisponibilidades>(VM.SelectedPaciente);
-		//_ = VM.RefrescarTurnosAsync();
-	}
 	private async void Button_ConfirmarTurnoAsistencia(object sender, RoutedEventArgs e) {
 		if (VM.SelectedTurno is null) return;
 
-		var turno = VM.SelectedTurno;
+        TurnoVM turno = VM.SelectedTurno;
 
 		VM.IndicarAccionRequiereComentario(false);
 
-		var result = await App.Repositorio.MarcarTurnoComoConcretado(
+        ResultWpf<TurnoDto> result = await App.Repositorio.MarcarTurnoComoConcretado(
 			turno.Id,
 			DateTime.Now
 		);
@@ -93,9 +77,9 @@ public partial class SecretariaGeneral : Window {
 
 		VM.IndicarAccionRequiereComentario(false);
 
-		//Aca no es obligatorio el comentario.
+        //Aca no es obligatorio el comentario.
 
-		var result = await App.Repositorio.MarcarTurnoComoAusente(
+        ResultWpf<TurnoDto> result = await App.Repositorio.MarcarTurnoComoAusente(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text
@@ -118,7 +102,7 @@ public partial class SecretariaGeneral : Window {
 			return;
 		}
 
-		var result = await App.Repositorio.ReprogramarTurno(
+        ResultWpf<TurnoDto> result = await App.Repositorio.ReprogramarTurno(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text
@@ -141,7 +125,7 @@ public partial class SecretariaGeneral : Window {
 			return;
 		}
 
-		var result = await App.Repositorio.CancelarTurno(
+        ResultWpf<TurnoDto> result = await App.Repositorio.CancelarTurno(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text
@@ -151,5 +135,20 @@ public partial class SecretariaGeneral : Window {
 			return;
 
 		await RefrescarTurnosAsync();
+	}
+
+	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
+		this.AbrirComoDialogo<SecretariaPacienteFormulario>();
+		//_ = VM.RefrescarPacientesAsync();
+	}
+	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
+		if (VM.SelectedPaciente is null) return;
+		this.AbrirComoDialogo<SecretariaPacienteFormulario>(VM.SelectedPaciente.Id);
+		//_ = VM.RefrescarPacientesAsync();
+	}
+	private void ButtonBuscarDisponibilidades(object sender, RoutedEventArgs e) {
+		if (VM.SelectedPaciente is null) return;
+		this.AbrirComoDialogo<SecretariaDisponibilidades>(VM.SelectedPaciente.Id);
+		//_ = VM.RefrescarTurnosAsync();
 	}
 }

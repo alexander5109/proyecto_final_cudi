@@ -1,42 +1,41 @@
 ﻿using System.Net.Http.Json;
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
 using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.Infrastructure;
 
 
 public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
-	async Task<List<MedicoDto>> IWPFRepositorioMedicos.SelectMedicos() {
+	async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicos() {
 		await EnsureMedicosLoaded();
 		return [.. DictCacheMedicos.Values];
 	}
-	async Task<List<PacienteDto>> IWPFRepositorioPacientes.SelectPacientes() {
+	async Task<List<PacienteDbModel>> IWPFRepositorioPacientes.SelectPacientes() {
 		await EnsurePacientesLoaded();
 		return [.. DictCachePacientes.Values];
 	}
 
 
-	async Task<List<MedicoDto>> IWPFRepositorioMedicos.SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code) {
+	async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code) {
 		await EnsureMedicosLoaded();
-		return DictCacheMedicos
+		return [.. DictCacheMedicos
 			.Values
-			.Where(m => m.EspecialidadCodigo == code)
-			.ToList();
+			.Where(m => m.EspecialidadCodigo == code)];
 		//return await Api.TryGetJsonAsync<List<MedicoDto>>($"api/medicos/por-especialidad/{code}", defaultValue: []);
 	}
 
 
 
-	async Task<MedicoDto?> IWPFRepositorioMedicos.SelectMedicoWhereId(MedicoId id) {
+	async Task<MedicoDbModel?> IWPFRepositorioMedicos.SelectMedicoWhereId(MedicoId id) {
 		await EnsureMedicosLoaded();
 
-		if (DictCacheMedicos.TryGetValue(id, out var dto))
+		if (DictCacheMedicos.TryGetValue(id, out MedicoDbModel? dto))
 			return dto;
-		var res = await Api.TryGetJsonOrNullAsync<MedicoDto>($"api/medicos/{id.Valor}");
+		MedicoDbModel? res = await Api.TryGetJsonOrNullAsync<MedicoDbModel>($"api/medicos/{id.Valor}");
 		if (res is not null) {
 			DictCacheMedicos[id] = res; // update cache
 		}
@@ -47,12 +46,12 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<PacienteDto?> IWPFRepositorioPacientes.SelectPacienteWhereId(PacienteId id) {
+	async Task<PacienteDbModel?> IWPFRepositorioPacientes.SelectPacienteWhereId(PacienteId id) {
 		await EnsurePacientesLoaded();
 
-		if (DictCachePacientes.TryGetValue(id, out var dto))
+		if (DictCachePacientes.TryGetValue(id, out PacienteDbModel? dto))
 			return dto;
-		var res = await Api.TryGetJsonOrNullAsync<PacienteDto>($"api/pacientes/{id.Valor}");
+		PacienteDbModel? res = await Api.TryGetJsonOrNullAsync<PacienteDbModel>($"api/pacientes/{id.Valor}");
 		if (res is not null) {
 			DictCachePacientes[id] = res; // update cache
 		}
@@ -63,8 +62,8 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	private Dictionary<MedicoId, MedicoDto> DictCacheMedicos = [];
-	private Dictionary<PacienteId, PacienteDto> DictCachePacientes = [];
+	private Dictionary<MedicoId, MedicoDbModel> DictCacheMedicos = [];
+	private Dictionary<PacienteId, PacienteDbModel> DictCachePacientes = [];
 
 
 
@@ -73,10 +72,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		if (_medicosLoaded)
 			return;
 
-		var list = await Api.TryGetJsonAsync<List<MedicoDto>>("api/medicos", defaultValue: []);
+        List<MedicoDbModel> list = await Api.TryGetJsonAsync<List<MedicoDbModel>>("api/medicos", defaultValue: []);
 
 		DictCacheMedicos = list.ToDictionary(m => m.Id, m => m);
-		foreach ( var m in DictCacheMedicos ) {
+		foreach (KeyValuePair<MedicoId, MedicoDbModel> m in DictCacheMedicos ) {
 			Console.WriteLine($"Medico cache loaded: {m.Key} -> {m.Value.Nombre} {m.Value.Apellido}");
 		}
 		_medicosLoaded = true;
@@ -88,7 +87,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		if (_pacientesLoaded)
 			return;
 
-		var list = await Api.TryGetJsonAsync<List<PacienteDto>>("api/pacientes", defaultValue: []);
+        List<PacienteDbModel> list = await Api.TryGetJsonAsync<List<PacienteDbModel>>("api/pacientes", defaultValue: []);
 
 		DictCachePacientes = list.ToDictionary(x => x.Id, x => x);
 		_pacientesLoaded = true;
@@ -108,8 +107,8 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<Result<PacienteId>> IWPFRepositorioPacientes.InsertPacienteReturnId(Paciente2025 instance) {
-		var response = await Api.TryApiCallAsync(
+	async Task<ResultWpf<PacienteId>> IWPFRepositorioPacientes.InsertPacienteReturnId(Paciente2025 instance) {
+        ResultWpf<PacienteId> response = await Api.TryApiCallAsync(
 			() => Api.Cliente.PostAsJsonAsync(
 				"api/pacientes", 
 				instance.ToDto()
@@ -123,8 +122,8 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		_ = RefreshPacientes();
 		return response;
 	}
-	async Task<Result<MedicoId>> IWPFRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance) {
-		var result = await Api.TryApiCallAsync(
+	async Task<ResultWpf<MedicoId>> IWPFRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance) {
+        ResultWpf<MedicoId> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PostAsJsonAsync(
 				"api/medicos", 
 				instance.ToDto()
@@ -142,28 +141,28 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<Result<Unit>> IWPFRepositorioPacientes.UpdatePacienteWhereId(Paciente2025 instance) {
-		var result = await Api.TryApiCallAsync(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioPacientes.UpdatePacienteWhereId(Paciente2025Agg aggrg) {
+        ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PutAsJsonAsync(
-				$"api/pacientes/{instance.Id.Valor}",
-				instance.ToDto()
+				$"api/pacientes/{aggrg.Id.Valor}",
+				aggrg.ToDto()
 			),
-			onOk: async response => new Unit(),
-			errorTitle: $"Error actualizando paciente {instance.Id.Valor}"
+			onOk: async response => UnitWpf.Valor,
+			errorTitle: $"Error actualizando el agregado {aggrg.Id.Valor}"
 		);
 
 		_ = RefreshPacientes();
 
 		return result;
 	}
-	async Task<Result<Unit>> IWPFRepositorioMedicos.UpdateMedicoWhereId(Medico2025 instance) {
-		var result = await Api.TryApiCallAsync(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereId(Medico2025Agg aggrg) {
+        ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PutAsJsonAsync(
-				$"api/medicos/{instance.Id.Valor}",
-				instance.ToDto()
+				$"api/medicos/{aggrg.Id.Valor}",
+				aggrg.ToDto()
 			),
-			onOk: async response => new Unit(),   // Se ignora el body, pero se respeta la firma
-			errorTitle: $"Error actualizando médico {instance.Id.Valor}"
+			onOk: async response => UnitWpf.Valor,   // Se ignora el body, pero se respeta la firma
+			errorTitle: $"Error actualizando médico {aggrg.Id.Valor}"
 		);
 
 		_ = RefreshMedicos();
@@ -205,21 +204,21 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<List<TurnoDto>> IWPFRepositorioTurnos.SelectTurnosWherePacienteId(PacienteId id) {
-		return await Api.TryGetJsonOrNullAsync<List<TurnoDto>>(
+	async Task<List<TurnoDbModel>> IWPFRepositorioTurnos.SelectTurnosWherePacienteId(PacienteId id) {
+		return await Api.TryGetJsonOrNullAsync<List<TurnoDbModel>>(
 			$"api/pacientes/{id.Valor}/turnos"
 		) ?? [];
 	}
 
 
-	async Task<List<TurnoDto>> IWPFRepositorioTurnos.SelectTurnosWhereMedicoId(MedicoId id) {
-		return await Api.TryGetJsonOrNullAsync<List<TurnoDto>>(
+	async Task<List<TurnoDbModel>> IWPFRepositorioTurnos.SelectTurnosWhereMedicoId(MedicoId id) {
+		return await Api.TryGetJsonOrNullAsync<List<TurnoDbModel>>(
 			$"api/medicos/{id.Valor}/turnos"
 		) ?? [];
 	}
 
-	async Task<List<TurnoDto>> IWPFRepositorioTurnos.SelectTurnos() {
-		return await Api.TryGetJsonOrNullAsync<List<TurnoDto>>(
+	async Task<List<TurnoDbModel>> IWPFRepositorioTurnos.SelectTurnos() {
+		return await Api.TryGetJsonOrNullAsync<List<TurnoDbModel>>(
 			$"api/turnos"
 		) ?? [];
 	}
@@ -239,10 +238,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<Result<Unit>> IWPFRepositorioPacientes.DeletePacienteWhereId(PacienteId id) {
-		var result = await Api.TryApiCallAsync(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioPacientes.DeletePacienteWhereId(PacienteId id) {
+        ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.DeleteAsync($"api/pacientes/{id.Valor}"),
-			onOk: async response => new Unit(),
+			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error eliminando paciente {id.Valor}"
 		);
 
@@ -251,10 +250,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return result;
 	}
 
-	async Task<Result<Unit>> IWPFRepositorioMedicos.DeleteMedicoWhereId(MedicoId id) {
-		var result = await Api.TryApiCallAsync(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.DeleteMedicoWhereId(MedicoId id) {
+        ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.DeleteAsync($"api/medicos/{id.Valor}"),
-			onOk: async response => new Unit(),
+			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error eliminando médico {id.Valor}"
 		);
 
@@ -265,23 +264,23 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-    Task<Result<TurnoDto>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad) {
+    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad) {
         throw new NotImplementedException();
     }
 
-    Task<Result<TurnoDto>> IWPFRepositorioTurnos.CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
         throw new NotImplementedException();
     }
 
-    Task<Result<TurnoDto>> IWPFRepositorioTurnos.ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
         throw new NotImplementedException();
     }
 
-    Task<Result<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason) {
         throw new NotImplementedException();
     }
 
-    Task<Result<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome) {
+    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome) {
         throw new NotImplementedException();
     }
 }

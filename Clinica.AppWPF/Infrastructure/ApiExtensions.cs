@@ -1,13 +1,14 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Windows;
-using Clinica.Dominio.Comun;
 
 namespace Clinica.AppWPF.Infrastructure;
 
+
 public static class ApiExtensions {
-	public static async Task<Result<T>> TryApiCallAsync<T>(
+	public static async Task<ResultWpf<T>> TryApiCallAsync<T>(
 		this ApiHelper api,
 		Func<Task<HttpResponseMessage>> httpCall,
 		Func<HttpResponseMessage, Task<T>>? onOk = null,
@@ -20,12 +21,12 @@ public static class ApiExtensions {
 
 				if (onOk is not null) {
 					T mapped = await onOk(response);
-					return new Result<T>.Ok(mapped);
+					return new ResultWpf<T>.Ok(mapped);
 				}
 
 				// Modo automático: intenta deserializar el body a T
 				T? data = await response.Content.ReadFromJsonAsync<T>();
-				return new Result<T>.Ok(data!);
+				return new ResultWpf<T>.Ok(data!);
 			}
 
 			return await HandleHttpError<T>(response, errorTitle);
@@ -77,7 +78,7 @@ public static class ApiExtensions {
 	private static string? ExtractErrorMessage(string raw) {
 		try {
 			using var doc = JsonDocument.Parse(raw);
-			if (doc.RootElement.TryGetProperty("error", out var prop))
+			if (doc.RootElement.TryGetProperty("error", out JsonElement prop))
 				return prop.GetString();
 		} catch {
 			// No era JSON
@@ -115,50 +116,45 @@ public static class ApiExtensions {
 		}
 	}
 
-	static Result<T> HandleException<T>(Exception ex, string title) {
-		MessageBox.Show(
-			$"{title}:\n{ex.Message}",
-			"Error de conexión",
-			MessageBoxButton.OK,
-			MessageBoxImage.Error
+	static ResultWpf<T> HandleException<T>(Exception ex, string title) {
+		// Creamos ErrorInfo enriquecido
+		var info = new ErrorInfo(
+			Mensaje: $"{title}: {ex.Message}",
+			Icono: MessageBoxImage.Error,
+			Detalle: ex.ToString()
 		);
 
-		return new Result<T>.Error(ex.Message);
+		return new ResultWpf<T>.Error(info);
 	}
 
 
-	static async Task<Result<T>> HandleHttpError<T>(
+	static async Task<ResultWpf<T>> HandleHttpError<T>(
 		HttpResponseMessage response,
 		string title
 	) {
 		string detalle = await response.Content.ReadAsStringAsync();
 
-		switch (response.StatusCode) {
-			case System.Net.HttpStatusCode.Unauthorized:
-				MessageBox.Show("No estás autenticado.", "401", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return new Result<T>.Error("No autenticado");
+		return response.StatusCode switch {
+			HttpStatusCode.Unauthorized =>
+				new ResultWpf<T>.Error(new ErrorInfo("No estás autenticado.", MessageBoxImage.Warning, detalle, 401)),
 
-			case System.Net.HttpStatusCode.Forbidden:
-				MessageBox.Show("No tenés permisos.", "403", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return new Result<T>.Error("Sin permiso");
+			HttpStatusCode.Forbidden =>
+				new ResultWpf<T>.Error(new ErrorInfo("No tenés permisos.", MessageBoxImage.Warning, detalle, 403)),
 
-			case System.Net.HttpStatusCode.NotFound:
-				MessageBox.Show("Recurso no encontrado.", "404", MessageBoxButton.OK, MessageBoxImage.Information);
-				return new Result<T>.Error("No encontrado");
+			HttpStatusCode.NotFound =>
+				new ResultWpf<T>.Error(new ErrorInfo("Recurso no encontrado.", MessageBoxImage.Information, detalle, 404)),
 
-			case System.Net.HttpStatusCode.BadRequest:
-				MessageBox.Show($"{detalle}", "400", MessageBoxButton.OK, MessageBoxImage.Warning);
-				return new Result<T>.Error("Solicitud inválida");
-		}
+			HttpStatusCode.BadRequest =>
+				new ResultWpf<T>.Error(new ErrorInfo(detalle, MessageBoxImage.Warning, detalle, 400)),
 
-		MessageBox.Show(
-			$"{title}\nStatus: {(int)response.StatusCode}\n{detalle}",
-			"Error HTTP",
-			MessageBoxButton.OK,
-			MessageBoxImage.Error
-		);
-
-		return new Result<T>.Error($"{title}: HTTP {(int)response.StatusCode}");
+			_ =>
+				new ResultWpf<T>.Error(new ErrorInfo(
+					$"{title}: HTTP {(int)response.StatusCode}",
+					MessageBoxImage.Error,
+					detalle,
+					(int)response.StatusCode
+				))
+		};
 	}
 
 

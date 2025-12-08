@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using static Clinica.Shared.Dtos.ApiDtos;
 
@@ -71,7 +70,7 @@ public partial class TurnosModificar2025 : Window, INotifyPropertyChanged {
 	private void ButtonGuardar(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 
-		Result<Turno2025> resultado = SelectedTurno.ToDomain();
+		ResultWpf<Turno2025> resultado = SelectedTurno.ToDomain();
 
 		resultado.Switch(
 			ok => {

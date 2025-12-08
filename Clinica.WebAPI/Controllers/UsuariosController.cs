@@ -52,7 +52,7 @@ public class UsuariosController(
 		PermisoSistema.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
-		usuario => repositorio.UpdateUsuarioWhereId(usuario),
+		usuario => repositorio.UpdateUsuarioWhereId(new UsuarioId(id), usuario),
 		notFoundMessage: $"No existe usuario con id {id}"
 	);
 

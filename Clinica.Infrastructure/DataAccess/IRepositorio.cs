@@ -23,7 +23,7 @@ public static class IRepositorioInterfaces {
 		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWherePacienteId(PacienteId id);
 		Task<Result<PacienteDbModel?>> SelectPacienteWhereId(PacienteId id);
 		//Task<Result<PacienteDbModel?>> SelectPacienteWhereTurnoId(TurnoId id);
-		Task<Result<Unit>> UpdatePacienteWhereId(Paciente2025 instance);
+		Task<Result<Unit>> UpdatePacienteWhereId(PacienteId id, Paciente2025 instance);
 	}
 
 	public interface IRepositorioMedicos {
@@ -33,7 +33,7 @@ public static class IRepositorioInterfaces {
 		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id);
 		Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code);
 		Task<Result<MedicoDbModel?>> SelectMedicoWhereId(MedicoId id);
-		Task<Result<Unit>> UpdateMedicoWhereId(Medico2025 instance);
+		Task<Result<Unit>> UpdateMedicoWhereId(MedicoId id, Medico2025 instance);
 	}
 
 	public interface IRepositorioTurnos {
@@ -41,22 +41,22 @@ public static class IRepositorioInterfaces {
 		Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance);
 		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnos();
 		Task<Result<TurnoDbModel?>> SelectTurnoWhereId(TurnoId id);
-		Task<Result<Unit>> UpdateTurnoWhereId(Turno2025 instance);
+		Task<Result<Unit>> UpdateTurnoWhereId(TurnoId id, Turno2025 instance);
 	}
 	public interface IRepositorioUsuarios {
 		Task<Result<Unit>> DeleteUsuarioWhereId(UsuarioId id);
 		Task<Result<UsuarioId>> InsertUsuarioReturnId(Usuario2025 instance);
 		Task<Result<IEnumerable<UsuarioDbModel>>> SelectUsuarios();
 		Task<Result<UsuarioDbModel?>> SelectUsuarioWhereId(UsuarioId id);
-		Task<Result<Unit>> UpdateUsuarioWhereId(Usuario2025 instance);
+		Task<Result<Unit>> UpdateUsuarioWhereId(UsuarioId id, Usuario2025 instance);
 	}
 
 
 	public interface IRepositorioHorarios {
-		Task<Result<Unit>> DeleteHorarioWhereId(HorarioMedicoId id);
-		Task<Result<HorarioMedicoId>> InsertHorarioReturnId(Horario2025 instance);
+		Task<Result<Unit>> DeleteHorarioWhereId(HorarioId id);
+		Task<Result<HorarioId>> InsertHorarioReturnId(Horario2025 instance);
 		Task<Result<IEnumerable<HorarioDbModel>>> SelectHorarios();
-		Task<Result<HorarioDbModel?>> SelectHorarioWhereId(HorarioMedicoId id);
-		Task<Result<Unit>> UpdateHorarioWhereId(Horario2025 instance);
+		Task<Result<HorarioDbModel?>> SelectHorarioWhereId(HorarioId id);
+		Task<Result<Unit>> UpdateHorarioWhereId(HorarioId id, Horario2025 instance);
 	}
 }

@@ -6,6 +6,7 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.AppWPF.UsuarioSecretaria.Comodidades;
 using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
@@ -19,26 +20,26 @@ public static class Comodidades {
 	//public record ModelViewDiaSemana(int Value, string NombreDia);
 
 
-	public static async Task<MedicoDto> RespectivoMedico(this MedicoId id) {
-		var instance = await App.Repositorio.SelectMedicoWhereId(id);
+	public static async Task<MedicoDbModel> RespectivoMedico(this MedicoId id) {
+        MedicoDbModel? instance = await App.Repositorio.SelectMedicoWhereId(id);
 		if (instance is not null) return instance;
 		string error = $"No existe el médico con ID {id.Valor}";
 		MessageBox.Show(error);
 		throw new InvalidOperationException(error);
 	}
-	public static async Task<PacienteDto> RespectivoPaciente(this PacienteId id) {
-		var instance = await App.Repositorio.SelectPacienteWhereId(id);
+	public static async Task<PacienteDbModel> RespectivoPaciente(this PacienteId id) {
+		PacienteDbModel? instance = await App.Repositorio.SelectPacienteWhereId(id);
 		if (instance is not null) return instance;
 		string error = $"No existe el médico con ID {id.Valor}";
 		MessageBox.Show(error);
 		throw new InvalidOperationException(error);
 	}
 
-	public static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDto dto) {
+	public static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDbModel model) {
 		return new MedicoSimpleViewModel(
-			Id: dto.Id,
-			EspecialidadCodigo: dto.EspecialidadCodigo,
-			Displayear: $"{dto.Nombre} {dto.Apellido}"
+			Id: model.Id,
+			EspecialidadCodigo: model.EspecialidadCodigo,
+			Displayear: $"{model.Nombre} {model.Apellido}"
 		);
 	}
 
@@ -50,7 +51,7 @@ public static class Comodidades {
 	}
 
 	async public static Task<DisponibilidadEspecialidadModelView> ToSimpleViewModel(this Disponibilidad2025 domainValue) {
-		MedicoDto medico = await domainValue.MedicoId.RespectivoMedico();
+		MedicoDbModel medico = await domainValue.MedicoId.RespectivoMedico();
 		return new DisponibilidadEspecialidadModelView(
 			Fecha: domainValue.FechaHoraDesde.AFechaArgentina(),
 			Hora: domainValue.FechaHoraDesde.AHorasArgentina(),
@@ -64,8 +65,8 @@ public static class Comodidades {
 
 
 //DiaSemana2025
-public partial class SecretariaConsultaDisponibilidades : Window, INotifyPropertyChanged {
-	//public SecretariaConsultaDisponibilidades() {
+public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged {
+	//public SecretariaDisponibilidades() {
 	//	InitializeComponent();
 	//	DataContext = this;
 	//	CargarHoras();
@@ -73,17 +74,19 @@ public partial class SecretariaConsultaDisponibilidades : Window, INotifyPropert
 	//	DisponibilidadesItemsSource.Clear();
 	//	Loaded += WindowGestionTurno_Loaded;
 	//}
-	public SecretariaConsultaDisponibilidades(PacienteDto paciente) {
+	public SecretariaDisponibilidades(PacienteId pacienteId) {
 		InitializeComponent();
 		DataContext = this;
-		SelectedPaciente = paciente;
-		UpdatePacienteUI(paciente);
+		//SelectedPaciente = paciente;
+
+        //_ = LoadPacienteAsync(pacienteId);
+		UpdatePacienteUI(pacienteId);
 		Loaded += WindowGestionTurno_Loaded;
 		CargarHoras();
 	}
 
 	private async void WindowGestionTurno_Loaded(object sender, RoutedEventArgs e) {
-		var medicos = await App.Repositorio.SelectMedicos();
+        List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
 		MedicosTodos = [.. medicos.Select(x => x.ToSimpleViewModel())];
 		OnPropertyChanged(nameof(MedicosTodos));
 	}
@@ -92,16 +95,19 @@ public partial class SecretariaConsultaDisponibilidades : Window, INotifyPropert
 
 
 	//------------------------------//
-	private void UpdatePacienteUI(PacienteDto paciente) {
-		txtPacienteDni.Text = paciente.Dni;
-		txtPacienteNombre.Text = paciente.Nombre;
-		txtPacienteApellido.Text = paciente.Apellido;
-		txtPacienteEmail.Text = paciente.Email;
-		txtPacienteTelefono.Text = paciente.Telefono;
-		buttonModificarPaciente.IsEnabled = paciente != null;
+	private void UpdatePacienteUI(PacienteId paciente) {
+
+		//Task<PacienteApiDto>? paciente = await pacienteId.RespectivoPaciente();
+
+		//txtPacienteDni.Text = paciente.Dni;
+		//txtPacienteNombre.Text = paciente.Nombre;
+		//txtPacienteApellido.Text = paciente.Apellido;
+		//txtPacienteEmail.Text = paciente.Email;
+		//txtPacienteTelefono.Text = paciente.Telefono;
+		//buttonModificarPaciente.IsEnabled = paciente != null;
 	}
 
-	public required PacienteDto SelectedPaciente { get; set; }
+	public required PacienteDbModel SelectedPaciente { get; set; }
 
 
 
@@ -292,10 +298,10 @@ public partial class SecretariaConsultaDisponibilidades : Window, INotifyPropert
 		//MessageBox.Show("Cargando medicos especialistas...", "Cargando", MessageBoxButton.OK, MessageBoxImage.Information);
 		IEnumerable<MedicoSimpleViewModel> found = [];
 		if (MedicosTodos is null) {
-			var medicos = await App.Repositorio.SelectMedicos();
+            List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
 			MedicosTodos = [.. medicos.Select(x => x.ToSimpleViewModel())];
 		}
-		foreach (var item in MedicosTodos.Where(m => m.EspecialidadCodigo == especialidadCodigo)) {
+		foreach (MedicoSimpleViewModel? item in MedicosTodos.Where(m => m.EspecialidadCodigo == especialidadCodigo)) {
 			MedicosEspecialistasItemsSource.Add(item);
 			//MessageBox.Show("{item}", "Medico encontrado", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
@@ -319,7 +325,7 @@ public partial class SecretariaConsultaDisponibilidades : Window, INotifyPropert
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 		if (SelectedPaciente != null) {
-			this.AbrirComoDialogo<SecretariaPacientesModificar>(SelectedPaciente.Id);
+			this.AbrirComoDialogo<SecretariaPacienteFormulario>(SelectedPaciente.Id);
 		}
 	}
 	// Botones
