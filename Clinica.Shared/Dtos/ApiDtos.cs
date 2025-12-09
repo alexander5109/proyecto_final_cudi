@@ -6,25 +6,43 @@ using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Shared.Dtos;
 
+
+public static class ApiServiciosPublicos {
+	public sealed record ConcretarTurnoDto(
+		TurnoId TurnoId,
+		DateTime FechaSolicitud,
+		string? Comentario
+	);
+	public sealed record ModificarTurnoDto(
+		TurnoId TurnoId,
+		DateTime FechaSolicitud,
+		string Comentario
+	);
+	public sealed record ProgramarTurnoDto(
+		PacienteId PacienteId,
+		DateTime FechaSolicitud,
+		DisponibilidadDto Disponibilidad
+	);
+	public sealed record DisponibilidadDto(
+		EspecialidadCodigo EspecialidadCodigo,
+		MedicoId MedicoId,
+		DateTime FechaHoraDesde,
+		DateTime FechaHoraHasta
+	);
+	public static Disponibilidad2025 ToDomain(this DisponibilidadDto dto) {
+		return new Disponibilidad2025(
+			dto.EspecialidadCodigo,
+			dto.MedicoId,
+			dto.FechaHoraDesde,
+			dto.FechaHoraHasta
+		);
+	}
+
+}
+
+
 public static class ApiDtos {
 
-
-	public record SolicitarCancelacionDto(
-		TurnoId TurnoId,
-		DateTime OutcomeFecha,
-		string OutcomeComentario
-	);
-	public record SolicitarReprogramacionDto(
-		TurnoId TurnoId,
-		DateTime OutcomeFecha,
-		string OutcomeComentario
-	);
-
-	public record SolicitarTurnoPrimeraDispDto(
-		PacienteId PacienteId,
-		EspecialidadCodigo Especialidad,
-		DateTime FechaCreacion
-	);
 
 
 

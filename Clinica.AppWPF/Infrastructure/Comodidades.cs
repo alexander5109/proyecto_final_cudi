@@ -4,7 +4,7 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.Dtos.DbModels;
 
-namespace Clinica.AppWPF.UsuarioSecretaria;
+namespace Clinica.AppWPF.Infrastructure;
 
 public static class Comodidades {
 
@@ -15,21 +15,6 @@ public static class Comodidades {
 	public record MedicoSimpleViewModel(MedicoId Id, EspecialidadCodigo EspecialidadCodigo, string Displayear);
 	//public record ModelViewDiaSemana(int Value, string NombreDia);
 
-
-	public static async Task<MedicoDbModel> RespectivoMedico(this MedicoId id) {
-        MedicoDbModel? instance = await App.Repositorio.SelectMedicoWhereId(id);
-		if (instance is not null) return instance;
-		string error = $"No existe el médico con ID {id.Valor}";
-		MessageBox.Show(error);
-		throw new InvalidOperationException(error);
-	}
-	public static async Task<PacienteDbModel> RespectivoPaciente(this PacienteId id) {
-		PacienteDbModel? instance = await App.Repositorio.SelectPacienteWhereId(id);
-		if (instance is not null) return instance;
-		string error = $"No existe el médico con ID {id.Valor}";
-		MessageBox.Show(error);
-		throw new InvalidOperationException(error);
-	}
 
 	public static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDbModel model) {
 		return new MedicoSimpleViewModel(

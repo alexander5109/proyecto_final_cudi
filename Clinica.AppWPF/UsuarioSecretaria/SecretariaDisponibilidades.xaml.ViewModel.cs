@@ -7,7 +7,7 @@ using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.ViewModels;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
-using static Clinica.AppWPF.UsuarioSecretaria.Comodidades;
+using static Clinica.AppWPF.Infrastructure.Comodidades;
 using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;

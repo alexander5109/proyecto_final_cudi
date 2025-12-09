@@ -6,10 +6,9 @@ using Clinica.Dominio.TiposDeValor;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
-using static Clinica.WebAPI.Controllers.ServiciosPublicosControllerDtos;
+using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.ApiServiciosPublicos;
 namespace Clinica.WebAPI.Controllers;
-
-
 
 
 
@@ -66,23 +65,20 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 		);
 	}
 
-
-
-
 	[HttpPost("Turnos/Cancelar")]
-	public Task<IActionResult> CancelarTurno([FromBody] ModificarTurnoDto dto) {
-		return this.SafeExecuteApi(
-			logger,
-			PermisoSistema.GestionDeTurnos,
-			operation: async () => (
-				await servicios.PersistirComoCanceladoAsync(
-					dto.TurnoId,
-					dto.FechaSolicitud,
-					dto.Comentario,
-					repositorio
-				)
-			).ToApi(statusCodeOnError: 409)
+	public async Task<ActionResult<Turno2025Agg>> CancelarTurno([FromBody] ModificarTurnoDto dto) {
+		var result = await servicios.PersistirComoCanceladoAsync(
+			dto.TurnoId,
+			dto.FechaSolicitud,
+			dto.Comentario,
+			repositorio
 		);
+
+		return result switch {
+			Result<Turno2025Agg>.Ok ok => Ok(ok.Valor),
+			Result<Turno2025Agg>.Error err => Conflict(new { error = err.Mensaje }),
+			_ => StatusCode(500)
+		};
 	}
 
 

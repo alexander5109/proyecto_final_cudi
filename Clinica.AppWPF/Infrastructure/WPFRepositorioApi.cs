@@ -1,28 +1,53 @@
-﻿using System.Net.Http.Json;
+﻿using System.Collections.ObjectModel;
+using System.Net.Http.Json;
+using System.Windows;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
 using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.Dtos.ApiServiciosPublicos;
 using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.Infrastructure;
 
+public static class RepoCache {
+	public static Dictionary<MedicoId, MedicoDbModel> DictMedicos { get;  set; } = new();
+	public static Dictionary<PacienteId, PacienteDbModel> DictPacientes { get; set; } = new();
+}
+
 
 public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
+
+
+
+	//public static async Task<PacienteDbModel> RespectivoPaciente(this PacienteId id) {
+	//	PacienteDbModel? instance = await App.Repositorio.SelectPacienteWhereId(id);
+	//	if (instance is not null) return instance;
+	//	string error = $"No existe el médico con ID {id.Valor}";
+	//	MessageBox.Show(error);
+	//	throw new InvalidOperationException(error);
+	//}
+
+
+
+
+
+
+
 	async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicos() {
 		await EnsureMedicosLoaded();
-		return [.. DictCacheMedicos.Values];
+		return [.. RepoCache.DictMedicos.Values];
 	}
 	async Task<List<PacienteDbModel>> IWPFRepositorioPacientes.SelectPacientes() {
 		await EnsurePacientesLoaded();
-		return [.. DictCachePacientes.Values];
+		return [.. RepoCache.DictPacientes.Values];
 	}
 
 
 	async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code) {
 		await EnsureMedicosLoaded();
-		return [.. DictCacheMedicos
+		return [.. RepoCache.DictMedicos
 			.Values
 			.Where(m => m.EspecialidadCodigo == code)];
 		//return await Api.TryGetJsonAsync<List<MedicoDto>>($"api/medicos/por-especialidad/{code}", defaultValue: []);
@@ -33,11 +58,11 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	async Task<MedicoDbModel?> IWPFRepositorioMedicos.SelectMedicoWhereId(MedicoId id) {
 		await EnsureMedicosLoaded();
 
-		if (DictCacheMedicos.TryGetValue(id, out MedicoDbModel? dto))
+		if (RepoCache.DictMedicos.TryGetValue(id, out MedicoDbModel? dto))
 			return dto;
 		MedicoDbModel? res = await Api.TryGetJsonOrNullAsync<MedicoDbModel>($"api/medicos/{id.Valor}");
 		if (res is not null) {
-			DictCacheMedicos[id] = res; // update cache
+			RepoCache.DictMedicos[id] = res; // update cache
 		}
 
 		return res;
@@ -49,21 +74,17 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	async Task<PacienteDbModel?> IWPFRepositorioPacientes.SelectPacienteWhereId(PacienteId id) {
 		await EnsurePacientesLoaded();
 
-		if (DictCachePacientes.TryGetValue(id, out PacienteDbModel? dto))
+		if (RepoCache.DictPacientes.TryGetValue(id, out PacienteDbModel? dto))
 			return dto;
 		PacienteDbModel? res = await Api.TryGetJsonOrNullAsync<PacienteDbModel>($"api/pacientes/{id.Valor}");
 		if (res is not null) {
-			DictCachePacientes[id] = res; // update cache
+			RepoCache.DictPacientes[id] = res; // update cache
 		}
 
 		return res;
 	}
 
 
-
-
-	private Dictionary<MedicoId, MedicoDbModel> DictCacheMedicos = [];
-	private Dictionary<PacienteId, PacienteDbModel> DictCachePacientes = [];
 
 
 
@@ -74,10 +95,11 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
         List<MedicoDbModel> list = await Api.TryGetJsonAsync<List<MedicoDbModel>>("api/medicos", defaultValue: []);
 
-		DictCacheMedicos = list.ToDictionary(m => m.Id, m => m);
-		foreach (KeyValuePair<MedicoId, MedicoDbModel> m in DictCacheMedicos ) {
-			Console.WriteLine($"Medico cache loaded: {m.Key} -> {m.Value.Nombre} {m.Value.Apellido}");
-		}
+		RepoCache.DictMedicos.Clear();
+		RepoCache.DictMedicos = list.ToDictionary(m => m.Id, m => m);
+		//foreach (KeyValuePair<MedicoId, MedicoDbModel> m in DictMedicos ) {
+		//	Console.WriteLine($"Medico cache loaded: {m.Key} -> {m.Value.Nombre} {m.Value.Apellido}");
+		//}
 		_medicosLoaded = true;
 	}
 
@@ -89,7 +111,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
         List<PacienteDbModel> list = await Api.TryGetJsonAsync<List<PacienteDbModel>>("api/pacientes", defaultValue: []);
 
-		DictCachePacientes = list.ToDictionary(x => x.Id, x => x);
+		RepoCache.DictPacientes = list.ToDictionary(x => x.Id, x => x);
 		_pacientesLoaded = true;
 	}
 
@@ -250,11 +272,20 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
         throw new NotImplementedException();
     }
 
-    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
-        throw new NotImplementedException();
-    }
+	async Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.CancelarTurno(
+		TurnoId turnoId,
+		DateTime fechaOutcome,
+		string reason
+	) {
+		var dto = new ModificarTurnoDto(turnoId, fechaOutcome, reason);
 
-    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+		return await Api.TryApiCallAsync(
+			() => Api.Cliente.PostAsJsonAsync("api/ServiciosPublicos/Turnos/Cancelar", dto),
+			onOk: async response => await response.Content.ReadFromJsonAsync<TurnoDto>(),
+			errorTitle: $"Error al cancelar el turno {turnoId.Valor}"
+		);
+	}
+	Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
         throw new NotImplementedException();
     }
 

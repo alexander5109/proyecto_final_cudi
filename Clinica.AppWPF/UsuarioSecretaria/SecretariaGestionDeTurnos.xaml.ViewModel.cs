@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.Dtos.DbModels;
@@ -6,12 +7,18 @@ using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
-public sealed class TurnoVM(Shared.Dtos.DbModels.TurnoDbModel model) {
+public sealed class TurnoVM(TurnoDbModel model) {
     public TurnoId Id { get; } = model.Id;
-    public string PacienteDisplayear { get; } = "(await model.SelectedPacienteId.RespectivoPaciente()).Nombre+Apellido";
-    public string PacienteDni { get; } = "(await model.SelectedPacienteId.RespectivoPaciente()).Dni";
-    public string MedicoDisplayear { get; } = "(await model.MedicoId.RespectivoMedico()).Nombre + Apellido";
-    public EspecialidadCodigo EspecialidadCodigo { get; } = model.EspecialidadCodigo;
+	//public PacienteDbModel Paciente { get => {  
+	//		(await model.PacienteId.RespectivoPaciente()) //Los pacientes estan cacheados en memoria, sólo cndo no lo esten se hace fetch.
+	//	; }
+
+
+	public PacienteDbModel? PacienteRelacionado => RepoCache.DictPacientes.GetValueOrDefault(model.PacienteId);
+	public MedicoDbModel? MedicoRelacionado => RepoCache.DictMedicos.GetValueOrDefault(model.MedicoId);
+	public string MedicoDisplayear => PacienteRelacionado is null? "N/A": $"{PacienteRelacionado.Nombre} {PacienteRelacionado.Apellido}";
+	public string PacienteDisplayear => MedicoRelacionado is null ? "N/A" : $"{MedicoRelacionado.Nombre} {MedicoRelacionado.Apellido}";
+	public EspecialidadCodigo EspecialidadCodigo { get; } = model.EspecialidadCodigo;
     public string FechaSolicitud { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
     public string FechaAsignada { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
     public string HoraAsignada { get; } = model.FechaHoraAsignadaHasta.ATextoHoras();
