@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Clinica.AppWPF;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.UsuarioSecretaria;

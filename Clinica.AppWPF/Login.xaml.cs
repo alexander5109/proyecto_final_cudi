@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Windows;
+﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
 using static Clinica.Shared.Dtos.ApiDtos;
 
@@ -21,6 +20,7 @@ public partial class Login : Window {
 			return;
 		}
 		UsuarioLoginRequestDto loginRequest = new (guiUsuario.Text, guiPassword.Password);
+		//MessageBox.Show("Iniciando sesión...");
 		ResultWpf<UsuarioLoginResponseDto> result = await AuthService.LoginAsync(App.Api, loginRequest);
 
 		result.MatchAndDo(

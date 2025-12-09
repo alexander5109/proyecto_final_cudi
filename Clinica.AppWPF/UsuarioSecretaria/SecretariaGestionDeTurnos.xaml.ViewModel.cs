@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
-using System.Windows;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
-using static Clinica.Shared.Dtos.ApiDtos;
 using static Clinica.Shared.Dtos.DbModels;
 
 

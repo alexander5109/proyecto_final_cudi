@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Shared.Dtos;
 using static Clinica.Shared.Dtos.ApiDtos;
 using static Clinica.Shared.Dtos.DbModels;
 

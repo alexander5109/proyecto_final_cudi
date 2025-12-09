@@ -6,7 +6,6 @@ using Clinica.Dominio.TiposDeValor;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
-using static Clinica.Shared.Dtos.ApiDtos;
 using static Clinica.WebAPI.Controllers.ServiciosPublicosControllerDtos;
 namespace Clinica.WebAPI.Controllers;
 
@@ -58,9 +57,81 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 			PermisoSistema.GestionDeTurnos,
 			operation: async () => (
 				await servicios.PersistirProgramarTurnoAsync(
-					new PacienteId(dto.PacienteId),
+					dto.PacienteId,
 					dto.FechaSolicitud,
 					dto.Disponibilidad.ToDomain(),
+					repositorio
+				)
+			).ToApi(statusCodeOnError: 409)
+		);
+	}
+
+
+
+
+	[HttpPost("Turnos/Cancelar")]
+	public Task<IActionResult> CancelarTurno([FromBody] ModificarTurnoDto dto) {
+		return this.SafeExecuteApi(
+			logger,
+			PermisoSistema.GestionDeTurnos,
+			operation: async () => (
+				await servicios.PersistirComoCanceladoAsync(
+					dto.TurnoId,
+					dto.FechaSolicitud,
+					dto.Comentario,
+					repositorio
+				)
+			).ToApi(statusCodeOnError: 409)
+		);
+	}
+
+
+
+	[HttpPost("Turnos/Reprogramar")]
+	public Task<IActionResult> ReprogramarTurno([FromBody] ModificarTurnoDto dto) {
+		return this.SafeExecuteApi(
+			logger,
+			PermisoSistema.GestionDeTurnos,
+			operation: async () => (
+				await servicios.PersistirComoReprogramado(
+					dto.TurnoId,
+					dto.FechaSolicitud,
+					dto.Comentario,
+					repositorio
+				)
+			).ToApi(statusCodeOnError: 409)
+		);
+	}
+
+
+
+	[HttpPost("Turnos/Concretar")]
+	public Task<IActionResult> ConcretarTurno([FromBody] ConcretarTurnoDto dto) {
+		return this.SafeExecuteApi(
+			logger,
+			PermisoSistema.GestionDeTurnos,
+			operation: async () => (
+				await servicios.PersistirComoConcretadoAsync(
+					dto.TurnoId,
+					dto.FechaSolicitud,
+					dto.Comentario,
+					repositorio
+				)
+			).ToApi(statusCodeOnError: 409)
+		);
+	}
+
+
+	[HttpPost("Turnos/ConcretarComoAusente")]
+	public Task<IActionResult> ConcretarTurno([FromBody] ModificarTurnoDto dto) {
+		return this.SafeExecuteApi(
+			logger,
+			PermisoSistema.GestionDeTurnos,
+			operation: async () => (
+				await servicios.PersistirComoAusenteAsync(
+					dto.TurnoId,
+					dto.FechaSolicitud,
+					dto.Comentario,
 					repositorio
 				)
 			).ToApi(statusCodeOnError: 409)

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Clinica.AppWPF.Infrastructure;
+﻿using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
-using static Clinica.Shared.Dtos.ApiDtos;
 using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;

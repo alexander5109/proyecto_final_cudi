@@ -66,9 +66,9 @@ public static class MainProgram {
 		//	break;
 		//}
 
-
+		IServiciosPublicos servicios = new ServiciosPublicos();
 		// Caso de uso 1
-		Result<IReadOnlyList<Disponibilidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidades(
+		Result<IReadOnlyList<Disponibilidad2025>> disponibilidades = (await servicios.SolicitarDisponibilidades(
 			Especialidad2025.ClinicoGeneral.Codigo,
 			DateTime.Now,
 			4,
@@ -80,31 +80,31 @@ public static class MainProgram {
 			Console.WriteLine(d.ATexto());
 
 		// Caso de uso 2
-		Result<Turno2025> turno = (await ServiciosPublicos.SolicitarTurnoEnLaPrimeraDisponibilidad(
-			new PacienteId(1),
-			Especialidad2025.ClinicoGeneral.Codigo,
-			DateTime.Now,
-			repositorio
-		));
-		turno.PrintAndContinue("Turno asignado:");
+		//Result<Turno2025> turno = (await servicios.SolicitarTurnoEnLaPrimeraDisponibilidad(
+		//	new PacienteId(1),
+		//	Especialidad2025.ClinicoGeneral.Codigo,
+		//	DateTime.Now,
+		//	repositorio
+		//));
+		//turno.PrintAndContinue("Turno asignado:");
 
 		// Caso de uso 3
-		Result<Turno2025> reprogramado = (await ServiciosPublicos.SolicitarReprogramacionALaPrimeraDisponibilidad(
-			turno.UnwrapAsOk().Id,
-			DateTime.Now.AddDays(1),
-			"Reprogramación",
-			repositorio
-		));
-		reprogramado.PrintAndContinue("Turno reprogramado:");
+		//Result<Turno2025> reprogramado = (await servicios.SolicitarReprogramacionALaPrimeraDisponibilidad(
+		//	turno.UnwrapAsOk().Id,
+		//	DateTime.Now.AddDays(1),
+		//	"Reprogramación",
+		//	repositorio
+		//));
+		//reprogramado.PrintAndContinue("Turno reprogramado:");
 
 		// Caso de uso 4
-		Result<Turno2025> cancelado = (await ServiciosPublicos.SolicitarCancelacion(
-			reprogramado.UnwrapAsOk().Id,
-			DateTime.Now.AddDays(2),
-			"Cancelación definitiva",
-			repositorio
-		));
-		cancelado.PrintAndContinue("Turno cancelado:");
+		//Result<Turno2025> cancelado = (await servicios.SolicitarCancelacion(
+		//	reprogramado.UnwrapAsOk().Id,
+		//	DateTime.Now.AddDays(2),
+		//	"Cancelación definitiva",
+		//	repositorio
+		//));
+		//cancelado.PrintAndContinue("Turno cancelado:");
 
 	}
 

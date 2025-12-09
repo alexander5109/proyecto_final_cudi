@@ -2,6 +2,9 @@
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT * FROM dbo.[Turno];
+	SELECT * FROM dbo.[Turno]
+	
+	ORDER BY FechaHoraAsignadaDesde, OutcomeEstado ASC
+	;
 END;
 GO

@@ -43,7 +43,7 @@ public static class ApiExtensions {
 		T defaultValue
 	) {
 		try {
-			MessageBox.Show($"Solicitando <{url}>...");
+			//MessageBox.Show($"Solicitando <{url}>...");
 			HttpResponseMessage response = await api.Cliente.GetAsync(url);
 
 			if (response.IsSuccessStatusCode) {

@@ -1,9 +1,6 @@
 ﻿using System.Windows;
-using Clinica.AppWPF;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.UsuarioSecretaria;
 using Clinica.Dominio.Entidades;
-using static Clinica.Shared.Dtos.ApiDtos;
 using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;

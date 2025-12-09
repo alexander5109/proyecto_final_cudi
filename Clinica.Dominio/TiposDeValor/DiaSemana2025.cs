@@ -1,6 +1,4 @@
-﻿using Clinica.Dominio.Comun;
-
-namespace Clinica.Dominio.TiposDeValor;
+﻿namespace Clinica.Dominio.TiposDeValor;
 /*
 public sealed record DiaSemana2025(
 	DayOfWeek EnumValor,
