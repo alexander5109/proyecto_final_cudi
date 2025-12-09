@@ -375,92 +375,49 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 	Task<Result<TurnoId>> IRepositorioDomainServiciosPrivados.InsertTurnoReturnId(Turno2025 instance) => ((IRepositorioTurnos)this).InsertTurnoReturnId(instance);
 
 	Task<Result<TurnoId>> IRepositorioTurnos.InsertTurnoReturnId(Turno2025 instance)
-		=> TryAsync(async conn => {
-			int newId = await conn.ExecuteScalarAsync<int>(
-				"sp_InsertTurnoReturnId",
-				instance.ToDto(),
-				commandType: CommandType.StoredProcedure
-			);
-			return new TurnoId(newId);
-		});
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
+			"sp_InsertTurnoReturnId",
+			instance.ToDto(),
+			commandType: CommandType.StoredProcedure
+		)).MapAsync(newId => new TurnoId(newId));
 
-
-
-
-
-	//Task<Result<Turno2025Agg>> IRepositorioTurnos.UpdateTurnoWhereId(TurnoId id, Turno2025 instance)
-	//	=> TryAsyncVoid(async conn => {
-	//		await conn.ExecuteAsync(
-	//			"sp_UpdateTurnoWhereId",
-	//			instance.ToModel(),
-	//			commandType: CommandType.StoredProcedure
-	//		);
-	//	}).MapAsync(x => Turno2025Agg.Crear(id, instance));
 
 
 
 
 
 	Task<Result<MedicoId>> IRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance)
-		=> TryAsync(async conn => {
-			DynamicParameters parameters = new(instance.ToDto());
-			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
-			await conn.ExecuteScalarAsync<int>(
-				"sp_InsertMedicoReturnId",
-				parameters,
-				commandType: CommandType.StoredProcedure
-			);
-			int newId = parameters.Get<int>("@NewId");
-			return new MedicoId(newId);
-		});
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
+			"sp_InsertMedicoReturnId",
+			instance.ToDto(),
+			commandType: CommandType.StoredProcedure
+		)).MapAsync(newId => new MedicoId(newId));
 
 
 	Task<Result<PacienteId>> IRepositorioPacientes.InsertPacienteReturnId(Paciente2025 instance)
-		=> TryAsync(async conn => {
-			DynamicParameters parameters = new(instance.ToDto());
-			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
-			await conn.ExecuteScalarAsync<int>(
-				"sp_InsertPacienteReturnId",
-				parameters,
-				commandType: CommandType.StoredProcedure
-			);
-			int newId = parameters.Get<int>("@NewId");
-			return new PacienteId(newId);
-		});
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
+			"sp_InsertPacienteReturnId",
+			instance.ToDto(),
+			commandType: CommandType.StoredProcedure
+		)).MapAsync(newId => new PacienteId(newId));
+
+
 	Task<Result<UsuarioId>> IRepositorioUsuarios.InsertUsuarioReturnId(Usuario2025 instance)
-		=> TryAsync(async conn => {
-			DynamicParameters parameters = new(instance.ToDto());
-			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
-			await conn.ExecuteAsync(
-				"sp_InsertUsuarioReturnId",
-				parameters,
-				commandType: CommandType.StoredProcedure
-			);
-			int newId = parameters.Get<int>("@NewId");
-			return new UsuarioId(newId);   // ← solo devolvés el valor
-		});
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
+			"sp_InsertUsuarioReturnId",
+			instance.ToDto(),
+			commandType: CommandType.StoredProcedure
+		)).MapAsync(newId => new UsuarioId(newId));
 
 	Task<Result<HorarioId>> IRepositorioHorarios.InsertHorarioReturnId(Horario2025 instance)
-		=> TryAsync(async conn => {
-			//horarioDto
-			DynamicParameters parameters = new(instance.ToDto());
-			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
-			await conn.ExecuteAsync(
-				"sp_InsertHorarioReturnId",
-				parameters,
-				commandType: CommandType.StoredProcedure
-			);
-			int newId = parameters.Get<int>("@NewId");
-			return new HorarioId(newId);   // ← solo devolvés el valor
-		});
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
+			"sp_InsertHorarioReturnId",
+			instance.ToDto(),
+			commandType: CommandType.StoredProcedure
+		)).MapAsync(newId => new HorarioId(newId));
 
-	Task<Result<IEnumerable<UsuarioDbModel>>> IRepositorioUsuarios.SelectUsuarios()
-		=> TryAsync(async conn => {
-			return await conn.QueryAsync<UsuarioDbModel>(
-				"sp_SelectUsuarios",
-				commandType: CommandType.StoredProcedure
-			);
-		});
+
+
 
 
 
@@ -487,6 +444,15 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 		});
 
 
+
+
+	Task<Result<IEnumerable<UsuarioDbModel>>> IRepositorioUsuarios.SelectUsuarios()
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<UsuarioDbModel>(
+				"sp_SelectUsuarios",
+				commandType: CommandType.StoredProcedure
+			);
+		});
 	Task<Result<IEnumerable<HorarioDbModel>>> IRepositorioHorarios.SelectHorarios()
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<HorarioDbModel>(
