@@ -32,10 +32,10 @@ public static class ResultExtensions {
 	public static Result<U> BindWithPrefix<T, U>(
 		this Result<T> result,
 		string prefixError,
-		Func<T, Result<U>> doOnSuccess
+		Func<T, Result<U>> caseOk
 	) {
 		return result switch {
-			Result<T>.Ok o => doOnSuccess(o.Valor),
+			Result<T>.Ok o => caseOk(o.Valor),
 			Result<T>.Error e => new Result<U>.Error($"{prefixError}{e.Mensaje}"),
 			_ => throw new InvalidOperationException()
 		};
@@ -43,18 +43,18 @@ public static class ResultExtensions {
 	public static async Task<Result<U>> BindWithPrefix<T, U>(
 		this Task<Result<T>> result,
 		string prefixError,
-		Func<T, Result<U>> doOnSuccess
+		Func<T, Result<U>> caseOk
 	) {
-		return (await result).BindWithPrefix(prefixError, doOnSuccess);
+		return (await result).BindWithPrefix(prefixError, caseOk);
 	}
 
 	public static async Task<Result<U>> BindWithPrefixAsync<T, U>(
 		this Result<T> result,
 		string prefixError,
-		Func<T, Task<Result<U>>> doOnSuccess
+		Func<T, Task<Result<U>>> caseOk
 	) {
 		return result switch {
-			Result<T>.Ok ok => await doOnSuccess(ok.Valor),
+			Result<T>.Ok ok => await caseOk(ok.Valor),
 			Result<T>.Error err => new Result<U>.Error($"{prefixError}{err.Mensaje}"),
 			_ => throw new InvalidOperationException("Resultado inválido en BindWithPrefixAsync."),
 		};
@@ -216,8 +216,9 @@ public static class ResultExtensionsASync {
 
 
 	public static async Task<Result<U>> BindAsync<T, U>(
-	this Task<Result<T>> task,
-	Func<T, Task<Result<U>>> func) {
+		this Task<Result<T>> task,
+		Func<T, Task<Result<U>>> func
+	) {
 		Result<T> result = await task;
 		return result is Result<T>.Ok ok
 			? await func(ok.Valor)
@@ -225,8 +226,9 @@ public static class ResultExtensionsASync {
 	}
 
 	public static async Task<Result<U>> MapAsync<T, U>(
-	this Task<Result<T>> task,
-	Func<T, U> map) {
+		this Task<Result<T>> task,
+		Func<T, U> map
+	) {
 		Result<T> result = await task;
 		return result is Result<T>.Ok ok
 			? new Result<U>.Ok(map(ok.Valor))

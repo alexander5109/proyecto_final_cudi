@@ -81,14 +81,14 @@ public class ServiciosPublicos : IServiciosPublicos {
 		string outcomeComentario,
 		IRepositorioDomainServiciosPrivados repositorio
 	) {
-		return (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
+		return await  (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
 		.BindWithPrefix(
-			doOnSuccess: aggOriginal => aggOriginal.Turno.MarcarComoAusente(outcomeFecha, outcomeComentario)
-			.BindWithPrefix(
-				doOnSuccess: turnoAusente => new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(turnoOriginalId, turnoAusente)),
-				prefixError: "Error de dominio: "),
-			prefixError: "Error de db: "
-		);
+			caseOk: aggOriginal => aggOriginal.Turno.MarcarComoAusente(outcomeFecha, outcomeComentario),
+			prefixError: "Error de dominio: ")
+		.BindWithPrefixAsync(
+			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),
+			prefixError: "Error de escritura en Db: ")
+		;
 	}
 
 
@@ -98,15 +98,16 @@ public class ServiciosPublicos : IServiciosPublicos {
 		string? outcomeComentario,
 		IRepositorioDomainServiciosPrivados repositorio
 	) {
-		return (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
+		return await (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
 		.BindWithPrefix(
-			doOnSuccess: aggOriginal => aggOriginal.Turno.MarcarComoConcretado(outcomeFecha, outcomeComentario)
-			.BindWithPrefix(
-				doOnSuccess: turnoAusente => new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(turnoOriginalId, turnoAusente)),
-				prefixError: "Error de Dominio: "),
-			prefixError: "Error de db: "
-		);
+			caseOk: aggOriginal => aggOriginal.Turno.MarcarComoConcretado(outcomeFecha, outcomeComentario),
+			prefixError: "Error de dominio: ")
+		.BindWithPrefixAsync(
+			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),
+			prefixError: "Error de escritura en Db: ")
+		;
 	}
+
 
 
 	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoCanceladoAsync(
@@ -115,15 +116,34 @@ public class ServiciosPublicos : IServiciosPublicos {
 		string outcomeComentario,
 		IRepositorioDomainServiciosPrivados repositorio
 	) {
-		return (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
+		return await (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
 		.BindWithPrefix(
-			doOnSuccess: aggOriginal => aggOriginal.Turno.MarcarComoCancelado(outcomeFecha, outcomeComentario)
-			.BindWithPrefix(
-				doOnSuccess: turnoCancelado => new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(turnoOriginalId, turnoCancelado)),
-				prefixError: "Error de dominio: "),
-			prefixError: "Error de db: "
-		);
+			caseOk: aggOriginal => aggOriginal.Turno.MarcarComoCancelado(outcomeFecha, outcomeComentario),
+			prefixError: "Error de dominio: ")
+		.BindWithPrefixAsync(
+			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),
+			prefixError: "Error de escritura en Db: ")
+		;
 	}
+
+
+
+	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoReprogramado(
+		TurnoId turnoOriginalId,
+		DateTime outcomeFecha,
+		string outcomeComentario,
+		IRepositorioDomainServiciosPrivados repositorio
+	) {
+		return await (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
+		.BindWithPrefix(
+			caseOk: aggOriginal => aggOriginal.Turno.MarcarComoReprogramado(outcomeFecha, outcomeComentario),
+			prefixError: "Error de dominio: ")
+		.BindWithPrefixAsync(
+			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),
+			prefixError: "Error de escritura en Db: ")
+		;
+	}
+
 
 
 	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirProgramarTurnoAsync(
@@ -133,45 +153,19 @@ public class ServiciosPublicos : IServiciosPublicos {
 		IRepositorioDomainServiciosPrivados repositorio
 	) {
 		return await Turno2025.Programar(pacienteId, FechaRegistro2025.Representar(fechaSolicitud), disponibilidad)
-		.BindWithPrefixAsync(
-			doOnSuccess: async nuevoTurno => (await repositorio.InsertTurnoReturnId(nuevoTurno))
+			.BindWithPrefixAsync(
+				prefixError: "Error de Dominio: ",
+				caseOk: async nuevoTurno => (await repositorio.InsertTurnoReturnId(nuevoTurno))
 			.BindWithPrefix(
-				doOnSuccess: turnoId => new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(turnoId, nuevoTurno)),
-				prefixError: "Error de DB: "),
-			prefixError: "Error de Dominio: "
+				prefixError: "Error de escritura en DB: ",
+				caseOk: turnoId => new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(turnoId, nuevoTurno))
+			)
 		);
 	}
 
 
 
 
-	async Task<Result<Turno2025Agg>> PersistirComoReprogramadoYPersistirProgramarTurnoAsync(
-		TurnoId turnoOriginalId,
-		PacienteId pacienteId,
-		DateTime outcomeFecha,
-		string outcomeComentario,
-		Disponibilidad2025 disponibilidad,
-		IRepositorioDomainServiciosPrivados repositorio
-	) {
-		return (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
-		.BindWithPrefix(
-			doOnSuccess: aggOriginal => aggOriginal.Turno.MarcarComoCancelado(outcomeFecha, outcomeComentario)
-			.BindWithPrefix(
-				doOnSuccess: turnoCancelado => new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(turnoOriginalId, turnoCancelado)),
-				prefixError: "Error de dominio: "),
-			prefixError: "Error de db: "
-		);
-	}
 
 
-
-
-	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoReprogramadoYPersistirProgramarTurnoAsync(
-		TurnoId turnoOriginalId,
-		DateTime outcomeFecha,
-		string outcomeComentario,
-		IRepositorioDomainServiciosPrivados repositorio
-	) {
-		throw new NotImplementedException();
-	}
 }

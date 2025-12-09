@@ -189,16 +189,16 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 
 
-	Task<Result<Unit>> IRepositorioDomainServiciosPrivados.UpdateTurnoWhereId(TurnoId id, Turno2025 instance) => ((IRepositorioTurnos)this).UpdateTurnoWhereId(id, instance);
+	Task<Result<Turno2025Agg>> IRepositorioDomainServiciosPrivados.UpdateTurnoWhereId(TurnoId id, Turno2025 instance) => ((IRepositorioTurnos)this).UpdateTurnoWhereId(id, instance);
 
-	Task<Result<Unit>> IRepositorioTurnos.UpdateTurnoWhereId(TurnoId id, Turno2025 instance)
+	Task<Result<Turno2025Agg>> IRepositorioTurnos.UpdateTurnoWhereId(TurnoId id, Turno2025 instance)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_UpdateTurnoWhereId",
 				instance.ToModel(),
 				commandType: CommandType.StoredProcedure
 			);
-		});
+		}).MapAsync(x => Turno2025Agg.Crear(id, instance));
 
 	Task<Result<Unit>> IRepositorioMedicos.UpdateMedicoWhereId(MedicoId id, Medico2025 instance)
 		=> TryAsyncVoid(async conn => {

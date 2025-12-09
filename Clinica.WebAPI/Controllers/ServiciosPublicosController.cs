@@ -79,7 +79,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 	) {
 		if (HttpContext.Items["Usuario"] is not Usuario2025 usuario)
 			return Unauthorized();
-		Result<Turno2025Agg> result = await servicios.PersistirComoReprogramadoYPersistirProgramarTurnoAsync(
+		Result<Turno2025Agg> result = await servicios.PersistirComoReprogramado(
 			dto.TurnoId,
 			dto.OutcomeFecha,
 			dto.OutcomeComentario,
@@ -204,7 +204,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 	// --------------------------------------------------------
 	// [HttpPut("{id:TurnoId}/reprogramar")]
 	// public async Task<IActionResult> MarcarComoReprogramado([FromRoute] TurnoId id, [FromBody] ReprogramarTurnoRequestDto dto) {
-	// Result<Turno2025> result = await repositorio.PersistirComoReprogramadoYPersistirProgramarTurnoAsync(
+	// Result<Turno2025> result = await repositorio.PersistirComoReprogramado(
 	// id,
 	// dto.NuevaFechaDesde,
 	// dto.NuevaFechaHasta

@@ -13,7 +13,8 @@ public interface IServiciosDisponibilidades {
 }
 public interface IServiciosGestionTurnos {
 	Task<Result<Turno2025Agg>> PersistirProgramarTurnoAsync(PacienteId pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad, IRepositorioDomainServiciosPrivados repositorio);
-	Task<Result<Turno2025Agg>> PersistirComoReprogramadoYPersistirProgramarTurnoAsync(TurnoId turnoOriginalId, DateTime outcomeFecha, string outcomeComentario, IRepositorioDomainServiciosPrivados repositorio);
+	Task<Result<Turno2025Agg>> PersistirComoReprogramado(TurnoId turnoOriginalId, DateTime outcomeFecha, string outcomeComentario, IRepositorioDomainServiciosPrivados repositorio);
+
 	Task<Result<Turno2025Agg>> PersistirComoCanceladoAsync(TurnoId turnoOriginalId, DateTime outcomeFecha, string outcomeComentario, IRepositorioDomainServiciosPrivados repositorio);
 	Task<Result<Turno2025Agg>> PersistirComoAusenteAsync(TurnoId turnoOriginalId, DateTime outcomeFecha, string outcomeComentario, IRepositorioDomainServiciosPrivados repositorio);
 	Task<Result<Turno2025Agg>> PersistirComoConcretadoAsync(TurnoId turnoOriginalId, DateTime outcomeFecha, string? outcomeComentario, IRepositorioDomainServiciosPrivados repositorio);
