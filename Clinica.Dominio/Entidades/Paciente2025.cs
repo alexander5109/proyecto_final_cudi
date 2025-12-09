@@ -61,11 +61,11 @@ public record Paciente2025(
 		Result<FechaDeNacimiento2025> fechaNacimientoResult,
 		DateTime fechaIngreso
 	) 
-		=> nombreResult.BindWithPrefix(prefixError: "Error en NombreCompleto", caseOk: nombre
-		=> dniResult.BindWithPrefix(prefixError: "Error en Dni", caseOk: dni
-		=> contactoResult.BindWithPrefix(prefixError: "Error en Contacto", caseOk: contacto
-		=> domicilioResult.BindWithPrefix(prefixError: "Error en Domicilio", caseOk: domicilio
-		=> fechaNacimientoResult.BindWithPrefix(prefixError: "Error en FechaNacimiento", caseOk: fechaNac
+		=> nombreResult.BindWithPrefix(prefixError: "Error en NombreCompleto: \n", caseOk: nombre
+		=> dniResult.BindWithPrefix(prefixError: "Error en Dni: \n", caseOk: dni
+		=> contactoResult.BindWithPrefix(prefixError: "Error en Contacto: \n", caseOk: contacto
+		=> domicilioResult.BindWithPrefix(prefixError: "Error en Domicilio: \n", caseOk: domicilio
+		=> fechaNacimientoResult.BindWithPrefix(prefixError: "Error en FechaNacimiento: \n", caseOk: fechaNac
 		=> new Result<Paciente2025>.Ok(new Paciente2025(
 			nombre,
 			dni,

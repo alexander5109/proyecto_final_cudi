@@ -12,12 +12,42 @@ public abstract class Result<T> {
 	}
 	public bool IsOk => this is Ok;
 	public bool IsError => this is Error;
+	public static Result<Unit> Ensure(bool condition, string msg) {
+		return condition
+			? new Result<Unit>.Ok(Unit.Valor)
+			: new Result<Unit>.Error(msg);
+	}
+
+
 }
 //
 // ==========================================
 //  EXTENSIONES FUNCIONALES
 // ==========================================
 public static class ResultExtensions {
+
+	public static Result<T> ToError<T>(
+		this string mensajeError
+	) => new Result<T>.Error(mensajeError);
+
+
+	public static Result<T> ToOk<T>(
+		this T valor
+	)
+	=> new Result<T>.Ok(valor);
+
+
+	public static Result<T> ToResult<T>(
+		this T valor,
+		bool condition,
+		string mensajeError
+	) {
+		return condition
+			? new Result<T>.Ok(valor)
+			: new Result<T>.Error(mensajeError);
+	}
+
+
 	public static Result<T> MapError<T>(
 		this Result<T> self,
 		Func<string,
@@ -53,6 +83,29 @@ public static class ResultExtensions {
 		};
 	}
 
+
+	public static Result<U> Bind<T, U>(
+		this Result<T> result,
+		Func<T, Result<U>> caseOk
+	) =>
+		result switch {
+			Result<T>.Ok ok => caseOk(ok.Valor),
+			Result<T>.Error e => new Result<U>.Error(e.Mensaje),
+			_ => throw new InvalidOperationException()
+		};
+
+	public static Result<U> Bind<T, U>(
+		this IEnumerable<Result<T>> results,
+		Func<IReadOnlyList<T>, Result<U>> caseOk
+	) {
+		Result<List<T>> combined = results.CombineResults();
+		return combined switch {
+			Result<List<T>>.Ok ok => caseOk(ok.Valor),
+			Result<List<T>>.Error err => new Result<U>.Error(err.Mensaje),
+			_ => throw new InvalidOperationException()
+		};
+	}
+
 	public static void MatchAndDo<T>(
 		this Result<T> self,
 		Action<T> ok,
@@ -74,24 +127,6 @@ public static class ResultExtensions {
 		return self switch {
 			Result<T>.Ok o => ok(o.Valor),
 			Result<T>.Error e => error(e.Mensaje),
-			_ => throw new InvalidOperationException()
-		};
-	}
-
-	public static Result<U> Bind<T, U>(this Result<T> r, Func<T, Result<U>> f) =>
-		r switch {
-			Result<T>.Ok ok => f(ok.Valor),
-			Result<T>.Error e => new Result<U>.Error(e.Mensaje),
-			_ => throw new InvalidOperationException()
-		};
-
-	public static Result<U> Bind<T, U>(
-		this IEnumerable<Result<T>> results,
-		Func<IReadOnlyList<T>, Result<U>> func) {
-		Result<List<T>> combined = results.CombineResults();
-		return combined switch {
-			Result<List<T>>.Ok ok => func(ok.Valor),
-			Result<List<T>>.Error err => new Result<U>.Error(err.Mensaje),
 			_ => throw new InvalidOperationException()
 		};
 	}
