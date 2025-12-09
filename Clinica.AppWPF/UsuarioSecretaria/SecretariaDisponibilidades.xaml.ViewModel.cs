@@ -29,7 +29,7 @@ public class SecretariaDisponibilidadesViewModel : INotifyPropertyChanged {
 	public PacienteDbModel? SelectedPaciente { get; private set; }
 
 	private async Task LoadPaciente(PacienteId id) {
-		SelectedPaciente = await id.RespectivoPaciente();
+		SelectedPaciente = RepoCache.DictPacientes.GetValueOrDefault(id);
 		OnPropertyChanged(nameof(SelectedPaciente));
 	}
 

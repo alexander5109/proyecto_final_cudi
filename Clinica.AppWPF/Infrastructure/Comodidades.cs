@@ -10,7 +10,7 @@ public static class Comodidades {
 
 	
 
-	public record DisponibilidadEspecialidadModelView(string Fecha, string Hora, string Medico, DiaDeSemanaViewModel DiaSemana);
+	public record DisponibilidadEspecialidadModelView(string Fecha, string Hora, string MedicoDisplayear, DiaDeSemanaViewModel DiaSemana);
 	public record EspecialidadViewModel(EspecialidadCodigo Codigo, string Displayear);
 	public record MedicoSimpleViewModel(MedicoId Id, EspecialidadCodigo EspecialidadCodigo, string Displayear);
 	//public record ModelViewDiaSemana(int Value, string NombreDia);
@@ -32,11 +32,11 @@ public static class Comodidades {
 	}
 
 	async public static Task<DisponibilidadEspecialidadModelView> ToSimpleViewModel(this Disponibilidad2025 domainValue) {
-		MedicoDbModel medico = await domainValue.MedicoId.RespectivoMedico();
+		MedicoDbModel? medico = RepoCache.DictMedicos.GetValueOrDefault(domainValue.MedicoId);
 		return new DisponibilidadEspecialidadModelView(
 			Fecha: domainValue.FechaHoraDesde.ATextoHoras(),
 			Hora: domainValue.FechaHoraDesde.ATextoHoras(),
-			Medico: $"{medico.Nombre}{medico.Apellido}",
+			MedicoDisplayear: $"{medico?.Nombre}{medico?.Apellido}",
 			DiaSemana: new DiaDeSemanaViewModel(domainValue.FechaHoraDesde.DayOfWeek, domainValue.FechaHoraDesde.DayOfWeek.ATexto())
 		);
 	}
