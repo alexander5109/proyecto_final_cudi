@@ -27,8 +27,8 @@ internal static class _ServiciosPrivados {
 
 		IReadOnlyList<Disponibilidad2025> lista = ((Result<IReadOnlyList<Disponibilidad2025>>.Ok)disponibilidadesResult).Valor;
 		IEnumerable<Disponibilidad2025> filtradas = lista;
-		if (preferencias.DiaPreferido is DiaSemana2025 dia)
-			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia.EnumValor);
+		if (preferencias.DiaPreferido is DayOfWeek dia)
+			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia);
 
 		if (preferencias.MomentoPreferido is TardeOMañana momento)
 			filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));
@@ -40,7 +40,7 @@ internal static class _ServiciosPrivados {
 		}
 	}
 
-
+	/*
 	internal static async Task<Result<Disponibilidad2025>> EncontrarProximaDisponibilidad(
 			Especialidad2025 solicitudEspecialidad,
 			DateTime aPartirDeCuando,
@@ -54,7 +54,7 @@ internal static class _ServiciosPrivados {
 		}
 		return new Result<Disponibilidad2025>.Error("No se encontró ninguna disponibilidad.");
 	}
-
+	*/
 
 	internal static async IAsyncEnumerable<Result<Disponibilidad2025>>GenerarDisponibilidades(
 		Especialidad2025 especialidad,
@@ -132,7 +132,7 @@ internal static class _ServiciosPrivados {
 
 				for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
 					var disp = new Disponibilidad2025(
-						solicitudEspecialidad, 
+						solicitudEspecialidad.Codigo, 
 						medicoId,
 						slot, 
 						slot.AddMinutes(duracion)
@@ -141,7 +141,7 @@ internal static class _ServiciosPrivados {
 
 					bool solapa = false;
 					foreach (TurnoQM? t in turnos) {
-						if (t.EspecialidadCodigo == disp.Especialidad.Codigo &&
+						if (t.EspecialidadCodigo == disp.EspecialidadCodigo &&
 							t.OutcomeEstado == TurnoEstadoCodigo.Programado &&
 							t.FechaHoraAsignadaDesde < disp.FechaHoraHasta &&
 							disp.FechaHoraDesde < t.FechaHoraAsignadaHasta) {

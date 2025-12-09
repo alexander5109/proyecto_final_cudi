@@ -73,7 +73,7 @@ public static class ApiDtos {
 					)
 				, pacientedto.Domicilio),
 				FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
-				FechaRegistro2025.CrearResult(pacientedto.FechaIngreso)
+				pacientedto.FechaIngreso
 			)
 		);
 	}
@@ -93,7 +93,7 @@ public static class ApiDtos {
 				)
 			, pacientedto.Domicilio),
 			FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
-			FechaRegistro2025.CrearResult(pacientedto.FechaIngreso)
+			pacientedto.FechaIngreso
 		);
 	}
 
@@ -102,7 +102,7 @@ public static class ApiDtos {
 			Dni = paciente.Dni.Valor,
 			Nombre = paciente.NombreCompleto.NombreValor,
 			Apellido = paciente.NombreCompleto.ApellidoValor,
-			FechaIngreso = paciente.FechaIngreso.Valor,
+			FechaIngreso = paciente.FechaIngreso,
 			Domicilio = paciente.Domicilio.DireccionValor,
 			Localidad = paciente.Domicilio.Localidad.NombreValor,
 			ProvinciaCodigo = paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
@@ -117,7 +117,7 @@ public static class ApiDtos {
 			Dni = agg.Paciente.Dni.Valor,
 			Nombre = agg.Paciente.NombreCompleto.NombreValor,
 			Apellido = agg.Paciente.NombreCompleto.ApellidoValor,
-			FechaIngreso = agg.Paciente.FechaIngreso.Valor,
+			FechaIngreso = agg.Paciente.FechaIngreso,
 			Domicilio = agg.Paciente.Domicilio.DireccionValor,
 			Localidad = agg.Paciente.Domicilio.Localidad.NombreValor,
 			ProvinciaCodigo = agg.Paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
@@ -148,7 +148,7 @@ public static class ApiDtos {
 
 	public static TurnoDto ToDto(this Turno2025 turno) {
 		return new TurnoDto(
-			turno.FechaDeCreacion.Valor,
+			turno.FechaDeCreacion,
 			turno.PacienteId,
 			turno.MedicoId,
 			turno.Especialidad.Codigo,
@@ -204,22 +204,22 @@ public static class ApiDtos {
 	public static HorarioDto ToDto(this Horario2025 instance) {
 		return new HorarioDto {
 			MedicoId = instance.MedicoId,
-			DiaSemana = instance.DiaSemana.EnumValor,
+			DiaSemana = instance.DiaSemana,
 			HoraDesde = instance.HoraDesde.Valor.ToTimeSpan(),
 			HoraHasta = instance.HoraHasta.Valor.ToTimeSpan(),
-			VigenteDesde = instance.VigenteDesde.Valor.ToDateTime(TimeOnly.MaxValue),
-			VigenteHasta = instance.VigenteHasta.Valor.ToDateTime(TimeOnly.MaxValue)
+			VigenteDesde = instance.VigenteDesde.ToDateTime(TimeOnly.MaxValue),
+			VigenteHasta = instance.VigenteHasta.ToDateTime(TimeOnly.MaxValue)
 		};
 	}
 
 	public static Result<Horario2025> ToDomain(this HorarioDto horarioDto) {
 		return Horario2025.CrearResult(
 			horarioDto.MedicoId,
-			new DiaSemana2025(horarioDto.DiaSemana, horarioDto.DiaSemana.AEspañol()),
+			horarioDto.DiaSemana,
 			new HorarioHora2025(TimeOnly.FromTimeSpan(horarioDto.HoraDesde)),
 			new HorarioHora2025(TimeOnly.FromTimeSpan(horarioDto.HoraHasta)),
-			new VigenciaHorario2025(new DateOnly(2014, 1, 1)),
-			new VigenciaHorario2025(new DateOnly(2026, 1, 1))
+			new DateOnly(2014, 1, 1),
+			new DateOnly(2026, 1, 30)
 		);
 	}
 
@@ -262,7 +262,7 @@ public static class ApiDtos {
 			ContactoTelefono2025.CrearResult(medicoDto.Telefono),
 			ContactoEmail2025.CrearResult(medicoDto.Email),
 			ListaHorarioMedicos2025.CrearResult(horariosDto.Select(x => x.ToDomain())),
-			FechaRegistro2025.CrearResult(medicoDto.FechaIngreso),
+			medicoDto.FechaIngreso,
 			medicoDto.HaceGuardias
 		);
 	}
@@ -275,7 +275,7 @@ public static class ApiDtos {
 			Dni = aggrg.Medico.Dni.Valor,
 			Nombre = aggrg.Medico.NombreCompleto.NombreValor,
 			Apellido = aggrg.Medico.NombreCompleto.ApellidoValor,
-			FechaIngreso = aggrg.Medico.FechaIngreso.Valor,
+			FechaIngreso = aggrg.Medico.FechaIngreso,
 			Domicilio = aggrg.Medico.Domicilio.DireccionValor,
 			Localidad = aggrg.Medico.Domicilio.Localidad.NombreValor,
 			ProvinciaCodigo = aggrg.Medico.Domicilio.Localidad.Provincia.CodigoInternoValor,
@@ -293,7 +293,7 @@ public static class ApiDtos {
 			Dni = medico.Dni.Valor,
 			Nombre = medico.NombreCompleto.NombreValor,
 			Apellido = medico.NombreCompleto.ApellidoValor,
-			FechaIngreso = medico.FechaIngreso.Valor,
+			FechaIngreso = medico.FechaIngreso,
 			Domicilio = medico.Domicilio.DireccionValor,
 			Localidad = medico.Domicilio.Localidad.NombreValor,
 			ProvinciaCodigo = medico.Domicilio.Localidad.Provincia.CodigoInternoValor,

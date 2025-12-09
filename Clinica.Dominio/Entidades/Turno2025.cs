@@ -29,7 +29,7 @@ public record Turno2025Agg(TurnoId Id, Turno2025 Turno) {
 	public static Turno2025Agg Crear(TurnoId id, Turno2025 turno) => new(id, turno);
 }
 public record Turno2025(
-	FechaRegistro2025 FechaDeCreacion,
+	DateTime FechaDeCreacion,
 	PacienteId PacienteId,
 	MedicoId MedicoId,
 	Especialidad2025 Especialidad,
@@ -66,7 +66,7 @@ public record Turno2025(
 		string? outcomeComentario
 	) {
 		return new(
-			FechaDeCreacion: FechaRegistro2025.Representar(fechaCreacion),
+			FechaDeCreacion: fechaCreacion,
 			PacienteId: pacienteId,
 			MedicoId: medicoId,
 			Especialidad: Especialidad2025.Representar(especialidadCododigo),
@@ -81,7 +81,7 @@ public record Turno2025(
 
 	public static Result<Turno2025> CrearResult(
 		//Result<TurnoId> idResult,
-		Result<FechaRegistro2025> fechaCreacionResult,
+		DateTime fechaCreacion,
 		Result<PacienteId> pacienteIdResult,
 		Result<MedicoId> medicoIdResult,
 		Result<Especialidad2025> especialidadResult,
@@ -93,7 +93,6 @@ public record Turno2025(
 	) {
 		return
 			//from id in idResult
-			from fechaCreacion in fechaCreacionResult
 			from pacienteId in pacienteIdResult
 			from medicoId in medicoIdResult
 			from especialidad in especialidadResult
@@ -116,7 +115,7 @@ public record Turno2025(
 
 	public static Result<Turno2025> Programar(
 		PacienteId pacienteId,
-		FechaRegistro2025 solicitadoEn,
+		DateTime solicitadoEn,
 		Disponibilidad2025 disp
 	) {
 		if (disp.FechaHoraDesde >= disp.FechaHoraHasta)
@@ -138,7 +137,7 @@ public record Turno2025(
 			FechaDeCreacion: solicitadoEn,
 			PacienteId: pacienteId,
 			MedicoId: disp.MedicoId,
-			Especialidad: disp.Especialidad,
+			Especialidad: Especialidad2025.Representar(disp.EspecialidadCodigo),
 			FechaHoraAsignadaDesdeValor: disp.FechaHoraDesde,
 			FechaHoraAsignadaHastaValor: disp.FechaHoraHasta,
 			OutcomeEstado: TurnoEstadoCodigo.Programado,
@@ -214,7 +213,7 @@ public static class TurnoExtentions {
 		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado || turnoOriginal.OutcomeFechaOption.HasValor) 
 			return new Result<Turno2025>.Error("Solo puede cancelarse un turno que todavía esté programado.");
 		
-		if (fechaEvento < turnoOriginal.FechaDeCreacion.Valor) 
+		if (fechaEvento < turnoOriginal.FechaDeCreacion) 
 			return new Result<Turno2025>.Error("La fecha del evento no puede ser anterior a la fecha de creación del turno.");
 		
 		if (fechaEvento >= turnoOriginal.FechaHoraAsignadaHastaValor) 

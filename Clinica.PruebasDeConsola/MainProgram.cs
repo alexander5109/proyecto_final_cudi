@@ -62,7 +62,7 @@ public static class MainProgram {
 		//	return;
 		//}
 		//foreach (var turno2025 in responseResult.UnwrapAsOk()) {
-		//	Console.Write(turno2025.UnwrapAsOk().AEspañol());
+		//	Console.Write(turno2025.UnwrapAsOk().ATexto());
 		//	break;
 		//}
 

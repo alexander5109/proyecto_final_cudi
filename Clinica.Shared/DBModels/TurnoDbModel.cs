@@ -26,7 +26,7 @@ public static partial class DbModels {
 	public static TurnoDbModel ToModel(this Turno2025 turno) {
 		return new TurnoDbModel(
 			default,
-			turno.FechaDeCreacion.Valor,
+			turno.FechaDeCreacion,
 			turno.PacienteId,
 			turno.MedicoId,
 			turno.Especialidad.Codigo,
@@ -41,7 +41,7 @@ public static partial class DbModels {
 	public static TurnoDbModel ToModel(this Turno2025Agg aggrg) {
 		return new TurnoDbModel(
 			aggrg.Id,
-			aggrg.Turno.FechaDeCreacion.Valor,
+			aggrg.Turno.FechaDeCreacion,
 			aggrg.Turno.PacienteId,
 			aggrg.Turno.MedicoId,
 			aggrg.Turno.Especialidad.Codigo,
@@ -55,7 +55,7 @@ public static partial class DbModels {
 	public static Result<Turno2025> ToDomain(this TurnoDbModel turnoDto) {
 		return Turno2025.CrearResult(
 			//TurnoId.CrearResult(turnoDto.Id.Valor),
-			FechaRegistro2025.CrearResult(turnoDto.FechaDeCreacion),
+			turnoDto.FechaDeCreacion,
 			PacienteId.CrearResult(turnoDto.PacienteId.Valor),
 			MedicoId.CrearResult(turnoDto.MedicoId.Valor),
 			Especialidad2025.CrearResult(turnoDto.EspecialidadCodigo),

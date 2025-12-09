@@ -6,12 +6,6 @@ namespace Clinica.Dominio.TiposDeValor;
 //NOT NEEDED SAVING
 
 
-public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
-	public string ATexto() => Tarde ? "Tarde" : "Mañana";
-	public bool AplicaA(DateTime fecha) => Tarde ? EsTarde(fecha) : EsMañana(fecha);
-	private static bool EsTarde(DateTime dt) => dt.Hour >= 13;
-	private static bool EsMañana(DateTime dt) => dt.Hour < 13;
-}
 
 //public readonly record struct SolicitudDeTurno(
 //	PacienteId PacienteId,
@@ -27,15 +21,22 @@ public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 //		return new Result<SolicitudDeTurno>.Ok(new SolicitudDeTurno(pacienteId, especialidad, fechaSolicitada));
 //	}
 
-//	public string AEspañol() =>
+//	public string ATexto() =>
 //		$"Solicitud básica:\n" +
 //		$"  • Nivel4Medico: {PacienteId}\n" +
-//		$"  • Especialidad: {Especialidad.AEspañol()}\n" +
+//		$"  • Especialidad: {Especialidad.ATexto()}\n" +
 //		$"  • Solicitado en: {FechaCreacion:G}";
 //}
 
+public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
+	public string ATexto() => Tarde ? "Tarde" : "Mañana";
+	public bool AplicaA(DateTime fecha) => Tarde ? EsTarde(fecha) : EsMañana(fecha);
+	private static bool EsTarde(DateTime dt) => dt.Hour >= 13;
+	private static bool EsMañana(DateTime dt) => dt.Hour < 13;
+}
+
 public readonly record struct SolicitudDeTurnoPreferencias(
-	DiaSemana2025? DiaPreferido,
+	DayOfWeek? DiaPreferido,
 	TardeOMañana? MomentoPreferido
 ) : IComoTexto {
 	public static readonly SolicitudDeTurnoPreferencias Ninguna = new(null, null);
@@ -48,7 +49,7 @@ public readonly record struct SolicitudDeTurnoPreferencias(
 
 		return
 			"Preferencias de turno:\n" +
-			(DiaPreferido is DiaSemana2025 d ? $"  • Día preferido: {d.ATexto()}\n" : "") +
+			(DiaPreferido is DayOfWeek d ? $"  • Día preferido: {d.ATexto()}\n" : "") +
 			(MomentoPreferido is TardeOMañana m ? $"  • Prefiere: {m.ATexto()}\n" : "");
 	}
 }
@@ -61,10 +62,10 @@ public readonly record struct SolicitudDeTurnoPreferencias(
 //	public Especialidad2025 Especialidad => Basica.Especialidad;
 //	public DateTime FechaCreacion => Basica.FechaCreacion;
 
-//	public string AEspañol() {
+//	public string ATexto() {
 //		return
 //			"Solicitud de turno:\n" +
-//			Basica.AEspañol() + "\n" +
-//			Preferencias.AEspañol();
+//			Basica.ATexto() + "\n" +
+//			Preferencias.ATexto();
 //	}
 //}

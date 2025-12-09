@@ -40,13 +40,6 @@ public static class ResultExtensions {
 			_ => throw new InvalidOperationException()
 		};
 	}
-	public static async Task<Result<U>> BindWithPrefix<T, U>(
-		this Task<Result<T>> result,
-		string prefixError,
-		Func<T, Result<U>> caseOk
-	) {
-		return (await result).BindWithPrefix(prefixError, caseOk);
-	}
 
 	public static async Task<Result<U>> BindWithPrefixAsync<T, U>(
 		this Result<T> result,

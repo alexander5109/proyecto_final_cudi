@@ -21,7 +21,8 @@ public enum PermisoSistema {
 	VerHorarios,
 
 
-	SolicitarTurno
+	SolicitarTurno,
+	GestionDeTurnos
 
 	// más adelante: editar paciente, etc.
 }

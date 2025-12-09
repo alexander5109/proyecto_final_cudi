@@ -4,20 +4,18 @@ using Clinica.Dominio.Entidades;
 
 namespace Clinica.Dominio.TiposDeValor;
 
-public record Disponibilidad2025(
-	Especialidad2025 Especialidad,
-	//PacienteId Paciente,
+public readonly record struct Disponibilidad2025( //este tipo de valor es la mejor utilizacion de un struct in c#
+	EspecialidadCodigo EspecialidadCodigo,
 	MedicoId MedicoId,
 	DateTime FechaHoraDesde,
 	DateTime FechaHoraHasta
-	//DiaSemana2025 DiaSemana
 ) : IComoTexto {
 	public string ATexto() {
         string fecha = FechaHoraDesde.ToString("dddd dd/MM/yyyy");
         string desde = FechaHoraDesde.ToString("HH:mm");
         string hasta = FechaHoraHasta.ToString("HH:mm");
 		return
-			$"Disponibilidad de {Especialidad.ATexto()}\n" +
+			$"Disponibilidad de {EspecialidadCodigo}\n" +
 			$"  • Médico: {MedicoId}\n" +
 			//$"  • Médico: {Medico.NombreCompleto.ATexto()}\n" +
 			$"  • Fecha: {fecha}\n" +

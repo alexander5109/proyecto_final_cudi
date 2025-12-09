@@ -152,7 +152,7 @@ public class ServiciosPublicos : IServiciosPublicos {
 		Disponibilidad2025 disponibilidad,
 		IRepositorioDomainServiciosPrivados repositorio
 	) {
-		return await Turno2025.Programar(pacienteId, FechaRegistro2025.Representar(fechaSolicitud), disponibilidad)
+		return await Turno2025.Programar(pacienteId, fechaSolicitud, disponibilidad)
 			.BindWithPrefixAsync(
 				prefixError: "Error de Dominio: ",
 				caseOk: async nuevoTurno => (await repositorio.InsertTurnoReturnId(nuevoTurno))

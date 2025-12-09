@@ -54,7 +54,7 @@ public static class Comodidades {
 		MedicoDbModel medico = await domainValue.MedicoId.RespectivoMedico();
 		return new DisponibilidadEspecialidadModelView(
 			Fecha: domainValue.FechaHoraDesde.AFechaArgentina(),
-			Hora: domainValue.FechaHoraDesde.AHorasArgentina(),
+			Hora: domainValue.FechaHoraDesde.ATexto(),
 			Medico: $"{medico.Nombre}{medico.Apellido}",
 			DiaSemana: DiaSemana2025.Crear(domainValue.FechaHoraDesde.DayOfWeek)
 		);

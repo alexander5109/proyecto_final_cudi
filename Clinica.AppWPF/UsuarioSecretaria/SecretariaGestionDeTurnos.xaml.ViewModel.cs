@@ -16,7 +16,7 @@ public sealed class TurnoVM(Shared.Dtos.DbModels.TurnoDbModel model) {
     public EspecialidadCodigo EspecialidadCodigo { get; } = model.EspecialidadCodigo;
     public string FechaSolicitud { get; } = model.FechaHoraAsignadaDesde.AFechaArgentina();
     public string FechaAsignada { get; } = model.FechaHoraAsignadaDesde.AFechaArgentina();
-    public string HoraAsignada { get; } = model.FechaHoraAsignadaHasta.AHorasArgentina();
+    public string HoraAsignada { get; } = model.FechaHoraAsignadaHasta.ATexto();
     public TurnoEstadoCodigo OutcomeEstado { get; } = model.OutcomeEstado;
     public DateTime? OutcomeFecha { get; set; } = model.OutcomeFecha;
     public string? OutcomeComentario { get; set; } = model.OutcomeComentario;
