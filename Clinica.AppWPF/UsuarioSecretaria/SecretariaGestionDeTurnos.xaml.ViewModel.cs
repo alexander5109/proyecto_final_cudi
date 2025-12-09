@@ -8,32 +8,18 @@ using static Clinica.Shared.Dtos.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
-public sealed class TurnoVM {
-	public TurnoId Id { get; }
-	public string PacienteDisplayear { get; }
-	public string PacienteDni { get; }
-	public string MedicoDisplayear { get; }
-	public EspecialidadCodigo EspecialidadCodigo { get; }
-	public string FechaSolicitud { get; }
-	public string FechaAsignada { get; }
-	public string HoraAsignada { get; }
-	public TurnoOutcomeEstadoCodigo2025 OutcomeEstado { get; }
-	public DateTime? OutcomeFecha { get; set; }
-	public string? OutcomeComentario { get; set; }
-	public TurnoVM(TurnoDbModel model) {
-		Id = model.Id;
-		PacienteDisplayear = "(await model.SelectedPacienteId.RespectivoPaciente()).Nombre+Apellido";
-		PacienteDni = "(await model.SelectedPacienteId.RespectivoPaciente()).Dni";
-		MedicoDisplayear = "(await model.MedicoId.RespectivoMedico()).Nombre + Apellido";
-		FechaSolicitud = model.FechaHoraAsignadaDesde.AFechaArgentina();
-		FechaAsignada = model.FechaHoraAsignadaDesde.AFechaArgentina();
-		HoraAsignada = model.FechaHoraAsignadaHasta.AHorasArgentina();
-		EspecialidadCodigo = model.EspecialidadCodigo;
-		OutcomeEstado = model.OutcomeEstado;
-		//MessageBox.Show($"{EspecialidadCodigo} {OutcomeEstado.ToString()}");
-		OutcomeFecha = model.OutcomeFecha;
-		OutcomeComentario = model.OutcomeComentario;
-	}
+public sealed class TurnoVM(Shared.Dtos.DbModels.TurnoDbModel model) {
+    public TurnoId Id { get; } = model.Id;
+    public string PacienteDisplayear { get; } = "(await model.SelectedPacienteId.RespectivoPaciente()).Nombre+Apellido";
+    public string PacienteDni { get; } = "(await model.SelectedPacienteId.RespectivoPaciente()).Dni";
+    public string MedicoDisplayear { get; } = "(await model.MedicoId.RespectivoMedico()).Nombre + Apellido";
+    public EspecialidadCodigo EspecialidadCodigo { get; } = model.EspecialidadCodigo;
+    public string FechaSolicitud { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
+    public string FechaAsignada { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
+    public string HoraAsignada { get; } = model.FechaHoraAsignadaHasta.ATextoHoras();
+    public TurnoEstadoCodigo OutcomeEstado { get; } = model.OutcomeEstado;
+    public DateTime? OutcomeFecha { get; set; } = model.OutcomeFecha;
+    public string? OutcomeComentario { get; set; } = model.OutcomeComentario;
 }
 public sealed class SecretariaGestionDeTurnosViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
@@ -85,7 +71,7 @@ public sealed class SecretariaGestionDeTurnosViewModel : INotifyPropertyChanged 
 	}
 
 	public bool HayTurnoSeleccionado => SelectedTurno is not null;
-	public bool PuedeModificarTurnoSeleccionado => SelectedTurno?.OutcomeEstado == TurnoOutcomeEstadoCodigo2025.Programado;
+	public bool PuedeModificarTurnoSeleccionado => SelectedTurno?.OutcomeEstado == TurnoEstadoCodigo.Programado;
 
 	public bool ComentarioObligatorio { get; private set; }
 

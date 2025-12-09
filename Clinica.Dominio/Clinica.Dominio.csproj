@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="TiposDeValor\VigenciaHorario2025.cs" />
   </ItemGroup>
 
 </Project>

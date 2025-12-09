@@ -38,7 +38,7 @@ public record Medico2025(
 	ContactoTelefono2025 Telefono,
 	ContactoEmail2025 Email,
 	ListaHorarioMedicos2025 ListaHorarios,
-	FechaRegistro2025 FechaIngreso,
+	DateTime FechaIngreso,
 	bool HaceGuardiasValor
 ) {
     public static Result<Medico2025> CrearResult(
@@ -51,7 +51,7 @@ public record Medico2025(
 		Result<ContactoTelefono2025> telefonoResult,
 		Result<ContactoEmail2025> emailResult,
 		Result<ListaHorarioMedicos2025> horariosResult,
-		Result<FechaRegistro2025> fechaIngresoResult,
+		DateTime fechaIngreso,
 		bool haceGuardia
 	) =>
 		from id in idResult
@@ -62,7 +62,6 @@ public record Medico2025(
 		from tel in telefonoResult
 		from email in emailResult
 		from horarios in horariosResult
-		from fechaIng in fechaIngresoResult
 		select new Medico2025(
 			id,
 			nombre,
@@ -72,7 +71,7 @@ public record Medico2025(
 			tel,
 			email,
 			horarios,
-			fechaIng,
+			fechaIngreso,
 			haceGuardia
 		);
 }

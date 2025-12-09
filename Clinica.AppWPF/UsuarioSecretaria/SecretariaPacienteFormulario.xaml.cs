@@ -67,7 +67,7 @@ public partial class SecretariaPacienteFormulario : Window {
 
 	private void ButtonSolicitarTurno(object sender, RoutedEventArgs e) {
 		//if (ViewModel.Id is int notNullId) {
-		//	this.AbrirComoDialogo<SecretariaDisponibilidades>(SelectedPacienteId.Crear(notNullId));
+		//	this.AbrirComoDialogo<SecretariaDisponibilidades>(SelectedPacienteId.CrearResult(notNullId));
 		//}
 	}
 }

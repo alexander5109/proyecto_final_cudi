@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.ViewModels;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.AppWPF.UsuarioSecretaria.Comodidades;
@@ -14,7 +15,9 @@ namespace Clinica.AppWPF.UsuarioSecretaria;
 
 public static class Comodidades {
 
-	public record DisponibilidadEspecialidadModelView(string Fecha, string Hora, string Medico, DiaSemana2025 DiaSemana);
+	
+
+	public record DisponibilidadEspecialidadModelView(string Fecha, string Hora, string Medico, DiaDeSemanaViewModel DiaSemana);
 	public record EspecialidadViewModel(EspecialidadCodigo Codigo, string Displayear);
 	public record MedicoSimpleViewModel(MedicoId Id, EspecialidadCodigo EspecialidadCodigo, string Displayear);
 	//public record ModelViewDiaSemana(int Value, string NombreDia);
@@ -53,10 +56,10 @@ public static class Comodidades {
 	async public static Task<DisponibilidadEspecialidadModelView> ToSimpleViewModel(this Disponibilidad2025 domainValue) {
 		MedicoDbModel medico = await domainValue.MedicoId.RespectivoMedico();
 		return new DisponibilidadEspecialidadModelView(
-			Fecha: domainValue.FechaHoraDesde.AFechaArgentina(),
-			Hora: domainValue.FechaHoraDesde.AHorasArgentina(),
+			Fecha: domainValue.FechaHoraDesde.ATextoHoras(),
+			Hora: domainValue.FechaHoraDesde.ATextoHoras(),
 			Medico: $"{medico.Nombre}{medico.Apellido}",
-			DiaSemana: domainValue.DiaSemana
+			DiaSemana: new DiaDeSemanaViewModel(domainValue.FechaHoraDesde.DayOfWeek, domainValue.FechaHoraDesde.DayOfWeek.ATexto())
 		);
 	}
 
@@ -209,10 +212,10 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 
 
 	//-------------- Elegir dia semana que prefiere la cita:
-	public ObservableCollection<DiaSemana2025> DiasSemanaItemsSource { get; } = [.. DiaSemana2025.Todos];
+	public ObservableCollection<DiaDeSemanaViewModel> DiasSemanaItemsSource { get; } = [.. DiaDeSemanaViewModel.Todos];
 
-	private DiaSemana2025? _selectedDiaValue;
-	public DiaSemana2025? SelectedDiaValue {
+	private DiaDeSemanaViewModel? _selectedDiaValue;
+	public DiaDeSemanaViewModel? SelectedDiaValue {
 		get => _selectedDiaValue;
 		set {
 			if (_selectedDiaValue == value) return;
@@ -317,7 +320,7 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 		foreach (Disponibilidad2025 dispo in disponibilidades) {
 			DisponibilidadesItemsSource.Add(await dispo.ToSimpleViewModel());
 		}
-		buttonReservar.IsEnabled = SelectedDisponibilidad != null;
+		//buttonReservar.IsEnabled = SelectedDisponibilidad != null;
 	}
 
 
@@ -334,7 +337,10 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 		this.Close();
 	}
 
-	private void ButtonReservar(object sender, RoutedEventArgs e) {
+
+	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
+
+    private void Click_AgendarNuevoTurno(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 		if (SelectedDisponibilidad is not DisponibilidadEspecialidadModelView seleccionada) {
 			MessageBox.Show("No hay una disponibilidad seleccionada.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -342,7 +348,7 @@ public partial class SecretariaDisponibilidades : Window, INotifyPropertyChanged
 			MessageBox.Show($"Reservando turno: {seleccionada.Fecha:d} {seleccionada.Hora} - {seleccionada.Medico}", "Reservar", MessageBoxButton.OK, MessageBoxImage.Information);
 			this.Close();
 		}
-	}
 
-	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
+
+	}
 }

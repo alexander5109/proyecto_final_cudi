@@ -46,73 +46,37 @@ public record Paciente2025Agg(
 }
 
 public record Paciente2025(
-	//PacienteId Id,
 	NombreCompleto2025 NombreCompleto,
 	DniArgentino2025 Dni,
 	Contacto2025 Contacto,
 	DomicilioArgentino2025 Domicilio,
 	FechaDeNacimiento2025 FechaNacimiento,
-	FechaRegistro2025 FechaIngreso
-): IComoTexto {
+	DateTime FechaIngreso
+) : IComoTexto {
 	public static Result<Paciente2025> CrearResult(
-		//Result<PacienteId> idResult,
 		Result<NombreCompleto2025> nombreResult,
 		Result<DniArgentino2025> dniResult,
 		Result<Contacto2025> contactoResult,
 		Result<DomicilioArgentino2025> domicilioResult,
 		Result<FechaDeNacimiento2025> fechaNacimientoResult,
-		Result<FechaRegistro2025> fechaIngresoResult
-	) {
-		Validated<(
-			//PacienteId, 
-			NombreCompleto2025, DniArgentino2025, Contacto2025, DomicilioArgentino2025, FechaDeNacimiento2025, FechaRegistro2025)> validado =
-			ValidatedCombine.Combine(
-				//idResult.ToValidated(),
-				nombreResult.ToValidated(),
-				dniResult.ToValidated(),
-				contactoResult.ToValidated(),
-				domicilioResult.ToValidated(),
-				fechaNacimientoResult.ToValidated(),
-				fechaIngresoResult.ToValidated()
-			);
+		DateTime fechaIngreso
+	) 
+		=> nombreResult.BindWithPrefix(prefixError: "Error en NombreCompleto: \n", caseOk: nombre
+		=> dniResult.BindWithPrefix(prefixError: "Error en Dni: \n", caseOk: dni
+		=> contactoResult.BindWithPrefix(prefixError: "Error en Contacto: \n", caseOk: contacto
+		=> domicilioResult.BindWithPrefix(prefixError: "Error en Domicilio: \n", caseOk: domicilio
+		=> fechaNacimientoResult.BindWithPrefix(prefixError: "Error en FechaNacimiento: \n", caseOk: fechaNac
+		=> new Result<Paciente2025>.Ok(new Paciente2025(
+			nombre,
+			dni,
+			contacto,
+			domicilio,
+			fechaNac,
+			fechaIngreso
+		))
+	)))));
 
-		return validado switch {
-			Validated<(
-						//PacienteId,
-					   NombreCompleto2025,
-					   DniArgentino2025,
-					   Contacto2025,
-					   DomicilioArgentino2025,
-					   FechaDeNacimiento2025,
-					   FechaRegistro2025)>.Valid v
-				=> new Result<Paciente2025>.Ok(
-						new Paciente2025(
-							v.Value.Item1,
-							v.Value.Item2,
-							v.Value.Item3,
-							v.Value.Item4,
-							v.Value.Item5,
-							v.Value.Item6
-							//v.Value.Item7
-						)
-					),
-
-			Validated<(
-				//PacienteId,
-					   NombreCompleto2025,
-					   DniArgentino2025,
-					   Contacto2025,
-					   DomicilioArgentino2025,
-					   FechaDeNacimiento2025,
-					   FechaRegistro2025)>.Invalid e
-				=> new Result<Paciente2025>.Error(
-						string.Join("\n", e.Errors)
-					),
-			_ => throw new InvalidOperationException()
-		};
-	}
-
-    public string ATexto() {
+	public string ATexto() {
 		//Id: { Id.Valor}\n
 		return @$"
 			NombreCompleto: {NombreCompleto.ATexto()}\n
@@ -120,9 +84,9 @@ public record Paciente2025(
 			Contacto: {Contacto.ATexto()}\n
 			Domicilio: {Domicilio.ATexto()}\n
 			FechaNacimiento: {FechaNacimiento.ATexto()}\n
-			FechaIngreso: {FechaIngreso.ATexto()}\n
+			FechaIngreso: {FechaIngreso.ATextoHoras()}\n
 		";
-    }
+	}
 
 
 	//public static Result<Paciente2025> CrearResult(

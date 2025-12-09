@@ -1,5 +1,5 @@
 ﻿using Clinica.Dominio.Entidades;
-using Clinica.WebAPI.Servicios;
+using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
@@ -41,7 +41,7 @@ public class PacientesController(
 	//public async Task<IActionResult> GetPacientesAsDomain() {
 
 
-	//Result<Turno2025> result = await ServiciosPublicos.SolicitarCancelacion(
+	//Result<Turno2025> result = await ServiciosPublicos.PersistirComoCanceladoAsync(
 	//	dto.TurnoId,
 	//	dto.OutcomeFecha,
 	//	dto.OutcomeComentario,

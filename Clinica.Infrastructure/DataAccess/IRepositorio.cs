@@ -41,7 +41,7 @@ public static class IRepositorioInterfaces {
 		Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance);
 		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnos();
 		Task<Result<TurnoDbModel?>> SelectTurnoWhereId(TurnoId id);
-		Task<Result<Unit>> UpdateTurnoWhereId(TurnoId id, Turno2025 instance);
+		Task<Result<Turno2025Agg>> UpdateTurnoWhereId(TurnoId id, Turno2025 instance);
 	}
 	public interface IRepositorioUsuarios {
 		Task<Result<Unit>> DeleteUsuarioWhereId(UsuarioId id);

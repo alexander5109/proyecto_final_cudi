@@ -38,7 +38,7 @@ public static partial class DbModels {
 					)
 				, pacientedto.Domicilio),
 				FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
-				FechaRegistro2025.CrearResult(pacientedto.FechaIngreso)
+				pacientedto.FechaIngreso
 			)
 		);
 	}
@@ -86,7 +86,7 @@ public static partial class DbModels {
 			Dni : paciente.Dni.Valor,
 			Nombre : paciente.NombreCompleto.NombreValor,
 			Apellido : paciente.NombreCompleto.ApellidoValor,
-			FechaIngreso : paciente.FechaIngreso.Valor,
+			FechaIngreso : paciente.FechaIngreso,
 			Domicilio : paciente.Domicilio.DireccionValor,
 			Localidad : paciente.Domicilio.Localidad.NombreValor,
 			ProvinciaCodigo : paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,

@@ -62,13 +62,13 @@ public static class MainProgram {
 		//	return;
 		//}
 		//foreach (var turno2025 in responseResult.UnwrapAsOk()) {
-		//	Console.Write(turno2025.UnwrapAsOk().AEspañol());
+		//	Console.Write(turno2025.UnwrapAsOk().ATextoDia());
 		//	break;
 		//}
 
 
 		// Caso de uso 1
-		Result<IReadOnlyList<Disponibilidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidadesPara(
+		Result<IReadOnlyList<Disponibilidad2025>> disponibilidades = (await ServiciosPublicos.SolicitarDisponibilidades(
 			Especialidad2025.ClinicoGeneral.Codigo,
 			DateTime.Now,
 			4,

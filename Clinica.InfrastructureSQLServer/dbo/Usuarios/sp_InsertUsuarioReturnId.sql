@@ -1,12 +1,11 @@
 ﻿CREATE PROCEDURE sp_InsertUsuarioReturnId
     @NombreUsuario NVARCHAR(100),
     @PasswordHash NVARCHAR(255),
-    @EnumRole TINYINT,
-    @NewId INT OUTPUT
+    @EnumRole TINYINT
 AS
 BEGIN
     INSERT INTO Usuario (NombreUsuario, PasswordHash, EnumRole)
     VALUES (@NombreUsuario, @PasswordHash, @EnumRole);
 
-    SET @NewId = SCOPE_IDENTITY();
+    SELECT SCOPE_IDENTITY() AS NewId;
 END

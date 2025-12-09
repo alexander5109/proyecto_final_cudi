@@ -6,7 +6,7 @@ using static Clinica.Dominio.IRepositorios.QueryModels;
 
 namespace Clinica.Dominio.Servicios;
 
-internal static class ServiciosPrivados {
+internal static class _ServiciosPrivados {
 	//internal static Result<Disponibilidad2025> TomarPrimera(this Result<IReadOnlyList<Disponibilidad2025>> listadoResult) {
 	//	return listadoResult.MatchAndSet(
 	//		ok => {
@@ -27,8 +27,8 @@ internal static class ServiciosPrivados {
 
 		IReadOnlyList<Disponibilidad2025> lista = ((Result<IReadOnlyList<Disponibilidad2025>>.Ok)disponibilidadesResult).Valor;
 		IEnumerable<Disponibilidad2025> filtradas = lista;
-		if (preferencias.DiaPreferido is DiaSemana2025 dia)
-			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia.EnumValor);
+		if (preferencias.DiaPreferido is DayOfWeek dia)
+			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia);
 
 		if (preferencias.MomentoPreferido is TardeOMañana momento)
 			filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));
@@ -40,7 +40,7 @@ internal static class ServiciosPrivados {
 		}
 	}
 
-
+	/*
 	internal static async Task<Result<Disponibilidad2025>> EncontrarProximaDisponibilidad(
 			Especialidad2025 solicitudEspecialidad,
 			DateTime aPartirDeCuando,
@@ -54,7 +54,7 @@ internal static class ServiciosPrivados {
 		}
 		return new Result<Disponibilidad2025>.Error("No se encontró ninguna disponibilidad.");
 	}
-
+	*/
 
 	internal static async IAsyncEnumerable<Result<Disponibilidad2025>>GenerarDisponibilidades(
 		Especialidad2025 especialidad,
@@ -132,17 +132,17 @@ internal static class ServiciosPrivados {
 
 				for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
 					var disp = new Disponibilidad2025(
-						solicitudEspecialidad, 
+						solicitudEspecialidad.Codigo, 
 						medicoId,
 						slot, 
-						slot.AddMinutes(duracion),
-						DiaSemana2025.Crear(slot.DayOfWeek)
+						slot.AddMinutes(duracion)
+						//DiaSemana2025.CrearResult(slot.DayOfWeek)
 					);
 
 					bool solapa = false;
 					foreach (TurnoQM? t in turnos) {
-						if (t.EspecialidadCodigo == disp.Especialidad.Codigo &&
-							t.OutcomeEstado == TurnoOutcomeEstado2025.Programado.Codigo &&
+						if (t.EspecialidadCodigo == disp.EspecialidadCodigo &&
+							t.OutcomeEstado == TurnoEstadoCodigo.Programado &&
 							t.FechaHoraAsignadaDesde < disp.FechaHoraHasta &&
 							disp.FechaHoraDesde < t.FechaHoraAsignadaHasta) {
 							solapa = true;
@@ -207,7 +207,7 @@ internal static class ServiciosPrivados {
 
 					foreach (TurnoQM t in turnos) {
 						if (t.EspecialidadCodigo == especialidad.Codigo &&
-							t.OutcomeEstado == TurnoOutcomeEstado2025.Programado.Codigo &&
+							t.OutcomeEstado == TurnoEstadoCodigo.Programado &&
 							t.FechaHoraAsignadaDesde < slotHasta &&
 							slot < t.FechaHoraAsignadaHasta) {
 							solapa = true;
