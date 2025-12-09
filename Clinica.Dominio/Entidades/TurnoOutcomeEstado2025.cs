@@ -12,8 +12,23 @@ public enum TurnoEstadoCodigo : byte {
 	Reprogramado = 5
 }
 
+public static class TurnoEstadoCodigoFactory {
 
+	public static Result<TurnoEstadoCodigo> CrearResult(TurnoEstadoCodigo codigo) {
+		if (!Enum.IsDefined(typeof(TurnoEstadoCodigo), codigo)) {
+			return new Result<TurnoEstadoCodigo>.Error($"Valor de TurnoEstadoCodigo inválido: {codigo}");
+		}
+		return new Result<TurnoEstadoCodigo>.Ok(codigo);
+	}
 
+	public static Result<TurnoEstadoCodigo> CrearResult(byte valor) {
+		if (!Enum.IsDefined(typeof(TurnoEstadoCodigo), valor)) {
+			return new Result<TurnoEstadoCodigo>.Error($"Valor de TurnoEstadoCodigo inválido: {valor}");
+		}
+
+		return new Result<TurnoEstadoCodigo>.Ok((TurnoEstadoCodigo)valor);
+	}
+}
 /*
 public sealed record TurnoOutcomeEstado2025(
 	TurnoEstadoCodigo Codigo,

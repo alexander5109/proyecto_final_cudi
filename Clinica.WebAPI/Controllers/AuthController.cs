@@ -9,11 +9,11 @@ namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("auth")]
-public class AuthController(IRepositorio repositorio, JwtService jwtService, ILogger<AuthController> logger)
+public class AuthController(IRepositorio repositorio, IServiciosPublicos servicios, JwtService jwtService, ILogger<AuthController> logger)
 	: ControllerBase {
 	[HttpPost("login")]
 	public async Task<IActionResult> Login([FromBody] UsuarioLoginRequestDto dto) {
-		Result<Usuario2025Agg> resultado = await ServiciosPublicos.ValidarCredenciales(
+		Result<Usuario2025Agg> resultado = await servicios.ValidarCredenciales(
 			dto.Username,
 			dto.UserPassword,
 			repositorio

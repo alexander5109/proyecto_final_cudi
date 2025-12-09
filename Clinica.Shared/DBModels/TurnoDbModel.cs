@@ -32,7 +32,7 @@ public static partial class DbModels {
 			turno.Especialidad.Codigo,
 			turno.FechaHoraAsignadaDesdeValor,
 			turno.FechaHoraAsignadaHastaValor,
-			turno.OutcomeEstado.Codigo,
+			turno.OutcomeEstado,
 			turno.OutcomeFechaOption.Match(d => d, () => (DateTime?)null),
 			turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
 		);
@@ -47,7 +47,7 @@ public static partial class DbModels {
 			aggrg.Turno.Especialidad.Codigo,
 			aggrg.Turno.FechaHoraAsignadaDesdeValor,
 			aggrg.Turno.FechaHoraAsignadaHastaValor,
-			aggrg.Turno.OutcomeEstado.Codigo,
+			aggrg.Turno.OutcomeEstado,
 			aggrg.Turno.OutcomeFechaOption.Match(d => d, () => (DateTime?)null),
 			aggrg.Turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
 		);
@@ -61,7 +61,7 @@ public static partial class DbModels {
 			Especialidad2025.CrearResult(turnoDto.EspecialidadCodigo),
 			turnoDto.FechaHoraAsignadaDesde,
 			turnoDto.FechaHoraAsignadaHasta,
-			TurnoOutcomeEstado2025.CrearPorCodigo(turnoDto.OutcomeEstado),
+			TurnoEstadoCodigoFactory.CrearResult(turnoDto.OutcomeEstado),
 			turnoDto.OutcomeFecha.ToOption(),
 			turnoDto.OutcomeComentario.ToOption()
 		);

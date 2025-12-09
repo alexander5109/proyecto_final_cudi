@@ -31,8 +31,8 @@ public static class ResultExtensions {
 	}
 	public static Result<U> BindWithPrefix<T, U>(
 		this Result<T> result,
-		Func<T, Result<U>> doOnSuccess,
-		string prefixError
+		string prefixError,
+		Func<T, Result<U>> doOnSuccess
 	) {
 		return result switch {
 			Result<T>.Ok o => doOnSuccess(o.Valor),
@@ -42,16 +42,16 @@ public static class ResultExtensions {
 	}
 	public static async Task<Result<U>> BindWithPrefix<T, U>(
 		this Task<Result<T>> result,
-		Func<T, Result<U>> doOnSuccess,
-		string prefixError
+		string prefixError,
+		Func<T, Result<U>> doOnSuccess
 	) {
-		return (await result).BindWithPrefix(doOnSuccess, prefixError);
+		return (await result).BindWithPrefix(prefixError, doOnSuccess);
 	}
 
 	public static async Task<Result<U>> BindWithPrefixAsync<T, U>(
 		this Result<T> result,
-		Func<T, Task<Result<U>>> doOnSuccess,
-		string prefixError
+		string prefixError,
+		Func<T, Task<Result<U>>> doOnSuccess
 	) {
 		return result switch {
 			Result<T>.Ok ok => await doOnSuccess(ok.Valor),

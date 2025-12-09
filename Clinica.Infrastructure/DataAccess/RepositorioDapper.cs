@@ -543,8 +543,8 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 				// ToDomain() → Result<Turno2025>
 				return dto.ToDomain().BindWithPrefix(
-					turnoOk => new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(id, turnoOk)),
-					$"Error de dominio en turno {id}: "
+					$"Error de dominio en turno {id}: ",
+					turnoOk => new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(id, turnoOk))
 				);
 			}
 		);

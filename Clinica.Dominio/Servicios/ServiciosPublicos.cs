@@ -149,13 +149,22 @@ public class ServiciosPublicos : IServiciosPublicos {
 		TurnoId turnoOriginalId,
 		PacienteId pacienteId,
 		DateTime outcomeFecha,
-		string Comentario,
+		string outcomeComentario,
 		Disponibilidad2025 disponibilidad,
 		IRepositorioDomainServiciosPrivados repositorio
 	) {
-
-		throw new NotImplementedException();
+		return (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
+		.BindWithPrefix(
+			doOnSuccess: aggOriginal => aggOriginal.Turno.MarcarComoCancelado(outcomeFecha, outcomeComentario)
+			.BindWithPrefix(
+				doOnSuccess: turnoCancelado => new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(turnoOriginalId, turnoCancelado)),
+				prefixError: "Error de dominio: "),
+			prefixError: "Error de db: "
+		);
 	}
+
+
+
 
 	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoReprogramadoYPersistirProgramarTurnoAsync(
 		TurnoId turnoOriginalId,

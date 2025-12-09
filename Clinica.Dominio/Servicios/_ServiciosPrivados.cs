@@ -142,7 +142,7 @@ internal static class _ServiciosPrivados {
 					bool solapa = false;
 					foreach (TurnoQM? t in turnos) {
 						if (t.EspecialidadCodigo == disp.Especialidad.Codigo &&
-							t.OutcomeEstado == TurnoOutcomeEstado2025.Programado.Codigo &&
+							t.OutcomeEstado == TurnoEstadoCodigo.Programado &&
 							t.FechaHoraAsignadaDesde < disp.FechaHoraHasta &&
 							disp.FechaHoraDesde < t.FechaHoraAsignadaHasta) {
 							solapa = true;
@@ -207,7 +207,7 @@ internal static class _ServiciosPrivados {
 
 					foreach (TurnoQM t in turnos) {
 						if (t.EspecialidadCodigo == especialidad.Codigo &&
-							t.OutcomeEstado == TurnoOutcomeEstado2025.Programado.Codigo &&
+							t.OutcomeEstado == TurnoEstadoCodigo.Programado &&
 							t.FechaHoraAsignadaDesde < slotHasta &&
 							slot < t.FechaHoraAsignadaHasta) {
 							solapa = true;
