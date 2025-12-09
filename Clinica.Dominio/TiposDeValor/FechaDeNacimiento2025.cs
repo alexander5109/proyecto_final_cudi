@@ -55,9 +55,9 @@ public readonly record struct FechaDeNacimiento2025(DateOnly Valor) : IComoTexto
 }
 
 public static class DateTimExtensiones {
-
-
-	//public static string ATexto(this FechaDeNacimiento2025 dia) => dia.va;
-	public static string ATexto(this DateOnly dia) => dia.ToString("dd/MM/yyyy");
-	public static string ATexto(this DateTime dia) => dia.ToString("HH:mm");
+	//public static string ATexto(this TimeSpan hora) => hora.ToString(@"hh\:mm");
+	public static string ATexto(this DateOnly fecha) => fecha.ToString("yyyy/dd/MM");
+	public static string ATextoDia(this DateTime fecha) => fecha.ToString("yyyy/dd/MM");
+	public static string ATextoHoras(this DateTime fechaHora) => fechaHora.ToString("HH:mm");
+	public static string ATexto(this DateTime fechaHora) => fechaHora.ToString("yyyy/dd/MM HH:mm");
 }

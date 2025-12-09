@@ -1,11 +1,13 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.WebAPI.Controllers.ServiciosPublicosControllerDtos;
 namespace Clinica.WebAPI.Controllers;
 
 
@@ -22,11 +24,13 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 	public async Task<IActionResult> VerDisponibilidades(
 		[FromQuery] EspecialidadCodigo EspecialidadCodigo,
 		[FromQuery] int cuantos,
-		[FromQuery] DateTime aPartirDeCuando
+		[FromQuery, DefaultValue("2025-12-03T00:00:00")] DateTime? aPartirDeCuando
 	) {
+		DateTime desde = aPartirDeCuando ?? DateTime.Now; // default real acá
+
 		Result<IReadOnlyList<Disponibilidad2025>> result = await servicios.SolicitarDisponibilidades(
 			EspecialidadCodigo,
-			aPartirDeCuando,
+			desde,
 			cuantos,
 			repositorio
 		);
@@ -45,5 +49,22 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 
 
 
+
+
+	[HttpPost("Turnos/Programar")]
+	public Task<IActionResult> ProgramarTurno([FromBody] ProgramarTurnoDto dto) {
+		return this.SafeExecuteApi(
+			logger,
+			PermisoSistema.GestionDeTurnos,
+			operation: async () => (
+				await servicios.PersistirProgramarTurnoAsync(
+					new PacienteId(dto.PacienteId),
+					dto.FechaSolicitud,
+					dto.Disponibilidad.ToDomain(),
+					repositorio
+				)
+			).ToApi(statusCodeOnError: 409)
+		);
+	}
 
 }

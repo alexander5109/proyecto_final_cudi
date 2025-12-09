@@ -125,7 +125,7 @@ public record Turno2025(
 
 		//we cant check this unless disponibildiad richness includes a whole doctor. Let's trust the disponibilidad maker
 		//if (disp.Medico.EspecialidadUnica != disp.Especialidad)
-		//	return new Result<Turno2025>.Error($"El medico {disp.Medico.NombreCompleto.ATexto()} tentativo no es especialidad en {disp.Especialidad.ATexto()}");
+		//	return new Result<Turno2025>.Error($"El medico {disp.Medico.NombreCompleto.ATextoDia()} tentativo no es especialidad en {disp.Especialidad.ATextoDia()}");
 
 		if (disp.FechaHoraDesde.Date != disp.FechaHoraHasta.Date)
 			return new Result<Turno2025>.Error(

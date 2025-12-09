@@ -84,7 +84,7 @@ public record Paciente2025(
 			Contacto: {Contacto.ATexto()}\n
 			Domicilio: {Domicilio.ATexto()}\n
 			FechaNacimiento: {FechaNacimiento.ATexto()}\n
-			FechaIngreso: {FechaIngreso.ATexto()}\n
+			FechaIngreso: {FechaIngreso.ATextoHoras()}\n
 		";
 	}
 

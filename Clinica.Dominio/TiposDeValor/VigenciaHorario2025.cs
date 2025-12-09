@@ -5,7 +5,7 @@ namespace Clinica.Dominio.TiposDeValor;
 
 
 //public record VigenciaHorario2025(DateOnly Valor) : IComoTexto {
-//	public string ATexto() {
+//	public string ATextoDia() {
 //		return Valor.ToString("dd/MM/yyyy");
 //	}
 //	public static VigenciaHorario2025 Crear(DateOnly fecha) {

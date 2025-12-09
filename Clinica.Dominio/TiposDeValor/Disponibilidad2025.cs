@@ -17,7 +17,7 @@ public readonly record struct Disponibilidad2025( //este tipo de valor es la mej
 		return
 			$"Disponibilidad de {EspecialidadCodigo}\n" +
 			$"  • Médico: {MedicoId}\n" +
-			//$"  • Médico: {Medico.NombreCompleto.ATexto()}\n" +
+			//$"  • Médico: {Medico.NombreCompleto.ATextoDia()}\n" +
 			$"  • Fecha: {fecha}\n" +
 			$"  • Horario: {desde}–{hasta}";
 	}

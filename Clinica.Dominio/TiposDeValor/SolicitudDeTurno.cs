@@ -21,10 +21,10 @@ namespace Clinica.Dominio.TiposDeValor;
 //		return new Result<SolicitudDeTurno>.Ok(new SolicitudDeTurno(pacienteId, especialidad, fechaSolicitada));
 //	}
 
-//	public string ATexto() =>
+//	public string ATextoDia() =>
 //		$"Solicitud básica:\n" +
 //		$"  • Nivel4Medico: {PacienteId}\n" +
-//		$"  • Especialidad: {Especialidad.ATexto()}\n" +
+//		$"  • Especialidad: {Especialidad.ATextoDia()}\n" +
 //		$"  • Solicitado en: {FechaCreacion:G}";
 //}
 
@@ -62,10 +62,10 @@ public readonly record struct SolicitudDeTurnoPreferencias(
 //	public Especialidad2025 Especialidad => Basica.Especialidad;
 //	public DateTime FechaCreacion => Basica.FechaCreacion;
 
-//	public string ATexto() {
+//	public string ATextoDia() {
 //		return
 //			"Solicitud de turno:\n" +
-//			Basica.ATexto() + "\n" +
-//			Preferencias.ATexto();
+//			Basica.ATextoDia() + "\n" +
+//			Preferencias.ATextoDia();
 //	}
 //}

@@ -34,7 +34,7 @@ public sealed record TurnoOutcomeEstado2025(
 	TurnoEstadoCodigo Codigo,
 	string Nombre
 ) : IComoTexto {
-	public string ATexto() => Nombre;
+	public string ATextoDia() => Nombre;
 
 	public static readonly TurnoOutcomeEstado2025 Programado = new(TurnoEstadoCodigo.Programado, "Programado");
 
