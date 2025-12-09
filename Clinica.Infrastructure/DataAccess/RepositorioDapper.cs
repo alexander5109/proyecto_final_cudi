@@ -376,16 +376,28 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 
 	Task<Result<TurnoId>> IRepositorioTurnos.InsertTurnoReturnId(Turno2025 instance)
 		=> TryAsync(async conn => {
-			DynamicParameters parameters = new(instance.ToDto());
-			parameters.Add("@NewId", dbType: DbType.Int32, direction: ParameterDirection.Output);
-			await conn.ExecuteScalarAsync<int>(
+			int newId = await conn.ExecuteScalarAsync<int>(
 				"sp_InsertTurnoReturnId",
-				parameters,
+				instance.ToDto(),
 				commandType: CommandType.StoredProcedure
 			);
-			int newId = parameters.Get<int>("@NewId");
 			return new TurnoId(newId);
 		});
+
+
+
+
+
+	//Task<Result<Turno2025Agg>> IRepositorioTurnos.UpdateTurnoWhereId(TurnoId id, Turno2025 instance)
+	//	=> TryAsyncVoid(async conn => {
+	//		await conn.ExecuteAsync(
+	//			"sp_UpdateTurnoWhereId",
+	//			instance.ToModel(),
+	//			commandType: CommandType.StoredProcedure
+	//		);
+	//	}).MapAsync(x => Turno2025Agg.Crear(id, instance));
+
+
 
 
 

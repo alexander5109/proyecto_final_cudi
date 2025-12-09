@@ -130,9 +130,9 @@ public static class ApiDtos {
 
 
 
+
 	public record TurnoDto(
-		//TurnoId Id,
-		DateTime FechaCreacionSolicitud,
+		DateTime FechaDeCreacion,
 		PacienteId PacienteId,
 		MedicoId MedicoId,
 		EspecialidadCodigo EspecialidadCodigo,
@@ -162,7 +162,7 @@ public static class ApiDtos {
 	//public static Result<Turno2025> ToDomain(this TurnoDto turnoDto) {
 	//	return Turno2025.CrearResult(
 	//		//TurnoId.CrearResult(turnoDto.Id.Valor),
-	//		FechaRegistro2025.CrearResult(turnoDto.FechaCreacionSolicitud),
+	//		FechaRegistro2025.CrearResult(turnoDto.@FechaDeCreacion),
 	//		PacienteId.CrearResult(turnoDto.PacienteId.Valor),
 	//		MedicoId.CrearResult(turnoDto.MedicoId.Valor),
 	//		Especialidad2025.CrearResult(turnoDto.EspecialidadCodigo),
