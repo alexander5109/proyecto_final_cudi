@@ -30,37 +30,32 @@ public static class ResultExtensions {
 		};
 	}
 	public static Result<U> BindWithPrefix<T, U>(
-		this Result<T> r,
-		Func<T, Result<U>> ok,
-		string prefix
+		this Result<T> result,
+		Func<T, Result<U>> doOnSuccess,
+		string prefixError
 	) {
-		return r switch {
-			Result<T>.Ok o =>
-				ok(o.Valor),
-
-			Result<T>.Error e =>
-				new Result<U>.Error($"{prefix}{e.Mensaje}"),
-
+		return result switch {
+			Result<T>.Ok o => doOnSuccess(o.Valor),
+			Result<T>.Error e => new Result<U>.Error($"{prefixError}{e.Mensaje}"),
 			_ => throw new InvalidOperationException()
 		};
 	}
 	public static async Task<Result<U>> BindWithPrefix<T, U>(
-		this Task<Result<T>> taskSelf,
-		Func<T, Result<U>> binder,
-		string prefix
+		this Task<Result<T>> result,
+		Func<T, Result<U>> doOnSuccess,
+		string prefixError
 	) {
-		var self = await taskSelf;
-		return self.BindWithPrefix(binder, prefix);
+		return (await result).BindWithPrefix(doOnSuccess, prefixError);
 	}
 
 	public static async Task<Result<U>> BindWithPrefixAsync<T, U>(
-		this Result<T> self,
-		Func<T, Task<Result<U>>> binder,
-		string prefix
+		this Result<T> result,
+		Func<T, Task<Result<U>>> doOnSuccess,
+		string prefixError
 	) {
-		return self switch {
-			Result<T>.Ok ok => await binder(ok.Valor),
-			Result<T>.Error err => new Result<U>.Error($"{prefix}{err.Mensaje}"),
+		return result switch {
+			Result<T>.Ok ok => await doOnSuccess(ok.Valor),
+			Result<T>.Error err => new Result<U>.Error($"{prefixError}{err.Mensaje}"),
 			_ => throw new InvalidOperationException("Resultado inválido en BindWithPrefixAsync."),
 		};
 	}
@@ -73,7 +68,6 @@ public static class ResultExtensions {
 			case Result<T>.Ok o:
 				ok(o.Valor);
 				break;
-
 			case Result<T>.Error e:
 				error(e.Mensaje);
 				break;
@@ -130,7 +124,7 @@ public static class ResultExtensions {
 		Func<T, Result<U>> bind,
 		Func<T, U, V> project
 	) {
-		// r.Bind(t => bind(t).Map(u => project(t, u)))
+		// result.Bind(t => bind(t).Map(u => project(t, u)))
 		return r.Bind(t =>
 			bind(t).Map(u => project(t, u))
 		);
