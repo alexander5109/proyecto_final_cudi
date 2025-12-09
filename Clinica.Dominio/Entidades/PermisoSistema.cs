@@ -21,7 +21,8 @@ public enum PermisoSistema {
 	VerHorarios,
 
 
-	SolicitarTurno
+	SolicitarTurno,
+	GestionDeTurnos
 
 	// más adelante: editar paciente, etc.
 }
@@ -48,6 +49,7 @@ public static class PermisosPorRol {
 
 			PermisoSistema.UpdateEntidades,
 			PermisoSistema.DeleteEntidades,
+			PermisoSistema.GestionDeTurnos,
 
 		],
 
@@ -84,6 +86,7 @@ public static class PermisosPorRol {
 
 			PermisoSistema.CancelarTurno,
 			PermisoSistema.SolicitarTurno,
+			PermisoSistema.GestionDeTurnos,
 
 			PermisoSistema.UpdateEntidades, // ← Puede modificar pacientes
             // No puede reprogramar turnos (opcional: lo podés habilitar)

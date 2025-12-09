@@ -1,6 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
+using Clinica.Dominio.Entidades;
 
-namespace Clinica.Dominio.Entidades;
+namespace Clinica.Dominio.TiposDeValor;
 
 
 public readonly record struct DomicilioArgentino2025(
@@ -8,23 +9,19 @@ public readonly record struct DomicilioArgentino2025(
 	string DireccionValor
 ) : IComoTexto {
 	public string ATexto() => $"{DireccionValor}, {Localidad.ATexto()}";
-	public static Result<DomicilioArgentino2025> CrearResult(Result<LocalidadDeProvincia2025> localidadResult, string? direccionTexto) {
-		if (string.IsNullOrWhiteSpace(direccionTexto))
-			return new Result<DomicilioArgentino2025>.Error("La dirección no puede estar vacía");
 
-
-		if (localidadResult is Result<LocalidadDeProvincia2025>.Error localidadError)
-			return new Result<DomicilioArgentino2025>.Error(localidadError.Mensaje);
-
-		LocalidadDeProvincia2025 localidad = ((Result<LocalidadDeProvincia2025>.Ok)localidadResult).Valor;
-
-		return new Result<DomicilioArgentino2025>.Ok(
+	public static Result<DomicilioArgentino2025> CrearResult(
+		Result<LocalidadDeProvincia2025> localidadResult,
+		string? direccionTexto
+	) =>
+		direccionTexto.ToResult(!string.IsNullOrWhiteSpace(direccionTexto), "La dirección no puede estar vacía")
+		.Bind(_ => localidadResult)
+		.Map(localidad =>
 			new DomicilioArgentino2025(
 				localidad,
-				Normalize(direccionTexto)
+				Normalize(direccionTexto!)
 			)
 		);
-	}
 	public static string Normalize(string value) => value.Trim();
 }
 

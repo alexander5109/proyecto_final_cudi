@@ -2,7 +2,7 @@
 
 public record DiaDeSemanaViewModel(DayOfWeek Value, string NombreDia) {
 
-	public static readonly List<DiaDeSemanaViewModel> Los7DiasDeLaSemana = [
+	public static readonly List<DiaDeSemanaViewModel> Todos = [
 		new(DayOfWeek.Monday,    "Lunes"),
 		new(DayOfWeek.Tuesday,   "Martes"),
 		new(DayOfWeek.Wednesday, "Miércoles"),

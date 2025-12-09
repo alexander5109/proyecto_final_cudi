@@ -89,7 +89,7 @@ public class SecretariaPacienteFormularioViewModel : INotifyPropertyChanged {
 		set { _email = value; Notify(nameof(Email)); }
 	}
 
-	private DateTime _fechaNacimiento = DateTime.MinValue;
+	private DateTime _fechaNacimiento = DateTime.Today;
 	public DateTime FechaNacimiento {
 		get => _fechaNacimiento;
 		set { _fechaNacimiento = value; Notify(nameof(FechaNacimiento)); }

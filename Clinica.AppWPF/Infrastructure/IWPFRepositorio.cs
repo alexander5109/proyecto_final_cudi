@@ -51,7 +51,7 @@ public static class IWPFRepositorioInterfaces {
 		Task<ResultWpf<TurnoDto>> CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);
 		Task<ResultWpf<TurnoDto>> ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);
 		Task<ResultWpf<TurnoDto>> MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason);
-		Task<ResultWpf<TurnoDto>> MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome);
+		Task<ResultWpf<TurnoDto>> MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome, string? reason);
 	}
 }
 

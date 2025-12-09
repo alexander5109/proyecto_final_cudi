@@ -47,7 +47,7 @@ public static class SecretariaPacienteMiniViewModels {
 				viewModel.Domicilio
 			),
 			FechaDeNacimiento2025.CrearResult(viewModel.FechaNacimiento),
-			FechaRegistro2025.CrearResult(viewModel.FechaIngreso)
+			viewModel.FechaIngreso
 		).ToWpf();
 	}
 }

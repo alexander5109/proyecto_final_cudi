@@ -46,7 +46,8 @@ public static class WpfResultExtensions {
 
 	public static Task<ResultWpf<TOut>> Bind<TIn, TOut>(
 		this ResultWpf<TIn> result,
-		Func<TIn, Task<ResultWpf<TOut>>> next) {
+		Func<TIn, Task<ResultWpf<TOut>>> next
+	) {
 		return result switch {
 			ResultWpf<TIn>.Ok ok =>
 				next(ok.Valor),
@@ -59,24 +60,6 @@ public static class WpfResultExtensions {
 			_ => throw new InvalidOperationException()
 		};
 	}
-
-	//public static void MatchAndSet<T>(
-	//this ResultWpf<T> result,
-	//Action<T> ok,
-	//Action<ErrorInfo> error) {
-	//	switch (result) {
-	//		case ResultWpf<T>.Ok o:
-	//			ok(o.Valor);
-	//			break;
-
-	//		case ResultWpf<T>.Error e:
-	//			error(e.Info);
-	//			break;
-
-	//		default:
-	//			throw new InvalidOperationException();
-	//	}
-	//}
 
 	public static void MatchAndDo<T>(
 		this ResultWpf<T> result,
@@ -107,30 +90,15 @@ public static class WpfResultExtensions {
 	}
 
 	public static ResultWpf<TOut> MatchTo<TIn, TOut>(
-	this ResultWpf<TIn> result,
-	Func<TIn, ResultWpf<TOut>> ok,
-	Func<ErrorInfo, ResultWpf<TOut>> error) {
+		this ResultWpf<TIn> result,
+		Func<TIn, ResultWpf<TOut>> ok,
+		Func<ErrorInfo, ResultWpf<TOut>> error
+	) {
 		return result switch {
 			ResultWpf<TIn>.Ok o => ok(o.Valor),
 			ResultWpf<TIn>.Error e => error(e.Info),
 			_ => throw new InvalidOperationException()
 		};
-	}
-
-	//Sin referencias todavia
-	public static void ShowMessageBox<T>(this ResultWpf<T>.Error err) {
-		ErrorInfo info = err.Info;
-
-		string texto = info.Detalle is null
-			? info.Mensaje
-			: $"{info.Mensaje}\n\nDetalles:\n{info.Detalle}";
-
-		MessageBox.Show(
-			texto,
-			"Error",
-			MessageBoxButton.OK,
-			info.Icono
-		);
 	}
 
 

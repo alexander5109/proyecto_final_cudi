@@ -13,7 +13,7 @@ public static partial class DbModels {
 		EspecialidadCodigo EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
-		TurnoOutcomeEstadoCodigo2025 OutcomeEstado,
+		TurnoEstadoCodigo OutcomeEstado,
 		DateTime? OutcomeFecha,
 		string? OutcomeComentario
 	) {
@@ -26,13 +26,13 @@ public static partial class DbModels {
 	public static TurnoDbModel ToModel(this Turno2025 turno) {
 		return new TurnoDbModel(
 			default,
-			turno.FechaDeCreacion.Valor,
+			turno.FechaDeCreacion,
 			turno.PacienteId,
 			turno.MedicoId,
 			turno.Especialidad.Codigo,
 			turno.FechaHoraAsignadaDesdeValor,
 			turno.FechaHoraAsignadaHastaValor,
-			turno.OutcomeEstado.Codigo,
+			turno.OutcomeEstado,
 			turno.OutcomeFechaOption.Match(d => d, () => (DateTime?)null),
 			turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
 		);
@@ -41,13 +41,13 @@ public static partial class DbModels {
 	public static TurnoDbModel ToModel(this Turno2025Agg aggrg) {
 		return new TurnoDbModel(
 			aggrg.Id,
-			aggrg.Turno.FechaDeCreacion.Valor,
+			aggrg.Turno.FechaDeCreacion,
 			aggrg.Turno.PacienteId,
 			aggrg.Turno.MedicoId,
 			aggrg.Turno.Especialidad.Codigo,
 			aggrg.Turno.FechaHoraAsignadaDesdeValor,
 			aggrg.Turno.FechaHoraAsignadaHastaValor,
-			aggrg.Turno.OutcomeEstado.Codigo,
+			aggrg.Turno.OutcomeEstado,
 			aggrg.Turno.OutcomeFechaOption.Match(d => d, () => (DateTime?)null),
 			aggrg.Turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
 		);
@@ -55,13 +55,13 @@ public static partial class DbModels {
 	public static Result<Turno2025> ToDomain(this TurnoDbModel turnoDto) {
 		return Turno2025.CrearResult(
 			//TurnoId.CrearResult(turnoDto.Id.Valor),
-			FechaRegistro2025.CrearResult(turnoDto.FechaDeCreacion),
+			turnoDto.FechaDeCreacion,
 			PacienteId.CrearResult(turnoDto.PacienteId.Valor),
 			MedicoId.CrearResult(turnoDto.MedicoId.Valor),
-			Especialidad2025.CrearResultPorCodigoInterno(turnoDto.EspecialidadCodigo),
+			Especialidad2025.CrearResult(turnoDto.EspecialidadCodigo),
 			turnoDto.FechaHoraAsignadaDesde,
 			turnoDto.FechaHoraAsignadaHasta,
-			TurnoOutcomeEstado2025.CrearPorCodigo(turnoDto.OutcomeEstado),
+			TurnoEstadoCodigoFactory.CrearResult(turnoDto.OutcomeEstado),
 			turnoDto.OutcomeFecha.ToOption(),
 			turnoDto.OutcomeComentario.ToOption()
 		);

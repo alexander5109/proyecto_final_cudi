@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Clinica.Dominio.IRepositorios;
+using Clinica.Dominio.Servicios;
 using Clinica.Infrastructure.DataAccess;
 using Clinica.WebAPI.Servicios;
 using Microsoft.IdentityModel.Tokens;
@@ -38,6 +39,11 @@ builder.Services.AddSingleton<IRepositorioTurnos>(sp => sp.GetRequiredService<Re
 builder.Services.AddSingleton<IRepositorioUsuarios>(sp => sp.GetRequiredService<RepositorioDapper>());
 builder.Services.AddSingleton<IRepositorioDomainServiciosPrivados>(sp => sp.GetRequiredService<RepositorioDapper>());
 builder.Services.AddSingleton<IRepositorioHorarios>(sp => sp.GetRequiredService<RepositorioDapper>());
+
+
+
+builder.Services.AddSingleton<IServiciosPublicos, ServiciosPublicos>();
+
 
 // JwtService (singleton)
 builder.Services.AddSingleton<JwtService>(sp => {

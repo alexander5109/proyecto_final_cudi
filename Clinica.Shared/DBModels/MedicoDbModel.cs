@@ -35,7 +35,7 @@ public static partial class DbModels {
 			MedicoId.CrearResult(medicoDto.Id.Valor),
 			NombreCompleto2025.CrearResult(medicoDto.Nombre, medicoDto.Apellido),
 			//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
-			Especialidad2025.CrearResultPorCodigoInterno(medicoDto.EspecialidadCodigo),
+			Especialidad2025.CrearResult(medicoDto.EspecialidadCodigo),
 			DniArgentino2025.CrearResult(medicoDto.Dni),
 			DomicilioArgentino2025.CrearResult(
 				LocalidadDeProvincia2025.CrearResult(
@@ -46,7 +46,7 @@ public static partial class DbModels {
 			ContactoTelefono2025.CrearResult(medicoDto.Telefono),
 			ContactoEmail2025.CrearResult(medicoDto.Email),
 			ListaHorarioMedicos2025.CrearResult(horariosDto.Select(x => x.ToDomain())),
-			FechaRegistro2025.CrearResult(medicoDto.FechaIngreso),
+			medicoDto.FechaIngreso,
 			medicoDto.HaceGuardias
 		);
 	}
@@ -59,7 +59,7 @@ public static partial class DbModels {
 			Dni = aggrg.Medico.Dni.Valor,
 			Nombre = aggrg.Medico.NombreCompleto.NombreValor,
 			Apellido = aggrg.Medico.NombreCompleto.ApellidoValor,
-			FechaIngreso = aggrg.Medico.FechaIngreso.Valor,
+			FechaIngreso = aggrg.Medico.FechaIngreso,
 			Domicilio = aggrg.Medico.Domicilio.DireccionValor,
 			Localidad = aggrg.Medico.Domicilio.Localidad.NombreValor,
 			ProvinciaCodigo = aggrg.Medico.Domicilio.Localidad.Provincia.CodigoInternoValor,
@@ -78,7 +78,7 @@ public static partial class DbModels {
 			Dni = medico.Dni.Valor,
 			Nombre = medico.NombreCompleto.NombreValor,
 			Apellido = medico.NombreCompleto.ApellidoValor,
-			FechaIngreso = medico.FechaIngreso.Valor,
+			FechaIngreso = medico.FechaIngreso,
 			Domicilio = medico.Domicilio.DireccionValor,
 			Localidad = medico.Domicilio.Localidad.NombreValor,
 			ProvinciaCodigo = medico.Domicilio.Localidad.Provincia.CodigoInternoValor,

@@ -67,8 +67,11 @@ public sealed record Especialidad2025(
 		Traumatologo, Neurologo, Dermatologo
 	];
 
-	// Lookup seguro por código interno
-	public static Result<Especialidad2025> CrearResultPorCodigoInterno(EspecialidadCodigo codigo) {
+	// Asumimos o crasheamos
+	public static Especialidad2025 Representar(EspecialidadCodigo codigo) => Todas.FirstOrDefault(e => e.Codigo == codigo)!;
+
+
+	public static Result<Especialidad2025> CrearResult(EspecialidadCodigo codigo) {
 		Especialidad2025? esp = Todas.FirstOrDefault(e => e.Codigo == codigo);
 		return esp is not null
 			? new Result<Especialidad2025>.Ok(esp)
@@ -76,13 +79,13 @@ public sealed record Especialidad2025(
 	}
 
 	// Para facilitar conversion desde DTOs que usen byte
-	//public static Result<Especialidad2025> CrearResultPorCodigoInterno(byte? codigo) {
+	//public static Result<Especialidad2025> CrearResult(byte? codigo) {
 	//	if (codigo is null)
 	//		return new Result<Especialidad2025>.Error("El Codigo no puede ser nulo.");
 
 	//	if (!Enum.IsDefined(typeof(EspecialidadCodigo), codigo.Value))
 	//		return new Result<Especialidad2025>.Error($"Valor inválido de EspecialidadCodigo: {codigo.Value}");
 
-	//	return CrearResultPorCodigoInterno((EspecialidadCodigo)codigo.Value);
+	//	return CrearResult((EspecialidadCodigo)codigo.Value);
 	//}
 }
