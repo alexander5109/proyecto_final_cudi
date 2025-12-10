@@ -1,10 +1,21 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.TiposExtensiones;
 
 namespace Clinica.Shared.ApiDtos;
 
 public static class UsuarioAuthDtos {
+
+
+
+	public sealed record UsuarioAutenticado(
+		UsuarioId Id,
+		string UserName,
+		UsuarioEnumRole EnumRole
+	);
 
 	public record UsuarioLoginResponseDto(string Username, UsuarioEnumRole EnumRole, string Token);
 	public record UsuarioSignUpDto(
@@ -20,7 +31,7 @@ public static class UsuarioAuthDtos {
 
 	public record UsuarioLoginRequestDto(string Username, string UserPassword);
 
-	public record UsuarioPerfilDto(
+	public record UsuarioDto(
 		string UserName,
 		string Nombre,
 		string Apellido,
@@ -29,20 +40,11 @@ public static class UsuarioAuthDtos {
 		string Email,
 		string Telefono
 	) {
-		public UsuarioPerfilDto() : this("", "", "", "", default, "", "") { }
+		public UsuarioDto() : this("", "", "", "", default, "", "") { }
 	}
-	public static Result<Usuario2025> ToDomain(this UsuarioPerfilDto usuario)
-		=> Usuario2025.CrearResult(
-			UserName.CrearResult(usuario.UserName),
-			NombreCompleto2025.CrearResult(usuario.Nombre, usuario.Apellido),
-			ContraseñaHasheada.CrearResult(usuario.PasswordHash),
-			usuario.EnumRole.CrearResult(),
-			ContactoEmail2025.CrearResult(usuario.Email),
-			ContactoTelefono2025.CrearResult(usuario.Telefono)
-		);
 
-	public static UsuarioPerfilDto ToDto(this Usuario2025 entidad) {
-		return new UsuarioPerfilDto(
+	public static UsuarioDto ToDto(this Usuario2025 entidad) {
+		return new UsuarioDto(
 			entidad.UserName.Valor,
 			entidad.NombreCompleto.NombreValor,
 			entidad.NombreCompleto.ApellidoValor,
@@ -53,5 +55,14 @@ public static class UsuarioAuthDtos {
 		);
 	}
 
+	public static Result<Usuario2025> ToDomain(this UsuarioDto dto)
+		=> Usuario2025.CrearResult(
+			UserName.CrearResult(dto.UserName),
+			NombreCompleto2025.CrearResult(dto.Nombre, dto.Apellido),
+			ContraseñaHasheada.CrearResult(dto.PasswordHash),
+			dto.EnumRole.CrearResult(),
+			ContactoEmail2025.CrearResult(dto.Email),
+			ContactoTelefono2025.CrearResult(dto.Telefono)
+		);
 
 }

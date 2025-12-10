@@ -1,33 +1,7 @@
 ﻿using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.TiposExtensiones;
 
-namespace Clinica.Dominio.TiposDeValor;
-
-//THIS IS JUST FOR UI'S
-//NOT NEEDED SAVING
-
-
-
-//public readonly record struct SolicitudDeTurno(
-//	PacienteId PacienteId,
-//	Especialidad2025 Especialidad,
-//	DateTime FechaCreacion
-//) : IComoTexto {
-
-//	public static Result<SolicitudDeTurno> CrearFromStrings(
-//		PacienteId pacienteId,
-//		Especialidad2025 especialidad,
-//		DateTime fechaSolicitada
-//	) {
-//		return new Result<SolicitudDeTurno>.Ok(new SolicitudDeTurno(pacienteId, especialidad, fechaSolicitada));
-//	}
-
-//	public string ATextoDia() =>
-//		$"Solicitud básica:\n" +
-//		$"  • Nivel4Medico: {PacienteId}\n" +
-//		$"  • Especialidad: {Especialidad.ATextoDia()}\n" +
-//		$"  • Solicitado en: {FechaCreacion:G}";
-//}
+namespace Clinica.Dominio._Disabled;
 
 public readonly record struct TardeOMañana(bool Tarde) : IComoTexto {
 	public string ATexto() => Tarde ? "Tarde" : "Mañana";
@@ -69,4 +43,29 @@ public readonly record struct SolicitudDeTurnoPreferencias(
 //			Basica.ATextoDia() + "\n" +
 //			Preferencias.ATextoDia();
 //	}
+//}
+//THIS IS JUST FOR UI'S
+//NOT NEEDED SAVING
+
+
+
+//public readonly record struct SolicitudDeTurno(
+//	PacienteId PacienteId,
+//	Especialidad2025 Especialidad,
+//	DateTime FechaCreacion
+//) : IComoTexto {
+
+//	public static Result<SolicitudDeTurno> CrearFromStrings(
+//		PacienteId pacienteId,
+//		Especialidad2025 especialidad,
+//		DateTime fechaSolicitada
+//	) {
+//		return new Result<SolicitudDeTurno>.Ok(new SolicitudDeTurno(pacienteId, especialidad, fechaSolicitada));
+//	}
+
+//	public string ATextoDia() =>
+//		$"Solicitud básica:\n" +
+//		$"  • Nivel4Medico: {PacienteId}\n" +
+//		$"  • Especialidad: {Especialidad.ATextoDia()}\n" +
+//		$"  • Solicitado en: {FechaCreacion:G}";
 //}

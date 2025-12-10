@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Infrastructure.Repositorios;
 using Microsoft.Data.SqlClient;
 
 namespace Clinica.Infrastructure;

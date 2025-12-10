@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.IInterfaces;
 
-namespace Clinica.Dominio.TiposDeValor;
+namespace Clinica.Dominio.TiposDeEnum;
 
 public enum ProvinciaCodigo2025 : byte {
 	BuenosAires = 1,

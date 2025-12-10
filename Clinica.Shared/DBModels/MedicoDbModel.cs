@@ -1,5 +1,9 @@
 ﻿using System.Text.Json;
 using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Shared.DbModels;
@@ -44,25 +48,24 @@ public static partial class DbModels {
 
 	public static Result<Medico2025Agg> ToDomainAgg(this MedicoDbModel dbModel) {
 		string json = string.IsNullOrWhiteSpace(dbModel.HorariosJson) ? "[]" : dbModel.HorariosJson;
-		List<HorarioDbModel> horariosDto = JsonSerializer.Deserialize<List<HorarioDbModel>>(json)
+		List<Horario2025> horariosDto = JsonSerializer.Deserialize<List<Horario2025>>(json)
 			?? [];
 		return Medico2025Agg.CrearResult(
 			MedicoId.CrearResult(dbModel.Id),
 			Medico2025.CrearResult(
-				MedicoId.CrearResult(dbModel.Id.Valor),
 				NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
-				//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
+
 				Especialidad2025.CrearResult(dbModel.EspecialidadCodigo),
+
 				DniArgentino2025.CrearResult(dbModel.Dni),
+
 				DomicilioArgentino2025.CrearResult(
-					LocalidadDeProvincia2025.CrearResult(
-						dbModel.Localidad,
-						ProvinciaArgentina2025.CrearResultPorCodigo(dbModel.ProvinciaCodigo)),
-					dbModel.Domicilio
+					LocalidadDeProvincia2025.CrearResult(dbModel.Localidad, ProvinciaArgentina2025.CrearResultPorCodigo(dbModel.ProvinciaCodigo))
+					, dbModel.Domicilio
 				),
 				ContactoTelefono2025.CrearResult(dbModel.Telefono),
 				ContactoEmail2025.CrearResult(dbModel.Email),
-				ListaHorarioMedicos2025.CrearResult(horariosDto.Select(x => x.ToDomain())),
+				ListaHorarioMedicos2025.CrearResult(horariosDto),
 				dbModel.FechaIngreso,
 				dbModel.HaceGuardias
 			)

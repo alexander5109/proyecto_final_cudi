@@ -1,6 +1,6 @@
-﻿namespace Clinica.Dominio.TiposDeValor;
+﻿using Clinica.Dominio.TiposDeValor;
 
-public record HorarioDeAtencion(TimeOnly DesdeHs, TimeOnly HastaHs);
+namespace Clinica.Dominio.TiposDeEntidad;
 
 public static class ClinicaNegocio {
 	public static readonly HorarioDeAtencion Atencion = new(

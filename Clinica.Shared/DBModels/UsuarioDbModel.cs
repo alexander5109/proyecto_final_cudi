@@ -1,4 +1,8 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.TiposExtensiones;
 
@@ -18,29 +22,29 @@ public static partial class DbModels {
 		public UsuarioDbModel() : this(default, "", "", "", "", default, "", "") { }
 	}
 
-	public static UsuarioDbModel ToModel(this Usuario2025 entidad, UsuarioId id) {
+	public static UsuarioDbModel ToModel(this Usuario2025Agg aggrg) {
 		return new UsuarioDbModel(
-			id,
-			entidad.UserName.Valor,
-			entidad.NombreCompleto.NombreValor,
-			entidad.NombreCompleto.ApellidoValor,
-			entidad.PasswordHash.Valor,
-			entidad.EnumRole,
-			entidad.Email.Valor,
-			entidad.Telefono.Valor
+			aggrg.Id,
+			aggrg.Usuario.UserName.Valor,
+			aggrg.Usuario.NombreCompleto.NombreValor,
+			aggrg.Usuario.NombreCompleto.ApellidoValor,
+			aggrg.Usuario.PasswordHash.Valor,
+			aggrg.Usuario.EnumRole,
+			aggrg.Usuario.Email.Valor,
+			aggrg.Usuario.Telefono.Valor
 		);
 	}
 
-	public static Result<Usuario2025Agg> ToDomainAgg(this UsuarioDbModel usuario)
+	public static Result<Usuario2025Agg> ToDomainAgg(this UsuarioDbModel dbModel)
 		=> Usuario2025Agg.CrearResult(
-			UsuarioId.CrearResult(usuario.Id.Valor),
+			UsuarioId.CrearResult(dbModel.Id.Valor),
 			Usuario2025.CrearResult(
-				UserName.CrearResult(usuario.UserName),
-				NombreCompleto2025.CrearResult(usuario.Nombre, usuario.Apellido),
-				ContraseñaHasheada.CrearResult(usuario.PasswordHash),
-				usuario.EnumRole.CrearResult(),
-				ContactoEmail2025.CrearResult(usuario.Email),
-				ContactoTelefono2025.CrearResult(usuario.Telefono)
+				UserName.CrearResult(dbModel.UserName),
+				NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
+				ContraseñaHasheada.CrearResult(dbModel.PasswordHash),
+				dbModel.EnumRole.CrearResult(),
+				ContactoEmail2025.CrearResult(dbModel.Email),
+				ContactoTelefono2025.CrearResult(dbModel.Telefono)
 			)
 		);
 }

@@ -1,13 +1,15 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.IInterfaces;
+using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 
 
 namespace Clinica.Dominio.Servicios;
 
 public class ServiciosPublicos : IServiciosDeDominio {
-
-
 
 	async Task<Result<IReadOnlyList<Disponibilidad2025>>> IServiciosDeDominio.SolicitarDisponibilidades(EspecialidadCodigo solicitudEspecialidadCodigo, DateTime aPartirDeCuando, int cuantos, IRepositorioDominioServices repositorio) {
 
@@ -63,7 +65,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 
 
-	async Task<Result<Turno2025Agg>> IServiciosDeDominio.PersistirComoAusenteAsync(
+	async Task<Result<Turno2025>> IServiciosDeDominio.PersistirComoAusenteAsync(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
 		string outcomeComentario,
@@ -71,7 +73,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 	) {
 		return await  (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
 		.BindWithPrefix(
-			caseOk: aggOriginal => aggOriginal.Turno.MarcarComoAusente(outcomeFecha, outcomeComentario),
+			caseOk: turnoOriginal => turnoOriginal.MarcarComoAusente(outcomeFecha, outcomeComentario),
 			prefixError: "Error de dominio: ")
 		.BindWithPrefixAsync(
 			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),
@@ -80,7 +82,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 	}
 
 
-	async Task<Result<Turno2025Agg>> IServiciosDeDominio.PersistirComoConcretadoAsync(
+	async Task<Result<Turno2025>> IServiciosDeDominio.PersistirComoConcretadoAsync(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
 		string? outcomeComentario,
@@ -88,7 +90,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 	) {
 		return await (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
 		.BindWithPrefix(
-			caseOk: aggOriginal => aggOriginal.Turno.MarcarComoConcretado(outcomeFecha, outcomeComentario),
+			caseOk: turnoOriginal => turnoOriginal.MarcarComoConcretado(outcomeFecha, outcomeComentario),
 			prefixError: "Error de dominio: ")
 		.BindWithPrefixAsync(
 			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),
@@ -98,7 +100,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 
 
-	async Task<Result<Turno2025Agg>> IServiciosDeDominio.PersistirComoCanceladoAsync(
+	async Task<Result<Turno2025>> IServiciosDeDominio.PersistirComoCanceladoAsync(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
 		string outcomeComentario,
@@ -106,7 +108,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 	) {
 		return await (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
 		.BindWithPrefix(
-			caseOk: aggOriginal => aggOriginal.Turno.MarcarComoCancelado(outcomeFecha, outcomeComentario),
+			caseOk: turnoOriginal => turnoOriginal.MarcarComoCancelado(outcomeFecha, outcomeComentario),
 			prefixError: "Error de dominio: ")
 		.BindWithPrefixAsync(
 			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),
@@ -116,7 +118,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 
 
-	async Task<Result<Turno2025Agg>> IServiciosDeDominio.PersistirComoReprogramado(
+	async Task<Result<Turno2025>> IServiciosDeDominio.PersistirComoReprogramado(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
 		string outcomeComentario,
@@ -124,7 +126,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 	) {
 		return await (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
 		.BindWithPrefix(
-			caseOk: aggOriginal => aggOriginal.Turno.MarcarComoReprogramado(outcomeFecha, outcomeComentario),
+			caseOk: turnoOriginal => turnoOriginal.MarcarComoReprogramado(outcomeFecha, outcomeComentario),
 			prefixError: "Error de dominio: ")
 		.BindWithPrefixAsync(
 			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),

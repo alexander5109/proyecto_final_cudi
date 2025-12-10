@@ -1,7 +1,34 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Shared.ApiDtos;
+
+//public record PacienteListDto(
+//	PacienteId Id,
+//	string Dni,
+//	string Username,
+//	string Apellido,
+//	string Email,
+//	string Telefono
+//);
+//public record TurnoListDto(
+//	TurnoId Id,
+//	TimeSpan Hora,
+//	DateTime Fecha,
+//	EspecialidadCodigo EspecialidadCodigo,
+//	TurnoEstadoCodigo Estado,
+//	MedicoId MedicoId
+//);
+
+//public record MedicoListDto(
+//	string Dni,
+//	string Username,
+//	string Apellido,
+//	EspecialidadCodigo EspecialidadCodigo
+//);
+
 
 
 public static class PacienteDtos {
@@ -22,24 +49,6 @@ public static class PacienteDtos {
 		public PacienteDto()
 			: this("", "", "", default, "", "", default, "", "", default) { }
 	}
-	public static Result<Paciente2025> ToDomain(this PacienteDto pacientedto) {
-		return Paciente2025.CrearResult(
-			NombreCompleto2025.CrearResult(pacientedto.Nombre, pacientedto.Apellido),
-			DniArgentino2025.CrearResult(pacientedto.Dni),
-			Contacto2025.CrearResult(
-			ContactoEmail2025.CrearResult(pacientedto.Email),
-			ContactoTelefono2025.CrearResult(pacientedto.Telefono)),
-			DomicilioArgentino2025.CrearResult(
-			LocalidadDeProvincia2025.CrearResult(
-				pacientedto.Localidad,
-				ProvinciaArgentina2025.CrearResultPorCodigo(
-					pacientedto.ProvinciaCodigo)
-				)
-			, pacientedto.Domicilio),
-			FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
-			pacientedto.FechaIngreso
-		);
-	}
 
 	public static PacienteDto ToDto(this Paciente2025 paciente) {
 		return new PacienteDto(
@@ -58,30 +67,23 @@ public static class PacienteDtos {
 
 
 
-	//public record PacienteListDto(
-	//	PacienteId Id,
-	//	string Dni,
-	//	string Username,
-	//	string Apellido,
-	//	string Email,
-	//	string Telefono
-	//);
-	//public record TurnoListDto(
-	//	TurnoId Id,
-	//	TimeSpan Hora,
-	//	DateTime Fecha,
-	//	EspecialidadCodigo EspecialidadCodigo,
-	//	TurnoEstadoCodigo Estado,
-	//	MedicoId MedicoId
-	//);
-
-	//public record MedicoListDto(
-	//	string Dni,
-	//	string Username,
-	//	string Apellido,
-	//	EspecialidadCodigo EspecialidadCodigo
-	//);
-
-
+	public static Result<Paciente2025> ToDomain(this PacienteDto dto) {
+		return Paciente2025.CrearResult(
+			NombreCompleto2025.CrearResult(dto.Nombre, dto.Apellido),
+			DniArgentino2025.CrearResult(dto.Dni),
+			Contacto2025.CrearResult(
+			ContactoEmail2025.CrearResult(dto.Email),
+			ContactoTelefono2025.CrearResult(dto.Telefono)),
+			DomicilioArgentino2025.CrearResult(
+			LocalidadDeProvincia2025.CrearResult(
+				dto.Localidad,
+				ProvinciaArgentina2025.CrearResultPorCodigo(
+					dto.ProvinciaCodigo)
+				)
+			, dto.Domicilio),
+			FechaDeNacimiento2025.CrearResult(dto.FechaNacimiento),
+			dto.FechaIngreso
+		);
+	}
 
 }

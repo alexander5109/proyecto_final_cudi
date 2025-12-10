@@ -2,7 +2,8 @@
 using Clinica.AppWPF;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.UsuarioSecretaria;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeEnum;
 using static Clinica.AppWPF.UsuarioSecretaria.SecretariaPacienteMiniViewModels;
 
 

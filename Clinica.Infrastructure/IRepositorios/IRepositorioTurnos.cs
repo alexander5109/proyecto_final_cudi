@@ -1,15 +1,14 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
 
-namespace Clinica.Infrastructure.DataAccess;
+namespace Clinica.Infrastructure.IRepositorios;
 
-public static partial class IRepositorioInterfaces {
-    public interface IRepositorioTurnos {
-		Task<Result<Unit>> DeleteTurnoWhereId(TurnoId id);
-		Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance);
-		Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnos();
-		Task<Result<TurnoDbModel?>> SelectTurnoWhereId(TurnoId id);
-		Task<Result<Turno2025Agg>> UpdateTurnoWhereId(TurnoId id, Turno2025 instance);
-	}
+public interface IRepositorioTurnos {
+	Task<Result<Unit>> DeleteTurnoWhereId(TurnoId id);
+	Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance);
+	Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnos();
+	Task<Result<TurnoDbModel?>> SelectTurnoWhereId(TurnoId id);
+	Task<Result<Turno2025>> UpdateTurnoWhereId(TurnoId id, Turno2025 instance);
 }

@@ -1,10 +1,10 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeEntidad;
 using Dapper;
-using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.DbModels.DbModels;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
+using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.Infrastructure.Repositorios;
 
@@ -58,7 +58,7 @@ public class RepositorioPacientes(SQLServerConnectionFactory factory) : Reposito
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_UpdatePacienteWhereId",
-				instance.ToModel(id),
+				instance.ToDto(),
 				commandType: CommandType.StoredProcedure
 			);
 		});

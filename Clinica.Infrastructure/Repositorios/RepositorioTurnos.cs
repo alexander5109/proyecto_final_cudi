@@ -1,10 +1,10 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeEntidad;
 using Dapper;
-using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.DbModels.DbModels;
 using static Clinica.Shared.ApiDtos.TurnoDtos;
+using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.Infrastructure.Repositorios;
 
@@ -23,19 +23,18 @@ public class RepositorioTurnos(SQLServerConnectionFactory factory) : Repositorio
 
 
 
-	Task<Result<Turno2025Agg>> IRepositorioTurnos.UpdateTurnoWhereId(TurnoId id, Turno2025 instance)
-		=> TryAsyncVoid(async conn => {
+	Task<Result<Turno2025>> IRepositorioTurnos.UpdateTurnoWhereId(
+		TurnoId id,
+		Turno2025 instance
+	)
+		=> TryAsync(async conn => {
 			await conn.ExecuteAsync(
 				"sp_UpdateTurnoWhereId",
-				instance.ToModel(),
+				instance.ToDto(),
 				commandType: CommandType.StoredProcedure
 			);
-		}).MapAsync(x => Turno2025Agg.Crear(id, instance));
-
-
-
-
-
+			return instance;
+		});
 
 	Task<Result<TurnoDbModel?>> IRepositorioTurnos.SelectTurnoWhereId(TurnoId id)
 		=> TryAsync(async conn => {

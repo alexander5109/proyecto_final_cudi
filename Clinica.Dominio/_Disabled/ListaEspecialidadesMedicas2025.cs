@@ -1,8 +1,8 @@
 ﻿//using Clinica.Dominio.FunctionalToolkit;
-//using Clinica.Dominio.TiposDeValor;
+//using Clinica.Dominio.TiposDeEntidad;
 //using System.Text;
 
-//namespace Clinica.Dominio.TiposDeValor;
+//namespace Clinica.Dominio.TiposDeEntidad;
 
 //public sealed record ListaEspecialidadesMedicas2025(
 //	IReadOnlyList<Especialidad2025> Valores

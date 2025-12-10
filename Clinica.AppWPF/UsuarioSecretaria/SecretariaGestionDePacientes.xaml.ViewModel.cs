@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeEnum;
 using static Clinica.Shared.DbModels.DbModels;
 
 

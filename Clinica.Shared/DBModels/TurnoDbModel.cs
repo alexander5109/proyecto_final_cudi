@@ -1,5 +1,8 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposExtensiones;
 
 namespace Clinica.Shared.DbModels;
@@ -21,23 +24,6 @@ public static partial class DbModels {
 		public TurnoDbModel() : this(default!, default, default!, default!, default!, default, default, default!, default, default) { }
 	};
 
-
-
-	public static TurnoDbModel ToModel(this Turno2025 turno) {
-		return new TurnoDbModel(
-			default,
-			turno.FechaDeCreacion,
-			turno.PacienteId,
-			turno.MedicoId,
-			turno.Especialidad.Codigo,
-			turno.FechaHoraAsignadaDesdeValor,
-			turno.FechaHoraAsignadaHastaValor,
-			turno.OutcomeEstado,
-			turno.OutcomeFechaOption.Match(d => d, () => (DateTime?)null),
-			turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
-		);
-	}
-
 	public static TurnoDbModel ToModel(this Turno2025Agg aggrg) {
 		return new TurnoDbModel(
 			aggrg.Id,
@@ -52,18 +38,20 @@ public static partial class DbModels {
 			aggrg.Turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
 		);
 	}
-	public static Result<Turno2025> ToDomain(this TurnoDbModel turnoDto) {
-		return Turno2025.CrearResult(
-			//TurnoId.CrearResult(turnoDto.Id.Valor),
-			turnoDto.FechaDeCreacion,
-			PacienteId.CrearResult(turnoDto.PacienteId.Valor),
-			MedicoId.CrearResult(turnoDto.MedicoId.Valor),
-			Especialidad2025.CrearResult(turnoDto.EspecialidadCodigo),
-			turnoDto.FechaHoraAsignadaDesde,
-			turnoDto.FechaHoraAsignadaHasta,
-			turnoDto.OutcomeEstado.CrearResult(),
-			turnoDto.OutcomeFecha.ToOption(),
-			turnoDto.OutcomeComentario.ToOption()
-		);
+	public static Result<Turno2025Agg> ToDomainAgg(this TurnoDbModel dbModel) {
+		return Turno2025Agg.CrearResult(
+			TurnoId.CrearResult(dbModel.Id),
+			Turno2025.CrearResult(
+			//TurnoId.CrearResult(dbModel.Id.Valor),
+			dbModel.FechaDeCreacion,
+			PacienteId.CrearResult(dbModel.PacienteId.Valor),
+			MedicoId.CrearResult(dbModel.MedicoId.Valor),
+			Especialidad2025.CrearResult(dbModel.EspecialidadCodigo),
+			dbModel.FechaHoraAsignadaDesde,
+			dbModel.FechaHoraAsignadaHasta,
+			dbModel.OutcomeEstado.CrearResult(),
+			dbModel.OutcomeFecha.ToOption(),
+			dbModel.OutcomeComentario.ToOption()
+		));
 	}
 }

@@ -1,5 +1,7 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.Shared.DbModels;
 
@@ -30,27 +32,17 @@ public static partial class DbModels {
 		};
 	}
 
-	public static HorarioDbModel ToModel(this Horario2025 horario, HorarioId id) {
-		return new HorarioDbModel(
-			Id : id,
-			MedicoId : horario.MedicoId,
-			DiaSemana : horario.DiaSemana,
-			HoraDesde : horario.HoraDesde.ToTimeSpan(),
-			HoraHasta : horario.HoraHasta.ToTimeSpan(),
-			VigenteDesde : horario.VigenteDesde.ToDateTime(TimeOnly.MaxValue),
-			VigenteHasta : horario.VigenteHasta.ToDateTime(TimeOnly.MaxValue)
-		);
-	}
-
-	public static Result<Horario2025> ToDomain(this HorarioDbModel horarioDto) {
-		return Horario2025.CrearResult(
-			horarioDto.MedicoId,
-			horarioDto.DiaSemana, 
-			TimeOnly.FromTimeSpan(horarioDto.HoraDesde),
-			TimeOnly.FromTimeSpan(horarioDto.HoraHasta),
+	public static Result<Horario2025Agg> ToDomainAgg(this HorarioDbModel dbModel) {
+		return Horario2025Agg.CrearResult(
+			HorarioId.CrearResult(dbModel.Id),
+			Horario2025.CrearResult(
+			dbModel.MedicoId,
+			dbModel.DiaSemana,
+			TimeOnly.FromTimeSpan(dbModel.HoraDesde),
+			TimeOnly.FromTimeSpan(dbModel.HoraHasta),
 			new DateOnly(2014, 1, 1),
 			new DateOnly(2026, 1, 1)
-		);
+		));
 	}
 
 }

@@ -109,7 +109,8 @@ public static class ResultExtensions {
 	public static void MatchAndDo<T>(
 		this Result<T> self,
 		Action<T> ok,
-		Action<string> error) {
+		Action<string> error
+	) {
 		switch (self) {
 			case Result<T>.Ok o:
 				ok(o.Valor);
@@ -119,6 +120,12 @@ public static class ResultExtensions {
 				break;
 		}
 	}
+
+	public static U Match<T, U>(
+		this Result<T> result, 
+		Func<T, U> caseOk, 
+		Func<string, U> error
+	) => result.MatchAndSet(caseOk, error);
 
 	public static TOut MatchAndSet<T, TOut>(
 		this Result<T> self,
@@ -171,7 +178,7 @@ public static class ResultExtensions {
 	) {
 		switch (r) {
 			case Result<T>.Ok ok:
-				var uResult = await bindAsync(ok.Valor);
+				Result<U> uResult = await bindAsync(ok.Valor);
 				return uResult switch {
 					Result<U>.Ok uOk => new Result<V>.Ok(project(ok.Valor, uOk.Valor)),
 					Result<U>.Error uErr => new Result<V>.Error(uErr.Mensaje),

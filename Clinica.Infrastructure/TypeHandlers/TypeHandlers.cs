@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Dapper;
 
 namespace Clinica.Infrastructure.TypeHandlers;

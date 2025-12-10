@@ -1,8 +1,8 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
 
-namespace Clinica.Dominio.TiposDeValor;
+namespace Clinica.Dominio._Disabled;
 
-public record Apellido2025(
+public record struct Apellido2025(
 	string Valor
 ) {
     private static readonly int MaxLongitud = 50; // razonable, pero configurable

@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.ViewModels;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.AppWPF.Infrastructure.Comodidades;
 using static Clinica.Shared.DbModels.DbModels;
@@ -46,7 +48,7 @@ public class SecretariaDisponibilidadesViewModel : INotifyPropertyChanged {
 	}
 
 	public async Task LoadMedicosTodosAsync() {
-		var medicos = await App.Repositorio.SelectMedicos();
+        List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
 		MedicosTodos = medicos.Select(m => m.ToSimpleViewModel()).ToList();
 		OnPropertyChanged(nameof(MedicosTodos));
 	}
@@ -58,7 +60,7 @@ public class SecretariaDisponibilidadesViewModel : INotifyPropertyChanged {
 		if (MedicosTodos == null)
 			await LoadMedicosTodosAsync();
 
-		foreach (var m in MedicosTodos!.Where(x => x.EspecialidadCodigo == codigo))
+		foreach (MedicoSimpleViewModel? m in MedicosTodos!.Where(x => x.EspecialidadCodigo == codigo))
 			MedicosEspecialistasItemsSource.Add(m);
 
 		if (MedicosEspecialistasItemsSource.Any())
@@ -105,10 +107,10 @@ public class SecretariaDisponibilidadesViewModel : INotifyPropertyChanged {
 	private void LoadHoras() {
 		HorasItemsSource.Clear();
 
-		var inicio = ClinicaNegocio.Atencion.DesdeHs;
-		var fin = ClinicaNegocio.Atencion.HastaHs;
+        TimeOnly inicio = ClinicaNegocio.Atencion.DesdeHs;
+        TimeOnly fin = ClinicaNegocio.Atencion.HastaHs;
 
-		for (var t = inicio; t <= fin; t = t.AddMinutes(30))
+		for (TimeOnly t = inicio; t <= fin; t = t.AddMinutes(30))
 			HorasItemsSource.Add(t);
 
 		if (HorasItemsSource.Any())
@@ -187,13 +189,13 @@ public class SecretariaDisponibilidadesViewModel : INotifyPropertyChanged {
 
 		DateTime desde = PreferedFechaValue + SelectedHoraValue.ToTimeSpan();
 
-		var lista = await App.Repositorio.SelectDisponibilidades(
+        List<Disponibilidad2025> lista = await App.Repositorio.SelectDisponibilidades(
 			especialidad: esp,
 			cuantos: 15,
 			apartirDeCuando: desde
 		);
 
-		foreach (var d in lista)
+		foreach (Disponibilidad2025 d in lista)
 			DisponibilidadesItemsSource.Add(await d.ToSimpleViewModel());
 	}
 }

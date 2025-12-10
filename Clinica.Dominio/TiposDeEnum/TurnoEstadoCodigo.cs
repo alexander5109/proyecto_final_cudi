@@ -1,4 +1,4 @@
-﻿namespace Clinica.Dominio.TiposDeValor;
+﻿namespace Clinica.Dominio.TiposDeEnum;
 
 
 

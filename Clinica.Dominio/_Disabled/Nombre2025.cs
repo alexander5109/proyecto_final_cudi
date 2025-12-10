@@ -1,6 +1,6 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
 
-namespace Clinica.Dominio.TiposDeValor;
+namespace Clinica.Dominio._Disabled;
 
 public record Nombre2025(
 	string Valor

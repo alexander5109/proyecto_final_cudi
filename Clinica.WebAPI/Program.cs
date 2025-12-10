@@ -2,9 +2,7 @@
 using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.Servicios;
 using Clinica.Infrastructure.Repositorios;
-using Clinica.WebAPI.Servicios;
 using Microsoft.IdentityModel.Tokens;
-using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -26,18 +24,11 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	)
 );
 
-builder.Services.AddSingleton<RepositorioHorarios>(sp => {
-    SQLServerConnectionFactory factory = sp.GetRequiredService<SQLServerConnectionFactory>();
-    return new RepositorioDapper(factory);
-});
-
 // Registrar cada interfaz como alias de la instancia principal
-builder.Services.AddSingleton<IRepositorio>(sp => sp.GetRequiredService<RepositorioHorarios>());
-builder.Services.AddSingleton<IRepositorioPacientes>(sp => sp.GetRequiredService<RepositorioHorarios>());
-builder.Services.AddSingleton<IRepositorioTurnos>(sp => sp.GetRequiredService<RepositorioHorarios>());
-builder.Services.AddSingleton<IRepositorioTurnos>(sp => sp.GetRequiredService<RepositorioHorarios>());
-builder.Services.AddSingleton<IRepositorioUsuarios>(sp => sp.GetRequiredService<RepositorioHorarios>());
-builder.Services.AddSingleton<IRepositorioDominioServices>(sp => sp.GetRequiredService<RepositorioHorarios>());
+builder.Services.AddSingleton<IRepositorioPacientes>(sp => sp.GetRequiredService<RepositorioPacientes>());
+builder.Services.AddSingleton<IRepositorioTurnos>(sp => sp.GetRequiredService<RepositorioTurnos>());
+builder.Services.AddSingleton<IRepositorioUsuarios>(sp => sp.GetRequiredService<RepositorioUsuarios>());
+builder.Services.AddSingleton<IRepositorioDominioServices>(sp => sp.GetRequiredService<RepositorioDominioServices>());
 builder.Services.AddSingleton<IRepositorioHorarios>(sp => sp.GetRequiredService<RepositorioHorarios>());
 
 

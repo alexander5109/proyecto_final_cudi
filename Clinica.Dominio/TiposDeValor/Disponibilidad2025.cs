@@ -1,4 +1,6 @@
 ﻿using Clinica.Dominio.IInterfaces;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.Dominio.TiposDeValor;
 

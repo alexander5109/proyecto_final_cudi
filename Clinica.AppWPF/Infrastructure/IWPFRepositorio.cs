@@ -1,3 +1,6 @@
+using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 using static Clinica.Shared.DbModels.DbModels;
@@ -25,7 +28,7 @@ public static class IWPFRepositorioInterfaces {
 		Task<ResultWpf<UsuarioId>> InsertUsuarioReturnId(Usuario2025 instance);
 		Task<ResultWpf<UnitWpf>> UpdateUsuarioWhereId(Usuario2025Agg instance);
 		Task<List<UsuarioDbModel>> SelectUsuarios();
-		Task<UsuarioPerfilDto?> SelectUsuarioProfileWhereUsername(UserName username);
+		Task<UsuarioDto?> SelectUsuarioProfileWhereUsername(UserName username);
 	}
 
 

@@ -13,7 +13,7 @@ namespace Clinica.AppWPF;
 public partial class App : Application {
 	public static ApiHelper Api = new();
 	public static IWPFRepositorio Repositorio = new WPFRepositorioApi(Api);
-	public static UsuarioPerfilDto? UsuarioActivo = null;
+	public static UsuarioDto? UsuarioActivo = null;
 	//public static Repositorio2024 BaseDeDatos;
 
 	protected override void OnStartup(StartupEventArgs e) {

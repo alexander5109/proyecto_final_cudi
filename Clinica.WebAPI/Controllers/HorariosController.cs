@@ -1,8 +1,9 @@
-﻿using Clinica.Dominio.TiposDeValor;
+﻿using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
+using static Clinica.Shared.ApiDtos.HorarioDtos;
 
 namespace Clinica.WebAPI.Controllers;
 
@@ -45,20 +46,20 @@ public class HorariosController(
 
 
 	[HttpPut("{id:int}")]
-	public Task<IActionResult> UpdateHorario(int id, [FromBody] HorarioDbModel dto)
+	public Task<IActionResult> UpdateHorario(int id, [FromBody] HorarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisoSistema.UpdateHorarios,
 		dto,
 		x => x.ToDomain(),
-		horario => repositorio.UpdateHorarioWhereId(dto.Id, horario),
+		horario => repositorio.UpdateHorarioWhereId(new HorarioId(id), horario),
 		notFoundMessage: $"No existe horario con id {id}"
 	);
 
 
 
 	[HttpPost]
-	public Task<IActionResult> CrearHorario([FromBody] HorarioDbModel dto)
+	public Task<IActionResult> CrearHorario([FromBody] HorarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisoSistema.CrearHorarios,

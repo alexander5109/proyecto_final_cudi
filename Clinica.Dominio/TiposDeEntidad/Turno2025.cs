@@ -1,43 +1,10 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.IInterfaces;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Dominio.TiposDeValor;
-
-
-public record struct TurnoId(int Valor) {
-	public static Result<TurnoId> CrearResult(TurnoId? id) =>
-		(id is TurnoId idGood && idGood.Valor >= 0)
-		? new Result<TurnoId>.Ok(idGood)
-		: new Result<TurnoId>.Error("El id no puede ser nulo o negativo.");
-	public static TurnoId Crear(int id) => new(id);
-	public static Result<TurnoId> CrearResult(int? id) =>
-		id is int idGood
-		? new Result<TurnoId>.Ok(new TurnoId(idGood))
-		: new Result<TurnoId>.Error("El id no puede ser nulo.");
-	public static bool TryParse(string? s, out TurnoId id) {
-		if (int.TryParse(s, out int value)) {
-			id = new TurnoId(value);
-			return true;
-		}
-		id = default;
-		return false;
-	}
-
-	public override string ToString() {
-		return Valor.ToString();
-	}
-}
-public record Turno2025Agg(TurnoId Id, Turno2025 Turno) {
-	public static Turno2025Agg Crear(TurnoId id, Turno2025 turno) => new(id, turno);
-	public static Result<Turno2025Agg> CrearResult(Result<TurnoId> idResult,Result<Turno2025> instanceResult)
-		=> from id in idResult
-		   from instance in instanceResult
-		   select new Turno2025Agg(
-			   id,
-			   instance
-		   );
-
-}
+namespace Clinica.Dominio.TiposDeEntidad;
 public record Turno2025(
 	DateTime FechaDeCreacion,
 	PacienteId PacienteId,

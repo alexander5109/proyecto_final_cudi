@@ -1,5 +1,9 @@
-﻿using Clinica.Dominio.FunctionalToolkit;
+﻿using Clinica.Dominio._Disabled;
+using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.IInterfaces;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Dominio.IInterfaces.QueryModels;
 

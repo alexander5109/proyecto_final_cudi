@@ -1,50 +1,9 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.IInterfaces;
+using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.TiposExtensiones;
 
-namespace Clinica.Dominio.TiposDeValor;
-
-
-public readonly record struct PacienteId(int Valor) {
-	public static Result<PacienteId> CrearResult(PacienteId? id) =>
-		(id is PacienteId idGood && idGood.Valor >= 0)
-		? new Result<PacienteId>.Ok(idGood)
-		: new Result<PacienteId>.Error("El id no puede ser nulo o negativo.");
-	public static Result<PacienteId> CrearResult(int? id) =>
-		id is int idGood
-		? new Result<PacienteId>.Ok(new PacienteId(idGood))
-		: new Result<PacienteId>.Error("El id no puede ser nulo.");
-	public static PacienteId Crear(int id) => new(id);
-	public static bool TryParse(string? s, out PacienteId id) {
-		if (int.TryParse(s, out int value)) {
-			id = new PacienteId(value);
-			return true;
-		}
-		id = default;
-		return false;
-	}
-	public readonly override string ToString() {
-		return Valor.ToString();
-	}
-
-}
-public record Paciente2025Agg(
-	PacienteId Id,
-	Paciente2025 Paciente
-) {
-	public static Paciente2025Agg Crear(PacienteId id, Paciente2025 paciente) => new(id, paciente);
-	public static Result<Paciente2025Agg> CrearResult(
-		Result<PacienteId> idResult,
-		Result<Paciente2025> pacienteResult
-	)
-		=> from id in idResult
-		   from paciente in pacienteResult
-		   select new Paciente2025Agg(
-			   id,
-			   paciente
-		   );
-
-}
+namespace Clinica.Dominio.TiposDeEntidad;
 
 public record Paciente2025(
 	NombreCompleto2025 NombreCompleto,

@@ -1,10 +1,11 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
 using Dapper;
-using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.DbModels.DbModels;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
+using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.Infrastructure.Repositorios;
 
@@ -60,8 +61,8 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 			);
 		});
 
-	Task<Result<UsuarioPerfilDto>> IRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName nombre)
-		=> TryAsync(async conn => await conn.QuerySingleOrDefaultAsync<UsuarioPerfilDto>(
+	Task<Result<UsuarioDbModel>> IRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName nombre)
+		=> TryAsync(async conn => await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
 				"sp_SelectUsuarioWhereNombre",
 				new { UserName = nombre.Valor },
 				commandType: CommandType.StoredProcedure

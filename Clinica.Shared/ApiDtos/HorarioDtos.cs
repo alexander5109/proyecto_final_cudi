@@ -1,5 +1,6 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.Shared.ApiDtos;
 
@@ -26,12 +27,12 @@ public static class HorarioDtos {
 		};
 	}
 
-	public static Result<Horario2025> ToDomain(this HorarioDto horarioDto) {
+	public static Result<Horario2025> ToDomain(this HorarioDto dto) {
 		return Horario2025.CrearResult(
-			horarioDto.MedicoId,
-			horarioDto.DiaSemana,
-			TimeOnly.FromTimeSpan(horarioDto.HoraDesde),
-			TimeOnly.FromTimeSpan(horarioDto.HoraHasta),
+			dto.MedicoId,
+			dto.DiaSemana,
+			TimeOnly.FromTimeSpan(dto.HoraDesde),
+			TimeOnly.FromTimeSpan(dto.HoraHasta),
 			new DateOnly(2014, 1, 1),
 			new DateOnly(2026, 1, 30)
 		);

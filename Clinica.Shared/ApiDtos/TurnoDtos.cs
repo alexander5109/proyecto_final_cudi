@@ -1,5 +1,8 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Dominio.TiposExtensiones;
 
 namespace Clinica.Shared.ApiDtos;
 
@@ -32,6 +35,21 @@ public static class TurnoDtos {
 			turno.OutcomeEstado,
 			turno.OutcomeFechaOption.Match(d => (DateTime?)d, () => null),
 			turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
+		);
+	}
+
+
+	public static Result<Turno2025> ToDomain(this TurnoDto dbModel) {
+		return Turno2025.CrearResult(
+			dbModel.FechaDeCreacion,
+			PacienteId.CrearResult(dbModel.PacienteId.Valor),
+			MedicoId.CrearResult(dbModel.MedicoId.Valor),
+			Especialidad2025.CrearResult(dbModel.EspecialidadCodigo),
+			dbModel.FechaHoraAsignadaDesde,
+			dbModel.FechaHoraAsignadaHasta,
+			dbModel.OutcomeEstado.CrearResult(),
+			dbModel.OutcomeFecha.ToOption(),
+			dbModel.OutcomeComentario.ToOption()
 		);
 	}
 

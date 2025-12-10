@@ -1,10 +1,9 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.TypeHandlers;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.Infrastructure.Repositorios;
@@ -16,7 +15,7 @@ public abstract class RepositorioBase {
 
 
 
-	protected Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id)
+	public Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<TurnoDbModel>(
 				"sp_SelectTurnosWhereMedicoId",

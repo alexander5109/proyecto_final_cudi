@@ -1,10 +1,10 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeEntidad;
 using Dapper;
-using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.DbModels.DbModels;
 using static Clinica.Shared.ApiDtos.HorarioDtos;
+using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.Infrastructure.Repositorios;
 
@@ -52,7 +52,7 @@ public class RepositorioHorarios(SQLServerConnectionFactory factory) : Repositor
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_UpdateHorarioWhereId",
-				instance.ToModel(id),
+				instance.ToDto(),
 				commandType: CommandType.StoredProcedure
 			);
 		});

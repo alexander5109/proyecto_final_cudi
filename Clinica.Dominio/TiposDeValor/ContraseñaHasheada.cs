@@ -7,11 +7,6 @@ namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct ContraseñaHasheada(string Valor) {
 
-	public static ContraseñaHasheada CrearFromRaw(string raw) {
-		byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes(raw));
-		return new(Convert.ToHexString(hash));
-	}
-
 	public static Result<ContraseñaHasheada> CrearResult(string? hash) {
 		if (string.IsNullOrWhiteSpace(hash))
 			return new Result<ContraseñaHasheada>.Error("El hash no puede estar vacío.");
@@ -27,6 +22,11 @@ public readonly record struct ContraseñaHasheada(string Valor) {
 		}
 
 		return new Result<ContraseñaHasheada>.Ok(new ContraseñaHasheada(hash));
+	}
+
+	public static ContraseñaHasheada CrearFromRaw(string raw) {
+		byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes(raw));
+		return new(Convert.ToHexString(hash));
 	}
 
 	public bool IgualA(string raw) {

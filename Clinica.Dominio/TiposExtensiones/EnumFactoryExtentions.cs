@@ -1,5 +1,5 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeEnum;
 
 namespace Clinica.Dominio.TiposExtensiones;
 

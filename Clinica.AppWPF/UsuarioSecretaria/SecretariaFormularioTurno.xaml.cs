@@ -1,6 +1,5 @@
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
@@ -26,7 +25,7 @@ public partial class SecretariaDisponibilidades : Window {
 			return;
 		}
 
-		var d = VM.SelectedDisponibilidad;
+        Comodidades.DisponibilidadEspecialidadModelView d = VM.SelectedDisponibilidad;
 		MessageBox.Show($"Reservando turno: {d.Fecha} {d.Hora}", "Reservar");
 		Close();
 	}

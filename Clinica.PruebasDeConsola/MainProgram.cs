@@ -1,9 +1,10 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.Servicios;
 using Microsoft.Extensions.Configuration;
 using Clinica.Dominio.IInterfaces;
 using Clinica.Infrastructure.Repositorios;
+using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.PruebasDeConsola;
 

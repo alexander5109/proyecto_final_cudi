@@ -1,9 +1,10 @@
-﻿using Clinica.Dominio.TiposDeValor;
+﻿using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Dominio.TiposDeValor;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
-using static Clinica.Shared.DbModels.DbModels;
+using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 
 namespace Clinica.WebAPI.Controllers;
 
@@ -56,7 +57,7 @@ public class UsuariosController(
 
 
 	[HttpPut("{id:int}")]
-	public Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioDbModel dto)
+	public Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisoSistema.UpdateEntidades,

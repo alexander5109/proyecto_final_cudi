@@ -1,11 +1,14 @@
 ﻿using System.Text.Json;
+using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Shared.ApiDtos;
 
 public static class MedicoDtos {
 
-	public record MedicDto(
+	public record MedicoDto(
 		EspecialidadCodigo EspecialidadCodigo,
 		string Dni,
 		string Nombre,
@@ -19,13 +22,13 @@ public static class MedicoDtos {
 		bool HaceGuardias,
 		string? HorariosJson
 	) {
-		public MedicDto()
+		public MedicoDto()
 			: this(default, "", "", "", default, "", "", default, "", "", default, null) { }
 	}
 
 
-	public static MedicDto ToDto(this Medico2025 medico) {
-		return new MedicDto(
+	public static MedicoDto ToDto(this Medico2025 medico) {
+		return new MedicoDto(
 			EspecialidadCodigo: medico.EspecialidadUnica.Codigo,
 			Dni: medico.Dni.Valor,
 			Nombre: medico.NombreCompleto.NombreValor,
@@ -39,6 +42,26 @@ public static class MedicoDtos {
 			HaceGuardias: medico.HaceGuardiasValor,
 			HorariosJson: JsonSerializer.Serialize(medico.ListaHorarios.ToString()) //Cualquier cosa estaba haciedno aca.
 		);
+	}
+
+	public static Result<Medico2025> ToDomain(this MedicoDto dto) {
+		return Medico2025.CrearResult(
+				NombreCompleto2025.CrearResult(dto.Nombre, dto.Apellido),
+				//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
+				Especialidad2025.CrearResult(dto.EspecialidadCodigo),
+				DniArgentino2025.CrearResult(dto.Dni),
+				DomicilioArgentino2025.CrearResult(
+					LocalidadDeProvincia2025.CrearResult(
+						dto.Localidad,
+						ProvinciaArgentina2025.CrearResultPorCodigo(dto.ProvinciaCodigo)),
+					dto.Domicilio
+				),
+				ContactoTelefono2025.CrearResult(dto.Telefono),
+				ContactoEmail2025.CrearResult(dto.Email),
+				ListaHorarioMedicos2025.CrearResult([.. JsonSerializer.Deserialize<IReadOnlyList<Horario2025>>(dto.HorariosJson)]),
+				dto.FechaIngreso,
+				dto.HaceGuardias
+			);
 	}
 
 }

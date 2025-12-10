@@ -1,12 +1,15 @@
 ﻿using System.ComponentModel;
 using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeValor;
 using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
 using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
 using Clinica.Dominio.IInterfaces;
+using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeEntidad;
+using static Clinica.Shared.ApiDtos.TurnoDtos;
 namespace Clinica.WebAPI.Controllers;
 
 
@@ -15,7 +18,7 @@ namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ServiciosPublicosController(IRepositorio repositorio, IServiciosDeDominio servicios, ILogger<ServiciosPublicosController> logger) : ControllerBase {
+public class ServiciosPublicosController(IRepositorioDominioServices repositorio, IServiciosDeDominio servicios, ILogger<ServiciosPublicosController> logger) : ControllerBase {
 
 	[HttpGet("Turnos/Disponibilidades")]
 	public async Task<IActionResult> VerDisponibilidades(
@@ -65,8 +68,8 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosDeD
 	}
 
 	[HttpPut("Turnos/Cancelar")]
-	public async Task<ActionResult<TurnoDbModel>> CancelarTurno([FromBody] ModificarTurnoDto dto) {
-        Result<Turno2025Agg> result = await servicios.PersistirComoCanceladoAsync(
+	public async Task<ActionResult<TurnoDto>> CancelarTurno([FromBody] ModificarTurnoDto dto) {
+        Result<Turno2025> result = await servicios.PersistirComoCanceladoAsync(
 			dto.TurnoId,
 			dto.FechaSolicitud,
 			dto.Comentario,
@@ -74,8 +77,8 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosDeD
 		);
 
 		return result switch {
-			Result<Turno2025Agg>.Ok ok => Ok(ok.Valor.ToModel()),
-			Result<Turno2025Agg>.Error err => Conflict(new { error = err.Mensaje }),
+			Result<Turno2025>.Ok ok => Ok(ok.Valor.ToDto()),
+			Result<Turno2025>.Error err => Conflict(new { error = err.Mensaje }),
 			_ => StatusCode(500)
 		};
 	}

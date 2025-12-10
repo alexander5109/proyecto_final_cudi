@@ -1,39 +1,8 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.IInterfaces;
+using Clinica.Dominio.TiposDeEnum;
 
-namespace Clinica.Dominio.TiposDeValor;
-
-// Enum simple para DTOs y mapeo automático
-public enum EspecialidadCodigo : byte {
-	ClinicoGeneral = 1,
-	Cardiologo = 2,
-	Oftalmologo = 3,
-	Otorrinolaringologo = 4,
-	Psiquiatra = 5,
-	Psicologo = 6,
-	Cirujano = 7,
-	Kinesiologo = 8,
-	Nutricionista = 9,
-	Gastroenterologo = 10,
-	Osteopata = 11,
-	Proctologo = 12,
-	Pediatra = 13,
-	Ginecologo = 14,
-	Traumatologo = 15,
-	Neurologo = 16,
-	Dermatologo = 17
-}
-
-//public static class EnumExtentions {
-//	public string ToDomain(this EspecialidadCodigo code) {
-
-//		return Especialidad2025.
-
-//	}
-
-
-//}
-
+namespace Clinica.Dominio.TiposDeEntidad;
 
 public sealed record Especialidad2025(
 	EspecialidadCodigo Codigo,

@@ -1,4 +1,7 @@
 ﻿using System.Net.Http.Json;
+using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Shared.ApiDtos;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
@@ -336,7 +339,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		throw new NotImplementedException();
 	}
 
-	async Task<UsuarioPerfilDto?> IWPFRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName username) {
-		return await Api.TryGetJsonOrNullAsync<UsuarioPerfilDto>($"api/usuarios/{username.Valor}");
+	async Task<UsuarioDto?> IWPFRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName username) {
+		return await Api.TryGetJsonOrNullAsync<UsuarioDto>($"api/usuarios/{username.Valor}");
 	}
 }

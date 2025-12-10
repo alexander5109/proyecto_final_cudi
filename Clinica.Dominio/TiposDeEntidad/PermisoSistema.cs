@@ -1,4 +1,6 @@
-﻿namespace Clinica.Dominio.TiposDeValor;
+﻿using Clinica.Dominio.TiposDeEnum;
+
+namespace Clinica.Dominio.TiposDeEntidad;
 
 
 public enum PermisoSistema {
@@ -24,11 +26,10 @@ public enum PermisoSistema {
 	SolicitarTurno,
 	GestionDeTurnos
 
-	// más adelante: editar paciente, etc.
 }
 
 
-public static class PermisosPorRol {
+public static class UsuarioPermisosExtensions {
 	private static readonly Dictionary<UsuarioEnumRole, HashSet<PermisoSistema>> tabla = new() {
 		[UsuarioEnumRole.Nivel1Superadmin] = [
 			PermisoSistema.VerPacientes,
@@ -105,10 +106,6 @@ public static class PermisosPorRol {
 
 	public static bool Tiene(UsuarioEnumRole rol, PermisoSistema permiso) =>
 		tabla.TryGetValue(rol, out HashSet<PermisoSistema>? set) && set.Contains(permiso);
-}
-
-
-public static class UsuarioPermisosExtensions {
 	public static bool HasPermission(this Usuario2025 u, PermisoSistema permiso)
-		=> PermisosPorRol.Tiene(u.EnumRole, permiso);
+		=> Tiene(u.EnumRole, permiso);
 }
