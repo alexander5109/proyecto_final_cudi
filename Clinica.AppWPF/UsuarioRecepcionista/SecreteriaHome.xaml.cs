@@ -1,11 +1,11 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
 
-namespace Clinica.AppWPF.UsuarioSecretaria;
+namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class SecretariaHome : Window {
+public partial class RecepcionistaHome : Window {
 	public string MensajeBienvenida { get; }
-	public SecretariaHome() {
+	public RecepcionistaHome() {
 		InitializeComponent();
 		soundCheckBox.IsChecked = SoundsService.SoundOn;
 
@@ -19,7 +19,7 @@ public partial class SecretariaHome : Window {
 
 	private void MetodoBotonLogout(object sender, RoutedEventArgs e) => this.CerrarSesion();
 
-	private void MetodoBotonGestionTurnos(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaGestionDeTurnos>();
+	private void MetodoBotonGestionTurnos(object sender, RoutedEventArgs e) => this.NavegarA<RecepcionistaGestionDeTurnos>();
 
-    private void MetodoBotonGestionPacientes(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaGestionDePacientes>();
+    private void MetodoBotonGestionPacientes(object sender, RoutedEventArgs e) => this.NavegarA<RecepcionistaGestionDePacientes>();
 }

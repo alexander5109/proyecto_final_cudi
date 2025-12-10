@@ -2,14 +2,14 @@
 using Clinica.AppWPF.Infrastructure;
 using static Clinica.Shared.DbModels.DbModels;
 
-namespace Clinica.AppWPF.UsuarioSecretaria;
+namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class SecretariaGestionDeTurnos : Window {
-	public SecretariaGestionDeTurnosViewModel VM { get; }
+public partial class RecepcionistaGestionDeTurnos : Window {
+	public RecepcionistaGestionDeTurnosViewModel VM { get; }
 
-	public SecretariaGestionDeTurnos() {
+	public RecepcionistaGestionDeTurnos() {
 		InitializeComponent();
-		VM = new SecretariaGestionDeTurnosViewModel();
+		VM = new RecepcionistaGestionDeTurnosViewModel();
 		DataContext = VM;
 
 		Loaded += async (_, __) => await CargaInicialAsync();
@@ -138,17 +138,17 @@ public partial class SecretariaGestionDeTurnos : Window {
 
 
 	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<SecretariaPacienteFormulario>();
+		this.AbrirComoDialogo<RecepcionistaPacienteFormulario>();
 		//_ = VM.RefrescarPacientesAsync();
 	}
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is null) return;
-		this.AbrirComoDialogo<SecretariaPacienteFormulario>(VM.SelectedPaciente.Id);
+		this.AbrirComoDialogo<RecepcionistaPacienteFormulario>(VM.SelectedPaciente.Id);
 		//_ = VM.RefrescarPacientesAsync();
 	}
 	private void ButtonBuscarDisponibilidades(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is null) return;
-		this.AbrirComoDialogo<SecretariaDisponibilidades>(VM.SelectedPaciente.Id);
+		this.AbrirComoDialogo<RecepcionistaDisponibilidades>(VM.SelectedPaciente.Id);
 		//_ = VM.RefrescarTurnosAsync();
 	}
 }

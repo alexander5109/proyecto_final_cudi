@@ -59,11 +59,11 @@ public partial class HomeAdministrativo : Window {
 
 	private void MetodoBotonTurnos2025(object sender, RoutedEventArgs e) {
 		if (App.Api.UsuarioActual?.RolEnum < 2) {
-			//this.NavegarA<SecretariaGestorTurnos>();
+			//this.NavegarA<RecepcionistaGestorTurnos>();
 		} else {
 			this.AbrirComoDialogo<WindowLogin>();
 			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				//this.NavegarA<SecretariaGestorTurnos>();
+				//this.NavegarA<RecepcionistaGestorTurnos>();
 			}
 		}
 

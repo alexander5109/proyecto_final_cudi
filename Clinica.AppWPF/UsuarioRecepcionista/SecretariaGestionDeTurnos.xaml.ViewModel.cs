@@ -1,12 +1,33 @@
 ﻿using System.ComponentModel;
+using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
 
 
-namespace Clinica.AppWPF.UsuarioSecretaria;
+namespace Clinica.AppWPF.UsuarioRecepcionista;
+
+public sealed class TurnoViewModel(TurnoDbModel model) {
+    public TurnoId Id { get; } = model.Id;
+	//public PacienteDbModel Paciente { get => {  
+	//		(await model.PacienteId.RespectivoPaciente()) //Los pacientes estan cacheados en memoria, sólo cndo no lo esten se hace fetch.
+	//	; }
 
 
-public sealed class SecretariaGestionDePacientesViewModel : INotifyPropertyChanged {
+	public PacienteDbModel? PacienteRelacionado => RepoCache.DictPacientes.GetValueOrDefault(model.PacienteId);
+	public MedicoDbModel? MedicoRelacionado => RepoCache.DictMedicos.GetValueOrDefault(model.MedicoId);
+	public string PacienteDisplayear => PacienteRelacionado is null? "N/A": $"{PacienteRelacionado.Nombre} {PacienteRelacionado.Apellido} {PacienteRelacionado.Dni}";
+	public string MedicoDisplayear => MedicoRelacionado is null ? "N/A" : $"{MedicoRelacionado.Nombre} {MedicoRelacionado.Apellido} {MedicoRelacionado.Dni}";
+	public EspecialidadCodigo EspecialidadCodigo { get; } = model.EspecialidadCodigo;
+    public string FechaSolicitud { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
+    public string FechaAsignada { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
+    public string HoraAsignada { get; } = model.FechaHoraAsignadaHasta.ATextoHoras();
+    public TurnoEstadoCodigo OutcomeEstado { get; } = model.OutcomeEstado;
+    public DateTime? OutcomeFecha { get; set; } = model.OutcomeFecha;
+    public string? OutcomeComentario { get; set; } = model.OutcomeComentario;
+}
+public sealed class RecepcionistaGestionDeTurnosViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	// ==== PACIENTES ====

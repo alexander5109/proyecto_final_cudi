@@ -39,14 +39,6 @@
 				Margin="0 10 0 0"
 				FontSize="20"
 				Click="MetodoBotonSalir" />
-			<Button
-				Content="Cancelar"
-				Style="{StaticResource BotonRedondeado}"
-				Width="110"
-				Height="38"
-				Margin="0 10 0 0"
-				FontSize="20"
-				Click="MetodoBotonCancelar" />
 		</StackPanel>
 		<StackPanel
 			Grid.Row="0"

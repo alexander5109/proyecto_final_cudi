@@ -20,7 +20,7 @@ public partial class Login : Window {
 			MessageBox.Show("Complete todos los campos");
 			return;
 		}
-		UsuarioLoginRequestDto loginRequest = new (guiUsuario.Text, guiPassword.Password);
+		UsuarioLoginRequestDto loginRequest = new(guiUsuario.Text, guiPassword.Password);
 		//MessageBox.Show("Iniciando sesión...");
 		ResultWpf<UsuarioLoginResponseDto> result = await AuthService.LoginAsync(App.Api, loginRequest);
 
@@ -45,9 +45,6 @@ public partial class Login : Window {
 		this.Salir();
 	}
 
-	private void MetodoBotonCancelar(object sender, RoutedEventArgs e) {
-		this.Cerrar();
-	}
 	private void SoundCheckBox_Checked(object sender, RoutedEventArgs e) {
 		SoundsService.ToggleSound(soundCheckBox.IsChecked);
 	}

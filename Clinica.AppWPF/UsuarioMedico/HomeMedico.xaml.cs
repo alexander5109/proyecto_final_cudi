@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.UsuarioSecretaria;
+using Clinica.AppWPF.UsuarioRecepcionista;
 
 namespace Clinica.AppWPF.UsuarioMedico;
 
@@ -60,11 +60,11 @@ public partial class HomeMedico : Window {
 
 	private void MetodoBotonTurnos2025(object sender, RoutedEventArgs e) {
 		if (App.Api.UsuarioActual?.RolEnum < 2) {
-			//this.NavegarA<SecretariaGestorTurnos>();
+			//this.NavegarA<RecepcionistaGestorTurnos>();
 		} else {
 			this.AbrirComoDialogo<WindowLogin>();
 			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				//this.NavegarA<SecretariaGestorTurnos>();
+				//this.NavegarA<RecepcionistaGestorTurnos>();
 			}
 		}
 

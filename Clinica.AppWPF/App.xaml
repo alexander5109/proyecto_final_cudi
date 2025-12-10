@@ -6,7 +6,7 @@
 	StartupUri="Login.xaml"
 	ShutdownMode="OnLastWindowClose">
 	<!-- StartupUri="Login.xaml" -->
-	<!-- StartupUri="UsuarioSecretaria/WindowGestionTurno.xaml"  -->
+	<!-- StartupUri="UsuarioRecepcionista/WindowGestionTurno.xaml"  -->
 	<Application.Resources>
 		<!-- ,,,,,,,,,,,,,,,,,,,,,,,,,,CONTENTCONTROLS,,,,,,,,,,,,,,,,,,,,,,,,,, -->
 		<Style

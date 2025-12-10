@@ -1,5 +1,5 @@
 using System.Windows;
-using Clinica.AppWPF.UsuarioSecretaria;
+using Clinica.AppWPF.UsuarioRecepcionista;
 using Clinica.Dominio.TiposDeEnum;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 
@@ -50,8 +50,8 @@ public static class ExtensionMethods {
 			//case UsuarioRoleCodigo.Nivel2Administrativo:
 			//	this.NavegarA<AdministrativoHome>();
 			//	break;
-			case UsuarioRoleCodigo.Nivel3Secretaria:
-				previousWindow.NavegarA<SecretariaHome>();
+			case UsuarioRoleCodigo.Nivel3Recepcionista:
+				previousWindow.NavegarA<RecepcionistaHome>();
 				break;
 			//case UsuarioRoleCodigo.Nivel4Medico:
 			//	this.NavegarA<MedicoHome>();
@@ -72,8 +72,8 @@ public static class ExtensionMethods {
 			//case UsuarioRoleCodigo.Nivel2Administrativo:
 			//	this.NavegarA<AdministrativoHome>();
 			//	break;
-			case UsuarioRoleCodigo.Nivel3Secretaria:
-				previousWindow.NavegarA<SecretariaHome>();
+			case UsuarioRoleCodigo.Nivel3Recepcionista:
+				previousWindow.NavegarA<RecepcionistaHome>();
 				break;
 			//case UsuarioRoleCodigo.Nivel4Medico:
 			//	this.NavegarA<MedicoHome>();

@@ -53,7 +53,7 @@ public static class PermisoSistema {
 
 		],
 
-		[UsuarioRoleCodigo.Nivel3Secretaria] = [
+		[UsuarioRoleCodigo.Nivel3Recepcionista] = [
             // Puede operar turnos y datos básicos, pero no estructura
             PermisosAccionesCodigo.VerPacientes,
 			PermisosAccionesCodigo.VerTurnos,

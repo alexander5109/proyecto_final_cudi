@@ -5,10 +5,10 @@ using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.DbModels.DbModels;
 using Clinica.Dominio.TiposExtensiones;
 
-namespace Clinica.AppWPF.UsuarioSecretaria;
+namespace Clinica.AppWPF.UsuarioRecepcionista;
 
 
-public static class SecretariaPacienteMiniViewModels {
+public static class RecepcionistaPacienteMiniViewModels {
 	public record ProvinciaVmItem(
 		ProvinciaCodigo Codigo,
 		string Nombre
@@ -17,8 +17,8 @@ public static class SecretariaPacienteMiniViewModels {
 	public static ProvinciaVmItem ToViewModel(this ProvinciaArgentina2025 domain) => new(Codigo: domain.CodigoInternoValor, Nombre: domain.NombreValor);
 
 
-	public static SecretariaPacienteFormularioViewModel ToViewModel(this PacienteDbModel model)
-		=> new SecretariaPacienteFormularioViewModel {
+	public static RecepcionistaPacienteFormularioViewModel ToViewModel(this PacienteDbModel model)
+		=> new RecepcionistaPacienteFormularioViewModel {
 			Id = model.Id,
 			Dni = model.Dni,
 			Nombre = model.Nombre,
@@ -31,7 +31,7 @@ public static class SecretariaPacienteMiniViewModels {
 			Localidad = model.Localidad,
 			Provincia = model.ProvinciaCodigo.ToViewModel()
 		};
-	public static ResultWpf<Paciente2025> ToDomain(this SecretariaPacienteFormularioViewModel viewModel) {
+	public static ResultWpf<Paciente2025> ToDomain(this RecepcionistaPacienteFormularioViewModel viewModel) {
 		return Paciente2025.CrearResult(
 			//PacienteId.CrearResult(viewModel.Id),
 			NombreCompleto2025.CrearResult(viewModel.Nombre, viewModel.Apellido),

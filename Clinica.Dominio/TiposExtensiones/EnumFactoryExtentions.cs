@@ -17,7 +17,7 @@ public static class EnumFactoryExtentions {
 		raw switch {
 			UsuarioRoleCodigo.Nivel1Superadmin
 			or UsuarioRoleCodigo.Nivel2Administrativo
-			or UsuarioRoleCodigo.Nivel3Secretaria
+			or UsuarioRoleCodigo.Nivel3Recepcionista
 			or UsuarioRoleCodigo.Nivel4Medico
 				=> new Result<UsuarioRoleCodigo>.Ok(raw),
 

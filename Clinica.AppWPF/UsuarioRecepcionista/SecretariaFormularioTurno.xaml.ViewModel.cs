@@ -9,15 +9,15 @@ using Clinica.Dominio.TiposDeValor;
 using static Clinica.AppWPF.Infrastructure.Comodidades;
 using static Clinica.Shared.DbModels.DbModels;
 
-namespace Clinica.AppWPF.UsuarioSecretaria;
+namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public class SecretariaDisponibilidadesViewModel : INotifyPropertyChanged {
+public class RecepcionistaDisponibilidadesViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void OnPropertyChanged(string name)
 		=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-	public SecretariaDisponibilidadesViewModel(PacienteId pacienteId) {
-		_ = LoadPaciente(pacienteId);
+	public RecepcionistaDisponibilidadesViewModel(PacienteDbModel paciente) {
+		SelectedPaciente = paciente;
 		_ = LoadMedicosTodosAsync();
 		LoadHoras();
 	}
@@ -27,10 +27,14 @@ public class SecretariaDisponibilidadesViewModel : INotifyPropertyChanged {
 	// -----------------------------------------------------------------------
 	public PacienteDbModel? SelectedPaciente { get; private set; }
 
-	private async Task LoadPaciente(PacienteId id) {
-		SelectedPaciente = RepoCache.DictPacientes.GetValueOrDefault(id);
-		OnPropertyChanged(nameof(SelectedPaciente));
-	}
+	//private async Task LoadPaciente(PacienteId id) {
+	//	SelectedPaciente = RepoCache.DictPacientes.GetValueOrDefault(id);
+	//	OnPropertyChanged(nameof(SelectedPaciente));
+	//}
+
+
+	public string? SelectedPacienteDomicilioCompleto => SelectedPaciente is null ? null : $"{SelectedPaciente?.Localidad}, {SelectedPaciente?.Domicilio}";
+	public string? SelectedPacienteNombreCompleto => SelectedPaciente is null ? null : $"{SelectedPaciente?.Nombre} {SelectedPaciente?.Apellido}";
 
 	// -----------------------------------------------------------------------
 	// MEDICOS
@@ -49,7 +53,7 @@ public class SecretariaDisponibilidadesViewModel : INotifyPropertyChanged {
 	}
 
 	public async Task LoadMedicosTodosAsync() {
-        List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
+		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
 		MedicosTodos = medicos.Select(m => m.ToSimpleViewModel()).ToList();
 		OnPropertyChanged(nameof(MedicosTodos));
 	}
@@ -108,8 +112,8 @@ public class SecretariaDisponibilidadesViewModel : INotifyPropertyChanged {
 	private void LoadHoras() {
 		HorasItemsSource.Clear();
 
-        TimeOnly inicio = ClinicaNegocio.Atencion.DesdeHs;
-        TimeOnly fin = ClinicaNegocio.Atencion.HastaHs;
+		TimeOnly inicio = ClinicaNegocio.Atencion.DesdeHs;
+		TimeOnly fin = ClinicaNegocio.Atencion.HastaHs;
 
 		for (TimeOnly t = inicio; t <= fin; t = t.AddMinutes(30))
 			HorasItemsSource.Add(t);
@@ -190,7 +194,7 @@ public class SecretariaDisponibilidadesViewModel : INotifyPropertyChanged {
 
 		DateTime desde = PreferedFechaValue + SelectedHoraValue.ToTimeSpan();
 
-        List<Disponibilidad2025> lista = await App.Repositorio.SelectDisponibilidades(
+		List<Disponibilidad2025> lista = await App.Repositorio.SelectDisponibilidades(
 			especialidad: esp,
 			cuantos: 15,
 			apartirDeCuando: desde

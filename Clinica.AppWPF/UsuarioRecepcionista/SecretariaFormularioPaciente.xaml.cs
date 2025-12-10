@@ -3,19 +3,19 @@ using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
 
-namespace Clinica.AppWPF.UsuarioSecretaria;
+namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class SecretariaPacienteFormulario : Window {
-	public SecretariaPacienteFormularioViewModel ViewModel { get; private set; } = new();
+public partial class RecepcionistaPacienteFormulario : Window {
+	public RecepcionistaPacienteFormularioViewModel VM { get; private set; } = new();
 
-	public SecretariaPacienteFormulario() {
+	public RecepcionistaPacienteFormulario() {
 		InitializeComponent();
-		DataContext = ViewModel;
+		DataContext = VM;
 	}
 
-	public SecretariaPacienteFormulario(PacienteId id) {
+	public RecepcionistaPacienteFormulario(PacienteId id) {
 		InitializeComponent();
-		DataContext = ViewModel;
+		DataContext = VM;
 		_ = CargaInicialAsync(id);
 	}
 
@@ -29,12 +29,12 @@ public partial class SecretariaPacienteFormulario : Window {
 		}
 		//SelectedPacienteId = dto.Id;
 
-		ViewModel = dto.ToViewModel();
-		DataContext = ViewModel;
+		VM = dto.ToViewModel();
+		DataContext = VM;
 	}
 
 	private async void ButtonGuardar(object sender, RoutedEventArgs e) {
-		ResultWpf<UnitWpf> result = await ViewModel.GuardarAsync();
+		ResultWpf<UnitWpf> result = await VM.GuardarAsync();
 		result.MatchAndDo(
 			caseOk => MessageBox.Show("Cambios guardados.", "Éxito", MessageBoxButton.OK),
 			caseError => caseError.ShowMessageBox()
@@ -47,7 +47,7 @@ public partial class SecretariaPacienteFormulario : Window {
 
 	private async void ButtonEliminar(object sender, RoutedEventArgs e) {
 		if (
-			ViewModel.Id is not PacienteId idGood || (
+			VM.Id is not PacienteId idGood || (
 			MessageBox.Show("¿Esta seguro que desea eliminar este paciente?",
 			"Confirmación", MessageBoxButton.YesNo) == MessageBoxResult.No)
 		) return;
@@ -63,8 +63,9 @@ public partial class SecretariaPacienteFormulario : Window {
 	}
 
 	private void ButtonSolicitarTurno(object sender, RoutedEventArgs e) {
-		//if (ViewModel.Id is int notNullId) {
-		//	this.AbrirComoDialogo<SecretariaDisponibilidades>(SelectedPacienteId.CrearResult(notNullId));
+		//if (VM.Id is int notNullId) {
+		//	this.AbrirComoDialogo<RecepcionistaDisponibilidades>(SelectedPacienteId.CrearResult(notNullId));
 		//}
 	}
+
 }

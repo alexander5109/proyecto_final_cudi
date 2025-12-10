@@ -1,15 +1,16 @@
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeIdentificacion;
+using static Clinica.Shared.DbModels.DbModels;
 
-namespace Clinica.AppWPF.UsuarioSecretaria;
+namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class SecretariaDisponibilidades : Window {
-	public SecretariaDisponibilidadesViewModel VM { get; }
+public partial class RecepcionistaDisponibilidades : Window {
+	public RecepcionistaDisponibilidadesViewModel VM { get; }
 
-	public SecretariaDisponibilidades(PacienteId pacienteId) {
+	public RecepcionistaDisponibilidades(PacienteDbModel paciente) {
 		InitializeComponent();
-		VM = new SecretariaDisponibilidadesViewModel(pacienteId);
+		VM = new RecepcionistaDisponibilidadesViewModel(paciente);
 		DataContext = VM;
 	}
 
@@ -35,7 +36,7 @@ public partial class SecretariaDisponibilidades : Window {
 		SoundsService.PlayClickSound();
 
 		if (VM.SelectedPaciente != null) {
-			this.AbrirComoDialogo<SecretariaPacienteFormulario>(VM.SelectedPaciente.Id);
+			this.AbrirComoDialogo<RecepcionistaPacienteFormulario>(VM.SelectedPaciente.Id);
 		}
 	}
 

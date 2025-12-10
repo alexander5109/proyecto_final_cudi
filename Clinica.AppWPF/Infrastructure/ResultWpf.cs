@@ -35,7 +35,7 @@ public static class ResultToWpfAdapter {
 		return result switch {
 			Result<T>.Ok ok => new ResultWpf<T>.Ok(ok.Valor),
 			Result<T>.Error err => new ResultWpf<T>.Error(
-				new ErrorInfo(err.Mensaje, MessageBoxImage.Error)
+				new ErrorInfo(err.Mensaje, MessageBoxImage.Warning)
 			),
 			_ => throw new InvalidOperationException()
 		};

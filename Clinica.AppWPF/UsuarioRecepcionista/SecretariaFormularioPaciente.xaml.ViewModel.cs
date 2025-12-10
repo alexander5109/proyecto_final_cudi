@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel;
 using Clinica.AppWPF;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.UsuarioSecretaria;
+using Clinica.AppWPF.UsuarioRecepcionista;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
-using static Clinica.AppWPF.UsuarioSecretaria.SecretariaPacienteMiniViewModels;
+using static Clinica.AppWPF.UsuarioRecepcionista.RecepcionistaPacienteMiniViewModels;
 
 
-public class SecretariaPacienteFormularioViewModel : INotifyPropertyChanged {
+public class RecepcionistaPacienteFormularioViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void Notify(string prop) => PropertyChanged?.Invoke(this, new(prop));
 
