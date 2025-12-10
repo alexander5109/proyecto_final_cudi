@@ -41,7 +41,7 @@ public static class PacienteDtos {
 		DateTime FechaIngreso,
 		string Domicilio,
 		string Localidad,
-		ProvinciaCodigo2025 ProvinciaCodigo,
+		ProvinciaCodigo ProvinciaCodigo,
 		string Telefono,
 		string Email,
 		DateTime FechaNacimiento

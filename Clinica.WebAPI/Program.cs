@@ -5,6 +5,7 @@ using Clinica.Infrastructure.IRepositorios;
 using Clinica.Infrastructure.Repositorios;
 using Clinica.WebAPI.Controllers;
 using Microsoft.IdentityModel.Tokens;
+using static Clinica.WebAPI.Controllers.AuthMiddleware;
 
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,7 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 // Primero registrás las implementaciones
 builder.Services.AddSingleton<RepositorioPacientes>();
 builder.Services.AddSingleton<RepositorioTurnos>();
+builder.Services.AddSingleton<RepositorioMedicos>();
 builder.Services.AddSingleton<RepositorioUsuarios>();
 builder.Services.AddSingleton<RepositorioDominioServices>();
 builder.Services.AddSingleton<RepositorioHorarios>();
@@ -34,6 +36,7 @@ builder.Services.AddSingleton<RepositorioHorarios>();
 // Luego mapeás interfaces → implementación
 builder.Services.AddSingleton<IRepositorioPacientes, RepositorioPacientes>();
 builder.Services.AddSingleton<IRepositorioTurnos, RepositorioTurnos>();
+builder.Services.AddSingleton<IRepositorioMedicos, RepositorioMedicos>();
 builder.Services.AddSingleton<IRepositorioUsuarios, RepositorioUsuarios>();
 builder.Services.AddSingleton<IRepositorioDominioServices, RepositorioDominioServices>();
 builder.Services.AddSingleton<IRepositorioHorarios, RepositorioHorarios>();
@@ -60,6 +63,7 @@ builder.Services.AddCors(options => {
 });
 
 builder.Services.AddAuthentication("Bearer")
+
 	.AddJwtBearer("Bearer", options => {
 		options.TokenValidationParameters = new TokenValidationParameters {
 			ValidateIssuer = false,
@@ -69,6 +73,7 @@ builder.Services.AddAuthentication("Bearer")
 				Encoding.ASCII.GetBytes("ESTA_ES_UNA_LLAVE_DE_DESARROLLO_CAMBIAR_EN_PRODUCCION_123456789")
 			)
 		};
+		options.MapInboundClaims = false;
 	});
 
 builder.Services.AddAuthorization();

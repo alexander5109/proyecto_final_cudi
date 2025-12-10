@@ -3,16 +3,17 @@ using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.DbModels.DbModels;
+using Clinica.Dominio.TiposExtensiones;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
 
 public static class SecretariaPacienteMiniViewModels {
 	public record ProvinciaVmItem(
-		ProvinciaCodigo2025 Codigo,
+		ProvinciaCodigo Codigo,
 		string Nombre
 	);
-	public static ProvinciaVmItem ToViewModel(this ProvinciaCodigo2025 enumm) => new(Codigo: enumm, Nombre: enumm.ATexto());
+	public static ProvinciaVmItem ToViewModel(this ProvinciaCodigo enumm) => new(Codigo: enumm, Nombre: enumm.ATexto());
 	public static ProvinciaVmItem ToViewModel(this ProvinciaArgentina2025 domain) => new(Codigo: domain.CodigoInternoValor, Nombre: domain.NombreValor);
 
 

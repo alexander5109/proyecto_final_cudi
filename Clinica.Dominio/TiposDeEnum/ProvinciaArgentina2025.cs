@@ -3,7 +3,7 @@ using Clinica.Dominio.IInterfaces;
 
 namespace Clinica.Dominio.TiposDeEnum;
 
-public enum ProvinciaCodigo2025 : byte {
+public enum ProvinciaCodigo : byte {
 	BuenosAires = 1,
 	CiudadAutonomaBuenosAires = 2,
 	Catamarca = 3,
@@ -31,58 +31,48 @@ public enum ProvinciaCodigo2025 : byte {
 }
 
 
-public static class ProvinciaExtentions {
-	public static string ATexto(this ProvinciaCodigo2025 codigo) {
-		Result<ProvinciaArgentina2025> resultado = ProvinciaArgentina2025.CrearResultPorCodigo(codigo);
-		if (resultado is Result<ProvinciaArgentina2025>.Ok ok)
-			return ok.Valor.NombreValor;
-		return "Código de provincia inválido";
-	}
 
-}
-
-
-public record struct ProvinciaArgentina2025(ProvinciaCodigo2025 CodigoInternoValor, string NombreValor) : IComoTexto {
+public record struct ProvinciaArgentina2025(ProvinciaCodigo CodigoInternoValor, string NombreValor) : IComoTexto {
 	public string ATexto() => NombreValor;
 	public static IReadOnlyList<ProvinciaArgentina2025> Todas() => [.. _nombresPorCodigo.Select(kvp => new ProvinciaArgentina2025(kvp.Key, kvp.Value))];
 
 	// Diccionario privado para lookup rápido
-	private static readonly IReadOnlyDictionary<ProvinciaCodigo2025, string> _nombresPorCodigo = new Dictionary<ProvinciaCodigo2025, string>
+	private static readonly IReadOnlyDictionary<ProvinciaCodigo, string> _nombresPorCodigo = new Dictionary<ProvinciaCodigo, string>
 	{
-		{ ProvinciaCodigo2025.BuenosAires, "Buenos Aires" },
-		{ ProvinciaCodigo2025.CiudadAutonomaBuenosAires, "Ciudad Autónoma de Buenos Aires" },
-		{ ProvinciaCodigo2025.Catamarca, "Catamarca" },
-		{ ProvinciaCodigo2025.Chaco, "Chaco" },
-		{ ProvinciaCodigo2025.Chubut, "Chubut" },
-		{ ProvinciaCodigo2025.Cordoba, "Córdoba" },
-		{ ProvinciaCodigo2025.Corrientes, "Corrientes" },
-		{ ProvinciaCodigo2025.EntreRios, "Entre Ríos" },
-		{ ProvinciaCodigo2025.Formosa, "Formosa" },
-		{ ProvinciaCodigo2025.Jujuy, "Jujuy" },
-		{ ProvinciaCodigo2025.LaPampa, "La Pampa" },
-		{ ProvinciaCodigo2025.LaRioja, "La Rioja" },
-		{ ProvinciaCodigo2025.Mendoza, "Mendoza" },
-		{ ProvinciaCodigo2025.Misiones, "Misiones" },
-		{ ProvinciaCodigo2025.Neuquen, "Neuquén" },
-		{ ProvinciaCodigo2025.RioNegro, "Río Negro" },
-		{ ProvinciaCodigo2025.Salta, "Salta" },
-		{ ProvinciaCodigo2025.SanJuan, "San Juan" },
-		{ ProvinciaCodigo2025.SanLuis, "San Luis" },
-		{ ProvinciaCodigo2025.SantaCruz, "Santa Cruz" },
-		{ ProvinciaCodigo2025.SantaFe, "Santa Fe" },
-		{ ProvinciaCodigo2025.SantiagoDelEstero, "Santiago del Estero" },
-		{ ProvinciaCodigo2025.TierraDelFuego, "Tierra del Fuego" },
-		{ ProvinciaCodigo2025.Tucuman, "Tucumán" }
+		{ ProvinciaCodigo.BuenosAires, "Buenos Aires" },
+		{ ProvinciaCodigo.CiudadAutonomaBuenosAires, "Ciudad Autónoma de Buenos Aires" },
+		{ ProvinciaCodigo.Catamarca, "Catamarca" },
+		{ ProvinciaCodigo.Chaco, "Chaco" },
+		{ ProvinciaCodigo.Chubut, "Chubut" },
+		{ ProvinciaCodigo.Cordoba, "Córdoba" },
+		{ ProvinciaCodigo.Corrientes, "Corrientes" },
+		{ ProvinciaCodigo.EntreRios, "Entre Ríos" },
+		{ ProvinciaCodigo.Formosa, "Formosa" },
+		{ ProvinciaCodigo.Jujuy, "Jujuy" },
+		{ ProvinciaCodigo.LaPampa, "La Pampa" },
+		{ ProvinciaCodigo.LaRioja, "La Rioja" },
+		{ ProvinciaCodigo.Mendoza, "Mendoza" },
+		{ ProvinciaCodigo.Misiones, "Misiones" },
+		{ ProvinciaCodigo.Neuquen, "Neuquén" },
+		{ ProvinciaCodigo.RioNegro, "Río Negro" },
+		{ ProvinciaCodigo.Salta, "Salta" },
+		{ ProvinciaCodigo.SanJuan, "San Juan" },
+		{ ProvinciaCodigo.SanLuis, "San Luis" },
+		{ ProvinciaCodigo.SantaCruz, "Santa Cruz" },
+		{ ProvinciaCodigo.SantaFe, "Santa Fe" },
+		{ ProvinciaCodigo.SantiagoDelEstero, "Santiago del Estero" },
+		{ ProvinciaCodigo.TierraDelFuego, "Tierra del Fuego" },
+		{ ProvinciaCodigo.Tucuman, "Tucumán" }
 	};
 
-	private static readonly IReadOnlyDictionary<string, ProvinciaCodigo2025> _codigoPorNombre =
+	private static readonly IReadOnlyDictionary<string, ProvinciaCodigo> _codigoPorNombre =
 		_nombresPorCodigo.ToDictionary(kvp => kvp.Value.ToLowerInvariant(), kvp => kvp.Key);
 
 	//public static IReadOnlyCollection<string> ProvinciasValidas => _nombresPorCodigo.Values;
 
 	// ---------------- FACTORY POR CÓDIGO ----------------
-	public static Result<ProvinciaArgentina2025> CrearResultPorCodigo(ProvinciaCodigo2025? codigoNulled) {
-		if (codigoNulled is not ProvinciaCodigo2025 codigo) {
+	public static Result<ProvinciaArgentina2025> CrearResultPorCodigo(ProvinciaCodigo? codigoNulled) {
+		if (codigoNulled is not ProvinciaCodigo codigo) {
 			return new Result<ProvinciaArgentina2025>.Error($"Código de provincia vacío");
 		}
 		if (_nombresPorCodigo.TryGetValue(codigo, out string? nombre))
@@ -95,10 +85,10 @@ public record struct ProvinciaArgentina2025(ProvinciaCodigo2025 CodigoInternoVal
 		if (codigo is not byte value)
 			return new Result<ProvinciaArgentina2025>.Error("Código de provincia missing.");
 
-		if (!Enum.IsDefined(typeof(ProvinciaCodigo2025), value))
+		if (!Enum.IsDefined(typeof(ProvinciaCodigo), value))
 			return new Result<ProvinciaArgentina2025>.Error($"Código de provincia inválido: {value}");
 
-		return CrearResultPorCodigo((ProvinciaCodigo2025)value);
+		return CrearResultPorCodigo((ProvinciaCodigo)value);
 	}
 
 	// ---------------- FACTORY POR NOMBRE ----------------
@@ -108,7 +98,7 @@ public record struct ProvinciaArgentina2025(ProvinciaCodigo2025 CodigoInternoVal
 			return new Result<ProvinciaArgentina2025>.Error("La provincia no puede estar vacía.");
 
 		string normalizado = input.Trim().ToLowerInvariant();
-		if (_codigoPorNombre.TryGetValue(normalizado, out ProvinciaCodigo2025 codigo))
+		if (_codigoPorNombre.TryGetValue(normalizado, out ProvinciaCodigo codigo))
 			return CrearResultPorCodigo(codigo);
 
 		return new Result<ProvinciaArgentina2025>.Error($"Provincia inválida: '{input}'.");

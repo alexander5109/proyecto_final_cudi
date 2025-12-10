@@ -1,4 +1,4 @@
-﻿using Clinica.Dominio.TiposDeEntidad;
+﻿using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.IRepositorios;
@@ -20,7 +20,7 @@ public class UsuariosController(
 	public Task<IActionResult> GetUsuarios()
 	=> this.SafeExecute(
 		logger,
-		PermisoSistema.VerUsuarios,
+		PermisosAccionesCodigo.VerUsuarios,
 		() => repositorio.SelectUsuarios()
 	);
 
@@ -30,7 +30,7 @@ public class UsuariosController(
 	public Task<IActionResult> GetUsuarioPorId(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisoSistema.VerUsuarios,
+			PermisosAccionesCodigo.VerUsuarios,
 			() => repositorio.SelectUsuarioWhereId(new UsuarioId(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
@@ -40,7 +40,7 @@ public class UsuariosController(
 	public Task<IActionResult> GetUsuarioProfileByUsername(string username)
 		=> this.SafeExecute(
 			logger,
-			PermisoSistema.VerUsuarios,
+			PermisosAccionesCodigo.VerUsuarios,
 			() => repositorio.SelectUsuarioProfileWhereUsername(new UserName(username)),
 			notFoundMessage: $"No existe usuario con nombre: {username}"
 		);
@@ -50,7 +50,7 @@ public class UsuariosController(
 	public Task<IActionResult> DeleteUsuario(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisoSistema.DeleteEntidades,
+			PermisosAccionesCodigo.DeleteEntidades,
 			() => repositorio.DeleteUsuarioWhereId(new UsuarioId(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
@@ -61,7 +61,7 @@ public class UsuariosController(
 	public Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisoSistema.UpdateEntidades,
+		PermisosAccionesCodigo.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
 		usuario => repositorio.UpdateUsuarioWhereId(new UsuarioId(id), usuario),
@@ -74,7 +74,7 @@ public class UsuariosController(
 	public Task<IActionResult> CrearUsuario([FromBody] UsuarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisoSistema.CrearUsuarios,
+		PermisosAccionesCodigo.CrearUsuarios,
 		dto,
 		x => x.ToDomain(),
 		usuario => repositorio.InsertUsuarioReturnId(usuario)

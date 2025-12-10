@@ -1,4 +1,4 @@
-using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
 using Clinica.Infrastructure.Repositorios;
@@ -25,7 +25,7 @@ public class TurnosController(
 	public Task<IActionResult> GetTurnos()
 	=> this.SafeExecute(
 		logger,
-		PermisoSistema.VerTurnos,
+		PermisosAccionesCodigo.VerTurnos,
 		() => repositorio.SelectTurnos()
 	);
 
@@ -36,7 +36,7 @@ public class TurnosController(
 	public Task<IActionResult> GetTurnoPorId(int id)
 	=> this.SafeExecute(
 		logger,
-		PermisoSistema.VerTurnos,
+		PermisosAccionesCodigo.VerTurnos,
 		() => repositorio.SelectTurnoWhereId(new TurnoId(id)),
 		notFoundMessage: $"No existe turno con id {id}"
 	);
@@ -45,7 +45,7 @@ public class TurnosController(
 	public Task<IActionResult> GetTurnosPorMedico([FromRoute] int id)
 		=> this.SafeExecute(
 			logger,
-			PermisoSistema.VerTurnos,
+			PermisosAccionesCodigo.VerTurnos,
 			() => repositorio.SelectTurnosWhereMedicoId(new MedicoId(id)),
 			notFoundMessage: $"No existen turnos con medicoid {id}"
 		);
@@ -54,7 +54,7 @@ public class TurnosController(
 	public Task<IActionResult> GetTurnosPorPaciente([FromRoute] int id)
 		=> this.SafeExecute(
 			logger,
-			PermisoSistema.VerTurnos,
+			PermisosAccionesCodigo.VerTurnos,
 			() => repositorio.SelectTurnosWherePacienteId(new PacienteId(id)),
 			notFoundMessage: $"No existen turnos con PacienteId {id}"
 		);
@@ -64,7 +64,7 @@ public class TurnosController(
 	public Task<IActionResult> DeleteTurno(int id)
 	=> this.SafeExecute(
 		logger,
-		PermisoSistema.DeleteEntidades,
+		PermisosAccionesCodigo.DeleteEntidades,
 		() => repositorio.DeleteTurnoWhereId(new TurnoId(id)),
 		notFoundMessage: $"No existe turno con id {id}"
 	);
@@ -75,7 +75,7 @@ public class TurnosController(
 	public Task<IActionResult> UpdateTurno(int id, [FromBody] TurnoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisoSistema.UpdateEntidades,
+		PermisosAccionesCodigo.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
 		turno => repositorio.UpdateTurnoWhereId(new TurnoId(id), turno),
@@ -88,7 +88,7 @@ public class TurnosController(
 	public Task<IActionResult> CrearTurno([FromBody] TurnoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisoSistema.CrearTurnos,
+		PermisosAccionesCodigo.CrearTurnos,
 		dto,
 		x => x.ToDomain(),
 		turno => repositorio.InsertTurnoReturnId(turno)

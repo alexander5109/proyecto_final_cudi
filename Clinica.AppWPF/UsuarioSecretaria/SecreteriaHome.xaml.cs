@@ -21,4 +21,5 @@ public partial class SecretariaHome : Window {
 
 	private void MetodoBotonGestionTurnos(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaGestionDeTurnos>();
 
+    private void MetodoBotonGestionPacientes(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaGestionDePacientes>();
 }

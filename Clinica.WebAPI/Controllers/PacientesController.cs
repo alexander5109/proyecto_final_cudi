@@ -1,4 +1,4 @@
-﻿using Clinica.Dominio.TiposDeEntidad;
+﻿using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
 using Clinica.Shared.ApiDtos;
@@ -22,7 +22,7 @@ public class PacientesController(
 	public Task<IActionResult> GetPacientes()
 	=> this.SafeExecute(
 		logger,
-		PermisoSistema.VerPacientes,
+		PermisosAccionesCodigo.VerPacientes,
 		() => repositorio.SelectPacientes()
 	);
 
@@ -32,7 +32,7 @@ public class PacientesController(
 	//public Task<IActionResult> GetPacientePorTurnoId(int id)
 	//	=> this.SafeExecute(
 	//		logger,
-	//		PermisoSistema.VerPacientes,
+	//		PermisosAccionesCodigo.VerPacientes,
 	//		() => repositorio.SelectPacienteWhereTurnoId(new TurnoId(id)),
 	//		notFoundMessage: $"No existe paciente con id {id}"
 	//	);
@@ -67,7 +67,7 @@ public class PacientesController(
 	public Task<IActionResult> GetPacientePorId(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisoSistema.VerPacientes,
+			PermisosAccionesCodigo.VerPacientes,
 			() => repositorio.SelectPacienteWhereId(new PacienteId(id)),
 			notFoundMessage: $"No existe paciente con id {id}"
 		);
@@ -79,7 +79,7 @@ public class PacientesController(
 	public Task<IActionResult> GetTurnosPorPaciente([FromRoute] int id)
 		=> this.SafeExecute(
 			logger,
-			PermisoSistema.VerTurnos,
+			PermisosAccionesCodigo.VerTurnos,
 			() => repositorio.SelectTurnosWherePacienteId(new PacienteId(id)),
 			notFoundMessage: $"No existen turnos con pacienteid {id}"
 		);
@@ -90,7 +90,7 @@ public class PacientesController(
 	public Task<IActionResult> DeletePaciente(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisoSistema.DeleteEntidades,
+			PermisosAccionesCodigo.DeleteEntidades,
 			() => repositorio.DeletePacienteWhereId(new PacienteId(id)),
 			notFoundMessage: $"No existe paciente con id {id}"
 		);
@@ -101,7 +101,7 @@ public class PacientesController(
 	public Task<IActionResult> UpdatePaciente(int id, [FromBody] PacienteDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisoSistema.UpdatePacientes,
+		PermisosAccionesCodigo.UpdatePacientes,
 		dto,
 		x => x.ToDomain(),
 		paciente => repositorio.UpdatePacienteWhereId(new PacienteId(id), paciente),
@@ -114,7 +114,7 @@ public class PacientesController(
 	public Task<IActionResult> CrearPaciente([FromBody] PacienteDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisoSistema.CrearPacientes,
+		PermisosAccionesCodigo.CrearPacientes,
 		dto,
 		x => x.ToDomain(),
 		paciente => repositorio.InsertPacienteReturnId(paciente)

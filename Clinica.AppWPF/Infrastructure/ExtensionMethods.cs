@@ -1,5 +1,6 @@
 using System.Windows;
 using Clinica.AppWPF.UsuarioSecretaria;
+using Clinica.Dominio.TiposDeEnum;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 
 namespace Clinica.AppWPF.Infrastructure;
@@ -43,16 +44,16 @@ public static class ExtensionMethods {
 		SoundsService.PlayClickSound();
 		UsuarioLoginResponseDto user = App.Api.UsuarioActual!;
 		switch (user.EnumRole) {
-			//case UsuarioEnumRole.Nivel1Superadmin:
+			//case UsuarioRoleCodigo.Nivel1Superadmin:
 			//	this.NavegarA<SuperaadminHome>();
 			//	break;
-			//case UsuarioEnumRole.Nivel2Administrativo:
+			//case UsuarioRoleCodigo.Nivel2Administrativo:
 			//	this.NavegarA<AdministrativoHome>();
 			//	break;
-			case UsuarioEnumRole.Nivel3Secretaria:
+			case UsuarioRoleCodigo.Nivel3Secretaria:
 				previousWindow.NavegarA<SecretariaHome>();
 				break;
-			//case UsuarioEnumRole.Nivel4Medico:
+			//case UsuarioRoleCodigo.Nivel4Medico:
 			//	this.NavegarA<MedicoHome>();
 			//	break;
 			default:
@@ -65,16 +66,16 @@ public static class ExtensionMethods {
 		SoundsService.PlayClickSound();
 		//UsuarioLoginResponseDto user = App.Api.UsuarioActual!;
 		switch (user.EnumRole) {
-			//case UsuarioEnumRole.Nivel1Superadmin:
+			//case UsuarioRoleCodigo.Nivel1Superadmin:
 			//	this.NavegarA<SuperaadminHome>();
 			//	break;
-			//case UsuarioEnumRole.Nivel2Administrativo:
+			//case UsuarioRoleCodigo.Nivel2Administrativo:
 			//	this.NavegarA<AdministrativoHome>();
 			//	break;
-			case UsuarioEnumRole.Nivel3Secretaria:
+			case UsuarioRoleCodigo.Nivel3Secretaria:
 				previousWindow.NavegarA<SecretariaHome>();
 				break;
-			//case UsuarioEnumRole.Nivel4Medico:
+			//case UsuarioRoleCodigo.Nivel4Medico:
 			//	this.NavegarA<MedicoHome>();
 			//	break;
 			default:

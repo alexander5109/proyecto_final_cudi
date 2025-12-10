@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.IRepositorios;
 using Microsoft.AspNetCore.Mvc;
@@ -14,29 +15,66 @@ namespace Clinica.WebAPI.Controllers;
 
 
 
-public class AuthMiddleware {
-	private readonly RequestDelegate _next;
+[ApiController]
+[Route("auth")]
+public class AuthController(
+	IRepositorioUsuarios repositorio,
+	JwtService jwtService
+) : ControllerBase {
 
-	public AuthMiddleware(RequestDelegate next)
-		=> _next = next;
+	[HttpPost("login")]
+	public async Task<IActionResult> Login([FromBody] UsuarioLoginRequestDto dto) {
 
-	public async Task Invoke(HttpContext context) {
-		ClaimsPrincipal user = context.User;
+        Result<UsuarioAutenticadoDto> result = await ServicioAuth.ValidarCredenciales(
+			dto.Username,
+			dto.UserPassword,
+			repositorio
+		);
 
-		if (user.Identity?.IsAuthenticated == true) {
-			context.Items["UsuarioId"] = int.Parse(user.FindFirst("userid")!.Value);
-			context.Items["UserName"] = user.FindFirst("username")!.Value;
-			context.Items["Role"] = user.FindFirst("role")!.Value;
-		}
 
-		await _next(context);
+		// MatchAndSet -> produce directamente un IActionResult
+		return result.MatchAndSet<UsuarioAutenticadoDto, IActionResult>(
+			ok => Ok(new UsuarioLoginResponseDto(
+				ok.UserName,
+				ok.EnumRole,
+				jwtService.EmitirJwt(ok) // ver punto 3 abajo
+			)),
+			err => Unauthorized(new { error = err })
+		);
 	}
 
 }
 
 
+
+
+public class AuthMiddleware(RequestDelegate next) {
+	private readonly RequestDelegate _next = next;
+
+    public async Task Invoke(HttpContext context) {
+		ClaimsPrincipal user = context.User;
+
+		if (user.Identity?.IsAuthenticated == true) {
+			int userId = int.Parse(user.FindFirst("userid")!.Value);
+			string username = user.FindFirst("username")!.Value;
+			string role = user.FindFirst("role")!.Value;
+
+			// solo info necesaria, no agregados completos
+			context.Items["Usuario"] = new {
+				Id = userId,
+				Username = username,
+				Role = role
+			};
+		}
+
+		await _next(context);
+	}
+}
+
+
+
 public class JwtService(string jwtKey) {
-	public string EmitirJwt(UsuarioAutenticado u) {
+	public string EmitirJwt(UsuarioAutenticadoDto u) {
 		JwtSecurityTokenHandler handler = new();
 
 		byte[] key = Encoding.ASCII.GetBytes(jwtKey);
@@ -67,35 +105,27 @@ public class JwtService(string jwtKey) {
 
 public static class ServicioAuth {
 
-	public static async Task<Result<UsuarioAutenticado>> ValidarCredenciales(
+	public static async Task<Result<UsuarioAutenticadoDto>> ValidarCredenciales(
 		string username,
 		string passwordRaw,
 		IRepositorioUsuarios repo
 	) {
-		// Paso 1: Buscar usuario en DB
-		Result<UsuarioDbModel> rDb =
-			await repo.SelectUsuarioProfileWhereUsername(new UserName(username));
+        Result<UsuarioDbModel> dbResult = await repo.SelectUsuarioProfileWhereUsername(new UserName(username));
 
-		// Paso 2: DBModel → Aggregate
-		Result<Usuario2025Agg> rAgg =
-			rDb.Bind(db => db.ToDomainAgg());
+		if (dbResult.IsError) { 
+			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDto>();
+		}
+		var db = dbResult.UnwrapAsOk();
+		// VALIDAR PASSWORD
+		if (!ContraseñaHasheada.RawIdenticalToHashed(passwordRaw, db.PasswordHash))
+			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDto>();
 
-		// Paso 3: Validar password
-		Result<Usuario2025Agg> rPassword =
-			rAgg.Bind(agg =>
-				agg.Usuario.PasswordHash.IgualA(passwordRaw)
-					? agg.ToOk()
-					: "Usuario o contraseña incorrectos.".ToError<Usuario2025Agg>()
-			);
-
-		// Paso 4: Convertir → UsuarioAutenticado
-		return rPassword.Map(agg =>
-			new UsuarioAutenticado(
-				agg.Id,
-				agg.Usuario.UserName.Valor,
-				agg.Usuario.EnumRole
-			)
-		);
+		// CONSTRUIR RESULTADO
+		return new UsuarioAutenticadoDto(
+			db.Id,
+			db.UserName,
+			db.EnumRole
+		).ToOk();
 	}
 }
 
@@ -103,31 +133,3 @@ public static class ServicioAuth {
 
 
 
-[ApiController]
-[Route("auth")]
-public class AuthController(
-	IRepositorioUsuarios repositorio,
-	JwtService jwtService
-) : ControllerBase {
-
-	[HttpPost("login")]
-	public async Task<IActionResult> Login([FromBody] UsuarioLoginRequestDto dto) {
-
-		Result<UsuarioAutenticado> result =
-			await ServicioAuth.ValidarCredenciales(
-				dto.Username,
-				dto.UserPassword,
-				repositorio
-			);
-
-		// MatchAndSet -> produce directamente un IActionResult
-		return result.MatchAndSet<UsuarioAutenticado, IActionResult>(
-			ok => Ok(new UsuarioLoginResponseDto(
-				ok.UserName,
-				ok.EnumRole,
-				jwtService.EmitirJwt(ok) // ver punto 3 abajo
-			)),
-			err => Unauthorized(new { error = err })
-		);
-	}
-}

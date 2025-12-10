@@ -59,7 +59,7 @@ public class ServiciosPublicosController(
 	public Task<IActionResult> ProgramarTurno([FromBody] ProgramarTurnoDto dto) {
 		return this.SafeExecuteApi(
 			logger,
-			PermisoSistema.GestionDeTurnos,
+			PermisosAccionesCodigo.GestionDeTurnos,
 			operation: async () => (
 				await servicios.PersistirProgramarTurnoAsync(
 					dto.PacienteId,
@@ -93,7 +93,7 @@ public class ServiciosPublicosController(
 	public Task<IActionResult> ReprogramarTurno([FromBody] ModificarTurnoDto dto) {
 		return this.SafeExecuteApi(
 			logger,
-			PermisoSistema.GestionDeTurnos,
+			PermisosAccionesCodigo.GestionDeTurnos,
 			operation: async () => (
 				await servicios.PersistirComoReprogramado(
 					dto.TurnoId,
@@ -111,7 +111,7 @@ public class ServiciosPublicosController(
 	public Task<IActionResult> ConcretarTurno([FromBody] ConcretarTurnoDto dto) {
 		return this.SafeExecuteApi(
 			logger,
-			PermisoSistema.GestionDeTurnos,
+			PermisosAccionesCodigo.GestionDeTurnos,
 			operation: async () => (
 				await servicios.PersistirComoConcretadoAsync(
 					dto.TurnoId,
@@ -128,7 +128,7 @@ public class ServiciosPublicosController(
 	public Task<IActionResult> ConcretarTurno([FromBody] ModificarTurnoDto dto) {
 		return this.SafeExecuteApi(
 			logger,
-			PermisoSistema.GestionDeTurnos,
+			PermisosAccionesCodigo.GestionDeTurnos,
 			operation: async () => (
 				await servicios.PersistirComoAusenteAsync(
 					dto.TurnoId,

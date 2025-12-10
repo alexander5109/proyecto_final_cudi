@@ -11,7 +11,7 @@ public sealed record Usuario2025(
 	UserName UserName,
 	NombreCompleto2025 NombreCompleto,
 	ContraseñaHasheada PasswordHash,
-	UsuarioEnumRole EnumRole,
+	UsuarioRoleCodigo EnumRole,
 	ContactoEmail2025 Email,
 	ContactoTelefono2025 Telefono
 ) : IComoTexto {
@@ -22,7 +22,7 @@ public sealed record Usuario2025(
 		Result<UserName> userNameResult,
 		Result<NombreCompleto2025> nombreCompletoResult,
 		Result<ContraseñaHasheada> passwordHashResult,
-		Result<UsuarioEnumRole> enumRoleResult,
+		Result<UsuarioRoleCodigo> enumRoleResult,
 		Result<ContactoEmail2025> telefonoResult,
 		Result<ContactoTelefono2025> emailResult
 	)
@@ -43,7 +43,4 @@ public sealed record Usuario2025(
 			)
 		)))))));
 
-
-
-	public bool PasswordMatch(string raw) => PasswordHash.IgualA(raw);
 }

@@ -29,9 +29,9 @@ public readonly record struct ContraseñaHasheada(string Valor) {
 		return new(Convert.ToHexString(hash));
 	}
 
-	public bool IgualA(string raw) {
+	static public bool RawIdenticalToHashed(string raw, string hashed) {
 		byte[] rawHash = SHA256.HashData(Encoding.UTF8.GetBytes(raw));
-		byte[] storedHash = Convert.FromHexString(Valor);
+		byte[] storedHash = Convert.FromHexString(hashed);
 		return CryptographicOperations.FixedTimeEquals(rawHash, storedHash);
 	}
 }

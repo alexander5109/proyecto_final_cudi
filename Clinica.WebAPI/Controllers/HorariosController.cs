@@ -1,4 +1,4 @@
-﻿using Clinica.Dominio.TiposDeEntidad;
+﻿using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
 using Clinica.WebAPI.Infrastructure;
@@ -19,7 +19,7 @@ public class HorariosController(
 	public Task<IActionResult> GetHorarios()
 	=> this.SafeExecute(
 		logger,
-		PermisoSistema.VerHorarios,
+		PermisosAccionesCodigo.VerHorarios,
 		() => repositorio.SelectHorarios()
 	);
 
@@ -29,7 +29,7 @@ public class HorariosController(
 	public Task<IActionResult> GetHorarioPorId(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisoSistema.VerHorarios,
+			PermisosAccionesCodigo.VerHorarios,
 			() => repositorio.SelectHorarioWhereId(new HorarioId(id)),
 			notFoundMessage: $"No existe horario con id {id}"
 		);
@@ -39,7 +39,7 @@ public class HorariosController(
 	public Task<IActionResult> DeleteHorario(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisoSistema.DeleteEntidades,
+			PermisosAccionesCodigo.DeleteEntidades,
 			() => repositorio.DeleteHorarioWhereId(new HorarioId(id)),
 			notFoundMessage: $"No existe horario con id {id}"
 		);
@@ -50,7 +50,7 @@ public class HorariosController(
 	public Task<IActionResult> UpdateHorario(int id, [FromBody] HorarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisoSistema.UpdateHorarios,
+		PermisosAccionesCodigo.UpdateHorarios,
 		dto,
 		x => x.ToDomain(),
 		horario => repositorio.UpdateHorarioWhereId(new HorarioId(id), horario),
@@ -63,7 +63,7 @@ public class HorariosController(
 	public Task<IActionResult> CrearHorario([FromBody] HorarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisoSistema.CrearHorarios,
+		PermisosAccionesCodigo.CrearHorarios,
 		dto,
 		x => x.ToDomain(),
 		horario => repositorio.InsertHorarioReturnId(horario)

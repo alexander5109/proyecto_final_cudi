@@ -11,19 +11,19 @@ public static class UsuarioAuthDtos {
 
 
 
-	public sealed record UsuarioAutenticado(
+	public sealed record UsuarioAutenticadoDto(
 		UsuarioId Id,
 		string UserName,
-		UsuarioEnumRole EnumRole
+		UsuarioRoleCodigo EnumRole
 	);
 
-	public record UsuarioLoginResponseDto(string Username, UsuarioEnumRole EnumRole, string Token);
+	public record UsuarioLoginResponseDto(string Username, UsuarioRoleCodigo EnumRole, string Token);
 	public record UsuarioSignUpDto(
 		string UserName,
 		string Nombre,
 		string Apellido,
 		string PasswordRaw,
-		UsuarioEnumRole EnumRole,
+		UsuarioRoleCodigo EnumRole,
 		string Email,
 		string Telefono
 	);
@@ -36,7 +36,7 @@ public static class UsuarioAuthDtos {
 		string Nombre,
 		string Apellido,
 		string PasswordHash,
-		UsuarioEnumRole EnumRole,
+		UsuarioRoleCodigo EnumRole,
 		string Email,
 		string Telefono
 	) {

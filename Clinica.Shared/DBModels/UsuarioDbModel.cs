@@ -15,7 +15,7 @@ public static partial class DbModels {
 		string Nombre,
 		string Apellido,
 		string PasswordHash,
-		UsuarioEnumRole EnumRole,
+		UsuarioRoleCodigo EnumRole,
 		string Email,
 		string Telefono
 	) {
