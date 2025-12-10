@@ -5,6 +5,10 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Dominio.Entidades;
 
 public record struct MedicoId(int Valor) {
+	public static Result<MedicoId> CrearResult(MedicoId? id) =>
+		(id is MedicoId idGood && idGood.Valor >= 0)
+		? new Result<MedicoId>.Ok(idGood)
+		: new Result<MedicoId>.Error("El id no puede ser nulo o negativo.");
 	public static Result<MedicoId> CrearResult(int? id) =>
 		id is int idGood
 		? new Result<MedicoId>.Ok(new MedicoId(idGood))
@@ -25,7 +29,20 @@ public record struct MedicoId(int Valor) {
 
 //public struct HaceGuardia(bool Valor);
 
-public record Medico2025Agg(MedicoId Id, Medico2025 Medico);
+public record Medico2025Agg(MedicoId Id, Medico2025 Medico) {
+	public static Medico2025Agg Crear(MedicoId id, Medico2025 medico) => new(id, medico);
+	public static Result<Medico2025Agg> CrearResult(
+		Result<MedicoId> idResult,
+		Result<Medico2025> medicoResult
+	)
+		=> from id in idResult
+		   from paciente in medicoResult
+		   select new Medico2025Agg(
+			   id,
+			   paciente
+		   );
+
+}
 
 public record Medico2025(
 	//ListaEspecialidadesMedicas2025 Especialidades,

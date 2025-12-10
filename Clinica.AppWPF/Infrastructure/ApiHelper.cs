@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
-using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.ApiDtos.AuthDtos;
 
 namespace Clinica.AppWPF.Infrastructure;
 

@@ -1,10 +1,10 @@
 ﻿using Clinica.Dominio.Entidades;
+using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
-using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.DbModels;
+using static Clinica.Shared.ApiDtos.PacienteDtos;
 
 namespace Clinica.WebAPI.Controllers;
 
@@ -53,7 +53,7 @@ public class PacientesController(
 	//);
 
 	//       IEnumerable<PacienteDbModel> vasdfr = (await repositorio.SelectPacientes()).UnwrapAsOk();
-	//       IEnumerable<Result<Paciente2025>> resulttt = vasdfr.Select(x => x.ToDomain());
+	//       IEnumerable<Result<Paciente2025>> resulttt = vasdfr.Select(x => x.ToDomainAgg());
 	//       IEnumerable<Paciente2025> resultt222t = resulttt.Select(x => x.UnwrapAsOk());
 	//	return Ok(resultt222t);
 
@@ -97,7 +97,7 @@ public class PacientesController(
 
 
 	[HttpPut("{id:int}")]
-	public Task<IActionResult> UpdatePaciente(int id, [FromBody] PacienteApiDto dto)
+	public Task<IActionResult> UpdatePaciente(int id, [FromBody] PacienteDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisoSistema.UpdatePacientes,
@@ -110,7 +110,7 @@ public class PacientesController(
 
 
 	[HttpPost]
-	public Task<IActionResult> CrearPaciente([FromBody] PacienteApiDto dto)
+	public Task<IActionResult> CrearPaciente([FromBody] PacienteDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisoSistema.CrearPacientes,

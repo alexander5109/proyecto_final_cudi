@@ -3,7 +3,6 @@ using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
-using static Clinica.Shared.Dtos.DbModels;
 namespace Clinica.WebAPI.Controllers;
 
 

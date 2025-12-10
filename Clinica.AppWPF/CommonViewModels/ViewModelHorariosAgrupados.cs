@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace Clinica.AppWPF.ViewModels;
+﻿namespace Clinica.AppWPF.ViewModels;
 
 //public partial class ViewModelHorariosAgrupados(DiaDeSemanaViewModel dia) : ObservableObject {
 //	public DiaDeSemanaViewModel DiaSemana { get; } = dia;

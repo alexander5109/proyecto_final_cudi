@@ -4,7 +4,7 @@
 # shortcuts 
 *.lnk
 *.appsettings.Development.json
-
+@*
 
 
 

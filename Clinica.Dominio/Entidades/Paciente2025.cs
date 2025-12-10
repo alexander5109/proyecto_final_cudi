@@ -31,6 +31,7 @@ public record Paciente2025Agg(
 	PacienteId Id,
 	Paciente2025 Paciente
 ) {
+	public static Paciente2025Agg Crear(PacienteId id, Paciente2025 paciente) => new(id, paciente);
 	public static Result<Paciente2025Agg> CrearResult(
 		Result<PacienteId> idResult,
 		Result<Paciente2025> pacienteResult

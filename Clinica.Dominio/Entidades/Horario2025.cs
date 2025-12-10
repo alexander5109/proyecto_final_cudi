@@ -31,23 +31,23 @@ public readonly record struct Horario2025(
    //HorarioId Id,
    MedicoId MedicoId,
    DayOfWeek DiaSemana,
-   HorarioHora2025 HoraDesde,
-   HorarioHora2025 HoraHasta,
+   TimeOnly HoraDesde,
+   TimeOnly HoraHasta,
    DateOnly VigenteDesde,
    DateOnly VigenteHasta
 ) : IComoTexto {
 	public string ATexto()
-		=> $"{DiaSemana.ATexto()}: {HoraDesde.ATexto()} — {HoraHasta.ATexto()} (vigencia {VigenteDesde.ATexto()} → {VigenteHasta.ATexto()}";
+		=> $"{DiaSemana.ATexto()}: {HoraDesde.ATextoHoras()} — {HoraHasta.ATextoHoras()} (vigencia {VigenteDesde.ATexto()} → {VigenteHasta.ATexto()}";
 
 	public static Result<Horario2025> CrearResult(
 		MedicoId medicoId,
 		DayOfWeek dia,
-		HorarioHora2025 desde,
-		HorarioHora2025 hasta,
+		TimeOnly desde,
+		TimeOnly hasta,
 		DateOnly vigenteDesde,
 		DateOnly vigenteHasta
 	) {
-		if (desde.Valor >= hasta.Valor)
+		if (desde >= hasta)
 			return new Result<Horario2025>.Error("La hora de inicio debe ser anterior a la hora de fin.");
 
 		if (vigenteDesde >= vigenteHasta)

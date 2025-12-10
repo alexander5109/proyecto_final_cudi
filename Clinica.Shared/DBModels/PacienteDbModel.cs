@@ -2,7 +2,7 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Shared.Dtos;
+namespace Clinica.Shared.DbModels;
 
 public static partial class DbModels {
 	public record PacienteDbModel(
@@ -21,78 +21,46 @@ public static partial class DbModels {
 		public PacienteDbModel()
 			: this(default, "", "", "", default, "", "", default, "", "", default) { }
 	}
-	public static Result<Paciente2025Agg> ToDomain(this PacienteDbModel pacientedto) {
+
+	public static PacienteDbModel ToModel(this Paciente2025Agg aggrg) {
+		return new PacienteDbModel(
+			Id: aggrg.Id,
+			Dni: aggrg.Paciente.Dni.Valor,
+			Nombre: aggrg.Paciente.NombreCompleto.NombreValor,
+			Apellido: aggrg.Paciente.NombreCompleto.ApellidoValor,
+			FechaIngreso: aggrg.Paciente.FechaIngreso,
+			Domicilio: aggrg.Paciente.Domicilio.DireccionValor,
+			Localidad: aggrg.Paciente.Domicilio.Localidad.NombreValor,
+			ProvinciaCodigo: aggrg.Paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
+			Telefono: aggrg.Paciente.Contacto.Telefono.Valor,
+			Email: aggrg.Paciente.Contacto.Email.Valor,
+			FechaNacimiento: aggrg.Paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MinValue)
+		);
+	}
+
+
+
+	public static Result<Paciente2025Agg> ToDomainAgg(this PacienteDbModel dbModel) {
 		return Paciente2025Agg.CrearResult(
-			PacienteId.CrearResult(pacientedto.Id.Valor),
+			PacienteId.CrearResult(dbModel.Id.Valor),
 			Paciente2025.CrearResult(
-				NombreCompleto2025.CrearResult(pacientedto.Nombre, pacientedto.Apellido),
-				DniArgentino2025.CrearResult(pacientedto.Dni),
+				NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
+				DniArgentino2025.CrearResult(dbModel.Dni),
 				Contacto2025.CrearResult(
-				ContactoEmail2025.CrearResult(pacientedto.Email),
-				ContactoTelefono2025.CrearResult(pacientedto.Telefono)),
+				ContactoEmail2025.CrearResult(dbModel.Email),
+				ContactoTelefono2025.CrearResult(dbModel.Telefono)),
 				DomicilioArgentino2025.CrearResult(
 				LocalidadDeProvincia2025.CrearResult(
-					pacientedto.Localidad,
+					dbModel.Localidad,
 					ProvinciaArgentina2025.CrearResultPorCodigo(
-						pacientedto.ProvinciaCodigo)
+						dbModel.ProvinciaCodigo)
 					)
-				, pacientedto.Domicilio),
-				FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
-				pacientedto.FechaIngreso
+				, dbModel.Domicilio),
+				FechaDeNacimiento2025.CrearResult(dbModel.FechaNacimiento),
+				dbModel.FechaIngreso
 			)
 		);
 	}
 
 
-	//public static Result<Paciente2025> ToDomain(this PacienteDbModel pacientedto) {
-	//	return Paciente2025.CrearResult(
-	//		//PacienteId.CrearResult(pacientedto.Id.Valor),
-	//		NombreCompleto2025.CrearResult(pacientedto.Nombre, pacientedto.Apellido),
-	//		DniArgentino2025.CrearResult(pacientedto.Dni),
-	//		Contacto2025.CrearResult(
-	//		ContactoEmail2025.CrearResult(pacientedto.Email),
-	//		ContactoTelefono2025.CrearResult(pacientedto.Telefono)),
-	//		DomicilioArgentino2025.CrearResult(
-	//		LocalidadDeProvincia2025.CrearResult(
-	//			pacientedto.Localidad,
-	//			ProvinciaArgentina2025.CrearResultPorCodigo(
-	//				pacientedto.ProvinciaCodigo)
-	//			)
-	//		, pacientedto.Domicilio),
-	//		FechaDeNacimiento2025.CrearResult(pacientedto.FechaNacimiento),
-	//		FechaRegistro2025.CrearResult(pacientedto.FechaIngreso)
-	//	);
-	//}
-
-	//public static PacienteDbModel ToModel(this Paciente2025Agg aggrg) {
-	//	return new PacienteDbModel (
-	//		Id : aggrg.Id,
-	//		Dni : aggrg.Paciente.Dni.Valor,
-	//		Nombre : aggrg.Paciente.NombreCompleto.NombreValor,
-	//		Apellido : aggrg.Paciente.NombreCompleto.ApellidoValor,
-	//		FechaIngreso : aggrg.Paciente.FechaIngreso.Valor,
-	//		Domicilio : aggrg.Paciente.Domicilio.DireccionValor,
-	//		Localidad : aggrg.Paciente.Domicilio.Localidad.NombreValor,
-	//		ProvinciaCodigo : aggrg.Paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
-	//		Telefono : aggrg.Paciente.Contacto.Telefono.Valor,
-	//		Email : aggrg.Paciente.Contacto.Email.Valor,
-	//		FechaNacimiento : aggrg.Paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MaxValue),
-	//	);
-	//}
-
-	public static PacienteDbModel ToModel(this Paciente2025 paciente, PacienteId id) {
-		return new PacienteDbModel(
-			Id : id,
-			Dni : paciente.Dni.Valor,
-			Nombre : paciente.NombreCompleto.NombreValor,
-			Apellido : paciente.NombreCompleto.ApellidoValor,
-			FechaIngreso : paciente.FechaIngreso,
-			Domicilio : paciente.Domicilio.DireccionValor,
-			Localidad : paciente.Domicilio.Localidad.NombreValor,
-			ProvinciaCodigo : paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
-			Telefono : paciente.Contacto.Telefono.Valor,
-			Email : paciente.Contacto.Email.Valor,
-			FechaNacimiento : paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MaxValue)
-		);
-	}
 }

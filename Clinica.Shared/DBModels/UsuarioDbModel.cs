@@ -1,7 +1,7 @@
 ﻿using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 
-namespace Clinica.Shared.Dtos;
+namespace Clinica.Shared.DbModels;
 
 public static partial class DbModels {
 	public record UsuarioDbModel(
@@ -10,11 +10,24 @@ public static partial class DbModels {
 		string PasswordHash,
 		UsuarioEnumRole EnumRole
 	) {
-		// Constructor sin parámetros requerido por Dapper / serializadores
 		public UsuarioDbModel() : this(default!, "", "", default) { }
 	}
-	public static Result<Usuario2025> ToDomain(this UsuarioDbModel usuario)
-		=> Usuario2025.CrearResult(usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole);
+
+	public static UsuarioDbModel ToModel(this Usuario2025 usuario, UsuarioId id) {
+		return new UsuarioDbModel(
+			id,
+			usuario.NombreUsuario.Valor,
+			usuario.PasswordHash.Valor,
+			usuario.EnumRole
+		);
+	}
+
+
+	public static Result<Usuario2025Agg> ToDomainAgg(this UsuarioDbModel usuario)
+		=> Usuario2025Agg.CrearResult(
+			UsuarioId.CrearResult(usuario.Id.Valor),
+			Usuario2025.CrearResult(usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole)
+		);
 	//public static Result<Usuario2025Agg> ToDomainAgg(this UsuarioDbModel usuario)
 	//	=> Usuario2025Agg.CrearResult(usuario.Id, Usuario2025.CrearResult(usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole));
 
@@ -26,13 +39,4 @@ public static partial class DbModels {
 	//		aggrg.Usuario.EnumRole
 	//	);
 	//}
-
-	public static UsuarioDbModel ToModel(this Usuario2025 usuario, UsuarioId id) {
-		return new UsuarioDbModel(
-			id,
-			usuario.NombreUsuario.Valor,
-			usuario.PasswordHash.Valor,
-			usuario.EnumRole
-		);
-	}
 }

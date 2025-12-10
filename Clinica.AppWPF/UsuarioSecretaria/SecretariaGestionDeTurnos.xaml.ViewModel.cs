@@ -2,7 +2,7 @@
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
-using static Clinica.Shared.Dtos.DbModels;
+using static Clinica.Shared.DbModels.DbModels;
 
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
@@ -16,8 +16,8 @@ public sealed class TurnoVM(TurnoDbModel model) {
 
 	public PacienteDbModel? PacienteRelacionado => RepoCache.DictPacientes.GetValueOrDefault(model.PacienteId);
 	public MedicoDbModel? MedicoRelacionado => RepoCache.DictMedicos.GetValueOrDefault(model.MedicoId);
-	public string MedicoDisplayear => PacienteRelacionado is null? "N/A": $"{PacienteRelacionado.Nombre} {PacienteRelacionado.Apellido}";
-	public string PacienteDisplayear => MedicoRelacionado is null ? "N/A" : $"{MedicoRelacionado.Nombre} {MedicoRelacionado.Apellido}";
+	public string PacienteDisplayear => PacienteRelacionado is null? "N/A": $"{PacienteRelacionado.Nombre} {PacienteRelacionado.Apellido} {PacienteRelacionado.Dni}";
+	public string MedicoDisplayear => MedicoRelacionado is null ? "N/A" : $"{MedicoRelacionado.Nombre} {MedicoRelacionado.Apellido} {MedicoRelacionado.Dni}";
 	public EspecialidadCodigo EspecialidadCodigo { get; } = model.EspecialidadCodigo;
     public string FechaSolicitud { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
     public string FechaAsignada { get; } = model.FechaHoraAsignadaDesde.ATextoDia();

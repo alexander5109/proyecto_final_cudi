@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Windows;
-using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.ApiDtos.AuthDtos;
 
 namespace Clinica.AppWPF.Infrastructure;
 

@@ -1,12 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.Net.Http.Json;
-using System.Windows;
+﻿using System.Net.Http.Json;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Shared.ApiDtos;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
-using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.ApiServiciosPublicos;
-using static Clinica.Shared.Dtos.DbModels;
+using static Clinica.Shared.ApiDtos.PacienteDtos;
+using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
+using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.Infrastructure;
 
@@ -121,8 +120,9 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		await EnsureMedicosLoaded();
 	}
 
+
 	public async Task RefreshPacientes() {
-		_medicosLoaded = false;
+		_pacientesLoaded = false;
 		await EnsurePacientesLoaded();
 	}
 
@@ -159,6 +159,20 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		_ = RefreshMedicos();
 		return result;
 	}
+	async Task<ResultWpf<UsuarioId>> IWPFRepositorioUsuarios.InsertUsuarioReturnId(Usuario2025 instance) {
+		ResultWpf<UsuarioId> result = await Api.TryApiCallAsync(
+			() => Api.Cliente.PostAsJsonAsync(
+				"api/medicos",
+				instance.ToDto()
+			),
+			onOk: async response => {
+				int id = await response.Content.ReadFromJsonAsync<int>();
+				return new UsuarioId(id);
+			},
+			errorTitle: "Error creando usuario"
+		);
+		return result;
+	}
 
 
 
@@ -167,7 +181,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
         ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PutAsJsonAsync(
 				$"api/pacientes/{aggrg.Id.Valor}",
-				aggrg.ToDto()
+				aggrg.ToModel()
 			),
 			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error actualizando el agregado {aggrg.Id.Valor}"
@@ -177,21 +191,6 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 		return result;
 	}
-	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereId(Medico2025Agg aggrg) {
-        ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
-			() => Api.Cliente.PutAsJsonAsync(
-				$"api/medicos/{aggrg.Id.Valor}",
-				aggrg.ToDto()
-			),
-			onOk: async response => UnitWpf.Valor,   // Se ignora el body, pero se respeta la firma
-			errorTitle: $"Error actualizando médico {aggrg.Id.Valor}"
-		);
-
-		_ = RefreshMedicos();
-
-		return result;
-	}
-
 
 
 
@@ -268,32 +267,71 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return await Api.TryGetJsonAsync<List<Disponibilidad2025>>(url, defaultValue: []);
 	}
 
-	Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad) {
-        throw new NotImplementedException();
-    }
 
-	async Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.CancelarTurno(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereId(Medico2025Agg aggrg) {
+		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
+			() => Api.Cliente.PutAsJsonAsync(
+				$"api/medicos/{aggrg.Id.Valor}",
+				aggrg.ToModel()
+			),
+			onOk: async response => UnitWpf.Valor,   // Se ignora el body, pero se respeta la firma
+			errorTitle: $"Error actualizando médico {aggrg.Id.Valor}"
+		);
+
+		_ = RefreshMedicos();
+
+		return result;
+	}
+
+
+
+	async Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.CancelarTurno(
 		TurnoId turnoId,
 		DateTime fechaOutcome,
 		string reason
 	) {
-		var dto = new ModificarTurnoDto(turnoId, fechaOutcome, reason);
 
-		return await Api.TryApiCallAsync(
-			() => Api.Cliente.PostAsJsonAsync("api/ServiciosPublicos/Turnos/Cancelar", dto),
-			onOk: async response => await response.Content.ReadFromJsonAsync<TurnoDto>(),
+		ResultWpf<TurnoDbModel> result = await Api.TryApiCallAsync<TurnoDbModel>(
+			httpCall: () => Api.Cliente.PutAsJsonAsync(
+				"api/ServiciosPublicos/Turnos/Cancelar",
+				new ModificarTurnoDto(turnoId, fechaOutcome, reason)
+			),
 			errorTitle: $"Error al cancelar el turno {turnoId.Valor}"
 		);
+
+
+		_ = RefreshMedicos();
+		return result;
 	}
-	Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+
+	Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad) {
+		throw new NotImplementedException();
+	}
+	Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason) {
         throw new NotImplementedException();
     }
 
-    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason) {
+    Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason) {
         throw new NotImplementedException();
     }
 
-    Task<ResultWpf<TurnoDto>> IWPFRepositorioTurnos.MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome, string? reason) {
+    Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome, string? reason) {
+        throw new NotImplementedException();
+    }
+
+    Task<ResultWpf<UnitWpf>> IWPFRepositorioUsuarios.DeleteUsuarioWhereId(UsuarioId id) {
+        throw new NotImplementedException();
+    }
+
+    Task<ResultWpf<UnitWpf>> IWPFRepositorioUsuarios.UpdateUsuarioWhereId(Usuario2025Agg instance) {
+        throw new NotImplementedException();
+    }
+
+    Task<List<UsuarioDbModel>> IWPFRepositorioUsuarios.SelectUsuarios() {
+        throw new NotImplementedException();
+    }
+
+    Task<UsuarioDbModel?> IWPFRepositorioUsuarios.SelectUsuarioWhereId(UsuarioId id) {
         throw new NotImplementedException();
     }
 }

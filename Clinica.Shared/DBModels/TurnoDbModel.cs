@@ -2,7 +2,7 @@
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
 
-namespace Clinica.Shared.Dtos;
+namespace Clinica.Shared.DbModels;
 
 public static partial class DbModels {
 	public record TurnoDbModel(

@@ -3,11 +3,12 @@ using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
-using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.ApiServiciosPublicos;
+using static Clinica.Shared.ApiDtos.PacienteDtos;
+using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
 namespace Clinica.WebAPI.Controllers;
 
 
@@ -65,9 +66,9 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 		);
 	}
 
-	[HttpPost("Turnos/Cancelar")]
-	public async Task<ActionResult<Turno2025Agg>> CancelarTurno([FromBody] ModificarTurnoDto dto) {
-		var result = await servicios.PersistirComoCanceladoAsync(
+	[HttpPut("Turnos/Cancelar")]
+	public async Task<ActionResult<TurnoDbModel>> CancelarTurno([FromBody] ModificarTurnoDto dto) {
+        Result<Turno2025Agg> result = await servicios.PersistirComoCanceladoAsync(
 			dto.TurnoId,
 			dto.FechaSolicitud,
 			dto.Comentario,
@@ -75,7 +76,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 		);
 
 		return result switch {
-			Result<Turno2025Agg>.Ok ok => Ok(ok.Valor),
+			Result<Turno2025Agg>.Ok ok => Ok(ok.Valor.ToModel()),
 			Result<Turno2025Agg>.Error err => Conflict(new { error = err.Mensaje }),
 			_ => StatusCode(500)
 		};
@@ -83,7 +84,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 
 
 
-	[HttpPost("Turnos/Reprogramar")]
+	[HttpPut("Turnos/Reprogramar")]
 	public Task<IActionResult> ReprogramarTurno([FromBody] ModificarTurnoDto dto) {
 		return this.SafeExecuteApi(
 			logger,
@@ -101,7 +102,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 
 
 
-	[HttpPost("Turnos/Concretar")]
+	[HttpPut("Turnos/Concretar")]
 	public Task<IActionResult> ConcretarTurno([FromBody] ConcretarTurnoDto dto) {
 		return this.SafeExecuteApi(
 			logger,
@@ -118,7 +119,7 @@ public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPub
 	}
 
 
-	[HttpPost("Turnos/ConcretarComoAusente")]
+	[HttpPut("Turnos/ConcretarComoAusente")]
 	public Task<IActionResult> ConcretarTurno([FromBody] ModificarTurnoDto dto) {
 		return this.SafeExecuteApi(
 			logger,

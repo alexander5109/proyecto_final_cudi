@@ -3,20 +3,15 @@
 public readonly struct Option<T> {
 	public bool HasValor { get; }
 	public T Valor { get; }
-
 	private Option(T value) {
 		HasValor = true;
 		Valor = value;
 	}
-
 	public static Option<T> None => new();    // Sin valor
 	public static Option<T> Some(T value) => new(value);
 }
 
 public static class OptionExtensions {
-	/// <summary>
-	/// Ejecuta una de dos funciones dependiendo si el Option tiene valor o no.
-	/// </summary>
 	public static TResult Match<T, TResult>(
 		this Option<T> option,
 		Func<T, TResult> some,

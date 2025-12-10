@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.Entidades;
-using static Clinica.Shared.Dtos.DbModels;
+using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 

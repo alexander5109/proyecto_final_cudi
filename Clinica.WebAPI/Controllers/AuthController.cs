@@ -3,7 +3,6 @@ using Clinica.Dominio.Entidades;
 using Clinica.Dominio.Servicios;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
-using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.WebAPI.Controllers;
 

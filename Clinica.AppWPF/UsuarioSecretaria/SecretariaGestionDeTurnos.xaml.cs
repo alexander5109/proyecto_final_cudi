@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.DbModels;
+using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
@@ -59,7 +58,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 
 		VM.IndicarAccionRequiereComentario(false);
 
-        ResultWpf<TurnoDto> result = await App.Repositorio.MarcarTurnoComoConcretado(
+        ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoConcretado(
 			turno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text
@@ -79,7 +78,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 
         //Aca no es obligatorio el comentario.
 
-        ResultWpf<TurnoDto> result = await App.Repositorio.MarcarTurnoComoAusente(
+        ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoAusente(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text
@@ -102,7 +101,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 			return;
 		}
 
-        ResultWpf<TurnoDto> result = await App.Repositorio.ReprogramarTurno(
+        ResultWpf<TurnoDbModel> result = await App.Repositorio.ReprogramarTurno(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text
@@ -125,7 +124,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 			return;
 		}
 
-        ResultWpf<TurnoDto> result = await App.Repositorio.CancelarTurno(
+        ResultWpf<TurnoDbModel> result = await App.Repositorio.CancelarTurno(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			comentarioTextBox.Text

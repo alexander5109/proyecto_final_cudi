@@ -3,12 +3,12 @@ using Clinica.Dominio.Comun;
 using Clinica.Dominio.Entidades;
 using Clinica.Dominio.IRepositorios;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Shared.ApiDtos;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using static Clinica.Dominio.IRepositorios.QueryModels;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
-using static Clinica.Shared.Dtos.ApiDtos;
-using static Clinica.Shared.Dtos.DbModels;
+using static Clinica.Shared.ApiDtos.PacienteDtos;
 
 namespace Clinica.Infrastructure.DataAccess;
 
@@ -519,7 +519,7 @@ public class RepositorioDapper(SQLServerConnectionFactory factory) : IRepositori
 						$"Turno con id {id} no encontrado."
 					);
 
-				// ToDomain() → Result<Turno2025>
+				// ToDomainAgg() → Result<Turno2025>
 				return dto.ToDomain().BindWithPrefix(
 					$"Error de dominio en turno {id}: ",
 					turnoOk => new Result<Turno2025Agg>.Ok(Turno2025Agg.Crear(id, turnoOk))
