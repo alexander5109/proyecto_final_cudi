@@ -45,6 +45,23 @@ public static partial class DbModels {
 			HorariosJson: JsonSerializer.Serialize(aggrg.Medico.ListaHorarios.ToString()) //Cualquier cosa estaba haciedno aca.
 		);
 	}
+	public static MedicoDbModel ToModel(this Medico2025 instance, MedicoId id) {
+		return new MedicoDbModel(
+			Id: id,
+			EspecialidadCodigo: instance.EspecialidadUnica.Codigo,
+			Dni: instance.Dni.Valor,
+			Nombre: instance.NombreCompleto.NombreValor,
+			Apellido: instance.NombreCompleto.ApellidoValor,
+			FechaIngreso: instance.FechaIngreso,
+			Domicilio: instance.Domicilio.DireccionValor,
+			Localidad: instance.Domicilio.Localidad.NombreValor,
+			ProvinciaCodigo: instance.Domicilio.Localidad.Provincia.CodigoInternoValor,
+			Telefono: instance.Telefono.Valor,
+			Email: instance.Email.Valor,
+			HaceGuardias: instance.HaceGuardiasValor,
+			HorariosJson: JsonSerializer.Serialize(instance.ListaHorarios.ToString()) //Cualquier cosa estaba haciedno aca.
+		);
+	}
 
 	public static Result<Medico2025Agg> ToDomainAgg(this MedicoDbModel dbModel) {
 		string json = string.IsNullOrWhiteSpace(dbModel.HorariosJson) ? "[]" : dbModel.HorariosJson;

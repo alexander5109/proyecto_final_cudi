@@ -34,6 +34,18 @@ public static partial class DbModels {
 			aggrg.Usuario.Telefono.Valor
 		);
 	}
+	public static UsuarioDbModel ToModel(this Usuario2025 instance, UsuarioId id) {
+		return new UsuarioDbModel(
+			id,
+			instance.UserName.Valor,
+			instance.NombreCompleto.NombreValor,
+			instance.NombreCompleto.ApellidoValor,
+			instance.PasswordHash.Valor,
+			instance.EnumRole,
+			instance.Email.Valor,
+			instance.Telefono.Valor
+		);
+	}
 
 	public static Result<Usuario2025Agg> ToDomainAgg(this UsuarioDbModel dbModel)
 		=> Usuario2025Agg.CrearResult(

@@ -21,15 +21,26 @@ public static partial class DbModels {
 
 
 	public static HorarioDbModel ToModel(this Horario2025Agg aggrg) {
-		return new HorarioDbModel {
-			Id = aggrg.Id,
-			MedicoId = aggrg.Horario.MedicoId,
-			DiaSemana = aggrg.Horario.DiaSemana,
-			HoraDesde = aggrg.Horario.HoraDesde.ToTimeSpan(),
-			HoraHasta = aggrg.Horario.HoraHasta.ToTimeSpan(),
-			VigenteDesde = aggrg.Horario.VigenteDesde.ToDateTime(TimeOnly.MaxValue),
-			VigenteHasta = aggrg.Horario.VigenteHasta.ToDateTime(TimeOnly.MaxValue)
-		};
+		return new HorarioDbModel(
+			Id: aggrg.Id,
+			MedicoId: aggrg.Horario.MedicoId,
+			DiaSemana: aggrg.Horario.DiaSemana,
+			HoraDesde: aggrg.Horario.HoraDesde.ToTimeSpan(),
+			HoraHasta: aggrg.Horario.HoraHasta.ToTimeSpan(),
+			VigenteDesde: aggrg.Horario.VigenteDesde.ToDateTime(TimeOnly.MaxValue),
+			VigenteHasta: aggrg.Horario.VigenteHasta.ToDateTime(TimeOnly.MaxValue)
+		);
+	}
+	public static HorarioDbModel ToModel(this Horario2025 instance, HorarioId id) {
+		return new HorarioDbModel(
+			Id: id,
+			MedicoId: instance.MedicoId,
+			DiaSemana: instance.DiaSemana,
+			HoraDesde: instance.HoraDesde.ToTimeSpan(),
+			HoraHasta: instance.HoraHasta.ToTimeSpan(),
+			VigenteDesde: instance.VigenteDesde.ToDateTime(TimeOnly.MaxValue),
+			VigenteHasta: instance.VigenteHasta.ToDateTime(TimeOnly.MaxValue)
+		);
 	}
 
 	public static Result<Horario2025Agg> ToDomainAgg(this HorarioDbModel dbModel) {

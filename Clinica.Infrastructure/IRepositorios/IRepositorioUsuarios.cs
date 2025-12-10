@@ -12,6 +12,6 @@ public interface IRepositorioUsuarios {
 	Task<Result<UsuarioId>> InsertUsuarioReturnId(Usuario2025 instance);
 	Task<Result<IEnumerable<UsuarioDbModel>>> SelectUsuarios();
 	Task<Result<UsuarioDbModel?>> SelectUsuarioWhereId(UsuarioId id);
-	Task<Result<UsuarioDto>> UpdateUsuarioWhereId(UsuarioId id, Usuario2025 instance);
 	Task<Result<UsuarioDbModel>> SelectUsuarioProfileWhereUsername(UserName username);
+	Task<Result<UsuarioDbModel>> UpdateUsuarioWhereId(UsuarioId id, Usuario2025 instance);
 }

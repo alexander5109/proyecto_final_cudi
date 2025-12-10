@@ -47,13 +47,13 @@ public class RepositorioPacientes(SQLServerConnectionFactory factory) : Reposito
 
 
 
-	Task<Result<PacienteDto>> IRepositorioPacientes.UpdatePacienteWhereId(
+	Task<Result<PacienteDbModel>> IRepositorioPacientes.UpdatePacienteWhereId(
 		PacienteId id,
 		Paciente2025 instance
 	)
-		=> TryAsync<PacienteDto>(async conn => {
+		=> TryAsync<PacienteDbModel>(async conn => {
 			// 1) Convertimos a DTO una sola vez
-			PacienteDto dto = instance.ToDto();
+			PacienteDbModel dto = instance.ToModel(id);
 
 			// 2) Ejecutamos el SP y obtenemos @@ROWCOUNT
 			int rowsAffected = await conn.ExecuteScalarAsync<int>(

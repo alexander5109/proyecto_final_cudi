@@ -11,5 +11,5 @@ public interface IRepositorioHorarios {
 	Task<Result<HorarioId>> InsertHorarioReturnId(Horario2025 instance);
 	Task<Result<IEnumerable<HorarioDbModel>>> SelectHorarios();
 	Task<Result<HorarioDbModel?>> SelectHorarioWhereId(HorarioId id);
-	Task<Result<HorarioDto>> UpdateHorarioWhereId(HorarioId id, Horario2025 instance);
+	Task<Result<HorarioDbModel>> UpdateHorarioWhereId(HorarioId id, Horario2025 instance);
 }

@@ -13,5 +13,5 @@ public interface IRepositorioPacientes {
 	Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWherePacienteId(PacienteId id);
 	Task<Result<PacienteDbModel?>> SelectPacienteWhereId(PacienteId id);
 	//Task<Result<PacienteDbModel?>> SelectPacienteWhereTurnoId(TurnoId id);
-	Task<Result<PacienteDto>> UpdatePacienteWhereId(PacienteId id, Paciente2025 instance);
+	Task<Result<PacienteDbModel>> UpdatePacienteWhereId(PacienteId id, Paciente2025 instance);
 }

@@ -40,6 +40,21 @@ public static partial class DbModels {
 			FechaNacimiento: aggrg.Paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MinValue)
 		);
 	}
+	public static PacienteDbModel ToModel(this Paciente2025 instance, PacienteId id) {
+		return new PacienteDbModel(
+			Id: id,
+			Dni: instance.Dni.Valor,
+			Nombre: instance.NombreCompleto.NombreValor,
+			Apellido: instance.NombreCompleto.ApellidoValor,
+			FechaIngreso: instance.FechaIngreso,
+			Domicilio: instance.Domicilio.DireccionValor,
+			Localidad: instance.Domicilio.Localidad.NombreValor,
+			ProvinciaCodigo: instance.Domicilio.Localidad.Provincia.CodigoInternoValor,
+			Telefono: instance.Contacto.Telefono.Valor,
+			Email: instance.Contacto.Email.Valor,
+			FechaNacimiento: instance.FechaNacimiento.Valor.ToDateTime(TimeOnly.MinValue)
+		);
+	}
 
 
 

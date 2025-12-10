@@ -38,6 +38,20 @@ public static partial class DbModels {
 			aggrg.Turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
 		);
 	}
+	public static TurnoDbModel ToModel(this Turno2025 instance, TurnoId id) {
+		return new TurnoDbModel(
+			id,
+			instance.FechaDeCreacion,
+			instance.PacienteId,
+			instance.MedicoId,
+			instance.Especialidad.Codigo,
+			instance.FechaHoraAsignadaDesdeValor,
+			instance.FechaHoraAsignadaHastaValor,
+			instance.OutcomeEstado,
+			instance.OutcomeFechaOption.Match(d => d, () => (DateTime?)null),
+			instance.OutcomeComentarioOption.Match(s => s, () => (string?)null)
+		);
+	}
 	public static Result<Turno2025Agg> ToDomainAgg(this TurnoDbModel dbModel) {
 		return Turno2025Agg.CrearResult(
 			TurnoId.CrearResult(dbModel.Id),

@@ -50,10 +50,10 @@ public class RepositorioHorarios(SQLServerConnectionFactory factory) : Repositor
 		});
 
 
-	Task<Result<HorarioDto>> IRepositorioHorarios.UpdateHorarioWhereId(HorarioId id, Horario2025 instance)
-		=> TryAsync<HorarioDto>(async conn => {
+	Task<Result<HorarioDbModel>> IRepositorioHorarios.UpdateHorarioWhereId(HorarioId id, Horario2025 instance)
+		=> TryAsync<HorarioDbModel>(async conn => {
 			// 1) Convertimos a DTO una sola vez
-			HorarioDto dto = instance.ToDto();
+			HorarioDbModel dto = instance.ToModel(id);
 
 			// 2) Ejecutamos el SP y obtenemos @@ROWCOUNT
 			int rowsAffected = await conn.ExecuteScalarAsync<int>(
