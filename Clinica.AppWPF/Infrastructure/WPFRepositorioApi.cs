@@ -2,6 +2,7 @@
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Shared.ApiDtos;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;

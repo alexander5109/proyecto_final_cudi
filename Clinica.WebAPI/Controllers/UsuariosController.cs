@@ -1,6 +1,7 @@
 ﻿using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Infrastructure.IRepositorios;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,7 @@ public class UsuariosController(
 		);
 
 
-	[HttpGet("{id:string}")]
+	[HttpGet("por-nombre/{username}")]
 	public Task<IActionResult> GetUsuarioProfileByUsername(string username)
 		=> this.SafeExecute(
 			logger,

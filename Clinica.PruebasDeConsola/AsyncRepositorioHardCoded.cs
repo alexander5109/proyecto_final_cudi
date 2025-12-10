@@ -2,6 +2,7 @@
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.PruebasDeConsola;
@@ -10,7 +11,7 @@ public static class AsyncRepositorioHardCoded {
 	public static Task<List<Medico2025>> GetMedicos()
 		=> Task.FromResult(new List<Medico2025> {
 		Medico2025.CrearResult(
-				MedicoId.CrearResult(1),
+				//MedicoId.CrearResult(1),
 				NombreCompleto2025.CrearResult("Carlos Alfredo", "Markier"),
 				Especialidad2025.CrearResult(Especialidad2025.Gastroenterologo.Codigo),
 				//ListaEspecialidadesMedicas2025.CrearResult([
@@ -28,19 +29,19 @@ public static class AsyncRepositorioHardCoded {
 				ContactoTelefono2025.CrearResult("1133832021"),
 				ContactoEmail2025.CrearResult("carlosmerkeir@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
-					Horario2025.CrearResult(
+					Horario2025.Crear(
 						new MedicoId(2341456),
 						DayOfWeek.Monday,
-						new HorarioHora2025(TimeOnly.Parse("09:00")),
-						new HorarioHora2025(TimeOnly.Parse("15:00")),
+						new TimeOnly(09,00),
+						new TimeOnly(15,00),
 						new DateOnly(2024, 1, 1),
 						new DateOnly(2026, 1, 1)
 					),
-					Horario2025.CrearResult(
+					Horario2025.Crear(
 						new MedicoId(2311056),
 						DayOfWeek.Wednesday,
-						new HorarioHora2025(TimeOnly.Parse("09:00")),
-						new HorarioHora2025(TimeOnly.Parse("15:00")),
+						new TimeOnly(09,00),
+						new TimeOnly(15,00),
 						new DateOnly(2024, 1, 1),
 						new DateOnly(2026, 1, 1)
 					)
@@ -53,7 +54,7 @@ public static class AsyncRepositorioHardCoded {
 			,
 
 			Medico2025.CrearResult(
-				MedicoId.CrearResult(2),
+				//MedicoId.CrearResult(2),
 				NombreCompleto2025.CrearResult("Jorge", "Pereyra"),
 				Especialidad2025.CrearResult(Especialidad2025.Ginecologo.Codigo),
 				//ListaEspecialidadesMedicas2025.CrearResult([
@@ -71,19 +72,19 @@ public static class AsyncRepositorioHardCoded {
 				ContactoTelefono2025.CrearResult("1163632071"),
 				ContactoEmail2025.CrearResult("jorgepereiyra@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
-					Horario2025.CrearResult(
+					Horario2025.Crear(
 						new MedicoId(231156),
 						DayOfWeek.Tuesday,
-						new HorarioHora2025(new TimeOnly(08, 0)),
-						new HorarioHora2025(new TimeOnly(18, 00)),
+						new TimeOnly(08, 0),
+						new TimeOnly(18, 00),
 						new DateOnly(2024, 1, 12),
 						new DateOnly(2026, 1, 12)
 					),
-					Horario2025.CrearResult(
+					Horario2025.Crear(
 						new MedicoId(23156),
 						DayOfWeek.Thursday,
-						new HorarioHora2025(new TimeOnly(08,00)),
-						new HorarioHora2025(new TimeOnly(18,0)),
+						new TimeOnly(08,00),
+						new TimeOnly(18,0),
 						new DateOnly(2024, 1, 12),
 						new DateOnly(2026, 1, 12)
 					)
@@ -96,7 +97,6 @@ public static class AsyncRepositorioHardCoded {
 			,
 
 			Medico2025.CrearResult(
-				MedicoId.CrearResult(3),
 				NombreCompleto2025.CrearResult("Marta", "Algerich"),
 				Especialidad2025.CrearResult(Especialidad2025.Neurologo.Codigo),
 				//ListaEspecialidadesMedicas2025.CrearResult([
@@ -114,27 +114,27 @@ public static class AsyncRepositorioHardCoded {
 				ContactoTelefono2025.CrearResult("1149920537"),
 				ContactoEmail2025.CrearResult("martaalgerich@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
-					Horario2025.CrearResult(
+					Horario2025.Crear(
 						new MedicoId(156),
 						DayOfWeek.Monday,
-						new HorarioHora2025(TimeOnly.Parse("08:00")),
-						new HorarioHora2025(TimeOnly.Parse("12:00")),
+						new TimeOnly(08,00),
+						new TimeOnly(12,00),
 						new DateOnly(2022, 1, 12),
 						new DateOnly(2024, 1, 12)
 					),
-					Horario2025.CrearResult(
+					Horario2025.Crear(
 						new MedicoId(1256),
 						DayOfWeek.Wednesday,
-						new HorarioHora2025(TimeOnly.Parse("08:00")),
-						new HorarioHora2025(TimeOnly.Parse("12:00")),
+						new TimeOnly(08,00),
+						new TimeOnly(12,00),
 						new DateOnly(2022, 1, 12),
 						new DateOnly(2024, 1, 12)
 					),
-					Horario2025.CrearResult(
+					Horario2025.Crear(
 						new MedicoId(12756),
 						DayOfWeek.Friday,
-						new HorarioHora2025(TimeOnly.Parse("08:00")),
-						new HorarioHora2025(TimeOnly.Parse("12:00")),
+						new TimeOnly(08,00),
+						new TimeOnly(12,00),
 						new DateOnly(2022, 1, 12),
 						new DateOnly(2024, 1, 12)
 					)

@@ -1,11 +1,13 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEntidad;
-using Dapper;
-using static Clinica.Shared.DbModels.DbModels;
-using static Clinica.Shared.ApiDtos.MedicoDtos;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Infrastructure.IRepositorios;
+using Dapper;
+using static Clinica.Shared.ApiDtos.MedicoDtos;
+using static Clinica.Shared.ApiDtos.PacienteDtos;
+using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.Infrastructure.Repositorios;
 
@@ -32,13 +34,27 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 
 
 
-	Task<Result<Unit>> IRepositorioMedicos.UpdateMedicoWhereId(MedicoId id, Medico2025 instance)
-		=> TryAsyncVoid(async conn => {
-			await conn.ExecuteAsync(
-				"sp_UpdateMedico",
-				instance.ToDto(),
+	Task<Result<MedicoDto>> IRepositorioMedicos.UpdateMedicoWhereId(
+		MedicoId id, 
+		Medico2025 instance
+	)
+		=> TryAsync<MedicoDto>(async conn => {
+			// 1) Convertimos a DTO una sola vez
+			MedicoDto dto = instance.ToDto();
+
+			// 2) Ejecutamos el SP y obtenemos @@ROWCOUNT
+			int rowsAffected = await conn.ExecuteScalarAsync<int>(
+				"sp_UpdatePacienteWhereId",
+				dto,
 				commandType: CommandType.StoredProcedure
 			);
+
+			// 3) Si no se actualizó nada → error lógico
+			if (rowsAffected == 0)
+				throw new Exception($"No se actualizó ningún médico con Id={id.Valor}");
+
+			// 4) Devolvemos el dto actualizado
+			return dto;
 		});
 
 

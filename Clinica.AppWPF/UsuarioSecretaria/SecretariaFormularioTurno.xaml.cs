@@ -1,5 +1,6 @@
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 

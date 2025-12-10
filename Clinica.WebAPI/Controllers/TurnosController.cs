@@ -1,5 +1,7 @@
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Infrastructure.IRepositorios;
+using Clinica.Infrastructure.Repositorios;
 using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
@@ -39,6 +41,23 @@ public class TurnosController(
 		notFoundMessage: $"No existe turno con id {id}"
 	);
 
+	[HttpGet("medico/{id}")]
+	public Task<IActionResult> GetTurnosPorMedico([FromRoute] int id)
+		=> this.SafeExecute(
+			logger,
+			PermisoSistema.VerTurnos,
+			() => repositorio.SelectTurnosWhereMedicoId(new MedicoId(id)),
+			notFoundMessage: $"No existen turnos con medicoid {id}"
+		);
+
+	[HttpGet("paciente/{id}")]
+	public Task<IActionResult> GetTurnosPorPaciente([FromRoute] int id)
+		=> this.SafeExecute(
+			logger,
+			PermisoSistema.VerTurnos,
+			() => repositorio.SelectTurnosWherePacienteId(new PacienteId(id)),
+			notFoundMessage: $"No existen turnos con PacienteId {id}"
+		);
 
 
 	[HttpDelete("{id:int}")]
@@ -74,15 +93,6 @@ public class TurnosController(
 		x => x.ToDomain(),
 		turno => repositorio.InsertTurnoReturnId(turno)
 	);
-
-	//[HttpGet]
-	//public Task<IActionResult> GetTurnosWithPacienteMedicoNames()
-	//=> this.SafeExecute(
-	//	logger,
-	//	PermisoSistema.VerTurnos,
-	//	x => x.ToDto(),
-	//	() => repositorio.SelectTurnos()
-	//);
 
 
 

@@ -42,7 +42,7 @@ public static class MainProgram {
 			.Build();
 
 		//RepositorioDapper repositorio = new(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
-		RepositorioHorarios repositorio = new RepositorioDapper(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
+		IRepositorioDominioServices repositorio = new RepositorioDominioServices(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
 
 		//var response = await http.GetAsync($"/disponibilidades?EspecialidadCodigo=3&cuantos=10");
 

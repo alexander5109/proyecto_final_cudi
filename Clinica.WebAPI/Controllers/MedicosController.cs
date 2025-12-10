@@ -1,6 +1,7 @@
 ﻿using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Infrastructure.IRepositorios;
 using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
@@ -15,8 +16,7 @@ namespace Clinica.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class MedicosController(
-	IRepositorioTurnos repositorioTurnos,
-	IRepositorioMedicos repositorioMedicos,
+	IRepositorioMedicos repositorio,
 	ILogger<AuthController> logger
 ) : ControllerBase {
 
@@ -24,7 +24,7 @@ public class MedicosController(
 	public Task<IActionResult> GetMedicos() => this.SafeExecute(
 		logger,
 		PermisoSistema.VerMedicos,
-		() => repositorioMedicos.SelectMedicos()
+		() => repositorio.SelectMedicos()
 	);
 
 
@@ -33,7 +33,7 @@ public class MedicosController(
 		=> this.SafeExecute(
 			logger,
 			PermisoSistema.VerMedicos,
-			() => repositorioMedicos.SelectMedicosWhereEspecialidadCodigo(code)
+			() => repositorio.SelectMedicosWhereEspecialidadCodigo(code)
 		);
 
 
@@ -43,7 +43,7 @@ public class MedicosController(
 		=> this.SafeExecute(
 			logger,
 			PermisoSistema.VerMedicos,
-			() => repositorioMedicos.SelectMedicoWhereId(new MedicoId(id)),
+			() => repositorio.SelectMedicoWhereId(new MedicoId(id)),
 			notFoundMessage: $"No existe medico con id {id}"
 		);
 
@@ -53,7 +53,7 @@ public class MedicosController(
 		=> this.SafeExecute(
 			logger,
 			PermisoSistema.VerTurnos,
-			() => repositorioMedicos.SelectTurnosWhereMedicoId(new MedicoId(id)),
+			() => repositorio.SelectTurnosWhereMedicoId(new MedicoId(id)),
 			notFoundMessage: $"No existen turnos con medicoid {id}"
 		);
 
@@ -64,7 +64,7 @@ public class MedicosController(
 		=> this.SafeExecute(
 			logger,
 			PermisoSistema.DeleteEntidades,
-			() => repositorioMedicos.DeleteMedicoWhereId(new MedicoId(id)),
+			() => repositorio.DeleteMedicoWhereId(new MedicoId(id)),
 			notFoundMessage: $"No existe medico con id {id}"
 		);
 
@@ -77,7 +77,7 @@ public class MedicosController(
 		PermisoSistema.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
-		medico => repositorioMedicos.UpdateMedicoWhereId(new MedicoId(id), medico),
+		medico => repositorio.UpdateMedicoWhereId(new MedicoId(id), medico),
 		notFoundMessage: $"No existe medico con id {id}"
 	);
 
@@ -90,7 +90,7 @@ public class MedicosController(
 		PermisoSistema.CrearMedicos,
 		dto,
 		x => x.ToDomain(),
-		medico => repositorioMedicos.InsertMedicoReturnId(medico)
+		medico => repositorio.InsertMedicoReturnId(medico)
 	);
 
 

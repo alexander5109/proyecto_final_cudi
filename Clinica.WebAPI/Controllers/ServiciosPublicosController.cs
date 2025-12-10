@@ -18,7 +18,11 @@ namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ServiciosPublicosController(IRepositorioDominioServices repositorio, IServiciosDeDominio servicios, ILogger<ServiciosPublicosController> logger) : ControllerBase {
+public class ServiciosPublicosController(
+	IRepositorioDominioServices repositorio, 
+	IServiciosDeDominio servicios, 
+	ILogger<ServiciosPublicosController> logger
+) : ControllerBase {
 
 	[HttpGet("Turnos/Disponibilidades")]
 	public async Task<IActionResult> VerDisponibilidades(

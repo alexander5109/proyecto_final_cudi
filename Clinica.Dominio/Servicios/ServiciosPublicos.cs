@@ -76,7 +76,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 			caseOk: turnoOriginal => turnoOriginal.MarcarComoAusente(outcomeFecha, outcomeComentario),
 			prefixError: "Error de dominio: ")
 		.BindWithPrefixAsync(
-			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),
+			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereIdAndReturnAsDomain(turnoOriginalId, turnoModificado),
 			prefixError: "Error de escritura en Db: ")
 		;
 	}
@@ -93,7 +93,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 			caseOk: turnoOriginal => turnoOriginal.MarcarComoConcretado(outcomeFecha, outcomeComentario),
 			prefixError: "Error de dominio: ")
 		.BindWithPrefixAsync(
-			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),
+			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereIdAndReturnAsDomain(turnoOriginalId, turnoModificado),
 			prefixError: "Error de escritura en Db: ")
 		;
 	}
@@ -111,7 +111,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 			caseOk: turnoOriginal => turnoOriginal.MarcarComoCancelado(outcomeFecha, outcomeComentario),
 			prefixError: "Error de dominio: ")
 		.BindWithPrefixAsync(
-			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),
+			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereIdAndReturnAsDomain(turnoOriginalId, turnoModificado),
 			prefixError: "Error de escritura en Db: ")
 		;
 	}
@@ -129,7 +129,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 			caseOk: turnoOriginal => turnoOriginal.MarcarComoReprogramado(outcomeFecha, outcomeComentario),
 			prefixError: "Error de dominio: ")
 		.BindWithPrefixAsync(
-			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereId(turnoOriginalId, turnoModificado),
+			caseOk: async turnoModificado => await repositorio.UpdateTurnoWhereIdAndReturnAsDomain(turnoOriginalId, turnoModificado),
 			prefixError: "Error de escritura en Db: ")
 		;
 	}

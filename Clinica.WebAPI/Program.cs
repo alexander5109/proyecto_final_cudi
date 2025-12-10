@@ -1,7 +1,9 @@
 ﻿using System.Text;
 using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.Servicios;
+using Clinica.Infrastructure.IRepositorios;
 using Clinica.Infrastructure.Repositorios;
+using Clinica.WebAPI.Controllers;
 using Microsoft.IdentityModel.Tokens;
 
 
@@ -12,8 +14,6 @@ builder.Services.AddControllers();
 
 
 //builder.Services.AddOpenApi();
-
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -24,15 +24,21 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	)
 );
 
-// Registrar cada interfaz como alias de la instancia principal
-builder.Services.AddSingleton<IRepositorioPacientes>(sp => sp.GetRequiredService<RepositorioPacientes>());
-builder.Services.AddSingleton<IRepositorioTurnos>(sp => sp.GetRequiredService<RepositorioTurnos>());
-builder.Services.AddSingleton<IRepositorioUsuarios>(sp => sp.GetRequiredService<RepositorioUsuarios>());
-builder.Services.AddSingleton<IRepositorioDominioServices>(sp => sp.GetRequiredService<RepositorioDominioServices>());
-builder.Services.AddSingleton<IRepositorioHorarios>(sp => sp.GetRequiredService<RepositorioHorarios>());
+// Primero registrás las implementaciones
+builder.Services.AddSingleton<RepositorioPacientes>();
+builder.Services.AddSingleton<RepositorioTurnos>();
+builder.Services.AddSingleton<RepositorioUsuarios>();
+builder.Services.AddSingleton<RepositorioDominioServices>();
+builder.Services.AddSingleton<RepositorioHorarios>();
 
+// Luego mapeás interfaces → implementación
+builder.Services.AddSingleton<IRepositorioPacientes, RepositorioPacientes>();
+builder.Services.AddSingleton<IRepositorioTurnos, RepositorioTurnos>();
+builder.Services.AddSingleton<IRepositorioUsuarios, RepositorioUsuarios>();
+builder.Services.AddSingleton<IRepositorioDominioServices, RepositorioDominioServices>();
+builder.Services.AddSingleton<IRepositorioHorarios, RepositorioHorarios>();
 
-
+// Servicios públicos
 builder.Services.AddSingleton<IServiciosDeDominio, ServiciosPublicos>();
 
 

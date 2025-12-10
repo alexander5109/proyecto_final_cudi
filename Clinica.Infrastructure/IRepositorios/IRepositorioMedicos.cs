@@ -2,6 +2,7 @@
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
+using static Clinica.Shared.ApiDtos.MedicoDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.Infrastructure.IRepositorios;
@@ -13,5 +14,5 @@ public interface IRepositorioMedicos {
 	Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id);
 	Task<Result<IEnumerable<MedicoDbModel>>> SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code);
 	Task<Result<MedicoDbModel?>> SelectMedicoWhereId(MedicoId id);
-	Task<Result<Unit>> UpdateMedicoWhereId(MedicoId id, Medico2025 instance);
+	Task<Result<MedicoDto>> UpdateMedicoWhereId(MedicoId id, Medico2025 instance);
 }

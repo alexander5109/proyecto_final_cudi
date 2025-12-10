@@ -1,5 +1,7 @@
 ﻿using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSecretaria;

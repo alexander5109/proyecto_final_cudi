@@ -5,6 +5,7 @@ using Dapper;
 using static Clinica.Shared.DbModels.DbModels;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Infrastructure.IRepositorios;
 
 namespace Clinica.Infrastructure.Repositorios;
 
@@ -45,23 +46,31 @@ public class RepositorioPacientes(SQLServerConnectionFactory factory) : Reposito
 		)).MapAsync(newId => new PacienteId(newId));
 
 
-	Task<Result<IEnumerable<TurnoDbModel>>> IRepositorioPacientes.SelectTurnosWherePacienteId(PacienteId id)
-		=> TryAsync(async conn => {
-			return await conn.QueryAsync<TurnoDbModel>(
-				"sp_SelectTurnosWherePacienteId",
-				new { PacienteId = id.Valor },
+
+	Task<Result<PacienteDto>> IRepositorioPacientes.UpdatePacienteWhereId(
+		PacienteId id,
+		Paciente2025 instance
+	)
+		=> TryAsync<PacienteDto>(async conn => {
+			// 1) Convertimos a DTO una sola vez
+			PacienteDto dto = instance.ToDto();
+
+			// 2) Ejecutamos el SP y obtenemos @@ROWCOUNT
+			int rowsAffected = await conn.ExecuteScalarAsync<int>(
+				"sp_UpdatePacienteWhereId",
+				dto,
 				commandType: CommandType.StoredProcedure
 			);
+
+			// 3) Si no se actualizó nada → error lógico
+			if (rowsAffected == 0)
+				throw new Exception($"No se actualizó ningún paciente con Id={id.Valor}");
+
+			// 4) Devolvemos el dto actualizado
+			return dto;
 		});
 
-	Task<Result<Unit>> IRepositorioPacientes.UpdatePacienteWhereId(PacienteId id, Paciente2025 instance)
-		=> TryAsyncVoid(async conn => {
-			await conn.ExecuteAsync(
-				"sp_UpdatePacienteWhereId",
-				instance.ToDto(),
-				commandType: CommandType.StoredProcedure
-			);
-		});
+
 
 	Task<Result<Unit>> IRepositorioPacientes.DeletePacienteWhereId(PacienteId id)
 		=> TryAsyncVoid(async conn => {

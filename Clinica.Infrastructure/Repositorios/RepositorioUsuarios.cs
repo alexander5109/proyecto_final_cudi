@@ -1,11 +1,13 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
-using Dapper;
-using static Clinica.Shared.DbModels.DbModels;
-using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
-using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Dominio.TiposDeValor;
+using Clinica.Infrastructure.IRepositorios;
+using Dapper;
+using static Clinica.Shared.ApiDtos.TurnoDtos;
+using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
+using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.Infrastructure.Repositorios;
 
@@ -30,13 +32,27 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 
 
 
-	Task<Result<Unit>> IRepositorioUsuarios.UpdateUsuarioWhereId(UsuarioId id, Usuario2025 instance)
-		=> TryAsyncVoid(async conn => {
-			await conn.ExecuteAsync(
+	Task<Result<UsuarioDto>> IRepositorioUsuarios.UpdateUsuarioWhereId(
+		UsuarioId id,
+		Usuario2025 instance
+	)
+		=> TryAsync<UsuarioDto>(async conn => {
+			// 1) Convertimos solo UNA VEZ
+			UsuarioDto dto = instance.ToDto();
+
+			// 2) Ejecutamos el SP que devuelve @@ROWCOUNT
+			int rowsAffected = await conn.ExecuteScalarAsync<int>(
 				"sp_UpdateUsuarioWhereId",
-				instance.ToModel(id),
+				dto,
 				commandType: CommandType.StoredProcedure
 			);
+
+			// 3) Validamos que realmente se haya actualizado
+			if (rowsAffected == 0)
+				throw new Exception($"No se actualizó ningún usuario con Id={id.Valor}");
+
+			// 4) Devolvemos el dto actualizado
+			return dto;
 		});
 
 

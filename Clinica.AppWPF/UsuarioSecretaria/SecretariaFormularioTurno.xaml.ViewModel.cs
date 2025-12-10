@@ -4,6 +4,7 @@ using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.ViewModels;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.AppWPF.Infrastructure.Comodidades;
 using static Clinica.Shared.DbModels.DbModels;

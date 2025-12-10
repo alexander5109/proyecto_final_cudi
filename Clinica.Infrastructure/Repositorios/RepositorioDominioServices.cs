@@ -4,6 +4,7 @@ using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Infrastructure.IRepositorios;
 using Clinica.Shared.ApiDtos;
 using Dapper;
 using static Clinica.Dominio.IInterfaces.QueryModels;
@@ -17,7 +18,33 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 
 
 
-	Task<Result<Turno2025>> IRepositorioDominioServices.UpdateTurnoWhereId(TurnoId id, Turno2025 instance) => ((IRepositorioTurnos)this).UpdateTurnoWhereId(id, instance);
+
+	Task<Result<Turno2025>> IRepositorioDominioServices.UpdateTurnoWhereIdAndReturnAsDomain(
+		TurnoId id,
+		Turno2025 instance
+	)
+		=> TryAsync<Turno2025>(async conn => {
+			// Enviar parámetros al SP
+			TurnoDto parametros = instance.ToDto();
+
+			// Ejecutar SP que devuelve int RowsAffected
+			int rowsAffected = await conn.ExecuteScalarAsync<int>(
+				"sp_UpdateTurnoWhereId",
+				parametros,
+				commandType: CommandType.StoredProcedure
+			);
+
+			if (rowsAffected == 0)
+				throw new Exception("No se actualizó ningún turno.");
+			// → TryAsync lo convertirá en Result.Error automáticamente
+
+			// Si hubo cambios, devolver el DTO actualizado
+			// (tenemos todo en la instancia, ya que la DB solo actualiza)
+			return instance;
+		});
+
+
+
 	Task<Result<IEnumerable<MedicoId>>> IRepositorioDominioServices.SelectMedicosIdWhereEspecialidadCodigo(EspecialidadCodigo code)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<MedicoId>(
