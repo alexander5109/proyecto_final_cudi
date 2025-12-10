@@ -1,8 +1,9 @@
-﻿using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.TiposDeValor;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
+using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.WebAPI.Controllers;
 
@@ -33,6 +34,16 @@ public class UsuariosController(
 		);
 
 
+	[HttpGet("{id:string}")]
+	public Task<IActionResult> GetUsuarioProfileByUsername(string username)
+		=> this.SafeExecute(
+			logger,
+			PermisoSistema.VerUsuarios,
+			() => repositorio.SelectUsuarioProfileWhereUsername(new UserName(username)),
+			notFoundMessage: $"No existe usuario con nombre: {username}"
+		);
+
+
 	[HttpDelete("{id:int}")]
 	public Task<IActionResult> DeleteUsuario(int id)
 		=> this.SafeExecute(
@@ -58,7 +69,7 @@ public class UsuariosController(
 
 
 	[HttpPost]
-	public Task<IActionResult> CrearUsuario([FromBody] UsuarioDbModel dto)
+	public Task<IActionResult> CrearUsuario([FromBody] UsuarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisoSistema.CrearUsuarios,

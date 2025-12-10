@@ -1,9 +1,9 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Servicios;
+﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Infrastructure.DataAccess;
+using Clinica.Dominio.Servicios;
 using Microsoft.Extensions.Configuration;
+using Clinica.Dominio.IInterfaces;
+using Clinica.Infrastructure.Repositorios;
 
 namespace Clinica.PruebasDeConsola;
 
@@ -41,14 +41,14 @@ public static class MainProgram {
 			.Build();
 
 		//RepositorioDapper repositorio = new(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
-		RepositorioDapper repositorio = new RepositorioDapper(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
+		RepositorioHorarios repositorio = new RepositorioDapper(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
 
 		//var response = await http.GetAsync($"/disponibilidades?EspecialidadCodigo=3&cuantos=10");
 
-		NombreUsuario nombreUsuario = new ("admin1");
-		//var usuarioFakeResult = await repositorio.SelectUsuarioWhereNombre(nombreUsuario);
+		UserName UserName = new ("admin1");
+		//var usuarioFakeResult = await repositorio.SelectUsuarioWhereNombre(UserName);
 		//if (usuarioFakeResult.IsError) {
-		//	Console.WriteLine($"No se encontro el usuario {nombreUsuario}");
+		//	Console.WriteLine($"No se encontro el usuario {UserName}");
 		//	return;
 		//}
         //Usuario2025 usuarioFake = usuarioFakeResult.UnwrapAsOk();
@@ -66,7 +66,7 @@ public static class MainProgram {
 		//	break;
 		//}
 
-		IServiciosPublicos servicios = new ServiciosPublicos();
+		IServiciosDeDominio servicios = new ServiciosPublicos();
 		// Caso de uso 1
 		Result<IReadOnlyList<Disponibilidad2025>> disponibilidades = (await servicios.SolicitarDisponibilidades(
 			Especialidad2025.ClinicoGeneral.Codigo,

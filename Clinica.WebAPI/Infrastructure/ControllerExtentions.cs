@@ -1,5 +1,5 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeValor;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clinica.WebAPI.Infrastructure;

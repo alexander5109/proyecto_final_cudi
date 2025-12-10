@@ -1,6 +1,6 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposExtensiones;
 
 namespace Clinica.Shared.DbModels;
 
@@ -61,7 +61,7 @@ public static partial class DbModels {
 			Especialidad2025.CrearResult(turnoDto.EspecialidadCodigo),
 			turnoDto.FechaHoraAsignadaDesde,
 			turnoDto.FechaHoraAsignadaHasta,
-			TurnoEstadoCodigoFactory.CrearResult(turnoDto.OutcomeEstado),
+			turnoDto.OutcomeEstado.CrearResult(),
 			turnoDto.OutcomeFecha.ToOption(),
 			turnoDto.OutcomeComentario.ToOption()
 		);

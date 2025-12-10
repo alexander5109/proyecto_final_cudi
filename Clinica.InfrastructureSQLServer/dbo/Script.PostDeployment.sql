@@ -15,13 +15,13 @@ PRINT 'Ejecutando Post-Deployment...Haciendo unos inserts... incluyendo usuarios
 ----------------------------------------------------
 IF NOT EXISTS (SELECT 1 FROM dbo.Usuario)
 BEGIN
-    INSERT INTO dbo.Usuario 
-        (NombreUsuario, PasswordHash, EnumRole)
-    VALUES
-        ('super1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 1), --password: 123
-        ('admin1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 2), --password: 123
-        ('secret1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 3), --password: 123
-        ('medico1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 4) --password: 123
+	INSERT INTO dbo.Usuario 
+		(UserName, PasswordHash, Nombre, Apellido, Telefono, Email, EnumRole)
+	VALUES
+		('super1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 'Alexander', 'Seling', '1138830130', 'xanderseling@gmail.com', 1),
+		('admin1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 'Gerardo', 'Brokenhaüer', '1147835190', 'gerardobrokerhauer@gmail.com', 2),
+		('secret1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 'Roxana', 'Benitez', '1156830136', 'roxanabenitez@gmail.com', 3),
+		('medico1', 'A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3', 'Carlos', 'Merkier', '1164830132', 'carlosmerkier@gmail.com', 4);
 END;
 GO
 

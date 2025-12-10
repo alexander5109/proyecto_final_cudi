@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using Clinica.Dominio.IRepositorios;
+using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.Servicios;
-using Clinica.Infrastructure.DataAccess;
+using Clinica.Infrastructure.Repositorios;
 using Clinica.WebAPI.Servicios;
 using Microsoft.IdentityModel.Tokens;
 using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
@@ -26,23 +26,23 @@ builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
 	)
 );
 
-builder.Services.AddSingleton<RepositorioDapper>(sp => {
+builder.Services.AddSingleton<RepositorioHorarios>(sp => {
     SQLServerConnectionFactory factory = sp.GetRequiredService<SQLServerConnectionFactory>();
     return new RepositorioDapper(factory);
 });
 
 // Registrar cada interfaz como alias de la instancia principal
-builder.Services.AddSingleton<IRepositorio>(sp => sp.GetRequiredService<RepositorioDapper>());
-builder.Services.AddSingleton<IRepositorioPacientes>(sp => sp.GetRequiredService<RepositorioDapper>());
-builder.Services.AddSingleton<IRepositorioMedicos>(sp => sp.GetRequiredService<RepositorioDapper>());
-builder.Services.AddSingleton<IRepositorioTurnos>(sp => sp.GetRequiredService<RepositorioDapper>());
-builder.Services.AddSingleton<IRepositorioUsuarios>(sp => sp.GetRequiredService<RepositorioDapper>());
-builder.Services.AddSingleton<IRepositorioDomainServiciosPrivados>(sp => sp.GetRequiredService<RepositorioDapper>());
-builder.Services.AddSingleton<IRepositorioHorarios>(sp => sp.GetRequiredService<RepositorioDapper>());
+builder.Services.AddSingleton<IRepositorio>(sp => sp.GetRequiredService<RepositorioHorarios>());
+builder.Services.AddSingleton<IRepositorioPacientes>(sp => sp.GetRequiredService<RepositorioHorarios>());
+builder.Services.AddSingleton<IRepositorioTurnos>(sp => sp.GetRequiredService<RepositorioHorarios>());
+builder.Services.AddSingleton<IRepositorioTurnos>(sp => sp.GetRequiredService<RepositorioHorarios>());
+builder.Services.AddSingleton<IRepositorioUsuarios>(sp => sp.GetRequiredService<RepositorioHorarios>());
+builder.Services.AddSingleton<IRepositorioDominioServices>(sp => sp.GetRequiredService<RepositorioHorarios>());
+builder.Services.AddSingleton<IRepositorioHorarios>(sp => sp.GetRequiredService<RepositorioHorarios>());
 
 
 
-builder.Services.AddSingleton<IServiciosPublicos, ServiciosPublicos>();
+builder.Services.AddSingleton<IServiciosDeDominio, ServiciosPublicos>();
 
 
 // JwtService (singleton)
@@ -145,7 +145,7 @@ if (app.Environment.IsDevelopment() == false) {
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<UsuarioMiddleware>();
+app.UseMiddleware<AuthMiddleware>();
 
 app.MapControllers();
 

@@ -1,8 +1,7 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.IRepositorios;
+﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.TiposDeValor;
-using static Clinica.Dominio.IRepositorios.QueryModels;
+using static Clinica.Dominio.IInterfaces.QueryModels;
 
 namespace Clinica.Dominio.Servicios;
 
@@ -59,7 +58,7 @@ internal static class _ServiciosPrivados {
 	internal static async IAsyncEnumerable<Result<Disponibilidad2025>>GenerarDisponibilidades(
 		Especialidad2025 especialidad,
 		DateTime aPartirDeCuando,
-		IRepositorioDomainServiciosPrivados repo
+		IRepositorioDominioServices repo
 	) {
         Result<IEnumerable<MedicoId>> medicosResult = await repo.SelectMedicosIdWhereEspecialidadCodigo(especialidad.Codigo);
 		if (medicosResult is Result<IEnumerable<MedicoId>>.Error errMed) {
@@ -90,7 +89,7 @@ internal static class _ServiciosPrivados {
 		Especialidad2025 solicitudEspecialidad,
 		DateTime aPartirDeCuando,
 		MedicoId medicoId,
-		IRepositorioDomainServiciosPrivados repositorio
+		IRepositorioDominioServices repositorio
 	) {
 		int duracion = solicitudEspecialidad.DuracionConsultaMinutos;
 		int semanas = 30;
@@ -161,7 +160,7 @@ internal static class _ServiciosPrivados {
 		MedicoId medicoId,
 		Especialidad2025 especialidad,
 		DateTime aPartirDeCuando,
-		IRepositorioDomainServiciosPrivados repositorio
+		IRepositorioDominioServices repositorio
 	) {
 		int duracion = especialidad.DuracionConsultaMinutos;
 

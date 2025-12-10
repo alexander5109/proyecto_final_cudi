@@ -3,6 +3,7 @@ using System.Windows;
 //using Clinica.AppWPF.Clinica2024;
 using Clinica.AppWPF.Infrastructure;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
+using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 
 namespace Clinica.AppWPF;
 
@@ -12,6 +13,7 @@ namespace Clinica.AppWPF;
 public partial class App : Application {
 	public static ApiHelper Api = new();
 	public static IWPFRepositorio Repositorio = new WPFRepositorioApi(Api);
+	public static UsuarioPerfilDto? UsuarioActivo = null;
 	//public static Repositorio2024 BaseDeDatos;
 
 	protected override void OnStartup(StartupEventArgs e) {
@@ -20,7 +22,7 @@ public partial class App : Application {
 		// Captura cualquier error de binding
 		PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Error;
 		System.Diagnostics.PresentationTraceSources.Refresh();
-		System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
+		//System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
 		//Api = new ApiHelper();
 		//Repositorio = new WPFRepositorioApi(Api);
 

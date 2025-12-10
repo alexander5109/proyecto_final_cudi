@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
 
 
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
-public sealed class TurnoVM(TurnoDbModel model) {
+public sealed class TurnoViewModel(TurnoDbModel model) {
     public TurnoId Id { get; } = model.Id;
 	//public PacienteDbModel Paciente { get => {  
 	//		(await model.PacienteId.RespectivoPaciente()) //Los pacientes estan cacheados en memoria, sólo cndo no lo esten se hace fetch.
@@ -55,14 +55,14 @@ public sealed class SecretariaGestionDeTurnosViewModel : INotifyPropertyChanged 
 
 
 	// ==== TURNOS ====
-	private List<TurnoVM> _turnos = [];
-	public List<TurnoVM> TurnosList {
+	private List<TurnoViewModel> _turnos = [];
+	public List<TurnoViewModel> TurnosList {
 		get => _turnos;
 		set { _turnos = value; OnPropertyChanged(nameof(TurnosList)); }
 	}
 
-	private TurnoVM? _turnoSeleccionado;
-	public TurnoVM? SelectedTurno {
+	private TurnoViewModel? _turnoSeleccionado;
+	public TurnoViewModel? SelectedTurno {
 		get => _turnoSeleccionado;
 		set {
 			if (_turnoSeleccionado != value) {

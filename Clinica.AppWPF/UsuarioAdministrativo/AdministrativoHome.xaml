@@ -1,0 +1,181 @@
+﻿<Window
+	x:Class="Clinica.AppWPF.UsuarioAdministrativo.HomeAdministrativo"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	Title="Clinica Medica - Home"
+	Height="600"
+	Width="1024"
+	Icon="pack://application:,,,/PublishedResources/icons/icono.ico"
+	Activated="Window_Activated"
+	WindowStartupLocation="CenterScreen">
+	<Grid>
+		<Grid.Background>
+			<ImageBrush
+				ImageSource="pack://application:,,,/PublishedResources/images/falopa.jpg" />
+		</Grid.Background>
+		<StackPanel
+			HorizontalAlignment="Left"
+			VerticalAlignment="Top"
+			Height="564"
+			Margin="10,0,0,0"
+			Width="601">
+			<Label
+				Content="Clinica Medica"
+				FontSize="34"
+				HorizontalAlignment="Center"
+				FontFamily="SachaWynterTight Linotype"
+				Background="{x:Null}"
+				VerticalAlignment="Center"
+				Foreground="#FF1B1B67"
+				Margin="0,15,0,15" />
+			<Label
+				Content="Bienvenido señor administrativo"
+				FontSize="26"
+				HorizontalAlignment="Center"
+				FontFamily="Palatino Linotype"
+				Background="{x:Null}"
+				Width="Auto"
+				VerticalAlignment="Center"
+				Foreground="#FF0F0A2B"
+				FontWeight="Bold" />
+			<Label
+				Content="`Mala Praxis SXXI´"
+				FontSize="24"
+				HorizontalAlignment="Center"
+				FontFamily="SachaWynterTight Linotype"
+				Background="{x:Null}"
+				VerticalAlignment="Center"
+				Foreground="#FF333363" />
+			<Button
+				Content="Gestionar personal Médicos"
+				HorizontalAlignment="Center"
+				Height="37"
+				Width="286"
+				Click="MetodoBotonMedicos"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeado}"
+				FontWeight="Bold"
+				BorderBrush="#FF0E0D0D"
+				FontFamily="Baskerville Old Face"
+				Margin="0,7,0,7" />
+			<Button
+				x:Name="buttonVerTurnos"
+				Content="Gestionar cuentas de usuario"
+				HorizontalAlignment="Center"
+				Height="37"
+				Width="284"
+				Click="MetodoBotonTurnos"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeado}"
+				FontWeight="Bold"
+				BorderBrush="#FF0E0D0D"
+				FontFamily="Baskerville Old Face"
+				Margin="0,7,0,7" />
+			<Button
+				Content="Cerrar sesión"
+				Height="37"
+				Width="170"
+				Click="MetodoBotonLogout"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeado}"
+				FontWeight="Bold"
+				BorderBrush="#FF0E0D0D"
+				FontFamily="Baskerville Old Face"
+				Margin="0,28,0,7" />
+			<Button
+				Content="Salir"
+				Height="37"
+				Width="170"
+				Click="ButtonSalir"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeado}"
+				FontWeight="Bold"
+				BorderBrush="#FF0E0D0D"
+				FontFamily="Baskerville Old Face"
+				Margin="0,7,0,7" />
+		</StackPanel>
+		<!-- <Image x:Name="volumeIcoImage" Stretch="Uniform" Margin="772,77,198,450"/> -->
+		<CheckBox
+			x:Name="soundCheckBox"
+			Content="Soniditos?"
+			Click="soundCheckBox_Checked"
+			Margin="865,10,0,0"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Top"
+			Height="48"
+			Width="149"
+			FontFamily="SachaWynterTight"
+			FontSize="10">
+			<CheckBox.Template>
+				<ControlTemplate
+					TargetType="CheckBox">
+					<StackPanel
+						Orientation="Horizontal">
+						<Image
+							Width="40"
+							Height="40">
+							<Image.Style>
+								<Style
+									TargetType="Image">
+									<Style.Triggers>
+										<!-- Checked state without hover -->
+										<DataTrigger
+											Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}"
+											Value="True">
+											<Setter
+												Property="Source"
+												Value="pack://application:,,,/PublishedResources/images/sonidoOn.png" />
+										</DataTrigger>
+										<!-- Unchecked state without hover -->
+										<DataTrigger
+											Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}"
+											Value="False">
+											<Setter
+												Property="Source"
+												Value="pack://application:,,,/PublishedResources/images/sonidoOff.png" />
+										</DataTrigger>
+										<!-- Checked state with hover -->
+										<MultiDataTrigger>
+											<MultiDataTrigger.Conditions>
+												<Condition
+													Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}"
+													Value="True" />
+												<Condition
+													Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=CheckBox}}"
+													Value="True" />
+											</MultiDataTrigger.Conditions>
+											<Setter
+												Property="Source"
+												Value="pack://application:,,,/PublishedResources/images/sonidoOn_hover.png" />
+										</MultiDataTrigger>
+										<!-- Unchecked state with hover -->
+										<MultiDataTrigger>
+											<MultiDataTrigger.Conditions>
+												<Condition
+													Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}"
+													Value="False" />
+												<Condition
+													Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=CheckBox}}"
+													Value="True" />
+											</MultiDataTrigger.Conditions>
+											<Setter
+												Property="Source"
+												Value="pack://application:,,,/PublishedResources/images/sonidoOff_hover.png" />
+										</MultiDataTrigger>
+									</Style.Triggers>
+								</Style>
+							</Image.Style>
+						</Image>
+						<!-- Display optional text content next to the image -->
+						<ContentPresenter
+							VerticalAlignment="Center"
+							Margin="5,0,0,0" />
+					</StackPanel>
+				</ControlTemplate>
+			</CheckBox.Template>
+		</CheckBox>
+	</Grid>
+</Window>

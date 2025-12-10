@@ -42,7 +42,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 		try {
 			List<TurnoDbModel> turnosDto = await App.Repositorio.SelectTurnos();
 
-			VM.TurnosList = [.. turnosDto.Select(dto => new TurnoVM(dto))];
+			VM.TurnosList = [.. turnosDto.Select(dto => new TurnoViewModel(dto))];
 		} catch (Exception ex) {
 			MessageBox.Show("Error cargando turnos: " + ex.Message);
 		}
@@ -51,17 +51,19 @@ public partial class SecretariaGestionDeTurnos : Window {
 
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.VolverARespectivoHome();
 	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
+
+
+
 	private async void Button_ConfirmarTurnoAsistencia(object sender, RoutedEventArgs e) {
 		if (VM.SelectedTurno is null) return;
 
-        TurnoVM turno = VM.SelectedTurno;
 
 		VM.IndicarAccionRequiereComentario(false);
 
-        ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoConcretado(
-			turno.Id,
+		ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoConcretado(
+			VM.SelectedTurno.Id,
 			DateTime.Now,
-			comentarioTextBox.Text
+			VM.SelectedTurno.OutcomeComentario
 		);
 
 		if (MostrarErrorSiCorresponde(result))
@@ -76,12 +78,10 @@ public partial class SecretariaGestionDeTurnos : Window {
 
 		VM.IndicarAccionRequiereComentario(false);
 
-        //Aca no es obligatorio el comentario.
-
-        ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoAusente(
+		ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoAusente(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
-			comentarioTextBox.Text
+			VM.SelectedTurno.OutcomeComentario
 		);
 
 		if (MostrarErrorSiCorresponde(result))
@@ -96,15 +96,15 @@ public partial class SecretariaGestionDeTurnos : Window {
 
 		VM.IndicarAccionRequiereComentario(true);
 
-		if (string.IsNullOrWhiteSpace(comentarioTextBox.Text)) {
+		if (string.IsNullOrWhiteSpace(VM.SelectedTurno.OutcomeComentario)) {
 			MessageBox.Show("Debe completar un comentario para reprogramar el turno.");
 			return;
 		}
 
-        ResultWpf<TurnoDbModel> result = await App.Repositorio.ReprogramarTurno(
+		ResultWpf<TurnoDbModel> result = await App.Repositorio.ReprogramarTurno(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
-			comentarioTextBox.Text
+			VM.SelectedTurno.OutcomeComentario
 		);
 
 		if (MostrarErrorSiCorresponde(result))
@@ -119,15 +119,15 @@ public partial class SecretariaGestionDeTurnos : Window {
 
 		VM.IndicarAccionRequiereComentario(true);
 
-		if (string.IsNullOrWhiteSpace(comentarioTextBox.Text)) {
+		if (string.IsNullOrWhiteSpace(VM.SelectedTurno.OutcomeComentario)) {
 			MessageBox.Show("Debe completar un comentario para cancelar el turno.");
 			return;
 		}
 
-        ResultWpf<TurnoDbModel> result = await App.Repositorio.CancelarTurno(
+		ResultWpf<TurnoDbModel> result = await App.Repositorio.CancelarTurno(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
-			comentarioTextBox.Text
+			VM.SelectedTurno.OutcomeComentario
 		);
 
 		if (MostrarErrorSiCorresponde(result))
@@ -135,6 +135,7 @@ public partial class SecretariaGestionDeTurnos : Window {
 
 		await RefrescarTurnosAsync();
 	}
+
 
 	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
 		this.AbrirComoDialogo<SecretariaPacienteFormulario>();

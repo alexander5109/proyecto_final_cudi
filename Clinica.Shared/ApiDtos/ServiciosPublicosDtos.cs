@@ -1,5 +1,4 @@
-﻿using Clinica.Dominio.Entidades;
-using Clinica.Dominio.TiposDeValor;
+﻿using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Shared.ApiDtos;
 

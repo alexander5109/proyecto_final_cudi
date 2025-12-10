@@ -1,5 +1,4 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.IInterfaces;
 
 namespace Clinica.Dominio.TiposDeValor;
 
@@ -21,13 +20,3 @@ public readonly record struct Disponibilidad2025( //este tipo de valor es la mej
 			$"  • Horario: {desde}–{hasta}";
 	}
 }
-//public static class DisponbiilidadConvertions {
-
-
-
-	//public Especialidad2025 ToDomain(CallConvThiscall DayOfWeek)
-
-
-
-
-//}

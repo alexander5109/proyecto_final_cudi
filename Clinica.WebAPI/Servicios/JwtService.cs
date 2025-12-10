@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Clinica.Dominio.Entidades;
+using Clinica.Dominio.TiposDeValor;
 using Microsoft.IdentityModel.Tokens;
 
 public class JwtService(string jwtKey) {
@@ -13,7 +13,7 @@ public class JwtService(string jwtKey) {
 		List<Claim> claims =
 		[
 			new("userid", aggrg.Id.Valor.ToString()),
-			new("username", aggrg.Usuario.NombreUsuario.Valor),
+			new("username", aggrg.Usuario.UserName.Valor),
 			new("role", aggrg.Usuario.EnumRole.ToString())
 		];
 

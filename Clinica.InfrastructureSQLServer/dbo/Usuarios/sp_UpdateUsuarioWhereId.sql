@@ -1,7 +1,11 @@
 ﻿CREATE PROCEDURE dbo.sp_UpdateUsuarioWhereId
     @Id INT,
-    @NombreUsuario NVARCHAR(100),
+    @UserName NVARCHAR(100),
     @PasswordHash NVARCHAR(255),
+	@Nombre NVARCHAR(50),
+	@Apellido NVARCHAR(50),
+	@Telefono CHAR(10),
+	@Email VARCHAR(320),
     @EnumRole TINYINT
 AS
 BEGIN
@@ -9,9 +13,13 @@ BEGIN
 
     UPDATE dbo.Usuario
     SET
-        NombreUsuario = @NombreUsuario,
-        PasswordHash  = @PasswordHash,
-        EnumRole      = @EnumRole
+        UserName	= @UserName,
+        PasswordHash	= @PasswordHash,
+        Nombre			= @Nombre,
+        Apellido		= @Apellido,
+        Telefono		= @Telefono,
+        Email			= @Email,
+        EnumRole		= @EnumRole
     WHERE Id = @Id;
 
     SELECT @@ROWCOUNT AS RowsAffected;

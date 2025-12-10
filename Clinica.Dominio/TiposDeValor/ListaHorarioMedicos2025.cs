@@ -1,7 +1,7 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.IInterfaces;
 
-namespace Clinica.Dominio.ListasOrganizadoras;
+namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct ListaHorarioMedicos2025(
 	IReadOnlyList<Horario2025> Valores

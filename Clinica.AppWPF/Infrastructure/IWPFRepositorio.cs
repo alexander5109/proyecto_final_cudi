@@ -1,5 +1,5 @@
-using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
+using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.Infrastructure;
@@ -25,7 +25,7 @@ public static class IWPFRepositorioInterfaces {
 		Task<ResultWpf<UsuarioId>> InsertUsuarioReturnId(Usuario2025 instance);
 		Task<ResultWpf<UnitWpf>> UpdateUsuarioWhereId(Usuario2025Agg instance);
 		Task<List<UsuarioDbModel>> SelectUsuarios();
-		Task<UsuarioDbModel?> SelectUsuarioWhereId(UsuarioId id);
+		Task<UsuarioPerfilDto?> SelectUsuarioProfileWhereUsername(UserName username);
 	}
 
 
@@ -56,9 +56,9 @@ public static class IWPFRepositorioInterfaces {
 		Task<List<TurnoDbModel>> SelectTurnosWherePacienteId(PacienteId id);
 		Task<List<TurnoDbModel>> SelectTurnosWhereMedicoId(MedicoId id);
 		Task<ResultWpf<TurnoDbModel>> AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad);
-		Task<ResultWpf<TurnoDbModel>> CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);
-		Task<ResultWpf<TurnoDbModel>> ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string reason);
-		Task<ResultWpf<TurnoDbModel>> MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string reason);
+		Task<ResultWpf<TurnoDbModel>> CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string? reason);
+		Task<ResultWpf<TurnoDbModel>> ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string? reason);
+		Task<ResultWpf<TurnoDbModel>> MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string? reason);
 		Task<ResultWpf<TurnoDbModel>> MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome, string? reason);
 	}
 }

@@ -1,7 +1,7 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.TiposDeValor;
+﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.IInterfaces;
 
-namespace Clinica.Dominio.Entidades;
+namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct LocalidadDeProvincia2025(
 	string NombreValor,

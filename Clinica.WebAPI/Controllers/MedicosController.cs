@@ -1,5 +1,4 @@
-﻿using Clinica.Dominio.Entidades;
-using Clinica.Dominio.TiposDeValor;
+﻿using Clinica.Dominio.TiposDeValor;
 using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +13,7 @@ namespace Clinica.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class MedicosController(
-	IRepositorioMedicos repositorio,
+	IRepositorioTurnos repositorio,
 	ILogger<AuthController> logger
 ) : ControllerBase {
 

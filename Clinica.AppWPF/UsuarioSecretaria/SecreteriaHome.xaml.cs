@@ -4,9 +4,13 @@ using Clinica.AppWPF.Infrastructure;
 namespace Clinica.AppWPF.UsuarioSecretaria;
 
 public partial class SecretariaHome : Window {
+	public string MensajeBienvenida { get; }
 	public SecretariaHome() {
 		InitializeComponent();
 		soundCheckBox.IsChecked = SoundsService.SoundOn;
+
+		MensajeBienvenida = $"Bienvenid@ {App.UsuarioActivo?.Nombre ?? "Recepcionista"}";
+		DataContext = this; // sencillo, no hace falta más
 	}
 
 	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();

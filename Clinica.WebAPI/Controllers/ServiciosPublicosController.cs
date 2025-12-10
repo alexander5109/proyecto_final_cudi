@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel;
-using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.Servicios;
+using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Infrastructure.DataAccess.IRepositorioInterfaces;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
 using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
+using Clinica.Dominio.IInterfaces;
 namespace Clinica.WebAPI.Controllers;
 
 
@@ -17,7 +15,7 @@ namespace Clinica.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ServiciosPublicosController(IRepositorio repositorio, IServiciosPublicos servicios, ILogger<ServiciosPublicosController> logger) : ControllerBase {
+public class ServiciosPublicosController(IRepositorio repositorio, IServiciosDeDominio servicios, ILogger<ServiciosPublicosController> logger) : ControllerBase {
 
 	[HttpGet("Turnos/Disponibilidades")]
 	public async Task<IActionResult> VerDisponibilidades(

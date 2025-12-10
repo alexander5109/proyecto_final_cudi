@@ -1,42 +1,46 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposExtensiones;
 
 namespace Clinica.Shared.DbModels;
 
 public static partial class DbModels {
 	public record UsuarioDbModel(
 		UsuarioId Id,
-		string NombreUsuario,
+		string UserName,
+		string Nombre,
+		string Apellido,
 		string PasswordHash,
-		UsuarioEnumRole EnumRole
+		UsuarioEnumRole EnumRole,
+		string Email,
+		string Telefono
 	) {
-		public UsuarioDbModel() : this(default!, "", "", default) { }
+		public UsuarioDbModel() : this(default, "", "", "", "", default, "", "") { }
 	}
 
-	public static UsuarioDbModel ToModel(this Usuario2025 usuario, UsuarioId id) {
+	public static UsuarioDbModel ToModel(this Usuario2025 entidad, UsuarioId id) {
 		return new UsuarioDbModel(
 			id,
-			usuario.NombreUsuario.Valor,
-			usuario.PasswordHash.Valor,
-			usuario.EnumRole
+			entidad.UserName.Valor,
+			entidad.NombreCompleto.NombreValor,
+			entidad.NombreCompleto.ApellidoValor,
+			entidad.PasswordHash.Valor,
+			entidad.EnumRole,
+			entidad.Email.Valor,
+			entidad.Telefono.Valor
 		);
 	}
-
 
 	public static Result<Usuario2025Agg> ToDomainAgg(this UsuarioDbModel usuario)
 		=> Usuario2025Agg.CrearResult(
 			UsuarioId.CrearResult(usuario.Id.Valor),
-			Usuario2025.CrearResult(usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole)
+			Usuario2025.CrearResult(
+				UserName.CrearResult(usuario.UserName),
+				NombreCompleto2025.CrearResult(usuario.Nombre, usuario.Apellido),
+				ContraseñaHasheada.CrearResult(usuario.PasswordHash),
+				usuario.EnumRole.CrearResult(),
+				ContactoEmail2025.CrearResult(usuario.Email),
+				ContactoTelefono2025.CrearResult(usuario.Telefono)
+			)
 		);
-	//public static Result<Usuario2025Agg> ToDomainAgg(this UsuarioDbModel usuario)
-	//	=> Usuario2025Agg.CrearResult(usuario.Id, Usuario2025.CrearResult(usuario.NombreUsuario, usuario.PasswordHash, usuario.EnumRole));
-
-	//public static UsuarioDbModel ToModel(this Usuario2025Agg aggrg) {
-	//	return new UsuarioDbModel(
-	//		aggrg.Id,
-	//		aggrg.Usuario.NombreUsuario.Valor,
-	//		aggrg.Usuario.PasswordHash.Valor,
-	//		aggrg.Usuario.EnumRole
-	//	);
-	//}
 }

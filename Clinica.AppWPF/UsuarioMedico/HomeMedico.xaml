@@ -63,7 +63,7 @@
 				Foreground="#FF333363" />
 			<Button
 				x:Name="buttonVerTurnos_Copiar"
-				Content="Ver historial de un paciente"
+				Content="Mis pacientes"
 				Height="45"
 				Width="276"
 				Margin="0,7,0,7"
@@ -76,7 +76,7 @@
 				HorizontalAlignment="Center" />
 			<Button
 				x:Name="buttonVerTurnos"
-				Content="Ver mis consultas de hoy"
+				Content="Mis turnos"
 				Height="45"
 				Click="MetodoBotonTurnos"
 				FontSize="22"
@@ -85,7 +85,7 @@
 				BorderBrush="#FF0E0D0D"
 				FontFamily="Baskerville Old Face"
 				Margin="0,7,0,7"
-				Width="266" />
+				Width="211" />
 			<Button
 				Content="Cerrar sesión"
 				Height="37"
@@ -100,16 +100,15 @@
 			<Button
 				Content="Salir"
 				HorizontalAlignment="Center"
-				VerticalAlignment="Top"
 				Height="37"
-				Width="170"
+				Width="110"
 				Click="ButtonSalir"
 				FontSize="20"
 				Style="{StaticResource BotonRedondeado}"
 				FontWeight="Bold"
 				BorderBrush="#FF0E0D0D"
 				FontFamily="Baskerville Old Face"
-				Margin="0,7,0,7"></Button>
+				Margin="0,7,0,7" />
 		</StackPanel>
 		<!-- <Image x:Name="volumeIcoImage" Stretch="Uniform" Margin="772,77,198,450"/> -->
 		<CheckBox

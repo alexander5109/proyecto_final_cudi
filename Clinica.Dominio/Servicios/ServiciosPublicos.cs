@@ -1,27 +1,15 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.IRepositorios;
+﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.TiposDeValor;
 
 
 namespace Clinica.Dominio.Servicios;
 
-public class ServiciosPublicos : IServiciosPublicos {
-	async Task<Result<Usuario2025Agg>> IServiciosAuth.ValidarCredenciales(string username, string password, IRepositorioDomainServiciosPrivados repositorio) {
-		Result<Usuario2025Agg> resultadoUsuario =
-			await repositorio.SelectUsuarioWhereNombreAsDomain(new NombreUsuario(username));
-
-		return resultadoUsuario.MatchAndSet(
-			okValue => okValue.Usuario.PasswordMatch(password)
-						? new Result<Usuario2025Agg>.Ok(okValue)
-						: new Result<Usuario2025Agg>.Error("Usuario o contraseña incorrectos"),
-			err => resultadoUsuario
-		);
-	}
+public class ServiciosPublicos : IServiciosDeDominio {
 
 
 
-	async Task<Result<IReadOnlyList<Disponibilidad2025>>> IServiciosDisponibilidades.SolicitarDisponibilidades(EspecialidadCodigo solicitudEspecialidadCodigo, DateTime aPartirDeCuando, int cuantos, IRepositorioDomainServiciosPrivados repositorio) {
+	async Task<Result<IReadOnlyList<Disponibilidad2025>>> IServiciosDeDominio.SolicitarDisponibilidades(EspecialidadCodigo solicitudEspecialidadCodigo, DateTime aPartirDeCuando, int cuantos, IRepositorioDominioServices repositorio) {
 
 		if (cuantos > 50) {
 			return new Result<IReadOnlyList<Disponibilidad2025>>.Error("No vamos a producir tantas disponibilidades. Si quiere, adelante la fecha");
@@ -75,11 +63,11 @@ public class ServiciosPublicos : IServiciosPublicos {
 
 
 
-	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoAusenteAsync(
+	async Task<Result<Turno2025Agg>> IServiciosDeDominio.PersistirComoAusenteAsync(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
 		string outcomeComentario,
-		IRepositorioDomainServiciosPrivados repositorio
+		IRepositorioDominioServices repositorio
 	) {
 		return await  (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
 		.BindWithPrefix(
@@ -92,11 +80,11 @@ public class ServiciosPublicos : IServiciosPublicos {
 	}
 
 
-	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoConcretadoAsync(
+	async Task<Result<Turno2025Agg>> IServiciosDeDominio.PersistirComoConcretadoAsync(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
 		string? outcomeComentario,
-		IRepositorioDomainServiciosPrivados repositorio
+		IRepositorioDominioServices repositorio
 	) {
 		return await (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
 		.BindWithPrefix(
@@ -110,11 +98,11 @@ public class ServiciosPublicos : IServiciosPublicos {
 
 
 
-	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoCanceladoAsync(
+	async Task<Result<Turno2025Agg>> IServiciosDeDominio.PersistirComoCanceladoAsync(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
 		string outcomeComentario,
-		IRepositorioDomainServiciosPrivados repositorio
+		IRepositorioDominioServices repositorio
 	) {
 		return await (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
 		.BindWithPrefix(
@@ -128,11 +116,11 @@ public class ServiciosPublicos : IServiciosPublicos {
 
 
 
-	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirComoReprogramado(
+	async Task<Result<Turno2025Agg>> IServiciosDeDominio.PersistirComoReprogramado(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
 		string outcomeComentario,
-		IRepositorioDomainServiciosPrivados repositorio
+		IRepositorioDominioServices repositorio
 	) {
 		return await (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
 		.BindWithPrefix(
@@ -146,11 +134,11 @@ public class ServiciosPublicos : IServiciosPublicos {
 
 
 
-	async Task<Result<Turno2025Agg>> IServiciosGestionTurnos.PersistirProgramarTurnoAsync(
+	async Task<Result<Turno2025Agg>> IServiciosDeDominio.PersistirProgramarTurnoAsync(
 		PacienteId pacienteId,
 		DateTime fechaSolicitud,
 		Disponibilidad2025 disponibilidad,
-		IRepositorioDomainServiciosPrivados repositorio
+		IRepositorioDominioServices repositorio
 	) {
 		return await Turno2025.Programar(pacienteId, fechaSolicitud, disponibilidad)
 			.BindWithPrefixAsync(

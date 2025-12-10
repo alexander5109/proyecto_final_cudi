@@ -1,4 +1,5 @@
-﻿using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.IInterfaces;
+using Clinica.Dominio.TiposExtensiones;
 
 namespace Clinica.Dominio.TiposDeValor;
 

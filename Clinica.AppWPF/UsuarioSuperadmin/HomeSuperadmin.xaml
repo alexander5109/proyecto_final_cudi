@@ -102,6 +102,17 @@
 				FontFamily="Baskerville Old Face"
 				Margin="0,7,0,7"></Button>
 			<Button
+				x:Name="buttonVerTurnos_Copiar"
+				Content="Ver Usuarios"
+				Height="37"
+				Width="170"
+				Click="MetodoBotonTurnos"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeado}"
+				FontWeight="Bold"
+				BorderBrush="#FF0E0D0D"
+				FontFamily="Baskerville Old Face" />
+			<Button
 				Content="Cerrar sesión"
 				Height="37"
 				Width="170"

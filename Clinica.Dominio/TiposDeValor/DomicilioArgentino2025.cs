@@ -1,5 +1,5 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
+﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.IInterfaces;
 
 namespace Clinica.Dominio.TiposDeValor;
 

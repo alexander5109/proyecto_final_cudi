@@ -1,6 +1,6 @@
 using Clinica.AppWPF.ViewModels;
-using Clinica.Dominio.Entidades;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.Infrastructure;

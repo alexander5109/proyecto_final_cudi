@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Clinica.Dominio.Comun;
+using Clinica.Dominio.FunctionalToolkit;
 
 namespace Clinica.AppWPF.Infrastructure;
 

@@ -1,4 +1,4 @@
-﻿using Clinica.Dominio.Comun;
+﻿using Clinica.Dominio.FunctionalToolkit;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clinica.WebAPI.Infrastructure;

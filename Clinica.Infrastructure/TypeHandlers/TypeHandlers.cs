@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using Clinica.Dominio.Entidades;
+using Clinica.Dominio.TiposDeValor;
 using Dapper;
 
 namespace Clinica.Infrastructure.TypeHandlers;

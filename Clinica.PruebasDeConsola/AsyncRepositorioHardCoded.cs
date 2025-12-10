@@ -1,6 +1,4 @@
-﻿using Clinica.Dominio.Comun;
-using Clinica.Dominio.Entidades;
-using Clinica.Dominio.ListasOrganizadoras;
+﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.PruebasDeConsola;

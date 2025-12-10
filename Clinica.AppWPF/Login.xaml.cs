@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using static Clinica.Shared.ApiDtos.AuthDtos;
+using Clinica.Dominio.TiposDeValor;
+using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 
 
 namespace Clinica.AppWPF;
@@ -24,8 +25,9 @@ public partial class Login : Window {
 		ResultWpf<UsuarioLoginResponseDto> result = await AuthService.LoginAsync(App.Api, loginRequest);
 
 		result.MatchAndDo(
-			loggedUser => {
+			async loggedUser => {
 				App.Api.SetUsuario(loggedUser);
+				App.UsuarioActivo = await App.Repositorio.SelectUsuarioProfileWhereUsername(new UserName(loggedUser.Username));
 				this.IrARespectivaHome(loggedUser);
 				return;
 			},

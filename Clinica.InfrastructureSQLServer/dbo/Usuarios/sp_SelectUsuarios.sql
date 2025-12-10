@@ -5,8 +5,12 @@ BEGIN
 
     SELECT
         Id,
-        NombreUsuario,
+        UserName,
         PasswordHash,
+        Nombre,
+        Apellido,
+        Telefono,
+        Email
         EnumRole
     FROM Usuario;
 END;

@@ -28,12 +28,7 @@
     <Page Remove="UsuarioMedico\**" />
     <Page Remove="UsuarioSuperadmin\**" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="UsuarioSecretaria\SecretariaPacienteVer.xaml.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Remove="UsuarioSecretaria\SecretariaPacienteVer.xaml" />
-  </ItemGroup>
+
 
   <!-- Copy sounds and JSON to output -->
   <ItemGroup>
