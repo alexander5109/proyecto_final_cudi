@@ -18,17 +18,12 @@
 	</Window.Background>
 	<!-- ============== CONTENIDO ============== -->
 	<Grid
-		Margin="20">
+		Margin="25">
 		<StackPanel
 			Orientation="Vertical"
 			Background="Transparent"
 			HorizontalAlignment="Center"
-			Width="840"
 			Margin="0,106,0,0">
-			<!-- Título -->
-			<!-- Lista de usuarios -->
-			<!-- Botones inferiores -->
-			<!-- Lista de usuarios -->
 			<ListView
 				Height="374"
 				Background="#80FFFFFF"
@@ -96,9 +91,11 @@
 			FontSize="40"
 			FontFamily="Ringbearer"
 			FontWeight="Bold"
-			HorizontalAlignment="Left"
-			Margin="479,10,0,476"
-			Width="365"></Label>
+			HorizontalAlignment="Center"
+			VerticalAlignment="Top"
+			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
+			Grid.RowSpan="7" />
 		<Button
 			Content="Home"
 			HorizontalAlignment="Left"

@@ -27,6 +27,10 @@
   <ItemGroup>
     <None Remove="bluegreen.jpeg" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Remove="PublishedResources\images2025sol\fondoAbstracto2025.jpg" />
+    <Resource Remove="PublishedResources\images2025sol\labelFondo2025.png" />
+  </ItemGroup>
 
 
   <!-- Copy sounds and JSON to output -->
