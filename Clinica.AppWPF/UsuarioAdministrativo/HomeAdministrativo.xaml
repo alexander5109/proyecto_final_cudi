@@ -11,18 +11,21 @@
 	Icon="pack://application:,,,/PublishedResources/icons/icono.ico"
 	Activated="Window_Activated"
 	WindowStartupLocation="CenterScreen">
-	<Window.Background>
-		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg" />
-	</Window.Background>
-	<Grid
+    <Window.Background>
+        <ImageBrush
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/depositphotos_3899599-stock-photo-abstract-background.jpg" />
+    </Window.Background>
+    <Grid
 		RenderTransformOrigin="0.485,0.779">
-		<StackPanel
+        <StackPanel
 			HorizontalAlignment="Left"
 			VerticalAlignment="Top"
 			Height="668"
-			Margin="56,43,0,0"
+			Margin="120,72,0,0"
 			Width="788" RenderTransformOrigin="0.49,0.943">
+            <StackPanel.Background>
+                <ImageBrush/>
+            </StackPanel.Background>
             <Label
 				Content="Bienvenido señor administrativo"
 				FontSize="26"
@@ -166,6 +169,6 @@
             FontSize="40"
             FontFamily="Palatino Linotype"
             Background="{x:Null}"
-            Foreground="Black" FontWeight="Bold" Margin="531,489,139,31" />
+            Foreground="Black" FontWeight="Bold" Margin="632,486,38,34" />
     </Grid>
 </Window>

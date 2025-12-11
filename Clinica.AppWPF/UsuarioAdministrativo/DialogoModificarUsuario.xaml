@@ -9,41 +9,41 @@
 	Title="DialogoModificarUsuario"
 	Height="600"
 	Width="800">
-	<Window.Background>
-		<ImageBrush
+    <Window.Background>
+        <ImageBrush
 			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg" />
-	</Window.Background>
-	<Grid>
-		<Grid
+    </Window.Background>
+    <Grid>
+        <Grid
 			Margin="6,-4,-4,3">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
 					Width="130" />
-				<ColumnDefinition
+                <ColumnDefinition
 					Width="600" />
-				<ColumnDefinition
+                <ColumnDefinition
 					Width="130" />
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition
 					Height="400" />
-				<RowDefinition />
-			</Grid.RowDefinitions>
-			<StackPanel
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel
 				Grid.Column="0"
 				Grid.Row="1"
 				VerticalAlignment="Bottom"
 				Margin="30,0,559,37"
 				Grid.ColumnSpan="2"
 				Height="92">
-				<Button
+                <Button
 					Content="Salir"
 					Style="{StaticResource BotonRedondeado}"
 					Width="110"
 					Height="38"
 					FontSize="20"
 					Click="MetodoBotonSalir" />
-				<Button
+                <Button
 					Content="Cancelar"
 					Style="{StaticResource BotonRedondeado}"
 					Width="110"
@@ -51,29 +51,29 @@
 					Margin="0 10 0 0"
 					FontSize="20"
 					Click="MetodoBotonCancelar" />
-			</StackPanel>
-			<StackPanel
-				Grid.Column="1"
+            </StackPanel>
+            <StackPanel
 				VerticalAlignment="Top"
 				HorizontalAlignment="Left"
-				Width="528"
+				Width="627"
 				Height="458"
-				Margin="22,31,0,0"
-				Grid.RowSpan="2">
-				<TextBlock
+				Margin="82,97,0,0"
+				Grid.RowSpan="2" Grid.ColumnSpan="2">
+                <TextBlock
 					Text="Crear/Modificar Usuario"
-					FontFamily="Ringbearer"
+					FontFamily="Javanese Text"
 					FontSize="50"
 					Style="{StaticResource LabelLindo}"
-					HorizontalAlignment="Center"
-					Margin="0 60 0 20"
-					Height="94"></TextBlock>
-				<TextBlock
+					Height="92" FlowDirection="RightToLeft" FontWeight="Bold" Width="568">
+                    <TextBlock.Background>
+                        <ImageBrush ImageSource="/UsuarioAdministrativo/labelFondo2025.png"/>
+                    </TextBlock.Background></TextBlock>
+                <TextBlock
 					Text="Usuario"
 					FontFamily="Bahnschrift Light"
 					FontSize="20"
 					HorizontalAlignment="Center" />
-				<TextBox
+                <TextBox
 					x:Name="guiUsuario"
 					Style="{StaticResource TextBoxLindo2}"
 					Width="220"
@@ -81,12 +81,12 @@
 					FontSize="16"
 					HorizontalAlignment="Center"
 					Margin="0 10 0 20" />
-				<TextBlock
+                <TextBlock
 					Text="Contraseña"
 					FontFamily="Bahnschrift Light"
 					FontSize="20"
 					HorizontalAlignment="Center" />
-				<PasswordBox
+                <PasswordBox
 					x:Name="guiPassword"
 					Style="{StaticResource PasswordBoxLindo2}"
 					Width="220"
@@ -94,7 +94,7 @@
 					FontSize="16"
 					HorizontalAlignment="Center"
 					Margin="0 10 0 30" />
-				<Button
+                <Button
 					x:Name="iniciarSesionButton"
 					Content="Iniciar sesión"
 					Style="{StaticResource BotonRedondeado}"
@@ -104,15 +104,15 @@
 					FontSize="20"
 					Background="#FF7FC7FA"
 					Click="MetodoBotonIniciarSesion" />
-			</StackPanel>
-			<ContentControl
+            </StackPanel>
+            <ContentControl
 				Grid.Row="0"
 				Grid.Column="2"
 				HorizontalAlignment="Center"
 				VerticalAlignment="Top"
 				Height="50"
 				Width="50">
-				<CheckBox
+                <CheckBox
 					x:Name="soundCheckBox"
 					Width="50"
 					Height="50"
@@ -120,38 +120,38 @@
 					Click="SoundCheckBox_Checked"
 					ToolTip="Sonido"
 					Margin="-48,18,48,-18">
-					<CheckBox.Template>
-						<ControlTemplate
+                    <CheckBox.Template>
+                        <ControlTemplate
 							TargetType="{x:Type CheckBox}">
-							<Image
+                            <Image
 								Width="40"
 								Height="40">
-								<Image.Style>
-									<Style
+                                <Image.Style>
+                                    <Style
 										TargetType="{x:Type Image}">
-										<Style.Triggers>
-											<DataTrigger
+                                        <Style.Triggers>
+                                            <DataTrigger
 												Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType={x:Type CheckBox}}}"
 												Value="True">
-												<Setter
+                                                <Setter
 													Property="Source"
 													Value="pack://application:,,,/PublishedResources/images/sonidoOn.png" />
-											</DataTrigger>
-											<DataTrigger
+                                            </DataTrigger>
+                                            <DataTrigger
 												Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType={x:Type CheckBox}}}"
 												Value="False">
-												<Setter
+                                                <Setter
 													Property="Source"
 													Value="pack://application:,,,/PublishedResources/images/sonidoOff.png" />
-											</DataTrigger>
-										</Style.Triggers>
-									</Style>
-								</Image.Style>
-							</Image>
-						</ControlTemplate>
-					</CheckBox.Template>
-				</CheckBox>
-			</ContentControl>
-		</Grid>
-	</Grid>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </ControlTemplate>
+                    </CheckBox.Template>
+                </CheckBox>
+            </ContentControl>
+        </Grid>
+    </Grid>
 </Window>

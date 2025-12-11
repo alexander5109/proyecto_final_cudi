@@ -36,4 +36,9 @@ public partial class DialogoModificarHorario : Window {
 	private void Cancelar_Click(object sender, RoutedEventArgs e) {
 		Close();
 	}
+
+    private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    {
+
+    }
 }

@@ -12,7 +12,7 @@
     <!-- ===== ESTILO DE BOTONES (mismo que en las otras pantallas) ===== -->
     <!-- Fondo -->
     <Window.Background>
-		<ImageBrush
+        <ImageBrush
 			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg"
                     Stretch="UniformToFill"/>
     </Window.Background>
@@ -27,8 +27,7 @@
 
         <StackPanel Orientation="Horizontal" Height="30">
             <Label Content="Día de la semana:"
-                   Width="100"
-                   HorizontalAlignment="Center"
+                   Width="110"
                    VerticalAlignment="Center"
                    HorizontalContentAlignment="Center"
                    VerticalContentAlignment="Center" FontFamily="Bahnschrift"/>
@@ -36,12 +35,11 @@
                 x:Name="txtComboBox"
                 ItemsSource="{Binding DiaSemanaValues}"
                 SelectedItem="{Binding Horario.DiaSemana}"
-                HorizontalAlignment="Center"
                 Margin="15,0,0,0"
                 VerticalAlignment="Center" 
                 VerticalContentAlignment="Center" 
                 HorizontalContentAlignment="Center" 
-                Width="120" 
+                Width="123" 
                 Height="20"/>
         </StackPanel>
 
@@ -50,7 +48,7 @@
                    HorizontalAlignment="Center" VerticalAlignment="Center"
                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Bahnschrift"/>
             <TextBox Text="{Binding Horario.Desde}"
-                     Width="122"
+                     Width="131"
                      VerticalAlignment="Center"
                      Margin="15,0,0,0"
                      Height="20"/>
@@ -61,10 +59,10 @@
                    HorizontalAlignment="Center" VerticalAlignment="Center"
                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Bahnschrift"/>
             <TextBox Text="{Binding Horario.Hasta}"
-                     Width="122"
+                     Width="130"
                      VerticalAlignment="Center"
                      Margin="15,0,0,0"
-                     Height="20"/>
+                     Height="20" TextChanged="TextBox_TextChanged"/>
         </StackPanel>
 
         <!-- Botones con estilo nuevo -->
@@ -72,11 +70,10 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Height="40">
+                    Height="123">
             <Button Content="Aceptar"
                     Width="110"
                     Height="30"
-                    Margin="5"
                     Click="Aceptar_Click"
                     Style="{StaticResource BotonRedondeado}" />
             <Button Content="Cancelar"

@@ -11,101 +11,22 @@
 	Activated="Window_Activated"
 	WindowStartupLocation="CenterScreen"
 	mc:Ignorable="d">
-	<!-- ============== FONDO GENERAL ============== -->
-	<Window.Background>
-		<ImageBrush
+    <!-- ============== FONDO GENERAL ============== -->
+    <Window.Background>
+        <ImageBrush
 			ImageSource="/PublishedResources/images2025sol/fondoClaro2025.jpg"
 			Stretch="Fill" />
-	</Window.Background>
-	<Grid
-		HorizontalAlignment="Stretch"
-		VerticalAlignment="Stretch"
-		Margin="25,25,25,25">
-		<StackPanel
+    </Window.Background>
+    <Grid
+		Margin="25,25,-33,-43">
+        <StackPanel
 			Orientation="Vertical"
 			Background="Transparent"
 			Margin="25,10,0,0"
 			VerticalAlignment="Top"
-			HorizontalAlignment="Left">
-			<ListView
-				x:Name="medicosListView"
-				Height="339"
-				Background="White"
-				BorderThickness="0"
-				SelectionChanged="MedicosListView_SelectionChanged"
-				BorderBrush="#72828790"
-				HorizontalContentAlignment="Center"
-				ScrollViewer.HorizontalScrollBarVisibility="Auto"
-				ScrollViewer.VerticalScrollBarVisibility="Auto"
-				Width="782">
-				<ListView.View>
-					<GridView>
-						<GridViewColumn
-							Header="Id"
-							DisplayMemberBinding="{Binding Id}"
-							Width="25" />
-						<GridViewColumn
-							Header="Dni"
-							DisplayMemberBinding="{Binding Dni}"
-							Width="60" />
-						<GridViewColumn
-							Header="Nombre"
-							DisplayMemberBinding="{Binding Nombre}"
-							Width="65" />
-						<GridViewColumn
-							Header="Apellido"
-							DisplayMemberBinding="{Binding Apellido}"
-							Width="70" />
-						<GridViewColumn
-							Header="Especialidad"
-							DisplayMemberBinding="{Binding EspecialidadCodigo}"
-							Width="80" />
-						<GridViewColumn
-							Header="Teléfono"
-							DisplayMemberBinding="{Binding Telefono}"
-							Width="70" />
-						<GridViewColumn
-							Header="Guardia"
-							DisplayMemberBinding="{Binding HaceGuardias}"
-							Width="45" />
-					</GridView>
-				</ListView.View>
-			</ListView>
-			<StackPanel
-				Orientation="Horizontal"
-				Background="Transparent"
-				VerticalAlignment="Center"
-				HorizontalAlignment="Center">
-				<!-- Agregar nuevo -->
-				<Button
-					Content="Agregar nuevo"
-					HorizontalAlignment="Left"
-					VerticalAlignment="Top"
-					Height="35"
-					Width="150"
-					Click="ButtonAgregarMedico"
-					FontSize="20"
-					FontFamily="Baskerville Old Face"
-					Margin="25,10,25,25"
-					Style="{StaticResource BotonRedondeado}" />
-				<!-- Modificar -->
-				<Button
-					x:Name="buttonModificarMedico"
-					Content="Modificar"
-					HorizontalAlignment="Left"
-					VerticalAlignment="Top"
-					Height="35"
-					Width="150"
-					Click="ButtonModificarMedico"
-					FontSize="20"
-					FontFamily="Baskerville Old Face"
-					Margin="25,10,25,25"
-					IsEnabled="False"
-					Style="{StaticResource BotonRedondeado}" />
-			</StackPanel>
-		</StackPanel>
-		<!-- Botones Home / Salir abajo a la izquierda -->
-		<Button
+			HorizontalAlignment="Left"/>
+        <!-- Botones Home / Salir abajo a la izquierda -->
+        <Button
 			Content="Home"
 			HorizontalAlignment="Left"
 			VerticalAlignment="Top"
@@ -114,9 +35,9 @@
 			Click="ButtonHome"
 			FontSize="20"
 			FontFamily="Baskerville Old Face"
-			Margin="25,464,0,0"
+			Margin="47,426,0,0"
 			Style="{StaticResource BotonRedondeado}" />
-		<Button
+        <Button
 			Content="Salir"
 			HorizontalAlignment="Left"
 			VerticalAlignment="Top"
@@ -125,20 +46,84 @@
 			Click="ButtonSalir"
 			FontSize="20"
 			FontFamily="Baskerville Old Face"
-			Margin="25,514,0,0"
+			Margin="47,484,0,0"
 			Style="{StaticResource BotonRedondeado}" />
-		<!-- Labels de modo de DB y título -->
-		<Label
+        <!-- Labels de modo de DB y título -->
+        <Label
 			Content="Medicos"
-			FontSize="72"
+			FontSize="60"
 			FontFamily="Javanese Text"
 			FlowDirection="RightToLeft"
 			Style="{StaticResource LabelLindo}"
 			HorizontalContentAlignment="Right"
 			FontWeight="Bold"
-			HorizontalAlignment="Center"
-			VerticalAlignment="Center"
-			Height="180"
-			Width="345" />
-	</Grid>
+			HorizontalAlignment="Left"
+			VerticalAlignment="Top"
+			Height="109"
+			Width="276" Margin="17,-14,0,0" />
+        <StackPanel
+				Orientation="Horizontal"
+				Background="Transparent" Margin="524,413,333,119">
+            <!-- Agregar nuevo -->
+            <Button
+					Content="Agregar nuevo"
+					Height="35"
+					Width="150"
+					Click="ButtonAgregarMedico"
+					FontSize="20"
+					FontFamily="Baskerville Old Face"
+					Style="{StaticResource BotonRedondeado}" />
+            
+        </StackPanel>
+        <Button
+					x:Name="buttonModificarMedico"
+					Content="Modificar"
+					Click="ButtonModificarMedico"
+					FontSize="20"
+					FontFamily="Baskerville Old Face"
+					Style="{StaticResource BotonRedondeado}" Margin="717,430,168,137" />
+        <ListView
+				x:Name="medicosListView"
+				Background="White"
+				BorderThickness="0"
+				SelectionChanged="MedicosListView_SelectionChanged"
+				BorderBrush="#72828790"
+				HorizontalContentAlignment="Center"
+				ScrollViewer.HorizontalScrollBarVisibility="Auto"
+				ScrollViewer.VerticalScrollBarVisibility="Auto"
+				d:ItemsSource="{d:SampleData ItemCount=5}" Margin="144,115,158,202">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn
+							Header="Id"
+							DisplayMemberBinding="{Binding Id}"
+							Width="25" />
+                    <GridViewColumn
+							Header="Dni"
+							DisplayMemberBinding="{Binding Dni}"
+							Width="60" />
+                    <GridViewColumn
+							Header="Nombre"
+							DisplayMemberBinding="{Binding Nombre}"
+							Width="65" />
+                    <GridViewColumn
+							Header="Apellido"
+							DisplayMemberBinding="{Binding Apellido}"
+							Width="70" />
+                    <GridViewColumn
+							Header="Especialidad"
+							DisplayMemberBinding="{Binding EspecialidadCodigo}"
+							Width="80" />
+                    <GridViewColumn
+							Header="Teléfono"
+							DisplayMemberBinding="{Binding Telefono}"
+							Width="70" />
+                    <GridViewColumn
+							Header="Guardia"
+							DisplayMemberBinding="{Binding HaceGuardias}"
+							Width="45" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
 </Window>
