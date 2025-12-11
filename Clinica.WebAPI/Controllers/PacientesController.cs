@@ -13,7 +13,7 @@ namespace Clinica.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class PacientesController(
-	IRepositorioPacientes repositorio, 
+	IRepositorioPacientes repositorio,
 	ILogger<PacientesController> logger
 ) : ControllerBase {
 
@@ -111,15 +111,17 @@ public class PacientesController(
 
 
 	[HttpPost]
-	public Task<IActionResult> CrearPaciente([FromBody] PacienteDto dto)
-	=> this.SafeExecuteWithDomain(
-		logger,
-		PermisosAccionesCodigo.CrearPacientes,
-		dto,
-		x => x.ToDomain(),
-		paciente => repositorio.InsertPacienteReturnId(paciente)
-	);
+	public Task<IActionResult<int>> CrearPaciente([FromBody] PacienteDto dto) {
+		Console.WriteLine(dto.ToString());
 
+		return this.SafeExecuteWithDomain(
+		   logger,
+		   PermisosAccionesCodigo.CrearPacientes,
+		   dto,
+		   x => x.ToDomain(),
+		   paciente => repositorio.InsertPacienteReturnId(paciente)
+	   );
+	}
 
 
 }

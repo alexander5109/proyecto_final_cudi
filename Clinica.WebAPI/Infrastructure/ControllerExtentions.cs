@@ -86,25 +86,27 @@ public static class ControllerExtensions {
 	// --------------------------------------------------------
 	// Variante con DTO -> Domain -> Acción de dominio
 	// --------------------------------------------------------
-	public static async Task<IActionResult> SafeExecuteWithDomain<TDto, TDomain, TResult>(
+
+
+	public static async Task<ActionResult<TOut>> SafeExecuteWithDomain<
+		TDto, TDomain, TResult, TOut
+	>(
 		this ControllerBase controller,
 		ILogger logger,
 		PermisosAccionesCodigo permiso,
 		TDto dto,
 		Func<TDto, Result<TDomain>> toDomain,
 		Func<TDomain, Task<Result<TResult>>> action,
+		Func<TResult, TOut> mapToOut, // <-- NUEVO
 		string? notFoundMessage = null
 	) {
 		return await controller.SafeExecute<TResult>(
 			logger,
 			permiso,
 			async () => {
-				// Convertir DTO a dominio
 				Result<TDomain> dom = toDomain(dto);
 				if (dom.IsError)
 					return new Result<TResult>.Error(dom.UnwrapAsError());
-
-				// Ejecutar acción de dominio
 				return await action(dom.UnwrapAsOk());
 			},
 			notFoundMessage

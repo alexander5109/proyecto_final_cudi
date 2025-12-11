@@ -43,7 +43,7 @@ public record Paciente2025(
 			Dni: {Dni.Valor}\n
 			Contacto: {Contacto.ATexto()}\n
 			Domicilio: {Domicilio.ATexto()}\n
-			FechaNacimiento: {FechaNacimiento.ATexto()}\n
+			FechaNacimiento: {FechaNacimiento.Valor.ATexto()}\n
 			FechaIngreso: {FechaIngreso.ATextoHoras()}\n
 		";
 	}

@@ -18,15 +18,15 @@ public static class ServiciosPublicosDtos {
 	public sealed record ProgramarTurnoDto(
 		PacienteId PacienteId,
 		DateTime FechaSolicitud,
-		DisponibilidadDto Disponibilidad
+		Disponibilidad2025 Disponibilidad
 	);
-	public sealed record DisponibilidadDto(
-		EspecialidadCodigo EspecialidadCodigo,
-		MedicoId MedicoId,
-		DateTime FechaHoraDesde,
-		DateTime FechaHoraHasta
-	);
-	public static Disponibilidad2025 ToDomain(this DisponibilidadDto dto) {
+	//public sealed record DisponibilidadDto( //usemos el del domino
+	//	EspecialidadCodigo EspecialidadCodigo,
+	//	MedicoId MedicoId,
+	//	DateTime FechaHoraDesde,
+	//	DateTime FechaHoraHasta
+	//);
+	public static Disponibilidad2025 ToDomain(this Disponibilidad2025 dto) {
 		return new Disponibilidad2025(
 			dto.EspecialidadCodigo,
 			dto.MedicoId,

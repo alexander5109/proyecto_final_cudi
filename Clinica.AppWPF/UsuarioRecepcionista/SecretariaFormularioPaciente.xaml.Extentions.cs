@@ -31,7 +31,7 @@ public static class RecepcionistaPacienteMiniViewModels {
 			Localidad = model.Localidad,
 			Provincia = model.ProvinciaCodigo.ToViewModel()
 		};
-	public static ResultWpf<Paciente2025> ToDomain(this RecepcionistaPacienteFormularioViewModel viewModel) {
+	public static ResultWpf<Paciente2025> ToDomain(this RecepcionistaPacienteFormularioViewModel viewModel, DateTime fechaIngreso) {
 		return Paciente2025.CrearResult(
 			//PacienteId.CrearResult(viewModel.Id),
 			NombreCompleto2025.CrearResult(viewModel.Nombre, viewModel.Apellido),
@@ -45,7 +45,7 @@ public static class RecepcionistaPacienteMiniViewModels {
 				viewModel.Domicilio
 			),
 			FechaDeNacimiento2025.CrearResult(viewModel.FechaNacimiento),
-			viewModel.FechaIngreso
+			fechaIngreso
 		).ToWpf();
 	}
 }

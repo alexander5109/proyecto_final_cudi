@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel;
+using System.Windows;
 using Clinica.AppWPF;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.UsuarioRecepcionista;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Shared.DbModels;
 using static Clinica.AppWPF.UsuarioRecepcionista.RecepcionistaPacienteMiniViewModels;
 
 
@@ -50,8 +52,8 @@ public class RecepcionistaPacienteFormularioViewModel : INotifyPropertyChanged {
 		set { _apellido = value; Notify(nameof(Apellido)); }
 	}
 
-	private DateTime _fechaIngreso;
-	public DateTime FechaIngreso {
+	private DateTime? _fechaIngreso;
+	public DateTime? FechaIngreso {
 		get => _fechaIngreso;
 		set { _fechaIngreso = value; Notify(nameof(FechaIngreso)); }
 	}
@@ -100,12 +102,15 @@ public class RecepcionistaPacienteFormularioViewModel : INotifyPropertyChanged {
 
 
 	public async Task<ResultWpf<UnitWpf>> GuardarAsync() {
-		return await this.ToDomain().Bind(async paciente =>
+		return await this.ToDomain(fechaIngreso:DateTime.Now).Bind(async paciente =>
 		{
 			if (Id is PacienteId idExistente) {
 				Paciente2025Agg agg = new(idExistente, paciente);
 				return await App.Repositorio.UpdatePacienteWhereId(agg);
 			} else {
+				//MessageBox.Show(paciente.FechaIngreso);
+				//MessageBox.Show(paciente.FechaNacimiento);
+
 				return (await App.Repositorio.InsertPacienteReturnId(paciente))
 					.MatchTo<PacienteId, UnitWpf>(
 						ok => {

@@ -1,6 +1,7 @@
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
@@ -19,14 +20,23 @@ public partial class SecretariaFormularioTurno : Window {
 		await VM.RefreshDisponibilidadesAsync();
 	}
 
-	private void Click_AgendarNuevoTurno(object sender, RoutedEventArgs e) {
+	async private void Click_AgendarNuevoTurno(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 
-		if (VM.SelectedDisponibilidad is not null) {
-			DisponibilidadEspecialidadModelView d = VM.SelectedDisponibilidad;
-			MessageBox.Show($"Reservando turno: {d.Fecha} {d.Hora}", "Reservar");
-			Close();
-		}
+		if (VM.SelectedDisponibilidad is null) return;
+		DisponibilidadEspecialidadModelView d = VM.SelectedDisponibilidad;
+		MessageBox.Show($"Reservando turno: {d.Fecha} {d.Hora}", "Reservar");
+		Close();
+        ResultWpf<TurnoDbModel> result = await App.Repositorio.AgendarNuevoTurno(
+			VM.SelectedPaciente.Id,
+			DateTime.Now,
+			VM.SelectedDisponibilidad.Original
+		);
+		result.MatchAndDo(
+			caseOk => MessageBox.Show("Turno reservado exitosamente.", "Éxito", MessageBoxButton.OK),
+			caseError => caseError.ShowMessageBox()
+		);
+
 
 	}
 

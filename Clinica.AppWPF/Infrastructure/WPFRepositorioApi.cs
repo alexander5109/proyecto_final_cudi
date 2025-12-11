@@ -171,29 +171,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 				instance.ToDto()
 			),
 			onOk: async response => {
-				int id = await response.Content.ReadFromJsonAsync<int>();
-				return new UsuarioId(id);
+				return await response.Content.ReadFromJsonAsync<UsuarioId>();
 			},
 			errorTitle: "Error creando usuario"
 		);
-		return result;
-	}
-
-
-
-
-	async Task<ResultWpf<UnitWpf>> IWPFRepositorioPacientes.UpdatePacienteWhereId(Paciente2025Agg aggrg) {
-		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
-			() => Api.Cliente.PutAsJsonAsync(
-				$"api/pacientes/{aggrg.Id.Valor}",
-				aggrg.ToModel()
-			),
-			onOk: async response => UnitWpf.Valor,
-			errorTitle: $"Error actualizando el agregado {aggrg.Id.Valor}"
-		);
-
-		_ = RefreshPacientes();
-
 		return result;
 	}
 
@@ -257,6 +238,24 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioPacientes.UpdatePacienteWhereId(Paciente2025Agg aggrg) {
+		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
+			() => Api.Cliente.PutAsJsonAsync(
+				$"api/pacientes/{aggrg.Id.Valor}",
+				aggrg.ToModel()
+			),
+			onOk: async response => UnitWpf.Valor,
+			errorTitle: $"Error actualizando el agregado {aggrg.Id.Valor}"
+		);
+
+		_ = RefreshPacientes();
+
+		return result;
+	}
+
+
+
+
 
 	async Task<List<Disponibilidad2025>> IWPFRepositorioDominio.SelectDisponibilidades(
 		EspecialidadCodigo especialidad,
@@ -309,9 +308,32 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return result;
 	}
 
-	async Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad) {
-		throw new NotImplementedException();
+	async Task<UsuarioDto?> IWPFRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName username) {
+		return await Api.TryGetJsonOrNullAsync<UsuarioDto>($"api/usuarios/{username.Valor}");
 	}
+
+	async Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad) {
+		ResultWpf<TurnoDbModel> response = await Api.TryApiCallAsync(
+			() => Api.Cliente.PostAsJsonAsync(
+				"api/ServiciosPublicos/Turnos/Programar",
+				new ProgramarTurnoDto(
+					pacienteId,
+					fechaSolicitud,
+					disponibilidad
+				)
+			),
+			onOk: async response => {
+				return (await response.Content.ReadFromJsonAsync<TurnoDbModel>())!; //MMMMMM CODE SMELL
+			},
+			errorTitle: "Error agendando turno"
+		);
+		_ = RefreshPacientes();
+		return response;
+	}
+
+
+
+
 	async Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string? reason) {
 		//if (string.IsNullOrEmpty(reason)) {
 		//return new ResultWpf<TurnoDbModel>.Error("Marcar un turno como reprogramado requiere un comentario con motivo.");
@@ -339,9 +361,5 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 	async Task<List<UsuarioDbModel>> IWPFRepositorioUsuarios.SelectUsuarios() {
 		throw new NotImplementedException();
-	}
-
-	async Task<UsuarioDto?> IWPFRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName username) {
-		return await Api.TryGetJsonOrNullAsync<UsuarioDto>($"api/usuarios/{username.Valor}");
 	}
 }
