@@ -65,8 +65,7 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 				DateTime.Now,
 				VM.SelectedTurno.OutcomeComentario
 			);
-
-			if (MostrarErrorSiCorresponde(result))
+			if (!MostrarErrorSiCorresponde(result))
 				return;
 
 
@@ -86,13 +85,11 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 			DateTime.Now,
 			VM.SelectedTurno.OutcomeComentario
 		);
-
-		if (MostrarErrorSiCorresponde(result))
+		if (!MostrarErrorSiCorresponde(result))
 			return;
 
 		await RefrescarTurnosAsync();
 	}
-
 
 	private async void Button_ReprogramarTurno(object sender, RoutedEventArgs e) {
 		if (VM.SelectedTurno is null) return;
@@ -107,10 +104,8 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 
 		this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedPaciente, VM.SelectedTurno);
 
-
-
 		await RefrescarTurnosAsync();
-		VM.SelectedTurno = null; //to trigger refreshes
+		VM.SelectedTurno = null;
 	}
 
 
@@ -124,17 +119,26 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 			return;
 		}
 
-		ResultWpf<TurnoDbModel> result = await App.Repositorio.CancelarTurno(
+		if (MessageBox.Show(
+				"¿Desea cancelar el turno seleccionado?",
+				"Confirmación",
+				MessageBoxButton.YesNo,
+				MessageBoxImage.Warning) != MessageBoxResult.Yes)
+			return;
+
+		var result = await App.Repositorio.CancelarTurno(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
 			VM.SelectedTurno.OutcomeComentario
 		);
 
-		if (MostrarErrorSiCorresponde(result))
+		if (!MostrarErrorSiCorresponde(result))
 			return;
 
 		await RefrescarTurnosAsync();
+		VM.SelectedTurno = null;
 	}
+
 
 
 	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {

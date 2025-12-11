@@ -237,6 +237,7 @@ public static class TurnoExtentions {
 		DateTime fechaEvento,
 		string? comentario
 	) {
+		Console.WriteLine($"peticion de MarcarComoCancelado\n\t{turnoOriginal}");
 		if (comentario is null)
 			return new Result<Turno2025>.Error("El comentario es obligatorio para cancelar un turno.");
 
