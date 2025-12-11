@@ -1,7 +1,6 @@
 ﻿using Clinica.AppWPF.Infrastructure;
 using System.Windows;
 using System.Windows.Controls;
-using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF;
 

@@ -1,13 +1,12 @@
 ﻿using System.Windows;
-using static Clinica.Shared.Dtos.ApiDtos;
 
 namespace Clinica.AppWPF.Ventanas;
 
 
-public partial class WindowModificarHorario : Window {
+public partial class DialogoModificarHorario : Window {
 	public HorarioModificarViewModel VM { get; }
 
-	public WindowModificarHorario(MedicoDto medico, HorarioMedicoDto horario, bool esNuevo) {
+	public DialogoModificarHorario(MedicoDto medico, HorarioMedicoDto horario, bool esNuevo) {
 		InitializeComponent();
 		VM = new HorarioModificarViewModel(medico, horario, esNuevo);
 		DataContext = VM;

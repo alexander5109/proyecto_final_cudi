@@ -1,16 +1,16 @@
 ﻿using Clinica.AppWPF.Infrastructure;
 using System.Windows;
 using System.Windows.Controls;
-using static Clinica.Shared.Dtos.ApiDtos;
+using static Clinica.Shared.ApiDtos.MedicoDtos;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
-public partial class Medicos : Window {
+public partial class AdministrativoGestionDeMedicos : Window {
 	private MedicoDto? SelectedMedico = null;
 	private TurnoDto? SelectedTurno = null;
 	private PacienteDto? PacienteRelacionado = null;
 
-	public Medicos() {
+	public AdministrativoGestionDeMedicos() {
 		InitializeComponent();
 		_ = CargaInicialAsync();
 	}

@@ -5,7 +5,6 @@ using Clinica.Infrastructure.IRepositorios;
 using Clinica.Infrastructure.Repositorios;
 using Clinica.WebAPI.Controllers;
 using Microsoft.IdentityModel.Tokens;
-using static Clinica.WebAPI.Controllers.AuthMiddleware;
 
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

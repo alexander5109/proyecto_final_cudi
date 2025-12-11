@@ -2,7 +2,6 @@
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
-using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.Infrastructure.IRepositorios;

@@ -1,7 +1,5 @@
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.TiposDeIdentificacion;
-using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;

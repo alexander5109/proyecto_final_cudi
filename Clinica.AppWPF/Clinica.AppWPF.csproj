@@ -15,16 +15,12 @@
     <Resource Include="PublishedResources\**\*" Exclude="PublishedResources\sonidos\**\*" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="UsuarioAdministrativo\**" />
     <Compile Remove="UsuarioMedico\**" />
     <Compile Remove="UsuarioSuperadmin\**" />
-    <EmbeddedResource Remove="UsuarioAdministrativo\**" />
     <EmbeddedResource Remove="UsuarioMedico\**" />
     <EmbeddedResource Remove="UsuarioSuperadmin\**" />
-    <None Remove="UsuarioAdministrativo\**" />
     <None Remove="UsuarioMedico\**" />
     <None Remove="UsuarioSuperadmin\**" />
-    <Page Remove="UsuarioAdministrativo\**" />
     <Page Remove="UsuarioMedico\**" />
     <Page Remove="UsuarioSuperadmin\**" />
   </ItemGroup>

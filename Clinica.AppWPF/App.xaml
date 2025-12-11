@@ -150,7 +150,7 @@
 				Property="Background">
 				<Setter.Value>
 					<ImageBrush
-						ImageSource="pack://application:,,,/PublishedResources/images/labelFondo2025.png" />
+						ImageSource="pack://application:,,,/PublishedResources/images2025sol/labelFondo2025.png" />
 				</Setter.Value>
 			</Setter>
 			<Setter
@@ -367,7 +367,7 @@
 								<Border.Background>
 									<!-- Imagen verde/azul de los botones -->
 									<ImageBrush
-										ImageSource="PublishedResources/images/boton/BLUEGREEN.jpeg"
+										ImageSource="PublishedResources/images2025sol/BLUEGREEN.jpeg"
 										Stretch="Fill" />
 								</Border.Background>
 								<TextBlock

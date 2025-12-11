@@ -2,8 +2,6 @@
 using System.Security.Claims;
 using System.Text;
 using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeAgregado;
-using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.IRepositorios;
 using Microsoft.AspNetCore.Mvc;

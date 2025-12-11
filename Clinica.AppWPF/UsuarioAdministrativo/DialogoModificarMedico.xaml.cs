@@ -1,9 +1,8 @@
-﻿using Clinica.AppWPF.Dtos;
-using Clinica.AppWPF.Ventanas;
+﻿using Clinica.AppWPF.Ventanas;
 using System.ComponentModel;
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.Entidades;
+using static Clinica.Shared.ApiDtos.MedicoDtos;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
@@ -94,10 +93,10 @@ public partial class MedicoModificar : Window, INotifyPropertyChanged {
 			Hasta = new TimeOnly(12, 0)
 		};
 
-		WindowModificarHorario win = new(SelectedMedico, nuevoHorario, esNuevo: true);
+		DialogoModificarHorario win = new(SelectedMedico, nuevoHorario, esNuevo: true);
 
 		if (win.ShowDialog() == true) {
-			// Se agregó realmente dentro de WindowModificarHorario
+			// Se agregó realmente dentro de DialogoModificarHorario
 			// Ahora refrescamos los agrupados (INotifyPropertyChanged se encarga)
 			OnPropertyChanged(nameof(SelectedMedico.HorariosAgrupados));
 		}
@@ -111,7 +110,7 @@ public partial class MedicoModificar : Window, INotifyPropertyChanged {
 			return;
 		}
 
-        WindowModificarHorario win = new(SelectedMedico, horario, esNuevo: false);
+        DialogoModificarHorario win = new(SelectedMedico, horario, esNuevo: false);
 
 		if (win.ShowDialog() == true) {
 			// El horario ya está modificado (data binding)

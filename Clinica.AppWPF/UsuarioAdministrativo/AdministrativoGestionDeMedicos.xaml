@@ -1,158 +1,192 @@
 ﻿<Window
-	x:Class="Clinica.AppWPF.UsuarioAdministrativo.Medicos"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	Title="Clinica Medica - Medicos"
-	Height="600"
-	Width="800"
-	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
-	Activated="Window_Activated"
-	WindowStartupLocation="CenterScreen">
-	<Grid
-		HorizontalAlignment="Stretch"
-		VerticalAlignment="Stretch">
-		<Grid.Background>
-			<ImageBrush
-				ImageSource="pack://application:,,,/PublishedResources/images/pngwing.com.png" />
-		</Grid.Background>
-		<!-- Definicion del grid -->
-		<ContentControl
-			Style="{StaticResource ContentControlLindo}"
-			HorizontalAlignment="Left"
-			VerticalAlignment="Top"
-			Height="324"
-			Width="563"
-			Margin="144,40,0,0">
-			<StackPanel
-				Orientation="Vertical"
-				Background="Transparent">
-				<Label
-					Content="Usuarios"
-					HorizontalAlignment="Center"
-					VerticalAlignment="Center"
-					FontSize="72"
-					FontFamily="Ringbearer"
-					Grid.RowSpan="2" />
-				<ListView
-					Name="medicosListView"
-					Background="Transparent"
-					BorderThickness="0"
-					SelectionChanged="MedicosListView_SelectionChanged"
-					BorderBrush="#72828790"
-					HorizontalAlignment="Center"
-					Margin="0,0,0,10"
-					HorizontalContentAlignment="Center"
-					ScrollViewer.HorizontalScrollBarVisibility="Auto"
-					ScrollViewer.VerticalScrollBarVisibility="Auto"
-					Height="100"
-					Width="616">
-					<ListView.View>
-						<GridView>
-							<GridViewColumn
-								Header="NombreUsuario"
-								DisplayMemberBinding="{Binding NombreUsuario}"
-								Width="auto" />
-							<GridViewColumn
-								Header="Nombre"
-								DisplayMemberBinding="{Binding Nombre}"
-								Width="auto" />
-							<GridViewColumn
-								Header="Apellido"
-								DisplayMemberBinding="{Binding Apellido}"
-								Width="auto" />
-							<GridViewColumn
-								Header="Telefono"
-								DisplayMemberBinding="{Binding Telefono}"
-								Width="auto" />
-							<GridViewColumn
-								Header="Email"
-								DisplayMemberBinding="{Binding Email}"
-								Width="auto" />
-							<GridViewColumn
-								Header="Rol"
-								DisplayMemberBinding="{Binding Rol}"
-								Width="auto" />
-						</GridView>
-					</ListView.View>
-				</ListView>
-				<StackPanel
-					Orientation="Horizontal"
-					Background="Transparent"
-					VerticalAlignment="Center"
-					HorizontalAlignment="Center">
-					<Button
-						Content="Agregar nuevo"
-						HorizontalAlignment="Left"
-						VerticalAlignment="Top"
-						Height="35"
-						Width="150"
-						Click="ButtonAgregarMedico"
-						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
-						FontWeight="Bold"
-						BorderBrush="#FF0E0D0D"
-						FontFamily="Baskerville Old Face"
-						Margin="25,10,25,25"></Button>
-					<Button
-						x:Name="buttonModificarMedico"
-						Content="Modificar"
-						HorizontalAlignment="Left"
-						VerticalAlignment="Top"
-						Height="35"
-						Click="ButtonModificarMedico"
-						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
-						FontWeight="Bold"
-						BorderBrush="#FF0E0D0D"
-						FontFamily="Baskerville Old Face"
-						IsEnabled="False"
-						Margin="25,10,25,25"
-						Width="150" />
-				</StackPanel>
-			</StackPanel>
-		</ContentControl>
-		<!-- Botones -->
-		<Button
-			Content="Home"
-			HorizontalAlignment="Left"
-			VerticalAlignment="Top"
-			Height="37"
-			Width="170"
-			Click="ButtonHome"
-			FontSize="20"
-			Style="{StaticResource BotonRedondeado}"
-			FontWeight="Bold"
-			BorderBrush="#FF0E0D0D"
-			Margin="25,464,0,0"
-			FontFamily="Baskerville Old Face" />
-		<Button
-			Content="Salir"
-			HorizontalAlignment="Left"
-			VerticalAlignment="Top"
-			Height="37"
-			Width="170"
-			Click="ButtonSalir"
-			FontSize="20"
-			Style="{StaticResource BotonRedondeado}"
-			FontWeight="Bold"
-			BorderBrush="#FF0E0D0D"
-			Margin="25,514,0,0"
-			FontFamily="Baskerville Old Face" />
-		<Label
-			Style="{StaticResource LabelLindo}"
-			x:Name="labelBaseDeDatosModo"
-			Content="Elegir DB Modo"
-			Margin="708,480,0,0"
-			FontSize="35"
-			HorizontalAlignment="Left"
-			FontFamily="Palatino Linotype"
-			VerticalAlignment="Top"
-			Foreground="#FF0F0A2B"
-			HorizontalContentAlignment="Center"
-			VerticalContentAlignment="Center"
-			Padding="10,10,10,10"
-			Width="316" />
-	</Grid>
+    x:Class="Clinica.AppWPF.UsuarioAdministrativo.Medicos"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Clinica Medica - Medicos"
+    Height="600"
+    Width="1024"
+    Icon="pack://application:,,,/PublishedResources/icons/icono.png"
+    Activated="Window_Activated"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+
+    <!-- ================== ESTILOS ================== -->
+    <Window.Resources>
+
+        <!-- Botón redondeado con la imagen verde/azul -->
+        <Style x:Key="BotonRedondeado" TargetType="Button">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                CornerRadius="10"
+                                SnapsToDevicePixels="True">
+                            <Border.Background>
+                                <!-- imagen de los botones -->
+                                <ImageBrush ImageSource="/UsuarioSecretaria/this-beautiful-gradient-art-piece-showcases-a-blend-of-teal-green-and-blue-tones-free-photo.jpeg"
+                                            Stretch="Fill" />
+                            </Border.Background>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- hover -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border"
+                                        Property="Opacity"
+                                        Value="0.9" />
+                            </Trigger>
+                            <!-- presionado -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border"
+                                        Property="Opacity"
+                                        Value="0.8" />
+                            </Trigger>
+                            <!-- deshabilitado -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border"
+                                        Property="Opacity"
+                                        Value="0.5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <!-- ================== CONTENIDO ================== -->
+    <Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+
+        <!-- Fondo de la ventana -->
+        <Grid.Background>
+            <ImageBrush
+                ImageSource="/UsuarioAdministrativo/8fdc7c4e57f0801738927b57b4a8e837.jpg" />
+        </Grid.Background>
+
+        <!-- Lista de médicos + botones principales -->
+        <ContentControl Margin="4,17,573,135">
+            <StackPanel Orientation="Vertical"
+                        Background="Transparent"
+                        Margin="199,112,-553,-244">
+
+                <ListView x:Name="medicosListView"
+                          Height="339"
+                          Background="White"
+                          BorderThickness="0"
+                          SelectionChanged="MedicosListView_SelectionChanged"
+                          BorderBrush="#72828790"
+                          HorizontalContentAlignment="Center"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          Width="782">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Id"
+                                            DisplayMemberBinding="{Binding Id}"
+                                            Width="25" />
+                            <GridViewColumn Header="Dni"
+                                            DisplayMemberBinding="{Binding Dni}"
+                                            Width="60" />
+                            <GridViewColumn Header="Nombre"
+                                            DisplayMemberBinding="{Binding Nombre}"
+                                            Width="65" />
+                            <GridViewColumn Header="Apellido"
+                                            DisplayMemberBinding="{Binding Apellido}"
+                                            Width="70" />
+                            <GridViewColumn Header="Especialidad"
+                                            DisplayMemberBinding="{Binding EspecialidadCodigo}"
+                                            Width="80" />
+                            <GridViewColumn Header="Teléfono"
+                                            DisplayMemberBinding="{Binding Telefono}"
+                                            Width="70" />
+                            <GridViewColumn Header="Guardia"
+                                            DisplayMemberBinding="{Binding HaceGuardias}"
+                                            Width="45" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <StackPanel Orientation="Horizontal"
+                            Background="Transparent"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+
+                    <!-- Agregar nuevo -->
+                    <Button Content="Agregar nuevo"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Height="35"
+                            Width="150"
+                            Click="ButtonAgregarMedico"
+                            FontSize="20"
+                            FontFamily="Baskerville Old Face"
+                            Margin="25,10,25,25"
+                            Style="{StaticResource BotonRedondeado}" />
+
+                    <!-- Modificar -->
+                    <Button x:Name="buttonModificarMedico"
+                            Content="Modificar"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Height="35"
+                            Width="150"
+                            Click="ButtonModificarMedico"
+                            FontSize="20"
+                            FontFamily="Baskerville Old Face"
+                            Margin="25,10,25,25"
+                            IsEnabled="False"
+                            Style="{StaticResource BotonRedondeado}" />
+
+                </StackPanel>
+            </StackPanel>
+        </ContentControl>
+
+        <!-- Botones Home / Salir abajo a la izquierda -->
+        <Button Content="Home"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Height="37"
+                Width="170"
+                Click="ButtonHome"
+                FontSize="20"
+                FontFamily="Baskerville Old Face"
+                Margin="25,464,0,0"
+                Style="{StaticResource BotonRedondeado}" />
+
+        <Button Content="Salir"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Height="37"
+                Width="170"
+                Click="ButtonSalir"
+                FontSize="20"
+                FontFamily="Baskerville Old Face"
+                Margin="25,514,0,0"
+                Style="{StaticResource BotonRedondeado}" />
+
+        <!-- Labels de modo de DB y título -->
+
+        <Label Content="Medicos"
+               FontSize="72"
+               FontFamily="Javanese Text"
+               FlowDirection="RightToLeft"
+               HorizontalContentAlignment="Right"
+               FontWeight="Bold"
+               Margin="10,0,720,464">
+            <Label.Background>
+                <ImageBrush ImageSource="/UsuarioAdministrativo/pngwing.com (1).png" />
+            </Label.Background>
+        </Label>
+
+    </Grid>
 </Window>

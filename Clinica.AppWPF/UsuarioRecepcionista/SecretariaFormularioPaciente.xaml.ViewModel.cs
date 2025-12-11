@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel;
-using System.Windows;
 using Clinica.AppWPF;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.AppWPF.UsuarioRecepcionista;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
-using Clinica.Shared.DbModels;
 using static Clinica.AppWPF.UsuarioRecepcionista.RecepcionistaPacienteMiniViewModels;
 
 

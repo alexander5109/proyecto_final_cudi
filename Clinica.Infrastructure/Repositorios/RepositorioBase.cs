@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeIdentificacion;
-using Clinica.Infrastructure.IRepositorios;
 using Clinica.Infrastructure.TypeHandlers;
 using Dapper;
 using Microsoft.Data.SqlClient;
