@@ -15,7 +15,7 @@ public partial class Medicos : Window {
 
 	//----------------------ActualizarSecciones-------------------//
 	async private void UpdateMedicoUI() {
-		medicosListView.ItemsSource = await App.Repositorio.SelectMedicosWithHorarios();
+		medicosListView.ItemsSource = await App.Repositorio.SelectMedicos();
 		buttonModificarMedico.IsEnabled = SelectedMedico != null;
 	}
 	async private void UpdateTurnoUI() {

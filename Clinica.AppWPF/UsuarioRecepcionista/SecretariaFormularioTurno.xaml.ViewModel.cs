@@ -136,7 +136,7 @@ internal class MyViewModel : INotifyPropertyChanged {
 
 
 	public async Task LoadMedicosTodosAsync() {
-		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicosWithHorarios();
+		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
 		MedicosTodos = [.. medicos.Select(m => m.ToSimpleViewModel())];
 		OnPropertyChanged(nameof(MedicosTodos));
 		OnPropertyChanged(nameof(ComboBoxMedicosEnabled));

@@ -30,35 +30,56 @@ public sealed class TurnoViewModel(TurnoDbModel model) {
 public sealed class RecepcionistaGestionDeTurnosViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	// ==== PACIENTES ====
-	private List<PacienteDbModel> _pacientes = [];
-	public List<PacienteDbModel> PacientesList {
-		get => _pacientes;
-		set { _pacientes = value; OnPropertyChanged(nameof(PacientesList)); }
+	// ================================================================
+	// TURNOS
+	// ================================================================
+
+	private List<TurnoViewModel> _turnosOriginal = [];   // Original immutable list
+	private List<TurnoViewModel> _turnos = [];           // Filtered list for the UI
+
+	public List<TurnoViewModel> TurnosList {
+		get => _turnos;
+		private set {
+			_turnos = value;
+			OnPropertyChanged(nameof(TurnosList));
+		}
 	}
 
+	public void CargarTurnos(List<TurnoViewModel> turnos) {
+		_turnosOriginal = turnos;
+		_turnos = turnos;
 
-
-
-	// FILTRO ESPECIALIDAD
-	public List<EspecialidadCodigo> Especialidades { get; } =
-		Enum.GetValues<EspecialidadCodigo>().ToList();
-
-	private EspecialidadCodigo? _especialidadSeleccionada;
-	public EspecialidadCodigo? EspecialidadSeleccionada {
-		get => _especialidadSeleccionada;
-		set { _especialidadSeleccionada = value; OnPropertyChanged(nameof(EspecialidadSeleccionada)); AplicarFiltros(); }
+		// DEFAULT FILTER: only "Programado"
+		EstadoSeleccionado = TurnoEstadoCodigo.Programado;
+		AplicarFiltros();
 	}
 
-	// FILTRO POR DNI
-	private string _filtroDniPaciente = "";
-	public string FiltroDniPaciente {
-		get => _filtroDniPaciente;
-		set { _filtroDniPaciente = value; OnPropertyChanged(nameof(FiltroDniPaciente)); AplicarFiltros(); }
+	// ================================================================
+	// SELECTED TURNO
+	// ================================================================
+
+	private TurnoViewModel? _turnoSeleccionado;
+	public TurnoViewModel? SelectedTurno {
+		get => _turnoSeleccionado;
+		set {
+			if (_turnoSeleccionado != value) {
+				_turnoSeleccionado = value;
+				OnPropertyChanged(nameof(SelectedTurno));
+				OnPropertyChanged(nameof(HayTurnoSeleccionado));
+				OnPropertyChanged(nameof(PuedeCancelarTurno));
+				OnPropertyChanged(nameof(PuedeConfirmarTurno));
+				OnPropertyChanged(nameof(PuedeMarcarComoAusente));
+			}
+		}
 	}
 
+	public bool HayTurnoSeleccionado => SelectedTurno is not null;
 
-	// ==================== FILTRO POR PACIENTE (texto) ====================
+
+	// ================================================================
+	// FILTER: PACIENTE (search in PacienteDisplayear)
+	// ================================================================
+
 	private string _filtroTurnosPaciente = "";
 	public string FiltroTurnosPaciente {
 		get => _filtroTurnosPaciente;
@@ -71,9 +92,12 @@ public sealed class RecepcionistaGestionDeTurnosViewModel : INotifyPropertyChang
 		}
 	}
 
-	// ==================== FILTRO POR ESTADO ====================
-	public List<TurnoEstadoCodigo> Estados { get; } =
-		Enum.GetValues<TurnoEstadoCodigo>().ToList();
+	// ================================================================
+	// FILTER: ESTADO
+	// ================================================================
+
+	public List<TurnoEstadoCodigo> Estados { get; }
+		= Enum.GetValues<TurnoEstadoCodigo>().ToList();
 
 	private TurnoEstadoCodigo? _estadoSeleccionado;
 	public TurnoEstadoCodigo? EstadoSeleccionado {
@@ -87,125 +111,63 @@ public sealed class RecepcionistaGestionDeTurnosViewModel : INotifyPropertyChang
 		}
 	}
 
-
-
-
+	// ================================================================
+	// APPLY FILTERS (ONLY TWO)
+	// ================================================================
 
 	private void AplicarFiltros() {
 		IEnumerable<TurnoViewModel> query = _turnosOriginal;
 
-		// Filtro estado
+		// Filtro por estado
 		if (EstadoSeleccionado is not null)
 			query = query.Where(t => t.OutcomeEstado == EstadoSeleccionado);
 
-		// Filtro DNI
-		if (!string.IsNullOrWhiteSpace(FiltroDniPaciente))
-			query = query.Where(t => t.PacienteDisplayear.Contains(FiltroDniPaciente));
-
-		// Filtro especialidad
-		if (EspecialidadSeleccionada is not null)
-			query = query.Where(t => t.EspecialidadCodigo == EspecialidadSeleccionada);
+		// Filtro por paciente: searches in PacienteDisplayear
+		if (!string.IsNullOrWhiteSpace(FiltroTurnosPaciente)) {
+			string txt = FiltroTurnosPaciente.Trim().ToLowerInvariant();
+			query = query.Where(t =>
+				t.PacienteDisplayear.ToLowerInvariant().Contains(txt)
+			);
+		}
 
 		TurnosList = query.ToList();
-
-
 	}
 
-
-
-
-
-
-
-
-
-	public bool ModificarPacienteCommand => SelectedPaciente is not null;
-
-	private PacienteDbModel? _selectedPaciente;
-	public PacienteDbModel? SelectedPaciente {
-		get => _selectedPaciente;
-		set {
-			if (_selectedPaciente != value) {
-				_selectedPaciente = value;
-				OnPropertyChanged(nameof(SelectedPaciente));
-				OnPropertyChanged(nameof(HayPacienteSeleccionado));
-			}
-		}
-	}
-
-	public bool HayPacienteSeleccionado => SelectedPaciente is not null;
-
-
-	private List<TurnoViewModel> _turnosOriginal = [];
-
-	public List<TurnoViewModel> TurnosList {
-		get => _turnos;
-		set {
-			_turnosOriginal = value;
-			_turnos = value;
-			OnPropertyChanged(nameof(TurnosList));
-		}
-	}
-
-
-	// ==== TURNOS ====
-	private List<TurnoViewModel> _turnos = [];
-
-	private TurnoViewModel? _turnoSeleccionado;
-	public TurnoViewModel? SelectedTurno {
-		get => _turnoSeleccionado;
-		set {
-			if (_turnoSeleccionado != value) {
-				_turnoSeleccionado = value;
-				OnPropertyChanged(nameof(SelectedTurno));
-				OnPropertyChanged(nameof(PuedeCancelarTurno));
-				OnPropertyChanged(nameof(PuedeConfirmarTurno));
-				OnPropertyChanged(nameof(PuedeMarcarComoAusente));
-
-
-				OnPropertyChanged(nameof(HayTurnoSeleccionado));
-				OnPropertyChanged(nameof(ComentarioObligatorio));
-			}
-		}
-	}
-
-	public bool HayTurnoSeleccionado => SelectedTurno is not null;
-
-
+	// ================================================================
+	// POLICIES
+	// ================================================================
 
 	public bool PuedeMarcarComoAusente =>
-		SelectedTurno != null
-		&& TurnoPolicyRaw.PuedeMarcarComoAusente(
-			estado: SelectedTurno.OutcomeEstado,
-			fechaAsignadaHasta: SelectedTurno.Original.FechaHoraAsignadaHasta,
-			tieneOutcome: SelectedTurno.OutcomeFecha is not null,
-			ahora: DateTime.Now
+		SelectedTurno != null &&
+		TurnoPolicyRaw.PuedeMarcarComoAusente(
+			SelectedTurno.OutcomeEstado,
+			SelectedTurno.Original.FechaHoraAsignadaHasta,
+			SelectedTurno.OutcomeFecha is not null,
+			DateTime.Now
 		);
+
 	public bool PuedeConfirmarTurno =>
-		SelectedTurno != null
-		&& TurnoPolicyRaw.PuedeConfirmar(
-			estado: SelectedTurno.OutcomeEstado,
-			fechaAsignadaDesde: SelectedTurno.Original.FechaHoraAsignadaDesde,
-			tieneOutcome: SelectedTurno.OutcomeFecha is not null,
-			ahora: DateTime.Now
+		SelectedTurno != null &&
+		TurnoPolicyRaw.PuedeConfirmar(
+			SelectedTurno.OutcomeEstado,
+			SelectedTurno.Original.FechaHoraAsignadaDesde,
+			SelectedTurno.OutcomeFecha is not null,
+			DateTime.Now
 		);
+
 	public bool PuedeCancelarTurno =>
-		SelectedTurno != null
-		&& TurnoPolicyRaw.PuedeCancelar(
-			estado: SelectedTurno.OutcomeEstado,
-			fechaAsignadaDesde: SelectedTurno.Original.FechaHoraAsignadaDesde,
-			tieneOutcome: SelectedTurno.OutcomeFecha is not null,
-			ahora: DateTime.Now
+		SelectedTurno != null &&
+		TurnoPolicyRaw.PuedeCancelar(
+			SelectedTurno.OutcomeEstado,
+			SelectedTurno.Original.FechaHoraAsignadaDesde,
+			SelectedTurno.OutcomeFecha is not null,
+			DateTime.Now
 		);
 
-	public bool ComentarioObligatorio { get; private set; }
+	// ================================================================
+	// UTILS
+	// ================================================================
 
-	public void IndicarAccionRequiereComentario(bool requiere) {
-		ComentarioObligatorio = requiere;
-		OnPropertyChanged(nameof(ComentarioObligatorio));
-	}
-
-
-	private void OnPropertyChanged(string propertyName) =>
-		PropertyChanged?.Invoke(this, new(propertyName));
+	private void OnPropertyChanged(string prop) =>
+		PropertyChanged?.Invoke(this, new(prop));
 }

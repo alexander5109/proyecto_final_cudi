@@ -39,7 +39,12 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicosWithHorarios() {
+	//async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicos() {
+	//	await EnsureMedicosLoaded();
+	//	return [.. RepoCache.DictMedicos.Values];
+	//}
+
+	async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicos() {
 		await EnsureMedicosLoaded();
 		return [.. RepoCache.DictMedicos.Values];
 	}
@@ -101,11 +106,12 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 	private bool _medicosLoaded = false;
-	private async Task EnsureMedicosLoaded() {
+	public async Task EnsureMedicosLoaded() {
 		if (_medicosLoaded)
 			return;
 
-		List<MedicoDbModel> list = await Api.TryGetJsonAsync<List<MedicoDbModel>>("api/medicos/con-horarios", defaultValue: []);
+		List<MedicoDbModel> list = await Api.TryGetJsonAsync<List<MedicoDbModel>>("api/medicos", defaultValue: []);
+		//List<MedicoDbModel> list = await Api.TryGetJsonAsync<List<MedicoDbModel>>("api/medicos/con-horarios", defaultValue: []);
 
 		RepoCache.DictMedicos.Clear();
 		RepoCache.DictMedicos = list.ToDictionary(m => m.Id, m => m);
@@ -117,7 +123,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 	private bool _pacientesLoaded = false;
-	private async Task EnsurePacientesLoaded() {
+	public async Task EnsurePacientesLoaded() {
 		if (_pacientesLoaded)
 			return;
 

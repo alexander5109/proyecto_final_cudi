@@ -34,7 +34,7 @@ public partial class TurnosModificar : Window {
 		txtPacientes.ItemsSource = await App.Repositorio.SelectPacientes();
 		txtPacientes.DisplayMemberPath = "Displayear";  //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 
-		txtMedicos.ItemsSource = await App.Repositorio.SelectMedicosWithHorarios();
+		txtMedicos.ItemsSource = await App.Repositorio.SelectMedicos();
 		txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 	}
 	async private void txtEspecialidades_SelectionChanged(object sender, SelectionChangedEventArgs e) {

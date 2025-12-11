@@ -37,12 +37,15 @@ public static class IWPFRepositorioInterfaces {
 		Task<ResultWpf<UnitWpf>> DeleteMedicoWhereId(MedicoId id);
 		Task<ResultWpf<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
 		Task<ResultWpf<UnitWpf>> UpdateMedicoWhereId(Medico2025Agg instance);
-		Task<List<MedicoDbModel>> SelectMedicosWithHorarios();
+		//Task<List<MedicoDbModel>> SelectMedicos();
+		Task<List<MedicoDbModel>> SelectMedicos();
+		Task EnsureMedicosLoaded();
 		Task<List<MedicoDbModel>> SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code);
 		Task<MedicoDbModel?> SelectMedicoWhereId(MedicoId id);
 	}
 
 	public interface IWPFRepositorioPacientes {
+		Task EnsurePacientesLoaded();
 		Task<ResultWpf<UnitWpf>> DeletePacienteWhereId(PacienteId id);
 		Task<ResultWpf<PacienteId>> InsertPacienteReturnId(Paciente2025 instance);
 		Task<List<PacienteDbModel>> SelectPacientes();
