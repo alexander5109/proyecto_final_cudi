@@ -41,9 +41,7 @@ public partial class RecepcionistaPacienteFormulario : Window {
 		);
 	}
 
-	private void ButtonCancelar(object sender, RoutedEventArgs e) {
-		Close();
-	}
+	private void ButtonCancelar(object sender, RoutedEventArgs e) => Close();
 
 	private async void ButtonEliminar(object sender, RoutedEventArgs e) {
 		if (

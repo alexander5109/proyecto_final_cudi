@@ -10,15 +10,13 @@ public record ApiError(
 );
 
 public abstract class ApiResult<T> {
-	public sealed class Ok : ApiResult<T> {
-		public T Value { get; }
-		public Ok(T value) => Value = value;
-	}
+	public sealed class Ok(T value) : ApiResult<T> {
+        public T Value { get; } = value;
+    }
 
-	public sealed class Error : ApiResult<T> {
-		public ApiError ErrorInfo { get; }
-		public Error(ApiError errorInfo) => ErrorInfo = errorInfo;
-	}
+	public sealed class Error(ApiError errorInfo) : ApiResult<T> {
+        public ApiError ErrorInfo { get; } = errorInfo;
+    }
 
 	public bool IsOk => this is Ok;
 	public bool IsError => this is Error;

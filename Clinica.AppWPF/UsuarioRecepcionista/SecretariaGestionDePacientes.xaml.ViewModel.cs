@@ -60,13 +60,12 @@ public sealed class RecepcionistaGestionDePacientesViewModel : INotifyPropertyCh
 			PacientesList = new List<PacienteDbModel>(_todosLosPacientes);
 		} else {
 			var texto = FiltroPacientesTexto.Trim().ToLower();
-			PacientesList = _todosLosPacientes
+			PacientesList = [.. _todosLosPacientes
 				.Where(p =>
 					(p.Nombre?.ToLower().Contains(texto) ?? false) ||
 					(p.Apellido?.ToLower().Contains(texto) ?? false) ||
 					(p.Dni?.ToLower().Contains(texto) ?? false)
-				)
-				.ToList();
+				)];
 		}
 	}
 

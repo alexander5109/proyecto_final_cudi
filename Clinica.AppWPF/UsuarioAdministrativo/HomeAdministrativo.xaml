@@ -9,7 +9,6 @@
 	Height="600"
 	Width="1024"
 	Icon="pack://application:,,,/PublishedResources/icons/icono.ico"
-	Activated="Window_Activated"
 	WindowStartupLocation="CenterScreen">
     <Window.Background>
         <ImageBrush
@@ -41,7 +40,6 @@
 				HorizontalAlignment="Center"
 				Height="37"
 				Width="300"
-				Click="MetodoBotonMedicos"
 				FontSize="20"
 				Style="{StaticResource BotonRedondeado}"
 				FontWeight="Bold"
@@ -53,7 +51,6 @@
 				Content="Gestionar cuentas de usuario"
 				Height="37"
 				Width="284"
-				Click="MetodoBotonTurnos"
 				FontSize="20"
 				Style="{StaticResource BotonRedondeado}"
 				FontWeight="Bold"

@@ -1,11 +1,18 @@
 ﻿using System.Windows;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
-/// <summary>
-/// Lógica de interacción para AdministrativoFormularioUsuario.xaml
-/// </summary>
-public partial class AdministrativoFormularioUsuario : Window {
-    public AdministrativoFormularioUsuario() {
-        InitializeComponent();
-    }
+
+
+public partial class DialogoModificarUsuario : Window {
+	public DialogoModificarUsuario() {
+		InitializeComponent();
+	}
+
+
+
+	private void ButtonCancelar(object sender, RoutedEventArgs e) => Close();
+
+    private void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
+
+	}
 }

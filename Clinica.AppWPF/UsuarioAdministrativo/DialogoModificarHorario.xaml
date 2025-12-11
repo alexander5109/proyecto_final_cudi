@@ -62,7 +62,7 @@
                      Width="130"
                      VerticalAlignment="Center"
                      Margin="15,0,0,0"
-                     Height="20" TextChanged="TextBox_TextChanged"/>
+                     Height="20" />
         </StackPanel>
 
         <!-- Botones con estilo nuevo -->
@@ -74,13 +74,11 @@
             <Button Content="Aceptar"
                     Width="110"
                     Height="30"
-                    Click="Aceptar_Click"
                     Style="{StaticResource BotonRedondeado}" />
             <Button Content="Cancelar"
                     Width="110"
                     Height="30"
                     Margin="5"
-                    Click="Cancelar_Click"
                     Style="{StaticResource BotonRedondeado}" />
         </StackPanel>
     </Grid>

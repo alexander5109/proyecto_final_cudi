@@ -274,7 +274,7 @@ internal static class ExtensionesLocales {
 		List<DayOfWeek> dias = [];
 		if (!string.IsNullOrWhiteSpace(model.HorariosJson)) {
 			var horarios = System.Text.Json.JsonSerializer.Deserialize<List<HorarioDto>>(model.HorariosJson);
-			dias = horarios is null ? [] : horarios.Select(h => h.DiaSemana).Distinct().ToList();
+			dias = horarios is null ? [] : [.. horarios.Select(h => h.DiaSemana).Distinct()];
 		}
 
 		return new MedicoSimpleViewModel(

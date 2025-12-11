@@ -41,16 +41,14 @@
 					Style="{StaticResource BotonRedondeado}"
 					Width="110"
 					Height="38"
-					FontSize="20"
-					Click="MetodoBotonSalir" />
+					FontSize="20" />
                 <Button
 					Content="Cancelar"
 					Style="{StaticResource BotonRedondeado}"
 					Width="110"
 					Height="38"
 					Margin="0 10 0 0"
-					FontSize="20"
-					Click="MetodoBotonCancelar" />
+					FontSize="20" />
             </StackPanel>
             <StackPanel
 				VerticalAlignment="Top"
@@ -111,47 +109,7 @@
 				HorizontalAlignment="Center"
 				VerticalAlignment="Top"
 				Height="50"
-				Width="50">
-                <CheckBox
-					x:Name="soundCheckBox"
-					Width="50"
-					Height="50"
-					Background="Transparent"
-					Click="SoundCheckBox_Checked"
-					ToolTip="Sonido"
-					Margin="-48,18,48,-18">
-                    <CheckBox.Template>
-                        <ControlTemplate
-							TargetType="{x:Type CheckBox}">
-                            <Image
-								Width="40"
-								Height="40">
-                                <Image.Style>
-                                    <Style
-										TargetType="{x:Type Image}">
-                                        <Style.Triggers>
-                                            <DataTrigger
-												Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType={x:Type CheckBox}}}"
-												Value="True">
-                                                <Setter
-													Property="Source"
-													Value="pack://application:,,,/PublishedResources/images/sonidoOn.png" />
-                                            </DataTrigger>
-                                            <DataTrigger
-												Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType={x:Type CheckBox}}}"
-												Value="False">
-                                                <Setter
-													Property="Source"
-													Value="pack://application:,,,/PublishedResources/images/sonidoOff.png" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>
-                            </Image>
-                        </ControlTemplate>
-                    </CheckBox.Template>
-                </CheckBox>
-            </ContentControl>
-        </Grid>
+				Width="50" />
+		</Grid>
     </Grid>
 </Window>

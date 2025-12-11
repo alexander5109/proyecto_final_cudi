@@ -1,75 +1,26 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.UsuarioRecepcionista;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
 public partial class HomeAdministrativo : Window {
-
+	public string MensajeBienvenida { get; }
 	public HomeAdministrativo() {
 		InitializeComponent();
 		soundCheckBox.IsChecked = SoundsService.SoundOn;
-	}
-	public void MetodoBotonLogin(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<WindowLogin>();
-	}
-	private void MetodoBotonMedicos(object sender, RoutedEventArgs e) {
-		if (App.Api.UsuarioActual?.RolEnum < 2) {
-			//this.NavegarA<WindowListarMedicos>();
-		} else {
-			this.AbrirComoDialogo<WindowLogin>();
-			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				//this.NavegarA<WindowListarMedicos>();
-			}
-		}
+
+		MensajeBienvenida = $"Bienvenid@ {App.UsuarioActivo?.Nombre ?? "Recepcionista"}";
+		DataContext = this; // sencillo, no hace falta más
 	}
 
-	private void MetodoBotonPacientes(object sender, RoutedEventArgs e) {
-		if (App.Api.UsuarioActual?.RolEnum < 2) {
-			this.NavegarA<PacientesVer>();
-		} else {
-			this.AbrirComoDialogo<WindowLogin>();
-			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				this.NavegarA<PacientesVer>();
-			}
-		}
-	}
+	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
 
-	private void MetodoBotonTurnos(object sender, RoutedEventArgs e) {
-		if (App.Api.UsuarioActual?.RolEnum < 2) {
-			//this.NavegarA<WindowListarTurnos>();
-		} else {
-			this.AbrirComoDialogo<WindowLogin>();
-			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				//this.NavegarA<WindowListarTurnos>();
-			}
-		}
-	}
+	private void soundCheckBox_Checked(object sender, RoutedEventArgs e) => SoundsService.ToggleSound(this.soundCheckBox.IsChecked);
 
-	private void Window_Activated(object sender, EventArgs e) {
-		//App.UpdateLabelDataBaseModo(this.labelBaseDeDatosModo);
-	}
+	private void MetodoBotonLogout(object sender, RoutedEventArgs e) => this.CerrarSesion();
 
-	private void ButtonSalir(object sender, RoutedEventArgs e) {
-		this.Salir();
-	}
+	private void MetodoBotonGestionTurnos(object sender, RoutedEventArgs e) => this.NavegarA<RecepcionistaGestionDeTurnos>();
 
-	private void soundCheckBox_Checked(object sender, RoutedEventArgs e) {
-		SoundsService.ToggleSound(this.soundCheckBox.IsChecked);
-	}
-
-	private void MetodoBotonTurnos2025(object sender, RoutedEventArgs e) {
-		if (App.Api.UsuarioActual?.RolEnum < 2) {
-			//this.NavegarA<RecepcionistaGestorTurnos>();
-		} else {
-			this.AbrirComoDialogo<WindowLogin>();
-			if (App.Api.UsuarioActual?.RolEnum < 2) {
-				//this.NavegarA<RecepcionistaGestorTurnos>();
-			}
-		}
-
-	}
-
-	private void MetodoBotonLogout(object sender, RoutedEventArgs e) {
-
-	}
+	private void MetodoBotonGestionPacientes(object sender, RoutedEventArgs e) => this.NavegarA<RecepcionistaGestionDePacientes>();
 }

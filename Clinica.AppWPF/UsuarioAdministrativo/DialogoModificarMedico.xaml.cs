@@ -1,29 +1,43 @@
-﻿using Clinica.AppWPF.Ventanas;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.Ventanas;
+using Clinica.Dominio.TiposDeEnum;
 using static Clinica.Shared.ApiDtos.MedicoDtos;
+using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
-public partial class MedicoModificar : Window, INotifyPropertyChanged {
-	public event PropertyChangedEventHandler? PropertyChanged;
-	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	public MedicoDto _selectedMedico = MedicoDto.NewEmpty();
-	public MedicoDto SelectedMedico { get => _selectedMedico; set { _selectedMedico = value; OnPropertyChanged(nameof(SelectedMedico)); } }
 
-	//---------------------constructor-------------------//
-	public MedicoModificar() {
+public record HorarioDb(int Id, int MedicoId, int DiaSemana, TimeSpan HoraDesde, TimeSpan HoraHasta);
+
+public class ViewModelHorarioAgrupado(int dia, List<HorarioDb> horarios) {
+	public string DiaSemanaNombre { get; } = CultureInfo.GetCultureInfo("es-AR").DateTimeFormat.DayNames[dia];
+	public ObservableCollection<HorarioMedicoViewModel> Horarios { get; } = new ObservableCollection<HorarioMedicoViewModel>(
+			horarios.Select(h => new HorarioMedicoViewModel(h))
+		);
+}
+
+public class HorarioMedicoViewModel(HorarioDb h) {
+	public string Desde { get; } = h.HoraDesde.ToString(@"hh\:mm");
+	public string Hasta { get; } = h.HoraHasta.ToString(@"hh\:mm");
+}
+
+
+
+public partial class DialogoModificarMedico : Window {
+	public MedicoFormularioViewModel VM { get; }
+
+	public DialogoModificarMedico(MedicoDbModel model, IEnumerable<EspecialidadCodigo> especialidades) {
 		InitializeComponent();
-		DataContext = this;
+		VM = new MedicoFormularioViewModel(model, especialidades);
+		DataContext = VM;
 	}
 
-	public MedicoModificar(MedicoDto medicoDto) {
+	/*
 
-		InitializeComponent();
-		//SelectedMedico = medicoDto.ToDto();
-		DataContext = this;
-	}
 	//---------------------botones.GuardarCambios-------------------//
 	private void ButtonGuardar(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
@@ -65,7 +79,7 @@ public partial class MedicoModificar : Window, INotifyPropertyChanged {
 
 	//---------------------botones.Salida-------------------//
 	private void ButtonCancelar(object sender, RoutedEventArgs e) {
-		this.Cerrar(); 
+		this.Cerrar();
 	}
 
 	//---------------------botones.Horarios-------------------//
@@ -74,7 +88,7 @@ public partial class MedicoModificar : Window, INotifyPropertyChanged {
 	}
 
 	private void BtnAgregarHorarioFranja_Click(object sender, RoutedEventArgs e) {
-        object? selected = GetSelectedTreeItem();
+		object? selected = GetSelectedTreeItem();
 
 		DiaDeSemanaDto dia;
 
@@ -103,14 +117,14 @@ public partial class MedicoModificar : Window, INotifyPropertyChanged {
 	}
 
 	private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
-        object? selected = GetSelectedTreeItem();
+		object? selected = GetSelectedTreeItem();
 
 		if (selected is not HorarioMedicoDto horario) {
 			MessageBox.Show("Seleccione un horario para editar.");
 			return;
 		}
 
-        DialogoModificarHorario win = new(SelectedMedico, horario, esNuevo: false);
+		DialogoModificarHorario win = new(SelectedMedico, horario, esNuevo: false);
 
 		if (win.ShowDialog() == true) {
 			// El horario ya está modificado (data binding)
@@ -119,7 +133,7 @@ public partial class MedicoModificar : Window, INotifyPropertyChanged {
 	}
 
 	private void BtnEliminarHorario_Click(object sender, RoutedEventArgs e) {
-        object? selected = GetSelectedTreeItem();
+		object? selected = GetSelectedTreeItem();
 
 		if (selected is not HorarioMedicoDto horario) {
 			MessageBox.Show("Seleccione un horario para eliminar.");
@@ -135,7 +149,7 @@ public partial class MedicoModificar : Window, INotifyPropertyChanged {
 		// Forzar refresco para que se actualicen los días vacíos
 		OnPropertyChanged(nameof(SelectedMedico.HorariosAgrupados));
 	}
-
+	*/
 
 	//------------------------Fin---------------------------//
 

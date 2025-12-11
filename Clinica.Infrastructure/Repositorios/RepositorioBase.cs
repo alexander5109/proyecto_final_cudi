@@ -9,8 +9,8 @@ using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.Infrastructure.Repositorios;
 
 
-public abstract class RepositorioBase {
-	protected readonly SQLServerConnectionFactory Factory;
+public abstract class RepositorioBase(SQLServerConnectionFactory factory) {
+	protected readonly SQLServerConnectionFactory Factory = factory;
 
 
 
@@ -31,29 +31,7 @@ public abstract class RepositorioBase {
 				commandType: CommandType.StoredProcedure);
 		});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	public RepositorioBase(SQLServerConnectionFactory factory) {
-		Factory = factory;
-	}
-
-	protected async Task<Result<T>> TryResultAsync<T>(Func<IDbConnection, Task<Result<T>>> action) {
+    protected async Task<Result<T>> TryResultAsync<T>(Func<IDbConnection, Task<Result<T>>> action) {
 		try {
 			using IDbConnection conn = Factory.CrearConexion();
 			return await action(conn);

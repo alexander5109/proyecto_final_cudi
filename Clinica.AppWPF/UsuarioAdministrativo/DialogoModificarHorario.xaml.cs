@@ -1,44 +1,40 @@
 ﻿using System.Windows;
+using static Clinica.Shared.ApiDtos.MedicoDtos;
 
 namespace Clinica.AppWPF.Ventanas;
 
 
 public partial class DialogoModificarHorario : Window {
-	public HorarioModificarViewModel VM { get; }
+	//	public HorarioModificarViewModel VM { get; }
 
-	public DialogoModificarHorario(MedicoDto medico, HorarioMedicoDto horario, bool esNuevo) {
+	public DialogoModificarHorario(MedicoDto medico) {
 		InitializeComponent();
-		VM = new HorarioModificarViewModel(medico, horario, esNuevo);
-		DataContext = VM;
+		//VM = new HorarioModificarViewModel(medico, horario, esNuevo);
+		//DataContext = VM;
 	}
 
-	private bool ValidarHorario(MedicoDto medico, HorarioMedicoDto nuevo) {
-		return !medico.Horarios.Any(h =>
-			h != nuevo &&
-			h.DiaSemana == nuevo.DiaSemana &&
-			!(nuevo.Hasta <= h.Desde || nuevo.Desde >= h.Hasta)
-		);
-	}
+	//	private bool ValidarHorario(MedicoDto medico, HorarioMedicoDto nuevo) {
+	//		return !medico.Horarios.Any(h =>
+	//			h != nuevo &&
+	//			h.DiaSemana == nuevo.DiaSemana &&
+	//			!(nuevo.Hasta <= h.Desde || nuevo.Desde >= h.Hasta)
+	//		);
+	//	}
 
-	private void Aceptar_Click(object sender, RoutedEventArgs e) {
-		if (!ValidarHorario(VM.Medico, VM.Horario)) {
-			MessageBox.Show("El horario colisiona con otro horario del médico.");
-			return;
-		}
+	//	private void Aceptar_Click(object sender, RoutedEventArgs e) {
+	//		if (!ValidarHorario(VM.Medico, VM.Horario)) {
+	//			MessageBox.Show("El horario colisiona con otro horario del médico.");
+	//			return;
+	//		}
 
-		if (VM.EsNuevo)
-			VM.Medico.Horarios.Add(VM.Horario);
+	//		if (VM.EsNuevo)
+	//			VM.Medico.Horarios.Add(VM.Horario);
 
-		DialogResult = true;
-		Close();
-	}
+	//		DialogResult = true;
+	//		Close();
+	//	}
 
-	private void Cancelar_Click(object sender, RoutedEventArgs e) {
-		Close();
-	}
-
-    private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-    {
-
-    }
+	//	private void Cancelar_Click(object sender, RoutedEventArgs e) {
+	//		Close();
+	//	}
 }

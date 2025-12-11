@@ -7,15 +7,13 @@ public readonly struct UnitWpf {
 	public static readonly UnitWpf Valor = default;
 }
 public abstract class ResultWpf<T> {
-	public sealed class Ok : ResultWpf<T> {
-		public T Valor { get; }
-		public Ok(T valor) => Valor = valor;
-	}
+	public sealed class Ok(T valor) : ResultWpf<T> {
+        public T Valor { get; } = valor;
+    }
 
-	public sealed class Error : ResultWpf<T> {
-		public ErrorInfo Info { get; }
-		public Error(ErrorInfo info) => Info = info;
-	}
+	public sealed class Error(ErrorInfo info) : ResultWpf<T> {
+        public ErrorInfo Info { get; } = info;
+    }
 
 	public bool IsOk => this is Ok;
 	public bool IsError => this is Error;
