@@ -328,7 +328,6 @@
 		<!-- ,,,,,,,,,,,,,,,,,,,,,,,,,,BOTONES (NUEVO ESTILO VERDE/AZUL) ,,,,,,,,,,,,,,,,,,,,,,,,,, -->
 		
 		
-    <Window.Resources>
         <Style x:Key="BotonRedondeado2" TargetType="Button">
             <Setter Property="Foreground" Value="White" />
             <Setter Property="FontSize" Value="14" />
@@ -341,10 +340,11 @@
                                 CornerRadius="10"
                                 SnapsToDevicePixels="True">
                             <Border.Background>
-                                <!-- imagen verde/azul de los otros botones -->
-                                <ImageBrush ImageSource="/UsuarioSecretaria/this-beautiful-gradient-art-piece-showcases-a-blend-of-teal-green-and-blue-tones-free-photo.jpeg"
-                                            Stretch="Fill" />
-                            </Border.Background>
+								<!-- imagen verde/azul de los otros botones -->
+								<ImageBrush
+									ImageSource="PublishedResources/images2025sol/BLUEGREEN.jpeg"
+									Stretch="Fill" />
+							</Border.Background>
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
                         </Border>
@@ -373,7 +373,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-    </Window.Resources>
 	
 	
 		<Style

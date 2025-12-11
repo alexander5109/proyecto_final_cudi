@@ -219,14 +219,10 @@
 					FontWeight="Bold"
 					HorizontalAlignment="Center"
 					Margin="0,0,0,5"
+					Style="{StaticResource LabelLindo}"
 					Height="48"
 					Width="270"
-					FontSize="25">
-					<Label.Background>
-						<ImageBrush
-							ImageSource="/UsuarioAdministrativo/pngwing.com (1).png" />
-					</Label.Background>
-				</Label>
+					FontSize="25"></Label>
 				<!-- <TreeView
 					x:Name="treeViewHorarios"
 					ItemsSource="{Binding SelectedMedico.HorariosAgrupados}"

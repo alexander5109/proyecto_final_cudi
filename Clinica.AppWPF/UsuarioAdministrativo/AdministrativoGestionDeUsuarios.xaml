@@ -97,17 +97,14 @@
             </StackPanel>
         </StackPanel>
         <Label
-           
-            Grid.Row="0"
+			Style="{StaticResource LabelLindo}"
+			Grid.Row="0"
             Content="Cuentas de usuario"
             FontSize="40"
             FontFamily="Ringbearer"
             FontWeight="Bold"
             HorizontalAlignment="Left"
             Margin="479,10,0,476" Width="365" >
-            <Label.Background>
-                <ImageBrush ImageSource="/UsuarioAdministrativo/pngwing.com (1).png"/>
-            </Label.Background>
         </Label>
 
         <!-- espacio libre a la derecha para futuro contenido -->
