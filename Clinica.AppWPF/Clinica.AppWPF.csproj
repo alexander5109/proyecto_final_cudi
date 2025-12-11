@@ -57,8 +57,5 @@
     <ProjectReference Include="..\Clinica.Dominio\Clinica.Dominio.csproj" />
     <ProjectReference Include="..\Clinica.Shared\Clinica.Shared.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="bluegreen.jpeg" />
-  </ItemGroup>
 
 </Project>

@@ -147,6 +147,47 @@
 			x:Key="LabelLindo"
 			TargetType="Label">
 			<Setter
+				Property="Background">
+				<Setter.Value>
+					<ImageBrush
+						ImageSource="pack://application:,,,/PublishedResources/images/labelFondo2025.png" />
+				</Setter.Value>
+			</Setter>
+			<Setter
+				Property="Effect">
+				<Setter.Value>
+					<DropShadowEffect
+						Color="Black"
+						Direction="270"
+						ShadowDepth="5"
+						BlurRadius="8"
+						Opacity="0.7" />
+				</Setter.Value>
+			</Setter>
+			<!-- OVERRIDE DEL TEMPLATE -->
+			<Setter
+				Property="Template">
+				<Setter.Value>
+					<ControlTemplate
+						TargetType="Label">
+						<Border
+							Background="{TemplateBinding Background}"
+							Padding="{TemplateBinding Padding}"
+							SnapsToDevicePixels="True">
+							<!-- El contenido del label -->
+							<ContentPresenter
+								RecognizesAccessKey="True"
+								HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+								VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style
+			x:Key="LabelLindo2024"
+			TargetType="Label">
+			<Setter
 				Property="Effect">
 				<Setter.Value>
 					<DropShadowEffect
@@ -284,14 +325,6 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
-		
-		
-		
-		
-		
-		
-		
-		
 		<!-- ,,,,,,,,,,,,,,,,,,,,,,,,,,BOTONES (NUEVO ESTILO VERDE/AZUL) ,,,,,,,,,,,,,,,,,,,,,,,,,, -->
 		<Style
 			x:Key="BotonRedondeado"
@@ -334,8 +367,8 @@
 								<Border.Background>
 									<!-- Imagen verde/azul de los botones -->
 									<ImageBrush
-                                        ImageSource="PublishedResources/images/boton/BLUEGREEN.jpeg"
-                                        Stretch="Fill" />
+										ImageSource="PublishedResources/images/boton/BLUEGREEN.jpeg"
+										Stretch="Fill" />
 								</Border.Background>
 								<TextBlock
 									HorizontalAlignment="Center"
@@ -389,26 +422,5 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	</Application.Resources>
 </Application>
