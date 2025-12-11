@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposExtensiones;
@@ -9,23 +10,21 @@ using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
 public sealed class TurnoViewModel(TurnoDbModel model) {
-    public TurnoId Id { get; } = model.Id;
-	//public PacienteDbModel PacienteExtensiones { get => {  
-	//		(await model.PacienteId.RespectivoPaciente()) //Los pacientes estan cacheados en memoria, sólo cndo no lo esten se hace fetch.
-	//	; }
 
-
+	public TurnoId Id { get; } = model.Id;
 	public PacienteDbModel? PacienteRelacionado => RepoCache.DictPacientes.GetValueOrDefault(model.PacienteId);
 	public MedicoDbModel? MedicoRelacionado => RepoCache.DictMedicos.GetValueOrDefault(model.MedicoId);
-	public string PacienteDisplayear => PacienteRelacionado is null? "N/A": $"{PacienteRelacionado.Nombre} {PacienteRelacionado.Apellido} {PacienteRelacionado.Dni}";
+	public string PacienteDisplayear => PacienteRelacionado is null ? "N/A" : $"{PacienteRelacionado.Nombre} {PacienteRelacionado.Apellido} {PacienteRelacionado.Dni}";
 	public string MedicoDisplayear => MedicoRelacionado is null ? "N/A" : $"{MedicoRelacionado.Nombre} {MedicoRelacionado.Apellido} {MedicoRelacionado.Dni}";
 	public EspecialidadCodigo EspecialidadCodigo { get; } = model.EspecialidadCodigo;
-    public string FechaSolicitud { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
-    public string FechaAsignada { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
-    public string HoraAsignada { get; } = model.FechaHoraAsignadaHasta.ATextoHoras();
-    public TurnoEstadoCodigo OutcomeEstado { get; } = model.OutcomeEstado;
-    public DateTime? OutcomeFecha { get; set; } = model.OutcomeFecha;
-    public string? OutcomeComentario { get; set; } = model.OutcomeComentario;
+	public string FechaSolicitud { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
+	public string FechaAsignada { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
+	public string HoraAsignada { get; } = model.FechaHoraAsignadaHasta.ATextoHoras();
+	public TurnoEstadoCodigo OutcomeEstado { get; } = model.OutcomeEstado;
+	public DateTime? OutcomeFecha { get; set; } = model.OutcomeFecha;
+	public string? OutcomeComentario { get; set; } = model.OutcomeComentario;
+
+	public readonly TurnoDbModel Original = model;
 }
 public sealed class RecepcionistaGestionDeTurnosViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
@@ -69,7 +68,11 @@ public sealed class RecepcionistaGestionDeTurnosViewModel : INotifyPropertyChang
 			if (_turnoSeleccionado != value) {
 				_turnoSeleccionado = value;
 				OnPropertyChanged(nameof(SelectedTurno));
-				OnPropertyChanged(nameof(PuedeModificarTurnoSeleccionado));
+				OnPropertyChanged(nameof(PuedeCancelarTurno));
+				OnPropertyChanged(nameof(PuedeConfirmarTurno));
+				OnPropertyChanged(nameof(PuedeMarcarComoAusente));
+
+
 				OnPropertyChanged(nameof(HayTurnoSeleccionado));
 				OnPropertyChanged(nameof(ComentarioObligatorio));
 			}
@@ -77,7 +80,39 @@ public sealed class RecepcionistaGestionDeTurnosViewModel : INotifyPropertyChang
 	}
 
 	public bool HayTurnoSeleccionado => SelectedTurno is not null;
-	public bool PuedeModificarTurnoSeleccionado => SelectedTurno?.OutcomeEstado == TurnoEstadoCodigo.Programado;
+
+
+
+	public bool PuedeMarcarComoAusente =>
+		SelectedTurno != null
+		&& TurnoPolicyRaw.PuedeMarcarComoAusente(
+			estado: SelectedTurno.OutcomeEstado,
+			fechaAsignadaHasta: SelectedTurno.Original.FechaHoraAsignadaHasta,
+			tieneOutcome: SelectedTurno.OutcomeFecha is not null,
+			ahora: DateTime.Now
+		);
+
+	public bool PuedeConfirmarTurno =>
+		SelectedTurno != null
+		&& TurnoPolicyRaw.PuedeConfirmar(
+			estado: SelectedTurno.OutcomeEstado,
+			fechaAsignadaDesde: SelectedTurno.Original.FechaHoraAsignadaDesde,
+			tieneOutcome: SelectedTurno.OutcomeFecha is not null,
+			ahora: DateTime.Now
+		);
+
+	public bool PuedeCancelarTurno =>
+		SelectedTurno != null
+		&& TurnoPolicyRaw.PuedeCancelar(
+			estado: SelectedTurno.OutcomeEstado,
+			fechaAsignadaDesde: SelectedTurno.Original.FechaHoraAsignadaDesde,
+			tieneOutcome: SelectedTurno.OutcomeFecha is not null,
+			ahora: DateTime.Now
+		);
+
+
+
+
 
 	public bool ComentarioObligatorio { get; private set; }
 

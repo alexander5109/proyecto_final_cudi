@@ -33,14 +33,11 @@ public static class RecepcionistaPacienteMiniViewModels {
 		};
 	public static ResultWpf<Paciente2025> ToDomain(this RecepcionistaPacienteFormularioViewModel viewModel, DateTime fechaIngreso) {
 		return Paciente2025.CrearResult(
-			//PacienteId.CrearResult(viewModel.Id),
-			NombreCompleto2025.CrearResult(viewModel.Nombre, viewModel.Apellido),
-			DniArgentino2025.CrearResult(viewModel.Dni),
-			Contacto2025.CrearResult(
-				ContactoEmail2025.CrearResult(viewModel.Email),
-				ContactoTelefono2025.CrearResult(viewModel.Telefono)
-			),
-			DomicilioArgentino2025.CrearResult(
+				NombreCompleto2025.CrearResult(viewModel.Nombre, viewModel.Apellido),
+				DniArgentino2025.CrearResult(viewModel.Dni),
+				Telefono2025.CrearResult(viewModel.Telefono),
+				Email2025.CrearResult(viewModel.Email),
+				DomicilioArgentino2025.CrearResult(
 				LocalidadDeProvincia2025.CrearResult(viewModel.Localidad, ProvinciaArgentina2025.CrearResultPorCodigo(viewModel.Provincia?.Codigo)),
 				viewModel.Domicilio
 			),

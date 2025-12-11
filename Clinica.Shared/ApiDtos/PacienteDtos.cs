@@ -59,8 +59,8 @@ public static class PacienteDtos {
 			Domicilio: paciente.Domicilio.DireccionValor,
 			Localidad: paciente.Domicilio.Localidad.NombreValor,
 			ProvinciaCodigo: paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
-			Telefono: paciente.Contacto.Telefono.Valor,
-			Email: paciente.Contacto.Email.Valor,
+			Telefono: paciente.Telefono.Valor,
+			Email: paciente.Email.Valor,
 			FechaNacimiento: paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MinValue)
 		);
 	}
@@ -71,9 +71,8 @@ public static class PacienteDtos {
 		return Paciente2025.CrearResult(
 			NombreCompleto2025.CrearResult(dto.Nombre, dto.Apellido),
 			DniArgentino2025.CrearResult(dto.Dni),
-			Contacto2025.CrearResult(
-			ContactoEmail2025.CrearResult(dto.Email),
-			ContactoTelefono2025.CrearResult(dto.Telefono)),
+			Telefono2025.CrearResult(dto.Telefono),
+			Email2025.CrearResult(dto.Email),
 			DomicilioArgentino2025.CrearResult(
 			LocalidadDeProvincia2025.CrearResult(
 				dto.Localidad,

@@ -32,7 +32,7 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 	}
 	private async Task RefrescarPacientesAsync() {
 		try {
-            List<PacienteDbModel> pacientes = await App.Repositorio.SelectPacientes();
+			List<PacienteDbModel> pacientes = await App.Repositorio.SelectPacientes();
 			VM.PacientesList = [.. pacientes];
 		} catch (Exception ex) {
 			MessageBox.Show("Error cargando pacientes: " + ex.Message);
@@ -101,11 +101,16 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 			return;
 		}
 
+		//if (VM.SelectedPaciente is not null) {
+		//	this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedPaciente);
+		//}
+
+
 		ResultWpf<TurnoDbModel> result = await App.Repositorio.ReprogramarTurno(
-			VM.SelectedTurno.Id,
-			DateTime.Now,
-			VM.SelectedTurno.OutcomeComentario
-		);
+		VM.SelectedTurno.Id,
+		DateTime.Now,
+		VM.SelectedTurno.OutcomeComentario
+	);
 
 		if (MostrarErrorSiCorresponde(result))
 			return;
@@ -150,5 +155,9 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 		if (VM.SelectedPaciente is null) return;
 		this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedPaciente.Id);
 		//_ = VM.RefrescarTurnosAsync();
+	}
+
+	private void PuedeCancelarTurno(object sender, RoutedEventArgs e) {
+
 	}
 }

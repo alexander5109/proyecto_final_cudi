@@ -27,11 +27,13 @@ public class RepositorioTurnos(SQLServerConnectionFactory factory) : Repositorio
 	Task<Result<TurnoDbModel>> IRepositorioTurnos.UpdateTurnoWhereId(
 		TurnoId id,
 		Turno2025 instance
-	)
-		=> TryAsync<TurnoDbModel>(async conn => {
-			// Enviar parámetros al SP
-			TurnoDbModel parametros = instance.ToModel(id);
+	) {
+		TurnoDbModel parametros = instance.ToModel(id);
+		Console.WriteLine(parametros.ToString());
 
+		return TryAsync<TurnoDbModel>(async conn => {
+			// Enviar parámetros al SP
+			
 			// Ejecutar SP que devuelve int RowsAffected
 			int rowsAffected = await conn.ExecuteScalarAsync<int>(
 				"sp_UpdateTurnoWhereId",
@@ -47,7 +49,7 @@ public class RepositorioTurnos(SQLServerConnectionFactory factory) : Repositorio
 			// (tenemos todo en la instancia, ya que la DB solo actualiza)
 			return parametros;
 		});
-
+	}
 
 	Task<Result<TurnoDbModel?>> IRepositorioTurnos.SelectTurnoWhereId(TurnoId id)
 		=> TryAsync(async conn => {

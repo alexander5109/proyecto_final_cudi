@@ -12,8 +12,8 @@ public sealed record Usuario2025(
 	NombreCompleto2025 NombreCompleto,
 	ContraseñaHasheada PasswordHash,
 	UsuarioRoleCodigo EnumRole,
-	ContactoEmail2025 Email,
-	ContactoTelefono2025 Telefono
+	Email2025 Email,
+	Telefono2025 Telefono
 ) : IComoTexto {
 
 	public string ATexto() => $"Usuario: {NombreCompleto.ATexto()} (Rol:{EnumRole}";
@@ -23,8 +23,8 @@ public sealed record Usuario2025(
 		Result<NombreCompleto2025> nombreCompletoResult,
 		Result<ContraseñaHasheada> passwordHashResult,
 		Result<UsuarioRoleCodigo> enumRoleResult,
-		Result<ContactoEmail2025> telefonoResult,
-		Result<ContactoTelefono2025> emailResult
+		Result<Email2025> telefonoResult,
+		Result<Telefono2025> emailResult
 	)
 		=> userNameResult.BindWithPrefix("Error en UserName:\n", userName
 		=> nombreCompletoResult.BindWithPrefix("Error en NombreCompleto:\n", nombreCompleto

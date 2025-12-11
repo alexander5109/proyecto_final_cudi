@@ -56,8 +56,8 @@ public static class MedicoDtos {
 						ProvinciaArgentina2025.CrearResultPorCodigo(dto.ProvinciaCodigo)),
 					dto.Domicilio
 				),
-				ContactoTelefono2025.CrearResult(dto.Telefono),
-				ContactoEmail2025.CrearResult(dto.Email),
+				Telefono2025.CrearResult(dto.Telefono),
+				Email2025.CrearResult(dto.Email),
 				ListaHorarioMedicos2025.CrearResult([.. JsonSerializer.Deserialize<IReadOnlyList<Horario2025>>(dto.HorariosJson)]),
 				dto.FechaIngreso,
 				dto.HaceGuardias

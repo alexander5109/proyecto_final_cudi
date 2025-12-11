@@ -11,8 +11,8 @@ public record Medico2025(
 	Especialidad2025 EspecialidadUnica,
 	DniArgentino2025 Dni,
 	DomicilioArgentino2025 Domicilio,
-	ContactoTelefono2025 Telefono,
-	ContactoEmail2025 Email,
+	Telefono2025 Telefono,
+	Email2025 Email,
 	ListaHorarioMedicos2025 ListaHorarios,
 	DateTime FechaIngreso,
 	bool HaceGuardiasValor
@@ -24,8 +24,8 @@ public record Medico2025(
 		//Result<ListaEspecialidadesMedicas2025> especialidadResult,
 		Result<DniArgentino2025> dniResult,
 		Result<DomicilioArgentino2025> domicilioResult,
-		Result<ContactoTelefono2025> telefonoResult,
-		Result<ContactoEmail2025> emailResult,
+		Result<Telefono2025> telefonoResult,
+		Result<Email2025> emailResult,
 		Result<ListaHorarioMedicos2025> horariosResult,
 		DateTime fechaIngreso,
 		bool haceGuardia

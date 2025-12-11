@@ -55,8 +55,8 @@ public static partial class DbModels {
 				NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
 				ContraseñaHasheada.CrearResult(dbModel.PasswordHash),
 				dbModel.EnumRole.CrearResult(),
-				ContactoEmail2025.CrearResult(dbModel.Email),
-				ContactoTelefono2025.CrearResult(dbModel.Telefono)
+				Email2025.CrearResult(dbModel.Email),
+				Telefono2025.CrearResult(dbModel.Telefono)
 			)
 		);
 }

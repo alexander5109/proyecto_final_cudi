@@ -35,8 +35,8 @@ public static partial class DbModels {
 			Domicilio: aggrg.Paciente.Domicilio.DireccionValor,
 			Localidad: aggrg.Paciente.Domicilio.Localidad.NombreValor,
 			ProvinciaCodigo: aggrg.Paciente.Domicilio.Localidad.Provincia.CodigoInternoValor,
-			Telefono: aggrg.Paciente.Contacto.Telefono.Valor,
-			Email: aggrg.Paciente.Contacto.Email.Valor,
+			Telefono: aggrg.Paciente.Telefono.Valor,
+			Email: aggrg.Paciente.Email.Valor,
 			FechaNacimiento: aggrg.Paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MinValue)
 		);
 	}
@@ -50,8 +50,8 @@ public static partial class DbModels {
 			Domicilio: instance.Domicilio.DireccionValor,
 			Localidad: instance.Domicilio.Localidad.NombreValor,
 			ProvinciaCodigo: instance.Domicilio.Localidad.Provincia.CodigoInternoValor,
-			Telefono: instance.Contacto.Telefono.Valor,
-			Email: instance.Contacto.Email.Valor,
+			Telefono: instance.Telefono.Valor,
+			Email: instance.Email.Valor,
 			FechaNacimiento: instance.FechaNacimiento.Valor.ToDateTime(TimeOnly.MinValue)
 		);
 	}
@@ -64,9 +64,8 @@ public static partial class DbModels {
 			Paciente2025.CrearResult(
 				NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
 				DniArgentino2025.CrearResult(dbModel.Dni),
-				Contacto2025.CrearResult(
-				ContactoEmail2025.CrearResult(dbModel.Email),
-				ContactoTelefono2025.CrearResult(dbModel.Telefono)),
+				Telefono2025.CrearResult(dbModel.Telefono),
+				Email2025.CrearResult(dbModel.Email),
 				DomicilioArgentino2025.CrearResult(
 				LocalidadDeProvincia2025.CrearResult(
 					dbModel.Localidad,

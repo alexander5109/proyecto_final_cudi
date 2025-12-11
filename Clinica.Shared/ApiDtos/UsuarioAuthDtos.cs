@@ -61,8 +61,8 @@ public static class UsuarioAuthDtos {
 			NombreCompleto2025.CrearResult(dto.Nombre, dto.Apellido),
 			ContraseñaHasheada.CrearResult(dto.PasswordHash),
 			dto.EnumRole.CrearResult(),
-			ContactoEmail2025.CrearResult(dto.Email),
-			ContactoTelefono2025.CrearResult(dto.Telefono)
+			Email2025.CrearResult(dto.Email),
+			Telefono2025.CrearResult(dto.Telefono)
 		);
 
 }

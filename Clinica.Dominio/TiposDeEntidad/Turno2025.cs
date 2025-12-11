@@ -5,6 +5,56 @@ using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.TiposDeEntidad;
+
+
+public static class TurnoPolicyRaw {
+	public static bool PuedeMarcarComoAusente(
+		TurnoEstadoCodigo estado,
+		DateTime fechaAsignadaHasta,
+		bool tieneOutcome,
+		DateTime ahora
+	) {
+		return estado == TurnoEstadoCodigo.Programado
+			&& !tieneOutcome
+			&& ahora >= fechaAsignadaHasta;
+	}
+
+	public static bool PuedeConfirmar(
+		TurnoEstadoCodigo estado,
+		DateTime fechaAsignadaDesde,
+		bool tieneOutcome,
+		DateTime ahora
+	) {
+		return estado == TurnoEstadoCodigo.Programado
+			&& !tieneOutcome
+			&& ahora.Date >= fechaAsignadaDesde.Date;
+	}
+
+	public static bool PuedeCancelar(
+		TurnoEstadoCodigo estado,
+		DateTime fechaAsignadaDesde,
+		bool tieneOutcome,
+		DateTime ahora
+	) {
+		return estado == TurnoEstadoCodigo.Programado
+			&& !tieneOutcome
+			&& ahora.Date < fechaAsignadaDesde.Date;
+	}
+
+	public static bool PuedeReprogramar(
+		TurnoEstadoCodigo estado,
+		DateTime fechaAsignadaHasta,
+		bool tieneOutcome,
+		DateTime ahora
+	) {
+		return estado == TurnoEstadoCodigo.Programado
+			&& !tieneOutcome
+			&& ahora < fechaAsignadaHasta;
+	}
+}
+
+
+
 public record Turno2025(
 	DateTime FechaDeCreacion,
 	PacienteId PacienteId,
@@ -100,7 +150,11 @@ public record Turno2025(
 				"La hora de inicio debe ser anterior a la hora de fin."
 			);
 
-		//we cant check this unless disponibildiad richness includes a whole doctor. Let's trust the disponibilidad maker
+		if (disp.FechaHoraDesde < solicitadoEn)
+			return new Result<Turno2025>.Error("No puede programarse un turno para una fecha pasada.");
+
+
+		//we cant check this unless Disponibilidad2025 richness includes more doctor info. So lLet's trust the Disponibilidad2025 generator system
 		//if (disp.Medico.EspecialidadUnica != disp.Especialidad)
 		//	return new Result<Turno2025>.Error($"El medico {disp.Medico.NombreCompleto.ATextoDia()} tentativo no es especialidad en {disp.Especialidad.ATextoDia()}");
 
@@ -141,11 +195,10 @@ public static class TurnoExtentions {
 		DateTime fechaEvento,
 		string comentario
 	) {
-		//if (comentario is null)
-		//	return new Result<Turno2025>.Error("El comentario es obligatorio al marcar como ausente un turno.");
-
-		if (turnoOriginal.OutcomeEstado == TurnoEstadoCodigo.Programado&& !turnoOriginal.OutcomeFechaOption.HasValor)
+		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
 			return new Result<Turno2025>.Error("Solo puede marcarse como ausente un turno que esté programado.");
+
+
 
 		return new Result<Turno2025>.Ok(
 			turnoOriginal with {
@@ -161,15 +214,11 @@ public static class TurnoExtentions {
 		DateTime fechaEvento,
 		string? comentario
 	) {
-		//comentario totalmente opcional
-		//if (comentario is null)
-		//	return new Result<Turno2025>.Error("El comentario es obligatorio al concretar un turno.");
-
-		if (turnoOriginal.OutcomeEstado == TurnoEstadoCodigo.Programado&& !turnoOriginal.OutcomeFechaOption.HasValor)
+		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
 			return new Result<Turno2025>.Error("Solo puede concretarse un turno que esté programado.");
 
-		if (fechaEvento.DayOfWeek < turnoOriginal.FechaHoraAsignadaDesdeValor.DayOfWeek)
-			return new Result<Turno2025>.Error("No puede confirmarse un turno uno o mas dias antes de la fecha de la cita");
+		if (fechaEvento.Date < turnoOriginal.FechaHoraAsignadaDesdeValor.Date)
+			return new Result<Turno2025>.Error("No puede confirmarse un turno antes de la fecha de la cita");
 
 		return new Result<Turno2025>.Ok(
 			turnoOriginal with {
@@ -184,18 +233,19 @@ public static class TurnoExtentions {
 		DateTime fechaEvento,
 		string comentario
 	) {
-		//if (comentario is null) 
-		//	return new Result<Turno2025>.Error("El comentario es obligatorio al cancelar un turno.");
-		
-		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado || turnoOriginal.OutcomeFechaOption.HasValor) 
-			return new Result<Turno2025>.Error("Solo puede cancelarse un turno que todavía esté programado.");
-		
-		if (fechaEvento < turnoOriginal.FechaDeCreacion) 
+
+		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
+			return new Result<Turno2025>.Error("Solo puede cancelarse un turno que esté programado.");
+
+		if (turnoOriginal.OutcomeFechaOption.HasValor)
+			return new Result<Turno2025>.Error("El turno ya tiene un resultado asignado y no puede cancelarse.");
+
+		if (fechaEvento < turnoOriginal.FechaDeCreacion)
 			return new Result<Turno2025>.Error("La fecha del evento no puede ser anterior a la fecha de creación del turno.");
-		
-		if (fechaEvento >= turnoOriginal.FechaHoraAsignadaHastaValor) 
+
+		if (fechaEvento >= turnoOriginal.FechaHoraAsignadaHastaValor)
 			return new Result<Turno2025>.Error("No puede cancelarse un turno después de la cita.");
-		
+
 		if (fechaEvento.Date == turnoOriginal.FechaHoraAsignadaDesdeValor.Date)
 			return new Result<Turno2025>.Error("No puede cancelarse el mismo dia de la cita. Por favor marcar como ausente por no avisar antes.");
 
@@ -213,17 +263,15 @@ public static class TurnoExtentions {
 		DateTime fechaEvento,
 		string comentario
 	) {
-		//if (comentario is null)
-		//	return new Result<Turno2025>.Error("El comentario es obligatorio al reporogranar un turno.");
+		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
+			return new Result<Turno2025>.Error("Solo puede reprogramarse un turno que esté programado.");
 
-		if (
-			turnoOriginal.OutcomeEstado == TurnoEstadoCodigo.Programado
-			&& !turnoOriginal.OutcomeFechaOption.HasValor
-		)
-			return new Result<Turno2025>.Error("Solo puede reprogramarse un turno que todavía esté programado.");
+		if (turnoOriginal.OutcomeFechaOption.HasValor)
+			return new Result<Turno2025>.Error("El turno ya tiene un resultado asignado y no puede reprogramarse.");
 
-		if (fechaEvento > turnoOriginal.FechaHoraAsignadaHastaValor)
-			return new Result<Turno2025>.Error("No puede reprogramarse un turno despues de la cita");
+		if (fechaEvento < turnoOriginal.FechaDeCreacion)
+			return new Result<Turno2025>.Error("La reprogramación no puede registrarse antes de que el turno haya sido creado.");
+
 
 		return new Result<Turno2025>.Ok(
 			turnoOriginal with {

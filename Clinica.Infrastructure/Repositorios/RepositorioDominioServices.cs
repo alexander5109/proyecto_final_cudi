@@ -6,10 +6,12 @@ using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
 using Clinica.Shared.ApiDtos;
+using Clinica.Shared.DbModels;
 using Dapper;
 using static Clinica.Dominio.IInterfaces.QueryModels;
-using static Clinica.Shared.ApiDtos.TurnoDtos;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
+using static Clinica.Shared.DbModels.DbModels;
+using static Clinica.Shared.ApiDtos.TurnoDtos;
 
 namespace Clinica.Infrastructure.Repositorios;
 
@@ -22,8 +24,8 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 		Turno2025 instance
 	)
 		=> TryAsync<Turno2025>(async conn => {
-			// Enviar parámetros al SP
-			TurnoDto parametros = instance.ToDto();
+            // Enviar parámetros al SP
+            TurnoDbModel parametros = instance.ToModel(id);
 
 			// Ejecutar SP que devuelve int RowsAffected
 			int rowsAffected = await conn.ExecuteScalarAsync<int>(

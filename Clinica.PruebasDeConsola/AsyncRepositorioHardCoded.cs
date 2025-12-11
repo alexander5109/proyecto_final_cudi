@@ -26,8 +26,8 @@ public static class AsyncRepositorioHardCoded {
 					),
 					"Avenida Rivadavia 2323"
 				),
-				ContactoTelefono2025.CrearResult("1133832021"),
-				ContactoEmail2025.CrearResult("carlosmerkeir@gmail.com"),
+				Telefono2025.CrearResult("1133832021"),
+				Email2025.CrearResult("carlosmerkeir@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
 					Horario2025.Crear(
 						new MedicoId(2341456),
@@ -69,8 +69,8 @@ public static class AsyncRepositorioHardCoded {
 					),
 					"Armonia 23231"
 				),
-				ContactoTelefono2025.CrearResult("1163632071"),
-				ContactoEmail2025.CrearResult("jorgepereiyra@gmail.com"),
+				Telefono2025.CrearResult("1163632071"),
+				Email2025.CrearResult("jorgepereiyra@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
 					Horario2025.Crear(
 						new MedicoId(231156),
@@ -111,8 +111,8 @@ public static class AsyncRepositorioHardCoded {
 					),
 					"Entre Rios 123"
 				),
-				ContactoTelefono2025.CrearResult("1149920537"),
-				ContactoEmail2025.CrearResult("martaalgerich@gmail.com"),
+				Telefono2025.CrearResult("1149920537"),
+				Email2025.CrearResult("martaalgerich@gmail.com"),
 				ListaHorarioMedicos2025.CrearResult([
 					Horario2025.Crear(
 						new MedicoId(156),
@@ -155,9 +155,9 @@ public static class AsyncRepositorioHardCoded {
 			Paciente2025.CrearResult(
 				NombreCompleto2025.CrearResult("Juan", "Diaz"),
 				DniArgentino2025.CrearResult("44444444"),
-				Contacto2025.CrearResult(
-					ContactoEmail2025.CrearResult("juandiaz@gmail.com"),
-					ContactoTelefono2025.CrearResult("1155544433")
+				Telefono2025.CrearResult(
+					Email2025.CrearResult("juandiaz@gmail.com"),
+					Telefono2025.CrearResult("1155544433")
 				),
 				DomicilioArgentino2025.CrearResult(
 					LocalidadDeProvincia2025.CrearResult(
@@ -175,9 +175,9 @@ public static class AsyncRepositorioHardCoded {
 			Paciente2025.CrearResult(
 				NombreCompleto2025.CrearResult("Pedro", "Fernandez"),
 				DniArgentino2025.CrearResult("30350123"),
-				Contacto2025.CrearResult(
-					ContactoEmail2025.CrearResult("pedroFalopa@gmail.com"),
-					ContactoTelefono2025.CrearResult("11655414253")
+				Telefono2025.CrearResult(
+					Email2025.CrearResult("pedroFalopa@gmail.com"),
+					Telefono2025.CrearResult("11655414253")
 				),
 				DomicilioArgentino2025.CrearResult(
 					LocalidadDeProvincia2025.CrearResult(
@@ -195,9 +195,9 @@ public static class AsyncRepositorioHardCoded {
 				Paciente2025.CrearResult(
 					NombreCompleto2025.CrearResult("Herminda", "Gutierrez Lopez"),
 					DniArgentino2025.CrearResult("44444444"),
-					Contacto2025.CrearResult(
-						ContactoEmail2025.CrearResult("hermindalaturri201@gmail.com"),
-						ContactoTelefono2025.CrearResult("11225411453")
+					Telefono2025.CrearResult(
+						Email2025.CrearResult("hermindalaturri201@gmail.com"),
+						Telefono2025.CrearResult("11225411453")
 					),
 					DomicilioArgentino2025.CrearResult(
 						LocalidadDeProvincia2025.CrearResult(

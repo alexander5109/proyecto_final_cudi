@@ -80,8 +80,8 @@ public static partial class DbModels {
 					LocalidadDeProvincia2025.CrearResult(dbModel.Localidad, ProvinciaArgentina2025.CrearResultPorCodigo(dbModel.ProvinciaCodigo))
 					, dbModel.Domicilio
 				),
-				ContactoTelefono2025.CrearResult(dbModel.Telefono),
-				ContactoEmail2025.CrearResult(dbModel.Email),
+				Telefono2025.CrearResult(dbModel.Telefono),
+				Email2025.CrearResult(dbModel.Email),
 				ListaHorarioMedicos2025.CrearResult(horariosDto),
 				dbModel.FechaIngreso,
 				dbModel.HaceGuardias
