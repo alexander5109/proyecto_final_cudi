@@ -24,6 +24,14 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 				commandType: CommandType.StoredProcedure
 			);
 		});
+	Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWithHorarioWhereId(MedicoId id)
+		=> TryAsync(async conn => {
+			return await conn.QuerySingleOrDefaultAsync<MedicoDbModel>(
+				"sp_SelectMedicoWithHorariosWhereId",
+				new { Id = id.Valor },
+				commandType: CommandType.StoredProcedure
+			);
+		});
 
 	Task<Result<MedicoId>> IRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance)
 		=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
@@ -70,6 +78,13 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<MedicoDbModel>(
 				"sp_SelectMedicos",
+				commandType: CommandType.StoredProcedure
+			);
+		});
+	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicosWithHorarios()
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<MedicoDbModel>(
+				"sp_SelectMedicosWithHorario",
 				commandType: CommandType.StoredProcedure
 			);
 		});

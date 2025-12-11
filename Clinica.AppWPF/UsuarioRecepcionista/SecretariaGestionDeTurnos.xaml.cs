@@ -148,7 +148,7 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 	}
 	private void ButtonBuscarDisponibilidades(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is null) return;
-		this.AbrirComoDialogo<RecepcionistaDisponibilidades>(VM.SelectedPaciente.Id);
+		this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedPaciente.Id);
 		//_ = VM.RefrescarTurnosAsync();
 	}
 }

@@ -5,12 +5,12 @@ using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class RecepcionistaDisponibilidades : Window {
-	public RecepcionistaDisponibilidadesViewModel VM { get; }
+public partial class SecretariaFormularioTurno : Window {
+	internal MyViewModel VM { get; }
 
-	public RecepcionistaDisponibilidades(PacienteDbModel paciente) {
+	public SecretariaFormularioTurno(PacienteDbModel paciente) {
 		InitializeComponent();
-		VM = new RecepcionistaDisponibilidadesViewModel(paciente);
+		VM = new MyViewModel(paciente);
 		DataContext = VM;
 	}
 
@@ -22,14 +22,12 @@ public partial class RecepcionistaDisponibilidades : Window {
 	private void Click_AgendarNuevoTurno(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 
-		if (VM.SelectedDisponibilidad is null) {
-			MessageBox.Show("No hay disponibilidad seleccionada.");
-			return;
+		if (VM.SelectedDisponibilidad is not null) {
+			DisponibilidadEspecialidadModelView d = VM.SelectedDisponibilidad;
+			MessageBox.Show($"Reservando turno: {d.Fecha} {d.Hora}", "Reservar");
+			Close();
 		}
 
-        Comodidades.DisponibilidadEspecialidadModelView d = VM.SelectedDisponibilidad;
-		MessageBox.Show($"Reservando turno: {d.Fecha} {d.Hora}", "Reservar");
-		Close();
 	}
 
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {

@@ -45,7 +45,7 @@ public partial class RecepcionistaGestionDePacientes : Window {
 	}
 	private void ButtonBuscarDisponibilidades(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is not null) {
-			this.AbrirComoDialogo<RecepcionistaDisponibilidades>(VM.SelectedPaciente);
+			this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedPaciente);
 		} else {
 			MessageBox.Show("No hay paciente seleecionado");
 		}

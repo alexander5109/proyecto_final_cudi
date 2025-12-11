@@ -27,6 +27,13 @@ public class MedicosController(
 		() => repositorio.SelectMedicos()
 	);
 
+	[HttpGet("con-horarios/")]
+	public Task<IActionResult> GetMedicosWithHorarios() => this.SafeExecute(
+		logger,
+		PermisosAccionesCodigo.VerMedicos,
+		() => repositorio.SelectMedicosWithHorarios()
+	);
+
 
 	[HttpGet("por-especialidad/{code}")]
 	public Task<IActionResult> GetMedicosWhereEspecialidadCodigo([FromRoute] EspecialidadCodigo code)

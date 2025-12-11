@@ -1,61 +1,98 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.ViewModels;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
-using static Clinica.AppWPF.Infrastructure.Comodidades;
+using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public class RecepcionistaDisponibilidadesViewModel : INotifyPropertyChanged {
+//----------------------------------internal Viewmodel for SecretariaFormularioTurno-------------------------
+internal class MyViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void OnPropertyChanged(string name)
 		=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-	public RecepcionistaDisponibilidadesViewModel(PacienteDbModel paciente) {
+	public MyViewModel(PacienteDbModel paciente) {
 		SelectedPaciente = paciente;
 		_ = LoadMedicosTodosAsync();
 		LoadHoras();
 	}
 
-	// -----------------------------------------------------------------------
-	// PACIENTE
-	// -----------------------------------------------------------------------
-	public PacienteDbModel? SelectedPaciente { get; private set; }
-
-	//private async Task LoadPaciente(PacienteId id) {
-	//	SelectedPaciente = RepoCache.DictPacientes.GetValueOrDefault(id);
-	//	OnPropertyChanged(nameof(SelectedPaciente));
-	//}
 
 
-	public string? SelectedPacienteDomicilioCompleto => SelectedPaciente is null ? null : $"{SelectedPaciente?.Localidad}, {SelectedPaciente?.Domicilio}";
-	public string? SelectedPacienteNombreCompleto => SelectedPaciente is null ? null : $"{SelectedPaciente?.Nombre} {SelectedPaciente?.Apellido}";
 
-	// -----------------------------------------------------------------------
-	// MEDICOS
-	// -----------------------------------------------------------------------
-	public IReadOnlyList<MedicoSimpleViewModel>? MedicosTodos { get; private set; }
-	public ObservableCollection<MedicoSimpleViewModel> MedicosEspecialistasItemsSource { get; } = [];
-
-	private MedicoId? _selectedMedicoId;
-	public MedicoId? SelectedMedicoId {
-		get => _selectedMedicoId;
+	private MedicoSimpleViewModel? _selectedMedico;
+	public MedicoSimpleViewModel? SelectedMedico {
+		get => _selectedMedico;
 		set {
-			if (_selectedMedicoId == value) return;
-			_selectedMedicoId = value;
-			OnPropertyChanged(nameof(SelectedMedicoId));
+			if (_selectedMedico == value) return;
+			_selectedMedico = value;
+			OnPropertyChanged(nameof(SelectedMedico));
+			OnPropertyChanged(nameof(HayMedicoSeleccionado));
+			OnPropertyChanged(nameof(BotonBuscarDisponibilidadEnabled)); // <--- importante
+			OnPropertyChanged(nameof(ComboBoxDiasSemanaEnabled));
+			ActualizarDiasSemana();
+			//FiltroDiaEnabled = SelectedMedico != null;
+
+			//MessageBox.Show(SelectedMedico?.ToString());
+
 		}
 	}
 
+	public bool HayMedicoSeleccionado => SelectedMedico != null;
+	public bool ComboBoxDiasSemanaEnabled => FiltroDiaEnabled && SelectedMedico != null && SelectedMedico.DiasAtencion.Any();
+
+
+	public DisponibilidadEspecialidadModelView? SelectedDisponibilidad {
+		get => _selectedDisponibilidad;
+		set {
+			if (_selectedDisponibilidad == value) return;
+			_selectedDisponibilidad = value;
+			OnPropertyChanged(nameof(SelectedDisponibilidad));
+			OnPropertyChanged(nameof(BotonBuscarDisponibilidadEnabled)); // <--- importante
+			OnPropertyChanged(nameof(ComboBoxDiasSemanaEnabled));
+		}
+	}
+
+
+
+
+
+
+	public PacienteDbModel SelectedPaciente { get; private set; }
+
+	public string? SelectedPacienteDomicilioCompleto => $"{SelectedPaciente?.Localidad}, {SelectedPaciente?.Domicilio}";
+	public string? SelectedPacienteNombreCompleto => $"{SelectedPaciente?.Nombre} {SelectedPaciente?.Apellido}";
+
+	public IReadOnlyList<MedicoSimpleViewModel>? MedicosTodos { get; private set; }
+	public ObservableCollection<MedicoSimpleViewModel> MedicosEspecialistasItemsSource { get; } = [];
+
+
+
+	public bool ComboBoxMedicosEnabled => MedicosEspecialistasItemsSource.Any();
+
+	private void ActualizarDiasSemana() {
+		DiasSemanaItemsSource.Clear();
+		if (SelectedMedico is null) return;
+
+		foreach (var dia in SelectedMedico.DiasAtencion) {
+			DiasSemanaItemsSource.Add(new DiaDeSemanaViewModel(dia, dia.ATexto()));
+		}
+
+		SelectedDiaValue = DiasSemanaItemsSource.FirstOrDefault();
+	}
+
+
 	public async Task LoadMedicosTodosAsync() {
-		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
+		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicosWithHorarios();
 		MedicosTodos = medicos.Select(m => m.ToSimpleViewModel()).ToList();
 		OnPropertyChanged(nameof(MedicosTodos));
+		OnPropertyChanged(nameof(ComboBoxMedicosEnabled));
 	}
 
 	public async Task LoadMedicosPorEspecialidadAsync(EspecialidadCodigo? esp) {
@@ -68,13 +105,15 @@ public class RecepcionistaDisponibilidadesViewModel : INotifyPropertyChanged {
 		foreach (MedicoSimpleViewModel? m in MedicosTodos!.Where(x => x.EspecialidadCodigo == codigo))
 			MedicosEspecialistasItemsSource.Add(m);
 
-		if (MedicosEspecialistasItemsSource.Any())
-			SelectedMedicoId = MedicosEspecialistasItemsSource.First().Id;
+		if (MedicosEspecialistasItemsSource.Any()) {
+			SelectedMedico = MedicosEspecialistasItemsSource.First();
+		} else {
+			SelectedMedico = null;
+		}
+		OnPropertyChanged(nameof(ComboBoxMedicosEnabled));
+
 	}
 
-	// -----------------------------------------------------------------------
-	// FECHAS / HORAS
-	// -----------------------------------------------------------------------
 	private DateTime _preferedFechaValue = DateTime.Today;
 	public DateTime PreferedFechaValue {
 		get => _preferedFechaValue;
@@ -97,18 +136,6 @@ public class RecepcionistaDisponibilidadesViewModel : INotifyPropertyChanged {
 		}
 	}
 
-	private bool _filtroHoraEnabled;
-	public bool FiltroHoraEnabled {
-		get => _filtroHoraEnabled;
-		set {
-			if (_filtroHoraEnabled == value) return;
-			_filtroHoraEnabled = value;
-			if (!value)
-				SelectedHoraValue = ClinicaNegocio.Atencion.DesdeHs;
-			OnPropertyChanged(nameof(FiltroHoraEnabled));
-		}
-	}
-
 	private void LoadHoras() {
 		HorasItemsSource.Clear();
 
@@ -125,9 +152,6 @@ public class RecepcionistaDisponibilidadesViewModel : INotifyPropertyChanged {
 
 
 
-	// -----------------------------------------------------------------------
-	// DÍA DE SEMANA
-	// -----------------------------------------------------------------------
 	public ObservableCollection<DiaDeSemanaViewModel> DiasSemanaItemsSource { get; } =
 		[.. DiaDeSemanaViewModel.Todos];
 
@@ -138,6 +162,7 @@ public class RecepcionistaDisponibilidadesViewModel : INotifyPropertyChanged {
 			if (_selectedDiaValue == value) return;
 			_selectedDiaValue = value;
 			OnPropertyChanged(nameof(SelectedDiaValue));
+			OnPropertyChanged(nameof(BotonBuscarDisponibilidadEnabled));
 		}
 	}
 
@@ -153,9 +178,6 @@ public class RecepcionistaDisponibilidadesViewModel : INotifyPropertyChanged {
 		}
 	}
 
-	// -----------------------------------------------------------------------
-	// ESPECIALIDAD
-	// -----------------------------------------------------------------------
 	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; } =
 		[.. Especialidad2025.Todas.Select(x => x.ToSimpleViewModel())];
 
@@ -167,25 +189,19 @@ public class RecepcionistaDisponibilidadesViewModel : INotifyPropertyChanged {
 			_selectedEspecialidadCodigo = value;
 
 			OnPropertyChanged(nameof(SelectedEspecialidadCodigo));
+			OnPropertyChanged(nameof(SelectedMedico));
+			OnPropertyChanged(nameof(BotonBuscarDisponibilidadEnabled));
+			OnPropertyChanged(nameof(ComboBoxMedicosEnabled));
 
 			_ = LoadMedicosPorEspecialidadAsync(value);
 		}
 	}
 
-	// -----------------------------------------------------------------------
-	// DISPONIBILIDADES
-	// -----------------------------------------------------------------------
 	public ObservableCollection<DisponibilidadEspecialidadModelView> DisponibilidadesItemsSource { get; } = [];
 
 	private DisponibilidadEspecialidadModelView? _selectedDisponibilidad;
-	public DisponibilidadEspecialidadModelView? SelectedDisponibilidad {
-		get => _selectedDisponibilidad;
-		set {
-			if (_selectedDisponibilidad == value) return;
-			_selectedDisponibilidad = value;
-			OnPropertyChanged(nameof(SelectedDisponibilidad));
-		}
-	}
+
+	public bool BotonBuscarDisponibilidadEnabled => SelectedMedico != null && SelectedMedico.DiasAtencion.Any();
 
 	public async Task RefreshDisponibilidadesAsync() {
 		if (SelectedEspecialidadCodigo is not EspecialidadCodigo esp) return;
@@ -204,3 +220,78 @@ public class RecepcionistaDisponibilidadesViewModel : INotifyPropertyChanged {
 			DisponibilidadesItemsSource.Add(await d.ToSimpleViewModel());
 	}
 }
+
+
+
+
+
+
+
+
+
+public record DiaDeSemanaViewModel(DayOfWeek Value, string DiaNombre) {
+
+	public static readonly List<DiaDeSemanaViewModel> Todos = [
+		new(DayOfWeek.Monday,    "Lunes"),
+		new(DayOfWeek.Tuesday,   "Martes"),
+		new(DayOfWeek.Wednesday, "Miércoles"),
+		new(DayOfWeek.Thursday,  "Jueves"),
+		new(DayOfWeek.Friday,    "Viernes"),
+		new(DayOfWeek.Saturday,  "Sábado"),
+		new(DayOfWeek.Sunday,    "Domingo")
+	];
+
+};
+
+
+
+public record MedicoSimpleViewModel(MedicoId Id, EspecialidadCodigo EspecialidadCodigo, string Displayear, IReadOnlyList<DayOfWeek> DiasAtencion);
+public record DisponibilidadEspecialidadModelView(string Fecha, string Hora, string MedicoDisplayear, DiaDeSemanaViewModel DiaSemana);
+public record EspecialidadViewModel(EspecialidadCodigo Codigo, string Displayear);
+
+internal static class ExtensionesLocales {
+
+	internal static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDbModel model) {
+		List<DayOfWeek> dias = [];
+		if (!string.IsNullOrWhiteSpace(model.HorariosJson)) {
+			var horarios = System.Text.Json.JsonSerializer.Deserialize<List<HorarioDto>>(model.HorariosJson);
+			dias = horarios is null ? [] : horarios.Select(h => h.DiaSemana).Distinct().ToList();
+		}
+
+		return new MedicoSimpleViewModel(
+			Id: model.Id,
+			EspecialidadCodigo: model.EspecialidadCodigo,
+			Displayear: $"{model.Nombre} {model.Apellido}",
+			DiasAtencion: dias
+		);
+	}
+
+	private record HorarioDto(int Id, int MedicoId, DayOfWeek DiaSemana, TimeOnly HoraDesde, TimeOnly HoraHasta);
+
+	internal static EspecialidadViewModel ToSimpleViewModel(this Especialidad2025 instance) {
+		return new EspecialidadViewModel(
+			Codigo: instance.Codigo,
+			Displayear: $"{instance.Titulo} --- (Duración consulta: {instance.DuracionConsultaMinutos})"
+		);
+	}
+
+	async internal static Task<DisponibilidadEspecialidadModelView> ToSimpleViewModel(this Disponibilidad2025 domainValue) {
+		MedicoDbModel? medico = RepoCache.DictMedicos.GetValueOrDefault(domainValue.MedicoId);
+		return new DisponibilidadEspecialidadModelView(
+			Fecha: domainValue.FechaHoraDesde.ATextoHoras(),
+			Hora: domainValue.FechaHoraDesde.ATextoHoras(),
+			MedicoDisplayear: $"{medico?.Nombre}{medico?.Apellido}",
+			DiaSemana: new DiaDeSemanaViewModel(domainValue.FechaHoraDesde.DayOfWeek, domainValue.FechaHoraDesde.DayOfWeek.ATexto())
+		);
+	}
+
+
+
+
+
+
+
+
+}
+
+
