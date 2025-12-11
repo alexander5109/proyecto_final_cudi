@@ -1,10 +1,12 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.UsuarioSuperadmin;
+using static Clinica.Shared.DbModels.DbModels;
 
-namespace Clinica.AppWPF.Clinica2024;
+namespace Clinica.AppWPF.UsuarioSuperadmin;
 
 public partial class PacientesModificar : Window {
-	private static Paciente? SelectedPaciente;
+	private static PacienteDbModel? SelectedPaciente;
 	//---------------------public.constructors-------------------//
 	public PacientesModificar() //Constructor vacio ==> Crear.
 	{
@@ -12,7 +14,7 @@ public partial class PacientesModificar : Window {
 		SelectedPaciente = null;
 	}
 
-	public PacientesModificar(Paciente selectedPaciente) //Constructor con un objeto como parametro ==> Modificarlo.
+	public PacientesModificar(PacienteDbModel selectedPaciente) //Constructor con un objeto como parametro ==> Modificarlo.
 	{
 		InitializeComponent();
 		SelectedPaciente = selectedPaciente;
@@ -56,17 +58,17 @@ public partial class PacientesModificar : Window {
 
 		//---------Crear-----------//
 		if (SelectedPaciente is null) {
-			var nuevpacoiente = new Paciente(this);
-			if (App.BaseDeDatos.CreatePaciente(nuevpacoiente)) {
-				this.Cerrar();
-			}
+			//var nuevpacoiente = new PacienteDbModel(this);
+			//if (App.BaseDeDatos.CreatePaciente(nuevpacoiente)) {
+			//	this.Cerrar();
+			//}
 		}
 		//---------Modificar-----------//
 		else {
 			SelectedPaciente.LeerDesdeVentana(this);
-			if (App.BaseDeDatos.UpdatePaciente(SelectedPaciente)) {
-				this.Cerrar();
-			}
+			//if (App.BaseDeDatos.UpdatePaciente(SelectedPaciente)) {
+			//	this.Cerrar();
+			//}
 		}
 	}
 
@@ -80,7 +82,7 @@ public partial class PacientesModificar : Window {
 			return;
 		}
 		//---------confirmacion-----------//
-		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedPaciente.Name}",
+		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedPaciente.Nombre}",
 			"Confirmar Eliminación",
 			MessageBoxButton.OKCancel,
 			MessageBoxImage.Warning
@@ -88,9 +90,9 @@ public partial class PacientesModificar : Window {
 			return;
 		}
 		//---------Eliminar-----------//
-		if (App.BaseDeDatos.DeletePaciente(SelectedPaciente)) {
-			this.Cerrar(); // this.NavegarA<Medicos>();
-		}
+		//if (App.BaseDeDatos.DeletePaciente(SelectedPaciente)) {
+		//	this.Cerrar(); // this.NavegarA<Medicos>();
+		//}
 	}
 	//---------------------botones.Salida-------------------//
 	private void ButtonCancelar(object sender, RoutedEventArgs e) {

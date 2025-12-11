@@ -1,10 +1,10 @@
 ﻿<Window
-	x:Class="Clinica.AppWPF.Clinica2024.Medicos"
+	x:Class="Clinica.AppWPF.UsuarioSuperadmin.Medicos"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:local="clr-namespace:Clinica.AppWPF.Clinica2024"
+	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioSuperadmin"
 	Title="Clinica Medica - Medicos"
 	Height="600"
 	Width="1024"
@@ -58,15 +58,15 @@
 								Width="60" />
 							<GridViewColumn
 								Header="Nombre"
-								DisplayMemberBinding="{Binding Name}"
+								DisplayMemberBinding="{Binding Nombre}"
 								Width="65" />
 							<GridViewColumn
 								Header="Apellido"
-								DisplayMemberBinding="{Binding LastName}"
+								DisplayMemberBinding="{Binding Apellido}"
 								Width="70" />
 							<GridViewColumn
 								Header="Especialidad"
-								DisplayMemberBinding="{Binding Especialidad}"
+								DisplayMemberBinding="{Binding EspecialidadCodigo}"
 								Width="80" />
 							<GridViewColumn
 								Header="Teléfono"
@@ -74,11 +74,11 @@
 								Width="70" />
 							<GridViewColumn
 								Header="Guardia"
-								DisplayMemberBinding="{Binding Guardia}"
+								DisplayMemberBinding="{Binding HaceGuardias}"
 								Width="45" />
 							<GridViewColumn
 								Header="Sueldo"
-								DisplayMemberBinding="{Binding SueldoMinimoGarantizado}"
+								DisplayMemberBinding="{Binding Email}"
 								Width="70" />
 						</GridView>
 					</ListView.View>
@@ -247,11 +247,11 @@
 								Width="25" />
 							<GridViewColumn
 								Header="Fecha"
-								DisplayMemberBinding="{Binding Fecha, StringFormat={}{0:dd/MM/yyyy}}"
+								DisplayMemberBinding="{Binding FechaHoraAsignadaDesde, StringFormat={}{0:dd/MM/yyyy}}"
 								Width="73" />
 							<GridViewColumn
 								Header="Hora"
-								DisplayMemberBinding="{Binding Hora, StringFormat={}{0:hh\\:mm}}"
+								DisplayMemberBinding="{Binding FechaHoraAsignadaDesde, StringFormat={}{0:hh\\:mm}}"
 								Width="63" />
 						</GridView>
 					</ListView.View>

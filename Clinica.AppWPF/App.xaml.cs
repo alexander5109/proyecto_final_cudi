@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows;
-//using Clinica.AppWPF.Clinica2024;
+//using Clinica.AppWPF.UsuarioSuperadmin;
 using Clinica.AppWPF.Infrastructure;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;

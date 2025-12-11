@@ -1,11 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
-using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.Ventanas;
 using Clinica.Dominio.TiposDeEnum;
-using static Clinica.Shared.ApiDtos.MedicoDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
@@ -48,10 +44,10 @@ public partial class DialogoModificarMedico : Window {
 				bool exito = false;
 				if (SelectedMedico.Id is null) {
 					// _ValidarRepositorios nuevo médico
-					//exito = App.BaseDeDatos.CreateMedico(MedicoRelacionado);
+					//exito = App.BaseDeDatos.CreateMedico(RelatedMedico);
 				} else {
 					// Actualizar médico existente
-					//exito = App.BaseDeDatos.UpdateMedico(MedicoRelacionado);
+					//exito = App.BaseDeDatos.UpdateMedico(RelatedMedico);
 				}
 				if (exito)
 					this.Cerrar();
@@ -72,7 +68,7 @@ public partial class DialogoModificarMedico : Window {
 		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedMedico.Name}", "Confirmar Eliminación", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK) {
 			return;
 		}
-		//if (App.BaseDeDatos.DeleteMedico(MedicoRelacionado)) {
+		//if (App.BaseDeDatos.DeleteMedico(RelatedMedico)) {
 		//	this.Cerrar(); // this.NavegarA<WindowListarMedicos>();
 		//}
 	}

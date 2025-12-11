@@ -57,28 +57,6 @@
 						</GridView>
 					</ListView.View>
 				</ListView>
-				<StackPanel
-					Orientation="Horizontal"
-					Background="Transparent"
-					Margin="5"
-					HorizontalAlignment="Center">
-					<Button
-						x:Name="buttonReservarTurnoAPaciente"
-						Content="Nuevo turno"
-						Click="ButtonReservarTurno"
-						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
-						FontWeight="Bold"
-						BorderBrush="#FF0E0D0D"
-						FontFamily="Baskerville Old Face"
-						IsEnabled="True"
-						Margin="15"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center"
-						VerticalContentAlignment="Center"
-						Height="33"
-						Width="250" />
-				</StackPanel>
 			</StackPanel>
 		</ContentControl>
 	</Grid>

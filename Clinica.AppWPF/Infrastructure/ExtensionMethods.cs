@@ -1,6 +1,8 @@
 using System.Windows;
 using Clinica.AppWPF.UsuarioAdministrativo;
+using Clinica.AppWPF.UsuarioMedico;
 using Clinica.AppWPF.UsuarioRecepcionista;
+using Clinica.AppWPF.UsuarioSuperadmin;
 using Clinica.Dominio.TiposDeEnum;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 
@@ -47,18 +49,18 @@ public static class ExtensionMethods {
 			MessageBox.Show($"No hay usuario logueado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 		} else {
 			switch (usuarioLogueado.EnumRole) {
-				//case UsuarioRoleCodigo.Nivel1Superadmin:
-				//	this.NavegarA<SuperaadminHome>();
-				//	break;
+				case UsuarioRoleCodigo.Nivel1Superadmin:
+					previousWindow.NavegarA<HomeSuperadmin>();
+					break;
 				case UsuarioRoleCodigo.Nivel2Administrativo:
 					previousWindow.NavegarA<HomeAdministrativo>();
 					break;
 				case UsuarioRoleCodigo.Nivel3Recepcionista:
 					previousWindow.NavegarA<RecepcionistaHome>();
 					break;
-				//case UsuarioRoleCodigo.Nivel4Medico:
-				//	this.NavegarA<MedicoHome>();
-				//	break;
+				case UsuarioRoleCodigo.Nivel4Medico:
+					previousWindow.NavegarA<HomeMedico>();
+					break;
 				default:
 					MessageBox.Show($"Rol de usuario >>{App.Api.UsuarioActual!.EnumRole}<<no reconocido o no soportado todavia.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 					break;

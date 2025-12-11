@@ -1,24 +1,25 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.Entidades;
-using static Clinica.Shared.Dtos.ApiDtos;
+using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeAgregado;
+using static Clinica.Shared.DbModels.DbModels;
 
-namespace Clinica.AppWPF.UsuarioSuperadmin;
+namespace Clinica.AppWPF.UsuarioSuperadmin; 
 public partial class TurnosModificar2025 : Window, INotifyPropertyChanged {
 
 
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public TurnoDto _selectedTurnoView = new TurnoDto();
-	public TurnoDto SelectedTurno { get => _selectedTurnoView; set { _selectedTurnoView = value; OnPropertyChanged(nameof(SelectedTurno)); } }
+	public TurnoDbModel _selectedTurnoView = new TurnoDbModel();
+	public TurnoDbModel SelectedTurno { get => _selectedTurnoView; set { _selectedTurnoView = value; OnPropertyChanged(nameof(SelectedTurno)); } }
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 	// Colecciones para los ComboBoxes
-	public IEnumerable<PacienteDto> PacientesDisponibles { get; private set; } = System.Linq.Enumerable.Empty<PacienteDto>();
-	public IEnumerable<MedicoDto> MedicosDisponibles { get; private set; } = System.Linq.Enumerable.Empty<MedicoDto>();
+	public IEnumerable<PacienteDbModel> PacientesDisponibles { get; private set; } = System.Linq.Enumerable.Empty<PacienteDbModel>();
+	public IEnumerable<MedicoDbModel> MedicosDisponibles { get; private set; } = System.Linq.Enumerable.Empty<MedicoDbModel>();
 
-	//public List<EspecialidadMedicaDto> EspecialidadesDisponibles { get; } = App.BaseDeDatos.ReadDistinctEspecialidades();
+	//public List<EspecialidadMedicaDto> EspecialidadesDisponibles { get; } = await App.Repositorio.SelectDistinctEspecialidades();
 
 
 
@@ -30,7 +31,7 @@ public partial class TurnosModificar2025 : Window, INotifyPropertyChanged {
 		LLenarComboBoxes();
 	}
 
-	public TurnosModificar2025(TurnoDto selectedTurno) //Constructor con un objeto como parametro ==> Modificarlo.
+	public TurnosModificar2025(TurnoDbModel selectedTurno) //Constructor con un objeto como parametro ==> Modificarlo.
 	{
 		InitializeComponent();
 		DataContext = this;
@@ -43,36 +44,36 @@ public partial class TurnosModificar2025 : Window, INotifyPropertyChanged {
 	private void LLenarComboBoxes() //por defecto llenamos todos los comboboxes
 	{
 		try {
-			//PacientesDisponibles = App.BaseDeDatos.ReadPacientes();
-			//MedicosDisponibles = App.BaseDeDatos.ReadMedicos();
+			//PacientesDisponibles = await App.Repositorio.SelectPacientes();
+			//MedicosDisponibles = await App.Repositorio.SelectMedicos();
 		} catch {
-			PacientesDisponibles = System.Linq.Enumerable.Empty<PacienteDto>();
-			MedicosDisponibles = System.Linq.Enumerable.Empty<MedicoDto>();
+			PacientesDisponibles = System.Linq.Enumerable.Empty<PacienteDbModel>();
+			MedicosDisponibles = System.Linq.Enumerable.Empty<MedicoDbModel>();
 		}
 		OnPropertyChanged(nameof(PacientesDisponibles));
 		OnPropertyChanged(nameof(MedicosDisponibles));
 
-		//txtEspecialidades.ItemsSource = App.BaseDeDatos.ReadDistinctEspecialidades();
+		//txtEspecialidades.ItemsSource = await App.Repositorio.SelectDistinctEspecialidades();
 
-		//txtPacientes.ItemsSource = App.BaseDeDatos.ReadPacientes();
+		//txtPacientes.ItemsSource = await App.Repositorio.SelectPacientes();
 		//txtPacientes.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 
-		//txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicos();
+		//txtMedicos.ItemsSource = await App.Repositorio.SelectMedicos();
 		//txtMedicos.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 	}
 	//private void txtEspecialidades_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		//txtMedicos.SelectedValuePath = "Codigo";
-		//txtMedicos.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
-		//txtMedicos.ItemsSource = App.BaseDeDatos.ReadMedicosWhereEspecialidad(txtEspecialidades.SelectedItem.ToString());
+	//txtMedicos.SelectedValuePath = "Codigo";
+	//txtMedicos.DisplayMemberPath = "Displayear"; //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
+	//txtMedicos.ItemsSource = await App.Repositorio.SelectMedicosWhereEspecialidad(txtEspecialidades.SelectedItem.ToString());
 	//}
 	//---------------------botones.GuardarCambios-------------------//
 
 	private void ButtonGuardar(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 
-		ResultWpf<Turno2025> resultado = SelectedTurno.ToDomain();
+        Result<Turno2025Agg> resultado = SelectedTurno.ToDomainAgg();
 
-		resultado.Switch(
+		resultado.MatchAndDo(
 			ok => {
 				bool exito = false;
 

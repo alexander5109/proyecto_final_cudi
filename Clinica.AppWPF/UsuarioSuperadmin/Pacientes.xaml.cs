@@ -1,31 +1,34 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
+using static Clinica.Shared.DbModels.DbModels;
 
-namespace Clinica.AppWPF.Clinica2024;
+namespace Clinica.AppWPF.UsuarioSuperadmin;
 
 public partial class Pacientes : Window {
-	private static Turno? SelectedTurno;
-	private static Paciente? SelectedPaciente;
+	private static TurnoDbModel? SelectedTurno;
+	private static PacienteDbModel? SelectedPaciente;
+	private static MedicoDbModel? RelatedMedico;
+
 	public Pacientes() {
 		InitializeComponent();
 	}
 
 	//----------------------ActualizarSecciones-------------------//
-	private void UpdatePacienteUI() {
-		pacientesListView.ItemsSource = App.BaseDeDatos.ReadPacientes();
+	async private void UpdatePacienteUI() {
+		pacientesListView.ItemsSource = await App.Repositorio.SelectPacientes();
 		buttonModificarPaciente.IsEnabled = SelectedPaciente != null;
 	}
-	private void UpdateTurnoUI() {
-		turnosListView.ItemsSource = App.BaseDeDatos.ReadTurnosWherePacienteId(SelectedPaciente);
+	async private void UpdateTurnoUI() {
+		turnosListView.ItemsSource = SelectedPaciente is not null? await App.Repositorio.SelectTurnosWherePacienteId(SelectedPaciente.Id): [];
 		buttonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
-	private void UpdateMedicoUI() {
-		txtMedicoDni.Text = SelectedTurno?.MedicoRelacionado.Dni;
-		txtMedicoNombre.Text = SelectedTurno?.MedicoRelacionado.Name;
-		txtMedicoApellido.Text = SelectedTurno?.MedicoRelacionado.LastName;
-		txtMedicoEspecialidad.Text = SelectedTurno?.MedicoRelacionado.Especialidad;
-		buttonModificarMedico.IsEnabled = SelectedTurno?.MedicoRelacionado != null;
+	async private void UpdateMedicoUI() {
+		txtMedicoDni.Text = RelatedMedico?.Dni;
+		txtMedicoNombre.Text = RelatedMedico?.Nombre;
+		txtMedicoApellido.Text = RelatedMedico?.Apellido;
+		txtMedicoEspecialidad.Text = RelatedMedico?.EspecialidadCodigo.ToString();
+		buttonModificarMedico.IsEnabled = RelatedMedico != null;
 	}
 
 
@@ -38,14 +41,15 @@ public partial class Pacientes : Window {
 		UpdateTurnoUI();
 		UpdateMedicoUI();
 	}
-	private void listViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedTurno = (Turno)turnosListView.SelectedItem;
+	async private void listViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+		SelectedTurno = (TurnoDbModel)turnosListView.SelectedItem;
+		RelatedMedico = SelectedTurno is not null? await App.Repositorio.SelectMedicoWhereId(SelectedTurno.MedicoId): null ;
 		UpdatePacienteUI();
 		UpdateTurnoUI();
 		UpdateMedicoUI();
 	}
 	private void pacientesListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		SelectedPaciente = (Paciente)pacientesListView.SelectedItem;
+		SelectedPaciente = (PacienteDbModel)pacientesListView.SelectedItem;
 		UpdateMedicoUI();
 		UpdateTurnoUI();
 		UpdatePacienteUI();
@@ -61,8 +65,8 @@ public partial class Pacientes : Window {
 		}
 	}
 	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
-		if (SelectedTurno?.MedicoRelacionado != null) {
-			this.AbrirComoDialogo<MedicosModificar>(SelectedTurno?.MedicoRelacionado!);
+		if (RelatedMedico != null) {
+			this.AbrirComoDialogo<MedicosModificar>(RelatedMedico!);
 		}
 	}
 	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
@@ -95,7 +99,7 @@ public partial class Pacientes : Window {
 		this.Salir();
 	}
 	private void ButtonHome(object sender, RoutedEventArgs e) {
-		this.VolverAHome();
+		this.IrARespectivaHome();
 	}
 	//------------------------Fin.Medicos----------------------//
 }

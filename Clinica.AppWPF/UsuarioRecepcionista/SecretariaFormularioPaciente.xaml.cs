@@ -23,7 +23,7 @@ public partial class RecepcionistaPacienteFormulario : Window {
 		PacienteDbModel? dto = await App.Repositorio.SelectPacienteWhereId(id);
 		//MessageBox.Show(dto.ToString());
 		if (dto == null) {
-			MessageBox.Show("Paciente no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			MessageBox.Show("PacienteExtensiones no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			Close();
 			return;
 		}
@@ -53,7 +53,7 @@ public partial class RecepcionistaPacienteFormulario : Window {
 		ResultWpf<UnitWpf> result = await App.Repositorio.DeletePacienteWhereId(idGood);
 		result.MatchAndDo(
 			caseOk => {
-				MessageBox.Show("Paciente eliminado.", "Éxito", MessageBoxButton.OK);
+				MessageBox.Show("PacienteExtensiones eliminado.", "Éxito", MessageBoxButton.OK);
 				Close();
 			},
 			caseError => caseError.ShowMessageBox()

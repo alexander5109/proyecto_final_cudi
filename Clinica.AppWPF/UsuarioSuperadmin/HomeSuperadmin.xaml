@@ -9,7 +9,7 @@
 	Height="600"
 	Width="1024"
 	Icon="pack://application:,,,/PublishedResources/icons/icono.ico"
-	Activated="Window_Activated"
+	
 	WindowStartupLocation="CenterScreen">
 	<Grid>
 		<Grid.Background>
@@ -67,7 +67,7 @@
 				VerticalAlignment="Top"
 				Height="37"
 				Width="170"
-				Click="MetodoBotonMedicos"
+				Click="MetodoBotonGestionMedicos"
 				FontSize="20"
 				Style="{StaticResource BotonRedondeado}"
 				FontWeight="Bold"
@@ -80,7 +80,7 @@
 				VerticalAlignment="Top"
 				Height="37"
 				Width="170"
-				Click="MetodoBotonPacientes"
+				Click="MetodoBotonGestionPacientes"
 				FontSize="20"
 				Style="{StaticResource BotonRedondeado}"
 				FontWeight="Bold"
@@ -88,13 +88,12 @@
 				FontFamily="Baskerville Old Face"
 				Margin="0,7,0,7"></Button>
 			<Button
-				x:Name="buttonVerTurnos"
 				Content="Ver Turnos"
 				HorizontalAlignment="Center"
 				VerticalAlignment="Top"
 				Height="37"
 				Width="170"
-				Click="MetodoBotonTurnos"
+				Click="MetodoBotonGestionTurnos"
 				FontSize="20"
 				Style="{StaticResource BotonRedondeado}"
 				FontWeight="Bold"
@@ -102,11 +101,10 @@
 				FontFamily="Baskerville Old Face"
 				Margin="0,7,0,7"></Button>
 			<Button
-				x:Name="buttonVerTurnos_Copiar"
 				Content="Ver Usuarios"
 				Height="37"
 				Width="170"
-				Click="MetodoBotonTurnos"
+				Click="MetodoBotonGestionUsuarios"
 				FontSize="20"
 				Style="{StaticResource BotonRedondeado}"
 				FontWeight="Bold"

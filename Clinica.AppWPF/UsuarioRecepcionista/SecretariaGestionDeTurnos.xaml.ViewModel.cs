@@ -10,7 +10,7 @@ namespace Clinica.AppWPF.UsuarioRecepcionista;
 
 public sealed class TurnoViewModel(TurnoDbModel model) {
     public TurnoId Id { get; } = model.Id;
-	//public PacienteDbModel Paciente { get => {  
+	//public PacienteDbModel PacienteExtensiones { get => {  
 	//		(await model.PacienteId.RespectivoPaciente()) //Los pacientes estan cacheados en memoria, sólo cndo no lo esten se hace fetch.
 	//	; }
 

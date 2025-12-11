@@ -1,7 +1,9 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.UsuarioSuperadmin;
+using static Clinica.Shared.DbModels.DbModels;
 
-namespace Clinica.AppWPF.Clinica2024;
+namespace Clinica.AppWPF.UsuarioSuperadmin;
 
 public static class Utilidades {
 	public static bool TryParseHoraField(string? campo) {
@@ -14,7 +16,7 @@ public static class Utilidades {
 	}
 }
 public partial class MedicosModificar : Window {
-	private static Medico? SelectedMedico;
+	private static MedicoDbModel? SelectedMedico;
 	//---------------------public.constructors-------------------//
 	public MedicosModificar() //Constructor con un objeto como parametro ==> Modificarlo.
 	{
@@ -23,7 +25,7 @@ public partial class MedicosModificar : Window {
 		txtDiasDeAtencion.ItemsSource = HorarioMedico.GetDiasDeLaSemanaAsList();
 	}
 
-	public MedicosModificar(Medico selectedMedico) //Constructor con un objeto como parametro ==> Modificarlo.
+	public MedicosModificar(MedicoDbModel selectedMedico) //Constructor con un objeto como parametro ==> Modificarlo.
 	{
 		InitializeComponent();
 		SelectedMedico = selectedMedico;
@@ -76,17 +78,17 @@ public partial class MedicosModificar : Window {
 			return;
 		}
 
-		if (SelectedMedico is null) {
-			SelectedMedico = new Medico(this);
-			if (App.BaseDeDatos.CreateMedico(SelectedMedico)) {
-				this.Cerrar();
-			}
-		} else {
-			SelectedMedico.LeerDesdeVentana(this);
-			if (App.BaseDeDatos.UpdateMedico(SelectedMedico)) {
-				this.Cerrar();
-			}
-		}
+		//if (SelectedMedico is null) {
+		//	SelectedMedico = new Medico(this);
+		//	if (App.BaseDeDatos.CreateMedico(SelectedMedico)) {
+		//		this.Cerrar();
+		//	}
+		//} else {
+		//	SelectedMedico.LeerDesdeVentana(this);
+		//	if (App.BaseDeDatos.UpdateMedico(SelectedMedico)) {
+		//		this.Cerrar();
+		//	}
+		//}
 	}
 
 
@@ -99,13 +101,13 @@ public partial class MedicosModificar : Window {
 			return;
 		}
 		//---------confirmacion-----------//
-		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedMedico.Name}", "Confirmar Eliminación", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK) {
+		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedMedico.Nombre}", "Confirmar Eliminación", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK) {
 			return;
 		}
 		//---------Eliminar-----------//
-		if (App.BaseDeDatos.DeleteMedico(SelectedMedico)) {
-			this.Cerrar(); // this.NavegarA<Medicos>();
-		}
+		//if (App.BaseDeDatos.DeleteMedico(SelectedMedico)) {
+		//	this.Cerrar(); // this.NavegarA<Medicos>();
+		//}
 	}
 
 
