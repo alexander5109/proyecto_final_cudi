@@ -13,7 +13,7 @@
 	<!-- ============== FONDO GENERAL ============== -->
 	<Window.Background>
 		<ImageBrush
-			ImageSource="/PublishedResources/images2025sol/fondoClaro2025.jpg"
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg"
 			Stretch="Fill" />
 	</Window.Background>
 	<!-- ============== CONTENIDO ============== -->

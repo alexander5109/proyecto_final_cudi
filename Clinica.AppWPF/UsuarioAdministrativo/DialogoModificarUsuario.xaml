@@ -7,109 +7,193 @@
 	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioAdministrativo"
 	mc:Ignorable="d"
 	Title="DialogoModificarUsuario"
-	Height="600"
-	Width="800">
-    <Window.Background>
-        <ImageBrush
+	Height="768"
+	Width="999">
+	<Window.Background>
+		<ImageBrush
 			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg" />
-    </Window.Background>
-    <Grid>
-        <Grid
-			Margin="6,-4,-4,3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition
-					Width="130" />
-                <ColumnDefinition
+	</Window.Background>
+	<Grid
+		Margin="25">
+		<Grid
+			Margin="25">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition
+					Width="*" />
+				<ColumnDefinition
 					Width="600" />
-                <ColumnDefinition
-					Width="130" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition
-					Height="400" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <StackPanel
-				Grid.Column="0"
-				Grid.Row="1"
+				<ColumnDefinition
+					Width="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions></Grid.RowDefinitions>
+			<StackPanel
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center"
+				Grid.Column="1"
+				Height="618"
+				Width="568">
+				<Label
+					Margin="25"
+					Content="Modificacion de Usuarios"
+					Style="{StaticResource LabelLindo}"
+					FontSize="35"
+					HorizontalAlignment="Center"
+					FontFamily="Palatino Linotype"
+					Width="Auto"
+					VerticalAlignment="Center"
+					Foreground="#FF0F0A2B"
+					FontWeight="Bold" />
+				<StackPanel
+					Orientation="Horizontal"
+					HorizontalAlignment="Right">
+					<TextBlock
+						Text="UserName"
+						FontFamily="Bahnschrift Light"
+						FontSize="20"
+						HorizontalAlignment="Center"
+						Margin="15,15,15,15" />
+					<TextBox
+						Style="{StaticResource TextBoxLindo2}"
+						Width="220"
+						Height="32"
+						FontSize="16"
+						Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
+						HorizontalAlignment="Center"
+						Margin="15,15,15,15" />
+				</StackPanel>
+				<StackPanel
+					Orientation="Horizontal"
+					HorizontalAlignment="Right">
+					<TextBlock
+						Text="Contraseña"
+						FontFamily="Bahnschrift Light"
+						FontSize="20"
+						HorizontalAlignment="Center"
+						Margin="15,15,15,15" />
+					<TextBox
+						Style="{StaticResource TextBoxLindo2}"
+						Width="220"
+						Height="32"
+						FontSize="16"
+						Text="{Binding PasswordHash, UpdateSourceTrigger=PropertyChanged}"
+						HorizontalAlignment="Center"
+						Margin="15,15,15,15" />
+				</StackPanel>
+				<StackPanel
+					Orientation="Horizontal"
+					HorizontalAlignment="Right">
+					<TextBlock
+						Text="Nombre"
+						FontFamily="Bahnschrift Light"
+						FontSize="20"
+						HorizontalAlignment="Center"
+						Margin="15,15,15,15" />
+					<TextBox
+						Style="{StaticResource TextBoxLindo2}"
+						Width="220"
+						Height="32"
+						FontSize="16"
+						Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged}"
+						HorizontalAlignment="Center"
+						Margin="15,15,15,15" />
+				</StackPanel>
+				<StackPanel
+					Orientation="Horizontal"
+					HorizontalAlignment="Right">
+					<TextBlock
+						Text="Apellido"
+						FontFamily="Bahnschrift Light"
+						FontSize="20"
+						HorizontalAlignment="Center"
+						Margin="15,15,15,15" />
+					<TextBox
+						Style="{StaticResource TextBoxLindo2}"
+						Width="220"
+						Height="32"
+						FontSize="16"
+						Text="{Binding Apellido, UpdateSourceTrigger=PropertyChanged}"
+						HorizontalAlignment="Center"
+						Margin="15,15,15,15" />
+				</StackPanel>
+				<StackPanel
+					Orientation="Horizontal"
+					HorizontalAlignment="Right">
+					<TextBlock
+						Text="Email"
+						FontFamily="Bahnschrift Light"
+						FontSize="20"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+						Margin="15,15,15,15" />
+					<TextBox
+						Style="{StaticResource TextBoxLindo2}"
+						Width="220"
+						Height="32"
+						FontSize="16"
+						Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
+						HorizontalAlignment="Center"
+						Margin="15,15,15,15" />
+				</StackPanel>
+				<StackPanel
+					Orientation="Horizontal"
+					HorizontalAlignment="Right">
+					<TextBlock
+						Text="Telefono"
+						FontFamily="Bahnschrift Light"
+						FontSize="20"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+						Margin="15,15,15,15" />
+					<TextBox
+						Style="{StaticResource TextBoxLindo2}"
+						Width="220"
+						Height="32"
+						FontSize="16"
+						Text="{Binding Telefono, UpdateSourceTrigger=PropertyChanged}"
+						HorizontalAlignment="Center"
+						Margin="15,15,15,15"
+						VerticalAlignment="Center" />
+				</StackPanel>
+				<StackPanel
+					Orientation="Horizontal"
+					HorizontalAlignment="Right">
+					<TextBlock
+						Text="Rol de usuario"
+						FontFamily="Bahnschrift Light"
+						FontSize="20"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+						Margin="15,15,15,15" />
+					<ComboBox
+						ItemsSource="{Binding RolesList}"
+						Width="220"
+						Height="32"
+						SelectedItem="{Binding SelectedRole, Mode=TwoWay}"
+						DisplayMemberPath="Nombre"
+						Margin="15,5,15,5" />
+				</StackPanel>
+			</StackPanel>
+			<StackPanel
+			Margin="25"
+				Grid.Row="0"
 				VerticalAlignment="Bottom"
-				Margin="30,0,559,37"
-				Grid.ColumnSpan="2"
-				Height="92">
-                <Button
+				HorizontalAlignment="Center"
+				Height="86"
+				Width="110">
+				<Button
 					Content="Salir"
 					Style="{StaticResource BotonRedondeado}"
 					Width="110"
 					Height="38"
 					FontSize="20" />
-                <Button
+				<Button
 					Content="Cancelar"
 					Style="{StaticResource BotonRedondeado}"
 					Width="110"
 					Height="38"
 					Margin="0 10 0 0"
 					FontSize="20" />
-            </StackPanel>
-            <StackPanel
-				VerticalAlignment="Top"
-				HorizontalAlignment="Left"
-				Width="627"
-				Height="458"
-				Margin="82,97,0,0"
-				Grid.RowSpan="2" Grid.ColumnSpan="2">
-                <TextBlock
-					Text="Crear/Modificar Usuario"
-					FontFamily="Javanese Text"
-					FontSize="50"
-					Style="{StaticResource LabelLindo}"
-					Height="92" FlowDirection="RightToLeft" FontWeight="Bold" Width="568">
-                    <TextBlock.Background>
-                        <ImageBrush ImageSource="/UsuarioAdministrativo/labelFondo2025.png"/>
-                    </TextBlock.Background></TextBlock>
-                <TextBlock
-					Text="Usuario"
-					FontFamily="Bahnschrift Light"
-					FontSize="20"
-					HorizontalAlignment="Center" />
-                <TextBox
-					x:Name="guiUsuario"
-					Style="{StaticResource TextBoxLindo2}"
-					Width="220"
-					Height="32"
-					FontSize="16"
-					HorizontalAlignment="Center"
-					Margin="0 10 0 20" />
-                <TextBlock
-					Text="Contraseña"
-					FontFamily="Bahnschrift Light"
-					FontSize="20"
-					HorizontalAlignment="Center" />
-                <PasswordBox
-					x:Name="guiPassword"
-					Style="{StaticResource PasswordBoxLindo2}"
-					Width="220"
-					Height="32"
-					FontSize="16"
-					HorizontalAlignment="Center"
-					Margin="0 10 0 30" />
-                <Button
-					x:Name="iniciarSesionButton"
-					Content="Iniciar sesión"
-					Style="{StaticResource BotonRedondeado}"
-					Width="240"
-					Height="50"
-					IsDefault="True"
-					FontSize="20"
-					Background="#FF7FC7FA"
-					Click="MetodoBotonIniciarSesion" />
-            </StackPanel>
-            <ContentControl
-				Grid.Row="0"
-				Grid.Column="2"
-				HorizontalAlignment="Center"
-				VerticalAlignment="Top"
-				Height="50"
-				Width="50" />
+			</StackPanel>
 		</Grid>
-    </Grid>
+	</Grid>
 </Window>

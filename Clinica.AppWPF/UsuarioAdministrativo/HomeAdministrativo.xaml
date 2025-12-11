@@ -10,32 +10,28 @@
 	Width="1024"
 	Icon="pack://application:,,,/PublishedResources/icons/icono.ico"
 	WindowStartupLocation="CenterScreen">
-    <Window.Background>
-        <ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/depositphotos_3899599-stock-photo-abstract-background.jpg" />
-    </Window.Background>
-    <Grid
-		RenderTransformOrigin="0.485,0.779">
-        <StackPanel
-			HorizontalAlignment="Left"
-			VerticalAlignment="Top"
-			Height="668"
-			Margin="120,72,0,0"
-			Width="788" RenderTransformOrigin="0.49,0.943">
-            <StackPanel.Background>
-                <ImageBrush/>
-            </StackPanel.Background>
-            <Label
+	<Window.Background>
+		<ImageBrush
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoAbstracto2025.jpg" />
+	</Window.Background>
+	<Grid
+		Margin="25">
+		<StackPanel
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			Margin="125"
+			RenderTransformOrigin="0.49,0.943">
+			<Label
 				Content="Bienvenido señor administrativo"
+				Style="{StaticResource LabelLindo}"
 				FontSize="26"
 				HorizontalAlignment="Center"
 				FontFamily="Palatino Linotype"
-				Background="{x:Null}"
 				Width="Auto"
 				VerticalAlignment="Center"
 				Foreground="#FF0F0A2B"
 				FontWeight="Bold" />
-            <Button
+			<Button
 				Content="Gestionar personal Médicos"
 				HorizontalAlignment="Center"
 				Height="37"
@@ -47,7 +43,7 @@
 				FontFamily="Baskerville Old Face"
 				Margin="0,45,0,7"
 				Click="MetodoBotonGuestionPersonalMedico" />
-            <Button
+			<Button
 				x:Name="buttonVerTurnos"
 				Content="Gestionar cuentas de usuario"
 				Height="37"
@@ -56,10 +52,10 @@
 				Style="{StaticResource BotonRedondeado}"
 				FontWeight="Bold"
 				BorderBrush="#FF0E0D0D"
-				FontFamily="Baskerville Old Face" 
-                Margin="0,7,0,7"
+				FontFamily="Baskerville Old Face"
+				Margin="0,7,0,7"
 				Click="MetodoBotonCuentasDeUsuario" />
-            <Button
+			<Button
 				Content="Cerrar sesión"
 				Height="37"
 				Width="170"
@@ -68,9 +64,9 @@
 				Style="{StaticResource BotonRedondeado}"
 				FontWeight="Bold"
 				BorderBrush="#FF0E0D0D"
-				FontFamily="Baskerville Old Face" 
-                Margin="0,7,0,7" />
-            <Button
+				FontFamily="Baskerville Old Face"
+				Margin="0,7,0,7" />
+			<Button
 				Content="Salir"
 				Height="37"
 				Width="170"
@@ -79,11 +75,11 @@
 				Style="{StaticResource BotonRedondeado}"
 				FontWeight="Bold"
 				BorderBrush="#FF0E0D0D"
-				FontFamily="Baskerville Old Face" 
-                Margin="0,7,0,7" />
-        </StackPanel>
-        <!-- <Image x:Name="volumeIcoImage" Stretch="Uniform" Margin="772,77,198,450"/> -->
-        <CheckBox
+				FontFamily="Baskerville Old Face"
+				Margin="0,7,0,7" />
+		</StackPanel>
+		<!-- <Image x:Name="volumeIcoImage" Stretch="Uniform" Margin="772,77,198,450"/> -->
+		<CheckBox
 			x:Name="soundCheckBox"
 			Content="Soniditos?"
 			Click="soundCheckBox_Checked"
@@ -94,80 +90,82 @@
 			Width="149"
 			FontFamily="SachaWynterTight"
 			FontSize="10">
-            <CheckBox.Template>
-                <ControlTemplate
+			<CheckBox.Template>
+				<ControlTemplate
 					TargetType="CheckBox">
-                    <StackPanel
+					<StackPanel
 						Orientation="Horizontal">
-                        <Image
+						<Image
 							Width="40"
 							Height="40">
-                            <Image.Style>
-                                <Style
+							<Image.Style>
+								<Style
 									TargetType="Image">
-                                    <Style.Triggers>
-                                        <!-- Checked state without hover -->
-                                        <DataTrigger
+									<Style.Triggers>
+										<!-- Checked state without hover -->
+										<DataTrigger
 											Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}"
 											Value="True">
-                                            <Setter
+											<Setter
 												Property="Source"
 												Value="pack://application:,,,/PublishedResources/images/sonidoOn.png" />
-                                        </DataTrigger>
-                                        <!-- Unchecked state without hover -->
-                                        <DataTrigger
+										</DataTrigger>
+										<!-- Unchecked state without hover -->
+										<DataTrigger
 											Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}"
 											Value="False">
-                                            <Setter
+											<Setter
 												Property="Source"
 												Value="pack://application:,,,/PublishedResources/images/sonidoOff.png" />
-                                        </DataTrigger>
-                                        <!-- Checked state with hover -->
-                                        <MultiDataTrigger>
-                                            <MultiDataTrigger.Conditions>
-                                                <Condition
+										</DataTrigger>
+										<!-- Checked state with hover -->
+										<MultiDataTrigger>
+											<MultiDataTrigger.Conditions>
+												<Condition
 													Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}"
 													Value="True" />
-                                                <Condition
+												<Condition
 													Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=CheckBox}}"
 													Value="True" />
-                                            </MultiDataTrigger.Conditions>
-                                            <Setter
+											</MultiDataTrigger.Conditions>
+											<Setter
 												Property="Source"
 												Value="pack://application:,,,/PublishedResources/images/sonidoOn_hover.png" />
-                                        </MultiDataTrigger>
-                                        <!-- Unchecked state with hover -->
-                                        <MultiDataTrigger>
-                                            <MultiDataTrigger.Conditions>
-                                                <Condition
+										</MultiDataTrigger>
+										<!-- Unchecked state with hover -->
+										<MultiDataTrigger>
+											<MultiDataTrigger.Conditions>
+												<Condition
 													Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}"
 													Value="False" />
-                                                <Condition
+												<Condition
 													Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=CheckBox}}"
 													Value="True" />
-                                            </MultiDataTrigger.Conditions>
-                                            <Setter
+											</MultiDataTrigger.Conditions>
+											<Setter
 												Property="Source"
 												Value="pack://application:,,,/PublishedResources/images/sonidoOff_hover.png" />
-                                        </MultiDataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                        <!-- Display optional text content next to the image -->
-                        <ContentPresenter
+										</MultiDataTrigger>
+									</Style.Triggers>
+								</Style>
+							</Image.Style>
+						</Image>
+						<!-- Display optional text content next to the image -->
+						<ContentPresenter
 							VerticalAlignment="Center"
 							Margin="5,0,0,0" />
-                    </StackPanel>
-                </ControlTemplate>
-            </CheckBox.Template>
-        </CheckBox>
-        <Label
-            Style="{StaticResource LabelLindo}"
-            Content="`Mala Praxis SXXI´"
-            FontSize="40"
-            FontFamily="Palatino Linotype"
-            Background="{x:Null}"
-            Foreground="Black" FontWeight="Bold" Margin="632,486,38,34" />
-    </Grid>
+					</StackPanel>
+				</ControlTemplate>
+			</CheckBox.Template>
+		</CheckBox>
+		<Label
+			Style="{StaticResource LabelLindo}"
+			Content="`Mala Praxis SXXI´"
+			FontSize="40"
+			FontFamily="Palatino Linotype"
+			Background="{x:Null}"
+			Foreground="Black"
+			FontWeight="Bold"
+			Margin="632,486,38,34" />
+	</Grid>
 </Window>
