@@ -11,22 +11,22 @@
 	Activated="Window_Activated"
 	WindowStartupLocation="CenterScreen"
 	mc:Ignorable="d">
-    <!-- ============== FONDO GENERAL ============== -->
-    <Window.Background>
-        <ImageBrush
+	<!-- ============== FONDO GENERAL ============== -->
+	<Window.Background>
+		<ImageBrush
 			ImageSource="/PublishedResources/images2025sol/fondoClaro2025.jpg"
 			Stretch="Fill" />
-    </Window.Background>
-    <Grid
-		Margin="25,25,-33,-43">
-        <StackPanel
+	</Window.Background>
+	<Grid
+		Margin="25">
+		<StackPanel
 			Orientation="Vertical"
 			Background="Transparent"
 			Margin="25,10,0,0"
 			VerticalAlignment="Top"
-			HorizontalAlignment="Left"/>
-        <!-- Botones Home / Salir abajo a la izquierda -->
-        <Button
+			HorizontalAlignment="Left" />
+		<!-- Botones Home / Salir abajo a la izquierda -->
+		<Button
 			Content="Home"
 			HorizontalAlignment="Left"
 			VerticalAlignment="Top"
@@ -37,7 +37,7 @@
 			FontFamily="Baskerville Old Face"
 			Margin="47,426,0,0"
 			Style="{StaticResource BotonRedondeado}" />
-        <Button
+		<Button
 			Content="Salir"
 			HorizontalAlignment="Left"
 			VerticalAlignment="Top"
@@ -48,82 +48,129 @@
 			FontFamily="Baskerville Old Face"
 			Margin="47,484,0,0"
 			Style="{StaticResource BotonRedondeado}" />
-        <!-- Labels de modo de DB y título -->
-        <Label
-			Content="Medicos"
-			FontSize="60"
-			FontFamily="Javanese Text"
-			FlowDirection="RightToLeft"
-			Style="{StaticResource LabelLindo}"
-			HorizontalContentAlignment="Right"
-			FontWeight="Bold"
-			HorizontalAlignment="Left"
-			VerticalAlignment="Top"
-			Height="109"
-			Width="276" Margin="25" />
-        <StackPanel
-				Orientation="Horizontal"
-				Background="Transparent" Margin="524,413,333,119">
-            <!-- Agregar nuevo -->
-            <Button
-					Content="Agregar nuevo"
-					Height="35"
-					Width="150"
-					Click="ButtonAgregarMedico"
-					FontSize="20"
-					FontFamily="Baskerville Old Face"
-					Style="{StaticResource BotonRedondeado}" />
-            
-        </StackPanel>
-        <Button
-					x:Name="buttonModificarMedico"
-					Content="Modificar"
-					Click="ButtonModificarMedico"
-					FontSize="20"
-					FontFamily="Baskerville Old Face"
-					Style="{StaticResource BotonRedondeado}" Margin="717,430,168,137" />
-        <ListView
+		<!-- Labels de modo de DB y título -->
+		<StackPanel
+			Orientation="Horizontal"
+			Background="Transparent"
+			Margin="524,413,333,119">
+			<!-- Agregar nuevo -->
+			<Button
+				Content="Agregar nuevo"
+				Height="35"
+				Width="150"
+				Click="ButtonAgregarMedico"
+				FontSize="20"
+				FontFamily="Baskerville Old Face"
+				Style="{StaticResource BotonRedondeado}" />
+		</StackPanel>
+		<Button
+			x:Name="buttonModificarMedico"
+			Content="Modificar"
+			Click="ButtonModificarMedico"
+			FontSize="20"
+			FontFamily="Baskerville Old Face"
+			Style="{StaticResource BotonRedondeado}"
+			Margin="717,430,168,137" />
+		<StackPanel
+			Orientation="Vertical"
+			Background="Transparent"
+			Margin="120,18,120,121">
+			<Label
+				Content="Medicos"
+				FontSize="33"
+				FontFamily="Javanese Text"
+				FlowDirection="RightToLeft"
+				Style="{StaticResource LabelLindo}"
+				HorizontalContentAlignment="Center"
+				FontWeight="Bold"
+				VerticalAlignment="Center"
+				Width="502"
+				Height="71"
+				HorizontalAlignment="Center"
+				VerticalContentAlignment="Center" />
+			<ListView
 				x:Name="medicosListView"
-				Background="White"
+				Background="Transparent"
 				BorderThickness="0"
-				SelectionChanged="MedicosListView_SelectionChanged"
 				BorderBrush="#72828790"
+				HorizontalAlignment="Center"
+				Margin="0,0,0,10"
 				HorizontalContentAlignment="Center"
 				ScrollViewer.HorizontalScrollBarVisibility="Auto"
 				ScrollViewer.VerticalScrollBarVisibility="Auto"
-				d:ItemsSource="{d:SampleData ItemCount=5}" Margin="144,115,158,202">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn
+				VerticalAlignment="Center">
+				<ListView.View>
+					<GridView>
+						<GridViewColumn
 							Header="Id"
 							DisplayMemberBinding="{Binding Id}"
 							Width="25" />
-                    <GridViewColumn
+						<GridViewColumn
 							Header="Dni"
 							DisplayMemberBinding="{Binding Dni}"
 							Width="60" />
-                    <GridViewColumn
+						<GridViewColumn
 							Header="Nombre"
 							DisplayMemberBinding="{Binding Nombre}"
 							Width="65" />
-                    <GridViewColumn
+						<GridViewColumn
 							Header="Apellido"
 							DisplayMemberBinding="{Binding Apellido}"
 							Width="70" />
-                    <GridViewColumn
+						<GridViewColumn
 							Header="Especialidad"
 							DisplayMemberBinding="{Binding EspecialidadCodigo}"
 							Width="80" />
-                    <GridViewColumn
+						<GridViewColumn
 							Header="Teléfono"
 							DisplayMemberBinding="{Binding Telefono}"
 							Width="70" />
-                    <GridViewColumn
+						<GridViewColumn
 							Header="Guardia"
 							DisplayMemberBinding="{Binding HaceGuardias}"
 							Width="45" />
-                </GridView>
-            </ListView.View>
-        </ListView>
-    </Grid>
+						<GridViewColumn
+							Header="Email"
+							DisplayMemberBinding="{Binding Email}"
+							Width="70" />
+					</GridView>
+				</ListView.View>
+			</ListView>
+		</StackPanel>
+		<StackPanel
+			Orientation="Horizontal"
+			Background="Transparent"
+			VerticalAlignment="Top"
+			HorizontalAlignment="Left"
+			Margin="342,414,0,0">
+			<Button
+				Content="Agregar nuevo"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Top"
+				Height="35"
+				Width="150"
+				Click="ButtonAgregarMedico"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeado}"
+				FontWeight="Bold"
+				BorderBrush="#FF0E0D0D"
+				FontFamily="Baskerville Old Face"
+				Margin="25,10,25,25" />
+			<Button
+				x:Name="buttonModificarMedico1"
+				Content="Modificar"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Top"
+				Height="35"
+				Click="ButtonModificarMedico"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeado}"
+				FontWeight="Bold"
+				BorderBrush="#FF0E0D0D"
+				FontFamily="Baskerville Old Face"
+				IsEnabled="False"
+				Margin="25,10,25,25"
+				Width="150" />
+		</StackPanel>
+	</Grid>
 </Window>
