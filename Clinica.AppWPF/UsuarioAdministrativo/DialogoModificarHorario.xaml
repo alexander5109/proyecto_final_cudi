@@ -10,56 +10,10 @@
         Title="EditarFranjaHorarioDialog">
 
     <!-- ===== ESTILO DE BOTONES (mismo que en las otras pantallas) ===== -->
-    <Window.Resources>
-        <Style x:Key="BotonRedondeado" TargetType="Button">
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border"
-                                CornerRadius="10"
-                                SnapsToDevicePixels="True">
-                            <Border.Background>
-                                <!-- imagen verde/azul de los otros botones -->
-                                <ImageBrush ImageSource="/UsuarioSecretaria/this-beautiful-gradient-art-piece-showcases-a-blend-of-teal-green-and-blue-tones-free-photo.jpeg"
-                                            Stretch="Fill" />
-                            </Border.Background>
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center" />
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-                            <!-- hover -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border"
-                                        Property="Opacity"
-                                        Value="0.9" />
-                            </Trigger>
-                            <!-- presionado -->
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border"
-                                        Property="Opacity"
-                                        Value="0.8" />
-                            </Trigger>
-                            <!-- deshabilitado -->
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="border"
-                                        Property="Opacity"
-                                        Value="0.5" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
-
     <!-- Fondo -->
     <Window.Background>
-        <ImageBrush ImageSource="pack://application:,,,/PublishedResources/images/8fdc7c4e57f0801738927b57b4a8e837.jpg"
+		<ImageBrush
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg"
                     Stretch="UniformToFill"/>
     </Window.Background>
 

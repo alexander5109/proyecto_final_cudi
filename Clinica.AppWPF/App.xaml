@@ -326,6 +326,56 @@
 			</Setter>
 		</Style>
 		<!-- ,,,,,,,,,,,,,,,,,,,,,,,,,,BOTONES (NUEVO ESTILO VERDE/AZUL) ,,,,,,,,,,,,,,,,,,,,,,,,,, -->
+		
+		
+    <Window.Resources>
+        <Style x:Key="BotonRedondeado2" TargetType="Button">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                CornerRadius="10"
+                                SnapsToDevicePixels="True">
+                            <Border.Background>
+                                <!-- imagen verde/azul de los otros botones -->
+                                <ImageBrush ImageSource="/UsuarioSecretaria/this-beautiful-gradient-art-piece-showcases-a-blend-of-teal-green-and-blue-tones-free-photo.jpeg"
+                                            Stretch="Fill" />
+                            </Border.Background>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <!-- hover -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border"
+                                        Property="Opacity"
+                                        Value="0.9" />
+                            </Trigger>
+                            <!-- presionado -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border"
+                                        Property="Opacity"
+                                        Value="0.8" />
+                            </Trigger>
+                            <!-- deshabilitado -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border"
+                                        Property="Opacity"
+                                        Value="0.5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+	
+	
 		<Style
 			x:Key="BotonRedondeado"
 			TargetType="{x:Type Button}">

@@ -11,12 +11,13 @@
 	Icon="pack://application:,,,/PublishedResources/icons/icono.ico"
 	Activated="Window_Activated"
 	WindowStartupLocation="CenterScreen">
-    <Grid RenderTransformOrigin="0.485,0.779">
-        <Grid.Background>
-            <ImageBrush
-				ImageSource="pack://application:,,,/PublishedResources/images/depositphotos_3899599-stock-photo-abstract-background.jpg" />
-        </Grid.Background>
-        <StackPanel
+	<Window.Background>
+		<ImageBrush
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg" />
+	</Window.Background>
+	<Grid
+		RenderTransformOrigin="0.485,0.779">
+		<StackPanel
 			HorizontalAlignment="Left"
 			VerticalAlignment="Top"
 			Height="668"
