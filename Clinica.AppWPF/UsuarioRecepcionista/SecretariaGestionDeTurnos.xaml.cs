@@ -49,7 +49,7 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 	}
 
 
-	private void ButtonHome(object sender, RoutedEventArgs e) => this.VolverARespectivoHome();
+	private void ButtonHome(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
 	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
 
 

@@ -30,7 +30,7 @@ public partial class RecepcionistaGestionDePacientes : Window {
 	}
 
 
-	private void ButtonHome(object sender, RoutedEventArgs e) => this.VolverARespectivoHome();
+	private void ButtonHome(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
 	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
 
 	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {

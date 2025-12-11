@@ -28,7 +28,7 @@ public partial class Login : Window {
 			async loggedUser => {
 				App.Api.SetUsuario(loggedUser);
 				App.UsuarioActivo = await App.Repositorio.SelectUsuarioProfileWhereUsername(new UserName(loggedUser.Username));
-				this.IrARespectivaHome(loggedUser);
+				this.IrARespectivaHome();
 				return;
 			},
 			errorMsg => {

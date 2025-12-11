@@ -1,4 +1,5 @@
 using System.Windows;
+using Clinica.AppWPF.UsuarioAdministrativo;
 using Clinica.AppWPF.UsuarioRecepcionista;
 using Clinica.Dominio.TiposDeEnum;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
@@ -40,47 +41,29 @@ public static class ExtensionMethods {
 		Application.Current.MainWindow = nuevaVentana;
 		nuevaVentana.ShowDialog();
 	}
-	public static void VolverARespectivoHome(this Window previousWindow) {
+	public static void IrARespectivaHome(this Window previousWindow) {
 		SoundsService.PlayClickSound();
-		UsuarioLoginResponseDto user = App.Api.UsuarioActual!;
-		switch (user.EnumRole) {
-			//case UsuarioRoleCodigo.Nivel1Superadmin:
-			//	this.NavegarA<SuperaadminHome>();
-			//	break;
-			//case UsuarioRoleCodigo.Nivel2Administrativo:
-			//	this.NavegarA<AdministrativoHome>();
-			//	break;
-			case UsuarioRoleCodigo.Nivel3Recepcionista:
-				previousWindow.NavegarA<RecepcionistaHome>();
-				break;
-			//case UsuarioRoleCodigo.Nivel4Medico:
-			//	this.NavegarA<MedicoHome>();
-			//	break;
-			default:
-				MessageBox.Show($"Rol de usuario >>{App.Api.UsuarioActual!.EnumRole}<<no reconocido o no soportado todavia.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				break;
-		}
-	}
+		if (App.Api.UsuarioActual is not UsuarioLoginResponseDto usuarioLogueado) {
+			MessageBox.Show($"No hay usuario logueado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+		} else {
+			switch (usuarioLogueado.EnumRole) {
+				//case UsuarioRoleCodigo.Nivel1Superadmin:
+				//	this.NavegarA<SuperaadminHome>();
+				//	break;
+				case UsuarioRoleCodigo.Nivel2Administrativo:
+					previousWindow.NavegarA<HomeAdministrativo>();
+					break;
+				case UsuarioRoleCodigo.Nivel3Recepcionista:
+					previousWindow.NavegarA<RecepcionistaHome>();
+					break;
+				//case UsuarioRoleCodigo.Nivel4Medico:
+				//	this.NavegarA<MedicoHome>();
+				//	break;
+				default:
+					MessageBox.Show($"Rol de usuario >>{App.Api.UsuarioActual!.EnumRole}<<no reconocido o no soportado todavia.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					break;
+			}
 
-	public static void IrARespectivaHome(this Window previousWindow, UsuarioLoginResponseDto user) {
-		SoundsService.PlayClickSound();
-		//UsuarioLoginResponseDto user = App.Api.UsuarioActual!;
-		switch (user.EnumRole) {
-			//case UsuarioRoleCodigo.Nivel1Superadmin:
-			//	this.NavegarA<SuperaadminHome>();
-			//	break;
-			//case UsuarioRoleCodigo.Nivel2Administrativo:
-			//	this.NavegarA<AdministrativoHome>();
-			//	break;
-			case UsuarioRoleCodigo.Nivel3Recepcionista:
-				previousWindow.NavegarA<RecepcionistaHome>();
-				break;
-			//case UsuarioRoleCodigo.Nivel4Medico:
-			//	this.NavegarA<MedicoHome>();
-			//	break;
-			default:
-				MessageBox.Show($"Rol de usuario >>{App.Api.UsuarioActual!.EnumRole}<<no reconocido o no soportado todavia.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				break;
 		}
 	}
 	public static void Salir(this Window previousWindow) {

@@ -111,10 +111,16 @@ public partial class AdministrativoGestionDeUsuarios : Window {
 	//=============================================================
 	// Botones de navegación
 	//=============================================================
-	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
-	//private void ButtonHome(object sender, RoutedEventArgs e) => this.VolverAHome();
 
     private void ButtonAgregarMedico(object sender, RoutedEventArgs e) {
 
     }
+
+
+
+
+
+
+	private void ButtonHome(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
+	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
 }
