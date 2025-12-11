@@ -3,6 +3,7 @@ using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Shared.DbModels;
 
 namespace Clinica.Shared.ApiDtos;
 
@@ -45,6 +46,10 @@ public static class MedicoDtos {
 	}
 
 	public static Result<Medico2025> ToDomain(this MedicoDto dto) {
+		string json = string.IsNullOrWhiteSpace(dto.HorariosJson) ? "[]" : dto.HorariosJson;
+		IReadOnlyList<Horario2025> horarios = JsonSerializer.Deserialize<IReadOnlyList<Horario2025>>(json)
+			?? [];
+
 		return Medico2025.CrearResult(
 				NombreCompleto2025.CrearResult(dto.Nombre, dto.Apellido),
 				//ListaEspecialidadesMedicas2025.CrearConUnicaEspecialidad(
@@ -58,7 +63,7 @@ public static class MedicoDtos {
 				),
 				Telefono2025.CrearResult(dto.Telefono),
 				Email2025.CrearResult(dto.Email),
-				ListaHorarioMedicos2025.CrearResult([.. JsonSerializer.Deserialize<IReadOnlyList<Horario2025>>(dto.HorariosJson)]),
+				ListaHorarioMedicos2025.CrearResult(horarios),
 				dto.FechaIngreso,
 				dto.HaceGuardias
 			);

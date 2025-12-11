@@ -48,6 +48,8 @@ public sealed record Especialidad2025(
 			: new Result<Especialidad2025>.Error($"No existe la especialidad con Codigo = {codigo}");
 	}
 
+	//public static Especialidad2025? Crear(EspecialidadCodigo codigo) => Todas.FirstOrDefault(e => e.Codigo == codigo);
+
 	// Para facilitar conversion desde DTOs que usen byte
 	//public static Result<Especialidad2025> CrearResult(byte? codigo) {
 	//	if (codigo is null)

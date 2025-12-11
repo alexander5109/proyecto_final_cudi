@@ -65,7 +65,7 @@ public static partial class DbModels {
 
 	public static Result<Medico2025Agg> ToDomainAgg(this MedicoDbModel dbModel) {
 		string json = string.IsNullOrWhiteSpace(dbModel.HorariosJson) ? "[]" : dbModel.HorariosJson;
-		List<Horario2025> horariosDto = JsonSerializer.Deserialize<List<Horario2025>>(json)
+		IReadOnlyList<Horario2025> horariosDto = JsonSerializer.Deserialize<IReadOnlyList<Horario2025>>(json)
 			?? [];
 		return Medico2025Agg.CrearResult(
 			MedicoId.CrearResult(dbModel.Id),

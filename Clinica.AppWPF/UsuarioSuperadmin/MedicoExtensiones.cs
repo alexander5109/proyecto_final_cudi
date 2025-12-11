@@ -5,12 +5,12 @@ using SystemTextJson = System.Text.Json;
 namespace Clinica.AppWPF.UsuarioSuperadmin;
 //---------------------------------Tablas.Horarios-------------------------------//
 public class HorarioMedico {
-	public string DiaSemana { get; set; }
+	public string? DiaSemana { get; set; }
 	public string? HoraInicio { get; set; }
 	public string? HoraFin { get; set; }
 
 	public static List<HorarioMedico> GetDiasDeLaSemanaAsList() {
-		return new List<HorarioMedico> {
+		return [
 				new() { DiaSemana = "Lunes" },
 				new() { DiaSemana = "Martes" },
 				new() { DiaSemana = "Miércoles" },
@@ -18,7 +18,7 @@ public class HorarioMedico {
 				new() { DiaSemana = "Viernes" },
 				new() { DiaSemana = "Sábado" },
 				new() { DiaSemana = "Domingo" }
-			};
+			];
 	}
 	public static Dictionary<string, HorarioMedico> GetDiasDeLaSemanaAsDict() {
 		return new Dictionary<string, HorarioMedico> {
@@ -35,8 +35,8 @@ public class HorarioMedico {
 
 public static class MedicoExtensiones {
 
-	public static void LeerDesdeVentana(this MedicoDbModel? instance, MedicosModificar window) {
-		if (instance is null) return;
+	//public static void LeerDesdeVentana(this MedicoDbModel? instance, MedicosModificar window) {
+		//if (instance is null) return;
 		//instance.Nombre = window.txtName.Text;
 		//instance.LastName = window.txtLastName.Text;
 		//instance.Dni = window.txtDni.Text;
@@ -48,8 +48,7 @@ public static class MedicoExtensiones {
 		//instance.FechaIngreso = (DateTime)window.txtFechaIngreso.SelectedDate;
 		//instance.Guardia = (bool)window.txtGuardia.IsChecked;
 		//this.DiasDeAtencion = //Al haber pasado los datos como List de HorariosMedicos, los objetos originales fueron modificados in-place. Assi que aca no hay que hacer nada.
-
-	}
+	//}
 
 	public static void MostrarseEnVentana(this MedicoDbModel? instance, MedicosModificar ventana) {
 		if (instance is null) return;

@@ -14,9 +14,9 @@ using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.Infrastructure;
 
 public static class RepoCache {
-	public static Dictionary<MedicoId, MedicoDbModel> DictMedicos { get; set; } = new();
-	public static Dictionary<PacienteId, PacienteDbModel> DictPacientes { get; set; } = new();
-	public static Dictionary<UsuarioId, UsuarioDbModel> DictUsuarios { get; set; } = new();
+	public static Dictionary<MedicoId, MedicoDbModel> DictMedicos { get; set; } = [];
+	public static Dictionary<PacienteId, PacienteDbModel> DictPacientes { get; set; } = [];
+	public static Dictionary<UsuarioId, UsuarioDbModel> DictUsuarios { get; set; } = [];
 }
 
 
@@ -336,7 +336,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	async Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.CancelarTurno(
 		TurnoId turnoId,
 		DateTime fechaOutcome,
-		string reason
+		string? reason
 	) {
 
 		ResultWpf<TurnoDbModel> result = await Api.TryApiCallAsync<TurnoDbModel>(

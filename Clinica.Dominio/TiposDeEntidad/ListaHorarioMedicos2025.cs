@@ -15,7 +15,7 @@ public readonly record struct ListaHorarioMedicos2025(
 		return "Lista de horarios:\n" + string.Join("\n", lineas);
 	}
 
-	public static Result<ListaHorarioMedicos2025> CrearResult(IEnumerable<Horario2025> horariosInput) {
+	public static Result<ListaHorarioMedicos2025> CrearResult(IEnumerable<Horario2025>? horariosInput) {
 		if (horariosInput is null)
 			return new Result<ListaHorarioMedicos2025>.Error("La lista de horarios no puede ser nula.");
 

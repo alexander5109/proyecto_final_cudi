@@ -24,7 +24,8 @@ public sealed class TurnoViewModel(TurnoDbModel model) {
 	public DateTime? OutcomeFecha { get; set; } = model.OutcomeFecha;
 	public string? OutcomeComentario { get; set; } = model.OutcomeComentario;
 
-	public readonly TurnoDbModel Original = model;
+	public TurnoDbModel Original => model;
+	//public readonly TurnoDbModel Original = model;
 }
 public sealed class RecepcionistaGestionDeTurnosViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;

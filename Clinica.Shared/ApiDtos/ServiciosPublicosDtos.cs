@@ -12,7 +12,7 @@ public static class ServiciosPublicosDtos {
 	public sealed record ModificarTurnoDto(
 		TurnoId TurnoId,
 		DateTime FechaSolicitud,
-		string Comentario
+		string? Comentario
 	);
 	public sealed record ProgramarTurnoDto(
 		PacienteId PacienteId,

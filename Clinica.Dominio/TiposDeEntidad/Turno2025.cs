@@ -145,6 +145,7 @@ public record Turno2025(
 		DateTime solicitadoEn,
 		Disponibilidad2025 disp
 	) {
+
 		if (disp.FechaHoraDesde >= disp.FechaHoraHasta)
 			return new Result<Turno2025>.Error(
 				"La hora de inicio debe ser anterior a la hora de fin."
@@ -193,11 +194,13 @@ public static class TurnoExtentions {
 	public static Result<Turno2025> MarcarComoAusente(
 		this Turno2025 turnoOriginal,
 		DateTime fechaEvento,
-		string comentario
+		string? comentario
 	) {
+		if (comentario is null)
+			return new Result<Turno2025>.Error("El comentario es obligatorio al marcar como ausente un turno.");
+
 		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
 			return new Result<Turno2025>.Error("Solo puede marcarse como ausente un turno que esté programado.");
-
 
 
 		return new Result<Turno2025>.Ok(
@@ -212,8 +215,9 @@ public static class TurnoExtentions {
 	public static Result<Turno2025> MarcarComoConcretado(
 		this Turno2025 turnoOriginal,
 		DateTime fechaEvento,
-		string? comentario
+		string? comentario //INTENDED TO BE OPTIONAL
 	) {
+
 		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
 			return new Result<Turno2025>.Error("Solo puede concretarse un turno que esté programado.");
 
@@ -231,8 +235,10 @@ public static class TurnoExtentions {
 	public static Result<Turno2025> MarcarComoCancelado(
 		this Turno2025 turnoOriginal,
 		DateTime fechaEvento,
-		string comentario
+		string? comentario
 	) {
+		if (comentario is null)
+			return new Result<Turno2025>.Error("El comentario es obligatorio para cancelar un turno.");
 
 		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
 			return new Result<Turno2025>.Error("Solo puede cancelarse un turno que esté programado.");
@@ -261,8 +267,11 @@ public static class TurnoExtentions {
 	public static Result<Turno2025> MarcarComoReprogramado(
 		this Turno2025 turnoOriginal,
 		DateTime fechaEvento,
-		string comentario
+		string? comentario
 	) {
+		if (comentario is null)
+			return new Result<Turno2025>.Error("El comentario es obligatorio al marcar querer reprogramar un turno.");
+
 		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
 			return new Result<Turno2025>.Error("Solo puede reprogramarse un turno que esté programado.");
 

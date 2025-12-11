@@ -16,12 +16,21 @@ public static class ExtensionMethods {
 		nuevaVentana.Show();  // Mostrar la nueva ventana
 		previousWindow.Close();  // Cerrar la ventana actual
 	}
-	public static void NavegarA<T>(this Window previousWindow, object optionalArg) where T : Window, new() {
+	public static void NavegarA<T>(this Window previousWindow, object? arg1)
+		where T : Window {
 		SoundsService.PlayClickSound();
-		T nuevaVentana = (T)Activator.CreateInstance(typeof(T), optionalArg);
-		Application.Current.MainWindow = nuevaVentana;  // Establecer la nueva ventana como la principal
-		nuevaVentana.Show();  // Mostrar la nueva ventana
-		previousWindow.Close();  // Cerrar la ventana actual
+
+		if (arg1 is null) {
+			MessageBox.Show("Error: parámetro nulo al navegar a la nueva ventana.");
+			return;
+		}
+
+		if (!TryCreateWindow<T>([arg1], out var nuevaVentana))
+			return;
+
+		Application.Current.MainWindow = nuevaVentana;
+		nuevaVentana?.Show();
+		previousWindow.Close();
 	}
 
 	public static void AbrirComoDialogo<T>(this Window previousWindow) where T : Window, new() {
@@ -37,12 +46,62 @@ public static class ExtensionMethods {
 	//	}
 	//}
 
-	public static void AbrirComoDialogo<T>(this Window previousWindow, object optionalArg) where T : Window {
+	public static void AbrirComoDialogo<T>(this Window previousWindow, object? arg1)
+		where T : Window {
 		SoundsService.PlayClickSound();
-		T nuevaVentana = (T)Activator.CreateInstance(typeof(T), optionalArg);
+
+		if (arg1 is null) {
+			MessageBox.Show("Error: parámetro nulo al abrir la ventana.");
+			return;
+		}
+
+		if (!TryCreateWindow<T>([arg1], out var nuevaVentana))
+			return;
+
 		Application.Current.MainWindow = nuevaVentana;
-		nuevaVentana.ShowDialog();
+		nuevaVentana?.ShowDialog();
 	}
+
+	public static void AbrirComoDialogo<T>(this Window previousWindow, object? arg1, object? arg2)
+		where T : Window {
+		SoundsService.PlayClickSound();
+
+		if (arg1 is null || arg2 is null) {
+			MessageBox.Show("Error: uno o más parámetros son nulos al abrir la ventana.");
+			return;
+		}
+
+		if (!TryCreateWindow<T>([arg1, arg2], out var nuevaVentana))
+			return;
+		Application.Current.MainWindow = nuevaVentana;
+		nuevaVentana?.ShowDialog();
+	}
+
+	private static bool TryCreateWindow<T>(object?[] args, out T? window)
+		where T : Window {
+		window = null;
+
+		try {
+			var instance = Activator.CreateInstance(typeof(T), args);
+
+			if (instance is not T win) {
+				MessageBox.Show(
+					$"Error: la ventana {typeof(T).Name} no tiene un constructor compatible."
+				);
+				return false;
+			}
+
+			window = win;
+			return true;
+		} catch (Exception ex) {
+			MessageBox.Show(
+				$"No se pudo abrir la ventana {typeof(T).Name}.\nDetalles: {ex.Message}"
+			);
+			return false;
+		}
+	}
+
+
 	public static void IrARespectivaHome(this Window previousWindow) {
 		SoundsService.PlayClickSound();
 		if (App.Api.UsuarioActual is not UsuarioLoginResponseDto usuarioLogueado) {

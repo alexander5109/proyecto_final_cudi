@@ -54,7 +54,10 @@ public partial class MedicosModificar : Window {
 			MessageBox.Show("Error: El sueldo minimo no es un número decimal válido. Use la coma (,) como separador decimal.", "Error de ingreso", MessageBoxButton.OK, MessageBoxImage.Warning);
 			return false;
 		}
-		foreach (HorarioMedico campo in this.txtDiasDeAtencion.ItemsSource as List<HorarioMedico>) {
+		if (this.txtDiasDeAtencion.ItemsSource is not List<HorarioMedico> result)
+			return true;   // o yield break, o lo que corresponda
+
+		foreach (HorarioMedico campo in (result)) {
 			if (string.IsNullOrEmpty(campo.HoraInicio) && string.IsNullOrEmpty(campo.HoraFin)) {
 				continue;
 			}

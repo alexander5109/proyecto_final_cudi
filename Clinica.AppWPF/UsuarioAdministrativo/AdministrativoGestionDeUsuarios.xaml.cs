@@ -8,22 +8,22 @@ using static Clinica.Shared.ApiDtos.TurnoDtos;
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
 public partial class AdministrativoGestionDeUsuarios : Window {
-	private MedicoDto? SelectedMedico = null;
-	private TurnoDto? SelectedTurno = null;
-	private PacienteDto? PacienteRelacionado = null;
+	//private MedicoDto? SelectedMedico = null;
+	//private TurnoDto? SelectedTurno = null;
+	//private PacienteDto? PacienteRelacionado = null;
 
 	public AdministrativoGestionDeUsuarios() {
 		InitializeComponent();
-		_ = CargaInicialAsync();
+		//_ = CargaInicialAsync();
 	}
 
 	//=============================================================
 	// Carga Inicial de datos
 	//=============================================================
 	private async Task CargaInicialAsync() {
-		await ActualizarMedicoUIAsync();
-		await ActualizarTurnoUIAsync();
-		ActualizarPacienteUI();
+		//await ActualizarMedicoUIAsync();
+		//await ActualizarTurnoUIAsync();
+		//ActualizarPacienteUI();
 	}
 
 	//=============================================================
@@ -65,22 +65,22 @@ public partial class AdministrativoGestionDeUsuarios : Window {
 	//=============================================================
 	private async void Window_Activated(object sender, EventArgs e) {
 		// App.UpdateLabelDataBaseModo(labelBaseDeDatosModo);
-		await ActualizarMedicoUIAsync();
-		await ActualizarTurnoUIAsync();
-		ActualizarPacienteUI();
+		//await ActualizarMedicoUIAsync();
+		//await ActualizarTurnoUIAsync();
+		//ActualizarPacienteUI();
 	}
 
 	private async void MedicosListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 		//SelectedMedico = medicosListView.SelectedItem as MedicoDto;
-		await ActualizarMedicoUIAsync();
-		await ActualizarTurnoUIAsync();
-		ActualizarPacienteUI();
+		//await ActualizarMedicoUIAsync();
+		//await ActualizarTurnoUIAsync();
+		//ActualizarPacienteUI();
 	}
 
 	private async void TurnosListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 		//SelectedTurno = turnosListView.SelectedItem as TurnoDto;
-		await ActualizarTurnoUIAsync();
-		ActualizarPacienteUI();
+		//await ActualizarTurnoUIAsync();
+		//ActualizarPacienteUI();
 	}
 
 	//=============================================================

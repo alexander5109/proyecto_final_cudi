@@ -155,10 +155,8 @@ public static class AsyncRepositorioHardCoded {
 			Paciente2025.CrearResult(
 				NombreCompleto2025.CrearResult("Juan", "Diaz"),
 				DniArgentino2025.CrearResult("44444444"),
-				Telefono2025.CrearResult(
-					Email2025.CrearResult("juandiaz@gmail.com"),
-					Telefono2025.CrearResult("1155544433")
-				),
+				Telefono2025.CrearResult("1155544433"),
+				Email2025.CrearResult("juandiaz@gmail.com"),
 				DomicilioArgentino2025.CrearResult(
 					LocalidadDeProvincia2025.CrearResult(
 						"Lanus",
@@ -175,10 +173,8 @@ public static class AsyncRepositorioHardCoded {
 			Paciente2025.CrearResult(
 				NombreCompleto2025.CrearResult("Pedro", "Fernandez"),
 				DniArgentino2025.CrearResult("30350123"),
-				Telefono2025.CrearResult(
+					Telefono2025.CrearResult("11655414253"),
 					Email2025.CrearResult("pedroFalopa@gmail.com"),
-					Telefono2025.CrearResult("11655414253")
-				),
 				DomicilioArgentino2025.CrearResult(
 					LocalidadDeProvincia2025.CrearResult(
 						"Castillo",
@@ -195,10 +191,8 @@ public static class AsyncRepositorioHardCoded {
 				Paciente2025.CrearResult(
 					NombreCompleto2025.CrearResult("Herminda", "Gutierrez Lopez"),
 					DniArgentino2025.CrearResult("44444444"),
-					Telefono2025.CrearResult(
+						Telefono2025.CrearResult("11225411453"),
 						Email2025.CrearResult("hermindalaturri201@gmail.com"),
-						Telefono2025.CrearResult("11225411453")
-					),
 					DomicilioArgentino2025.CrearResult(
 						LocalidadDeProvincia2025.CrearResult(
 							"Virrey del Pinos",

@@ -92,6 +92,9 @@ public class ServiciosPublicosController(
 
 	[HttpPut("Turnos/Reprogramar")]
 	public Task<ActionResult<Turno2025>> ReprogramarTurno([FromBody] ModificarTurnoDto dto) {
+		//if (dto.Comentario is null) {
+		//	return new BadRequestObjectResult("El comentario es obligatorio");
+		//}
 		return this.SafeExecuteApi(
 			logger,
 			PermisosAccionesCodigo.GestionDeTurnos,

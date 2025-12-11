@@ -64,7 +64,7 @@ public class MedicoFormularioViewModel : INotifyPropertyChanged {
 
 	private ObservableCollection<ViewModelHorarioAgrupado> LoadHorarios(string? json) {
 		if (string.IsNullOrWhiteSpace(json))
-			return new();
+			return [];
 
 		var horarios = JsonSerializer.Deserialize<List<HorarioDb>>(json)!;
 

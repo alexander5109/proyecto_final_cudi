@@ -68,7 +68,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 	async Task<Result<Turno2025>> IServiciosDeDominio.PersistirComoAusenteAsync(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
-		string outcomeComentario,
+		string? outcomeComentario,
 		IRepositorioDominioServices repositorio
 	) {
 		return await  (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
@@ -103,7 +103,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 	async Task<Result<Turno2025>> IServiciosDeDominio.PersistirComoCanceladoAsync(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
-		string outcomeComentario,
+		string? outcomeComentario,
 		IRepositorioDominioServices repositorio
 	) {
 		return await (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))
@@ -121,7 +121,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 	async Task<Result<Turno2025>> IServiciosDeDominio.PersistirComoReprogramado(
 		TurnoId turnoOriginalId,
 		DateTime outcomeFecha,
-		string outcomeComentario,
+		string? outcomeComentario,
 		IRepositorioDominioServices repositorio
 	) {
 		return await (await repositorio.SelectTurnoWhereIdAsDomain(turnoOriginalId))

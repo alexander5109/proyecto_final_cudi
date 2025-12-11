@@ -15,15 +15,6 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 		Loaded += async (_, __) => await CargaInicialAsync();
 	}
 
-	private bool MostrarErrorSiCorresponde<T>(ResultWpf<T> result)
-		=> result.MatchAndSet(
-			ok => true,
-			error => {
-				error.ShowMessageBox();
-				return false;
-			}
-		);
-
 
 
 	private async Task CargaInicialAsync() {
@@ -53,21 +44,33 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
 
 
-
-	private async void Button_ConfirmarTurnoAsistencia(object sender, RoutedEventArgs e) {
-		if (VM.SelectedTurno is null) return;
-
-
-		VM.IndicarAccionRequiereComentario(false);
-
-		ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoConcretado(
-			VM.SelectedTurno.Id,
-			DateTime.Now,
-			VM.SelectedTurno.OutcomeComentario
+	private static bool MostrarErrorSiCorresponde<T>(ResultWpf<T> result)
+		=> result.MatchAndSet(
+			ok => true,
+			error => {
+				error.ShowMessageBox();
+				return false;
+			}
 		);
 
-		if (MostrarErrorSiCorresponde(result))
-			return;
+
+	private async void Button_ConfirmarTurnoAsistencia(object sender, RoutedEventArgs e) {
+		if (VM.SelectedTurno is not null) {
+			//MARCAR EL ANTERIOR COMO REPROGRAMADO
+
+			VM.IndicarAccionRequiereComentario(false);
+
+			ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoConcretado(
+				VM.SelectedTurno.Id,
+				DateTime.Now,
+				VM.SelectedTurno.OutcomeComentario
+			);
+
+			if (MostrarErrorSiCorresponde(result))
+				return;
+
+
+		}
 
 		await RefrescarTurnosAsync();
 	}
@@ -93,6 +96,7 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 
 	private async void Button_ReprogramarTurno(object sender, RoutedEventArgs e) {
 		if (VM.SelectedTurno is null) return;
+		if (VM.SelectedPaciente is null) return;
 
 		VM.IndicarAccionRequiereComentario(true);
 
@@ -101,21 +105,12 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 			return;
 		}
 
-		//if (VM.SelectedPaciente is not null) {
-		//	this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedPaciente);
-		//}
+		this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedPaciente, VM.SelectedTurno);
 
 
-		ResultWpf<TurnoDbModel> result = await App.Repositorio.ReprogramarTurno(
-		VM.SelectedTurno.Id,
-		DateTime.Now,
-		VM.SelectedTurno.OutcomeComentario
-	);
-
-		if (MostrarErrorSiCorresponde(result))
-			return;
 
 		await RefrescarTurnosAsync();
+		VM.SelectedTurno = null; //to trigger refreshes
 	}
 
 
