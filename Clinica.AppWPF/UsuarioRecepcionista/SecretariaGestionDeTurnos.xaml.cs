@@ -92,8 +92,14 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 	}
 
 	private async void Button_ReprogramarTurno(object sender, RoutedEventArgs e) {
-		if (VM.SelectedTurno is null) return;
-		if (VM.SelectedPaciente is null) return;
+		if (VM.SelectedTurno is null) {
+			MessageBox.Show("SelectedTurno is null");
+			return;
+		}
+		if (VM.SelectedTurno.PacienteRelacionado is null) {
+			MessageBox.Show("SelectedPaciente is null");
+			return;
+		}
 
 		VM.IndicarAccionRequiereComentario(true);
 
@@ -102,7 +108,7 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 			return;
 		}
 
-		this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedPaciente, VM.SelectedTurno);
+		this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedTurno.PacienteRelacionado, VM.SelectedTurno);
 
 		await RefrescarTurnosAsync();
 		VM.SelectedTurno = null;

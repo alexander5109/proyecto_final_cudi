@@ -7,8 +7,8 @@ namespace Clinica.AppWPF.UsuarioRecepcionista;
 
 public partial class SecretariaFormularioTurno : Window {
 	internal MyViewModel VM { get; }
-    //bool EsReprogramacion = false;
-    readonly TurnoViewModel? TurnoOriginal;
+	//bool EsReprogramacion = false;
+	readonly TurnoViewModel? TurnoOriginal;
 	public SecretariaFormularioTurno(PacienteDbModel paciente) {
 		InitializeComponent();
 		VM = new MyViewModel(paciente);
@@ -42,7 +42,10 @@ public partial class SecretariaFormularioTurno : Window {
 
 
 	async private void Click_AgendarNuevoTurno(object sender, RoutedEventArgs e) {
-		if (VM.SelectedDisponibilidad is null) return;
+		if (VM.SelectedDisponibilidad is null) {
+			MessageBox.Show("No hay disponibilidad seleccionada");
+			return;
+		}
 
 		SoundsService.PlayClickSound();
 		if (TurnoOriginal is not null) {
@@ -51,7 +54,7 @@ public partial class SecretariaFormularioTurno : Window {
 				DateTime.Now,
 				TurnoOriginal.OutcomeComentario
 			);
-			if (MostrarErrorSiCorresponde(resultt)) {
+			if (!MostrarErrorSiCorresponde(resultt)) {
 				this.Close();
 			}
 		}
@@ -61,7 +64,10 @@ public partial class SecretariaFormularioTurno : Window {
 			VM.SelectedDisponibilidad.Original
 		);
 		result.MatchAndDo(
-			caseOk => MessageBox.Show("Turno reservado exitosamente.", "Éxito", MessageBoxButton.OK),
+			caseOk => {
+				MessageBox.Show("Turno reservado exitosamente.", "Éxito", MessageBoxButton.OK);
+				this.Close();
+			},
 			caseError => caseError.ShowMessageBox()
 		);
 
