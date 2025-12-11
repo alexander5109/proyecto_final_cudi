@@ -1,4 +1,5 @@
-﻿using Clinica.Dominio.TiposDeEnum;
+﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
 using Clinica.Shared.ApiDtos;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.ApiDtos.MedicoDtos;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
+using static Clinica.Shared.DbModels.DbModels;
 using static Clinica.WebAPI.Controllers.AuthMiddleware;
 
 namespace Clinica.WebAPI.Controllers;
@@ -21,14 +23,14 @@ public class MedicosController(
 ) : ControllerBase {
 
 	[HttpGet]
-	public Task<IActionResult> GetMedicos() => this.SafeExecute(
+	public Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicos() => this.SafeExecute(
 		logger,
 		PermisosAccionesCodigo.VerMedicos,
 		() => repositorio.SelectMedicos()
 	);
 
 	[HttpGet("con-horarios/")]
-	public Task<IActionResult> GetMedicosWithHorarios() => this.SafeExecute(
+	public Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicosWithHorarios() => this.SafeExecute(
 		logger,
 		PermisosAccionesCodigo.VerMedicos,
 		() => repositorio.SelectMedicosWithHorarios()
@@ -36,7 +38,7 @@ public class MedicosController(
 
 
 	[HttpGet("por-especialidad/{code}")]
-	public Task<IActionResult> GetMedicosWhereEspecialidadCodigo([FromRoute] EspecialidadCodigo code)
+	public Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicosWhereEspecialidadCodigo([FromRoute] EspecialidadCodigo code)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.VerMedicos,
@@ -46,7 +48,7 @@ public class MedicosController(
 
 
 	[HttpGet("{id:int}")]
-	public Task<IActionResult> GetMedicoWhereId(int id)
+	public Task<ActionResult<MedicoDbModel?>> GetMedicoWhereId(int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.VerMedicos,
@@ -56,7 +58,7 @@ public class MedicosController(
 
 
 	[HttpGet("{id}/turnos")]
-	public Task<IActionResult> GetTurnosPorMedico([FromRoute] int id)
+	public Task<ActionResult<IEnumerable<TurnoDbModel>>> GetTurnosPorMedico([FromRoute] int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.VerTurnos,
@@ -67,7 +69,7 @@ public class MedicosController(
 
 
 	[HttpDelete("{id:int}")]
-	public Task<IActionResult> DeleteMedico(int id)
+	public Task<ActionResult<Unit>> DeleteMedico(int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.DeleteEntidades,
@@ -78,7 +80,7 @@ public class MedicosController(
 
 
 	[HttpPut("{id:int}")]
-	public Task<IActionResult> UpdateMedico(int id, [FromBody] MedicoDto dto)
+	public Task<ActionResult<MedicoDbModel>> UpdateMedico(int id, [FromBody] MedicoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisosAccionesCodigo.UpdateEntidades,
@@ -91,7 +93,7 @@ public class MedicosController(
 
 
 	[HttpPost]
-	public Task<IActionResult> CrearMedico([FromBody] MedicoDto dto)
+	public Task<ActionResult<MedicoId>> CrearMedico([FromBody] MedicoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisosAccionesCodigo.CrearMedicos,

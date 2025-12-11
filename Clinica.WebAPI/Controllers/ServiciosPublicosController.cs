@@ -10,6 +10,7 @@ using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeEntidad;
 using static Clinica.Shared.ApiDtos.TurnoDtos;
+using Clinica.Dominio.TiposDeAgregado;
 namespace Clinica.WebAPI.Controllers;
 
 
@@ -56,7 +57,7 @@ public class ServiciosPublicosController(
 
 
 	[HttpPost("Turnos/Programar")]
-	public Task<IActionResult> ProgramarTurno([FromBody] ProgramarTurnoDto dto) {
+	public Task<ActionResult<Turno2025Agg>> ProgramarTurno([FromBody] ProgramarTurnoDto dto) {
 		return this.SafeExecuteApi(
 			logger,
 			PermisosAccionesCodigo.GestionDeTurnos,
@@ -90,7 +91,7 @@ public class ServiciosPublicosController(
 
 
 	[HttpPut("Turnos/Reprogramar")]
-	public Task<IActionResult> ReprogramarTurno([FromBody] ModificarTurnoDto dto) {
+	public Task<ActionResult<Turno2025>> ReprogramarTurno([FromBody] ModificarTurnoDto dto) {
 		return this.SafeExecuteApi(
 			logger,
 			PermisosAccionesCodigo.GestionDeTurnos,
@@ -108,7 +109,7 @@ public class ServiciosPublicosController(
 
 
 	[HttpPut("Turnos/Concretar")]
-	public Task<IActionResult> ConcretarTurno([FromBody] ConcretarTurnoDto dto) {
+	public Task<ActionResult<Turno2025>> ConcretarTurno([FromBody] ConcretarTurnoDto dto) {
 		return this.SafeExecuteApi(
 			logger,
 			PermisosAccionesCodigo.GestionDeTurnos,
@@ -125,7 +126,7 @@ public class ServiciosPublicosController(
 
 
 	[HttpPut("Turnos/ConcretarComoAusente")]
-	public Task<IActionResult> ConcretarTurno([FromBody] ModificarTurnoDto dto) {
+	public Task<ActionResult<Turno2025>> ConcretarTurno([FromBody] ModificarTurnoDto dto) {
 		return this.SafeExecuteApi(
 			logger,
 			PermisosAccionesCodigo.GestionDeTurnos,

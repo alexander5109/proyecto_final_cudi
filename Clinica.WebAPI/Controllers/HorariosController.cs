@@ -1,10 +1,12 @@
-﻿using Clinica.Dominio.TiposDeEnum;
+﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.ApiDtos.HorarioDtos;
+using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.WebAPI.Controllers;
 
@@ -16,7 +18,7 @@ public class HorariosController(
 	ILogger<HorariosController> logger
 ) : ControllerBase {
 	[HttpGet]
-	public Task<IActionResult> GetHorarios()
+	public Task<ActionResult<IEnumerable<HorarioDbModel>>> GetHorarios()
 	=> this.SafeExecute(
 		logger,
 		PermisosAccionesCodigo.VerHorarios,
@@ -26,7 +28,7 @@ public class HorariosController(
 
 
 	[HttpGet("{id:int}")]
-	public Task<IActionResult> GetHorarioPorId(int id)
+	public Task<ActionResult<HorarioDbModel?>> GetHorarioPorId(int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.VerHorarios,
@@ -36,7 +38,7 @@ public class HorariosController(
 
 
 	[HttpDelete("{id:int}")]
-	public Task<IActionResult> DeleteHorario(int id)
+	public Task<ActionResult<Unit>> DeleteHorario(int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.DeleteEntidades,
@@ -47,7 +49,7 @@ public class HorariosController(
 
 
 	[HttpPut("{id:int}")]
-	public Task<IActionResult> UpdateHorario(int id, [FromBody] HorarioDto dto)
+	public Task<ActionResult<HorarioDbModel>> UpdateHorario(int id, [FromBody] HorarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisosAccionesCodigo.UpdateHorarios,
@@ -60,7 +62,7 @@ public class HorariosController(
 
 
 	[HttpPost]
-	public Task<IActionResult> CrearHorario([FromBody] HorarioDto dto)
+	public Task<ActionResult<HorarioId>> CrearHorario([FromBody] HorarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisosAccionesCodigo.CrearHorarios,

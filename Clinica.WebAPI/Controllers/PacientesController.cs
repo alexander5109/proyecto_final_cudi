@@ -1,4 +1,5 @@
-﻿using Clinica.Dominio.TiposDeEnum;
+﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
 using Clinica.Shared.ApiDtos;
@@ -6,6 +7,7 @@ using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
+using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.WebAPI.Controllers;
 
@@ -19,7 +21,7 @@ public class PacientesController(
 
 
 	[HttpGet]
-	public Task<IActionResult> GetPacientes()
+	public Task<ActionResult<IEnumerable<PacienteDbModel>>> GetPacientes()
 	=> this.SafeExecute(
 		logger,
 		PermisosAccionesCodigo.VerPacientes,
@@ -29,7 +31,7 @@ public class PacientesController(
 
 	//tonto.
 	//[HttpGet("por-turnos/{id:int}")]
-	//public Task<IActionResult> GetPacientePorTurnoId(int id)
+	//public Task<ActionResult<Carajo>> GetPacientePorTurnoId(int id)
 	//	=> this.SafeExecute(
 	//		logger,
 	//		PermisosAccionesCodigo.VerPacientes,
@@ -39,7 +41,7 @@ public class PacientesController(
 
 
 	//[HttpGet("AsDomain")]
-	//public async Task<IActionResult> GetPacientesAsDomain() {
+	//public async Task<ActionResult<Carajo>> GetPacientesAsDomain() {
 
 
 	//Result<Turno2025> result = await ServiciosPublicos.PersistirComoCanceladoAsync(
@@ -64,7 +66,7 @@ public class PacientesController(
 
 
 	[HttpGet("{id:int}")]
-	public Task<IActionResult> GetPacientePorId(int id)
+	public Task<ActionResult<PacienteDbModel?>> GetPacientePorId(int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.VerPacientes,
@@ -76,7 +78,7 @@ public class PacientesController(
 
 
 	[HttpGet("{id}/turnos")]
-	public Task<IActionResult> GetTurnosPorPaciente([FromRoute] int id)
+	public Task<ActionResult<IEnumerable<TurnoDbModel>>> GetTurnosPorPaciente([FromRoute] int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.VerTurnos,
@@ -87,7 +89,7 @@ public class PacientesController(
 
 
 	[HttpDelete("{id:int}")]
-	public Task<IActionResult> DeletePaciente(int id)
+	public Task<ActionResult<Unit>> DeletePaciente(int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.DeleteEntidades,
@@ -98,7 +100,7 @@ public class PacientesController(
 
 
 	[HttpPut("{id:int}")]
-	public Task<IActionResult> UpdatePaciente(int id, [FromBody] PacienteDto dto)
+	public Task<ActionResult<PacienteDbModel>> UpdatePaciente(int id, [FromBody] PacienteDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisosAccionesCodigo.UpdatePacientes,
@@ -111,7 +113,7 @@ public class PacientesController(
 
 
 	[HttpPost]
-	public Task<IActionResult<int>> CrearPaciente([FromBody] PacienteDto dto) {
+	public Task<ActionResult<PacienteId>> CrearPaciente([FromBody] PacienteDto dto) {
 		Console.WriteLine(dto.ToString());
 
 		return this.SafeExecuteWithDomain(

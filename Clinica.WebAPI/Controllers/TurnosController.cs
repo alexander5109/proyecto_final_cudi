@@ -1,3 +1,4 @@
+using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
@@ -7,6 +8,7 @@ using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.ApiDtos.TurnoDtos;
+using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.WebAPI.Controllers;
 
 
@@ -22,7 +24,7 @@ public class TurnosController(
 
 
 	[HttpGet]
-	public Task<IActionResult> GetTurnos()
+	public Task<ActionResult<IEnumerable<TurnoDbModel>>> GetTurnos()
 	=> this.SafeExecute(
 		logger,
 		PermisosAccionesCodigo.VerTurnos,
@@ -33,7 +35,7 @@ public class TurnosController(
 
 
 	[HttpGet("{id:int}")]
-	public Task<IActionResult> GetTurnoPorId(int id)
+	public Task<ActionResult<TurnoDbModel?>> GetTurnoPorId(int id)
 	=> this.SafeExecute(
 		logger,
 		PermisosAccionesCodigo.VerTurnos,
@@ -42,7 +44,7 @@ public class TurnosController(
 	);
 
 	[HttpGet("medico/{id}")]
-	public Task<IActionResult> GetTurnosPorMedico([FromRoute] int id)
+	public Task<ActionResult<IEnumerable<TurnoDbModel>>> GetTurnosPorMedico([FromRoute] int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.VerTurnos,
@@ -51,7 +53,7 @@ public class TurnosController(
 		);
 
 	[HttpGet("paciente/{id}")]
-	public Task<IActionResult> GetTurnosPorPaciente([FromRoute] int id)
+	public Task<ActionResult<IEnumerable<TurnoDbModel>>> GetTurnosPorPaciente([FromRoute] int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.VerTurnos,
@@ -61,7 +63,7 @@ public class TurnosController(
 
 
 	[HttpDelete("{id:int}")]
-	public Task<IActionResult> DeleteTurno(int id)
+	public Task<ActionResult<Unit>> DeleteTurno(int id)
 	=> this.SafeExecute(
 		logger,
 		PermisosAccionesCodigo.DeleteEntidades,
@@ -72,7 +74,7 @@ public class TurnosController(
 
 
 	[HttpPut("{id:int}")]
-	public Task<IActionResult> UpdateTurno(int id, [FromBody] TurnoDto dto)
+	public Task<ActionResult<TurnoDbModel>> UpdateTurno(int id, [FromBody] TurnoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisosAccionesCodigo.UpdateEntidades,
@@ -85,7 +87,7 @@ public class TurnosController(
 
 
 	[HttpPost]
-	public Task<IActionResult> CrearTurno([FromBody] TurnoDto dto)
+	public Task<ActionResult<TurnoId>> CrearTurno([FromBody] TurnoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisosAccionesCodigo.CrearTurnos,

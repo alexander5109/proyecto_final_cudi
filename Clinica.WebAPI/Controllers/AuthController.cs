@@ -23,7 +23,7 @@ public class AuthController(
 ) : ControllerBase {
 
 	[HttpPost("login")]
-	public async Task<IActionResult> Login([FromBody] UsuarioLoginRequestDto dto) {
+	public async Task<ActionResult<UsuarioAutenticadoDto>> Login([FromBody] UsuarioLoginRequestDto dto) {
 
         Result<UsuarioAutenticadoDto> result = await ServicioAuth.ValidarCredenciales(
 			dto.Username,
@@ -31,9 +31,8 @@ public class AuthController(
 			repositorio
 		);
 
-
 		// MatchAndSet -> produce directamente un IActionResult
-		return result.MatchAndSet<UsuarioAutenticadoDto, IActionResult>(
+		return result.MatchAndSet<UsuarioAutenticadoDto, ActionResult>(
 			ok => Ok(new UsuarioLoginResponseDto(
 				ok.UserName,
 				ok.EnumRole,

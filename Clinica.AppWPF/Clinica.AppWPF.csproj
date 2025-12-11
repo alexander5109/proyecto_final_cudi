@@ -28,6 +28,9 @@
     <Page Remove="UsuarioMedico\**" />
     <Page Remove="UsuarioSuperadmin\**" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="bluegreen.jpeg" />
+  </ItemGroup>
 
 
   <!-- Copy sounds and JSON to output -->
@@ -53,6 +56,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Clinica.Dominio\Clinica.Dominio.csproj" />
     <ProjectReference Include="..\Clinica.Shared\Clinica.Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="bluegreen.jpeg" />
   </ItemGroup>
 
 </Project>

@@ -79,7 +79,7 @@ public static class ApiResultExtensions {
 	};
 
 
-	public static IActionResult ToActionResult<T>(
+	public static ActionResult ToActionResult<T>(
 		this ControllerBase controller,
 		ApiResult<T> result
 	) {

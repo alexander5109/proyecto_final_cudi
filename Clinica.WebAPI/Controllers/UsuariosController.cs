@@ -1,4 +1,5 @@
-﻿using Clinica.Dominio.TiposDeEnum;
+﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.IRepositorios;
@@ -6,6 +7,7 @@ using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
+using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.WebAPI.Controllers;
 
@@ -13,11 +15,11 @@ namespace Clinica.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class UsuariosController(
-	IRepositorioUsuarios repositorio, 
+	IRepositorioUsuarios repositorio,
 	ILogger<UsuariosController> logger
 ) : ControllerBase {
 	[HttpGet]
-	public Task<IActionResult> GetUsuarios()
+	public Task<ActionResult<IEnumerable<UsuarioDbModel>>> GetUsuarios()
 	=> this.SafeExecute(
 		logger,
 		PermisosAccionesCodigo.VerUsuarios,
@@ -27,7 +29,7 @@ public class UsuariosController(
 
 
 	[HttpGet("{id:int}")]
-	public Task<IActionResult> GetUsuarioPorId(int id)
+	public Task<ActionResult<UsuarioDbModel?>> GetUsuarioPorId(int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.VerUsuarios,
@@ -37,7 +39,7 @@ public class UsuariosController(
 
 
 	[HttpGet("por-nombre/{username}")]
-	public Task<IActionResult> GetUsuarioProfileByUsername(string username)
+	public Task<ActionResult<UsuarioDbModel>> GetUsuarioProfileByUsername(string username)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.VerUsuarios,
@@ -47,7 +49,7 @@ public class UsuariosController(
 
 
 	[HttpDelete("{id:int}")]
-	public Task<IActionResult> DeleteUsuario(int id)
+	public Task<ActionResult<Unit>> DeleteUsuario(int id)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.DeleteEntidades,
@@ -58,7 +60,7 @@ public class UsuariosController(
 
 
 	[HttpPut("{id:int}")]
-	public Task<IActionResult> UpdateUsuario(int id, [FromBody] UsuarioDto dto)
+	public Task<ActionResult<UsuarioDbModel>> UpdateUsuario(int id, [FromBody] UsuarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		PermisosAccionesCodigo.UpdateEntidades,
@@ -71,14 +73,14 @@ public class UsuariosController(
 
 
 	[HttpPost]
-	public Task<IActionResult> CrearUsuario([FromBody] UsuarioDto dto)
-	=> this.SafeExecuteWithDomain(
-		logger,
-		PermisosAccionesCodigo.CrearUsuarios,
-		dto,
-		x => x.ToDomain(),
-		usuario => repositorio.InsertUsuarioReturnId(usuario)
-	);
+	public Task<ActionResult<UsuarioId>> CrearUsuario([FromBody] UsuarioDto dto)
+		=> this.SafeExecuteWithDomain(
+			logger,
+			PermisosAccionesCodigo.CrearUsuarios,
+			dto,
+			x => x.ToDomain(),
+			usuario => repositorio.InsertUsuarioReturnId(usuario)
+		);
 
 
 
