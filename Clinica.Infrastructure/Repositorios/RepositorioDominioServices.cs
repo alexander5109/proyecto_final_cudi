@@ -17,8 +17,6 @@ namespace Clinica.Infrastructure.Repositorios;
 public class RepositorioDominioServices(SQLServerConnectionFactory factory) : RepositorioBase(factory), IRepositorioDominioServices {
 
 
-
-
 	Task<Result<Turno2025>> IRepositorioDominioServices.UpdateTurnoWhereIdAndReturnAsDomain(
 		TurnoId id,
 		Turno2025 instance
@@ -53,18 +51,6 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 				commandType: CommandType.StoredProcedure
 			);
 		});
-
-
-
-
-
-
-
-	Task<Result<TurnoId>> IRepositorioDominioServices.InsertTurnoReturnId(Turno2025 instance) => ((IRepositorioTurnos)this).InsertTurnoReturnId(instance);
-
-
-
-
 
 
 

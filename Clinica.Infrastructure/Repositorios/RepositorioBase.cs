@@ -1,10 +1,13 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Infrastructure.IRepositorios;
 using Clinica.Infrastructure.TypeHandlers;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using static Clinica.Shared.DbModels.DbModels;
+using static Clinica.Shared.ApiDtos.TurnoDtos;
 
 namespace Clinica.Infrastructure.Repositorios;
 
@@ -12,6 +15,14 @@ namespace Clinica.Infrastructure.Repositorios;
 public abstract class RepositorioBase(SQLServerConnectionFactory factory) {
 	protected readonly SQLServerConnectionFactory Factory = factory;
 
+
+
+	public Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance)
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
+			"sp_InsertTurnoReturnId",
+			instance.ToDto(),
+			commandType: CommandType.StoredProcedure
+		)).MapAsync(newId => new TurnoId(newId));
 
 
 
