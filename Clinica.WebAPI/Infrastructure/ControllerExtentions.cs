@@ -1,76 +1,75 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Clinica.WebAPI.Infrastructure;
-
-
 public static class ControllerExtensions {
-	// --------------------------------------------------------
-	// Helper para extraer rol del usuario desde el contexto
-	// --------------------------------------------------------
-	private static bool TryGetUsuarioRole(this ControllerBase controller, out UsuarioRoleCodigo roleEnum) {
-		roleEnum = default;
+
+	// ------------------------------
+	// Obtener rol
+	// ------------------------------
+	private static bool TryGetUsuarioRole(
+		this ControllerBase controller,
+		out UsuarioRoleCodigo role
+	) {
+		role = default;
 
 		var usuario = controller.HttpContext.Items["Usuario"];
 		if (usuario is null) return false;
 
 		var roleString = usuario.GetType().GetProperty("Role")?.GetValue(usuario)?.ToString();
-		if (!Enum.TryParse<UsuarioRoleCodigo>(roleString, out roleEnum)) return false;
 
-		return true;
+		return Enum.TryParse(roleString, out role);
 	}
 
-	// --------------------------------------------------------
-	// Helper para retornar 401
-	// --------------------------------------------------------
-	private static ApiResult<T> UsuarioNoAutorizado<T>(string message = "No se encontró información del usuario en el contexto.")
+	// ------------------------------
+	// Helpers de errores
+	// ------------------------------
+	private static ApiResult<T> UsuarioNoAutorizado<T>()
 		=> new ApiResult<T>.Error(
-			new ApiError(message, StatusCodes.Status401Unauthorized)
+			new ApiError("No se encontró información del usuario.", StatusCodes.Status401Unauthorized)
 		);
 
-	// --------------------------------------------------------
-	// Helper para retornar 403
-	// --------------------------------------------------------
 	private static ApiResult<T> PermisoDenegado<T>()
 		=> new ApiResult<T>.Error(
 			new ApiError("No posee permisos para acceder a este recurso.", StatusCodes.Status403Forbidden)
 		);
 
-	// --------------------------------------------------------
-	// Función unificada
-	// --------------------------------------------------------
-	public static async Task<IActionResult> SafeExecute<T>(
+
+	// =====================================================================
+	// 🔥 SAFEEXECUTE (RETORNA TIPADO)
+	// =====================================================================
+	public static async Task<ActionResult<T>> SafeExecute<T>(
 		this ControllerBase controller,
 		ILogger logger,
 		PermisosAccionesCodigo permiso,
-		Func<Task<Result<T>>> action,  // <-- sin pasar ControllerBase
+		Func<Task<Result<T>>> action,
 		string? notFoundMessage = null
 	) {
-		// 1️⃣ Validar usuario
-		if (!controller.TryGetUsuarioRole(out var roleEnum))
+		// 1️⃣ Usuario
+		if (!controller.TryGetUsuarioRole(out var role))
 			return controller.ToActionResult(UsuarioNoAutorizado<T>());
 
-		// 2️⃣ Validar permiso
-		if (!roleEnum.TienePermisosPara(permiso))
+		// 2️⃣ Permiso
+		if (!role.TienePermisosPara(permiso))
 			return controller.ToActionResult(PermisoDenegado<T>());
 
 		try {
 			// 3️⃣ Ejecutar acción
-			Result<T> result = await action();
+			var result = await action();
+			var apiResult = result.ToApi();
 
-			ApiResult<T> apiResult = result.ToApi();
-
-			// 4️⃣ Manejar NotFound si T es nullable y valor es null
+			// 4️⃣ Caso especial: Ok pero null
 			if (apiResult.IsOk && (apiResult as ApiResult<T>.Ok)!.Value is null) {
-				logger.LogInformation("Recurso no encontrado. {Mensaje}", notFoundMessage);
-				return controller.NotFound(new { mensaje = notFoundMessage ?? "Entidad no encontrada." });
+				logger.LogInformation("Recurso no encontrado: {Mensaje}", notFoundMessage);
+				return controller.NotFound(new {
+					mensaje = notFoundMessage ?? "Entidad no encontrada."
+				});
 			}
 
 			return controller.ToActionResult(apiResult);
 		} catch (Exception ex) {
 			logger.LogError(ex, "Error inesperado en SafeExecute");
-
 			return controller.ToActionResult(
 				new ApiResult<T>.Error(
 					new ApiError(
@@ -83,59 +82,53 @@ public static class ControllerExtensions {
 		}
 	}
 
-	// --------------------------------------------------------
-	// Variante con DTO -> Domain -> Acción de dominio
-	// --------------------------------------------------------
 
-
-	public static async Task<ActionResult<TOut>> SafeExecuteWithDomain<
-		TDto, TDomain, TResult, TOut
-	>(
+	// =====================================================================
+	// 🔥 SAFEEXECUTE WITH DOMAIN (RETORNA TIPADO)
+	// =====================================================================
+	public static Task<ActionResult<TResult>> SafeExecuteWithDomain<TDto, TDomain, TResult>(
 		this ControllerBase controller,
 		ILogger logger,
 		PermisosAccionesCodigo permiso,
 		TDto dto,
 		Func<TDto, Result<TDomain>> toDomain,
 		Func<TDomain, Task<Result<TResult>>> action,
-		Func<TResult, TOut> mapToOut, // <-- NUEVO
 		string? notFoundMessage = null
-	) {
-		return await controller.SafeExecute<TResult>(
+	) =>
+		controller.SafeExecute<TResult>(
 			logger,
 			permiso,
 			async () => {
-				Result<TDomain> dom = toDomain(dto);
-				if (dom.IsError)
-					return new Result<TResult>.Error(dom.UnwrapAsError());
-				return await action(dom.UnwrapAsOk());
+				var dom = toDomain(dto);
+				return dom.IsError
+					? new Result<TResult>.Error(dom.UnwrapAsError())
+					: await action(dom.UnwrapAsOk());
 			},
 			notFoundMessage
 		);
-	}
 
-	// --------------------------------------------------------
-	// Variante mínima para APIs que retornan ApiResult directamente
-	// --------------------------------------------------------
-	public static async Task<IActionResult> SafeExecuteApi<T>(
+
+	// =====================================================================
+	// 🔥 SAFEEXECUTE API (RETORNA TIPADO)
+	// =====================================================================
+	public static Task<ActionResult<T>> SafeExecuteApi<T>(
 		this ControllerBase controller,
 		ILogger logger,
 		PermisosAccionesCodigo permiso,
-		Func<Task<ApiResult<T>>> operation
-	) {
-		return await controller.SafeExecute<T>(
+		Func<Task<ApiResult<T>>> operation,
+		string? notFoundMessage = null
+	) =>
+		controller.SafeExecute<T>(
 			logger,
 			permiso,
 			async () => {
-				ApiResult<T> r = await operation();
-				return r.IsOk
-					? new Result<T>.Ok((r as ApiResult<T>.Ok)!.Value)
-					: new Result<T>.Error((r as ApiResult<T>.Error)!.ErrorInfo.Message);
-			}
+				var api = await operation();
+
+				if (api.IsOk)
+					return new Result<T>.Ok((api as ApiResult<T>.Ok)!.Value);
+
+				return new Result<T>.Error((api as ApiResult<T>.Error)!.ErrorInfo.Message);
+			},
+			notFoundMessage
 		);
-	}
-
-
-
-
-
 }
