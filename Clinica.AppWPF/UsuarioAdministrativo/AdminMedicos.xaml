@@ -162,7 +162,6 @@
 				VerticalAlignment="Center"
 				Margin="25,0,25,0"
 				FontWeight="Bold" />
-			<!-- Campos -->
 			<StackPanel
 				Margin="25">
 				<Label
@@ -174,43 +173,32 @@
 					Margin="25,0,25,0"
 					FontWeight="Bold" />
 				<ListView
-					x:Name="txtDiasDeAtencion"
-					VerticalAlignment="Top"
-					Height="auto"
-					MinHeight="200"
-					HorizontalAlignment="Left"
-					HorizontalContentAlignment="Center"
-					ScrollViewer.VerticalScrollBarVisibility="Auto"
-					Width="auto"
-					ScrollViewer.HorizontalScrollBarVisibility="Auto"
-					Grid.IsSharedSizeScope="True">
+					ItemsSource="{Binding SelectedMedico.Horarios}">
 					<ListView.View>
 						<GridView>
 							<GridViewColumn
-								Header="Día de la Semana"
-								Width="auto"
-								DisplayMemberBinding="{Binding DiaSemana}" />
+								Header="Día"
+								DisplayMemberBinding="{Binding DiaSemanaDescripcion}" />
 							<GridViewColumn
-								Header="Inicio Horario"
-								Width="120">
+								Header="Desde"
+								DisplayMemberBinding="{Binding HoraDesdeStr}" />
+							<GridViewColumn
+								Header="Hasta"
+								DisplayMemberBinding="{Binding HoraHastaStr}" />
+							<GridViewColumn
+								Header="Vigencia"
+								Width="150">
 								<GridViewColumn.CellTemplate>
 									<DataTemplate>
-										<TextBox
-											Text="{Binding HoraInicio}"
-											Margin="1,1,1,1"
-											Width="100" />
-									</DataTemplate>
-								</GridViewColumn.CellTemplate>
-							</GridViewColumn>
-							<GridViewColumn
-								Header="Fin Horario"
-								Width="120">
-								<GridViewColumn.CellTemplate>
-									<DataTemplate>
-										<TextBox
-											Text="{Binding HoraFin}"
-											Width="100"
-											Margin="1,1,1,1" />
+										<TextBlock>
+                            <Run
+												Text="{Binding VigenteDesde, StringFormat={}{0:dd/MM/yyyy}}" />
+                            <Run
+												Text=" → " />
+                            <Run
+												Text="{Binding VigenteHasta, 
+                                        TargetNullValue='Indefinido', 
+                                        StringFormat={}{0:dd/MM/yyyy}}" /></TextBlock>
 									</DataTemplate>
 								</GridViewColumn.CellTemplate>
 							</GridViewColumn>

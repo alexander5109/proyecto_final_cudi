@@ -17,6 +17,7 @@ public static class RepoCache {
 	public static Dictionary<MedicoId, MedicoDbModel> DictMedicos { get; set; } = [];
 	public static Dictionary<PacienteId, PacienteDbModel> DictPacientes { get; set; } = [];
 	public static Dictionary<UsuarioId, UsuarioDbModel> DictUsuarios { get; set; } = [];
+	public static Dictionary<HorarioId, HorarioDbModel> DictHorarios { get; set; } = [];
 }
 
 
@@ -47,6 +48,21 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicos() {
 		await EnsureMedicosLoaded();
 		return [.. RepoCache.DictMedicos.Values];
+	}
+
+
+	async Task<List<HorarioDbModel>> IWPFRepositorioHorarios.SelectHorarios() {
+		await EnsureHorariosLoaded();
+		return [.. RepoCache.DictHorarios.Values];
+	}
+
+
+
+	async Task<List<HorarioDbModel>> IWPFRepositorioHorarios.SelectHorariosWhereMedicoId(MedicoId id) {
+		await EnsureHorariosLoaded();
+		return [.. RepoCache.DictHorarios
+			.Values
+			.Where(m => m.MedicoId == id)];
 	}
 
 	async Task<List<PacienteDbModel>> IWPFRepositorioPacientes.SelectPacientes() {
@@ -100,6 +116,26 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		}
 
 		return res;
+	}
+
+
+
+
+
+	private bool _horariosLoaded = false;
+	public async Task EnsureHorariosLoaded() {
+		if (_horariosLoaded)
+			return;
+
+		List<HorarioDbModel> list = await Api.TryGetJsonAsync<List<HorarioDbModel>>("api/horarios", defaultValue: []);
+		//List<HorarioDbModel> list = await Api.TryGetJsonAsync<List<HorarioDbModel>>("api/horarios/con-horarios", defaultValue: []);
+
+		RepoCache.DictHorarios.Clear();
+		RepoCache.DictHorarios = list.ToDictionary(m => m.Id, m => m);
+		//foreach (KeyValuePair<HorarioId, HorarioDbModel> m in DictHorarios ) {
+		//	Console.WriteLine($"Horario cache loaded: {m.Key} -> {m.Value.Nombre} {m.Value.Apellido}");
+		//}
+		_horariosLoaded = true;
 	}
 
 
@@ -454,7 +490,4 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		_ = RefreshUsuarios();
 		return result;
 	}
-
-
-
 }

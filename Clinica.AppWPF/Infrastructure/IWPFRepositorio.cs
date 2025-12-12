@@ -22,6 +22,7 @@ public static class IWPFRepositorioInterfaces {
 		IWPFRepositorioPacientes,
 		IWPFRepositorioDominio,
 		IWPFRepositorioTurnos,
+		IWPFRepositorioHorarios,
 		IWPFRepositorioUsuarios {
 	}
 	public interface IWPFRepositorioUsuarios {
@@ -56,6 +57,11 @@ public static class IWPFRepositorioInterfaces {
 	public interface IWPFRepositorioDominio {
 		Task<List<Disponibilidad2025>> SelectDisponibilidades(EspecialidadCodigo especialidad, int cuantos, DateTime apartirDeCuando);
 
+	}
+
+	public interface IWPFRepositorioHorarios {
+		Task<List<HorarioDbModel>> SelectHorarios();
+		Task<List<HorarioDbModel>> SelectHorariosWhereMedicoId(MedicoId id);
 	}
 
 	public interface IWPFRepositorioTurnos {
