@@ -7,8 +7,8 @@
 	mc:Ignorable="d"
 	Title="Clinica Medica - Médicos Modificar"
 	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioAdministrativo"
-	Height="600"
 	Width="1024"
+	Height="600"
 	WindowStartupLocation="CenterScreen">
 	<Window.Background>
 		<ImageBrush

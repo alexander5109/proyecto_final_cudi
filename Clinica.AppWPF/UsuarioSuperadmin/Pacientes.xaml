@@ -7,8 +7,8 @@
 	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioSuperadmin"
 	mc:Ignorable="d"
 	Title="Clinica Medica - Pacientes"
-	Height="600"
 	Width="1024"
+	Height="600"
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 	WindowStartupLocation="CenterScreen"
 	Activated="Window_Activated">
@@ -20,7 +20,7 @@
 				ImageSource="pack://application:,,,/PublishedResources/images/falopa.jpg" />
 		</Grid.Background>
 		<ContentControl
-			Style="{StaticResource ContentControlLindo}"
+			Style="{StaticResource ContentControlGlass}"
 			Margin="512,17,22,180">
 			<StackPanel
 				Orientation="Vertical"
@@ -41,6 +41,19 @@
 					Height="167"
 					SelectionChanged="pacientesListView_SelectionChanged"
 					d:ItemsSource="{d:SampleData ItemCount=5}">
+					<ListView.Background>
+						<LinearGradientBrush
+							EndPoint="0.5,1"
+							StartPoint="0.5,0">
+							<GradientStop
+								Color="Black" />
+							<GradientStop
+								Color="#FF8A8A8A"
+								Offset="1" />
+							<GradientStop
+								Color="White" />
+						</LinearGradientBrush>
+					</ListView.Background>
 					<ListView.View>
 						<GridView>
 							<!-- Dni Column -->
@@ -136,7 +149,7 @@
 			Margin="810,501,0,0"
 			FontFamily="Baskerville Old Face" />
 		<ContentControl
-			Style="{StaticResource ContentControlLindo}"
+			Style="{StaticResource ContentControlSoftGradient}"
 			Margin="280,17,534,210">
 			<StackPanel
 				Orientation="Vertical"

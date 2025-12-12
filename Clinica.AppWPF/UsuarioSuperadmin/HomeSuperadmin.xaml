@@ -4,8 +4,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Clinica Medica - Home"
 	Width="1024"
-	WindowStartupLocation="CenterScreen"
-	Height="600">
+	Height="600"
+	WindowStartupLocation="CenterScreen">
 	<Window.Background>
 		<ImageBrush
 			ImageSource="/PublishedResources/images2025sol/fondoAbstracto2025.jpg" />

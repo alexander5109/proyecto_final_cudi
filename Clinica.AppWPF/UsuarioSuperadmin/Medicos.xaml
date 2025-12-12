@@ -16,7 +16,7 @@
 		VerticalAlignment="Stretch">
 		<Grid.Background>
 			<ImageBrush
-				ImageSource="pack://application:,,,/PublishedResources/images/hospital.jpg" />
+				ImageSource="pack://application:,,,/PublishedResources/images/doctor.jpg" />
 		</Grid.Background>
 		<!-- Definicion del grid -->
 		<ContentControl

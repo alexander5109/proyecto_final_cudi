@@ -7,8 +7,8 @@
 	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioSuperadmin"
 	mc:Ignorable="d"
 	Title="Clinica Medica - Turnos Agregar"
-	Height="450"
-	Width="800"
+	Width="1024"
+	Height="600"
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 	WindowStartupLocation="CenterScreen"
 	Padding="10,10,10,10">

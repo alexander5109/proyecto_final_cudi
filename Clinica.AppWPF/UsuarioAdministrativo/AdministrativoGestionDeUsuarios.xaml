@@ -7,8 +7,8 @@
 	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioAdministrativo"
 	mc:Ignorable="d"
 	Title="Gestión de Usuarios"
-	Height="620"
-	Width="1157"
+	Width="1024"
+	Height="600"
 	WindowStartupLocation="CenterScreen">
 	<!-- ============== FONDO GENERAL ============== -->
 	<Window.Background>

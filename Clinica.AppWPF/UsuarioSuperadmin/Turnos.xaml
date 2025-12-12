@@ -7,8 +7,8 @@
 	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioSuperadmin"
 	mc:Ignorable="d"
 	Title="Clinica Medica - Turnos"
-	Height="600"
 	Width="1024"
+	Height="600"
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 	Activated="Window_Activated"
 	WindowStartupLocation="CenterScreen">
@@ -61,7 +61,7 @@
 			</StackPanel>
 		</ContentControl>
 		<ContentControl
-			Style="{StaticResource ContentControlLindo}"
+			Style="{StaticResource ContentControlGlass}"
 			Margin="446,30,243,85">
 			<StackPanel
 				Orientation="Vertical"
@@ -205,7 +205,7 @@
 			Margin="35,490,0,0"
 			FontFamily="Baskerville Old Face"></Button>
 		<ContentControl
-			Style="{StaticResource ContentControlLindo}"
+			Style="{StaticResource ContentControlGlass}"
 			Margin="246,30,589,190">
 			<!-- <Expander Header="Información del Médico" IsExpanded="True" Background="Transparent" BorderThickness="0"> -->
 			<StackPanel
@@ -270,7 +270,7 @@
 			<!-- </Expander> -->
 		</ContentControl>
 		<ContentControl
-			Style="{StaticResource ContentControlLindo}"
+			Style="{StaticResource ContentControlPaper}"
 			Margin="795,30,19,130">
 			<!-- </Expander> -->
 			<!-- <Expander Header="Información del Paciente" IsExpanded="True" Background="Transparent" BorderThickness="0"> -->
