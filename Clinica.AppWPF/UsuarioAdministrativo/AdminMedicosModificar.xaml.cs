@@ -4,10 +4,10 @@ using static Clinica.Shared.ApiDtos.MedicoDtos;
 namespace Clinica.AppWPF.Ventanas;
 
 
-public partial class DialogoModificarHorario : Window {
+public partial class AdminMedicosModificar : Window {
 	//	public HorarioModificarViewModel VM { get; }
 
-	public DialogoModificarHorario(MedicoDto medico) {
+	public AdminMedicosModificar(MedicoDto medico) {
 		InitializeComponent();
 		//VM = new HorarioModificarViewModel(medico, horario, esNuevo);
 		//DataContext = VM;

@@ -23,10 +23,10 @@ public class HorarioMedicoViewModel(HorarioDb h) {
 
 
 
-public partial class DialogoModificarMedico : Window {
+public partial class AdminMedicosModificarHorario : Window {
 	public MedicoFormularioViewModel VM { get; }
 
-	public DialogoModificarMedico(MedicoDbModel model, IEnumerable<EspecialidadCodigo> especialidades) {
+	public AdminMedicosModificarHorario(MedicoDbModel model, IEnumerable<EspecialidadCodigo> especialidades) {
 		InitializeComponent();
 		VM = new MedicoFormularioViewModel(model, especialidades);
 		DataContext = VM;
@@ -101,10 +101,10 @@ public partial class DialogoModificarMedico : Window {
 			Hasta = new TimeOnly(12, 0)
 		};
 
-		DialogoModificarHorario win = new(SelectedMedico, nuevoHorario, esNuevo: true);
+		AdminMedicosModificar win = new(SelectedMedico, nuevoHorario, esNuevo: true);
 
 		if (win.ShowDialog() == true) {
-			// Se agregó realmente dentro de DialogoModificarHorario
+			// Se agregó realmente dentro de AdminMedicosModificar
 			// Ahora refrescamos los agrupados (INotifyPropertyChanged se encarga)
 			OnPropertyChanged(nameof(SelectedMedico.HorariosAgrupados));
 		}
@@ -118,7 +118,7 @@ public partial class DialogoModificarMedico : Window {
 			return;
 		}
 
-		DialogoModificarHorario win = new(SelectedMedico, horario, esNuevo: false);
+		AdminMedicosModificar win = new(SelectedMedico, horario, esNuevo: false);
 
 		if (win.ShowDialog() == true) {
 			// El horario ya está modificado (data binding)

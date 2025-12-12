@@ -4,8 +4,8 @@ using Clinica.AppWPF.Infrastructure;
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
 
-public partial class DialogoModificarUsuario : Window {
-	public DialogoModificarUsuario() {
+public partial class AdminUsuariosModificar : Window {
+	public AdminUsuariosModificar() {
 		InitializeComponent();
 	}
 
