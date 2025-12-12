@@ -3,9 +3,9 @@ using Clinica.AppWPF.Infrastructure;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class RecepcionistaHome : Window {
+public partial class HomeRecepcionista : Window {
 	public string MensajeBienvenida { get; }
-	public RecepcionistaHome() {
+	public HomeRecepcionista() {
 		InitializeComponent();
 		soundCheckBox.IsChecked = SoundsService.SoundOn;
 

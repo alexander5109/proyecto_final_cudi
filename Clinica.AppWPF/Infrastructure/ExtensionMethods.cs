@@ -115,7 +115,7 @@ public static class ExtensionMethods {
 					previousWindow.NavegarA<HomeAdministrativo>();
 					break;
 				case UsuarioRoleCodigo.Nivel3Recepcionista:
-					previousWindow.NavegarA<RecepcionistaHome>();
+					previousWindow.NavegarA<HomeRecepcionista>();
 					break;
 				case UsuarioRoleCodigo.Nivel4Medico:
 					previousWindow.NavegarA<HomeMedico>();
