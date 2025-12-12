@@ -126,8 +126,8 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		if (!string.IsNullOrWhiteSpace(FiltroTurnosPaciente)) {
 			string txt = FiltroTurnosPaciente.Trim().ToLowerInvariant();
 			query = query.Where(t =>
-				t.PacienteDisplayear.ToLowerInvariant().Contains(txt)
-			);
+				t.PacienteDisplayear.Contains(txt, StringComparison.InvariantCultureIgnoreCase)
+            );
 		}
 
 		TurnosList = query.ToList();

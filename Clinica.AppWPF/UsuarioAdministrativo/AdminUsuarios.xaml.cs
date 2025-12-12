@@ -90,7 +90,7 @@ public partial class AdminUsuarios : Window {
 
 	private void ClickBoton_ModificarMedico(object sender, RoutedEventArgs e) {
 		//if (SelectedMedico != null)
-		//	this.AbrirComoDialogo<AdminMedicosModificarHorario>(SelectedMedico);
+		//	this.AbrirComoDialogo<AdminMedicosModificar>(SelectedMedico);
 	}
 
 	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
@@ -101,7 +101,7 @@ public partial class AdminUsuarios : Window {
 	//=============================================================
 	// Botones de crear
 	//=============================================================
-	//private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<AdminMedicosModificarHorario>();
+	//private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<AdminMedicosModificar>();
 	//private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarPaciente>();
 	//private void ButtonAgregarTurno(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarTurno>();
 

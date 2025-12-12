@@ -4,20 +4,17 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioAdministrativo"
 	Title="Clinica Medica - Medicos"
-	Width="1024"
 	Height="600"
+	Width="1024"
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
-	Activated="Window_Activated"
-	WindowStartupLocation="CenterScreen"
-	mc:Ignorable="d">
-	<!-- ============== FONDO GENERAL ============== -->
+	WindowStartupLocation="CenterScreen">
 	<Window.Background>
 		<ImageBrush
-			ImageSource="/PublishedResources/images2025sol/fondoClaro2025.jpg"
-			Stretch="Fill" />
+			ImageSource="pack://application:,,,/PublishedResources/images/doctor.jpg" />
 	</Window.Background>
-	<!-- ============== LAYOUT PRINCIPAL ============== -->
+	<!-- ===================== LAYOUT GENERAL ===================== -->
 	<Grid
 		Margin="20">
 		<Grid.RowDefinitions>
@@ -26,118 +23,212 @@
 			<!-- Título -->
 			<RowDefinition
 				Height="*" />
-			<!-- Lista -->
+			<!-- Contenido -->
 			<RowDefinition
 				Height="Auto" />
-			<!-- Botones abajo -->
+			<!-- Botones inferiores -->
 		</Grid.RowDefinitions>
-		<!-- TÍTULO -->
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="*" />
+			<!-- Búsqueda + lista -->
+			<ColumnDefinition
+				Width="*" />
+			<!-- Estado del turno -->
+		</Grid.ColumnDefinitions>
 		<Label
+			Grid.Column="0"
 			Grid.Row="0"
 			Content="Medicos"
-			FontSize="33"
-			FontFamily="Javanese Text"
+			FontSize="55"
+			FontFamily="Segoe UI Historic"
 			FlowDirection="RightToLeft"
 			Style="{StaticResource LabelLindoConPiu}"
-			HorizontalContentAlignment="Right"
-			FontWeight="Bold"
-			HorizontalAlignment="Center"
-			Height="Auto"
-			VerticalAlignment="Center"
-			Padding="5,5,5,5" />
-		<!-- LISTA DE MÉDICOS -->
-		<ListView
-			Grid.Row="1"
-			x:Name="medicosListView"
-			Background="White"
-			BorderThickness="0"
-			BorderBrush="#72828790"
 			HorizontalContentAlignment="Center"
-			ScrollViewer.HorizontalScrollBarVisibility="Auto"
-			ScrollViewer.VerticalScrollBarVisibility="Auto"
-			Margin="120,0,120,10"
-			d:ItemsSource="{d:SampleData ItemCount=5}">
-			<ListView.View>
-				<GridView>
-					<GridViewColumn
-						Header="Id"
-						DisplayMemberBinding="{Binding Id}"
-						Width="40" />
-					<GridViewColumn
-						Header="Dni"
-						DisplayMemberBinding="{Binding Dni}"
-						Width="80" />
-					<GridViewColumn
-						Header="Nombre"
-						DisplayMemberBinding="{Binding Nombre}"
-						Width="120" />
-					<GridViewColumn
-						Header="Apellido"
-						DisplayMemberBinding="{Binding Apellido}"
-						Width="120" />
-					<GridViewColumn
-						Header="Especialidad"
-						DisplayMemberBinding="{Binding EspecialidadCodigo}"
-						Width="140" />
-					<GridViewColumn
-						Header="Teléfono"
-						DisplayMemberBinding="{Binding Telefono}"
-						Width="100" />
-					<GridViewColumn
-						Header="Guardia"
-						DisplayMemberBinding="{Binding HaceGuardias}"
-						Width="80" />
-				</GridView>
-			</ListView.View>
-		</ListView>
-		<!-- BOTONES ABAJO A LA IZQUIERDA (Home / Salir) -->
+			VerticalContentAlignment="Center"
+			VerticalAlignment="Center"
+			Margin="25,0,25,0"
+			FontWeight="Bold" />
+		<!-- ===================== PANEL 2 - ESTADO DEL TURNO ===================== -->
+		<!-- ===================== PANEL 3 - BUSCAR PACIENTE ===================== -->
+		<!-- ===================== BOTONES INFERIORES ===================== -->
+		<!-- ===== BOTONES INFERIORES (HOME / SALIR) ===== -->
 		<StackPanel
 			Grid.Row="2"
 			Orientation="Horizontal"
 			HorizontalAlignment="Left"
-			Margin="0,10,0,0">
+			Margin="15,15,15,15"
+			Width="380"
+			VerticalAlignment="Bottom">
 			<Button
 				Content="Home"
-				Height="37"
 				Width="170"
+				Height="37"
+				Margin="10,0,10,10"
 				Click="ButtonHome"
 				FontSize="20"
-				FontFamily="Baskerville Old Face"
-				Style="{StaticResource BotonRedondeado}"
-				Margin="0,0,10,0" />
+				Style="{StaticResource BotonRedondeado}" />
 			<Button
 				Content="Salir"
-				Height="37"
 				Width="170"
+				Height="37"
+				Margin="10,0,10,10"
 				Click="ClickBoton_Salir"
 				FontSize="20"
-				FontFamily="Baskerville Old Face"
 				Style="{StaticResource BotonRedondeado}" />
 		</StackPanel>
-		<!-- BOTONES ABAJO A LA DERECHA (Agregar / Modificar) -->
 		<StackPanel
-			Grid.Row="2"
-			Orientation="Horizontal"
-			HorizontalAlignment="Right"
-			Margin="0,10,0,0">
-			<Button
-				Content="Agregar nuevo"
-				Height="37"
-				Width="170"
-				Click="ButtonAgregarMedico"
-				FontSize="20"
-				FontFamily="Baskerville Old Face"
-				Style="{StaticResource BotonRedondeado}"
-				Margin="0,0,10,0" />
-			<Button
-				x:Name="x_BotonModificarMedico"
-				Content="Modificar"
-				Height="37"
-				Width="170"
-				Click="ClickBoton_ModificarMedico"
-				FontSize="20"
-				FontFamily="Baskerville Old Face"
-				Style="{StaticResource BotonRedondeado}" />
+			Grid.Column="0"
+			Grid.Row="1"
+			Margin="25,25,25,25">
+			<Label
+				Content="Buscar Medico"
+				FontSize="25"
+				FontFamily="Segoe UI Historic"
+				FlowDirection="RightToLeft"
+				Style="{StaticResource LabelLindoConSombra}"
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center"
+				VerticalAlignment="Center"
+				FontWeight="Bold"
+				HorizontalAlignment="Center" />
+			<Label
+				Content="Filtrar por Nombre, Apellido o Especialidad"
+				FontFamily="Palatino Linotype"
+				FontWeight="Bold"
+				Margin="10,10,10,0"
+				HorizontalAlignment="Center" />
+			<TextBox
+				Text="{Binding FiltroMedicosTexto, UpdateSourceTrigger=PropertyChanged}"
+				Margin="10,0,10,0"
+				HorizontalAlignment="Center"
+				Width="200" />
+			<ListView
+				ItemsSource="{Binding MedicosList}"
+				SelectedItem="{Binding SelectedMedico}"
+				Height="139"
+				Margin="10,10,10,10"
+				ScrollViewer.VerticalScrollBarVisibility="Auto"
+				HorizontalContentAlignment="Center">
+				<ListView.View>
+					<GridView>
+						<GridViewColumn
+							Header="Especialidad"
+							Width="155"
+							DisplayMemberBinding="{Binding EspecialidadCodigo}" />
+						<GridViewColumn
+							Header="Nombre"
+							Width="155"
+							DisplayMemberBinding="{Binding Nombre}" />
+						<GridViewColumn
+							Header="Apellido"
+							Width="155"
+							DisplayMemberBinding="{Binding Apellido}" />
+						<GridViewColumn
+							Header="DNI"
+							Width="75"
+							DisplayMemberBinding="{Binding Dni}" />
+						<GridViewColumn
+							Header="FechaIngreso"
+							Width="144"
+							DisplayMemberBinding="{Binding FechaIngreso}" />
+					</GridView>
+				</ListView.View>
+			</ListView>
+			<StackPanel
+				Margin="10"
+				HorizontalAlignment="Center">
+				<Button
+					Content="Agregar Medico"
+					Width="180"
+					Height="30"
+					Click="ButtonAgregarMedico"
+					Style="{StaticResource BotonRedondeado}" />
+			</StackPanel>
+		</StackPanel>
+		<StackPanel
+			Orientation="Vertical"
+			HorizontalAlignment="Center"
+			Grid.Row="0"
+			Grid.RowSpan="3"
+			Grid.Column="1"
+			Margin="5,0,5,5"
+			VerticalAlignment="Center">
+			<Label
+				Content="Medico seleccionado"
+				FontSize="25"
+				Style="{StaticResource LabelLindoConSombra}"
+				HorizontalContentAlignment="Center"
+				VerticalAlignment="Center"
+				Margin="25,0,25,0"
+				FontWeight="Bold" />
+			<!-- Campos -->
+			<StackPanel
+				Margin="25">
+				<Label
+					Content="Horarios de trabajo"
+					FontSize="20"
+					Style="{StaticResource LabelLindoConSombra}"
+					HorizontalContentAlignment="Center"
+					VerticalAlignment="Center"
+					Margin="25,0,25,0"
+					FontWeight="Bold" />
+				<ListView
+					x:Name="txtDiasDeAtencion"
+					VerticalAlignment="Top"
+					Height="auto"
+					MinHeight="200"
+					HorizontalAlignment="Left"
+					HorizontalContentAlignment="Center"
+					ScrollViewer.VerticalScrollBarVisibility="Auto"
+					Width="auto"
+					ScrollViewer.HorizontalScrollBarVisibility="Auto"
+					Grid.IsSharedSizeScope="True">
+					<ListView.View>
+						<GridView>
+							<GridViewColumn
+								Header="Día de la Semana"
+								Width="auto"
+								DisplayMemberBinding="{Binding DiaSemana}" />
+							<GridViewColumn
+								Header="Inicio Horario"
+								Width="120">
+								<GridViewColumn.CellTemplate>
+									<DataTemplate>
+										<TextBox
+											Text="{Binding HoraInicio}"
+											Margin="1,1,1,1"
+											Width="100" />
+									</DataTemplate>
+								</GridViewColumn.CellTemplate>
+							</GridViewColumn>
+							<GridViewColumn
+								Header="Fin Horario"
+								Width="120">
+								<GridViewColumn.CellTemplate>
+									<DataTemplate>
+										<TextBox
+											Text="{Binding HoraFin}"
+											Width="100"
+											Margin="1,1,1,1" />
+									</DataTemplate>
+								</GridViewColumn.CellTemplate>
+							</GridViewColumn>
+						</GridView>
+					</ListView.View>
+				</ListView>
+			</StackPanel>
+			<StackPanel
+				Margin="15,25,15,15">
+				<Button
+					Content="Modificar datos"
+					Width="180"
+					Height="30"
+					IsEnabled="{Binding HayMedicoSeleccionado}"
+					Click="ClickBoton_ModificarMedico"
+					Style="{StaticResource BotonRedondeado}"
+					Margin="0,0,0,25" />
+			</StackPanel>
 		</StackPanel>
 	</Grid>
 </Window>

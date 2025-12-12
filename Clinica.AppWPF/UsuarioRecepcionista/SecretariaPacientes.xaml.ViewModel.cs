@@ -57,14 +57,14 @@ public sealed class SecretariaPacientesViewModel : INotifyPropertyChanged {
 
 	private void FiltrarPacientes() {
 		if (string.IsNullOrWhiteSpace(FiltroPacientesTexto)) {
-			PacientesList = new List<PacienteDbModel>(_todosLosPacientes);
+			PacientesList = [.. _todosLosPacientes];
 		} else {
 			var texto = FiltroPacientesTexto.Trim().ToLower();
 			PacientesList = [.. _todosLosPacientes
 				.Where(p =>
-					(p.Nombre?.ToLower().Contains(texto) ?? false) ||
-					(p.Apellido?.ToLower().Contains(texto) ?? false) ||
-					(p.Dni?.ToLower().Contains(texto) ?? false)
+					(p.Nombre?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
+					(p.Apellido?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
+					(p.Dni?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false)
 				)];
 		}
 	}

@@ -8,7 +8,7 @@ using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
-public class MedicoFormularioViewModel : INotifyPropertyChanged {
+public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 	public MedicoId Id { get; }
 
 	private string _nombre;
@@ -45,7 +45,7 @@ public class MedicoFormularioViewModel : INotifyPropertyChanged {
 
 	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; }
 
-	public MedicoFormularioViewModel(MedicoDbModel model, IEnumerable<EspecialidadCodigo> especialidades) {
+	public AdminMedicosModificarViewModel(MedicoDbModel model, IEnumerable<EspecialidadCodigo> especialidades) {
 		Id = model.Id;
 		_nombre = model.Nombre;
 		_apellido = model.Apellido;
