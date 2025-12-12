@@ -16,15 +16,15 @@ public partial class SecretariaFormularioTurno : Window {
 		TurnoOriginal = null;
 	}
 
-	public SecretariaFormularioTurno(PacienteDbModel paciente, TurnoViewModel turnoOriginal) {
+	public SecretariaFormularioTurno(TurnoViewModel turnoOriginal) {
 		InitializeComponent();
-		VM = new MyViewModel(paciente, turnoOriginal.EspecialidadCodigo);
+		VM = new MyViewModel(turnoOriginal.PacienteRelacionado, turnoOriginal.EspecialidadCodigo);
 		DataContext = VM;
 		TurnoOriginal = turnoOriginal;
 
 	}
 
-	private async void ButtonConsultar(object sender, RoutedEventArgs e) {
+	private async void ClickBoton_Consultar(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 		await VM.RefreshDisponibilidadesAsync();
 	}
@@ -41,13 +41,14 @@ public partial class SecretariaFormularioTurno : Window {
 		);
 
 
-	async private void Click_AgendarNuevoTurno(object sender, RoutedEventArgs e) {
+	async private void ClickBoton_NuevoTurno(object sender, RoutedEventArgs e) {
+		SoundsService.PlayClickSound();
+
 		if (VM.SelectedDisponibilidad is null) {
 			MessageBox.Show("No hay disponibilidad seleccionada");
 			return;
 		}
 
-		SoundsService.PlayClickSound();
 		if (TurnoOriginal is not null) {
 			ResultWpf<TurnoDbModel> resultt = await App.Repositorio.ReprogramarTurno(
 				TurnoOriginal.Id,
@@ -74,7 +75,7 @@ public partial class SecretariaFormularioTurno : Window {
 
 	}
 
-	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
+	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 
 		if (VM.SelectedPaciente != null) {
@@ -82,11 +83,8 @@ public partial class SecretariaFormularioTurno : Window {
 		}
 	}
 
-	private void ButtonCancelar(object sender, RoutedEventArgs e) {
-		SoundsService.PlayClickSound();
-		Close();
-	}
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
 
-	private void ButtonSalir(object sender, RoutedEventArgs e)
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e)
 		=> this.Salir();
 }

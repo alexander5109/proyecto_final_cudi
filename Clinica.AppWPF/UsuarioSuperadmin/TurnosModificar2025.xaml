@@ -80,7 +80,7 @@
 			Width="144"
 			BorderBrush="Black"
 			Background="White"
-			Click="ButtonCancelar"
+			Click="ClickBoton_Cancelar"
 			FontFamily="Baskerville Old Face"
 			Margin="605,334,0,0"
 			Padding="30,30,30,30" />

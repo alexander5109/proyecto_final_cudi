@@ -34,7 +34,12 @@ internal class MyViewModel : INotifyPropertyChanged {
 		LoadHoras();
 	}
 
-	public MyViewModel(PacienteDbModel paciente, EspecialidadCodigo especialidad) {
+	public MyViewModel(PacienteDbModel? paciente, EspecialidadCodigo especialidad) {
+		if (paciente == null) {
+			MessageBox.Show("por que nulo el paciente?");
+			return;
+
+		}
 		SelectedPaciente = paciente;
 
 		EspecialidadesDisponiblesItemsSource.Clear(); // <<---- importantísimo

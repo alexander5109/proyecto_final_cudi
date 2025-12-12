@@ -48,7 +48,7 @@
 					Style="{StaticResource BotonRedondeado}"
 					BorderBrush="#FF0E0D0D"
 					FontFamily="Baskerville Old Face"
-					Click="MetodoBotonGuestionPersonalMedico"
+					Click="ClickBoton_GuestionPersonalMedico"
 					Margin="7,7,7,7"
 					Width="270" />
 				<Button
@@ -61,14 +61,14 @@
 					FontWeight="Bold"
 					BorderBrush="#FF0E0D0D"
 					FontFamily="Baskerville Old Face"
-					Click="MetodoBotonCuentasDeUsuario"
+					Click="ClickBoton_CuentasDeUsuario"
 					Margin="7,7,7,7" />
 			</StackPanel>
 			<Button
 				Content="Cerrar sesión"
 				Height="35"
 				Width="150"
-				Click="MetodoBotonLogout"
+				Click="ClickBoton_Logout"
 				Style="{StaticResource BotonRedondeado}"
 				FontSize="18"
 				FontWeight="Bold"
@@ -77,7 +77,7 @@
 				Content="Salir"
 				Height="35"
 				Width="150"
-				Click="ButtonSalir"
+				Click="ClickBoton_Salir"
 				Style="{StaticResource BotonRedondeado}"
 				FontSize="18"
 				Margin="7,7,7,7"

@@ -102,12 +102,12 @@
 						FontFamily="Baskerville Old Face"
 						Margin="25,10,25,25"></Button>
 					<Button
-						x:Name="buttonModificarMedico"
+						x:Name="ClickBoton_ModificarMedico"
 						Content="Modificar"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"
 						Height="35"
-						Click="ButtonModificarMedico"
+						Click="ClickBoton_ModificarMedico"
 						FontSize="20"
 						Style="{StaticResource BotonRedondeado}"
 						FontWeight="Bold"
@@ -139,7 +139,7 @@
 			VerticalAlignment="Top"
 			Height="37"
 			Width="170"
-			Click="ButtonSalir"
+			Click="ClickBoton_Salir"
 			FontSize="20"
 			Style="{StaticResource BotonRedondeado}"
 			FontWeight="Bold"
@@ -201,12 +201,12 @@
 					HorizontalAlignment="Center"
 					Width="184">
 					<Button
-						x:Name="buttonModificarPaciente"
+						x:Name="ClickBoton_ModificarPaciente"
 						Content="Modificar"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"
 						Height="30"
-						Click="ButtonModificarPaciente"
+						Click="ClickBoton_ModificarPaciente"
 						FontSize="20"
 						Style="{StaticResource BotonRedondeado}"
 						FontWeight="Bold"
@@ -262,11 +262,11 @@
 					HorizontalAlignment="Center"
 					Width="188">
 					<Button
-						x:Name="buttonModificarTurno"
+						x:Name="ClickBoton_ModificarTurno"
 						Content="Modificar"
 						VerticalAlignment="Center"
 						Height="30"
-						Click="ButtonModificarTurno"
+						Click="ClickBoton_ModificarTurno"
 						FontSize="20"
 						Style="{StaticResource BotonRedondeado}"
 						FontWeight="Bold"

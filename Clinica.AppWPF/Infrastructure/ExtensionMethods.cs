@@ -32,6 +32,22 @@ public static class ExtensionMethods {
 		nuevaVentana?.Show();
 		previousWindow.Close();
 	}
+	public static void NavegarA<T>(this Window previousWindow, object? arg1, object? arg2)
+		where T : Window {
+		SoundsService.PlayClickSound();
+
+		if (arg1 is null || arg2 is null) {
+			MessageBox.Show("Error: parámetro nulo al navegar a la nueva ventana.");
+			return;
+		}
+
+		if (!TryCreateWindow<T>([arg1, arg2], out var nuevaVentana))
+			return;
+
+		Application.Current.MainWindow = nuevaVentana;
+		nuevaVentana?.Show();
+		previousWindow.Close();
+	}
 
 	public static void AbrirComoDialogo<T>(this Window previousWindow) where T : Window, new() {
 		SoundsService.PlayClickSound();

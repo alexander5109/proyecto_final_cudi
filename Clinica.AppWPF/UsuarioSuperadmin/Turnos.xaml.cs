@@ -17,7 +17,7 @@ public partial class Turnos : Window {
 	//----------------------ActualizarSecciones-------------------//
 	async private void UpdateTurnoUI() {
 		turnosListView.ItemsSource = await App.Repositorio.SelectTurnos();
-		buttonModificarTurno.IsEnabled = SelectedTurno != null;
+		ClickBoton_ModificarTurno.IsEnabled = SelectedTurno != null;
 		txtCalendario.SelectedDate = SelectedTurno?.FechaHoraAsignadaDesde;
 		txtCalendario.DisplayDate = SelectedTurno?.FechaHoraAsignadaDesde ?? DateTime.Today;
 	}
@@ -26,7 +26,7 @@ public partial class Turnos : Window {
 		txtMedicoNombre.Text = MedicoRelacionado?.Nombre;
 		txtMedicoApellido.Text = MedicoRelacionado?.Apellido;
 		txtMedicoEspecialidad.Text = MedicoRelacionado?.EspecialidadCodigo.ToString();
-		buttonModificarMedico.IsEnabled = MedicoRelacionado != null;
+		ClickBoton_ModificarMedico.IsEnabled = MedicoRelacionado != null;
 	}
 	private void UpdatePacienteUI() {
 		txtPacienteDni.Text = PacienteRelacionado?.Dni;
@@ -34,7 +34,7 @@ public partial class Turnos : Window {
 		txtPacienteApellido.Text = PacienteRelacionado?.Apellido;
 		txtPacienteEmail.Text = PacienteRelacionado?.Email;
 		txtPacienteTelefono.Text = PacienteRelacionado?.Telefono;
-		buttonModificarPaciente.IsEnabled = PacienteRelacionado != null;
+		ClickBoton_ModificarPaciente.IsEnabled = PacienteRelacionado != null;
 	}
 
 
@@ -58,17 +58,17 @@ public partial class Turnos : Window {
 
 
 	//---------------------botonesDeModificar-------------------//
-	private void ButtonModificarTurno(object sender, RoutedEventArgs e) {
+	private void ClickBoton_ModificarTurno(object sender, RoutedEventArgs e) {
 		if (SelectedTurno != null) {
 			this.AbrirComoDialogo<TurnosModificar>(SelectedTurno);
 		}
 	}
-	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
+	private void ClickBoton_ModificarMedico(object sender, RoutedEventArgs e) {
 		if (MedicoRelacionado != null) {
 			this.AbrirComoDialogo<MedicosModificar>(MedicoRelacionado);
 		}
 	}
-	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
+	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
 		if (PacienteRelacionado != null) {
 			this.AbrirComoDialogo<PacientesModificar>(PacienteRelacionado);
 		}
@@ -92,7 +92,7 @@ public partial class Turnos : Window {
 
 
 	//---------------------botonesDeVolver-------------------//
-	private void ButtonSalir(object sender, RoutedEventArgs e) {
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) {
 		this.Salir();
 	}
 	private void ButtonHome(object sender, RoutedEventArgs e) {

@@ -81,7 +81,7 @@
 				IsDefault="True"
 				FontSize="20"
 				Background="#FF7FC7FA"
-				Click="MetodoBotonIniciarSesion" />
+				Click="ClickBoton_IniciarSesion" />
 		</StackPanel>
 		<ContentControl
 			HorizontalAlignment="Right"
@@ -138,7 +138,7 @@
 				Width="110"
 				Height="38"
 				FontSize="20"
-				Click="MetodoBotonSalir"
+				Click="ClickBoton_Salir"
 				HorizontalAlignment="Center"
 				Padding="25,1,1,1"
 				VerticalAlignment="Center"

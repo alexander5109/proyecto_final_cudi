@@ -34,6 +34,7 @@ public partial class RecepcionistaPacienteFormulario : Window {
 	}
 
 	private async void ButtonGuardar(object sender, RoutedEventArgs e) {
+		SoundsService.PlayClickSound();
 		ResultWpf<UnitWpf> result = await VM.GuardarAsync();
 		result.MatchAndDo(
 			caseOk => MessageBox.Show("Cambios guardados.", "Éxito", MessageBoxButton.OK),
@@ -41,7 +42,7 @@ public partial class RecepcionistaPacienteFormulario : Window {
 		);
 	}
 
-	private void ButtonCancelar(object sender, RoutedEventArgs e) => Close();
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e)  => this.Cerrar();
 
 	private async void ButtonEliminar(object sender, RoutedEventArgs e) {
 		if (

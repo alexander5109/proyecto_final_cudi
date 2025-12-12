@@ -45,15 +45,16 @@
 				<Button
 					Content="Gestión de Pacientes"
 					Width="235"
-					Click="MetodoBotonGestionPacientes"
+					Height="40"
+					Click="ClickBoton_GestionPacientes"
 					Style="{StaticResource BotonRedondeado}"
 					Margin="7,7,7,7"
-					Height="35" />
+					FontSize="20" />
 				<Button
 					Content="Gestión de Turnos"
-					Height="40"
 					Width="235"
-					Click="MetodoBotonGestionTurnos"
+					Height="40"
+					Click="ClickBoton_GestionTurnos"
 					Style="{StaticResource BotonRedondeado}"
 					FontSize="20"
 					FontWeight="Bold"
@@ -63,7 +64,7 @@
 				Content="Cerrar sesión"
 				Height="35"
 				Width="150"
-				Click="MetodoBotonLogout"
+				Click="ClickBoton_Logout"
 				Style="{StaticResource BotonRedondeado}"
 				FontSize="18"
 				FontWeight="Bold"
@@ -72,7 +73,7 @@
 				Content="Salir"
 				Height="35"
 				Width="150"
-				Click="ButtonSalir"
+				Click="ClickBoton_Salir"
 				Style="{StaticResource BotonRedondeado}"
 				FontSize="18"
 				Margin="7,7,7,7"

@@ -109,7 +109,7 @@
 				Content="Salir"
 				Height="37"
 				Width="170"
-				Click="ButtonSalir"
+				Click="ClickBoton_Salir"
 				FontSize="20"
 				FontFamily="Baskerville Old Face"
 				Style="{StaticResource BotonRedondeado}" />
@@ -130,11 +130,11 @@
 				Style="{StaticResource BotonRedondeado}"
 				Margin="0,0,10,0" />
 			<Button
-				x:Name="buttonModificarMedico"
+				x:Name="ClickBoton_ModificarMedico"
 				Content="Modificar"
 				Height="37"
 				Width="170"
-				Click="ButtonModificarMedico"
+				Click="ClickBoton_ModificarMedico"
 				FontSize="20"
 				FontFamily="Baskerville Old Face"
 				Style="{StaticResource BotonRedondeado}" />

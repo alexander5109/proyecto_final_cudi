@@ -14,7 +14,7 @@ public partial class Login : Window {
 	//	InitializeComponent();
 	//}
 
-	private async void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
+	private async void ClickBoton_IniciarSesion(object sender, RoutedEventArgs e) {
 		//SoundsService.PlayClickSound();
 		if (string.IsNullOrEmpty(guiUsuario.Text) || string.IsNullOrEmpty(guiPassword.Password)) {
 			MessageBox.Show("Complete todos los campos");
@@ -41,7 +41,7 @@ public partial class Login : Window {
 
 
 
-	public void MetodoBotonSalir(object sender, RoutedEventArgs e) {
+	public void ClickBoton_Salir(object sender, RoutedEventArgs e) {
 		this.Salir();
 	}
 

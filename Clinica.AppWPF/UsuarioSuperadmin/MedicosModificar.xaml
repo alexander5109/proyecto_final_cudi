@@ -293,7 +293,7 @@
 			Width="188"
 			BorderBrush="Black"
 			Background="White"
-			Click="ButtonCancelar"
+			Click="ClickBoton_Cancelar"
 			FontFamily="Baskerville Old Face"
 			Margin="65,495,0,0" />
 		<Button
