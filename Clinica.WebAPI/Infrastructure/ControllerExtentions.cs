@@ -47,7 +47,7 @@ public static class ControllerExtensions {
 		string? notFoundMessage = null
 	) {
 		// 1️⃣ Usuario
-		if (!controller.TryGetUsuarioRole(out var role))
+		if (!controller.TryGetUsuarioRole(out UsuarioRoleCodigo role))
 			return controller.ToActionResult(UsuarioNoAutorizado<T>());
 
 		// 2️⃣ Permiso
@@ -55,9 +55,9 @@ public static class ControllerExtensions {
 			return controller.ToActionResult(PermisoDenegado<T>());
 
 		try {
-			// 3️⃣ Ejecutar acción
-			var result = await action();
-			var apiResult = result.ToApi();
+            // 3️⃣ Ejecutar acción
+            Result<T> result = await action();
+            ApiResult<T> apiResult = result.ToApi();
 
 			// 4️⃣ Caso especial: Ok pero null
 			if (apiResult.IsOk && (apiResult as ApiResult<T>.Ok)!.Value is null) {
@@ -99,7 +99,7 @@ public static class ControllerExtensions {
 			logger,
 			permiso,
 			async () => {
-				var dom = toDomain(dto);
+                Result<TDomain> dom = toDomain(dto);
 				return dom.IsError
 					? new Result<TResult>.Error(dom.UnwrapAsError())
 					: await action(dom.UnwrapAsOk());
@@ -122,7 +122,7 @@ public static class ControllerExtensions {
 			logger,
 			permiso,
 			async () => {
-				var api = await operation();
+                ApiResult<T> api = await operation();
 
 				if (api.IsOk)
 					return new Result<T>.Ok((api as ApiResult<T>.Ok)!.Value);

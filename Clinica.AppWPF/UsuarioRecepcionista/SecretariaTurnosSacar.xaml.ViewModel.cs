@@ -27,7 +27,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 		SelectedPaciente = paciente;
 
 		EspecialidadesDisponiblesItemsSource.Clear();
-		foreach (var esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
+		foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
 			EspecialidadesDisponiblesItemsSource.Add(esp);
 
 		_ = LoadMedicosTodosAsync();
@@ -39,18 +39,18 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 
 		EspecialidadesDisponiblesItemsSource.Clear(); // <<---- importantísimo
 
-		var espResult = Especialidad2025.CrearResult(especialidad);
+        Result<Especialidad2025> espResult = Especialidad2025.CrearResult(especialidad);
 
 		espResult.MatchAndDo(
 			ok => {
-				var vm = ok.ToSimpleViewModel();
+                EspecialidadViewModel vm = ok.ToSimpleViewModel();
 				SelectedEspecialidad = vm;
 				EspecialidadesDisponiblesItemsSource.Add(vm);
 			},
 			err => {
 				MessageBox.Show($"El código de especialidad no existe <{especialidad}>");
 
-				foreach (var esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
+				foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
 					EspecialidadesDisponiblesItemsSource.Add(esp);
 			});
 
@@ -128,7 +128,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 		DiasSemanaItemsSource.Clear();
 		if (SelectedMedico is null) return;
 
-		foreach (var dia in SelectedMedico.DiasAtencion) {
+		foreach (DayOfWeek dia in SelectedMedico.DiasAtencion) {
 			DiasSemanaItemsSource.Add(new DiaDeSemanaViewModel(dia, dia.ATexto()));
 		}
 
@@ -291,16 +291,16 @@ public record EspecialidadViewModel(EspecialidadCodigo Codigo, string NombreEspe
 internal static class ExtensionesLocales {
 
 	internal static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDbModel model) {
-		MessageBox.Show(model.Nombre);
-		MessageBox.Show(model.HorariosJson);
+		// MessageBox.Show(model.Nombre);
+		// MessageBox.Show(model.HorariosJson);
 		List<DayOfWeek> dias = [];
 		if (!string.IsNullOrWhiteSpace(model.HorariosJson)) {
-			var horarios = System.Text.Json.JsonSerializer.Deserialize<List<HorarioDto>>(model.HorariosJson);
+            List<HorarioDto>? horarios = System.Text.Json.JsonSerializer.Deserialize<List<HorarioDto>>(model.HorariosJson);
 			dias = horarios is null ? [] : [.. horarios.Select(h => h.DiaSemana).Distinct()];
 		}
-		foreach (var item in dias) {
-			MessageBox.Show(item.ToString());
-		}
+		// foreach (var item in dias) {
+			// MessageBox.Show(item.ToString());
+		// }
 
 		return new MedicoSimpleViewModel(
 			Id: model.Id,

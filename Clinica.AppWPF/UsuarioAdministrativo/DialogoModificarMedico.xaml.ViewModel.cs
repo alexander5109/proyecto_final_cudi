@@ -66,7 +66,7 @@ public class MedicoFormularioViewModel : INotifyPropertyChanged {
 		if (string.IsNullOrWhiteSpace(json))
 			return [];
 
-		var horarios = JsonSerializer.Deserialize<List<HorarioDb>>(json)!;
+        List<HorarioDb> horarios = JsonSerializer.Deserialize<List<HorarioDb>>(json)!;
 
 		var agrupado = horarios
 			.GroupBy(h => h.DiaSemana)

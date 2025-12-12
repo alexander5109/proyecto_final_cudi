@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Microsoft.VisualBasic;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
@@ -67,11 +68,23 @@ public partial class SecretariaTurnos : Window {
 	// ==========================================================
 
 	private async void Button_ConfirmarTurnoAsistencia(object sender, RoutedEventArgs e) {
-		if (VM.SelectedTurno is null) return;
+		SoundsService.PlayClickSound();
+		if (VM.SelectedTurno is null) {
+			MessageBox.Show("Esto no deberia aparecer nunca. Por que no hay selectedturno seleciconado?");
+			return;
+		}
+		DateTime hoy = DateTime.Now;
 
-		var result = await App.Repositorio.MarcarTurnoComoConcretado(
+		if (MessageBox.Show(
+			$"¿Confirma que el paciente se presentó en el dia de la fecha {hoy:d} a las {hoy:t}?",
+			"Confirmación",
+			MessageBoxButton.YesNo,
+			MessageBoxImage.Warning
+		) != MessageBoxResult.Yes) return;
+
+		ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoConcretado(
 			VM.SelectedTurno.Id,
-			DateTime.Now,
+			hoy,
 			VM.SelectedTurno.OutcomeComentario
 		);
 
@@ -81,61 +94,66 @@ public partial class SecretariaTurnos : Window {
 	}
 
 	private async void Button_MarcarTurnoAusente(object sender, RoutedEventArgs e) {
-		if (VM.SelectedTurno is null) return;
-
-		var result = await App.Repositorio.MarcarTurnoComoAusente(
+		SoundsService.PlayClickSound();
+		if (VM.SelectedTurno is null) {
+			MessageBox.Show("Esto no deberia aparecer nunca. Por que no hay selectedturno seleciconado?");
+			return;
+		}
+		string comentario = Interaction.InputBox("Ingrese algun comentario minimo sobre este turno. El paciente nunca se volvio a contactar?", "Cancelar turno", "");
+		if (comentario == null || comentario.Length < 10) {
+			MessageBox.Show("Debe completar un comentario para marcar como ausente el turno.");
+		} else {
+			ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoAusente(
 			VM.SelectedTurno.Id,
 			DateTime.Now,
-			VM.SelectedTurno.OutcomeComentario
+			comentario
 		);
+			if (MostrarErrorSiCorresponde(result)) {
+				await RefrescarTurnosAsync();
+			}
 
-		if (!MostrarErrorSiCorresponde(result)) return;
-
-		await RefrescarTurnosAsync();
+		}
 	}
 
 	private async void Button_ReprogramarTurno(object sender, RoutedEventArgs e) {
-		if (VM.SelectedTurno is null) return;
+		//SoundsService.PlayClickSound();
+		if (VM.SelectedTurno is null) {
+			MessageBox.Show("Esto no deberia aparecer nunca. Por que no hay selectedturno seleciconado?");
+			return;
+		}
 
 		if (VM.SelectedTurno.PacienteRelacionado is null) {
 			MessageBox.Show("Paciente no encontrado.");
 			return;
 		}
 
-		if (string.IsNullOrWhiteSpace(VM.SelectedTurno.OutcomeComentario)) {
-			MessageBox.Show("Debe completar un comentario para reprogramar el turno.");
-			return;
-		}
+
 
 		// abre el formulario de reprogramación
-		this.AbrirComoDialogo<SecretariaTurnosSacar>(VM.SelectedTurno);
+		this.AbrirComoDialogo<SecretariaTurnosSacar>(VM.SelectedTurno); //alreadyplays sound
 
 		await RefrescarTurnosAsync();
 	}
 
 	private async void Button_CancelarTurno(object sender, RoutedEventArgs e) {
-		if (VM.SelectedTurno is null) return;
-
-		if (string.IsNullOrWhiteSpace(VM.SelectedTurno.OutcomeComentario)) {
-			MessageBox.Show("Debe completar un comentario para cancelar el turno.");
+		SoundsService.PlayClickSound();
+		if (VM.SelectedTurno is null) {
+			MessageBox.Show("Esto no deberia aparecer nunca. Por que no hay selectedturno seleciconado?");
 			return;
 		}
 
-		if (MessageBox.Show(
-			"¿Desea cancelar el turno seleccionado?",
-			"Confirmación",
-			MessageBoxButton.YesNo,
-			MessageBoxImage.Warning
-		) != MessageBoxResult.Yes) return;
+		string comentario = Interaction.InputBox("Ingrese la razón de la cancelación del turno:", "Cancelar turno", "");
+		if (comentario == null || comentario.Length < 10) {
+			MessageBox.Show("Debe completar un comentario para cancelar el turno.");
+		} else {
+			ResultWpf<TurnoDbModel> result = await App.Repositorio.CancelarTurno(
+				VM.SelectedTurno.Id,
+				DateTime.Now,
+				comentario
+			);
+			if (!MostrarErrorSiCorresponde(result)) return;
+			await RefrescarTurnosAsync();
+		}
 
-		var result = await App.Repositorio.CancelarTurno(
-			VM.SelectedTurno.Id,
-			DateTime.Now,
-			VM.SelectedTurno.OutcomeComentario
-		);
-
-		if (!MostrarErrorSiCorresponde(result)) return;
-
-		await RefrescarTurnosAsync();
 	}
 }

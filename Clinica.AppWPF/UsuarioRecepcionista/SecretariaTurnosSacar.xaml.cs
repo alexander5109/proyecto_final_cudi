@@ -1,5 +1,6 @@
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Microsoft.VisualBasic;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
@@ -53,13 +54,26 @@ public partial class SecretariaTurnosSacar : Window {
 		}
 
 		if (TurnoOriginal is not null) {
+
+			string comentario = Interaction.InputBox(
+				"Ingrese la razón de la reprogramacion del turno:",
+				"Continuar con la reprogramación del turno",
+				""
+			);
+
+			if (comentario == null || comentario.Length < 10) {
+				MessageBox.Show("Debe completar un comentario para cancelar el turno.");
+				return;
+			}
+
 			ResultWpf<TurnoDbModel> resultt = await App.Repositorio.ReprogramarTurno(
 				TurnoOriginal.Id,
 				DateTime.Now,
-				TurnoOriginal.OutcomeComentario
+				comentario
 			);
 			if (!MostrarErrorSiCorresponde(resultt)) {
 				this.Close();
+				return;
 			}
 		}
 		ResultWpf<TurnoDbModel> result = await App.Repositorio.AgendarNuevoTurno(
