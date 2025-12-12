@@ -14,7 +14,7 @@
 	<Grid>
 		<Grid.Background>
 			<ImageBrush
-				ImageSource="pack://application:,,,/PublishedResources/images/otroFondo.png" />
+				ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoAbstracto2025.jpg" />
 		</Grid.Background>
 		<Label
 			Style="{StaticResource LabelLindo}"
