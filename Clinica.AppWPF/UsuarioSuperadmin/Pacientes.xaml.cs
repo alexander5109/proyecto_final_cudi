@@ -17,18 +17,18 @@ public partial class Pacientes : Window {
 	//----------------------ActualizarSecciones-------------------//
 	async private void UpdatePacienteUI() {
 		pacientesListView.ItemsSource = await App.Repositorio.SelectPacientes();
-		ClickBoton_ModificarPaciente.IsEnabled = SelectedPaciente != null;
+		x_BotonModificarPaciente.IsEnabled = SelectedPaciente != null;
 	}
 	async private void UpdateTurnoUI() {
 		turnosListView.ItemsSource = SelectedPaciente is not null? await App.Repositorio.SelectTurnosWherePacienteId(SelectedPaciente.Id): [];
-		ClickBoton_ModificarTurno.IsEnabled = SelectedTurno != null;
+		x_BotonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 	async private void UpdateMedicoUI() {
 		txtMedicoDni.Text = RelatedMedico?.Dni;
 		txtMedicoNombre.Text = RelatedMedico?.Nombre;
 		txtMedicoApellido.Text = RelatedMedico?.Apellido;
 		txtMedicoEspecialidad.Text = RelatedMedico?.EspecialidadCodigo.ToString();
-		ClickBoton_ModificarMedico.IsEnabled = RelatedMedico != null;
+		x_BotonModificarMedico.IsEnabled = RelatedMedico != null;
 	}
 
 

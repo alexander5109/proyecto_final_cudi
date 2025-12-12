@@ -148,7 +148,7 @@
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center">
 					<Button
-						x:Name="ClickBoton_ModificarTurno"
+						x:Name="x_BotonModificarTurno"
 						Content="Modificar"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"
@@ -251,7 +251,7 @@
 					HorizontalAlignment="Center"
 					Width="176">
 					<Button
-						x:Name="ClickBoton_ModificarMedico"
+						x:Name="x_BotonModificarMedico"
 						Content="Modificar"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"
@@ -324,7 +324,7 @@
 					HorizontalAlignment="Center"
 					Width="180">
 					<Button
-						x:Name="ClickBoton_ModificarPaciente"
+						x:Name="x_BotonModificarPaciente"
 						Content="Modificar"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"

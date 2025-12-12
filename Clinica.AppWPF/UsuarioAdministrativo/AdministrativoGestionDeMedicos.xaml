@@ -130,7 +130,7 @@
 				Style="{StaticResource BotonRedondeado}"
 				Margin="0,0,10,0" />
 			<Button
-				x:Name="ClickBoton_ModificarMedico"
+				x:Name="x_BotonModificarMedico"
 				Content="Modificar"
 				Height="37"
 				Width="170"

@@ -17,7 +17,7 @@ public partial class Turnos : Window {
 	//----------------------ActualizarSecciones-------------------//
 	async private void UpdateTurnoUI() {
 		turnosListView.ItemsSource = await App.Repositorio.SelectTurnos();
-		ClickBoton_ModificarTurno.IsEnabled = SelectedTurno != null;
+		x_BotonModificarPaciente.IsEnabled = SelectedTurno != null;
 		txtCalendario.SelectedDate = SelectedTurno?.FechaHoraAsignadaDesde;
 		txtCalendario.DisplayDate = SelectedTurno?.FechaHoraAsignadaDesde ?? DateTime.Today;
 	}
@@ -26,7 +26,7 @@ public partial class Turnos : Window {
 		txtMedicoNombre.Text = MedicoRelacionado?.Nombre;
 		txtMedicoApellido.Text = MedicoRelacionado?.Apellido;
 		txtMedicoEspecialidad.Text = MedicoRelacionado?.EspecialidadCodigo.ToString();
-		ClickBoton_ModificarMedico.IsEnabled = MedicoRelacionado != null;
+		x_BotonModificarMedico.IsEnabled = MedicoRelacionado != null;
 	}
 	private void UpdatePacienteUI() {
 		txtPacienteDni.Text = PacienteRelacionado?.Dni;
@@ -34,7 +34,7 @@ public partial class Turnos : Window {
 		txtPacienteApellido.Text = PacienteRelacionado?.Apellido;
 		txtPacienteEmail.Text = PacienteRelacionado?.Email;
 		txtPacienteTelefono.Text = PacienteRelacionado?.Telefono;
-		ClickBoton_ModificarPaciente.IsEnabled = PacienteRelacionado != null;
+		x_BotonModificarPaciente.IsEnabled = PacienteRelacionado != null;
 	}
 
 

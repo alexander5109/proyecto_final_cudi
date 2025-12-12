@@ -105,7 +105,7 @@
 						FontFamily="Baskerville Old Face"
 						Margin="25,0,25,5"></Button>
 					<Button
-						x:Name="ClickBoton_ModificarPaciente"
+						x:Name="x_BotonModificarPaciente"
 						Content="Modificar"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"
@@ -192,7 +192,7 @@
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center">
 					<Button
-						x:Name="ClickBoton_ModificarTurno"
+						x:Name="x_BotonModificarTurno"
 						Content="Modificar"
 						VerticalAlignment="Center"
 						Height="30"
@@ -257,7 +257,7 @@
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center">
 					<Button
-						x:Name="ClickBoton_ModificarMedico"
+						x:Name="x_BotonModificarMedico"
 						Content="Modificar"
 						HorizontalAlignment="Center"
 						VerticalAlignment="Center"
