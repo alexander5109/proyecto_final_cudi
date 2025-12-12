@@ -14,7 +14,6 @@
 		Margin="25,25,25,25">
 		<StackPanel
 			HorizontalAlignment="Center"
-			VerticalAlignment="Top"
 			Width="663"
 			Margin="25,25,25,25">
 			<Label
@@ -50,11 +49,12 @@
 					FontFamily="Baskerville Old Face"
 					Click="ClickBoton_GuestionPersonalMedico"
 					Margin="7,7,7,7"
-					Width="270" />
+					Width="270"
+					Height="35" />
 				<Button
 					x:Name="buttonVerTurnos"
 					Content="Gestionar cuentas de Usuario"
-					Height="37"
+					Height="35"
 					Width="270"
 					FontSize="20"
 					Style="{StaticResource BotonRedondeado}"

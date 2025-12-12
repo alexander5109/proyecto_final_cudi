@@ -14,9 +14,8 @@
 	<Grid
 		Margin="25,25,25,25">
 		<StackPanel
-			HorizontalAlignment="Center"
-			VerticalAlignment="Top"
-			Margin="25,25,25,25">
+			Margin="25,25,25,25"
+			HorizontalAlignment="Center">
 			<Label
 				Content="Sistema de Gestión"
 				FontSize="30"

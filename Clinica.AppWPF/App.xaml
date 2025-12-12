@@ -376,6 +376,9 @@
 			x:Key="LabelLindoConSombra"
 			TargetType="Label">
 			<Setter
+				Property="FontFamily"
+				Value="Segoe UI Historic" />
+			<Setter
 				Property="Effect">
 				<Setter.Value>
 					<DropShadowEffect

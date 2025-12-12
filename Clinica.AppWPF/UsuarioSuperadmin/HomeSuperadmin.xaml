@@ -14,7 +14,6 @@
 		Margin="25,25,25,25">
 		<StackPanel
 			HorizontalAlignment="Center"
-			VerticalAlignment="Top"
 			Width="650"
 			Margin="25,25,25,25">
 			<Label
