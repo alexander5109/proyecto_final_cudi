@@ -35,16 +35,16 @@
 		<Label
 			Grid.Row="0"
 			Content="Medicos"
-			FontSize="60"
+			FontSize="33"
 			FontFamily="Javanese Text"
 			FlowDirection="RightToLeft"
-			Style="{StaticResource LabelLindo}"
+			Style="{StaticResource LabelLindoConPiu}"
 			HorizontalContentAlignment="Right"
 			FontWeight="Bold"
-			HorizontalAlignment="Left"
-			Margin="0,0,0,10"
+			HorizontalAlignment="Center"
 			Height="Auto"
-			Width="276" />
+			VerticalAlignment="Center"
+			Padding="5,5,5,5" />
 		<!-- LISTA DE MÉDICOS -->
 		<ListView
 			Grid.Row="1"

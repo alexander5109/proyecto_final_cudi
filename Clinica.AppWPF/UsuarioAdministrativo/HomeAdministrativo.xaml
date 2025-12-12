@@ -11,56 +11,51 @@
 			ImageSource="/PublishedResources/images2025sol/fondoclaro2025.jpg" />
 	</Window.Background>
 	<Grid
-		Margin="15,15,15,15">
+		Margin="25,25,25,25">
 		<StackPanel
 			HorizontalAlignment="Center"
-			VerticalAlignment="Center"
-			Grid.Row="1"
-			Width="663">
+			VerticalAlignment="Top"
+			Width="663"
+			Margin="25,25,25,25">
 			<Label
-				Content="Sistema"
-				FontSize="35"
+				Content="Sistema de Gestión"
+				FontSize="30"
 				FontFamily="SachaWynterTight Linotype"
 				Background="{x:Null}"
-				Foreground="#FF333363"
+				Foreground="#FF1F1F3C"
 				Padding="0,0,0,0"
 				HorizontalAlignment="Center" />
 			<Label
 				Content="`Reprocesos SXXI´"
-				FontSize="24"
+				FontSize="20"
 				FontFamily="SachaWynterTight Linotype"
-				Background="{x:Null}"
-				Foreground="#FF333363"
-				HorizontalAlignment="Center" />
+				Foreground="#FF1B1B35"
+				HorizontalAlignment="Center"
+				Margin="0,0,0,25" />
 			<Label
 				Content="Home Administrativo"
-				Style="{StaticResource LabelLindo}"
-				FontSize="40"
-				FontFamily="Palatino Linotype"
-				Foreground="#FF0F0A2B"
+				Style="{StaticResource LabelLindoConPiu}"
+				FontSize="30"
 				HorizontalContentAlignment="Center"
 				FontWeight="Bold"
 				VerticalAlignment="Center"
-				Margin="30,15,30,15" />
+				Margin="30,0,30,0" />
 			<StackPanel
-				Margin="25">
+				Margin="25,25,25,25">
 				<Button
 					Content="Gestionar personal Médico"
 					HorizontalAlignment="Center"
-					Height="37"
-					Width="300"
-					FontSize="20"
 					Style="{StaticResource BotonRedondeado}"
-					FontWeight="Bold"
 					BorderBrush="#FF0E0D0D"
 					FontFamily="Baskerville Old Face"
 					Click="MetodoBotonGuestionPersonalMedico"
-					Margin="7,7,7,7" />
+					Margin="7,7,7,7"
+					Width="270" />
 				<Button
 					x:Name="buttonVerTurnos"
 					Content="Gestionar cuentas de Usuario"
 					Height="37"
-					Width="275"
+					Width="270"
 					FontSize="20"
 					Style="{StaticResource BotonRedondeado}"
 					FontWeight="Bold"
@@ -71,21 +66,21 @@
 			</StackPanel>
 			<Button
 				Content="Cerrar sesión"
-				Height="37"
-				Width="200"
+				Height="35"
+				Width="150"
 				Click="MetodoBotonLogout"
 				Style="{StaticResource BotonRedondeado}"
-				FontSize="20"
+				FontSize="18"
 				FontWeight="Bold"
 				Margin="7,7,7,7" />
 			<Button
 				Content="Salir"
-				Height="37"
+				Height="35"
 				Width="150"
 				Click="ButtonSalir"
 				Style="{StaticResource BotonRedondeado}"
-				FontSize="20"
-				Margin="7,7,7,5"
+				FontSize="18"
+				Margin="7,7,7,7"
 				FontWeight="Bold" />
 		</StackPanel>
 		<CheckBox

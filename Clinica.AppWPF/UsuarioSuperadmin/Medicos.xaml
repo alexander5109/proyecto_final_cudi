@@ -280,7 +280,7 @@
 			</StackPanel>
 		</ContentControl>
 		<Label
-			Style="{StaticResource LabelLindo}"
+			Style="{StaticResource LabelLindoConPiu}"
 			x:Name="labelBaseDeDatosModo"
 			Content="Elegir DB Modo"
 			Margin="708,480,0,0"

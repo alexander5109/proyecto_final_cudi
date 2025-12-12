@@ -318,11 +318,20 @@
 		</Style>
 		<!-- ,,,,,,,,,,,,,,,,,,,,,,,,,,LABELS,,,,,,,,,,,,,,,,,,,,,,,,,, -->
 		<Style
-			x:Key="LabelLindo"
+			x:Key="LabelLindoConPiu"
 			TargetType="Label">
+			<!-- Flow direction -->
+			<Setter
+				Property="FontFamily"
+				Value="Segoe UI Historic" />
+			<Setter
+				Property="FlowDirection"
+				Value="RightToLeft" />
+			<!-- Font -->
 			<Setter
 				Property="FontSize"
-				Value="50" />
+				Value="30" />
+			<!-- Background -->
 			<Setter
 				Property="Background">
 				<Setter.Value>
@@ -330,6 +339,7 @@
 						ImageSource="pack://application:,,,/PublishedResources/images2025sol/labelFondo2025.png" />
 				</Setter.Value>
 			</Setter>
+			<!-- Shadow -->
 			<Setter
 				Property="Effect">
 				<Setter.Value>
@@ -341,7 +351,7 @@
 						Opacity="0.7" />
 				</Setter.Value>
 			</Setter>
-			<!-- OVERRIDE DEL TEMPLATE -->
+			<!-- Template override -->
 			<Setter
 				Property="Template">
 				<Setter.Value>
@@ -350,8 +360,8 @@
 						<Border
 							Background="{TemplateBinding Background}"
 							Padding="{TemplateBinding Padding}"
-							SnapsToDevicePixels="True">
-							<!-- El contenido del label -->
+							SnapsToDevicePixels="True"
+							FlowDirection="{TemplateBinding FlowDirection}">
 							<ContentPresenter
 								RecognizesAccessKey="True"
 								HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -361,8 +371,9 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+		<!-- ,,,,,,,,,,,,,,,,,,,,,,,,,,LABELS,,,,,,,,,,,,,,,,,,,,,,,,,, -->
 		<Style
-			x:Key="LabelLindo2024"
+			x:Key="LabelLindoConSombra"
 			TargetType="Label">
 			<Setter
 				Property="Effect">
@@ -521,6 +532,12 @@
 			<Setter
 				Property="Width"
 				Value="180" />
+			<Setter
+				Property="Height"
+				Value="35" />
+			<Setter
+				Property="FontFamily"
+				Value="Baskerville Old Face" />
 			<Setter
 				Property="BorderThickness"
 				Value="0" />

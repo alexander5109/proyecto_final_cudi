@@ -12,30 +12,30 @@
 			Stretch="UniformToFill" />
 	</Window.Background>
 	<Grid
-		Margin="15,15,15,15">
+		Margin="25,25,25,25">
 		<StackPanel
 			HorizontalAlignment="Center"
-			VerticalAlignment="Top">
+			VerticalAlignment="Top"
+			Margin="25,25,25,25">
 			<Label
 				Content="Sistema de Gestión"
-				FontSize="32"
+				FontSize="30"
 				FontFamily="SachaWynterTight Linotype"
 				Background="{x:Null}"
 				Foreground="#FF1B1B67"
-				Margin="0,25,0,0"
 				Padding="0,0,0,0" />
 			<Label
 				Content="`Reprocesos SXXI´"
-				FontSize="22"
+				FontSize="20"
 				FontFamily="SachaWynterTight Linotype"
 				Background="{x:Null}"
 				Foreground="#FF333363"
 				HorizontalAlignment="Center"
-				Margin="0,0,0,35"
+				Margin="0,0,0,25"
 				Padding="0,0,0,0" />
 			<Label
 				Content="Inicio de sesión"
-				FontSize="30"
+				FontSize="28"
 				FontFamily="Ringbearer"
 				Background="{x:Null}"
 				Foreground="#FF0E0E31"
