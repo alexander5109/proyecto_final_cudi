@@ -1,9 +1,6 @@
 ﻿using Clinica.AppWPF.Infrastructure;
 using System.Windows;
 using System.Windows.Controls;
-using static Clinica.Shared.ApiDtos.MedicoDtos;
-using static Clinica.Shared.ApiDtos.PacienteDtos;
-using static Clinica.Shared.ApiDtos.TurnoDtos;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 

@@ -1,24 +1,27 @@
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.TiposDeEnum;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class SecretariaFormularioTurno : Window {
-	internal MyViewModel VM { get; }
+public partial class SecretariaTurnosSacar : Window {
+	internal SecretariaTurnosSacarViewModel VM { get; }
 	//bool EsReprogramacion = false;
 	readonly TurnoViewModel? TurnoOriginal;
-	public SecretariaFormularioTurno(PacienteDbModel paciente) {
+	public SecretariaTurnosSacar(PacienteDbModel paciente) {
 		InitializeComponent();
-		VM = new MyViewModel(paciente);
+		VM = new SecretariaTurnosSacarViewModel(paciente);
 		DataContext = VM;
 		TurnoOriginal = null;
 	}
 
-	public SecretariaFormularioTurno(TurnoViewModel turnoOriginal) {
+	public SecretariaTurnosSacar(TurnoViewModel turnoOriginal) {
 		InitializeComponent();
-		VM = new MyViewModel(turnoOriginal.PacienteRelacionado, turnoOriginal.EspecialidadCodigo);
+		if (turnoOriginal.PacienteRelacionado == null) {
+			MessageBox.Show("por que nulo el paciente?");
+			throw new Exception("En realidad este scenario es imposbiel porque quien se encarga de llamar a este constructor valida al paciente tambien");
+		}
+		VM = new SecretariaTurnosSacarViewModel(turnoOriginal.PacienteRelacionado, turnoOriginal.EspecialidadCodigo);
 		DataContext = VM;
 		TurnoOriginal = turnoOriginal;
 
@@ -79,7 +82,7 @@ public partial class SecretariaFormularioTurno : Window {
 		SoundsService.PlayClickSound();
 
 		if (VM.SelectedPaciente != null) {
-			this.AbrirComoDialogo<RecepcionistaPacienteFormulario>(VM.SelectedPaciente.Id);
+			this.AbrirComoDialogo<SecretariaPacientesModificar>(VM.SelectedPaciente.Id);
 		}
 	}
 

@@ -5,15 +5,15 @@ using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class RecepcionistaPacienteFormulario : Window {
-	public RecepcionistaPacienteFormularioViewModel VM { get; private set; } = new();
+public partial class SecretariaPacientesModificar : Window {
+	public SecretariaPacientesModificarViewModel VM { get; private set; } = new();
 
-	public RecepcionistaPacienteFormulario() {
+	public SecretariaPacientesModificar() {
 		InitializeComponent();
 		DataContext = VM;
 	}
 
-	public RecepcionistaPacienteFormulario(PacienteId id) {
+	public SecretariaPacientesModificar(PacienteId id) {
 		InitializeComponent();
 		DataContext = VM;
 		_ = CargaInicialAsync(id);
@@ -63,7 +63,7 @@ public partial class RecepcionistaPacienteFormulario : Window {
 
 	private void ButtonSolicitarTurno(object sender, RoutedEventArgs e) {
 		//if (VM.Id is int notNullId) {
-		//	this.AbrirComoDialogo<SecretariaFormularioTurno>(SelectedPacienteId.CrearResult(notNullId));
+		//	this.AbrirComoDialogo<SecretariaTurnosSacar>(SelectedPacienteId.CrearResult(notNullId));
 		//}
 	}
 

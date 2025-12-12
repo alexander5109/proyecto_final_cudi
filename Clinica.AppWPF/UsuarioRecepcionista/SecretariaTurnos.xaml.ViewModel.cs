@@ -27,7 +27,7 @@ public sealed class TurnoViewModel(TurnoDbModel model) {
 	public TurnoDbModel Original => model;
 	//public readonly TurnoDbModel Original = model;
 }
-public sealed class RecepcionistaGestionDeTurnosViewModel : INotifyPropertyChanged {
+public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	// ================================================================

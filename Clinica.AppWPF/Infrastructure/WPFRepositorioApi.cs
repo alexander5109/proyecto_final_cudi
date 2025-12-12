@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;

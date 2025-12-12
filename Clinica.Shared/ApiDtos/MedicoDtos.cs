@@ -3,7 +3,6 @@ using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Shared.DbModels;
 
 namespace Clinica.Shared.ApiDtos;
 

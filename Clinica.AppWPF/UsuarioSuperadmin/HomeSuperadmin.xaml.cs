@@ -1,7 +1,5 @@
 ﻿using System.Windows;
-using Clinica.AppWPF.UsuarioSuperadmin;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.UsuarioRecepcionista;
 
 namespace Clinica.AppWPF.UsuarioSuperadmin;
 

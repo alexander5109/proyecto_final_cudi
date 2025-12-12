@@ -1,6 +1,4 @@
-﻿using Clinica.AppWPF.UsuarioSuperadmin;
-using static Clinica.Shared.DbModels.DbModels;
-using SystemTextJson = System.Text.Json;
+﻿using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSuperadmin;
 //---------------------------------Tablas.Horarios-------------------------------//

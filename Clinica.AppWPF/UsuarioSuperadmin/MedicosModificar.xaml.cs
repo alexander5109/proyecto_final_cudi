@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.UsuarioSuperadmin;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSuperadmin;

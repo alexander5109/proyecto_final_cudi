@@ -4,12 +4,12 @@ using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class RecepcionistaGestionDeTurnos : Window {
-	public RecepcionistaGestionDeTurnosViewModel VM { get; }
+public partial class SecretariaTurnos : Window {
+	public SecretariaTurnosViewModel VM { get; }
 
-	public RecepcionistaGestionDeTurnos() {
+	public SecretariaTurnos() {
 		InitializeComponent();
-		VM = new RecepcionistaGestionDeTurnosViewModel();
+		VM = new SecretariaTurnosViewModel();
 		DataContext = VM;
 
 		Loaded += async (_, __) => await CargaInicialAsync();
@@ -108,7 +108,7 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 		}
 
 		// abre el formulario de reprogramación
-		this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedTurno);
+		this.AbrirComoDialogo<SecretariaTurnosSacar>(VM.SelectedTurno);
 
 		await RefrescarTurnosAsync();
 	}

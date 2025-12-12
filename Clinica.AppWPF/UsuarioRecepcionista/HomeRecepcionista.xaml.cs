@@ -33,13 +33,13 @@ public partial class HomeRecepcionista : Window {
 
 
 	async private void ClickBoton_GestionTurnos(object sender, RoutedEventArgs e) {
-		this.NavegarA<RecepcionistaGestionDeTurnos>();
+		this.NavegarA<SecretariaTurnos>();
 		await CargarPacientesYMedicosOnce();
 	}
 
 
 	async private void ClickBoton_GestionPacientes(object sender, RoutedEventArgs e) {
-		this.NavegarA<RecepcionistaGestionDePacientes>();
+		this.NavegarA<SecretariaPacientes>();
 		await CargarPacientesYMedicosOnce();
 	}
 

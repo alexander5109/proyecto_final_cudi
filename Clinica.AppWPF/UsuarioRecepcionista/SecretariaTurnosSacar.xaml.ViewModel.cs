@@ -12,8 +12,8 @@ using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-//----------------------------------internal Viewmodel for SecretariaFormularioTurno-------------------------
-public class MyViewModel : INotifyPropertyChanged {
+//----------------------------------internal Viewmodel for SecretariaTurnosSacar-------------------------
+public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void OnPropertyChanged(string name)
 		=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -23,7 +23,7 @@ public class MyViewModel : INotifyPropertyChanged {
 	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; }
 		= [];
 
-	public MyViewModel(PacienteDbModel paciente) {
+	public SecretariaTurnosSacarViewModel(PacienteDbModel paciente) {
 		SelectedPaciente = paciente;
 
 		EspecialidadesDisponiblesItemsSource.Clear();
@@ -34,12 +34,7 @@ public class MyViewModel : INotifyPropertyChanged {
 		LoadHoras();
 	}
 
-	public MyViewModel(PacienteDbModel? paciente, EspecialidadCodigo especialidad) {
-		if (paciente == null) {
-			MessageBox.Show("por que nulo el paciente?");
-			return;
-
-		}
+	public SecretariaTurnosSacarViewModel(PacienteDbModel paciente, EspecialidadCodigo especialidad) {
 		SelectedPaciente = paciente;
 
 		EspecialidadesDisponiblesItemsSource.Clear(); // <<---- importantísimo

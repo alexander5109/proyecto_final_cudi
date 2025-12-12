@@ -3,12 +3,12 @@ using Clinica.AppWPF.Infrastructure;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class RecepcionistaGestionDePacientes : Window {
-	public RecepcionistaGestionDePacientesViewModel VM { get; }
+public partial class SecretariaPacientes : Window {
+	public SecretariaPacientesViewModel VM { get; }
 
-	public RecepcionistaGestionDePacientes() {
+	public SecretariaPacientes() {
 		InitializeComponent();
-		VM = new RecepcionistaGestionDePacientesViewModel();
+		VM = new SecretariaPacientesViewModel();
 		DataContext = VM;
 
 		Loaded += async (_, __) => await CargaInicialAsync();
@@ -21,18 +21,18 @@ public partial class RecepcionistaGestionDePacientes : Window {
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 
-	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<RecepcionistaPacienteFormulario>();
+	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<SecretariaPacientesModificar>();
 
 	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is not null) {
-			this.AbrirComoDialogo<RecepcionistaPacienteFormulario>(VM.SelectedPaciente.Id);
+			this.AbrirComoDialogo<SecretariaPacientesModificar>(VM.SelectedPaciente.Id);
 		} else {
 			MessageBox.Show("No hay paciente seleecionado");
 		}
 	}
 	private void ButtonBuscarDisponibilidades(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is not null) {
-			this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedPaciente);
+			this.AbrirComoDialogo<SecretariaTurnosSacar>(VM.SelectedPaciente);
 		} else {
 			MessageBox.Show("No hay paciente seleecionado");
 		}

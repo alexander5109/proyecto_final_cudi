@@ -4,7 +4,7 @@ using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public sealed class RecepcionistaGestionDePacientesViewModel : INotifyPropertyChanged {
+public sealed class SecretariaPacientesViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 

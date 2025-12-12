@@ -4,7 +4,6 @@ using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
-using Clinica.Infrastructure.IRepositorios;
 using Clinica.Shared.ApiDtos;
 using Clinica.Shared.DbModels;
 using Dapper;

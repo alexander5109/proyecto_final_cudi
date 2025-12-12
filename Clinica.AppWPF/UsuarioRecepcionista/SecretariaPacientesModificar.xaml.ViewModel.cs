@@ -1,14 +1,17 @@
 ﻿using System.ComponentModel;
 using Clinica.AppWPF;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.UsuarioRecepcionista;
 using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
-using static Clinica.AppWPF.UsuarioRecepcionista.RecepcionistaPacienteMiniViewModels;
+using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposExtensiones;
+using static Clinica.Shared.DbModels.DbModels;
+using static RecepcionistaPacienteMiniViewModels;
 
 
-public class RecepcionistaPacienteFormularioViewModel : INotifyPropertyChanged {
+public class SecretariaPacientesModificarViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void Notify(string prop) => PropertyChanged?.Invoke(this, new(prop));
 
@@ -25,7 +28,8 @@ public class RecepcionistaPacienteFormularioViewModel : INotifyPropertyChanged {
 	private PacienteId? _id;
 	public PacienteId? Id {
 		get => _id;
-		set { _id = value; 
+		set {
+			_id = value;
 			Notify(nameof(Id));
 			Notify(nameof(EstaCreando));
 			Notify(nameof(EstaEditando));
@@ -100,8 +104,7 @@ public class RecepcionistaPacienteFormularioViewModel : INotifyPropertyChanged {
 
 
 	public async Task<ResultWpf<UnitWpf>> GuardarAsync() {
-		return await this.ToDomain(fechaIngreso:DateTime.Now).Bind(async paciente =>
-		{
+		return await this.ToDomain(fechaIngreso: DateTime.Now).Bind(async paciente => {
 			if (Id is PacienteId idExistente) {
 				Paciente2025Agg agg = new(idExistente, paciente);
 				return await App.Repositorio.UpdatePacienteWhereId(agg);
@@ -121,8 +124,45 @@ public class RecepcionistaPacienteFormularioViewModel : INotifyPropertyChanged {
 		});
 	}
 
+}
 
 
 
+public static class RecepcionistaPacienteMiniViewModels {
+	public record ProvinciaVmItem(
+		ProvinciaCodigo Codigo,
+		string Nombre
+	);
+	public static ProvinciaVmItem ToViewModel(this ProvinciaCodigo enumm) => new(Codigo: enumm, Nombre: enumm.ATexto());
+	public static ProvinciaVmItem ToViewModel(this ProvinciaArgentina2025 domain) => new(Codigo: domain.CodigoInternoValor, Nombre: domain.NombreValor);
 
+
+	public static SecretariaPacientesModificarViewModel ToViewModel(this PacienteDbModel model)
+		=> new SecretariaPacientesModificarViewModel {
+			Id = model.Id,
+			Dni = model.Dni,
+			Nombre = model.Nombre,
+			Apellido = model.Apellido,
+			FechaIngreso = model.FechaIngreso,
+			Email = model.Email,
+			Telefono = model.Telefono,
+			FechaNacimiento = model.FechaNacimiento,
+			Domicilio = model.Domicilio,
+			Localidad = model.Localidad,
+			Provincia = model.ProvinciaCodigo.ToViewModel()
+		};
+	public static ResultWpf<Paciente2025> ToDomain(this SecretariaPacientesModificarViewModel viewModel, DateTime fechaIngreso) {
+		return Paciente2025.CrearResult(
+				NombreCompleto2025.CrearResult(viewModel.Nombre, viewModel.Apellido),
+				DniArgentino2025.CrearResult(viewModel.Dni),
+				Telefono2025.CrearResult(viewModel.Telefono),
+				Email2025.CrearResult(viewModel.Email),
+				DomicilioArgentino2025.CrearResult(
+				LocalidadDeProvincia2025.CrearResult(viewModel.Localidad, ProvinciaArgentina2025.CrearResultPorCodigo(viewModel.Provincia?.Codigo)),
+				viewModel.Domicilio
+			),
+			FechaDeNacimiento2025.CrearResult(viewModel.FechaNacimiento),
+			fechaIngreso
+		).ToWpf();
+	}
 }
