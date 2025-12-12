@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.ComponentModel;
+using System.Net.Http.Json;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
@@ -78,10 +79,11 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		if (RepoCache.DictMedicos.TryGetValue(id, out MedicoDbModel? dto))
 			return dto;
 		MedicoDbModel? res = await Api.TryGetJsonOrNullAsync<MedicoDbModel>($"api/medicos/{id.Valor}");
+		//thriow devuevle horarios esto?
 		if (res is not null) {
 			RepoCache.DictMedicos[id] = res; // update cache
 		}
-
+		//medicos
 		return res;
 	}
 

@@ -108,10 +108,7 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 		}
 
 		// abre el formulario de reprogramación
-		this.NavegarA<SecretariaFormularioTurno>(
-			//VM.SelectedTurno.PacienteRelacionado,
-			VM.SelectedTurno
-		);
+		this.AbrirComoDialogo<SecretariaFormularioTurno>(VM.SelectedTurno);
 
 		await RefrescarTurnosAsync();
 	}

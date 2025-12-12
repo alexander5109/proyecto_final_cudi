@@ -19,19 +19,19 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
     Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWhereId(MedicoId id)
 		=> TryAsync(async conn => {
 			return await conn.QuerySingleOrDefaultAsync<MedicoDbModel>(
-				"sp_SelectMedicoWhereId",
-				new { Id = id.Valor },
-				commandType: CommandType.StoredProcedure
-			);
-		});
-	Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWithHorarioWhereId(MedicoId id)
-		=> TryAsync(async conn => {
-			return await conn.QuerySingleOrDefaultAsync<MedicoDbModel>(
 				"sp_SelectMedicoWithHorariosWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure
 			);
 		});
+	//Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWithHorarioWhereId(MedicoId id)
+	//	=> TryAsync(async conn => {
+	//		return await conn.QuerySingleOrDefaultAsync<MedicoDbModel>(
+	//			"sp_SelectMedicoWithHorariosWhereId",
+	//			new { Id = id.Valor },
+	//			commandType: CommandType.StoredProcedure
+	//		);
+	//	});
 
 	Task<Result<MedicoId>> IRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance)
 		=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
@@ -77,17 +77,17 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicos()
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<MedicoDbModel>(
-				"sp_SelectMedicos",
+				"sp_SelectMedicosWithHorarios",
 				commandType: CommandType.StoredProcedure
 			);
 		});
-	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicosWithHorarios()
-		=> TryAsync(async conn => {
-			return await conn.QueryAsync<MedicoDbModel>(
-				"sp_SelectMedicosWithHorario",
-				commandType: CommandType.StoredProcedure
-			);
-		});
+	//Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicosWithHorarios()
+	//	=> TryAsync(async conn => {
+	//		return await conn.QueryAsync<MedicoDbModel>(
+	//			"sp_SelectMedicosWithHorario",
+	//			commandType: CommandType.StoredProcedure
+	//		);
+	//	});
 
 	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code)
 		=> TryAsync(async conn => {

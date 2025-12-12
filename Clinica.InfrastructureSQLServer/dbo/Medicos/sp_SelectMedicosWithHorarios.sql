@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.sp_SelectMedicosWithHorario
+﻿CREATE PROCEDURE dbo.sp_SelectMedicosWithHorarios
 AS
 BEGIN
     SET NOCOUNT ON;

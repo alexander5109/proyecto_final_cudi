@@ -27,12 +27,12 @@ public class MedicosController(
 		() => repositorio.SelectMedicos()
 	);
 
-	[HttpGet("con-horarios/")]
-	public Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicosWithHorarios() => this.SafeExecute(
-		logger,
-		PermisosAccionesCodigo.VerMedicos,
-		() => repositorio.SelectMedicosWithHorarios()
-	);
+	//[HttpGet("con-horarios/")]
+	//public Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicosWithHorarios() => this.SafeExecute(
+	//	logger,
+	//	PermisosAccionesCodigo.VerMedicos,
+	//	() => repositorio.SelectMedicosWithHorarios()
+	//);
 
 
 	[HttpGet("por-especialidad/{code}")]

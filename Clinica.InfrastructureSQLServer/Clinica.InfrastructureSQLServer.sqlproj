@@ -106,7 +106,7 @@
     <Build Include="dbo\Medicos\sp_InsertMedicoWithHorariosReturnId.sql" />
     <Build Include="dbo\Medicos\sp_DeleteMedicoWithHorariosWhereId.sql" />
     <Build Include="dbo\Medicos\sp_SelectMedicoWhereId.sql" />
-    <Build Include="dbo\Medicos\sp_SelectMedicosWithHorario.sql" />
+    <Build Include="dbo\Medicos\sp_SelectMedicosWithHorarios.sql" />
     <Build Include="dbo\Pacientes\sp_SelectPacientesListView.sql" />
     <Build Include="dbo\Pacientes\view_PacienteListView.sql" />
     <Build Include="dbo\HorariosMedicos\sp_SelectHorariosVigentesBetweenFechasWhereMedicoId.sql" />
