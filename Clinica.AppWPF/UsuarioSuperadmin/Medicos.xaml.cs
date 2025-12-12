@@ -16,11 +16,11 @@ public partial class Medicos : Window {
 	//----------------------ActualizarSecciones-------------------//
 	async private void UpdateMedicoUI() {
 		medicosListView.ItemsSource = await App.Repositorio.SelectMedicos();
-		buttonModificarMedico.IsEnabled = SelectedMedico != null;
+		x_BotonModificarMedico.IsEnabled = SelectedMedico != null;
 	}
 	async private void UpdateTurnoUI() {
 		turnosListView.ItemsSource = SelectedMedico is not null ? await App.Repositorio.SelectTurnosWhereMedicoId(SelectedMedico.Id) : [];
-		buttonModificarTurno.IsEnabled = SelectedTurno != null;
+		x_BotonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 	private void UpdatePacienteUI() {
 
@@ -29,7 +29,7 @@ public partial class Medicos : Window {
 		txtPacienteApellido.Text = PacienteRelacionado?.Apellido;
 		txtPacienteEmail.Text = PacienteRelacionado?.Email;
 		txtPacienteTelefono.Text = PacienteRelacionado?.Telefono;
-		buttonModificarPaciente.IsEnabled = PacienteRelacionado != null;
+		x_BotonModificarPaciente.IsEnabled = PacienteRelacionado != null;
 	}
 
 
@@ -59,17 +59,17 @@ public partial class Medicos : Window {
 
 
 	//---------------------botonesDeModificar-------------------//
-	private void ButtonModificarTurno(object sender, RoutedEventArgs e) {
+	private void ClickBoton_ModificarTurno(object sender, RoutedEventArgs e) {
 		if (SelectedTurno != null) {
 			this.AbrirComoDialogo<TurnosModificar>(SelectedTurno);
 		}
 	}
-	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
+	private void ClickBoton_ModificarMedico(object sender, RoutedEventArgs e) {
 		if (SelectedMedico != null) {
 			this.AbrirComoDialogo<MedicosModificar>(SelectedMedico);
 		}
 	}
-	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
+	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
 		if (PacienteRelacionado != null) {
 			this.AbrirComoDialogo<PacientesModificar>(PacienteRelacionado);
 		}
@@ -92,7 +92,7 @@ public partial class Medicos : Window {
 
 
 	//---------------------botonesDeVolver-------------------//
-	private void ButtonSalir(object sender, RoutedEventArgs e) {
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) {
 		this.Salir();
 	}
 	private void ButtonHome(object sender, RoutedEventArgs e) {

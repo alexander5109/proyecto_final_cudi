@@ -116,11 +116,9 @@ public partial class MedicosModificar : Window {
 
 
 	//---------------------botones.Salida-------------------//
-	private void ButtonCancelar(object sender, RoutedEventArgs e) {
-		this.Cerrar(); // this.NavegarA<Medicos>();
-	}
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e)  => this.Cerrar();
 
-	private void ButtonSalir(object sender, RoutedEventArgs e) {
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) {
 		this.Salir();
 	}
 	//------------------------Fin---------------------------//

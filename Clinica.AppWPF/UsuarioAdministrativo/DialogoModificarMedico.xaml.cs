@@ -74,9 +74,7 @@ public partial class DialogoModificarMedico : Window {
 	}
 
 	//---------------------botones.Salida-------------------//
-	private void ButtonCancelar(object sender, RoutedEventArgs e) {
-		this.Cerrar();
-	}
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
 
 	//---------------------botones.Horarios-------------------//
 	private object? GetSelectedTreeItem() {

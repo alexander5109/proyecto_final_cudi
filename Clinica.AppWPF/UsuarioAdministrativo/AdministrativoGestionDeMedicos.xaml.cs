@@ -31,7 +31,7 @@ public partial class AdministrativoGestionDeMedicos : Window {
 	//=============================================================
 	private async Task ActualizarMedicoUIAsync() {
 		//medicosListView.ItemsSource = await App.BaseDeDatos.SelectMedicos();
-		//buttonModificarMedico.IsEnabled = SelectedMedico != null;
+		//ClickBoton_ModificarMedico.IsEnabled = SelectedMedico != null;
 	}
 
 	private async Task ActualizarTurnoUIAsync() {
@@ -42,7 +42,7 @@ public partial class AdministrativoGestionDeMedicos : Window {
 		//}
 
 		//SelectedTurno = turnosListView.SelectedItem as TurnoDto;
-		//buttonModificarTurno.IsEnabled = SelectedTurno != null;
+		//ClickBoton_ModificarTurno.IsEnabled = SelectedTurno != null;
 
 		//if (SelectedTurno != null) {
 		//	PacienteRelacionado = await App.BaseDeDatos.SelectPacienteWhereId(SelectedTurno.PacienteId);
@@ -78,17 +78,17 @@ public partial class AdministrativoGestionDeMedicos : Window {
 	//=============================================================
 	// Botones de modificar
 	//=============================================================
-	private void ButtonModificarTurno(object sender, RoutedEventArgs e) {
+	private void ClickBoton_ModificarTurno(object sender, RoutedEventArgs e) {
 		//if (SelectedTurno != null)
 		//	this.AbrirComoDialogo<WindowModificarTurno>(SelectedTurno);
 	}
 
-	private void ButtonModificarMedico(object sender, RoutedEventArgs e) {
+	private void ClickBoton_ModificarMedico(object sender, RoutedEventArgs e) {
 		//if (SelectedMedico != null)
 		//	this.AbrirComoDialogo<DialogoModificarMedico>(SelectedMedico);
 	}
 
-	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
+	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
 		//if (PacienteRelacionado != null)
 		//	this.AbrirComoDialogo<WindowModificarPaciente>(PacienteRelacionado);
 	}
@@ -109,5 +109,5 @@ public partial class AdministrativoGestionDeMedicos : Window {
     }
 
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
-	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 }

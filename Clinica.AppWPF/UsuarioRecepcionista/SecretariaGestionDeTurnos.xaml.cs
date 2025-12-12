@@ -46,7 +46,7 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 	private void ButtonHome(object sender, RoutedEventArgs e)
 		=> this.IrARespectivaHome();
 
-	private void ButtonSalir(object sender, RoutedEventArgs e)
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e)
 		=> this.Salir();
 
 	// ==========================================================
@@ -108,8 +108,8 @@ public partial class RecepcionistaGestionDeTurnos : Window {
 		}
 
 		// abre el formulario de reprogramación
-		this.AbrirComoDialogo<SecretariaFormularioTurno>(
-			VM.SelectedTurno.PacienteRelacionado,
+		this.NavegarA<SecretariaFormularioTurno>(
+			//VM.SelectedTurno.PacienteRelacionado,
 			VM.SelectedTurno
 		);
 

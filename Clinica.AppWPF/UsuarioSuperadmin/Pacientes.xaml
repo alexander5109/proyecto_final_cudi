@@ -7,8 +7,8 @@
 	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioSuperadmin"
 	mc:Ignorable="d"
 	Title="Clinica Medica - Pacientes"
-	Height="600"
 	Width="1024"
+	Height="600"
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 	WindowStartupLocation="CenterScreen"
 	Activated="Window_Activated">
@@ -20,7 +20,7 @@
 				ImageSource="pack://application:,,,/PublishedResources/images/falopa.jpg" />
 		</Grid.Background>
 		<ContentControl
-			Style="{StaticResource ContentControlLindo}"
+			Style="{StaticResource ContentControlGlass}"
 			Margin="512,17,22,180">
 			<StackPanel
 				Orientation="Vertical"
@@ -41,6 +41,19 @@
 					Height="167"
 					SelectionChanged="pacientesListView_SelectionChanged"
 					d:ItemsSource="{d:SampleData ItemCount=5}">
+					<ListView.Background>
+						<LinearGradientBrush
+							EndPoint="0.5,1"
+							StartPoint="0.5,0">
+							<GradientStop
+								Color="Black" />
+							<GradientStop
+								Color="#FF8A8A8A"
+								Offset="1" />
+							<GradientStop
+								Color="White" />
+						</LinearGradientBrush>
+					</ListView.Background>
 					<ListView.View>
 						<GridView>
 							<!-- Dni Column -->
@@ -92,12 +105,12 @@
 						FontFamily="Baskerville Old Face"
 						Margin="25,0,25,5"></Button>
 					<Button
-						x:Name="buttonModificarPaciente"
+						x:Name="x_BotonModificarPaciente"
 						Content="Modificar"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"
 						Height="35"
-						Click="ButtonModificarPaciente"
+						Click="ClickBoton_ModificarPaciente"
 						FontSize="20"
 						Style="{StaticResource BotonRedondeado}"
 						FontWeight="Bold"
@@ -128,7 +141,7 @@
 			VerticalAlignment="Top"
 			Height="37"
 			Width="170"
-			Click="ButtonSalir"
+			Click="ClickBoton_Salir"
 			FontSize="20"
 			Style="{StaticResource BotonRedondeado}"
 			FontWeight="Bold"
@@ -136,7 +149,7 @@
 			Margin="810,501,0,0"
 			FontFamily="Baskerville Old Face" />
 		<ContentControl
-			Style="{StaticResource ContentControlLindo}"
+			Style="{StaticResource ContentControlSoftGradient}"
 			Margin="280,17,534,210">
 			<StackPanel
 				Orientation="Vertical"
@@ -179,11 +192,11 @@
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center">
 					<Button
-						x:Name="buttonModificarTurno"
+						x:Name="x_BotonModificarTurno"
 						Content="Modificar"
 						VerticalAlignment="Center"
 						Height="30"
-						Click="ButtonModificarTurno"
+						Click="ClickBoton_ModificarTurno"
 						FontSize="20"
 						Style="{StaticResource BotonRedondeado}"
 						FontWeight="Bold"
@@ -244,12 +257,12 @@
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center">
 					<Button
-						x:Name="buttonModificarMedico"
+						x:Name="x_BotonModificarMedico"
 						Content="Modificar"
 						HorizontalAlignment="Center"
 						VerticalAlignment="Center"
 						Height="30"
-						Click="ButtonModificarMedico"
+						Click="ClickBoton_ModificarMedico"
 						FontSize="20"
 						Style="{StaticResource BotonRedondeado}"
 						FontWeight="Bold"
@@ -262,7 +275,7 @@
 			</StackPanel>
 		</ContentControl>
 		<Label
-			Style="{StaticResource LabelLindo}"
+			Style="{StaticResource LabelLindoConPiu}"
 			x:Name="labelBaseDeDatosModo"
 			Content="Elegir DB Modo"
 			Margin="49,471,0,0"

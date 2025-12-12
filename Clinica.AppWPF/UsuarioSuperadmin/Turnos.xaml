@@ -7,8 +7,8 @@
 	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioSuperadmin"
 	mc:Ignorable="d"
 	Title="Clinica Medica - Turnos"
-	Height="600"
 	Width="1024"
+	Height="600"
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 	Activated="Window_Activated"
 	WindowStartupLocation="CenterScreen">
@@ -61,7 +61,7 @@
 			</StackPanel>
 		</ContentControl>
 		<ContentControl
-			Style="{StaticResource ContentControlLindo}"
+			Style="{StaticResource ContentControlGlass}"
 			Margin="446,30,243,85">
 			<StackPanel
 				Orientation="Vertical"
@@ -148,12 +148,12 @@
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center">
 					<Button
-						x:Name="buttonModificarTurno"
+						x:Name="x_BotonModificarTurno"
 						Content="Modificar"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"
 						Height="30"
-						Click="ButtonModificarTurno"
+						Click="ClickBoton_ModificarTurno"
 						FontSize="20"
 						Style="{StaticResource BotonRedondeado}"
 						FontWeight="Bold"
@@ -197,7 +197,7 @@
 			VerticalAlignment="Top"
 			Height="37"
 			Width="170"
-			Click="ButtonSalir"
+			Click="ClickBoton_Salir"
 			FontSize="20"
 			Style="{StaticResource BotonRedondeado}"
 			FontWeight="Bold"
@@ -205,7 +205,7 @@
 			Margin="35,490,0,0"
 			FontFamily="Baskerville Old Face"></Button>
 		<ContentControl
-			Style="{StaticResource ContentControlLindo}"
+			Style="{StaticResource ContentControlGlass}"
 			Margin="246,30,589,190">
 			<!-- <Expander Header="Información del Médico" IsExpanded="True" Background="Transparent" BorderThickness="0"> -->
 			<StackPanel
@@ -251,12 +251,12 @@
 					HorizontalAlignment="Center"
 					Width="176">
 					<Button
-						x:Name="buttonModificarMedico"
+						x:Name="x_BotonModificarMedico"
 						Content="Modificar"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"
 						Height="30"
-						Click="ButtonModificarMedico"
+						Click="ClickBoton_ModificarMedico"
 						FontSize="20"
 						Style="{StaticResource BotonRedondeado}"
 						FontWeight="Bold"
@@ -270,7 +270,7 @@
 			<!-- </Expander> -->
 		</ContentControl>
 		<ContentControl
-			Style="{StaticResource ContentControlLindo}"
+			Style="{StaticResource ContentControlPaper}"
 			Margin="795,30,19,130">
 			<!-- </Expander> -->
 			<!-- <Expander Header="Información del Paciente" IsExpanded="True" Background="Transparent" BorderThickness="0"> -->
@@ -324,12 +324,12 @@
 					HorizontalAlignment="Center"
 					Width="180">
 					<Button
-						x:Name="buttonModificarPaciente"
+						x:Name="x_BotonModificarPaciente"
 						Content="Modificar"
 						HorizontalAlignment="Left"
 						VerticalAlignment="Top"
 						Height="30"
-						Click="ButtonModificarPaciente"
+						Click="ClickBoton_ModificarPaciente"
 						FontSize="20"
 						Style="{StaticResource BotonRedondeado}"
 						FontWeight="Bold"
@@ -342,7 +342,7 @@
 			</StackPanel>
 		</ContentControl>
 		<Label
-			Style="{StaticResource LabelLindo}"
+			Style="{StaticResource LabelLindoConPiu}"
 			x:Name="labelBaseDeDatosModo"
 			Content="Elegir DB Modo"
 			Margin="679,488,0,0"

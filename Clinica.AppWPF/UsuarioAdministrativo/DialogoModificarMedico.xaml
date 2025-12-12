@@ -7,293 +7,276 @@
 	mc:Ignorable="d"
 	Title="Clinica Medica - Médicos Modificar"
 	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioAdministrativo"
-	Height="700"
-	Width="855"
+	Width="1024"
+	Height="600"
 	WindowStartupLocation="CenterScreen">
 	<Window.Background>
 		<ImageBrush
 			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg" />
 	</Window.Background>
-	<Grid
-		Margin="30,30,30,44">
+	<!-- Título -->
+	<!-- Formulario principal -->
+	<Grid Margin="25">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="auto" />
+			<!-- Columna Labels -->
+			<ColumnDefinition
+				Width="250" />
+			<ColumnDefinition
+				Width="*" />
+			<!-- Columna Inputs -->
+			<ColumnDefinition
+				Width="auto" />
+			<!-- Columna Agenda -->
+		</Grid.ColumnDefinitions>
+		<!-- Definir filas para los campos -->
 		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="auto" />
 			<RowDefinition
 				Height="Auto" />
 			<RowDefinition
-				Height="Auto"
-				MinHeight="434.64" />
+				Height="Auto" />
 			<RowDefinition
-				Height="Auto"
-				MinHeight="133" />
+				Height="Auto" />
 			<RowDefinition
-				Height="104*" />
+				Height="Auto" />
 			<RowDefinition
-				Height="31*" />
+				Height="Auto" />
+			<RowDefinition
+				Height="Auto" />
+			<RowDefinition
+				Height="Auto" />
+			<RowDefinition
+				Height="Auto" />
+			<RowDefinition
+				Height="Auto" />
+			<RowDefinition
+				Height="Auto" />
+			<RowDefinition
+				Height="Auto" />
+			<RowDefinition
+				Height="Auto" />
 		</Grid.RowDefinitions>
-		<!-- Título -->
+		<!-- Labels + Inputs -->
 		<Label
-			Content="Médico"
+			Content="Datos de Médico"
 			FontSize="40"
+			Grid.Row="0"
 			FontFamily="Bahnschrift"
-			HorizontalAlignment="Left"
 			VerticalAlignment="Center"
-			Height="53"
-			Width="205"
-			Style="{StaticResource LabelLindo}"
+			Style="{StaticResource LabelLindoConPiu}"
 			FlowDirection="RightToLeft"
-			HorizontalContentAlignment="Right"></Label>
-		<!-- Formulario principal -->
-		<Grid
+			HorizontalContentAlignment="Center"
+			Grid.ColumnSpan="3"
+			Margin="25,25,25,25" />
+		<Label
+			Content="Nombre"
 			Grid.Row="1"
-			Margin="0,9,0,25">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition
-					Width="200" />
-				<!-- Columna Labels -->
-				<ColumnDefinition
-					Width="250" />
-				<!-- Columna Inputs -->
-				<ColumnDefinition
-					Width="*" />
-				<!-- Columna Agenda -->
-			</Grid.ColumnDefinitions>
-			<!-- Definir filas para los campos -->
-			<Grid.RowDefinitions>
-				<RowDefinition
-					Height="Auto" />
-				<RowDefinition
-					Height="Auto" />
-				<RowDefinition
-					Height="Auto" />
-				<RowDefinition
-					Height="Auto" />
-				<RowDefinition
-					Height="Auto" />
-				<RowDefinition
-					Height="Auto" />
-				<RowDefinition
-					Height="Auto" />
-				<RowDefinition
-					Height="Auto" />
-				<RowDefinition
-					Height="Auto" />
-				<RowDefinition
-					Height="Auto" />
-				<RowDefinition
-					Height="Auto" />
-			</Grid.RowDefinitions>
-			<!-- Labels + Inputs -->
-			<Label
-				Content="Nombre"
-				Grid.Row="0"
-				Grid.Column="0"
-				VerticalAlignment="Center" />
-			<TextBox
-				Grid.Row="0"
-				Grid.Column="1"
-				Margin="5"
-				Style="{StaticResource TextBoxLindo2}"
-				Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged}" />
-
-			<Label
-				Content="Apellido"
-				Grid.Row="1"
-				Grid.Column="0"
-				VerticalAlignment="Center" />
-			<TextBox
-				Grid.Row="1"
-				Grid.Column="1"
-				Margin="5"
-				Style="{StaticResource TextBoxLindo2}"
-				Text="{Binding Apellido, UpdateSourceTrigger=PropertyChanged}" />
-
-			<Label
-				Content="DNI"
-				Grid.Row="2"
-				Grid.Column="0"
-				VerticalAlignment="Center" />
-			<TextBox
-				Grid.Row="2"
-				Grid.Column="1"
-				Margin="5"
-				Style="{StaticResource TextBoxLindo2}"
-				Text="{Binding Dni, UpdateSourceTrigger=PropertyChanged}" />
-
-			<Label
-				Content="Teléfono"
-				Grid.Row="3"
-				Grid.Column="0"
-				VerticalAlignment="Center" />
-			<TextBox
-				Grid.Row="3"
-				Grid.Column="1"
-				Margin="5"
-				Style="{StaticResource TextBoxLindo2}"
-				Text="{Binding Telefono, UpdateSourceTrigger=PropertyChanged}" />
-
-			<Label
-				Content="Provincia"
-				Grid.Row="4"
-				Grid.Column="0"
-				VerticalAlignment="Center" />
-			<TextBox
-				Grid.Row="4"
-				Grid.Column="1"
-				Margin="5"
-				Style="{StaticResource TextBoxLindo2}"
-				Text="{Binding Provincia, UpdateSourceTrigger=PropertyChanged}" />
-
-			<Label
-				Content="Domicilio"
-				Grid.Row="5"
-				Grid.Column="0"
-				VerticalAlignment="Center" />
-			<TextBox
-				Grid.Row="5"
-				Grid.Column="1"
-				Margin="5"
-				Style="{StaticResource TextBoxLindo2}"
-				Text="{Binding Domicilio, UpdateSourceTrigger=PropertyChanged}" />
-
-			<Label
-				Content="Localidad"
-				Grid.Row="6"
-				Grid.Column="0"
-				VerticalAlignment="Center" />
-			<TextBox
-				Grid.Row="6"
-				Grid.Column="1"
-				Margin="5"
-				Style="{StaticResource TextBoxLindo2}"
-				Text="{Binding Localidad, UpdateSourceTrigger=PropertyChanged}" />
-
-			<Label
-				Content="Especialidad"
-				Grid.Row="7"
-				Grid.Column="0"
-				VerticalAlignment="Center" />
-			<ComboBox
-				Grid.Row="7"
-				Grid.Column="1"
-				Width="234"
-				Height="27"
-				ItemsSource="{Binding EspecialidadesDisponibles}"
-				SelectedItem="{Binding Especialidad, Mode=TwoWay}" />
-
-			<Label
-				Content="Fecha de Ingreso"
-				Grid.Row="9"
-				Grid.Column="0"
-				VerticalAlignment="Center" />
-			<DatePicker
-				Grid.Row="9"
-				Grid.Column="1"
-				Margin="5"
-				SelectedDate="{Binding FechaIngreso, Mode=TwoWay}" />
-
-			<Label
-				Content="Realiza Guardia"
-				Grid.Row="10"
-				Grid.Column="0"
-				VerticalAlignment="Center" />
-			<CheckBox
-				Grid.Row="10"
-				Grid.Column="1"
-				Margin="5"
-				IsChecked="{Binding HaceGuardias, Mode=TwoWay}" />
-			<!-- Agenda -->
-			<StackPanel
-				Grid.Row="0"
-				Grid.Column="2"
-				Grid.RowSpan="11"
-				Margin="20,0,0,0">
-				<Label
-					Content="Horarios de atención"
-					FontWeight="Bold"
-					HorizontalAlignment="Center"
-					Margin="0,0,0,5"
-					Style="{StaticResource LabelLindo}"
-					Height="48"
-					Width="270"
-					FontSize="25"></Label>
-				<TreeView
-					ItemsSource="{Binding HorariosAgrupados}"
-					Height="270"
-					Margin="0,10,0,0">
-					<TreeView.Resources>
-						<HierarchicalDataTemplate
-							DataType="{x:Type local:ViewModelHorarioAgrupado}"
-							ItemsSource="{Binding Horarios}">
-							<TextBlock
-								Text="{Binding DiaSemanaNombre}"
-								FontWeight="Bold" />
-						</HierarchicalDataTemplate>
-						<DataTemplate
-							DataType="{x:Type local:HorarioMedicoViewModel}">
-							<StackPanel
-								Orientation="Horizontal"
-								Margin="15,0,0,0">
-								<TextBlock
-									Text="{Binding Desde}"
-									Width="50" />
-								<TextBlock
-									Text=" - " />
-								<TextBlock
-									Text="{Binding Hasta}"
-									Width="50" />
-							</StackPanel>
-						</DataTemplate>
-					</TreeView.Resources>
-				</TreeView>
-				<StackPanel
-					Orientation="Horizontal"
-					HorizontalAlignment="Center"
-					Margin="0,10,0,0">
-					<Button
-						x:Name="btnEditarHorario"
-						Content="✏️ Editar selección"
-						Margin="5" />
-					<Button
-						x:Name="btnEliminarHorario"
-						Content="🗑 Eliminar selección"
-						Margin="5" />
-				</StackPanel>
-				<StackPanel
-					Orientation="Horizontal"
-					HorizontalAlignment="Center"
-					Margin="0,10,0,0">
-					<Button
-						x:Name="btnAgregarDiaFranja"
-						Content="➕ Agregar horario"
-						Margin="5" />
-				</StackPanel>
-			</StackPanel>
-			<!-- Agenda END -->
-		</Grid>
-		<!-- Botones inferiores -->
-		<StackPanel
+			Grid.Column="0"
+			VerticalAlignment="Center" />
+		<TextBox
+			Grid.Row="1"
+			Grid.Column="1"
+			Margin="15,5,15,5"
+			Style="{StaticResource TextBoxLindo2}"
+			Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged}" />
+		<Label
+			Content="Apellido"
 			Grid.Row="2"
-			Orientation="Horizontal"
+			Grid.Column="0"
+			VerticalAlignment="Center" />
+		<TextBox
+			Grid.Row="2"
+			Grid.Column="1"
+			Margin="15,5,15,5"
+			Style="{StaticResource TextBoxLindo2}"
+			Text="{Binding Apellido, UpdateSourceTrigger=PropertyChanged}" />
+		<Label
+			Content="DNI"
+			Grid.Row="3"
+			Grid.Column="0"
+			VerticalAlignment="Center" />
+		<TextBox
+			Grid.Row="3"
+			Grid.Column="1"
+			Margin="15,5,15,5"
+			Style="{StaticResource TextBoxLindo2}"
+			Text="{Binding Dni, UpdateSourceTrigger=PropertyChanged}" />
+		<Label
+			Content="Teléfono"
+			Grid.Row="4"
+			Grid.Column="0"
+			VerticalAlignment="Center" />
+		<TextBox
+			Grid.Row="4"
+			Grid.Column="1"
+			Margin="15,5,15,5"
+			Style="{StaticResource TextBoxLindo2}"
+			Text="{Binding Telefono, UpdateSourceTrigger=PropertyChanged}" />
+		<Label
+			Content="Provincia"
+			Grid.Row="5"
+			Grid.Column="0"
+			VerticalAlignment="Center" />
+		<TextBox
+			Grid.Row="5"
+			Grid.Column="1"
+			Margin="15,5,15,5"
+			Style="{StaticResource TextBoxLindo2}"
+			Text="{Binding Provincia, UpdateSourceTrigger=PropertyChanged}" />
+		<Label
+			Content="Domicilio"
+			Grid.Row="6"
+			Grid.Column="0"
+			VerticalAlignment="Center" />
+		<TextBox
+			Grid.Row="6"
+			Grid.Column="1"
+			Margin="15,5,15,5"
+			Style="{StaticResource TextBoxLindo2}"
+			Text="{Binding Domicilio, UpdateSourceTrigger=PropertyChanged}" />
+		<Label
+			Content="Localidad"
+			Grid.Row="7"
+			Grid.Column="0"
+			VerticalAlignment="Center" />
+		<TextBox
+			Grid.Row="7"
+			Grid.Column="1"
+			Margin="15,5,15,5"
+			Style="{StaticResource TextBoxLindo2}"
+			Text="{Binding Localidad, UpdateSourceTrigger=PropertyChanged}" />
+		<Label
+			Content="Especialidad"
+			Grid.Row="8"
+			Grid.Column="0"
+			VerticalAlignment="Center" />
+		<ComboBox
+			Grid.Row="8"
+			Grid.Column="1"
+			Width="234"
+			Height="27"
+			ItemsSource="{Binding EspecialidadesDisponibles}"
+			SelectedItem="{Binding Especialidad, Mode=TwoWay}"
+			Margin="15,5,15,5" />
+		<Label
+			Content="Fecha de Ingreso"
+			Grid.Row="10"
+			Grid.Column="0"
+			VerticalAlignment="Center" />
+		<DatePicker
+			Grid.Row="10"
+			Grid.Column="1"
+			Margin="15,5,15,5"
+			SelectedDate="{Binding FechaIngreso, Mode=TwoWay}" />
+		<Label
+			Content="Realiza Guardia"
+			Grid.Row="11"
+			Grid.Column="0"
+			VerticalAlignment="Center" />
+		<CheckBox
+			Grid.Row="11"
+			Grid.Column="1"
+			Margin="15,5,15,5"
+			IsChecked="{Binding HaceGuardias, Mode=TwoWay}" />
+		<!-- Agenda -->
+		<StackPanel
+			Grid.Row="1"
+			Grid.Column="2"
+			Grid.RowSpan="15"
+			Margin="25,25,25,25">
+			<Label
+				Content="Horarios"
+				FontWeight="Bold"
+				HorizontalAlignment="Center"
+				Margin="0,0,0,5"
+				FontSize="25"
+				VerticalAlignment="Center"
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center" />
+			<TreeView
+				ItemsSource="{Binding HorariosAgrupados}"
+				Margin="5,5,5,5"
+				MinHeight="150"
+				Height="186">
+				<TreeView.Resources>
+					<HierarchicalDataTemplate
+						DataType="{x:Type local:ViewModelHorarioAgrupado}"
+						ItemsSource="{Binding Horarios}">
+						<TextBlock
+							Text="{Binding DiaSemanaNombre}"
+							FontWeight="Bold" />
+					</HierarchicalDataTemplate>
+					<DataTemplate
+						DataType="{x:Type local:HorarioMedicoViewModel}">
+						<StackPanel
+							Orientation="Horizontal"
+							Margin="15,0,0,0">
+							<TextBlock
+								Text="{Binding Desde}"
+								Width="50" />
+							<TextBlock
+								Text=" - " />
+							<TextBlock
+								Text="{Binding Hasta}"
+								Width="50" />
+						</StackPanel>
+					</DataTemplate>
+				</TreeView.Resources>
+			</TreeView>
+			<StackPanel
+				Orientation="Horizontal"
+				HorizontalAlignment="Center"
+				Margin="0,10,0,0">
+				<Button
+					x:Name="btnEditarHorario"
+					Content="✏️ Editar selección"
+					Margin="5" />
+				<Button
+					x:Name="btnEliminarHorario"
+					Content="🗑 Eliminar selección"
+					Margin="5" />
+			</StackPanel>
+			<StackPanel
+				Orientation="Horizontal"
+				HorizontalAlignment="Center"
+				Margin="0,10,0,0">
+				<Button
+					x:Name="btnAgregarDiaFranja"
+					Content="➕ Agregar horario"
+					Margin="5" />
+			</StackPanel>
+		</StackPanel>
+		<!-- Agenda END -->
+		<StackPanel
+			Grid.Column="3"
+			Grid.RowSpan="15"
+			Orientation="Vertical"
 			HorizontalAlignment="Center"
-			VerticalAlignment="Center"
-			Height="40"
-			Width="590">
+			VerticalAlignment="Bottom"
+			Margin="25,25,25,25"
+			Grid.Row="1">
 			<Button
 				Content="Guardar cambios"
 				Width="190"
 				Height="40"
-				Style="{StaticResource BotonRedondeado}" />
+				Style="{StaticResource BotonRedondeado}"
+				Margin="7,7,7,7" />
 			<Button
 				Content="Eliminar médico"
 				Width="190"
 				Height="40"
-				Margin="0,0,10,0"
+				Margin="7,7,7,7"
 				Style="{StaticResource BotonRedondeado}" />
 			<Button
 				Content="Volver"
 				Width="190"
 				Height="40"
-				Style="{StaticResource BotonRedondeado}" />
+				Style="{StaticResource BotonRedondeado}"
+				Margin="7,7,7,7" />
 		</StackPanel>
 	</Grid>
+	<!-- Botones inferiores -->
 </Window>

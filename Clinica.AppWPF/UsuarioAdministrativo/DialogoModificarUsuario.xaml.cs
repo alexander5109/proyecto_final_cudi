@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Clinica.AppWPF.Infrastructure;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
@@ -10,9 +11,9 @@ public partial class DialogoModificarUsuario : Window {
 
 
 
-	private void ButtonCancelar(object sender, RoutedEventArgs e) => Close();
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
 
-    private void MetodoBotonIniciarSesion(object sender, RoutedEventArgs e) {
+    private void ClickBoton_IniciarSesion(object sender, RoutedEventArgs e) {
 
 	}
 }

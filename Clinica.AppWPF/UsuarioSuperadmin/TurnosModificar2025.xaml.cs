@@ -123,8 +123,6 @@ public partial class TurnosModificar2025 : Window, INotifyPropertyChanged {
 
 
 	//---------------------botones.Salida-------------------//
-	private void ButtonCancelar(object sender, RoutedEventArgs e) {
-		this.Cerrar(); // this.NavegarA<WindowListarTurnos>();
-	}
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e)  => this.Cerrar();
 	//------------------------Fin---------------------------//
 }

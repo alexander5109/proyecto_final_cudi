@@ -14,33 +14,21 @@ public partial class RecepcionistaGestionDePacientes : Window {
 		Loaded += async (_, __) => await CargaInicialAsync();
 	}
 
-	private bool MostrarErrorSiCorresponde<T>(ResultWpf<T> result)
-		=> result.MatchAndSet(
-			ok => true,
-			error => {
-				error.ShowMessageBox();
-				return false;
-			}
-		);
-
-
-
 	private async Task CargaInicialAsync() {
 		await VM.RefrescarPacientesAsync();
 	}
 
-
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
-	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 
-	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) {
-		this.AbrirComoDialogo<RecepcionistaPacienteFormulario>();
-		_ = VM.RefrescarPacientesAsync();
-	}
-	private void ButtonModificarPaciente(object sender, RoutedEventArgs e) {
-		if (VM.SelectedPaciente is null) return;
-		this.AbrirComoDialogo<RecepcionistaPacienteFormulario>(VM.SelectedPaciente.Id);
-		_ = VM.RefrescarPacientesAsync();
+	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<RecepcionistaPacienteFormulario>();
+
+	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
+		if (VM.SelectedPaciente is not null) {
+			this.AbrirComoDialogo<RecepcionistaPacienteFormulario>(VM.SelectedPaciente.Id);
+		} else {
+			MessageBox.Show("No hay paciente seleecionado");
+		}
 	}
 	private void ButtonBuscarDisponibilidades(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is not null) {

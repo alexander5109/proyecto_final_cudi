@@ -70,12 +70,12 @@
 					Style="{StaticResource BotonRedondeado}" />
 				<!-- Botón Modificar -->
 				<Button
-					x:Name="buttonModificarMedico"
+					x:Name="x_BotonModificarMedico"
 					Content="Modificar"
 					Width="170"
 					Height="40"
 					Margin="10"
-					Click="ButtonModificarMedico"
+					Click="ClickBoton_ModificarMedico"
 					FontSize="18"
 					FontFamily="Baskerville Old Face"
 					FontWeight="Bold"
@@ -85,7 +85,7 @@
 			</StackPanel>
 		</StackPanel>
 		<Label
-			Style="{StaticResource LabelLindo}"
+			Style="{StaticResource LabelLindoConPiu}"
 			Grid.Row="0"
 			Content="Cuentas de usuario"
 			FontSize="40"
@@ -113,7 +113,7 @@
 			VerticalAlignment="Top"
 			Height="37"
 			Width="170"
-			Click="ButtonSalir"
+			Click="ClickBoton_Salir"
 			FontSize="20"
 			FontFamily="Baskerville Old Face"
 			Margin="898,229,0,0"

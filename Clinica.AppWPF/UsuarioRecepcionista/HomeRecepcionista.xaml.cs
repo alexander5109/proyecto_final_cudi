@@ -3,9 +3,9 @@ using Clinica.AppWPF.Infrastructure;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class RecepcionistaHome : Window {
+public partial class HomeRecepcionista : Window {
 	public string MensajeBienvenida { get; }
-	public RecepcionistaHome() {
+	public HomeRecepcionista() {
 		InitializeComponent();
 		soundCheckBox.IsChecked = SoundsService.SoundOn;
 
@@ -26,19 +26,19 @@ public partial class RecepcionistaHome : Window {
 
 
 
-	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
-	private void MetodoBotonLogout(object sender, RoutedEventArgs e) => this.CerrarSesion();
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
+	private void ClickBoton_Logout(object sender, RoutedEventArgs e) => this.CerrarSesion();
 
 
 
 
-	async private void MetodoBotonGestionTurnos(object sender, RoutedEventArgs e) {
+	async private void ClickBoton_GestionTurnos(object sender, RoutedEventArgs e) {
 		this.NavegarA<RecepcionistaGestionDeTurnos>();
 		await CargarPacientesYMedicosOnce();
 	}
 
 
-	async private void MetodoBotonGestionPacientes(object sender, RoutedEventArgs e) {
+	async private void ClickBoton_GestionPacientes(object sender, RoutedEventArgs e) {
 		this.NavegarA<RecepcionistaGestionDePacientes>();
 		await CargarPacientesYMedicosOnce();
 	}

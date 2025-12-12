@@ -4,54 +4,47 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Clinica Medica - Login"
 	WindowStartupLocation="CenterScreen"
-	SizeToContent="WidthAndHeight">
+	Width="1024"
+	Height="600">
 	<Window.Background>
 		<ImageBrush
 			ImageSource="pack://application:,,,/PublishedResources/images/otroFondo.png"
 			Stretch="UniformToFill" />
 	</Window.Background>
 	<Grid
-		Margin="40">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition
-				Width="130" />
-			<ColumnDefinition
-				Width="600" />
-			<ColumnDefinition
-				Width="130" />
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition
-				Height="400"></RowDefinition>
-			<RowDefinition
-				Height="*"></RowDefinition>
-		</Grid.RowDefinitions>
+		Margin="25,25,25,25">
 		<StackPanel
-			Grid.Column="0"
-			Grid.Row="1"
-			VerticalAlignment="Bottom"
-			Margin="0 0 20 0">
-			<Button
-				Content="Salir"
-				Style="{StaticResource BotonRedondeado}"
-				Width="110"
-				Height="38"
-				Margin="0 10 0 0"
+			Margin="25,25,25,25"
+			HorizontalAlignment="Center">
+			<Label
+				Content="Sistema de Gestión"
+				FontSize="30"
+				FontFamily="SachaWynterTight Linotype"
+				Background="{x:Null}"
+				Foreground="#FF1B1B67"
+				Padding="0,0,0,0" />
+			<Label
+				Content="`Reprocesos SXXI´"
 				FontSize="20"
-				Click="MetodoBotonSalir" />
-		</StackPanel>
-		<StackPanel
-			Grid.Row="0"
-			Grid.Column="1"
-			VerticalAlignment="Center"
-			HorizontalAlignment="Center"
-			Width="auto">
-			<TextBlock
-				Text="Ingreso al Sistema"
-				FontFamily="Ringbearer"
-				FontSize="50"
+				FontFamily="SachaWynterTight Linotype"
+				Background="{x:Null}"
+				Foreground="#FF333363"
 				HorizontalAlignment="Center"
-				Margin="0 60 0 20" />
+				Margin="0,0,0,25"
+				Padding="0,0,0,0" />
+			<Label
+				Content="Inicio de sesión"
+				FontSize="28"
+				FontFamily="Ringbearer"
+				Background="{x:Null}"
+				Foreground="#FF0E0E31"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center"
+				Grid.IsSharedSizeScope="True"
+				Padding="0,0,0,0"
+				Margin="5,5,5,5" />
 			<TextBlock
 				Text="Usuario"
 				FontFamily="Bahnschrift Light"
@@ -82,25 +75,25 @@
 				x:Name="iniciarSesionButton"
 				Content="Iniciar sesión"
 				Style="{StaticResource BotonRedondeado}"
-				Width="240"
-				Height="50"
+				Width="220"
+				Height="45"
 				IsDefault="True"
 				FontSize="20"
 				Background="#FF7FC7FA"
-				Click="MetodoBotonIniciarSesion" />
+				Click="ClickBoton_IniciarSesion" />
 		</StackPanel>
 		<ContentControl
-			Grid.Row="0"
-			Grid.Column="3"
-			HorizontalAlignment="Center"
-			VerticalAlignment="Top">
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Margin="25,25,25,25">
 			<CheckBox
 				x:Name="soundCheckBox"
-				Width="50"
-				Height="50"
 				Background="Transparent"
 				Click="SoundCheckBox_Checked"
-				ToolTip="Sonido">
+				ToolTip="Sonido"
+				HorizontalAlignment="Center"
+				Margin="5,5,5,5"
+				VerticalAlignment="Center">
 				<CheckBox.Template>
 					<ControlTemplate
 						TargetType="CheckBox">
@@ -133,5 +126,22 @@
 				</CheckBox.Template>
 			</CheckBox>
 		</ContentControl>
+		<StackPanel
+			Height="48"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Bottom"
+			Margin="25,25,25,25">
+			<Button
+				Content="Salir"
+				Style="{StaticResource BotonRedondeado}"
+				Width="110"
+				Height="38"
+				FontSize="20"
+				Click="ClickBoton_Salir"
+				HorizontalAlignment="Center"
+				Padding="25,1,1,1"
+				VerticalAlignment="Center"
+				Margin="5,5,5,5" />
+		</StackPanel>
 	</Grid>
 </Window>

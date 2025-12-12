@@ -9,8 +9,8 @@
 	Title="Clinica Medica - Pacientes Agregar"
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 	WindowStartupLocation="CenterScreen"
-	Width="725"
-	Height="505">
+	Width="1024"
+	Height="600">
 	<Window.Background>
 		<ImageBrush
 			ImageSource="pack://application:,,,/PublishedResources/images/MedicosFondo.jpg"
@@ -27,7 +27,7 @@
 			Width="144"
 			BorderBrush="Black"
 			Background="White"
-			Click="ButtonCancelar"
+			Click="ClickBoton_Cancelar"
 			FontFamily="Baskerville Old Face"
 			Margin="540,369,0,0" />
 		<Button
@@ -59,10 +59,11 @@
 			Background="White"
 			FontFamily="Baskerville Old Face" />
 		<Grid
-			VerticalAlignment="Top"
-			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Left"
 			MaxWidth="515"
-			Width="344">
+			Width="344"
+			Margin="137,0,0,0">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition
 					Width="Auto" />

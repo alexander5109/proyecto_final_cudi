@@ -14,24 +14,10 @@ public partial class HomeMedico : Window {
 
 	private void soundCheckBox_Checked(object sender, RoutedEventArgs e) => SoundsService.ToggleSound(this.soundCheckBox.IsChecked);
 
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
+	private void ClickBoton_Logout(object sender, RoutedEventArgs e) => this.CerrarSesion();
 
+	private void ClickBoton_MisPacientes(object sender, RoutedEventArgs e) => this.NavegarA<RecepcionistaGestionDePacientes>();
 
-
-	private void ButtonSalir(object sender, RoutedEventArgs e) => this.Salir();
-	private void MetodoBotonLogout(object sender, RoutedEventArgs e) => this.CerrarSesion();
-
-
-
-
-	private void MetodoBotonGestionTurnos(object sender, RoutedEventArgs e) => this.NavegarA<RecepcionistaGestionDeTurnos>();
-
-	private void MetodoBotonGestionPacientes(object sender, RoutedEventArgs e) => this.NavegarA<RecepcionistaGestionDePacientes>();
-
-    private void MetodoMisTurnos(object sender, RoutedEventArgs e) {
-
-    }
-
-    private void MetodoMisPAcientes(object sender, RoutedEventArgs e) {
-
-    }
+    private void MetodoMisTurnos(object sender, RoutedEventArgs e) => this.NavegarA<RecepcionistaGestionDeTurnos>();
 }
