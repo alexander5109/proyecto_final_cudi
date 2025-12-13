@@ -1,9 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
-using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
@@ -43,38 +41,23 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 	private bool _haceGuardias;
 	public bool HaceGuardias { get => _haceGuardias; set { _haceGuardias = value; OnPropertyChanged(); } }
 
-	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; }
+	//public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } //should it be associated to the selected medicoviewmodel or to the window viewmodel itself
 
-	public AdminMedicosModificarViewModel(MedicoDbModel model, IEnumerable<EspecialidadCodigo> especialidades) {
-		Id = model.Id;
-		_nombre = model.Nombre;
-		_apellido = model.Apellido;
-		_dni = model.Dni;
-		_telefono = model.Telefono;
-		_provincia = model.ProvinciaCodigo;
-		_domicilio = model.Domicilio;
-		_localidad = model.Localidad;
-		_especialidad = model.EspecialidadCodigo;
-		_fechaIngreso = model.FechaIngreso;
-		_haceGuardias = model.HaceGuardias;
+	public AdminMedicosModificarViewModel(MedicoDbModel medicoDbModel, IEnumerable<EspecialidadCodigo> especialidades) {
+		Id = medicoDbModel.Id;
+		_nombre = medicoDbModel.Nombre;
+		_apellido = medicoDbModel.Apellido;
+		_dni = medicoDbModel.Dni;
+		_telefono = medicoDbModel.Telefono;
+		_provincia = medicoDbModel.ProvinciaCodigo;
+		_domicilio = medicoDbModel.Domicilio;
+		_localidad = medicoDbModel.Localidad;
+		_especialidad = medicoDbModel.EspecialidadCodigo;
+		_fechaIngreso = medicoDbModel.FechaIngreso;
+		_haceGuardias = medicoDbModel.HaceGuardias;
 		EspecialidadesDisponibles = especialidades;
-
-		HorariosAgrupados = LoadHorarios(model.Horarios);
 	}
 
-	private static ObservableCollection<ViewModelHorarioAgrupado> LoadHorarios(IReadOnlyList<HorarioDto> horarios) {
-		//if (string.IsNullOrWhiteSpace(json))
-		//	return [];
-
-        //List<HorarioDb> horarios = JsonSerializer.Deserialize<List<HorarioDb>>(json)!;
-
-		var agrupado = horarios
-			.GroupBy(h => h.DiaSemana)
-			.Select(g => new ViewModelHorarioAgrupado(g.Key, [.. g]))
-			.ToList();
-
-		return new ObservableCollection<ViewModelHorarioAgrupado>(agrupado);
-	}
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 	void OnPropertyChanged([CallerMemberName] string? name = null)

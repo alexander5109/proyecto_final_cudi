@@ -117,6 +117,7 @@ public class SQLServerConnectionFactory(string connectionString) {
 		SqlMapper.AddTypeHandler(new PacienteIdHandler());
 		SqlMapper.AddTypeHandler(new MedicoIdHandler());
 		SqlMapper.AddTypeHandler(new UsuarioIdHandler());
+		SqlMapper.AddTypeHandler(new HorarioIdHandler());
 
 		return new SqlConnection(connectionString);
 	}

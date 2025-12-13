@@ -79,25 +79,25 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 	private List<MedicoDbModel> _todosLosMedicos = new List<MedicoDbModel>(); // Copia completa para filtrar
 	internal async Task RefrescarMedicosAsync() {
 		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
-		foreach (MedicoDbModel medico in medicos) {
-			string horariosTexto =
-				medico.Horarios.Count == 0
-					? "SIN HORARIOS"
-					: string.Join(
-						"\n",
-						medico.Horarios.Select(h =>
-							$"{h.DiaSemana.ATexto()} " +
-							$"{h.HoraDesde:hh\\:mm}–{h.HoraHasta:hh\\:mm} " +
-							$"({h.VigenteDesde:dd/MM/yyyy} → " // +
-							//$"{(h.VigenteHasta.HasValue ? h.VigenteHasta.Value.ToString("dd/MM/yyyy") : "Indefinido")})"
-						)
-					);
+		//foreach (MedicoDbModel medico in medicos) {
+			//string horariosTexto =
+			//	medico.Horarios.Count == 0
+			//		? "SIN HORARIOS"
+			//		: string.Join(
+			//			"\n",
+			//			medico.Horarios.Select(h =>
+			//				$"{h.DiaSemana.ATexto()} " +
+			//				$"{h.HoraDesde:hh\\:mm}–{h.HoraHasta:hh\\:mm} " +
+			//				$"({h.VigenteDesde:dd/MM/yyyy} → " // +
+			//				//$"{(h.VigenteHasta.HasValue ? h.VigenteHasta.Value.ToString("dd/MM/yyyy") : "Indefinido")})"
+			//			)
+			//		);
 
-			MessageBox.Show(
-				$"Cargando médico: {medico.Nombre}\n\nHorarios:\n{horariosTexto}",
-				"Debug horarios"
-			);
-		}
+			//MessageBox.Show(
+			//	$"Cargando médico: {medico.Nombre}\n\nHorarios:\n{horariosTexto}",
+			//	"Debug horarios"
+			//);
+		//}
 
 		_todosLosMedicos = medicos;
 		FiltrarMedicos();
@@ -124,12 +124,12 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 	private void CargarHorariosDeMedicoSeleccionado() {
 		HorariosViewModelList.Clear();
 
-		if (SelectedMedico?.Horarios.Count == 0) {
-			MessageBox.Show($"{SelectedMedico?.Nombre} no tiene ningun horario cargado");
-		} else {
-			foreach (var h in SelectedMedico.Horarios)
-				HorariosViewModelList.Add(new HorarioViewModel(h)); // Aquí estamos creando un ViewModel para cada HorarioDto
-		}
+		//if (SelectedMedico?.Horarios.Count == 0) {
+		//	MessageBox.Show($"{SelectedMedico?.Nombre} no tiene ningun horario cargado");
+		//} else {
+		//	foreach (var h in SelectedMedico.Horarios)
+		//		HorariosViewModelList.Add(new HorarioViewModel(h)); // Aquí estamos creando un ViewModel para cada HorarioDto
+		//}
 	}
 
 	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

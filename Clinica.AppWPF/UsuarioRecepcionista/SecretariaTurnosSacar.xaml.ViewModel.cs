@@ -294,6 +294,8 @@ internal static class ExtensionesLocales {
 		// MessageBox.Show(model.Nombre);
 		// MessageBox.Show(model.HorariosJson);
 
+
+
 		//List<DayOfWeek> dias = [];
 		List<DayOfWeek> dias = [.. model.Horarios.Select(x => x.DiaSemana)];
 		//if (!string.IsNullOrWhiteSpace(model.HorariosJson)) {

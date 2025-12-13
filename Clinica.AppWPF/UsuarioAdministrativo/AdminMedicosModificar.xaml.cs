@@ -2,7 +2,6 @@
 using System.Windows;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposExtensiones;
-using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
@@ -10,7 +9,7 @@ namespace Clinica.AppWPF.UsuarioAdministrativo;
 
 //public record HorarioDb(int Id, int MedicoId, int DiaSemana, TimeSpan HoraDesde, TimeSpan HoraHasta);
 
-public class ViewModelHorarioAgrupado(DayOfWeek dia, List<HorarioDto> horarios) {
+public class ViewModelHorarioAgrupado(DayOfWeek dia, List<HorarioDbModel> horarios) {
 	public string DiaSemanaNombre { get; } = dia.ATexto();
 	//public string DiaSemanaNombre { get; } = CultureInfo.GetCultureInfo("es-AR").DateTimeFormat.DayNames[dia];
 	public ObservableCollection<HorarioMedicoViewModel> Horarios { get; } = new ObservableCollection<HorarioMedicoViewModel>(
@@ -18,7 +17,7 @@ public class ViewModelHorarioAgrupado(DayOfWeek dia, List<HorarioDto> horarios) 
 		);
 }
 
-public class HorarioMedicoViewModel(HorarioDto h) {
+public class HorarioMedicoViewModel(HorarioDbModel h) {
 	public string Desde { get; } = h.HoraDesde.ToString(@"hh\:mm");
 	public string Hasta { get; } = h.HoraHasta.ToString(@"hh\:mm");
 }

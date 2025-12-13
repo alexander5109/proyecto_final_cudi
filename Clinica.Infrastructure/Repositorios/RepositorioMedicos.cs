@@ -5,6 +5,7 @@ using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
 using Dapper;
+using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.ApiDtos.MedicoDtos;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
 using static Clinica.Shared.DbModels.DbModels;
@@ -16,7 +17,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 
 
 
-    Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWhereId(MedicoId id)
+	Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWhereId(MedicoId id)
 		=> TryAsync(async conn => {
 			return await conn.QuerySingleOrDefaultAsync<MedicoDbModel>(
 				"sp_SelectMedicoWithHorariosWhereId",
@@ -42,8 +43,33 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 
 
 
+
+	//private static DataTable ToHorarioTable(IEnumerable<HorarioDto> horarios) {
+	//	var table = new DataTable();
+
+	//	table.Columns.Add("DiaSemana", typeof(byte));
+	//	table.Columns.Add("HoraDesde", typeof(TimeSpan));
+	//	table.Columns.Add("HoraHasta", typeof(TimeSpan));
+	//	table.Columns.Add("VigenteDesde", typeof(DateTime));
+	//	table.Columns.Add("VigenteHasta", typeof(DateTime));
+
+	//	foreach (var h in horarios) {
+	//		table.Rows.Add(
+	//			(byte)h.DiaSemana,          // DayOfWeek → TINYINT
+	//			h.HoraDesde,
+	//			h.HoraHasta,
+	//			h.VigenteDesde.Date,
+	//			h.VigenteHasta == default ? DBNull.Value : h.VigenteHasta.Date
+	//		);
+	//	}
+
+	//	return table;
+	//}
+
+
+
 	Task<Result<MedicoDbModel>> IRepositorioMedicos.UpdateMedicoWhereId(
-		MedicoId id, 
+		MedicoId id,
 		Medico2025 instance
 	)
 		=> TryAsync<MedicoDbModel>(async conn => {
@@ -52,7 +78,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 
 			// 2) Ejecutamos el SP y obtenemos @@ROWCOUNT
 			int rowsAffected = await conn.ExecuteScalarAsync<int>(
-				"sp_UpdatePacienteWhereId",
+				"sp_UpdateMedicoWithHorariosWhereId",
 				dto,
 				commandType: CommandType.StoredProcedure
 			);

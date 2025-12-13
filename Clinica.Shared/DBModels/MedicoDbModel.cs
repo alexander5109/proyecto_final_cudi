@@ -20,11 +20,12 @@ public static partial class DbModels {
 		ProvinciaCodigo ProvinciaCodigo,
 		string Telefono,
 		string Email,
-		bool HaceGuardias,
-		IReadOnlyList<HorarioDto> Horarios
+		bool HaceGuardias
+		//string? HorariosJson
+		//IReadOnlyList<HorarioDto> Horarios
 	) {
 		public MedicoDbModel()
-			: this(default!, default, "", "", "", default, "", "", default, "", "", default, []) { }
+			: this(default!, default, "", "", "", default, "", "", default, "", "", default) { }
 	}
 
 	public static MedicoDbModel ToModel(this Medico2025Agg aggrg) {
@@ -40,8 +41,8 @@ public static partial class DbModels {
 			ProvinciaCodigo: aggrg.Medico.Domicilio.Localidad.Provincia.CodigoInternoValor,
 			Telefono: aggrg.Medico.Telefono.Valor,
 			Email: aggrg.Medico.Email.Valor,
-			HaceGuardias: aggrg.Medico.HaceGuardiasValor,
-			Horarios: [.. aggrg.Medico.ListaHorarios.Valores.Select(x => x.ToDto())]
+			HaceGuardias: aggrg.Medico.HaceGuardiasValor
+			//HorariosJson: [.. aggrg.Medico.ListaHorarios.Valores.Select(x => x.ToDto())]
 		);
 	}
 
@@ -58,8 +59,8 @@ public static partial class DbModels {
 			ProvinciaCodigo: instance.Domicilio.Localidad.Provincia.CodigoInternoValor,
 			Telefono: instance.Telefono.Valor,
 			Email: instance.Email.Valor,
-			HaceGuardias: instance.HaceGuardiasValor,
-			Horarios: [.. instance.ListaHorarios.Valores.Select(x => x.ToDto())]
+			HaceGuardias: instance.HaceGuardiasValor
+			//Horarios: [.. instance.ListaHorarios.Valores.Select(x => x.ToDto())]
 		);
 	}
 	/*
