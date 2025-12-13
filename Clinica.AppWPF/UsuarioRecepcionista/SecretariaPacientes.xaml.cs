@@ -20,7 +20,7 @@ public partial class SecretariaPacientes : Window {
 	private void Click_AgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<SecretariaPacientesModificar>();
 	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is not null) {
-			this.AbrirComoDialogo<SecretariaPacientesModificar>(VM.SelectedPaciente.Id);
+			this.AbrirComoDialogo<SecretariaPacientesModificar>(VM.SelectedPaciente);
 		} else {
 			MessageBox.Show("No hay paciente seleecionado. Pero este mensaje no deberia aparecer nunca porque el boton tendria que estar desabilitado.");
 		}
@@ -59,15 +59,8 @@ public partial class SecretariaPacientes : Window {
 	// ==========================================================
 	// BOTONES: NAV
 	// ==========================================================
-	private void ClickBoton_Home(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
-
-
-
-
-
-
-
+	private void ClickBoton_Home(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
 
 
 }

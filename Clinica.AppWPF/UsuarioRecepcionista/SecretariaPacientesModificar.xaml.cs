@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
 
@@ -10,13 +11,13 @@ public partial class SecretariaPacientesModificar : Window {
 
 	public SecretariaPacientesModificar() {
 		InitializeComponent();
-		VM = new(new PacienteDbModel()); 
+		VM = new();
 		DataContext = VM;
 	}
 
 	public SecretariaPacientesModificar(PacienteDbModel pacientedbModel) {
 		InitializeComponent();
-		VM = new(pacientedbModel); //cheap recycle.... maybe we implement the refresh button just in case?
+		VM = new(pacientedbModel);
 		DataContext = VM;
 	}
 
@@ -46,7 +47,7 @@ public partial class SecretariaPacientesModificar : Window {
 	// BOTONES: NAV
 	// ==========================================================
 
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e)  => this.Cerrar();
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
 
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e)
 		=> this.Salir();
@@ -69,3 +70,4 @@ public partial class SecretariaPacientesModificar : Window {
 	}
 
 }
+

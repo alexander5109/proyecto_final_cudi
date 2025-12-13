@@ -76,7 +76,6 @@ public sealed class SecretariaPacientesViewModel : INotifyPropertyChanged {
 	// FILTER: PACIENTE (search in PacienteDisplayear)
 	// ================================================================
 
-
 	private string _filtroPacientesTexto = string.Empty;
 	public string FiltroPacientesTexto {
 		get => _filtroPacientesTexto;
@@ -96,7 +95,6 @@ public sealed class SecretariaPacientesViewModel : INotifyPropertyChanged {
 
 	public string? SelectedPacienteDomicilioCompleto => SelectedPaciente is null ? null : $"{SelectedPaciente?.Localidad}, {SelectedPaciente?.Domicilio}";
 	public string? SelectedPacienteNombreCompleto => SelectedPaciente is null ? null : $"{SelectedPaciente?.Nombre} {SelectedPaciente?.Apellido}";
-
 	public bool HayPacienteSeleccionado => SelectedPaciente is not null;
 
 
