@@ -2,8 +2,6 @@
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
-using Clinica.Shared.ApiDtos;
-using static Clinica.Shared.ApiDtos.HorarioDtos;
 
 namespace Clinica.Shared.DbModels;
 

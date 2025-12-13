@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
 

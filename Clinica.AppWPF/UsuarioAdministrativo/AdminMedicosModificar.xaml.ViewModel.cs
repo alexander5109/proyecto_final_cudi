@@ -1,9 +1,7 @@
-﻿using System.Collections.Immutable;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 using Clinica.AppWPF.UsuarioRecepcionista;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEntidad;
@@ -69,7 +67,7 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 	private bool _haceGuardias;
 	public bool HaceGuardias { get => _haceGuardias; set { _haceGuardias = value; OnPropertyChanged(); } }
 
-	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = new();
+	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = [];
 
 	public AdminMedicosModificarViewModel(MedicoDbModel medicoDbModel) {
 		Id = medicoDbModel.Id;

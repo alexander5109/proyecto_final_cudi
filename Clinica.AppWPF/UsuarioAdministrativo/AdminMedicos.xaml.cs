@@ -11,11 +11,7 @@ public partial class AdminMedicos : Window {
 		VM = new AdminMedicosViewModel();
 		DataContext = VM;
 
-		Loaded += async (_, __) => await CargaInicialAsync();
-	}
-
-	private async Task CargaInicialAsync() {
-		await VM.RefrescarMedicosAsync();
+		Loaded += async (_, __) => await VM.RefrescarMedicosAsync();
 	}
 
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
@@ -27,7 +23,7 @@ public partial class AdminMedicos : Window {
 		if (VM.SelectedMedico is not null) {
 			this.AbrirComoDialogo<AdminMedicosModificar>(VM.SelectedMedico);
 		} else {
-			MessageBox.Show("No hay paciente seleecionado");
+			MessageBox.Show("No hay médico seleccionado. (este boton deberia estar desabilitado)");
 		}
 	}
 

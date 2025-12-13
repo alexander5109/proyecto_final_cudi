@@ -26,7 +26,7 @@ public readonly record struct ListaHorarioMedicos2025(
 			return new Result<ListaHorarioMedicos2025>.Error("La lista de horarios no puede estar vacía.");
 
         // VALIDACION INDIVIDUAL
-        List<string> errores = new List<string>();
+        List<string> errores = [];
 
 		foreach (Horario2025 h in lista) {
 			if (h.HoraDesde >= h.HoraHasta)
