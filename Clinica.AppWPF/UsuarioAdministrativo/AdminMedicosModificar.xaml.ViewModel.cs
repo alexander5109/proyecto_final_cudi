@@ -1,6 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Controls;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
@@ -42,7 +45,7 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 	private bool _haceGuardias;
 	public bool HaceGuardias { get => _haceGuardias; set { _haceGuardias = value; OnPropertyChanged(); } }
 
-	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } //should it be associated to the selected medicoviewmodel or to the window viewmodel itself
+	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = new();
 
 	public AdminMedicosModificarViewModel(MedicoDbModel medicoDbModel, IEnumerable<EspecialidadCodigo> especialidades) {
 		Id = medicoDbModel.Id;
@@ -68,13 +71,20 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 		HorariosAgrupados.Clear();
 
 		if (Id is not MedicoId idGood) {
+			MessageBox.Show("why is medicoid null?");
 			return;
 		}
-		IReadOnlyList<HorarioDbModel> horarios = await App.Repositorio.SelectHorariosWhereMedicoId(idGood);
+		IReadOnlyList<HorarioDbModel>? horarios = await App.Repositorio.SelectHorariosWhereMedicoId(idGood);
+		if (horarios == null) {
+			MessageBox.Show("why is horarios null?");
+			return;
+		}
 
-        IOrderedEnumerable<IGrouping<DayOfWeek, HorarioDbModel>> grupos = horarios
+
+		IOrderedEnumerable<IGrouping<DayOfWeek, HorarioDbModel>> grupos = horarios
 			.GroupBy(h => h.DiaSemana)
 			.OrderBy(g => g.Key);
+
 
 		foreach (IGrouping<DayOfWeek, HorarioDbModel>? grupo in grupos) {
 			HorariosAgrupados.Add(
@@ -84,5 +94,14 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 				)
 			);
 		}
+
+
+
+		bool test = horarios.Count > 0;
+		bool test2 = grupos.Count() > 0;
+		bool test3 = HorariosAgrupados.Count > 0;
+		//bool test4 = TreeView.Items.Count > 0;
+
+
 	}
 }

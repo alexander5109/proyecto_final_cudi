@@ -9,26 +9,13 @@ namespace Clinica.AppWPF.UsuarioAdministrativo;
 
 //public record HorarioDb(int Id, int MedicoId, int DiaSemana, TimeSpan HoraDesde, TimeSpan HoraHasta);
 
-public class ViewModelHorarioAgrupado(DayOfWeek dia, List<HorarioDbModel> horarios) {
-	public string DiaSemanaNombre { get; } = dia.ATexto();
-	//public string DiaSemanaNombre { get; } = CultureInfo.GetCultureInfo("es-AR").DateTimeFormat.DayNames[dia];
-	public ObservableCollection<HorarioMedicoViewModel> Horarios { get; } = new ObservableCollection<HorarioMedicoViewModel>(
-			horarios.Select(h => new HorarioMedicoViewModel(h))
-		);
-}
-
-public class HorarioMedicoViewModel(HorarioDbModel h) {
-	public string Desde { get; } = h.HoraDesde.ToString(@"hh\:mm");
-	public string Hasta { get; } = h.HoraHasta.ToString(@"hh\:mm");
-}
-
 
 
 public partial class AdminMedicosModificar : Window {
 	public AdminMedicosModificarViewModel VM { get; }
 
 	public AdminMedicosModificar() {
-		//InitializeComponent();
+		InitializeComponent();
 		VM = new AdminMedicosModificarViewModel(new MedicoDbModel(), [EspecialidadCodigo.ClinicoGeneral]);
 		//DataContext = VM;
 	}
@@ -156,4 +143,17 @@ public partial class AdminMedicosModificar : Window {
 
 	//------------------------Fin---------------------------//
 
+}
+
+public class ViewModelHorarioAgrupado(DayOfWeek dia, List<HorarioDbModel> horarios) {
+	public string DiaSemanaNombre { get; } = dia.ATexto();
+	//public string DiaSemanaNombre { get; } = CultureInfo.GetCultureInfo("es-AR").DateTimeFormat.DayNames[dia];
+	public ObservableCollection<HorarioMedicoViewModel> Horarios { get; } = new ObservableCollection<HorarioMedicoViewModel>(
+			horarios.Select(h => new HorarioMedicoViewModel(h))
+		);
+}
+
+public class HorarioMedicoViewModel(HorarioDbModel h) {
+	public string Desde { get; } = h.HoraDesde.ToString(@"hh\:mm");
+	public string Hasta { get; } = h.HoraHasta.ToString(@"hh\:mm");
 }
