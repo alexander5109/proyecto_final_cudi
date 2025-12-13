@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
 using Microsoft.VisualBasic;
 using static Clinica.Shared.DbModels.DbModels;
@@ -28,11 +29,28 @@ public partial class SecretariaTurnosSacar : Window {
 
 	}
 
-	private async void ClickBoton_Consultar(object sender, RoutedEventArgs e) {
-		SoundsService.PlayClickSound();
-		await VM.RefreshDisponibilidadesAsync();
-	}
 
+
+
+
+
+	private bool _enCooldown;
+	private async void ClickBoton_Consultar(object sender, RoutedEventArgs e) {
+		if (_enCooldown)
+			return;
+		try {
+			_enCooldown = true;
+			if (sender is Button btn)
+				btn.IsEnabled = false;
+			await VM.RefreshDisponibilidadesAsync();
+		} finally {
+			await Task.Delay(2000);
+			if (sender is Button btn)
+				btn.IsEnabled = true;
+
+			_enCooldown = false;
+		}
+	}
 
 
 	private static bool MatchAndSetBooleano<T>(ResultWpf<T> result)
