@@ -31,39 +31,10 @@ public class HorarioViewModel(HorarioDto model) : INotifyPropertyChanged {
 }
 
 
-
-
 public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-
-	//public ICommand EditarHorarioCommand { get; }
-	//public ICommand EliminarHorarioCommand { get; }
-
-	public ObservableCollection<HorarioViewModel> HorariosViewModelList { get; } = [];
-
-	public async Task CargarHorariosAsync(int medicoId) {
-		//Los medicoDbModel ya traen HorarioDbModel
-		//var response = await App.Repositorio.SelectHorariosWhereMedicoId(new MedicoId(medicoId));
-		//HorariosViewModelList.Clear();
-		//foreach (var h in response)
-		//	HorariosViewModelList.Add(new HorarioViewModel(h));
-	}
-
-	private void CargarHorariosDeMedicoSeleccionado() {
-		HorariosViewModelList.Clear();
-		if (SelectedMedico is null) return;
-
-		if (SelectedMedico.Horarios.Count == 0) {
-			MessageBox.Show($"{SelectedMedico.Nombre} no tiene ningun horario cargado");
-		} else {
-			foreach (var h in SelectedMedico.Horarios)
-				HorariosViewModelList.Add(new HorarioViewModel(h));
-		}
-
-
-	}
-
+	public ObservableCollection<HorarioViewModel> HorariosViewModelList { get; } = new ObservableCollection<HorarioViewModel>();
 
 	private MedicoDbModel? _selectedMedico;
 	public MedicoDbModel? SelectedMedico {
@@ -76,6 +47,7 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 				OnPropertyChanged(nameof(SelectedMedicoDomicilioCompleto));
 				OnPropertyChanged(nameof(SelectedMedicoNombreCompleto));
 
+				// Cargar horarios directamente desde SelectedMedico.Horarios
 				CargarHorariosDeMedicoSeleccionado();
 			}
 		}
@@ -88,55 +60,77 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 			if (_filtroMedicosTexto != value) {
 				_filtroMedicosTexto = value;
 				OnPropertyChanged(nameof(FiltroMedicosTexto));
-				FiltrarMedicos(); // cada vez que cambia el texto, aplicamos el filtro
+				FiltrarMedicos(); // Aplica el filtro cada vez que cambia el texto
 			}
 		}
 	}
 
-	private List<MedicoDbModel> _medicos = [];
+	private List<MedicoDbModel> _medicos = new List<MedicoDbModel>();
 	public List<MedicoDbModel> MedicosList {
 		get => _medicos;
-		set { _medicos = value; 
+		set {
+			_medicos = value;
 			OnPropertyChanged(nameof(MedicosList));
-			OnPropertyChanged(nameof(HorariosViewModelList));
 		}
 	}
+
 	public bool ModificarMedicoCommand => SelectedMedico is not null;
 
-
-
-	private List<MedicoDbModel> _todosLosMedicos = []; // copia completa para filtrar
+	private List<MedicoDbModel> _todosLosMedicos = new List<MedicoDbModel>(); // Copia completa para filtrar
 	internal async Task RefrescarMedicosAsync() {
-		try {
-			List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
-			_todosLosMedicos = medicos;
-		} catch (Exception ex) {
-			MessageBox.Show("Error cargando medicos: " + ex.Message);
+		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
+		foreach (MedicoDbModel medico in medicos) {
+			string horariosTexto =
+				medico.Horarios.Count == 0
+					? "SIN HORARIOS"
+					: string.Join(
+						"\n",
+						medico.Horarios.Select(h =>
+							$"{h.DiaSemana.ATexto()} " +
+							$"{h.HoraDesde:hh\\:mm}–{h.HoraHasta:hh\\:mm} " +
+							$"({h.VigenteDesde:dd/MM/yyyy} → " // +
+							//$"{(h.VigenteHasta.HasValue ? h.VigenteHasta.Value.ToString("dd/MM/yyyy") : "Indefinido")})"
+						)
+					);
+
+			MessageBox.Show(
+				$"Cargando médico: {medico.Nombre}\n\nHorarios:\n{horariosTexto}",
+				"Debug horarios"
+			);
 		}
+
+		_todosLosMedicos = medicos;
 		FiltrarMedicos();
 	}
 
-
 	private void FiltrarMedicos() {
 		if (string.IsNullOrWhiteSpace(FiltroMedicosTexto)) {
-			MedicosList = [.. _todosLosMedicos];
+			MedicosList = new List<MedicoDbModel>(_todosLosMedicos);
 		} else {
 			var texto = FiltroMedicosTexto.Trim().ToLower();
-			MedicosList = [.. _todosLosMedicos
-				.Where(p =>
+			MedicosList = _todosLosMedicos.Where(p =>
 					(p.Nombre?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
 					(p.Apellido?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
-					(p.EspecialidadCodigo.ToString().Contains(texto, StringComparison.CurrentCultureIgnoreCase))
-				)];
+					(p.EspecialidadCodigo.ToString().Contains(texto, StringComparison.CurrentCultureIgnoreCase)))
+				.ToList();
 		}
 	}
-
 
 	public string? SelectedMedicoDomicilioCompleto => SelectedMedico is null ? null : $"{SelectedMedico?.Localidad}, {SelectedMedico?.Domicilio}";
 	public string? SelectedMedicoNombreCompleto => SelectedMedico is null ? null : $"{SelectedMedico?.Nombre} {SelectedMedico?.Apellido}";
 
 	public bool HayMedicoSeleccionado => SelectedMedico is not null;
 
-	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new(propertyName));
-}
+	private void CargarHorariosDeMedicoSeleccionado() {
+		HorariosViewModelList.Clear();
 
+		if (SelectedMedico?.Horarios.Count == 0) {
+			MessageBox.Show($"{SelectedMedico?.Nombre} no tiene ningun horario cargado");
+		} else {
+			foreach (var h in SelectedMedico.Horarios)
+				HorariosViewModelList.Add(new HorarioViewModel(h)); // Aquí estamos creando un ViewModel para cada HorarioDto
+		}
+	}
+
+	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+}

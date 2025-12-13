@@ -148,11 +148,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			return;
 
 		List<MedicoDbModel> list = await Api.TryGetJsonAsync<List<MedicoDbModel>>("api/medicos", defaultValue: []);
-		//List<MedicoDbModel> list = await Api.TryGetJsonAsync<List<MedicoDbModel>>("api/medicos/con-horarios", defaultValue: []);
 
 		RepoCache.DictMedicos.Clear();
 		RepoCache.DictMedicos = list.ToDictionary(m => m.Id, m => m);
-		//foreach (KeyValuePair<MedicoId, MedicoDbModel> m in DictMedicos ) {
+		//foreach (KeyValuePair<MedicoId, MedicoDbModel> m in DictMedicos) {
 		//	Console.WriteLine($"Medico cache loaded: {m.Key} -> {m.Value.Nombre} {m.Value.Apellido}");
 		//}
 		_medicosLoaded = true;

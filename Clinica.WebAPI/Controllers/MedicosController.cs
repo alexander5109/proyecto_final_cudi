@@ -21,11 +21,15 @@ public class MedicosController(
 ) : ControllerBase {
 
 	[HttpGet]
-	public Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicos() => this.SafeExecute(
-		logger,
-		PermisosAccionesCodigo.VerMedicos,
-		() => repositorio.SelectMedicos()
-	);
+	public async Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicos() {
+        ActionResult<IEnumerable<MedicoDbModel>> response = await this.SafeExecute(
+			logger,
+			PermisosAccionesCodigo.VerMedicos,
+			() => repositorio.SelectMedicos()
+		);
+        ActionResult? test = response.Result;
+		return response;
+	}
 
 	//[HttpGet("con-horarios/")]
 	//public Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicosWithHorarios() => this.SafeExecute(
