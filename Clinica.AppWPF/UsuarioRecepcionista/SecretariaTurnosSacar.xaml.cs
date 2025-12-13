@@ -79,7 +79,10 @@ public partial class SecretariaTurnosSacar : Window {
 				""
 			);
 
-			if (comentario == null || comentario.Length < 10) {
+			if (comentario == "") {
+				return;
+			}
+			if (comentario.Length < 7) {
 				MessageBox.Show("Debe completar un comentario para cancelar el turno.");
 				return;
 			}
@@ -90,10 +93,12 @@ public partial class SecretariaTurnosSacar : Window {
 				comentario
 			);
 			if (!MatchAndSetBooleano(resultt)) {
-				this.Close();
+				//this.NavegarA<SecretariaPacientes>();
+				this.IrARespectivaHome();
 				return;
 			}
 		}
+
 		ResultWpf<TurnoDbModel> result = await App.Repositorio.AgendarNuevoTurno(
 			VM.SelectedPaciente.Id,
 			DateTime.Now,
@@ -102,12 +107,15 @@ public partial class SecretariaTurnosSacar : Window {
 		result.MatchAndDo(
 			caseOk => {
 				MessageBox.Show("Turno reservado exitosamente.", "Éxito", MessageBoxButton.OK);
-				this.Close();
+				this.NavegarA<SecretariaPacientes>();
 			},
-			caseError => caseError.ShowMessageBox()
+			caseError => {
+				caseError.ShowMessageBox();
+				MessageBox.Show($"VM.SelectedDisponibilidad.Original: {VM.SelectedDisponibilidad.Original}");
+			}
 		);
 
-		//App.Repositorio.RefreshTurnos();
+		//App.Repositorio.Refres();
 
 	}
 
@@ -121,6 +129,5 @@ public partial class SecretariaTurnosSacar : Window {
 
 	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaTurnos>();
 
-	private void ClickBoton_Salir(object sender, RoutedEventArgs e)
-		=> this.Salir();
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 }

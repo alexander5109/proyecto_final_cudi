@@ -151,11 +151,9 @@ public partial class SecretariaTurnos : Window {
 	// BOTONES: NAV
 	// ==========================================================
 
-	private void ClickBoton_Home(object sender, RoutedEventArgs e)
-		=> this.IrARespectivaHome();
+	private void ClickBoton_Home(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
 
-	private void ClickBoton_Salir(object sender, RoutedEventArgs e)
-		=> this.Salir();
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 
 
 
