@@ -1,12 +1,249 @@
-﻿<Window x:Class="Clinica.AppWPF.UsuarioMedico.MedicoHistorialDelPaciente"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioMedico"
+﻿<Window
+	x:Class="Clinica.AppWPF.UsuarioMedico.MedicoMisPacientes"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
+	Title="Clinica Medica – Gestión Integral"
+	WindowStartupLocation="CenterScreen"
 	Width="1024"
 	Height="600"
-	Title="MedicoHistorialDelPaciente">
-    <Grid />
+	Icon="pack://application:,,,/PublishedResources/icons/icono.png">
+	<Window.Background>
+		<ImageBrush
+			ImageSource="/PublishedResources/images2025sol/fondoAbstracto2025.jpg" />
+	</Window.Background>
+	<!-- ===================== LAYOUT GENERAL ===================== -->
+	<Grid
+		Margin="20">
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="Auto" />
+			<!-- Título -->
+			<RowDefinition
+				Height="*" />
+			<!-- Contenido -->
+			<RowDefinition
+				Height="Auto" />
+			<!-- Botones inferiores -->
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="*" />
+			<!-- Búsqueda + lista -->
+			<ColumnDefinition
+				Width="*" />
+			<!-- Estado del turno -->
+		</Grid.ColumnDefinitions>
+		<StackPanel
+			Orientation="Horizontal"
+			Grid.Column="0"
+			Grid.Row="0"
+			HorizontalAlignment="Center">
+			<Button
+				Click="ClickBoton_Refrescar"
+				Style="{StaticResource BotonRefrescar}"
+				VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch"
+				Width="60"
+				Height="60" />
+			<Label
+				Grid.Column="0"
+				Grid.Row="0"
+				Content="Mis Pacientes"
+				FontSize="55"
+				FontFamily="Segoe UI Historic"
+				FlowDirection="RightToLeft"
+				Style="{StaticResource LabelLindoConPiu}"
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center"
+				VerticalAlignment="Center"
+				FontWeight="Bold"
+				Width="500" />
+		</StackPanel>
+		<!-- ===================== PANEL 2 - ESTADO DEL TURNO ===================== -->
+		<!-- ===================== PANEL 3 - BUSCAR PACIENTE ===================== -->
+		<!-- ===================== BOTONES INFERIORES ===================== -->
+		<!-- ===== BOTONES INFERIORES (HOME / SALIR) ===== -->
+		<StackPanel
+			Grid.Row="2"
+			Orientation="Horizontal"
+			HorizontalAlignment="Left"
+			Margin="15,15,15,15"
+			Width="380"
+			VerticalAlignment="Bottom">
+			<Button
+				Content="Home"
+				Width="170"
+				Height="37"
+				Margin="10,0,10,10"
+				Click="ButtonHome"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeado}" />
+			<Button
+				Content="Salir"
+				Width="170"
+				Height="37"
+				Margin="10,0,10,10"
+				Click="ClickBoton_Salir"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeado}" />
+		</StackPanel>
+		<StackPanel
+			Grid.Column="0"
+			Grid.Row="1"
+			Margin="25,25,25,25">
+			<Label
+				Content="Buscar Paciente"
+				FontSize="25"
+				FontFamily="Segoe UI Historic"
+				FlowDirection="RightToLeft"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center"
+				VerticalAlignment="Center"
+				FontWeight="Bold"
+				HorizontalAlignment="Center" />
+			<Label
+				Content="Filtrar por Nombre, Apellido o DNI:"
+				FontFamily="Palatino Linotype"
+				FontWeight="Bold"
+				Margin="10,10,10,0"
+				HorizontalAlignment="Center" />
+			<TextBox
+				Text="{Binding FiltroPacientesTexto, UpdateSourceTrigger=PropertyChanged}"
+				Margin="10,0,10,0"
+				HorizontalAlignment="Center"
+				Width="200" />
+			<ListView
+				ItemsSource="{Binding PacientesList}"
+				SelectedItem="{Binding SelectedPaciente}"
+				Height="211"
+				Margin="10,10,10,10"
+				ScrollViewer.VerticalScrollBarVisibility="Auto"
+				HorizontalContentAlignment="Center">
+				<ListView.View>
+					<GridView>
+						<GridViewColumn
+							Header="Nombre"
+							Width="155"
+							DisplayMemberBinding="{Binding Nombre}" />
+						<GridViewColumn
+							Header="Apellido"
+							Width="155"
+							DisplayMemberBinding="{Binding Apellido}" />
+						<GridViewColumn
+							Header="DNI"
+							Width="75"
+							DisplayMemberBinding="{Binding Dni}" />
+						<GridViewColumn
+							Header="FechaIngreso"
+							Width="144"
+							DisplayMemberBinding="{Binding FechaIngreso}" />
+					</GridView>
+				</ListView.View>
+			</ListView>
+			<StackPanel
+				Margin="10"
+				HorizontalAlignment="Center" />
+		</StackPanel>
+		<StackPanel
+			Orientation="Vertical"
+			HorizontalAlignment="Center"
+			Grid.Row="0"
+			Grid.RowSpan="3"
+			Grid.Column="1"
+			Margin="5,0,5,5"
+			VerticalAlignment="Center">
+			<Label
+				Content="Paciente seleccionado"
+				FontSize="25"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalContentAlignment="Center"
+				VerticalAlignment="Center"
+				Margin="25,0,25,0"
+				FontWeight="Bold" />
+			<!-- Campos -->
+			<Label
+				Content="Nombre completo:"
+				FontWeight="Bold"
+				Margin="0 10 0 0"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center" />
+			<Label
+				Content="{Binding SelectedPacienteNombreCompleto}"
+				MinWidth="200"
+				HorizontalContentAlignment="Center"
+				Grid.IsSharedSizeScope="True"
+				Padding="0,0,0,0"
+				Height="16" />
+			<Label
+				Content="Telefono:"
+				FontWeight="Bold"
+				Margin="0 10 0 0"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center" />
+			<Label
+				Content="{Binding SelectedPaciente.Telefono}"
+				VerticalAlignment="Center"
+				MinWidth="200"
+				HorizontalContentAlignment="Center"
+				HorizontalAlignment="Center"
+				Height="16"
+				Padding="0,0,0,0" />
+			<Label
+				Content="Email:"
+				FontWeight="Bold"
+				Margin="0 10 0 0"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center" />
+			<Label
+				Content="{Binding SelectedPaciente.Email}"
+				VerticalAlignment="Center"
+				HorizontalContentAlignment="Center"
+				MinWidth="200"
+				HorizontalAlignment="Center"
+				Height="16"
+				Padding="0,0,0,0" />
+			<Label
+				Content="Domicilio:"
+				FontWeight="Bold"
+				Margin="0 10 0 0"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center" />
+			<Label
+				Content="{Binding SelectedPacienteDomicilioCompleto}"
+				VerticalAlignment="Center"
+				MinWidth="200"
+				HorizontalContentAlignment="Center"
+				HorizontalAlignment="Center"
+				Height="16"
+				Padding="0,0,0,0" />
+			<Label
+				Content="Fecha de Ingreso:"
+				FontWeight="Bold"
+				Margin="0 10 0 0"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center" />
+			<Label
+				Content="{Binding SelectedPaciente.FechaIngreso}"
+				VerticalAlignment="Center"
+				MinWidth="200"
+				HorizontalContentAlignment="Center"
+				HorizontalAlignment="Center"
+				Height="16"
+				Padding="0,0,0,0" />
+			<StackPanel
+				Margin="15,25,15,15">
+				<Button
+					Content="Anotar informe"
+					Width="240"
+					Height="50"
+					IsEnabled="{Binding HayPacienteSeleccionado}"
+					Click="ClickBoton_AnotarInforme"
+					Style="{StaticResource BotonRedondeado}" />
+			</StackPanel>
+		</StackPanel>
+	</Grid>
 </Window>
