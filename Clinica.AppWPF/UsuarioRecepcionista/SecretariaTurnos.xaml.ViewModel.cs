@@ -17,7 +17,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 
 	private List<TurnoViewModel> _todosLosTurnos = [];   // Original immutable list
 	public ObservableCollection<TurnoViewModel> TurnosList { get; } = [];
-
+	public List<TurnoEstadoCodigo> Estados { get; } = [.. Enum.GetValues<TurnoEstadoCodigo>()];
 
 	// ================================================================
 	// METODOS DE DOMINIO
@@ -141,7 +141,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 			);
 		}
 
-		// 🔹 Filtro por paciente
+		// 🔹 Filtro por medico
 		if (!string.IsNullOrWhiteSpace(FiltroTurnosMedico)) {
 			var txt = FiltroTurnosMedico.Trim();
 
@@ -152,9 +152,6 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 				)
 			);
 		}
-
-
-		
 
 		foreach (TurnoViewModel turno in origen)
 			TurnosList.Add(turno);
@@ -186,13 +183,9 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		}
 	}
 
-
 	// ================================================================
-	// FILTER: ESTADO
+	// FILTROS
 	// ================================================================
-
-	public List<TurnoEstadoCodigo> Estados { get; }
-		= [.. Enum.GetValues<TurnoEstadoCodigo>()];
 
 	private TurnoEstadoCodigo? _estadoSeleccionado;
 	public TurnoEstadoCodigo? EstadoSeleccionado {
@@ -205,11 +198,6 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 			}
 		}
 	}
-
-
-	// ================================================================
-	// FILTROS
-	// ================================================================
 
 	private string _filtroTurnosPaciente = "";
 	public string FiltroTurnosPaciente {
