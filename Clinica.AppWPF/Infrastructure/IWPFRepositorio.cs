@@ -60,8 +60,9 @@ public static class IWPFRepositorioInterfaces {
 	}
 
 	public interface IWPFRepositorioHorarios {
-		Task<List<HorarioDbModel>> SelectHorarios();
-		Task<List<HorarioDbModel>> SelectHorariosWhereMedicoId(MedicoId id);
+		//Task<List<HorarioDbModel>> SelectHorarios();
+		Task<IReadOnlyList<HorarioDbModel>?> SelectHorariosWhereMedicoId(MedicoId id);
+		Task<IReadOnlyList<DayOfWeek>?> SelectDiasDeAtencionWhereMedicoId(MedicoId id);
 	}
 
 	public interface IWPFRepositorioTurnos {

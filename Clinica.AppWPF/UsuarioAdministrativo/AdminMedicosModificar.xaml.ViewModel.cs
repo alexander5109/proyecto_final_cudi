@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
@@ -7,7 +8,7 @@ using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
 public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
-	public MedicoId Id { get; }
+	public MedicoId? Id { get; }
 
 	private string _nombre;
 	public string Nombre { get => _nombre; set { _nombre = value; OnPropertyChanged(); } }
@@ -41,7 +42,7 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 	private bool _haceGuardias;
 	public bool HaceGuardias { get => _haceGuardias; set { _haceGuardias = value; OnPropertyChanged(); } }
 
-	//public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } //should it be associated to the selected medicoviewmodel or to the window viewmodel itself
+	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } //should it be associated to the selected medicoviewmodel or to the window viewmodel itself
 
 	public AdminMedicosModificarViewModel(MedicoDbModel medicoDbModel, IEnumerable<EspecialidadCodigo> especialidades) {
 		Id = medicoDbModel.Id;
@@ -60,6 +61,28 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	void OnPropertyChanged([CallerMemberName] string? name = null)
-		=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+	void OnPropertyChanged([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+
+	public async Task CargarHorariosAsync() {
+		HorariosAgrupados.Clear();
+
+		if (Id is not MedicoId idGood) {
+			return;
+		}
+		IReadOnlyList<HorarioDbModel> horarios = await App.Repositorio.SelectHorariosWhereMedicoId(idGood);
+
+        IOrderedEnumerable<IGrouping<DayOfWeek, HorarioDbModel>> grupos = horarios
+			.GroupBy(h => h.DiaSemana)
+			.OrderBy(g => g.Key);
+
+		foreach (IGrouping<DayOfWeek, HorarioDbModel>? grupo in grupos) {
+			HorariosAgrupados.Add(
+				new ViewModelHorarioAgrupado(
+					grupo.Key,
+					grupo.ToList()
+				)
+			);
+		}
+	}
 }

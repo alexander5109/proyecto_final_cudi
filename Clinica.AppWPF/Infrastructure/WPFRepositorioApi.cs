@@ -17,7 +17,7 @@ public static class RepoCache {
 	public static Dictionary<MedicoId, MedicoDbModel> DictMedicos { get; set; } = [];
 	public static Dictionary<PacienteId, PacienteDbModel> DictPacientes { get; set; } = [];
 	public static Dictionary<UsuarioId, UsuarioDbModel> DictUsuarios { get; set; } = [];
-	public static Dictionary<HorarioId, HorarioDbModel> DictHorarios { get; set; } = [];
+	public static Dictionary<MedicoId, IReadOnlyList<HorarioDbModel>> DictHorarios { get; set; } = [];
 }
 
 
@@ -51,19 +51,27 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	}
 
 
-	async Task<List<HorarioDbModel>> IWPFRepositorioHorarios.SelectHorarios() {
+	//async Task<List<HorarioDbModel>> IWPFRepositorioHorarios.SelectHorarios() {
+	//	await EnsureHorariosLoaded();
+	//	return [.. RepoCache.DictHorarios.Values];
+	//}
+
+
+
+	async Task<IReadOnlyList<HorarioDbModel>?> IWPFRepositorioHorarios.SelectHorariosWhereMedicoId(MedicoId id) {
 		await EnsureHorariosLoaded();
-		return [.. RepoCache.DictHorarios.Values];
+		return RepoCache.DictHorarios.GetValueOrDefault(id);
 	}
 
-
-
-	async Task<List<HorarioDbModel>> IWPFRepositorioHorarios.SelectHorariosWhereMedicoId(MedicoId id) {
+	async Task<IReadOnlyList<DayOfWeek>?> IWPFRepositorioHorarios.SelectDiasDeAtencionWhereMedicoId(MedicoId id) {
 		await EnsureHorariosLoaded();
-		return [.. RepoCache.DictHorarios
-			.Values
-			.Where(m => m.MedicoId == id)];
+		IReadOnlyList<HorarioDbModel>? resultad = RepoCache.DictHorarios.GetValueOrDefault(id);
+		if (resultad is null) {
+			return null;
+		}
+		return [.. resultad.Select(x => x.DiaSemana).Distinct()];
 	}
+
 
 	async Task<List<PacienteDbModel>> IWPFRepositorioPacientes.SelectPacientes() {
 		await EnsurePacientesLoaded();
@@ -126,17 +134,21 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	public async Task EnsureHorariosLoaded() {
 		if (_horariosLoaded)
 			return;
+		List<HorarioDbModel> list =
+			await Api.TryGetJsonAsync<List<HorarioDbModel>>(
+				"api/horarios",
+				defaultValue: []
+			);
+		RepoCache.DictHorarios = list
+			.GroupBy(h => h.MedicoId)
+			.ToDictionary(
+				g => g.Key,
+				g => (IReadOnlyList<HorarioDbModel>)[.. g]
+			);
 
-		List<HorarioDbModel> list = await Api.TryGetJsonAsync<List<HorarioDbModel>>("api/horarios", defaultValue: []);
-		//List<HorarioDbModel> list = await Api.TryGetJsonAsync<List<HorarioDbModel>>("api/horarios/con-horarios", defaultValue: []);
-
-		RepoCache.DictHorarios.Clear();
-		RepoCache.DictHorarios = list.ToDictionary(m => m.Id, m => m);
-		//foreach (KeyValuePair<HorarioId, HorarioDbModel> m in DictHorarios ) {
-		//	Console.WriteLine($"Horario cache loaded: {m.Key} -> {m.Value.Nombre} {m.Value.Apellido}");
-		//}
 		_horariosLoaded = true;
 	}
+
 
 
 
@@ -489,4 +501,5 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		_ = RefreshUsuarios();
 		return result;
 	}
+
 }

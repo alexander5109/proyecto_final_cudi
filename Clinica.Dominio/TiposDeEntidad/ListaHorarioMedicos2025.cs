@@ -19,14 +19,14 @@ public readonly record struct ListaHorarioMedicos2025(
 		if (horariosInput is null)
 			return new Result<ListaHorarioMedicos2025>.Error("La lista de horarios no puede ser nula.");
 
-		// Materializamos
-		var lista = horariosInput.ToList();
+        // Materializamos
+        List<Horario2025> lista = horariosInput.ToList();
 
 		if (lista.Count == 0)
 			return new Result<ListaHorarioMedicos2025>.Error("La lista de horarios no puede estar vacía.");
 
-		// VALIDACION INDIVIDUAL
-		var errores = new List<string>();
+        // VALIDACION INDIVIDUAL
+        List<string> errores = new List<string>();
 
 		foreach (Horario2025 h in lista) {
 			if (h.HoraDesde >= h.HoraHasta)
@@ -45,7 +45,7 @@ public readonly record struct ListaHorarioMedicos2025(
 			.GroupBy(h => (h.MedicoId, h.DiaSemana));
 
 		foreach (IGrouping<(MedicoId MedicoId, DayOfWeek DiaSemana), Horario2025> g in grupos) {
-			var horarios = g
+            List<Horario2025> horarios = g
 				.OrderBy(h => h.HoraDesde)
 				.ToList();
 

@@ -135,13 +135,53 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 		SelectedDiaValue = DiasSemanaItemsSource.FirstOrDefault();
 	}
 
-
 	public async Task LoadMedicosTodosAsync() {
 		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
-		MedicosTodos = [.. medicos.Select(m => m.ToSimpleViewModel())];
+
+		var tasks = medicos.Select(async medico => {
+			IReadOnlyList<DayOfWeek>? dias =
+				await App.Repositorio.SelectDiasDeAtencionWhereMedicoId(medico.Id)
+				?? [];
+
+			return new MedicoSimpleViewModel(
+				Id: medico.Id,
+				EspecialidadCodigo: medico.EspecialidadCodigo,
+				Displayear: $"{medico.Nombre} {medico.Apellido}",
+				DiasAtencion: dias
+			);
+		});
+
+		MedicosTodos = (await Task.WhenAll(tasks)).ToList();
+
 		OnPropertyChanged(nameof(MedicosTodos));
 		OnPropertyChanged(nameof(ComboBoxMedicos_Enabled));
 	}
+
+
+	//public async Task LoadMedicosTodosAsync() {
+	//	List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
+
+	//	List<MedicoSimpleViewModel> result = [];
+
+	//	foreach (MedicoDbModel medico in medicos) {
+	//		IReadOnlyList<DayOfWeek>? dias =
+	//			await App.Repositorio.SelectDiasDeAtencionWhereMedicoId(medico.Id)
+	//			?? [];
+
+	//		result.Add(new MedicoSimpleViewModel(
+	//			Id: medico.Id,
+	//			EspecialidadCodigo: medico.EspecialidadCodigo,
+	//			Displayear: $"{medico.Nombre} {medico.Apellido}",
+	//			DiasAtencion: dias
+	//		));
+	//	}
+
+	//	MedicosTodos = result;
+	//	OnPropertyChanged(nameof(MedicosTodos));
+	//	OnPropertyChanged(nameof(ComboBoxMedicos_Enabled));
+	//}
+
+
 
 	public async Task LoadMedicosPorEspecialidadAsync(EspecialidadCodigo? esp) {
 		MedicosEspecialistasItemsSource.Clear();
@@ -290,28 +330,14 @@ public record EspecialidadViewModel(EspecialidadCodigo Codigo, string NombreEspe
 
 internal static class ExtensionesLocales {
 
-	internal static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDbModel model) {
-		// MessageBox.Show(model.Nombre);
-		// MessageBox.Show(model.HorariosJson);
-
-
-
-		//List<DayOfWeek> dias = [];
-		List<DayOfWeek> dias = [.. model.Horarios.Select(x => x.DiaSemana)];
-		//if (!string.IsNullOrWhiteSpace(model.HorariosJson)) {
-		//          List<HorarioDto>? horarios = System.Text.Json.JsonSerializer.Deserialize<List<HorarioDto>>(model.HorariosJson);
-		//	dias = horarios is null ? [] : [.. horarios.Select(h => h.DiaSemana).Distinct()];
-		//}
-		// foreach (var item in dias) {
-		// MessageBox.Show(item.ToString());
-		// }
-
+	internal static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDbModel medicoDbModel, List<DayOfWeek> dias) {
 		return new MedicoSimpleViewModel(
-			Id: model.Id,
-			EspecialidadCodigo: model.EspecialidadCodigo,
-			Displayear: $"{model.Nombre} {model.Apellido}",
+			Id: medicoDbModel.Id,
+			EspecialidadCodigo: medicoDbModel.EspecialidadCodigo,
+			Displayear: $"{medicoDbModel.Nombre} {medicoDbModel.Apellido}",
 			DiasAtencion: dias
 		);
+
 	}
 
 	private record HorarioDto(int Id, int MedicoId, DayOfWeek DiaSemana, TimeOnly HoraDesde, TimeOnly HoraHasta);

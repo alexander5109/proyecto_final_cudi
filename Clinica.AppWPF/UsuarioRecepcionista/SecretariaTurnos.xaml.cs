@@ -31,7 +31,7 @@ public partial class SecretariaTurnos : Window {
 	private async Task RefrescarTurnosAsync() {
 		try {
 			List<TurnoDbModel> turnosDto = await App.Repositorio.SelectTurnos();
-			var lista = turnosDto.Select(t => new TurnoViewModel(t)).ToList();
+            List<TurnoViewModel> lista = turnosDto.Select(t => new TurnoViewModel(t)).ToList();
 
 			VM.CargarTurnos(lista);
 			VM.SelectedTurno = null;

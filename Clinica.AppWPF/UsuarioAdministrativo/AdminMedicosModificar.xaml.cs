@@ -37,6 +37,8 @@ public partial class AdminMedicosModificar : Window {
 		InitializeComponent();
 		VM = new AdminMedicosModificarViewModel(model, especialidades);
 		DataContext = VM;
+
+		Loaded += async (_, _) => await VM.CargarHorariosAsync();
 	}
 
 	/*
