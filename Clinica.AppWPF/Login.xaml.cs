@@ -50,7 +50,7 @@ public partial class Login : Window {
 			result.MatchAndDo(
 				async loggedUser => {
 					App.Api.SetUsuario(loggedUser);
-					App.UsuarioActivo = await App.Repositorio.SelectUsuarioProfileWhereUsername(new UserName(loggedUser.Username));
+					App.UsuarioActivo = await App.Repositorio.SelectUsuarioProfileWhereUsername(loggedUser.Username);
 					this.IrARespectivaHome();
 					return;
 				},

@@ -49,6 +49,7 @@ public static class PermisoSistema {
 			PermisosAccionesCodigo.SolicitarTurno,
 
 			PermisosAccionesCodigo.UpdateEntidades,
+			PermisosAccionesCodigo.VerUsuarios
             // No borra entidades sensibles
 
 		],
@@ -67,8 +68,9 @@ public static class PermisoSistema {
 			PermisosAccionesCodigo.CancelarTurno,
 			PermisosAccionesCodigo.SolicitarTurno,
 			PermisosAccionesCodigo.GestionDeTurnos,
+			PermisosAccionesCodigo.VerUsuarios,
 
-			PermisosAccionesCodigo.UpdateEntidades, // ← Puede modificar pacientes
+			PermisosAccionesCodigo.UpdateEntidades // ← Puede modificar pacientes
             // No puede reprogramar turnos (opcional: lo podés habilitar)
             // No puede crear médicos/usuarios/horarios
             // No borra entidades
@@ -78,7 +80,8 @@ public static class PermisoSistema {
 			PermisosAccionesCodigo.VerPacientes,  // opcional
             PermisosAccionesCodigo.VerTurnos,
 			PermisosAccionesCodigo.VerHorarios,
-			PermisosAccionesCodigo.SolicitarTurno
+			PermisosAccionesCodigo.SolicitarTurno,
+			PermisosAccionesCodigo.VerUsuarios
             // No modifica nada
 		],
 	};

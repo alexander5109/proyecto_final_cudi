@@ -406,8 +406,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return result;
 	}
 
-	async Task<UsuarioDto?> IWPFRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName username) {
-		return await Api.TryGetJsonOrNullAsync<UsuarioDto>($"api/usuarios/{username.Valor}");
+	async Task<UsuarioDbModel?> IWPFRepositorioUsuarios.SelectUsuarioProfileWhereUsername(string username) {
+        UsuarioDbModel? response = await Api.TryGetJsonOrNullAsync<UsuarioDbModel>($"api/usuarios/por-nombre/{username}");
+		//MessageBox.Show($"{response?.ToString()}");
+		return response;
 	}
 
 	async Task<ResultWpf<UnitWpf>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad) {
