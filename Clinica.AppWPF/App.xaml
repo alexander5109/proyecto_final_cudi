@@ -436,6 +436,40 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+		<!-- ,,,,,,,,,,,,,,,,,,,,,,,,,,REFRESCAR,,,,,,,,,,,,,,,,,,,,,,,,,, -->
+		<Style
+			x:Key="BotonRefrescar"
+			TargetType="Button">
+			<Setter
+				Property="Width"
+				Value="50" />
+			<Setter
+				Property="Height"
+				Value="50" />
+			<Setter
+				Property="FontSize"
+				Value="20" />
+			<Setter
+				Property="BorderBrush"
+				Value="{x:Null}" />
+			<Setter
+				Property="Foreground"
+				Value="{x:Null}" />
+			<Setter
+				Property="HorizontalAlignment"
+				Value="Center" />
+			<Setter
+				Property="VerticalAlignment"
+				Value="Center" />
+			<Setter
+				Property="Background">
+				<Setter.Value>
+					<ImageBrush
+						ImageSource="/PublishedResources/images/refrescar.png"
+						Stretch="Uniform" />
+				</Setter.Value>
+			</Setter>
+		</Style>
 		<!-- ,,,,,,,,,,,,,,,,,,,,,,,,,,BOTONES,,,,,,,,,,,,,,,,,,,,,,,,,, -->
 		<Style
 			x:Key="BotonRedondeadoViejo"

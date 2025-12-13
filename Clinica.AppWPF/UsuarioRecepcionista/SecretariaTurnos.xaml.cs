@@ -13,18 +13,11 @@ public partial class SecretariaTurnos : Window {
 		VM = new SecretariaTurnosViewModel();
 		DataContext = VM;
 
-		Loaded += async (_, __) => await CargaInicialAsync();
+		Loaded += async (_, __) => await RefrescarTurnosAsync();
 	}
 
-	// ==========================================================
-	// CARGA INICIAL
-	// ==========================================================
-
-	private async Task CargaInicialAsync() {
+	private async void ClickBoton_Refrescar(object sender, RoutedEventArgs e) {
 		await RefrescarTurnosAsync();
-		//await CargarPacientesYMedicosOnce();
-
-
 
 	}
 
@@ -142,9 +135,13 @@ public partial class SecretariaTurnos : Window {
 			return;
 		}
 
-		string comentario = Interaction.InputBox("Ingrese la razón de la cancelación del turno:", "Cancelar turno", "");
+		string comentario = Interaction.InputBox("Ingrese la razón de la cancelación del turno:", "Cancelar turno", "CancelarOperacion");
+		if (comentario == "CancelarOperacion") {
+			return;
+		}
 		if (comentario == null || comentario.Length < 10) {
 			MessageBox.Show("Debe completar un comentario para cancelar el turno.");
+			return;
 		} else {
 			ResultWpf<TurnoDbModel> result = await App.Repositorio.CancelarTurno(
 				VM.SelectedTurno.Id,

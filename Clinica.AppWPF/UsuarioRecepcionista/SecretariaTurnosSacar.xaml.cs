@@ -35,7 +35,7 @@ public partial class SecretariaTurnosSacar : Window {
 
 
 
-	private static bool MostrarErrorSiCorresponde<T>(ResultWpf<T> result)
+	private static bool MatchAndSetBooleano<T>(ResultWpf<T> result)
 		=> result.MatchAndSet(
 			ok => true,
 			error => {
@@ -71,7 +71,7 @@ public partial class SecretariaTurnosSacar : Window {
 				DateTime.Now,
 				comentario
 			);
-			if (!MostrarErrorSiCorresponde(resultt)) {
+			if (!MatchAndSetBooleano(resultt)) {
 				this.Close();
 				return;
 			}
@@ -89,6 +89,7 @@ public partial class SecretariaTurnosSacar : Window {
 			caseError => caseError.ShowMessageBox()
 		);
 
+		//App.Repositorio.RefreshTurnos();
 
 	}
 

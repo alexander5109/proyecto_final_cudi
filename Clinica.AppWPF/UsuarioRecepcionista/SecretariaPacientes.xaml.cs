@@ -11,11 +11,7 @@ public partial class SecretariaPacientes : Window {
 		VM = new SecretariaPacientesViewModel();
 		DataContext = VM;
 
-		Loaded += async (_, __) => await CargaInicialAsync();
-	}
-
-	private async Task CargaInicialAsync() {
-		await VM.RefrescarPacientesAsync();
+		Loaded += async (_, __) => await VM.RefrescarPacientesAsync();
 	}
 
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
@@ -38,4 +34,8 @@ public partial class SecretariaPacientes : Window {
 		}
 	}
 
+
+	private async void ClickBoton_Refrescar(object sender, RoutedEventArgs e) {
+		await VM.RefrescarPacientesAsync();
+	}
 }

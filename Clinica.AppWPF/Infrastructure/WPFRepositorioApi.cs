@@ -210,6 +210,11 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		await EnsureUsuariosLoaded();
 	}
 
+	public async Task RefreshHorarios() {
+		_horariosLoaded = false;
+		await EnsureHorariosLoaded();
+	}
+
 
 
 
@@ -220,8 +225,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 				instance.ToDto()
 			),
 			onOk: async response => {
-				int id = await response.Content.ReadFromJsonAsync<int>();
-				return new PacienteId(id);
+				return await response.Content.ReadFromJsonAsync<PacienteId>();
 			},
 			errorTitle: "Error creando paciente"
 		);
@@ -235,8 +239,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 				instance.ToDto()
 			),
 			onOk: async response => {
-				int id = await response.Content.ReadFromJsonAsync<int>();
-				return new MedicoId(id);
+				return await response.Content.ReadFromJsonAsync<MedicoId>();
 			},
 			errorTitle: "Error creando médico"
 		);

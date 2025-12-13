@@ -17,8 +17,8 @@ public sealed class TurnoViewModel(TurnoDbModel model) {
 	public string PacienteDisplayear => PacienteRelacionado is null ? "N/A" : $"{PacienteRelacionado.Dni}: {PacienteRelacionado.Nombre} {PacienteRelacionado.Apellido}";
 	public string MedicoDisplayear => MedicoRelacionado is null ? "N/A" : $"{MedicoRelacionado.Nombre} {MedicoRelacionado.Apellido} {MedicoRelacionado.Dni}";
 	public EspecialidadCodigo EspecialidadCodigo { get; } = model.EspecialidadCodigo;
-	public string FechaSolicitud { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
-	public string FechaAsignada { get; } = model.FechaHoraAsignadaDesde.ATextoDia();
+	public string FechaSolicitud { get; } = model.FechaDeCreacion.ATextoDiaYHoras();
+	public string FechaAsignada { get; } = model.FechaHoraAsignadaDesde.ATextoDiaYHoras();
 	public string HoraAsignada { get; } = model.FechaHoraAsignadaHasta.ATextoHoras();
 	public TurnoEstadoCodigo OutcomeEstado { get; } = model.OutcomeEstado;
 	public DateTime? OutcomeFecha { get; set; } = model.OutcomeFecha;
