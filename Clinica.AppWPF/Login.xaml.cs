@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
@@ -14,28 +15,62 @@ public partial class Login : Window {
 	//	InitializeComponent();
 	//}
 
-	private async void ClickBoton_IniciarSesion(object sender, RoutedEventArgs e) {
-		//SoundsService.PlayClickSound();
-		if (string.IsNullOrEmpty(guiUsuario.Text) || string.IsNullOrEmpty(guiPassword.Password)) {
-			MessageBox.Show("Complete todos los campos");
-			return;
-		}
-		UsuarioLoginRequestDto loginRequest = new(guiUsuario.Text, guiPassword.Password);
-		//MessageBox.Show("Iniciando sesión...");
-		ResultWpf<UsuarioLoginResponseDto> result = await AuthService.LoginAsync(App.Api, loginRequest);
 
-		result.MatchAndDo(
-			async loggedUser => {
-				App.Api.SetUsuario(loggedUser);
-				App.UsuarioActivo = await App.Repositorio.SelectUsuarioProfileWhereUsername(new UserName(loggedUser.Username));
-				this.IrARespectivaHome();
-				return;
-			},
-			errorMsg => {
-				errorMsg.ShowMessageBox();
+
+
+
+	private bool _enCooldown;
+	private async void ClickBoton_Refrescar(object sender, RoutedEventArgs e) {
+		if (_enCooldown)
+			return;
+	}
+
+
+	private async void ClickBoton_IniciarSesion(object sender, RoutedEventArgs e) {
+		if (_enCooldown)
+			return;
+
+		try {
+			_enCooldown = true;
+			if (sender is Button btn)
+				btn.IsEnabled = false;
+
+
+
+
+			//SoundsService.PlayClickSound();
+			if (string.IsNullOrEmpty(guiUsuario.Text) || string.IsNullOrEmpty(guiPassword.Password)) {
+				MessageBox.Show("Complete todos los campos");
 				return;
 			}
-		);
+			UsuarioLoginRequestDto loginRequest = new(guiUsuario.Text, guiPassword.Password);
+			//MessageBox.Show("Iniciando sesión...");
+			ResultWpf<UsuarioLoginResponseDto> result = await AuthService.LoginAsync(App.Api, loginRequest);
+
+			result.MatchAndDo(
+				async loggedUser => {
+					App.Api.SetUsuario(loggedUser);
+					App.UsuarioActivo = await App.Repositorio.SelectUsuarioProfileWhereUsername(new UserName(loggedUser.Username));
+					this.IrARespectivaHome();
+					return;
+				},
+				errorMsg => {
+					errorMsg.ShowMessageBox();
+					return;
+				}
+			);
+
+
+		} finally {
+			await Task.Delay(2000);
+			if (sender is Button btn)
+				btn.IsEnabled = true;
+
+			_enCooldown = false;
+		}
+
+
+
 	}
 
 

@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using Clinica.AppWPF.CommonViewModels;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
+using static Clinica.AppWPF.CommonViewModels.CommonEnumsToViewModel;
 using static Clinica.Shared.DbModels.DbModels;
-using static CommonEnumsToViewModel;
 
 
 
@@ -62,7 +63,7 @@ public class SecretariaPacientesModificarViewModel : INotifyPropertyChanged {
 	}
 
 	// ================================================================
-	// EXTRAS
+	// READ_ONLIES
 	// ================================================================
 
 	private readonly PacienteEdicionSnapshot _original;
@@ -269,9 +270,8 @@ public class SecretariaPacientesModificarViewModel : INotifyPropertyChanged {
 	}
 
 
-
 	// ================================================================
-	// UTILS
+	// INFRAESTRUCTURA
 	// ================================================================
 
 	public event PropertyChangedEventHandler? PropertyChanged;

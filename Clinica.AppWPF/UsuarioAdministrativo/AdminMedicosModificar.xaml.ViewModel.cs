@@ -2,11 +2,11 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using Clinica.AppWPF.UsuarioRecepcionista;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
+using static Clinica.AppWPF.CommonViewModels.CommonEnumsToViewModel;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;

@@ -20,12 +20,91 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 
 
 	// ================================================================
-	// METODOS
+	// METODOS DE DOMINIO
+	// ================================================================
+
+
+	public async Task<ResultWpf<UnitWpf>> MarcarAusenteAsync(string comentario) {
+		// 1️⃣ Validaciones de estado
+		if (SelectedTurno is null) {
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo(
+				"No hay un turno seleccionado para marcar como ausente.", MessageBoxImage.Information)
+			);
+		}
+
+		// 2️⃣ Validaciones de dominio mínimas
+		if (string.IsNullOrWhiteSpace(comentario)) {
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo(
+				"Debe ingresar un comentario.", MessageBoxImage.Information)
+			);
+		}
+
+		if (comentario.Length < 10) {
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo(
+				"El comentario debe tener al menos 10 caracteres.", MessageBoxImage.Information)
+			);
+		}
+
+		// 3️⃣ Llamada al repositorio
+		return await App.Repositorio.MarcarTurnoComoAusente(
+			SelectedTurno.Original.Id,
+			DateTime.Now,
+			comentario
+		);
+	}
+
+
+	public async Task<ResultWpf<UnitWpf>> CancelarTurnoAsync(string comentario) {
+		if (SelectedTurno is null) {
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No hay turno seleccionado.", MessageBoxImage.Information));
+		}
+		if (comentario.Length < 10) {
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("El comentario es muy corto.", MessageBoxImage.Information));
+		}
+
+		return await App.Repositorio.CancelarTurno(
+			SelectedTurno.Original.Id,
+			DateTime.Now,
+			comentario
+		);
+	}
+
+	public async Task<ResultWpf<UnitWpf>> ConfirmarAsistenciaAsync(DateTime fechaAsistencia) {
+		// 1️⃣ Validaciones de estado (UI-agnósticas)
+		if (SelectedTurno is null) {
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo(
+				"No hay un turno seleccionado para confirmar la asistencia.")
+			);
+		}
+
+		// (opcional, pero prolijo)
+		if (fechaAsistencia == default) {
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo(
+				"La fecha de asistencia es inválida.")
+			);
+		}
+
+		// 2️⃣ Delegación al repositorio
+		return await App.Repositorio.MarcarTurnoComoConcretado(
+			SelectedTurno.Original.Id,
+			fechaAsistencia,
+			SelectedTurno.Original.OutcomeComentario
+		);
+	}
+
+
+
+	// ================================================================
+	// METODOS DE UI
 	// ================================================================
 
 	internal async Task RefrescarTurnosAsync() {
+
+		await App.Repositorio.EnsureMedicosLoaded(); //just to generate the dictionaries for the views.
+		await App.Repositorio.EnsurePacientesLoaded();
+
 		try {
-            List<TurnoDbModel> turnos = await App.Repositorio.SelectTurnos();
+			List<TurnoDbModel> turnos = await App.Repositorio.SelectTurnos();
 			_todosLosTurnos = [.. turnos.Select(t => new TurnoViewModel(t))];
 			SelectedTurno = null;
 		} catch (Exception ex) {
@@ -39,7 +118,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 
 
 	private void AplicarFiltros() {
-        TurnoViewModel? seleccionado = SelectedTurno;
+		TurnoViewModel? seleccionado = SelectedTurno;
 
 		TurnosList.Clear();
 
@@ -61,6 +140,21 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 				)
 			);
 		}
+
+		// 🔹 Filtro por paciente
+		if (!string.IsNullOrWhiteSpace(FiltroTurnosMedico)) {
+			var txt = FiltroTurnosMedico.Trim();
+
+			origen = origen.Where(t =>
+				t.MedicoDisplayear.Contains(
+					txt,
+					StringComparison.InvariantCultureIgnoreCase
+				)
+			);
+		}
+
+
+		
 
 		foreach (TurnoViewModel turno in origen)
 			TurnosList.Add(turno);
@@ -114,7 +208,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 
 
 	// ================================================================
-	// FILTER: PACIENTE (search in PacienteDisplayear)
+	// FILTROS
 	// ================================================================
 
 	private string _filtroTurnosPaciente = "";
@@ -124,6 +218,20 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 			if (_filtroTurnosPaciente != value) {
 				_filtroTurnosPaciente = value;
 				OnPropertyChanged(nameof(FiltroTurnosPaciente));
+				OnPropertyChanged(nameof(FiltroTurnosMedico));
+				AplicarFiltros();
+			}
+		}
+	}
+
+	private string _filtroTurnosMedico = "";
+	public string FiltroTurnosMedico {
+		get => _filtroTurnosMedico;
+		set {
+			if (_filtroTurnosMedico != value) {
+				_filtroTurnosMedico = value;
+				OnPropertyChanged(nameof(FiltroTurnosPaciente));
+				OnPropertyChanged(nameof(FiltroTurnosMedico));
 				AplicarFiltros();
 			}
 		}
@@ -166,11 +274,12 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	public bool HayTurnoSeleccionado => SelectedTurno is not null;
 
 	// ================================================================
-	// UTILS
+	// INFRAESTRUCTURA
 	// ================================================================
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void OnPropertyChanged(string prop) => PropertyChanged?.Invoke(this, new(prop));
+
 }
 
 

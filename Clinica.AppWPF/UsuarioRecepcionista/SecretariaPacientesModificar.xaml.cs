@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
 
@@ -8,6 +7,10 @@ namespace Clinica.AppWPF.UsuarioRecepcionista;
 
 public partial class SecretariaPacientesModificar : Window {
 	public SecretariaPacientesModificarViewModel VM { get; private set; }
+
+	// ==========================================================
+	// CONSTRUCTORES
+	// ==========================================================
 
 	public SecretariaPacientesModificar() {
 		InitializeComponent();
@@ -34,23 +37,6 @@ public partial class SecretariaPacientesModificar : Window {
 		);
 	}
 
-
-
-	// ==========================================================
-	// BOTONES: REFRESH
-	// ==========================================================
-
-	// I guess i could implement it on the viewmodel and call it through the button here. It's just a matter of calling refresh pacientes and selectonebyid (which we have)
-
-
-	// ==========================================================
-	// BOTONES: NAV
-	// ==========================================================
-
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientes>();
-
-	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
-
 	private async void ButtonEliminar(object sender, RoutedEventArgs e) {
 		if (
 			VM.Id is not PacienteId idGood || (
@@ -67,6 +53,22 @@ public partial class SecretariaPacientesModificar : Window {
 			caseError => caseError.ShowMessageBox()
 		);
 	}
+
+
+	// ==========================================================
+	// BOTONES: REFRESH
+	// ==========================================================
+
+	// I guess i could implement it on the viewmodel and call it through the button here. It's just a matter of calling refresh pacientes and selectonebyid (which we have)
+
+
+	// ==========================================================
+	// BOTONES: NAV
+	// ==========================================================
+
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientes>();
+
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 
 }
 

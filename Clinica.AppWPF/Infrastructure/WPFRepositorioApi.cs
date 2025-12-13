@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
@@ -382,30 +383,26 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			onOk: async response => UnitWpf.Valor,   // Se ignora el body, pero se respeta la firma
 			errorTitle: $"Error actualizando médico {aggrg.Id.Valor}"
 		);
-
-		_ = RefreshMedicos();
-
+		//_ = RefreshMedicos();
 		return result;
 	}
 
 
 
-	async Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.CancelarTurno(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioTurnos.CancelarTurno(
 		TurnoId turnoId,
 		DateTime fechaOutcome,
 		string? reason
 	) {
 
-		ResultWpf<TurnoDbModel> result = await Api.TryApiCallAsync<TurnoDbModel>(
+		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync<UnitWpf>(
 			httpCall: () => Api.Cliente.PutAsJsonAsync(
 				"api/ServiciosPublicos/Turnos/Cancelar",
 				new ModificarTurnoDto(turnoId, fechaOutcome, reason)
 			),
 			errorTitle: $"Error al cancelar el turno {turnoId.Valor}"
 		);
-
-
-		_ = RefreshMedicos();
+		//_ = RefreshMedicos();
 		return result;
 	}
 
@@ -413,8 +410,8 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return await Api.TryGetJsonOrNullAsync<UsuarioDto>($"api/usuarios/{username.Valor}");
 	}
 
-	async Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad) {
-		ResultWpf<TurnoDbModel> response = await Api.TryApiCallAsync(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad) {
+		ResultWpf<UnitWpf> response = await Api.TryApiCallAsync(
 			() => Api.Cliente.PostAsJsonAsync(
 				"api/ServiciosPublicos/Turnos/Programar",
 				new ProgramarTurnoDto(
@@ -424,7 +421,8 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 				)
 			),
 			onOk: async response => {
-				return (await response.Content.ReadFromJsonAsync<TurnoDbModel>())!; //MMMMMM CODE SMELL
+				return UnitWpf.Valor;
+				//return (await response.Content.ReadFromJsonAsync<TurnoDbModel>())!; //MMMMMM CODE SMELL
 			},
 			errorTitle: "Error agendando turno"
 		);
@@ -432,17 +430,20 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return response;
 	}
 
-	async Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.ReprogramarTurno(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioTurnos.ReprogramarTurno(
 		TurnoId turnoId,
 		DateTime fechaOutcome,
 		string? reason
 	) {
-		ResultWpf<TurnoDbModel> result = await Api.TryApiCallAsync(
+		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			httpCall: () => Api.Cliente.PutAsJsonAsync(
 				"api/ServiciosPublicos/Turnos/Reprogramar",
 				new ModificarTurnoDto(turnoId, fechaOutcome, reason)
 			),
-			onOk: async response => (await response.Content.ReadFromJsonAsync<TurnoDbModel>())!,
+			onOk: async response => {
+				return UnitWpf.Valor;
+				//return (await response.Content.ReadFromJsonAsync<TurnoDbModel>())!;
+			},
 			errorTitle: $"Error reprogramando turno {turnoId.Valor}"
 		);
 
@@ -454,17 +455,20 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.MarcarTurnoComoAusente(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioTurnos.MarcarTurnoComoAusente(
 		TurnoId turnoId,
 		DateTime fechaOutcome,
 		string? reason
 	) {
-		ResultWpf<TurnoDbModel> result = await Api.TryApiCallAsync(
+		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			httpCall: () => Api.Cliente.PutAsJsonAsync(
 				"api/ServiciosPublicos/Turnos/ConcretarComoAusente",
 				new ModificarTurnoDto(turnoId, fechaOutcome, reason)
 			),
-			onOk: async response => (await response.Content.ReadFromJsonAsync<TurnoDbModel>())!,
+			onOk: async response => {
+				return UnitWpf.Valor;
+				//return (await response.Content.ReadFromJsonAsync<TurnoDbModel>())!;
+			},
 			errorTitle: $"Error marcando como ausente el turno {turnoId.Valor}"
 		);
 
@@ -473,17 +477,20 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	}
 
 
-	async Task<ResultWpf<TurnoDbModel>> IWPFRepositorioTurnos.MarcarTurnoComoConcretado(
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioTurnos.MarcarTurnoComoConcretado(
 		TurnoId turnoId,
 		DateTime fechaOutcome,
 		string? reason
 	) {
-		ResultWpf<TurnoDbModel> result = await Api.TryApiCallAsync(
+		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			httpCall: () => Api.Cliente.PutAsJsonAsync(
 				"api/ServiciosPublicos/Turnos/Concretar",
 				new ConcretarTurnoDto(turnoId, fechaOutcome, reason)
 			),
-			onOk: async response => (await response.Content.ReadFromJsonAsync<TurnoDbModel>())!,
+			onOk: async response => {
+				return UnitWpf.Valor;
+				//return (await response.Content.ReadFromJsonAsync<TurnoDbModel>())!;
+			},
 			errorTitle: $"Error concretando el turno {turnoId.Valor}"
 		);
 

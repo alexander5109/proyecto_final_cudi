@@ -1,3 +1,4 @@
+using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
@@ -75,11 +76,11 @@ public static class IWPFRepositorioInterfaces {
 		Task<List<TurnoDbModel>> SelectTurnos();
 		Task<List<TurnoDbModel>> SelectTurnosWherePacienteId(PacienteId id);
 		Task<List<TurnoDbModel>> SelectTurnosWhereMedicoId(MedicoId id);
-		Task<ResultWpf<TurnoDbModel>> AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad);
-		Task<ResultWpf<TurnoDbModel>> CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string? reason);
-		Task<ResultWpf<TurnoDbModel>> ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string? reason);
-		Task<ResultWpf<TurnoDbModel>> MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string? reason);
-		Task<ResultWpf<TurnoDbModel>> MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome, string? reason);
+		Task<ResultWpf<UnitWpf>> AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitudOriginal, Disponibilidad2025 disponibilidad);
+		Task<ResultWpf<UnitWpf>> CancelarTurno(TurnoId turnoId, DateTime fechaOutcome, string? reason);
+		Task<ResultWpf<UnitWpf>> ReprogramarTurno(TurnoId turnoId, DateTime fechaOutcome, string? reason);
+		Task<ResultWpf<UnitWpf>> MarcarTurnoComoAusente(TurnoId turnoId, DateTime fechaOutcome, string? reason);
+		Task<ResultWpf<UnitWpf>> MarcarTurnoComoConcretado(TurnoId turnoId, DateTime fechaOutcome, string? reason);
 	}
 }
 

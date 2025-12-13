@@ -14,11 +14,6 @@ public partial class HomeRecepcionista : Window {
 	}
 
 
-	private async Task CargarPacientesYMedicosOnce() {
-		await App.Repositorio.EnsureMedicosLoaded();
-		await App.Repositorio.EnsurePacientesLoaded();
-	}
-
 
 
 	private void soundCheckBox_Checked(object sender, RoutedEventArgs e) => SoundsService.ToggleSound(this.soundCheckBox.IsChecked);
@@ -34,13 +29,11 @@ public partial class HomeRecepcionista : Window {
 
 	async private void ClickBoton_GestionTurnos(object sender, RoutedEventArgs e) {
 		this.NavegarA<SecretariaTurnos>();
-		await CargarPacientesYMedicosOnce();
 	}
 
 
 	async private void ClickBoton_GestionPacientes(object sender, RoutedEventArgs e) {
 		this.NavegarA<SecretariaPacientes>();
-		await CargarPacientesYMedicosOnce();
 	}
 
 

@@ -10,6 +10,12 @@ public partial class SecretariaTurnosSacar : Window {
 	internal SecretariaTurnosSacarViewModel VM { get; }
 	//bool EsReprogramacion = false;
 	readonly TurnoViewModel? TurnoOriginal;
+
+
+
+	// ==========================================================
+	// CONSTRUCTORES
+	// ==========================================================
 	public SecretariaTurnosSacar(PacienteDbModel paciente) {
 		InitializeComponent();
 		VM = new SecretariaTurnosSacarViewModel(paciente);
@@ -31,8 +37,9 @@ public partial class SecretariaTurnosSacar : Window {
 
 
 
-
-
+	// ==========================================================
+	// BOTONES: REFRESH
+	// ==========================================================
 
 	private bool _enCooldown;
 	private async void ClickBoton_Consultar(object sender, RoutedEventArgs e) {
@@ -53,6 +60,9 @@ public partial class SecretariaTurnosSacar : Window {
 	}
 
 
+	// ==========================================================
+	// BOTONES: PERSISTENCIA
+	// ==========================================================
 	private static bool MatchAndSetBooleano<T>(ResultWpf<T> result)
 		=> result.MatchAndSet(
 			ok => true,
@@ -61,7 +71,6 @@ public partial class SecretariaTurnosSacar : Window {
 				return false;
 			}
 		);
-
 
 	async private void ClickBoton_NuevoTurno(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
@@ -72,6 +81,10 @@ public partial class SecretariaTurnosSacar : Window {
 		}
 
 		if (TurnoOriginal is not null) {
+			//await ReprogramarAsync();
+			//await AgendarNuevoAsync();
+
+
 
 			string comentario = Interaction.InputBox(
 				"Ingrese la razón de la reprogramacion del turno:",
@@ -87,7 +100,7 @@ public partial class SecretariaTurnosSacar : Window {
 				return;
 			}
 
-			ResultWpf<TurnoDbModel> resultt = await App.Repositorio.ReprogramarTurno(
+			ResultWpf<UnitWpf> resultt = await App.Repositorio.ReprogramarTurno(
 				TurnoOriginal.Original.Id,
 				DateTime.Now,
 				comentario
@@ -99,7 +112,7 @@ public partial class SecretariaTurnosSacar : Window {
 			}
 		}
 
-		ResultWpf<TurnoDbModel> result = await App.Repositorio.AgendarNuevoTurno(
+		ResultWpf<UnitWpf> result = await App.Repositorio.AgendarNuevoTurno(
 			VM.SelectedPaciente.Id,
 			DateTime.Now,
 			VM.SelectedDisponibilidad.Original
@@ -107,7 +120,8 @@ public partial class SecretariaTurnosSacar : Window {
 		result.MatchAndDo(
 			caseOk => {
 				MessageBox.Show("Turno reservado exitosamente.", "Éxito", MessageBoxButton.OK);
-				this.NavegarA<SecretariaPacientes>();
+				//this.NavegarA<SecretariaPacientes>();
+				this.IrARespectivaHome();
 			},
 			caseError => {
 				caseError.ShowMessageBox();
@@ -119,15 +133,10 @@ public partial class SecretariaTurnosSacar : Window {
 
 	}
 
-	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
-		SoundsService.PlayClickSound();
-
-		if (VM.SelectedPaciente != null) {
-			this.NavegarA<SecretariaPacientesModificar>(VM.SelectedPaciente.Id);
-		}
-	}
-
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaTurnos>();
+	// ==========================================================
+	// BOTONES: NAV
+	// ==========================================================
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientes>();
 
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 }
