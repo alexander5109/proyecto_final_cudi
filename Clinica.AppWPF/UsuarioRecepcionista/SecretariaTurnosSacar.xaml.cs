@@ -10,6 +10,12 @@ public partial class SecretariaTurnosSacar : Window {
 	internal SecretariaTurnosSacarViewModel VM { get; }
 	//bool EsReprogramacion = false;
 	readonly TurnoViewModel? TurnoOriginal;
+
+
+
+	// ==========================================================
+	// CONSTRUCTORES
+	// ==========================================================
 	public SecretariaTurnosSacar(PacienteDbModel paciente) {
 		InitializeComponent();
 		VM = new SecretariaTurnosSacarViewModel(paciente);
@@ -28,11 +34,11 @@ public partial class SecretariaTurnosSacar : Window {
 		TurnoOriginal = turnoOriginal;
 
 	}
+	
 
-
-
-
-
+	// ==========================================================
+	// BOTONES: REFRESH
+	// ==========================================================
 
 	private bool _enCooldown;
 	private async void ClickBoton_Consultar(object sender, RoutedEventArgs e) {
@@ -53,6 +59,9 @@ public partial class SecretariaTurnosSacar : Window {
 	}
 
 
+	// ==========================================================
+	// BOTONES: PERSISTENCIA
+	// ==========================================================
 	private static bool MatchAndSetBooleano<T>(ResultWpf<T> result)
 		=> result.MatchAndSet(
 			ok => true,
@@ -61,7 +70,6 @@ public partial class SecretariaTurnosSacar : Window {
 				return false;
 			}
 		);
-
 
 	async private void ClickBoton_NuevoTurno(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
@@ -119,14 +127,9 @@ public partial class SecretariaTurnosSacar : Window {
 
 	}
 
-	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
-		SoundsService.PlayClickSound();
-
-		if (VM.SelectedPaciente != null) {
-			this.NavegarA<SecretariaPacientesModificar>(VM.SelectedPaciente.Id);
-		}
-	}
-
+	// ==========================================================
+	// BOTONES: NAV
+	// ==========================================================
 	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaTurnos>();
 
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();

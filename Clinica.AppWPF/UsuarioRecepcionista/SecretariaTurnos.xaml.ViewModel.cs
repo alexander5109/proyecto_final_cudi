@@ -166,7 +166,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	public bool HayTurnoSeleccionado => SelectedTurno is not null;
 
 	// ================================================================
-	// UTILS
+	// INFRAESTRUCTURA
 	// ================================================================
 
 	public event PropertyChangedEventHandler? PropertyChanged;
