@@ -16,7 +16,7 @@
 	</Window.Background>
 	<!-- ===================== LAYOUT GENERAL ===================== -->
 	<Grid
-		Margin="20">
+		Margin="15,15,15,15">
 		<Grid.RowDefinitions>
 			<RowDefinition
 				Height="Auto" />
@@ -80,13 +80,13 @@
 		<StackPanel
 			Grid.Column="0"
 			Grid.Row="1"
-			Margin="25,25,25,25">
+			Margin="10,15,10,15">
 			<Label
 				Content="Buscar Medico"
 				FontSize="25"
 				FontFamily="Segoe UI Historic"
 				FlowDirection="RightToLeft"
-				Style="{StaticResource LabelLindoConSombra}"
+				Style="{StaticResource LabelLindoConTextoSombra}"
 				HorizontalContentAlignment="Center"
 				VerticalContentAlignment="Center"
 				VerticalAlignment="Center"
@@ -114,24 +114,32 @@
 					<GridView>
 						<GridViewColumn
 							Header="Especialidad"
-							Width="155"
+							Width="120"
 							DisplayMemberBinding="{Binding EspecialidadCodigo}" />
 						<GridViewColumn
 							Header="Nombre"
-							Width="155"
+							Width="100"
 							DisplayMemberBinding="{Binding Nombre}" />
 						<GridViewColumn
 							Header="Apellido"
-							Width="155"
+							Width="100"
 							DisplayMemberBinding="{Binding Apellido}" />
+						<!-- ===================== 
 						<GridViewColumn
-							Header="DNI"
-							Width="75"
-							DisplayMemberBinding="{Binding Dni}" />
+				Header="DNI"
+				Width="75"
+				DisplayMemberBinding="{Binding Dni}" />
+				===================== -->
 						<GridViewColumn
 							Header="FechaIngreso"
-							Width="144"
-							DisplayMemberBinding="{Binding FechaIngreso}" />
+							Width="80">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<TextBlock
+										Text="{Binding FechaIngreso, StringFormat={}{0:yyyy/MM/dd}}" />
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
 					</GridView>
 				</ListView.View>
 			</ListView>
@@ -152,11 +160,11 @@
 			Grid.Row="0"
 			Grid.RowSpan="3"
 			Grid.Column="1"
-			Margin="5,70,5,70">
+			Margin="10,70,10,70">
 			<Label
 				Content="Medico seleccionado"
 				FontSize="25"
-				Style="{StaticResource LabelLindoConSombra}"
+				Style="{StaticResource LabelLindoConTextoSombra}"
 				HorizontalContentAlignment="Center"
 				VerticalAlignment="Center"
 				Margin="25,0,25,0"
@@ -166,7 +174,7 @@
 				<Label
 					Content="Horarios de trabajo"
 					FontSize="20"
-					Style="{StaticResource LabelLindoConSombra}"
+					Style="{StaticResource LabelLindoConTextoSombra}"
 					HorizontalContentAlignment="Center"
 					VerticalAlignment="Center"
 					Margin="25,0,25,0"
@@ -178,17 +186,20 @@
 					<ListView.View>
 						<GridView>
 							<GridViewColumn
-								Header="Día"
+								Header="Días"
+								Width="65"
 								DisplayMemberBinding="{Binding DiaSemanaDescripcion}" />
 							<GridViewColumn
-								Header="Desde"
+								Header="Desde Hs"
+								Width="70"
 								DisplayMemberBinding="{Binding HoraDesdeStr}" />
 							<GridViewColumn
-								Header="Hasta"
+								Header="Hasta Hs"
+								Width="70"
 								DisplayMemberBinding="{Binding HoraHastaStr}" />
 							<GridViewColumn
 								Header="Vigencia"
-								Width="150">
+								Width="165">
 								<GridViewColumn.CellTemplate>
 									<DataTemplate>
 										<TextBlock>

@@ -13,7 +13,7 @@ using static RecepcionistaPacienteMiniViewModels;
 
 public class SecretariaPacientesModificarViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
-	private void Notify(string prop) => PropertyChanged?.Invoke(this, new(prop));
+	private void OnPropertyChanged(string prop) => PropertyChanged?.Invoke(this, new(prop));
 
 	// -----------------------------
 	// PROPIEDADES
@@ -30,52 +30,56 @@ public class SecretariaPacientesModificarViewModel : INotifyPropertyChanged {
 		get => _id;
 		set {
 			_id = value;
-			Notify(nameof(Id));
-			Notify(nameof(EstaCreando));
-			Notify(nameof(EstaEditando));
+			OnPropertyChanged(nameof(Id));
+			OnPropertyChanged(nameof(EstaCreando));
+			OnPropertyChanged(nameof(EstaEditando));
 		}
 	}
 
 	private string _dni = "";
 	public string Dni {
 		get => _dni;
-		set { _dni = value; Notify(nameof(Dni)); }
+		set { _dni = value; OnPropertyChanged(nameof(Dni)); }
 	}
 
 	private string _nombre = "";
 	public string Nombre {
 		get => _nombre;
-		set { _nombre = value; Notify(nameof(Nombre)); }
+		set { _nombre = value; OnPropertyChanged(nameof(Nombre)); }
 	}
 
 	private string _apellido = "";
 	public string Apellido {
 		get => _apellido;
-		set { _apellido = value; Notify(nameof(Apellido)); }
+		set { _apellido = value; OnPropertyChanged(nameof(Apellido)); }
 	}
 
-	private DateTime? _fechaIngreso;
-	public DateTime? FechaIngreso {
+	private DateTime _fechaIngreso = DateTime.Today;
+
+	public DateTime FechaIngreso {
 		get => _fechaIngreso;
-		set { _fechaIngreso = value; Notify(nameof(FechaIngreso)); }
+		set {
+			_fechaIngreso = value;
+			OnPropertyChanged(nameof(FechaIngreso));
+		}
 	}
 
 	private string _domicilio = "";
 	public string Domicilio {
 		get => _domicilio;
-		set { _domicilio = value; Notify(nameof(Domicilio)); }
+		set { _domicilio = value; OnPropertyChanged(nameof(Domicilio)); }
 	}
 
 	private string _localidad = "";
 	public string Localidad {
 		get => _localidad;
-		set { _localidad = value; Notify(nameof(Localidad)); }
+		set { _localidad = value; OnPropertyChanged(nameof(Localidad)); }
 	}
 
 	private ProvinciaVmItem? _provincia;
 	public ProvinciaVmItem? Provincia {
 		get => _provincia;
-		set { _provincia = value; Notify(nameof(Provincia)); Notify(nameof(Provincias)); }
+		set { _provincia = value; OnPropertyChanged(nameof(Provincia)); OnPropertyChanged(nameof(Provincias)); }
 	}
 
 	public IReadOnlyList<ProvinciaVmItem> Provincias { get; } = [.. ProvinciaArgentina2025.Todas().Select(p => p.ToViewModel())];
@@ -84,19 +88,19 @@ public class SecretariaPacientesModificarViewModel : INotifyPropertyChanged {
 	private string _telefono = "";
 	public string Telefono {
 		get => _telefono;
-		set { _telefono = value; Notify(nameof(Telefono)); }
+		set { _telefono = value; OnPropertyChanged(nameof(Telefono)); }
 	}
 
 	private string _email = "";
 	public string Email {
 		get => _email;
-		set { _email = value; Notify(nameof(Email)); }
+		set { _email = value; OnPropertyChanged(nameof(Email)); }
 	}
 
 	private DateTime _fechaNacimiento = DateTime.Today;
 	public DateTime FechaNacimiento {
 		get => _fechaNacimiento;
-		set { _fechaNacimiento = value; Notify(nameof(FechaNacimiento)); }
+		set { _fechaNacimiento = value; OnPropertyChanged(nameof(FechaNacimiento)); }
 	}
 
 	public string Displayear => $"{Id}: {Nombre} {Apellido}";

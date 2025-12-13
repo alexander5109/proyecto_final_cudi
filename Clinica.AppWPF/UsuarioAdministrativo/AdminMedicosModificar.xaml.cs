@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
+using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
@@ -16,17 +17,27 @@ public partial class AdminMedicosModificar : Window {
 
 	public AdminMedicosModificar() {
 		InitializeComponent();
-		VM = new AdminMedicosModificarViewModel(new MedicoDbModel(), [EspecialidadCodigo.ClinicoGeneral]);
-		//DataContext = VM;
+		VM = new AdminMedicosModificarViewModel(new MedicoDbModel());
+		DataContext = VM;
 	}
 
-	public AdminMedicosModificar(MedicoDbModel model, IEnumerable<EspecialidadCodigo> especialidades) {
+	public AdminMedicosModificar(MedicoDbModel model) {
 		InitializeComponent();
-		VM = new AdminMedicosModificarViewModel(model, especialidades);
+		VM = new AdminMedicosModificarViewModel(model);
 		DataContext = VM;
-
 		Loaded += async (_, _) => await VM.CargarHorariosAsync();
 	}
+
+    private void ClickBoton_GuardarCambios(object sender, RoutedEventArgs e) {
+		MessageBox.Show("Falta implementar el guardado de cambios");
+	}
+
+    private void ClickBoton_EliminarMedico(object sender, RoutedEventArgs e) {
+		MessageBox.Show("Falta implementar la eliminacion de medico");
+
+	}
+
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
 
 	/*
 

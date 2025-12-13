@@ -186,6 +186,7 @@
 					Width="110"
 					Height="38"
 					FontSize="20"
+					Click="ClickBoton_Salir"
 					Margin="0,10,0,10" />
 				<Button
 					Content="Cancelar"
@@ -193,7 +194,8 @@
 					Width="110"
 					Height="38"
 					FontSize="20"
-					Margin="0,10,0,10" />
+					Margin="0,10,0,10"
+					Click="ClickBoton_Cancelar" />
 			</StackPanel>
 		</Grid>
 	</Grid>

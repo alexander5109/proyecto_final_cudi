@@ -4,6 +4,9 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using Clinica.AppWPF.UsuarioRecepcionista;
+using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
@@ -34,20 +37,41 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 	private string _localidad;
 	public string Localidad { get => _localidad; set { _localidad = value; OnPropertyChanged(); } }
 
-	private EspecialidadCodigo _especialidad;
-	public EspecialidadCodigo Especialidad { get => _especialidad; set { _especialidad = value; OnPropertyChanged(); } }
+	//private EspecialidadCodigo _especialidad;
+	//public EspecialidadCodigo Especialidad { get => _especialidad; set { _especialidad = value; OnPropertyChanged(); } }
 
-	public IEnumerable<EspecialidadCodigo> EspecialidadesDisponibles { get; init; }
 
-	private DateTime _fechaIngreso;
-	public DateTime FechaIngreso { get => _fechaIngreso; set { _fechaIngreso = value; OnPropertyChanged(); } }
+	private EspecialidadViewModel? _selectedEspecialidad;
+	public EspecialidadViewModel? SelectedEspecialidad {
+		get => _selectedEspecialidad;
+		set {
+			if (_selectedEspecialidad == value) return;
+			_selectedEspecialidad = value;
+
+			OnPropertyChanged(nameof(SelectedEspecialidad));
+		}
+	}
+
+
+
+	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; } = [];
+
+	private DateTime _fechaIngreso = DateTime.Today;
+
+	public DateTime FechaIngreso {
+		get => _fechaIngreso;
+		set {
+			_fechaIngreso = value;
+			OnPropertyChanged(nameof(FechaIngreso));
+		}
+	}
 
 	private bool _haceGuardias;
 	public bool HaceGuardias { get => _haceGuardias; set { _haceGuardias = value; OnPropertyChanged(); } }
 
 	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = new();
 
-	public AdminMedicosModificarViewModel(MedicoDbModel medicoDbModel, IEnumerable<EspecialidadCodigo> especialidades) {
+	public AdminMedicosModificarViewModel(MedicoDbModel medicoDbModel) {
 		Id = medicoDbModel.Id;
 		_nombre = medicoDbModel.Nombre;
 		_apellido = medicoDbModel.Apellido;
@@ -56,10 +80,27 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 		_provincia = medicoDbModel.ProvinciaCodigo;
 		_domicilio = medicoDbModel.Domicilio;
 		_localidad = medicoDbModel.Localidad;
-		_especialidad = medicoDbModel.EspecialidadCodigo;
 		_fechaIngreso = medicoDbModel.FechaIngreso;
 		_haceGuardias = medicoDbModel.HaceGuardias;
-		EspecialidadesDisponibles = especialidades;
+
+
+		EspecialidadesDisponiblesItemsSource.Clear();
+		foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
+			EspecialidadesDisponiblesItemsSource.Add(esp);
+
+
+
+
+
+		Especialidad2025.CrearResult(medicoDbModel.EspecialidadCodigo)
+			.MatchAndDo(
+				ok => {
+					SelectedEspecialidad = ok.ToSimpleViewModel();
+				},
+				err => {
+					//MessageBox.Show($"El código de especialidad no existe <{(byte)medicoDbModel.EspecialidadCodigo}>");
+				});
+
 	}
 
 

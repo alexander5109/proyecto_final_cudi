@@ -25,7 +25,7 @@ public partial class AdminMedicos : Window {
 
 	private void ClickBoton_ModificarMedico(object sender, RoutedEventArgs e) {
 		if (VM.SelectedMedico is not null) {
-			this.AbrirComoDialogo<AdminMedicosModificar>(VM.SelectedMedico.Id);
+			this.AbrirComoDialogo<AdminMedicosModificar>(VM.SelectedMedico);
 		} else {
 			MessageBox.Show("No hay paciente seleecionado");
 		}

@@ -124,7 +124,7 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 		HorariosViewModelList.Clear();
 
 		if (SelectedMedico is null) {
-			MessageBox.Show("por que es null el selectmedico?");
+			// MessageBox.Show("por que es null el selectmedico?"); // porque se actualizo el listview de medicos tras usarse un filtro!
 			return;
 		}
 		IReadOnlyList<HorarioDbModel>? horarios =

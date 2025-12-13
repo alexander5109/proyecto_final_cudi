@@ -13,7 +13,5 @@ public partial class AdminUsuariosModificar : Window {
 
 	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
 
-    private void ClickBoton_IniciarSesion(object sender, RoutedEventArgs e) {
-
-	}
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 }

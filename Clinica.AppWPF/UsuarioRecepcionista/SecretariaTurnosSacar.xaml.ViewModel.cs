@@ -20,8 +20,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 
 
 
-	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; }
-		= [];
+	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; } = [];
 
 	public SecretariaTurnosSacarViewModel(PacienteDbModel paciente) {
 		SelectedPaciente = paciente;
