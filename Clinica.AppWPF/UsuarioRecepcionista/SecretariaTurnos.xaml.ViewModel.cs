@@ -26,7 +26,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	internal async Task RefrescarTurnosAsync() {
 		try {
             List<TurnoDbModel> turnos = await App.Repositorio.SelectTurnos();
-			_todosLosTurnos = turnos.Select(t => new TurnoViewModel(t)).ToList();
+			_todosLosTurnos = [.. turnos.Select(t => new TurnoViewModel(t))];
 			SelectedTurno = null;
 		} catch (Exception ex) {
 			MessageBox.Show("Error cargando turnos: " + ex.Message);
@@ -98,7 +98,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	// ================================================================
 
 	public List<TurnoEstadoCodigo> Estados { get; }
-		= Enum.GetValues<TurnoEstadoCodigo>().ToList();
+		= [.. Enum.GetValues<TurnoEstadoCodigo>()];
 
 	private TurnoEstadoCodigo? _estadoSeleccionado;
 	public TurnoEstadoCodigo? EstadoSeleccionado {

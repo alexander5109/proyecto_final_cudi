@@ -83,7 +83,7 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 
 
 		EspecialidadesDisponiblesItemsSource.Clear();
-		foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
+		foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => new EspecialidadViewModel(x)))
 			EspecialidadesDisponiblesItemsSource.Add(esp);
 
 
@@ -93,7 +93,7 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 		Especialidad2025.CrearResult(medicoDbModel.EspecialidadCodigo)
 			.MatchAndDo(
 				ok => {
-					SelectedEspecialidad = ok.ToSimpleViewModel();
+					SelectedEspecialidad = new EspecialidadViewModel(ok);
 				},
 				err => {
 					//MessageBox.Show($"El código de especialidad no existe <{(byte)medicoDbModel.EspecialidadCodigo}>");
@@ -129,7 +129,7 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 			HorariosAgrupados.Add(
 				new ViewModelHorarioAgrupado(
 					grupo.Key,
-					grupo.ToList()
+					[.. grupo]
 				)
 			);
 		}

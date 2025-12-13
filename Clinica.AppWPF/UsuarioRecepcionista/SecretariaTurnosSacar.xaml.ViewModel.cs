@@ -26,7 +26,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 		SelectedPaciente = paciente;
 
 		EspecialidadesDisponiblesItemsSource.Clear();
-		foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
+		foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => new EspecialidadViewModel(x)))
 			EspecialidadesDisponiblesItemsSource.Add(esp);
 
 		_ = LoadMedicosTodosAsync();
@@ -42,14 +42,14 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 
 		espResult.MatchAndDo(
 			ok => {
-				EspecialidadViewModel vm = ok.ToSimpleViewModel();
+				EspecialidadViewModel vm = new(ok);
 				SelectedEspecialidad = vm;
 				EspecialidadesDisponiblesItemsSource.Add(vm);
 			},
 			err => {
 				MessageBox.Show($"El código de especialidad no existe <{especialidad}>");
 
-				foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
+				foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => new EspecialidadViewModel(x)))
 					EspecialidadesDisponiblesItemsSource.Add(esp);
 			});
 
@@ -137,7 +137,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 	public async Task LoadMedicosTodosAsync() {
 		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
 
-        IEnumerable<Task<MedicoSimpleViewModel>> tasks = medicos.Select(async medico => {
+		IEnumerable<Task<MedicoSimpleViewModel>> tasks = medicos.Select(async medico => {
 			IReadOnlyList<DayOfWeek>? dias =
 				await App.Repositorio.SelectDiasDeAtencionWhereMedicoId(medico.Id)
 				?? [];
@@ -150,35 +150,11 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 			);
 		});
 
-		MedicosTodos = (await Task.WhenAll(tasks)).ToList();
+		MedicosTodos = [.. (await Task.WhenAll(tasks))];
 
 		OnPropertyChanged(nameof(MedicosTodos));
 		OnPropertyChanged(nameof(ComboBoxMedicos_Enabled));
 	}
-
-
-	//public async Task LoadMedicosTodosAsync() {
-	//	List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
-
-	//	List<MedicoSimpleViewModel> result = [];
-
-	//	foreach (MedicoDbModel medico in medicos) {
-	//		IReadOnlyList<DayOfWeek>? dias =
-	//			await App.Repositorio.SelectDiasDeAtencionWhereMedicoId(medico.Id)
-	//			?? [];
-
-	//		result.Add(new MedicoSimpleViewModel(
-	//			Id: medico.Id,
-	//			EspecialidadCodigo: medico.EspecialidadCodigo,
-	//			Displayear: $"{medico.Nombre} {medico.Apellido}",
-	//			DiasAtencion: dias
-	//		));
-	//	}
-
-	//	MedicosTodos = result;
-	//	OnPropertyChanged(nameof(MedicosTodos));
-	//	OnPropertyChanged(nameof(ComboBoxMedicos_Enabled));
-	//}
 
 
 
@@ -289,7 +265,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 		);
 
 		foreach (Disponibilidad2025 d in lista)
-			DisponibilidadesItemsSource.Add(await d.ToSimpleViewModel());
+			DisponibilidadesItemsSource.Add(new(d));
 	}
 }
 
@@ -302,7 +278,6 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 
 
 public record DiaDeSemanaViewModel(DayOfWeek Value, string DiaNombre) {
-
 	public static readonly List<DiaDeSemanaViewModel> Todos = [
 		new(DayOfWeek.Monday,    "Lunes"),
 		new(DayOfWeek.Tuesday,   "Martes"),
@@ -312,62 +287,64 @@ public record DiaDeSemanaViewModel(DayOfWeek Value, string DiaNombre) {
 		new(DayOfWeek.Saturday,  "Sábado"),
 		new(DayOfWeek.Sunday,    "Domingo")
 	];
-
 };
 
+public record EspecialidadViewModel(
+	EspecialidadCodigo Codigo,
+	string NombreEspecialidad,
+	int Duracion
+) {
+	internal EspecialidadViewModel(Especialidad2025 instance)
+		: this(
+			Codigo: instance.Codigo,
+			NombreEspecialidad: instance.Titulo,
+			Duracion: instance.DuracionConsultaMinutos
+		) {
+	}
+}
 
 
-public record MedicoSimpleViewModel(MedicoId Id, EspecialidadCodigo EspecialidadCodigo, string Displayear, IReadOnlyList<DayOfWeek> DiasAtencion);
 public record DisponibilidadEspecialidadModelView(
 	string Fecha,
 	string Hora,
 	string MedicoDisplayear,
 	DiaDeSemanaViewModel DiaSemana,
 	Disponibilidad2025 Original
-);
-public record EspecialidadViewModel(EspecialidadCodigo Codigo, string NombreEspecialidad, int Duracion);
-
-internal static class ExtensionesLocales {
-
-	internal static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDbModel medicoDbModel, List<DayOfWeek> dias) {
-		return new MedicoSimpleViewModel(
-			Id: medicoDbModel.Id,
-			EspecialidadCodigo: medicoDbModel.EspecialidadCodigo,
-			Displayear: $"{medicoDbModel.Nombre} {medicoDbModel.Apellido}",
-			DiasAtencion: dias
-		);
-
-	}
-
-	private record HorarioDto(int Id, int MedicoId, DayOfWeek DiaSemana, TimeOnly HoraDesde, TimeOnly HoraHasta);
-
-	internal static EspecialidadViewModel ToSimpleViewModel(this Especialidad2025 instance) {
-		return new EspecialidadViewModel(
-			Codigo: instance.Codigo,
-			NombreEspecialidad: instance.Titulo,
-			//NombreEspecialidad: $"{instance.Titulo} --- (Duración consulta: {instance.DuracionConsultaMinutos})"
-			Duracion: instance.DuracionConsultaMinutos
-		);
-	}
-
-	async internal static Task<DisponibilidadEspecialidadModelView> ToSimpleViewModel(this Disponibilidad2025 domainValue) {
-		MedicoDbModel? medico = RepoCache.DictMedicos.GetValueOrDefault(domainValue.MedicoId);
-		return new DisponibilidadEspecialidadModelView(
+) {
+	internal DisponibilidadEspecialidadModelView(Disponibilidad2025 domainValue)
+		: this(
 			Fecha: domainValue.FechaHoraDesde.ATextoDia(),
 			Hora: domainValue.FechaHoraDesde.ATextoHoras(),
-			MedicoDisplayear: $"{medico?.Nombre}{medico?.Apellido}",
-			DiaSemana: new DiaDeSemanaViewModel(domainValue.FechaHoraDesde.DayOfWeek, domainValue.FechaHoraDesde.DayOfWeek.ATexto()),
+			MedicoDisplayear: BuildMedicoDisplay(domainValue.MedicoId),
+			DiaSemana: new DiaDeSemanaViewModel(
+				domainValue.FechaHoraDesde.DayOfWeek,
+				domainValue.FechaHoraDesde.DayOfWeek.ATexto()
+			),
 			Original: domainValue
-		);
+		) {
 	}
 
-
-
-
-
-
-
-
+	private static string BuildMedicoDisplay(MedicoId medicoId) {
+		var medico = RepoCache.DictMedicos.GetValueOrDefault(medicoId);
+		return $"{medico?.Nombre} {medico?.Apellido}";
+	}
 }
 
 
+
+
+public record MedicoSimpleViewModel(
+	MedicoId Id,
+	EspecialidadCodigo EspecialidadCodigo,
+	string Displayear,
+	IReadOnlyList<DayOfWeek> DiasAtencion
+) {
+	internal MedicoSimpleViewModel(MedicoDbModel medico, IReadOnlyList<DayOfWeek> dias)
+		: this(
+			Id: medico.Id,
+			EspecialidadCodigo: medico.EspecialidadCodigo,
+			Displayear: $"{medico.Nombre} {medico.Apellido}",
+			DiasAtencion: dias
+		) {
+	}
+}

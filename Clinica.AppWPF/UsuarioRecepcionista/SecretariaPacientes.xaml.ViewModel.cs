@@ -110,5 +110,5 @@ public sealed class SecretariaPacientesViewModel : INotifyPropertyChanged {
 
 
 // ================================================================
-// VIEWMODELS PARA GRIDS
+// VIEWMODELS PARA SUB-COLLECTIONS
 // ================================================================

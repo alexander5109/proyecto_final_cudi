@@ -6,32 +6,23 @@ using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
 public partial class SecretariaPacientesModificar : Window {
-	public SecretariaPacientesModificarViewModel VM { get; private set; } = new();
+	public SecretariaPacientesModificarViewModel VM { get; private set; }
 
 	public SecretariaPacientesModificar() {
 		InitializeComponent();
+		VM = new(new PacienteDbModel()); 
 		DataContext = VM;
 	}
 
-	public SecretariaPacientesModificar(PacienteId id) {
+	public SecretariaPacientesModificar(PacienteDbModel pacientedbModel) {
 		InitializeComponent();
-		DataContext = VM;
-		_ = CargaInicialAsync(id);
-	}
-
-	private async Task CargaInicialAsync(PacienteId id) {
-		PacienteDbModel? dto = await App.Repositorio.SelectPacienteWhereId(id);
-		//MessageBox.Show(dto.ToString());
-		if (dto == null) {
-			MessageBox.Show("PacienteExtensiones no encontrado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-			Close();
-			return;
-		}
-		//SelectedPacienteId = dto.Id;
-
-		VM = dto.ToViewModel();
+		VM = new(pacientedbModel); //cheap recycle.... maybe we implement the refresh button just in case?
 		DataContext = VM;
 	}
+
+	// ==========================================================
+	// BOTONES: PERSISTENCIA
+	// ==========================================================
 
 	private async void ButtonGuardar(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
@@ -42,7 +33,23 @@ public partial class SecretariaPacientesModificar : Window {
 		);
 	}
 
+
+
+	// ==========================================================
+	// BOTONES: REFRESH
+	// ==========================================================
+
+	// I guess i could implement it on the viewmodel and call it through the button here. It's just a matter of calling refresh pacientes and selectonebyid (which we have)
+
+
+	// ==========================================================
+	// BOTONES: NAV
+	// ==========================================================
+
 	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e)  => this.Cerrar();
+
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e)
+		=> this.Salir();
 
 	private async void ButtonEliminar(object sender, RoutedEventArgs e) {
 		if (
@@ -59,12 +66,6 @@ public partial class SecretariaPacientesModificar : Window {
 			},
 			caseError => caseError.ShowMessageBox()
 		);
-	}
-
-	private void ButtonSolicitarTurno(object sender, RoutedEventArgs e) {
-		//if (VM.Id is int notNullId) {
-		//	this.AbrirComoDialogo<SecretariaTurnosSacar>(SelectedPacienteId.CrearResult(notNullId));
-		//}
 	}
 
 }
