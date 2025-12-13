@@ -1,7 +1,7 @@
 ﻿using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSuperadmin;
-//---------------------------------Tablas.Horarios-------------------------------//
+//---------------------------------Tablas.HorariosViewModelList-------------------------------//
 public class HorarioMedico {
 	public string? DiaSemana { get; set; }
 	public string? HoraInicio { get; set; }

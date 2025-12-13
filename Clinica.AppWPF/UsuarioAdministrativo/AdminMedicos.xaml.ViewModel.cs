@@ -1,17 +1,18 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Text.Json;
 using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media.Media3D;
-using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposExtensiones;
+using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
-public class HorarioViewModel(HorarioDbModel model) : INotifyPropertyChanged {
-	public int Id { get; } = model.Id.Valor;
+
+
+
+public class HorarioViewModel(HorarioDto model) : INotifyPropertyChanged {
+	//public int Id { get; } = model.Id.Valor;
 	public int MedicoId { get; } = model.MedicoId.Valor;
 
 	public DayOfWeek DiaSemana { get; } = model.DiaSemana;
@@ -39,16 +40,29 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 	//public ICommand EditarHorarioCommand { get; }
 	//public ICommand EliminarHorarioCommand { get; }
 
-	public ObservableCollection<HorarioViewModel> Horarios { get; } = [];
+	public ObservableCollection<HorarioViewModel> HorariosViewModelList { get; } = [];
 
 	public async Task CargarHorariosAsync(int medicoId) {
 		//Los medicoDbModel ya traen HorarioDbModel
 		//var response = await App.Repositorio.SelectHorariosWhereMedicoId(new MedicoId(medicoId));
-		//Horarios.Clear();
+		//HorariosViewModelList.Clear();
 		//foreach (var h in response)
-		//	Horarios.Add(new HorarioViewModel(h));
+		//	HorariosViewModelList.Add(new HorarioViewModel(h));
 	}
 
+	private void CargarHorariosDeMedicoSeleccionado() {
+		HorariosViewModelList.Clear();
+		if (SelectedMedico is null) return;
+
+		if (SelectedMedico.Horarios.Count == 0) {
+			MessageBox.Show($"{SelectedMedico.Nombre} no tiene ningun horario cargado");
+		} else {
+			foreach (var h in SelectedMedico.Horarios)
+				HorariosViewModelList.Add(new HorarioViewModel(h));
+		}
+
+
+	}
 
 
 	private MedicoDbModel? _selectedMedico;
@@ -61,6 +75,8 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 				OnPropertyChanged(nameof(HayMedicoSeleccionado));
 				OnPropertyChanged(nameof(SelectedMedicoDomicilioCompleto));
 				OnPropertyChanged(nameof(SelectedMedicoNombreCompleto));
+
+				CargarHorariosDeMedicoSeleccionado();
 			}
 		}
 	}
@@ -80,7 +96,10 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 	private List<MedicoDbModel> _medicos = [];
 	public List<MedicoDbModel> MedicosList {
 		get => _medicos;
-		set { _medicos = value; OnPropertyChanged(nameof(MedicosList)); }
+		set { _medicos = value; 
+			OnPropertyChanged(nameof(MedicosList));
+			OnPropertyChanged(nameof(HorariosViewModelList));
+		}
 	}
 	public bool ModificarMedicoCommand => SelectedMedico is not null;
 

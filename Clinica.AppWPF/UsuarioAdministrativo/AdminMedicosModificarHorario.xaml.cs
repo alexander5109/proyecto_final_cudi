@@ -14,7 +14,7 @@ public partial class AdminMedicosModificarHorario : Window {
 	}
 
 	//	private bool ValidarHorario(MedicoDto medico, HorarioMedicoDto nuevo) {
-	//		return !medico.Horarios.Any(h =>
+	//		return !medico.HorariosViewModelList.Any(h =>
 	//			h != nuevo &&
 	//			h.DiaSemana == nuevo.DiaSemana &&
 	//			!(nuevo.Hasta <= h.Desde || nuevo.Desde >= h.Hasta)
@@ -28,7 +28,7 @@ public partial class AdminMedicosModificarHorario : Window {
 	//		}
 
 	//		if (VM.EsNuevo)
-	//			VM.Medico.Horarios.Add(VM.Horario);
+	//			VM.Medico.HorariosViewModelList.Add(VM.Horario);
 
 	//		DialogResult = true;
 	//		Close();

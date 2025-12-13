@@ -39,11 +39,11 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 
 		EspecialidadesDisponiblesItemsSource.Clear(); // <<---- importantísimo
 
-        Result<Especialidad2025> espResult = Especialidad2025.CrearResult(especialidad);
+		Result<Especialidad2025> espResult = Especialidad2025.CrearResult(especialidad);
 
 		espResult.MatchAndDo(
 			ok => {
-                EspecialidadViewModel vm = ok.ToSimpleViewModel();
+				EspecialidadViewModel vm = ok.ToSimpleViewModel();
 				SelectedEspecialidad = vm;
 				EspecialidadesDisponiblesItemsSource.Add(vm);
 			},
@@ -293,13 +293,15 @@ internal static class ExtensionesLocales {
 	internal static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDbModel model) {
 		// MessageBox.Show(model.Nombre);
 		// MessageBox.Show(model.HorariosJson);
-		List<DayOfWeek> dias = [];
-		if (!string.IsNullOrWhiteSpace(model.HorariosJson)) {
-            List<HorarioDto>? horarios = System.Text.Json.JsonSerializer.Deserialize<List<HorarioDto>>(model.HorariosJson);
-			dias = horarios is null ? [] : [.. horarios.Select(h => h.DiaSemana).Distinct()];
-		}
+
+		//List<DayOfWeek> dias = [];
+		List<DayOfWeek> dias = [.. model.Horarios.Select(x => x.DiaSemana)];
+		//if (!string.IsNullOrWhiteSpace(model.HorariosJson)) {
+		//          List<HorarioDto>? horarios = System.Text.Json.JsonSerializer.Deserialize<List<HorarioDto>>(model.HorariosJson);
+		//	dias = horarios is null ? [] : [.. horarios.Select(h => h.DiaSemana).Distinct()];
+		//}
 		// foreach (var item in dias) {
-			// MessageBox.Show(item.ToString());
+		// MessageBox.Show(item.ToString());
 		// }
 
 		return new MedicoSimpleViewModel(

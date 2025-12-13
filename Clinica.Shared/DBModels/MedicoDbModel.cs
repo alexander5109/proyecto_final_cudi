@@ -1,10 +1,9 @@
-﻿using System.Text.Json;
-using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeAgregado;
+﻿using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
-using Clinica.Dominio.TiposDeValor;
+using Clinica.Shared.ApiDtos;
+using static Clinica.Shared.ApiDtos.HorarioDtos;
 
 namespace Clinica.Shared.DbModels;
 
@@ -22,10 +21,10 @@ public static partial class DbModels {
 		string Telefono,
 		string Email,
 		bool HaceGuardias,
-		string? HorariosJson
+		IReadOnlyList<HorarioDto> Horarios
 	) {
 		public MedicoDbModel()
-			: this(default!, default, "", "", "", default, "", "", default, "", "", default, null) { }
+			: this(default!, default, "", "", "", default, "", "", default, "", "", default, []) { }
 	}
 
 	public static MedicoDbModel ToModel(this Medico2025Agg aggrg) {
@@ -42,9 +41,28 @@ public static partial class DbModels {
 			Telefono: aggrg.Medico.Telefono.Valor,
 			Email: aggrg.Medico.Email.Valor,
 			HaceGuardias: aggrg.Medico.HaceGuardiasValor,
-			HorariosJson: JsonSerializer.Serialize(aggrg.Medico.ListaHorarios.ToString()) //Cualquier cosa estaba haciedno aca.
+			Horarios: [.. aggrg.Medico.ListaHorarios.Valores.Select(x => x.ToDto())]
 		);
 	}
+
+	public static MedicoDbModel ToModel(this Medico2025 instance, MedicoId id) {
+		return new MedicoDbModel(
+			Id: id,
+			EspecialidadCodigo: instance.EspecialidadUnica.Codigo,
+			Dni: instance.Dni.Valor,
+			Nombre: instance.NombreCompleto.NombreValor,
+			Apellido: instance.NombreCompleto.ApellidoValor,
+			FechaIngreso: instance.FechaIngreso,
+			Domicilio: instance.Domicilio.DireccionValor,
+			Localidad: instance.Domicilio.Localidad.NombreValor,
+			ProvinciaCodigo: instance.Domicilio.Localidad.Provincia.CodigoInternoValor,
+			Telefono: instance.Telefono.Valor,
+			Email: instance.Email.Valor,
+			HaceGuardias: instance.HaceGuardiasValor,
+			Horarios: [.. instance.ListaHorarios.Valores.Select(x => x.ToDto())]
+		);
+	}
+	/*
 	public static Result<Medico2025Agg> ToDomainAgg(this MedicoDbModel dbModel) {
 		string json = string.IsNullOrWhiteSpace(dbModel.HorariosJson) ? "[]" : dbModel.HorariosJson;
 		IReadOnlyList<Horario2025> horariosDto = JsonSerializer.Deserialize<IReadOnlyList<Horario2025>>(json)
@@ -70,26 +88,8 @@ public static partial class DbModels {
 			)
 		);
 	}
+	*/
 
-
-
-	public static MedicoDbModel ToModel(this Medico2025 instance, MedicoId id) {
-		return new MedicoDbModel(
-			Id: id,
-			EspecialidadCodigo: instance.EspecialidadUnica.Codigo,
-			Dni: instance.Dni.Valor,
-			Nombre: instance.NombreCompleto.NombreValor,
-			Apellido: instance.NombreCompleto.ApellidoValor,
-			FechaIngreso: instance.FechaIngreso,
-			Domicilio: instance.Domicilio.DireccionValor,
-			Localidad: instance.Domicilio.Localidad.NombreValor,
-			ProvinciaCodigo: instance.Domicilio.Localidad.Provincia.CodigoInternoValor,
-			Telefono: instance.Telefono.Valor,
-			Email: instance.Email.Valor,
-			HaceGuardias: instance.HaceGuardiasValor,
-			HorariosJson: JsonSerializer.Serialize(instance.ListaHorarios.ToString()) //Cualquier cosa estaba haciedno aca.
-		);
-	}
 
 
 

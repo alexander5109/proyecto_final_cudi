@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
+using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
@@ -59,14 +59,14 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 		_haceGuardias = model.HaceGuardias;
 		EspecialidadesDisponibles = especialidades;
 
-		HorariosAgrupados = LoadHorarios(model.HorariosJson);
+		HorariosAgrupados = LoadHorarios(model.Horarios);
 	}
 
-	private ObservableCollection<ViewModelHorarioAgrupado> LoadHorarios(string? json) {
-		if (string.IsNullOrWhiteSpace(json))
-			return [];
+	private static ObservableCollection<ViewModelHorarioAgrupado> LoadHorarios(IReadOnlyList<HorarioDto> horarios) {
+		//if (string.IsNullOrWhiteSpace(json))
+		//	return [];
 
-        List<HorarioDb> horarios = JsonSerializer.Deserialize<List<HorarioDb>>(json)!;
+        //List<HorarioDb> horarios = JsonSerializer.Deserialize<List<HorarioDb>>(json)!;
 
 		var agrupado = horarios
 			.GroupBy(h => h.DiaSemana)

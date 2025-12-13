@@ -1,22 +1,24 @@
 ﻿using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Windows;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposExtensiones;
+using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
 
-public record HorarioDb(int Id, int MedicoId, int DiaSemana, TimeSpan HoraDesde, TimeSpan HoraHasta);
+//public record HorarioDb(int Id, int MedicoId, int DiaSemana, TimeSpan HoraDesde, TimeSpan HoraHasta);
 
-public class ViewModelHorarioAgrupado(int dia, List<HorarioDb> horarios) {
-	public string DiaSemanaNombre { get; } = CultureInfo.GetCultureInfo("es-AR").DateTimeFormat.DayNames[dia];
+public class ViewModelHorarioAgrupado(DayOfWeek dia, List<HorarioDto> horarios) {
+	public string DiaSemanaNombre { get; } = dia.ATexto();
+	//public string DiaSemanaNombre { get; } = CultureInfo.GetCultureInfo("es-AR").DateTimeFormat.DayNames[dia];
 	public ObservableCollection<HorarioMedicoViewModel> Horarios { get; } = new ObservableCollection<HorarioMedicoViewModel>(
 			horarios.Select(h => new HorarioMedicoViewModel(h))
 		);
 }
 
-public class HorarioMedicoViewModel(HorarioDb h) {
+public class HorarioMedicoViewModel(HorarioDto h) {
 	public string Desde { get; } = h.HoraDesde.ToString(@"hh\:mm");
 	public string Hasta { get; } = h.HoraHasta.ToString(@"hh\:mm");
 }
@@ -82,7 +84,7 @@ public partial class AdminMedicosModificar : Window {
 	//---------------------botones.Salida-------------------//
 	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
 
-	//---------------------botones.Horarios-------------------//
+	//---------------------botones.HorariosViewModelList-------------------//
 	private object? GetSelectedTreeItem() {
 		return treeViewHorarios.SelectedItem;
 	}
@@ -144,7 +146,7 @@ public partial class AdminMedicosModificar : Window {
 			MessageBoxButton.YesNo) != MessageBoxResult.Yes)
 			return;
 
-		SelectedMedico.Horarios.Remove(horario);
+		SelectedMedico.HorariosViewModelList.Remove(horario);
 
 		// Forzar refresco para que se actualicen los días vacíos
 		OnPropertyChanged(nameof(SelectedMedico.HorariosAgrupados));
