@@ -34,7 +34,8 @@ public partial class SecretariaTurnosSacar : Window {
 		TurnoOriginal = turnoOriginal;
 
 	}
-	
+
+
 
 	// ==========================================================
 	// BOTONES: REFRESH
@@ -95,7 +96,7 @@ public partial class SecretariaTurnosSacar : Window {
 				return;
 			}
 
-			ResultWpf<TurnoDbModel> resultt = await App.Repositorio.ReprogramarTurno(
+			ResultWpf<UnitWpf> resultt = await App.Repositorio.ReprogramarTurno(
 				TurnoOriginal.Original.Id,
 				DateTime.Now,
 				comentario
@@ -107,7 +108,7 @@ public partial class SecretariaTurnosSacar : Window {
 			}
 		}
 
-		ResultWpf<TurnoDbModel> result = await App.Repositorio.AgendarNuevoTurno(
+		ResultWpf<UnitWpf> result = await App.Repositorio.AgendarNuevoTurno(
 			VM.SelectedPaciente.Id,
 			DateTime.Now,
 			VM.SelectedDisponibilidad.Original

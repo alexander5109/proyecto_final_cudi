@@ -104,6 +104,10 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 	// -----------------------------
 	// METHODS
 	// -----------------------------
+
+
+
+
 	public async Task RefreshDisponibilidadesAsync() {
 		if (SelectedEspecialidad is not EspecialidadViewModel esp) return;
 
@@ -230,7 +234,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 	}
 
 
-	private DateTime _selectedFecha = DateTime.Today;
+	private DateTime _selectedFecha = DateTime.Now;
 	public DateTime SelectedFecha {
 		get => _selectedFecha;
 		set {
