@@ -4,17 +4,17 @@ using static Clinica.Shared.ApiDtos.MedicoDtos;
 namespace Clinica.AppWPF.Ventanas;
 
 
-public partial class DialogoModificarHorario : Window {
+public partial class AdminMedicosModificarHorario : Window {
 	//	public HorarioModificarViewModel VM { get; }
 
-	public DialogoModificarHorario(MedicoDto medico) {
+	public AdminMedicosModificarHorario(MedicoDto medico) {
 		InitializeComponent();
 		//VM = new HorarioModificarViewModel(medico, horario, esNuevo);
 		//DataContext = VM;
 	}
 
 	//	private bool ValidarHorario(MedicoDto medico, HorarioMedicoDto nuevo) {
-	//		return !medico.Horarios.Any(h =>
+	//		return !medico.HorariosViewModelList.Any(h =>
 	//			h != nuevo &&
 	//			h.DiaSemana == nuevo.DiaSemana &&
 	//			!(nuevo.Hasta <= h.Desde || nuevo.Desde >= h.Hasta)
@@ -28,7 +28,7 @@ public partial class DialogoModificarHorario : Window {
 	//		}
 
 	//		if (VM.EsNuevo)
-	//			VM.Medico.Horarios.Add(VM.Horario);
+	//			VM.Medico.HorariosViewModelList.Add(VM.Horario);
 
 	//		DialogResult = true;
 	//		Close();

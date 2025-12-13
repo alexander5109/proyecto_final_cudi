@@ -12,50 +12,44 @@ using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-//----------------------------------internal Viewmodel for SecretariaFormularioTurno-------------------------
-internal class MyViewModel : INotifyPropertyChanged {
+//----------------------------------internal Viewmodel for SecretariaTurnosSacar-------------------------
+public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void OnPropertyChanged(string name)
 		=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
 
 
-	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; }
-		= [];
+	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; } = [];
 
-	public MyViewModel(PacienteDbModel paciente) {
+	public SecretariaTurnosSacarViewModel(PacienteDbModel paciente) {
 		SelectedPaciente = paciente;
 
 		EspecialidadesDisponiblesItemsSource.Clear();
-		foreach (var esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
+		foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
 			EspecialidadesDisponiblesItemsSource.Add(esp);
 
 		_ = LoadMedicosTodosAsync();
 		LoadHoras();
 	}
 
-	public MyViewModel(PacienteDbModel? paciente, EspecialidadCodigo especialidad) {
-		if (paciente == null) {
-			MessageBox.Show("por que nulo el paciente?");
-			return;
-
-		}
+	public SecretariaTurnosSacarViewModel(PacienteDbModel paciente, EspecialidadCodigo especialidad) {
 		SelectedPaciente = paciente;
 
 		EspecialidadesDisponiblesItemsSource.Clear(); // <<---- importantísimo
 
-		var espResult = Especialidad2025.CrearResult(especialidad);
+		Result<Especialidad2025> espResult = Especialidad2025.CrearResult(especialidad);
 
 		espResult.MatchAndDo(
 			ok => {
-				var vm = ok.ToSimpleViewModel();
+				EspecialidadViewModel vm = ok.ToSimpleViewModel();
 				SelectedEspecialidad = vm;
 				EspecialidadesDisponiblesItemsSource.Add(vm);
 			},
 			err => {
 				MessageBox.Show($"El código de especialidad no existe <{especialidad}>");
 
-				foreach (var esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
+				foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
 					EspecialidadesDisponiblesItemsSource.Add(esp);
 			});
 
@@ -72,11 +66,12 @@ internal class MyViewModel : INotifyPropertyChanged {
 			if (_selectedMedico == value) return;
 			_selectedMedico = value;
 			OnPropertyChanged(nameof(SelectedMedico));
-			OnPropertyChanged(nameof(HayMedicoSeleccionado));
-			OnPropertyChanged(nameof(BotonBuscarDisponibilidadEnabled)); // <--- importante
-			OnPropertyChanged(nameof(ComboBoxDiasSemanaEnabled));
+			//OnPropertyChanged(nameof(ComboBoxMedicos_Enabled)); // <--- importante
+			OnPropertyChanged(nameof(ComboBoxDiasSemana_Enabled));
+			OnPropertyChanged(nameof(BotonBuscar_Enabled)); // <--- importante
+			OnPropertyChanged(nameof(BotonAgendar_Enabled));
 			ActualizarDiasSemana();
-			//FiltroDiaEnabled = SelectedMedico != null;
+			//CheckBoxDiaSemana_Enabled = SelectedMedico != null;
 
 			//MessageBox.Show(SelectedMedico?.ToString());
 
@@ -93,9 +88,10 @@ internal class MyViewModel : INotifyPropertyChanged {
 	}
 
 
-	public bool HayMedicoSeleccionado => SelectedMedico != null;
-	public bool ComboBoxDiasSemanaEnabled => FiltroDiaEnabled && SelectedMedico != null && SelectedMedico.DiasAtencion.Any();
-	public bool AgendarTurnoEnabled => DisponibilidadesItemsSource.Any() && SelectedDisponibilidad != null;
+	public bool ComboBoxMedicos_Enabled => MedicosEspecialistasItemsSource.Any();
+	public bool ComboBoxDiasSemana_Enabled => SelectedMedico != null && SelectedMedico.DiasAtencion.Any();
+	public bool BotonBuscar_Enabled => SelectedMedico != null && SelectedMedico.DiasAtencion.Any();
+	public bool BotonAgendar_Enabled => DisponibilidadesItemsSource.Any() && SelectedDisponibilidad != null;
 
 
 	public DisponibilidadEspecialidadModelView? SelectedDisponibilidad {
@@ -104,10 +100,10 @@ internal class MyViewModel : INotifyPropertyChanged {
 			if (_selectedDisponibilidad == value) return;
 			_selectedDisponibilidad = value;
 			OnPropertyChanged(nameof(SelectedDisponibilidad));
-			OnPropertyChanged(nameof(BotonBuscarDisponibilidadEnabled));
-			OnPropertyChanged(nameof(ComboBoxDiasSemanaEnabled));
+			OnPropertyChanged(nameof(BotonBuscar_Enabled));
+			OnPropertyChanged(nameof(ComboBoxDiasSemana_Enabled));
 			OnPropertyChanged(nameof(InformeReservaDeTurno));
-			OnPropertyChanged(nameof(AgendarTurnoEnabled));
+			OnPropertyChanged(nameof(BotonAgendar_Enabled));
 		}
 	}
 
@@ -126,26 +122,65 @@ internal class MyViewModel : INotifyPropertyChanged {
 
 
 
-	public bool ComboBoxMedicosEnabled => MedicosEspecialistasItemsSource.Any();
 
 	private void ActualizarDiasSemana() {
 		DiasSemanaItemsSource.Clear();
 		if (SelectedMedico is null) return;
 
-		foreach (var dia in SelectedMedico.DiasAtencion) {
+		foreach (DayOfWeek dia in SelectedMedico.DiasAtencion) {
 			DiasSemanaItemsSource.Add(new DiaDeSemanaViewModel(dia, dia.ATexto()));
 		}
 
 		SelectedDiaValue = DiasSemanaItemsSource.FirstOrDefault();
 	}
 
-
 	public async Task LoadMedicosTodosAsync() {
 		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
-		MedicosTodos = [.. medicos.Select(m => m.ToSimpleViewModel())];
+
+		var tasks = medicos.Select(async medico => {
+			IReadOnlyList<DayOfWeek>? dias =
+				await App.Repositorio.SelectDiasDeAtencionWhereMedicoId(medico.Id)
+				?? [];
+
+			return new MedicoSimpleViewModel(
+				Id: medico.Id,
+				EspecialidadCodigo: medico.EspecialidadCodigo,
+				Displayear: $"{medico.Nombre} {medico.Apellido}",
+				DiasAtencion: dias
+			);
+		});
+
+		MedicosTodos = (await Task.WhenAll(tasks)).ToList();
+
 		OnPropertyChanged(nameof(MedicosTodos));
-		OnPropertyChanged(nameof(ComboBoxMedicosEnabled));
+		OnPropertyChanged(nameof(ComboBoxMedicos_Enabled));
 	}
+
+
+	//public async Task LoadMedicosTodosAsync() {
+	//	List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
+
+	//	List<MedicoSimpleViewModel> result = [];
+
+	//	foreach (MedicoDbModel medico in medicos) {
+	//		IReadOnlyList<DayOfWeek>? dias =
+	//			await App.Repositorio.SelectDiasDeAtencionWhereMedicoId(medico.Id)
+	//			?? [];
+
+	//		result.Add(new MedicoSimpleViewModel(
+	//			Id: medico.Id,
+	//			EspecialidadCodigo: medico.EspecialidadCodigo,
+	//			Displayear: $"{medico.Nombre} {medico.Apellido}",
+	//			DiasAtencion: dias
+	//		));
+	//	}
+
+	//	MedicosTodos = result;
+	//	OnPropertyChanged(nameof(MedicosTodos));
+	//	OnPropertyChanged(nameof(ComboBoxMedicos_Enabled));
+	//}
+
+
 
 	public async Task LoadMedicosPorEspecialidadAsync(EspecialidadCodigo? esp) {
 		MedicosEspecialistasItemsSource.Clear();
@@ -162,7 +197,7 @@ internal class MyViewModel : INotifyPropertyChanged {
 		} else {
 			SelectedMedico = null;
 		}
-		OnPropertyChanged(nameof(ComboBoxMedicosEnabled));
+		OnPropertyChanged(nameof(ComboBoxMedicos_Enabled));
 
 	}
 
@@ -214,20 +249,8 @@ internal class MyViewModel : INotifyPropertyChanged {
 			if (_selectedDiaValue == value) return;
 			_selectedDiaValue = value;
 			OnPropertyChanged(nameof(SelectedDiaValue));
-			OnPropertyChanged(nameof(BotonBuscarDisponibilidadEnabled));
-			OnPropertyChanged(nameof(AgendarTurnoEnabled));
-		}
-	}
-
-	private bool _filtroDiaEnabled;
-	public bool FiltroDiaEnabled {
-		get => _filtroDiaEnabled;
-		set {
-			if (_filtroDiaEnabled == value) return;
-			if (!value)
-				SelectedDiaValue = null;
-			_filtroDiaEnabled = value;
-			OnPropertyChanged(nameof(FiltroDiaEnabled));
+			OnPropertyChanged(nameof(BotonBuscar_Enabled));
+			OnPropertyChanged(nameof(BotonAgendar_Enabled));
 		}
 	}
 
@@ -241,8 +264,8 @@ internal class MyViewModel : INotifyPropertyChanged {
 
 			OnPropertyChanged(nameof(SelectedEspecialidad));
 			OnPropertyChanged(nameof(SelectedMedico));
-			OnPropertyChanged(nameof(BotonBuscarDisponibilidadEnabled));
-			OnPropertyChanged(nameof(ComboBoxMedicosEnabled));
+			OnPropertyChanged(nameof(BotonBuscar_Enabled));
+			OnPropertyChanged(nameof(ComboBoxMedicos_Enabled));
 
 			_ = LoadMedicosPorEspecialidadAsync(value?.Codigo);
 		}
@@ -251,8 +274,6 @@ internal class MyViewModel : INotifyPropertyChanged {
 	public ObservableCollection<DisponibilidadEspecialidadModelView> DisponibilidadesItemsSource { get; } = [];
 
 	private DisponibilidadEspecialidadModelView? _selectedDisponibilidad;
-
-	public bool BotonBuscarDisponibilidadEnabled => SelectedMedico != null && SelectedMedico.DiasAtencion.Any();
 
 	public async Task RefreshDisponibilidadesAsync() {
 		if (SelectedEspecialidad is not EspecialidadViewModel esp) return;
@@ -308,19 +329,14 @@ public record EspecialidadViewModel(EspecialidadCodigo Codigo, string NombreEspe
 
 internal static class ExtensionesLocales {
 
-	internal static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDbModel model) {
-		List<DayOfWeek> dias = [];
-		if (!string.IsNullOrWhiteSpace(model.HorariosJson)) {
-			var horarios = System.Text.Json.JsonSerializer.Deserialize<List<HorarioDto>>(model.HorariosJson);
-			dias = horarios is null ? [] : [.. horarios.Select(h => h.DiaSemana).Distinct()];
-		}
-
+	internal static MedicoSimpleViewModel ToSimpleViewModel(this MedicoDbModel medicoDbModel, List<DayOfWeek> dias) {
 		return new MedicoSimpleViewModel(
-			Id: model.Id,
-			EspecialidadCodigo: model.EspecialidadCodigo,
-			Displayear: $"{model.Nombre} {model.Apellido}",
+			Id: medicoDbModel.Id,
+			EspecialidadCodigo: medicoDbModel.EspecialidadCodigo,
+			Displayear: $"{medicoDbModel.Nombre} {medicoDbModel.Apellido}",
 			DiasAtencion: dias
 		);
+
 	}
 
 	private record HorarioDto(int Id, int MedicoId, DayOfWeek DiaSemana, TimeOnly HoraDesde, TimeOnly HoraHasta);

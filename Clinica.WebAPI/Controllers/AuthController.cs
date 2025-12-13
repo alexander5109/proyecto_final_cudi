@@ -112,7 +112,7 @@ public static class ServicioAuth {
 		if (dbResult.IsError) { 
 			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDto>();
 		}
-		var db = dbResult.UnwrapAsOk();
+        UsuarioDbModel db = dbResult.UnwrapAsOk();
 		// VALIDAR PASSWORD
 		if (!ContraseñaHasheada.RawIdenticalToHashed(passwordRaw, db.PasswordHash))
 			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDto>();

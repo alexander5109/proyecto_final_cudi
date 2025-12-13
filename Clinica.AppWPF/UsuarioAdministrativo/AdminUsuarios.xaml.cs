@@ -1,18 +1,15 @@
 ﻿using Clinica.AppWPF.Infrastructure;
 using System.Windows;
 using System.Windows.Controls;
-using static Clinica.Shared.ApiDtos.MedicoDtos;
-using static Clinica.Shared.ApiDtos.PacienteDtos;
-using static Clinica.Shared.ApiDtos.TurnoDtos;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
-public partial class AdministrativoGestionDeMedicos : Window {
+public partial class AdminUsuarios : Window {
 	//private MedicoDto? SelectedMedico = null;
 	//private TurnoDto? SelectedTurno = null;
 	//private PacienteDto? PacienteRelacionado = null;
 
-	public AdministrativoGestionDeMedicos() {
+	public AdminUsuarios() {
 		InitializeComponent();
 		//_ = CargaInicialAsync();
 	}
@@ -51,6 +48,14 @@ public partial class AdministrativoGestionDeMedicos : Window {
 		//}
 	}
 
+	private void ActualizarPacienteUI() {
+		//txtPacienteDni.Text = PacienteRelacionado?.Dni ?? string.Empty;
+		//txtPacienteNombre.Text = PacienteRelacionado?.Nombre ?? string.Empty;
+		//txtPacienteApellido.Text = PacienteRelacionado?.Apellido ?? string.Empty;
+		//txtPacienteEmail.Text = PacienteRelacionado?.Email ?? string.Empty;
+		//txtPacienteTelefono.Text = PacienteRelacionado?.Telefono ?? string.Empty;
+		//ClickBoton_ModificarPaciente.IsEnabled = PacienteRelacionado != null;
+	}
 
 	//=============================================================
 	// Eventos de ventana
@@ -85,7 +90,7 @@ public partial class AdministrativoGestionDeMedicos : Window {
 
 	private void ClickBoton_ModificarMedico(object sender, RoutedEventArgs e) {
 		//if (SelectedMedico != null)
-		//	this.AbrirComoDialogo<DialogoModificarMedico>(SelectedMedico);
+		//	this.AbrirComoDialogo<AdminMedicosModificar>(SelectedMedico);
 	}
 
 	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
@@ -96,7 +101,7 @@ public partial class AdministrativoGestionDeMedicos : Window {
 	//=============================================================
 	// Botones de crear
 	//=============================================================
-	//private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<DialogoModificarMedico>();
+	//private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<AdminMedicosModificar>();
 	//private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarPaciente>();
 	//private void ButtonAgregarTurno(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<WindowModificarTurno>();
 
@@ -107,6 +112,11 @@ public partial class AdministrativoGestionDeMedicos : Window {
     private void ButtonAgregarMedico(object sender, RoutedEventArgs e) {
 
     }
+
+
+
+
+
 
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();

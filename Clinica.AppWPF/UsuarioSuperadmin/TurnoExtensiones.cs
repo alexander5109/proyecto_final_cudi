@@ -1,5 +1,4 @@
-﻿using Clinica.AppWPF.UsuarioSuperadmin;
-using Clinica.Dominio.TiposExtensiones;
+﻿using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioSuperadmin;

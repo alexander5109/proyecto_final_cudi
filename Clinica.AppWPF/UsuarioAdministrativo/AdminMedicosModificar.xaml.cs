@@ -1,36 +1,43 @@
 ﻿using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Windows;
+using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
 
-public record HorarioDb(int Id, int MedicoId, int DiaSemana, TimeSpan HoraDesde, TimeSpan HoraHasta);
-
-public class ViewModelHorarioAgrupado(int dia, List<HorarioDb> horarios) {
-	public string DiaSemanaNombre { get; } = CultureInfo.GetCultureInfo("es-AR").DateTimeFormat.DayNames[dia];
-	public ObservableCollection<HorarioMedicoViewModel> Horarios { get; } = new ObservableCollection<HorarioMedicoViewModel>(
-			horarios.Select(h => new HorarioMedicoViewModel(h))
-		);
-}
-
-public class HorarioMedicoViewModel(HorarioDb h) {
-	public string Desde { get; } = h.HoraDesde.ToString(@"hh\:mm");
-	public string Hasta { get; } = h.HoraHasta.ToString(@"hh\:mm");
-}
+//public record HorarioDb(int Id, int MedicoId, int DiaSemana, TimeSpan HoraDesde, TimeSpan HoraHasta);
 
 
 
-public partial class DialogoModificarMedico : Window {
-	public MedicoFormularioViewModel VM { get; }
+public partial class AdminMedicosModificar : Window {
+	public AdminMedicosModificarViewModel VM { get; }
 
-	public DialogoModificarMedico(MedicoDbModel model, IEnumerable<EspecialidadCodigo> especialidades) {
+	public AdminMedicosModificar() {
 		InitializeComponent();
-		VM = new MedicoFormularioViewModel(model, especialidades);
+		VM = new AdminMedicosModificarViewModel(new MedicoDbModel());
 		DataContext = VM;
 	}
+
+	public AdminMedicosModificar(MedicoDbModel model) {
+		InitializeComponent();
+		VM = new AdminMedicosModificarViewModel(model);
+		DataContext = VM;
+		Loaded += async (_, _) => await VM.CargarHorariosAsync();
+	}
+
+    private void ClickBoton_GuardarCambios(object sender, RoutedEventArgs e) {
+		MessageBox.Show("Falta implementar el guardado de cambios");
+	}
+
+    private void ClickBoton_EliminarMedico(object sender, RoutedEventArgs e) {
+		MessageBox.Show("Falta implementar la eliminacion de medico");
+
+	}
+
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
 
 	/*
 
@@ -76,7 +83,7 @@ public partial class DialogoModificarMedico : Window {
 	//---------------------botones.Salida-------------------//
 	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
 
-	//---------------------botones.Horarios-------------------//
+	//---------------------botones.HorariosViewModelList-------------------//
 	private object? GetSelectedTreeItem() {
 		return treeViewHorarios.SelectedItem;
 	}
@@ -101,10 +108,10 @@ public partial class DialogoModificarMedico : Window {
 			Hasta = new TimeOnly(12, 0)
 		};
 
-		DialogoModificarHorario win = new(SelectedMedico, nuevoHorario, esNuevo: true);
+		AdminMedicosModificarHorario win = new(SelectedMedico, nuevoHorario, esNuevo: true);
 
 		if (win.ShowDialog() == true) {
-			// Se agregó realmente dentro de DialogoModificarHorario
+			// Se agregó realmente dentro de AdminMedicosModificarHorario
 			// Ahora refrescamos los agrupados (INotifyPropertyChanged se encarga)
 			OnPropertyChanged(nameof(SelectedMedico.HorariosAgrupados));
 		}
@@ -118,7 +125,7 @@ public partial class DialogoModificarMedico : Window {
 			return;
 		}
 
-		DialogoModificarHorario win = new(SelectedMedico, horario, esNuevo: false);
+		AdminMedicosModificarHorario win = new(SelectedMedico, horario, esNuevo: false);
 
 		if (win.ShowDialog() == true) {
 			// El horario ya está modificado (data binding)
@@ -138,7 +145,7 @@ public partial class DialogoModificarMedico : Window {
 			MessageBoxButton.YesNo) != MessageBoxResult.Yes)
 			return;
 
-		SelectedMedico.Horarios.Remove(horario);
+		SelectedMedico.HorariosViewModelList.Remove(horario);
 
 		// Forzar refresco para que se actualicen los días vacíos
 		OnPropertyChanged(nameof(SelectedMedico.HorariosAgrupados));
@@ -147,4 +154,17 @@ public partial class DialogoModificarMedico : Window {
 
 	//------------------------Fin---------------------------//
 
+}
+
+public class ViewModelHorarioAgrupado(DayOfWeek dia, List<HorarioDbModel> horarios) {
+	public string DiaSemanaNombre { get; } = dia.ATexto();
+	//public string DiaSemanaNombre { get; } = CultureInfo.GetCultureInfo("es-AR").DateTimeFormat.DayNames[dia];
+	public ObservableCollection<HorarioMedicoViewModel> Horarios { get; } = new ObservableCollection<HorarioMedicoViewModel>(
+			horarios.Select(h => new HorarioMedicoViewModel(h))
+		);
+}
+
+public class HorarioMedicoViewModel(HorarioDbModel h) {
+	public string Desde { get; } = h.HoraDesde.ToString(@"hh\:mm");
+	public string Hasta { get; } = h.HoraHasta.ToString(@"hh\:mm");
 }

@@ -23,7 +23,7 @@ public partial class HomeAdministrativo : Window {
 
 
 
-	private void ClickBoton_CuentasDeUsuario(object sender, RoutedEventArgs e) => this.NavegarA<AdministrativoGestionDeUsuarios>();
+	private void ClickBoton_CuentasDeUsuario(object sender, RoutedEventArgs e) => this.NavegarA<AdminUsuarios>();
 
-	private void ClickBoton_GuestionPersonalMedico(object sender, RoutedEventArgs e) => this.NavegarA<AdministrativoGestionDeMedicos>();
+	private void ClickBoton_GuestionPersonalMedico(object sender, RoutedEventArgs e) => this.NavegarA<AdminMedicos>();
 }

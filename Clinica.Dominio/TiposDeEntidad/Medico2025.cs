@@ -5,7 +5,6 @@ namespace Clinica.Dominio.TiposDeEntidad;
 
 public record Medico2025(
 	//ListaEspecialidadesMedicas2025 Especialidades,
-
 	//MedicoId Id,
 	NombreCompleto2025 NombreCompleto,
 	Especialidad2025 EspecialidadUnica,
@@ -13,7 +12,7 @@ public record Medico2025(
 	DomicilioArgentino2025 Domicilio,
 	Telefono2025 Telefono,
 	Email2025 Email,
-	ListaHorarioMedicos2025 ListaHorarios,
+	//ListaHorarioMedicos2025 ListaHorarios,
 	DateTime FechaIngreso,
 	bool HaceGuardiasValor
 ) {
@@ -26,7 +25,7 @@ public record Medico2025(
 		Result<DomicilioArgentino2025> domicilioResult,
 		Result<Telefono2025> telefonoResult,
 		Result<Email2025> emailResult,
-		Result<ListaHorarioMedicos2025> horariosResult,
+		//Result<ListaHorarioMedicos2025> horariosResult,
 		DateTime fechaIngreso,
 		bool haceGuardia
 	) =>
@@ -37,7 +36,7 @@ public record Medico2025(
 		from dom in domicilioResult
 		from tel in telefonoResult
 		from email in emailResult
-		from horarios in horariosResult
+		//from horarios in horariosResult
 		select new Medico2025(
 			//id,
 			nombre,
@@ -46,7 +45,7 @@ public record Medico2025(
 			dom,
 			tel,
 			email,
-			horarios,
+			//horarios,
 			fechaIngreso,
 			haceGuardia
 		);

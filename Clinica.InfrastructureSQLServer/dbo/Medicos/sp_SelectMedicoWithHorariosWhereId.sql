@@ -22,7 +22,9 @@ BEGIN
                 H.MedicoId,
                 H.DiaSemana,
                 H.HoraDesde,
-                H.HoraHasta
+                H.HoraHasta,
+                H.VigenteDesde,
+                H.VigenteHasta
             FROM dbo.Horario H
             WHERE H.MedicoId = M.Id
             FOR JSON PATH

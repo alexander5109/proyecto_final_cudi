@@ -18,5 +18,4 @@ public record Medico2025Agg(MedicoId Id, Medico2025 Medico) {
 			   id,
 			   paciente
 		   );
-
 }

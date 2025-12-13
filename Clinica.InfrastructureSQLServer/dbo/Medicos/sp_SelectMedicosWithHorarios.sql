@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.sp_SelectMedicosWithHorario
+﻿CREATE PROCEDURE dbo.sp_SelectMedicosWithHorarios
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -21,11 +21,13 @@ BEGIN
                 H.MedicoId,
                 H.DiaSemana,
                 H.HoraDesde,
-                H.HoraHasta
+                H.HoraHasta,
+                H.VigenteDesde,
+                H.VigenteHasta
             FROM dbo.Horario H
             WHERE H.MedicoId = M.Id
             FOR JSON PATH
-        ) AS HorariosJson    -- <--- cambiar nombre del alias
+        ) AS HorariosJson
     FROM dbo.Medico M;
 END;
 GO

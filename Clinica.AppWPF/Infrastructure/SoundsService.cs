@@ -42,7 +42,7 @@ public static class SoundsService {
 			//PlaySound("uclick_jewel.wav");
 			PlaySound("uclick_jewel.wav");
 
-		//PlaySystemSound("Windows Notify System Generic.wav");
+		//PlaySystemSound("Windows OnPropertyChanged System Generic.wav");
 		//System.Media.SystemSounds.Asterisk.Play();
 
 	}

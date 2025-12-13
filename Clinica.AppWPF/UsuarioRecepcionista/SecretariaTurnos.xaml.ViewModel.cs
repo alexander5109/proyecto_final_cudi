@@ -27,7 +27,7 @@ public sealed class TurnoViewModel(TurnoDbModel model) {
 	public TurnoDbModel Original => model;
 	//public readonly TurnoDbModel Original = model;
 }
-public sealed class RecepcionistaGestionDeTurnosViewModel : INotifyPropertyChanged {
+public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	// ================================================================
@@ -126,8 +126,8 @@ public sealed class RecepcionistaGestionDeTurnosViewModel : INotifyPropertyChang
 		if (!string.IsNullOrWhiteSpace(FiltroTurnosPaciente)) {
 			string txt = FiltroTurnosPaciente.Trim().ToLowerInvariant();
 			query = query.Where(t =>
-				t.PacienteDisplayear.ToLowerInvariant().Contains(txt)
-			);
+				t.PacienteDisplayear.Contains(txt, StringComparison.InvariantCultureIgnoreCase)
+            );
 		}
 
 		TurnosList = query.ToList();

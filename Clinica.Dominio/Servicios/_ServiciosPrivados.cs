@@ -70,7 +70,7 @@ internal static class _ServiciosPrivados {
 			yield break;
 		}
         IEnumerable<MedicoId> medicos = ((Result<IEnumerable<MedicoId>>.Ok)medicosResult).Valor;
-		var ordenados = new List<(MedicoId medico, DateTime slot)>();
+        List<(MedicoId medico, DateTime slot)> ordenados = new List<(MedicoId medico, DateTime slot)>();
 		foreach (MedicoId medico in medicos) {
             Result<DateTime> primero = await CalcularPrimerSlotDisponible(medico, especialidad, aPartirDeCuando, repo);
 			if (primero is Result<DateTime>.Error errSlot) {
@@ -134,7 +134,7 @@ internal static class _ServiciosPrivados {
 					continue;
 
 				for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
-					var disp = new Disponibilidad2025(
+                    Disponibilidad2025 disp = new Disponibilidad2025(
 						solicitudEspecialidad.Codigo, 
 						medicoId,
 						slot, 

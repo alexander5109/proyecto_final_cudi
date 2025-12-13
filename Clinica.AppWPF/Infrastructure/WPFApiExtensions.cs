@@ -77,7 +77,7 @@ public static class ApiExtensions {
 	}
 	private static string? ExtractErrorMessage(string raw) {
 		try {
-			using var doc = JsonDocument.Parse(raw);
+			using JsonDocument doc = JsonDocument.Parse(raw);
 			if (doc.RootElement.TryGetProperty("error", out JsonElement prop))
 				return prop.GetString();
 		} catch {
@@ -117,8 +117,8 @@ public static class ApiExtensions {
 	}
 
 	static ResultWpf<T> HandleException<T>(Exception ex, string title) {
-		// Creamos ErrorInfo enriquecido
-		var info = new ErrorInfo(
+        // Creamos ErrorInfo enriquecido
+        ErrorInfo info = new ErrorInfo(
 			Mensaje: $"{title}: {ex.Message}",
 			Icono: MessageBoxImage.Error,
 			Detalle: ex.ToString()

@@ -1,0 +1,236 @@
+﻿<Window
+	x:Class="Clinica.AppWPF.UsuarioAdministrativo.AdminMedicos"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioAdministrativo"
+	Title="Clinica Medica - Medicos"
+	Height="600"
+	Width="1024"
+	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
+	WindowStartupLocation="CenterScreen">
+	<Window.Background>
+		<ImageBrush
+			ImageSource="pack://application:,,,/PublishedResources/images/doctor.jpg" />
+	</Window.Background>
+	<!-- ===================== LAYOUT GENERAL ===================== -->
+	<Grid
+		Margin="15,15,15,15">
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="Auto" />
+			<!-- Título -->
+			<RowDefinition
+				Height="*" />
+			<!-- Contenido -->
+			<RowDefinition
+				Height="Auto" />
+			<!-- Botones inferiores -->
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="*" />
+			<!-- Búsqueda + lista -->
+			<ColumnDefinition
+				Width="*" />
+			<!-- Estado del turno -->
+		</Grid.ColumnDefinitions>
+		<Label
+			Grid.Column="0"
+			Grid.Row="0"
+			Content="Medicos"
+			FontSize="55"
+			FontFamily="Segoe UI Historic"
+			FlowDirection="RightToLeft"
+			Style="{StaticResource LabelLindoConPiu}"
+			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
+			VerticalAlignment="Center"
+			Margin="25,0,25,0"
+			FontWeight="Bold" />
+		<!-- ===================== PANEL 2 - ESTADO DEL TURNO ===================== -->
+		<!-- ===================== PANEL 3 - BUSCAR PACIENTE ===================== -->
+		<!-- ===================== BOTONES INFERIORES ===================== -->
+		<!-- ===== BOTONES INFERIORES (HOME / SALIR) ===== -->
+		<StackPanel
+			Grid.Row="2"
+			Orientation="Horizontal"
+			HorizontalAlignment="Left"
+			Margin="15,15,15,15"
+			Width="380"
+			VerticalAlignment="Bottom">
+			<Button
+				Content="Home"
+				Width="170"
+				Height="37"
+				Margin="10,0,10,10"
+				Click="ButtonHome"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeado}" />
+			<Button
+				Content="Salir"
+				Width="170"
+				Height="37"
+				Margin="10,0,10,10"
+				Click="ClickBoton_Salir"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeado}" />
+		</StackPanel>
+		<StackPanel
+			Grid.Column="0"
+			Grid.Row="1"
+			Margin="10,15,10,15">
+			<Label
+				Content="Buscar Medico"
+				FontSize="25"
+				FontFamily="Segoe UI Historic"
+				FlowDirection="RightToLeft"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center"
+				VerticalAlignment="Center"
+				FontWeight="Bold"
+				HorizontalAlignment="Center" />
+			<Label
+				Content="Filtrar por Nombre, Apellido o Especialidad"
+				FontFamily="Palatino Linotype"
+				FontWeight="Bold"
+				Margin="10,10,10,0"
+				HorizontalAlignment="Center" />
+			<TextBox
+				Text="{Binding FiltroMedicosTexto, UpdateSourceTrigger=PropertyChanged}"
+				Margin="10,0,10,0"
+				HorizontalAlignment="Center"
+				Width="200" />
+			<ListView
+				ItemsSource="{Binding MedicosList}"
+				SelectedItem="{Binding SelectedMedico}"
+				Height="139"
+				Margin="10,10,10,10"
+				ScrollViewer.VerticalScrollBarVisibility="Auto"
+				HorizontalContentAlignment="Center">
+				<ListView.View>
+					<GridView>
+						<GridViewColumn
+							Header="Especialidad"
+							Width="120"
+							DisplayMemberBinding="{Binding EspecialidadCodigo}" />
+						<GridViewColumn
+							Header="Nombre"
+							Width="100"
+							DisplayMemberBinding="{Binding Nombre}" />
+						<GridViewColumn
+							Header="Apellido"
+							Width="100"
+							DisplayMemberBinding="{Binding Apellido}" />
+						<!-- ===================== 
+						<GridViewColumn
+				Header="DNI"
+				Width="75"
+				DisplayMemberBinding="{Binding Dni}" />
+				===================== -->
+						<GridViewColumn
+							Header="FechaIngreso"
+							Width="80">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<TextBlock
+										Text="{Binding FechaIngreso, StringFormat={}{0:yyyy/MM/dd}}" />
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+					</GridView>
+				</ListView.View>
+			</ListView>
+			<StackPanel
+				Margin="10"
+				HorizontalAlignment="Center">
+				<Button
+					Content="Agregar Medico"
+					Width="180"
+					Height="30"
+					Click="ButtonAgregarMedico"
+					Style="{StaticResource BotonRedondeado}" />
+			</StackPanel>
+		</StackPanel>
+		<StackPanel
+			Orientation="Vertical"
+			HorizontalAlignment="Center"
+			Grid.Row="0"
+			Grid.RowSpan="3"
+			Grid.Column="1"
+			Margin="10,70,10,70">
+			<Label
+				Content="Medico seleccionado"
+				FontSize="25"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalContentAlignment="Center"
+				VerticalAlignment="Center"
+				Margin="25,0,25,0"
+				FontWeight="Bold" />
+			<StackPanel
+				Margin="25">
+				<Label
+					Content="Horarios de trabajo"
+					FontSize="20"
+					Style="{StaticResource LabelLindoConTextoSombra}"
+					HorizontalContentAlignment="Center"
+					VerticalAlignment="Center"
+					Margin="25,0,25,0"
+					FontWeight="Bold" />
+				<ListView
+					ItemsSource="{Binding HorariosViewModelList}"
+					Width="388"
+					MinHeight="200">
+					<ListView.View>
+						<GridView>
+							<GridViewColumn
+								Header="Días"
+								Width="65"
+								DisplayMemberBinding="{Binding DiaSemanaDescripcion}" />
+							<GridViewColumn
+								Header="Desde Hs"
+								Width="70"
+								DisplayMemberBinding="{Binding HoraDesdeStr}" />
+							<GridViewColumn
+								Header="Hasta Hs"
+								Width="70"
+								DisplayMemberBinding="{Binding HoraHastaStr}" />
+							<GridViewColumn
+								Header="Vigencia"
+								Width="165">
+								<GridViewColumn.CellTemplate>
+									<DataTemplate>
+										<TextBlock>
+            <Run
+												Text="{Binding VigenteDesde,
+                               Mode=OneWay,
+                               StringFormat={}{0:dd/MM/yyyy}}" />
+            <Run
+												Text=" → " />
+            <Run
+												Text="{Binding VigenteHasta,
+                               Mode=OneWay,
+                               TargetNullValue=Indefinido,
+                               StringFormat={}{0:dd/MM/yyyy}}" /></TextBlock>
+									</DataTemplate>
+								</GridViewColumn.CellTemplate>
+							</GridViewColumn>
+						</GridView>
+					</ListView.View>
+				</ListView>
+			</StackPanel>
+			<StackPanel>
+				<Button
+					Content="Modificar datos"
+					Width="180"
+					Height="30"
+					IsEnabled="{Binding HayMedicoSeleccionado}"
+					Click="ClickBoton_ModificarMedico"
+					Style="{StaticResource BotonRedondeado}"
+					Margin="7" />
+			</StackPanel>
+		</StackPanel>
+	</Grid>
+</Window>
