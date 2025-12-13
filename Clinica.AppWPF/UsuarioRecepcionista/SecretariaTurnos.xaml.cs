@@ -93,7 +93,7 @@ public partial class SecretariaTurnos : Window {
 			return;
 		}
 		// abre el formulario de reprogramación
-		this.AbrirComoDialogo<SecretariaTurnosSacar>(VM.SelectedTurno); //alreadyplays sound
+		this.NavegarA<SecretariaTurnosSacar>(VM.SelectedTurno); //alreadyplays sound
 
 		await VM.RefrescarTurnosAsync();
 	}

@@ -47,10 +47,9 @@ public partial class SecretariaPacientesModificar : Window {
 	// BOTONES: NAV
 	// ==========================================================
 
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientes>();
 
-	private void ClickBoton_Salir(object sender, RoutedEventArgs e)
-		=> this.Salir();
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 
 	private async void ButtonEliminar(object sender, RoutedEventArgs e) {
 		if (

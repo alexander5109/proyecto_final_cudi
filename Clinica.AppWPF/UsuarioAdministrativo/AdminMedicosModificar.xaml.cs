@@ -36,7 +36,7 @@ public partial class AdminMedicosModificar : Window {
 
 	}
 
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<AdminMedicos>();
 
 	/*
 

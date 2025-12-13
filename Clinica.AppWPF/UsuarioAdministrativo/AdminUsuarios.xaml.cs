@@ -85,17 +85,17 @@ public partial class AdminUsuarios : Window {
 	//=============================================================
 	private void ClickBoton_ModificarTurno(object sender, RoutedEventArgs e) {
 		//if (SelectedTurno != null)
-		//	this.AbrirComoDialogo<WindowModificarTurno>(SelectedTurno);
+		//	this.NavegarA<WindowModificarTurno>(SelectedTurno);
 	}
 
 	private void ClickBoton_ModificarMedico(object sender, RoutedEventArgs e) {
 		//if (SelectedMedico != null)
-		//	this.AbrirComoDialogo<AdminMedicosModificar>(SelectedMedico);
+		//	this.NavegarA<AdminMedicosModificar>(SelectedMedico);
 	}
 
 	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
 		//if (PacienteRelacionado != null)
-		//	this.AbrirComoDialogo<WindowModificarPaciente>(PacienteRelacionado);
+		//	this.NavegarA<WindowModificarPaciente>(PacienteRelacionado);
 	}
 
 	//=============================================================

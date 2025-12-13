@@ -115,11 +115,11 @@ public partial class SecretariaTurnosSacar : Window {
 		SoundsService.PlayClickSound();
 
 		if (VM.SelectedPaciente != null) {
-			this.AbrirComoDialogo<SecretariaPacientesModificar>(VM.SelectedPaciente.Id);
+			this.NavegarA<SecretariaPacientesModificar>(VM.SelectedPaciente.Id);
 		}
 	}
 
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaTurnos>();
 
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e)
 		=> this.Salir();

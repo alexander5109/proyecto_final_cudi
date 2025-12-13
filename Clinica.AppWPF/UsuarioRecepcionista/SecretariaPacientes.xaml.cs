@@ -17,17 +17,17 @@ public partial class SecretariaPacientes : Window {
 	// ==========================================================
 	// BOTONES: SELECTED ITEM ACTIONS
 	// ==========================================================
-	private void Click_AgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<SecretariaPacientesModificar>();
+	private void Click_AgregarPaciente(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientesModificar>();
 	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is not null) {
-			this.AbrirComoDialogo<SecretariaPacientesModificar>(VM.SelectedPaciente);
+			this.NavegarA<SecretariaPacientesModificar>(VM.SelectedPaciente);
 		} else {
 			MessageBox.Show("No hay paciente seleecionado. Pero este mensaje no deberia aparecer nunca porque el boton tendria que estar desabilitado.");
 		}
 	}
 	private void ClickBoton_BuscarDisponibilidades(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is not null) {
-			this.AbrirComoDialogo<SecretariaTurnosSacar>(VM.SelectedPaciente);
+			this.NavegarA<SecretariaTurnosSacar>(VM.SelectedPaciente);
 		} else {
 			MessageBox.Show("No hay paciente seleecionado");
 		}

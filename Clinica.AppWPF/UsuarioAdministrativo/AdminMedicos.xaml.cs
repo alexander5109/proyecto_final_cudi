@@ -17,11 +17,11 @@ public partial class AdminMedicos : Window {
 	private void ButtonHome(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 
-	private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<AdminMedicosModificar>();
+	private void ButtonAgregarMedico(object sender, RoutedEventArgs e) => this.NavegarA<AdminMedicosModificar>();
 
 	private void ClickBoton_ModificarMedico(object sender, RoutedEventArgs e) {
 		if (VM.SelectedMedico is not null) {
-			this.AbrirComoDialogo<AdminMedicosModificar>(VM.SelectedMedico);
+			this.NavegarA<AdminMedicosModificar>(VM.SelectedMedico);
 		} else {
 			MessageBox.Show("No hay médico seleccionado. (este boton deberia estar desabilitado)");
 		}
