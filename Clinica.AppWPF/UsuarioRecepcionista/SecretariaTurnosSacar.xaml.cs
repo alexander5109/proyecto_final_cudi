@@ -116,7 +116,8 @@ public partial class SecretariaTurnosSacar : Window {
 		result.MatchAndDo(
 			caseOk => {
 				MessageBox.Show("Turno reservado exitosamente.", "Éxito", MessageBoxButton.OK);
-				this.NavegarA<SecretariaPacientes>();
+				//this.NavegarA<SecretariaPacientes>();
+				this.IrARespectivaHome();
 			},
 			caseError => {
 				caseError.ShowMessageBox();
@@ -131,7 +132,7 @@ public partial class SecretariaTurnosSacar : Window {
 	// ==========================================================
 	// BOTONES: NAV
 	// ==========================================================
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaTurnos>();
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientes>();
 
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 }

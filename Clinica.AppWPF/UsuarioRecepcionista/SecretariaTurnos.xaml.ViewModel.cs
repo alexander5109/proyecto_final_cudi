@@ -99,6 +99,10 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	// ================================================================
 
 	internal async Task RefrescarTurnosAsync() {
+
+		await App.Repositorio.EnsureMedicosLoaded(); //just to generate the dictionaries for the views.
+		await App.Repositorio.EnsurePacientesLoaded();
+
 		try {
 			List<TurnoDbModel> turnos = await App.Repositorio.SelectTurnos();
 			_todosLosTurnos = [.. turnos.Select(t => new TurnoViewModel(t))];
@@ -136,6 +140,21 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 				)
 			);
 		}
+
+		// 🔹 Filtro por paciente
+		if (!string.IsNullOrWhiteSpace(FiltroTurnosMedico)) {
+			var txt = FiltroTurnosMedico.Trim();
+
+			origen = origen.Where(t =>
+				t.MedicoDisplayear.Contains(
+					txt,
+					StringComparison.InvariantCultureIgnoreCase
+				)
+			);
+		}
+
+
+		
 
 		foreach (TurnoViewModel turno in origen)
 			TurnosList.Add(turno);
@@ -189,7 +208,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 
 
 	// ================================================================
-	// FILTER: PACIENTE (search in PacienteDisplayear)
+	// FILTROS
 	// ================================================================
 
 	private string _filtroTurnosPaciente = "";
@@ -199,6 +218,20 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 			if (_filtroTurnosPaciente != value) {
 				_filtroTurnosPaciente = value;
 				OnPropertyChanged(nameof(FiltroTurnosPaciente));
+				OnPropertyChanged(nameof(FiltroTurnosMedico));
+				AplicarFiltros();
+			}
+		}
+	}
+
+	private string _filtroTurnosMedico = "";
+	public string FiltroTurnosMedico {
+		get => _filtroTurnosMedico;
+		set {
+			if (_filtroTurnosMedico != value) {
+				_filtroTurnosMedico = value;
+				OnPropertyChanged(nameof(FiltroTurnosPaciente));
+				OnPropertyChanged(nameof(FiltroTurnosMedico));
 				AplicarFiltros();
 			}
 		}
