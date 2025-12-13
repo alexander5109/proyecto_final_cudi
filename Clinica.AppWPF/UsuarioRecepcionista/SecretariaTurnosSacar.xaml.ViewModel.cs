@@ -106,18 +106,21 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 	// -----------------------------
 
 
-
-
 	public async Task RefreshDisponibilidadesAsync() {
 		if (SelectedEspecialidad is not EspecialidadViewModel esp) return;
 
 		DisponibilidadesItemsSource.Clear();
+		SelectedDisponibilidad = null;
 
-		DateTime desde = SelectedFecha;
+		int duracionMin = SelectedEspecialidad?.Duracion ?? 0;
+		DateTime desde = DateTime.SpecifyKind(
+			SelectedFecha < DateTime.Now ? DateTime.Now : SelectedFecha,
+			DateTimeKind.Local
+		).AddMinutes(duracionMin);
 
 		List<Disponibilidad2025> lista = await App.Repositorio.SelectDisponibilidades(
 			especialidad: esp.Codigo,
-			cuantos: 15,
+			cuantos: 40,
 			apartirDeCuando: desde
 		);
 
@@ -241,6 +244,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 			if (_selectedFecha == value) return;
 			_selectedFecha = value;
 			OnPropertyChanged(nameof(SelectedFecha));
+			OnPropertyChanged(nameof(BotonBuscar_Enabled));
 		}
 	}
 
@@ -312,7 +316,7 @@ public record DisponibilidadEspecialidadModelView(
 
 	private static string BuildMedicoDisplay(MedicoId medicoId) {
 		var medico = RepoCache.DictMedicos.GetValueOrDefault(medicoId);
-		return $"{medico?.Nombre} {medico?.Apellido}";
+		return medico is null ? "Médico desconocido" : $"{medico.Nombre} {medico.Apellido}";
 	}
 }
 

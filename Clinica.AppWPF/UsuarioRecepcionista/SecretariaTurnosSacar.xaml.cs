@@ -81,6 +81,10 @@ public partial class SecretariaTurnosSacar : Window {
 		}
 
 		if (TurnoOriginal is not null) {
+			//await ReprogramarAsync();
+			//await AgendarNuevoAsync();
+
+
 
 			string comentario = Interaction.InputBox(
 				"Ingrese la razón de la reprogramacion del turno:",
