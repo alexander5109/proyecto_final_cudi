@@ -13,7 +13,7 @@ public static partial class DbModels {
 		TimeSpan HoraDesde,
 		TimeSpan HoraHasta,
 		DateTime VigenteDesde,
-		DateTime VigenteHasta
+		DateTime? VigenteHasta
 	) {
 		public HorarioDbModel()
 			: this(default, default, default, default, default, default, default) { }

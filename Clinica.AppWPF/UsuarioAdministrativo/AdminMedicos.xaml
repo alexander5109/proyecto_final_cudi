@@ -172,7 +172,7 @@
 					Margin="25,0,25,0"
 					FontWeight="Bold" />
 				<ListView
-					ItemsSource="{Binding SelectedMedico.Horarios}"
+					ItemsSource="{Binding HorariosViewModelList}"
 					Width="388"
 					MinHeight="200">
 					<ListView.View>
@@ -192,14 +192,17 @@
 								<GridViewColumn.CellTemplate>
 									<DataTemplate>
 										<TextBlock>
-                            <Run
-												Text="{Binding VigenteDesde, StringFormat={}{0:dd/MM/yyyy}}" />
-                            <Run
+            <Run
+												Text="{Binding VigenteDesde,
+                               Mode=OneWay,
+                               StringFormat={}{0:dd/MM/yyyy}}" />
+            <Run
 												Text=" → " />
-                            <Run
-												Text="{Binding VigenteHasta, 
-                                        TargetNullValue='Indefinido', 
-                                        StringFormat={}{0:dd/MM/yyyy}}" /></TextBlock>
+            <Run
+												Text="{Binding VigenteHasta,
+                               Mode=OneWay,
+                               TargetNullValue=Indefinido,
+                               StringFormat={}{0:dd/MM/yyyy}}" /></TextBlock>
 									</DataTemplate>
 								</GridViewColumn.CellTemplate>
 							</GridViewColumn>

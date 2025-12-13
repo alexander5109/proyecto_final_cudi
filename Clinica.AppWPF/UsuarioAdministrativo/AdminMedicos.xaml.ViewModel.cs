@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Text.Json;
 using System.Windows;
 using Clinica.Dominio.TiposExtensiones;
-using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
@@ -11,21 +10,21 @@ namespace Clinica.AppWPF.UsuarioAdministrativo;
 
 
 
-public class HorarioViewModel(HorarioDto model) : INotifyPropertyChanged {
-	//public int Id { get; } = model.Id.Valor;
-	public int MedicoId { get; } = model.MedicoId.Valor;
+public class HorarioViewModel(HorarioDbModel horarioDbModel) : INotifyPropertyChanged {
+	//public int Id { get; } = horarioDbModel.Id.Valor;
+	public int MedicoId { get; } = horarioDbModel.MedicoId.Valor;
 
-	public DayOfWeek DiaSemana { get; } = model.DiaSemana;
+	public DayOfWeek DiaSemana { get; } = horarioDbModel.DiaSemana;
 	public string DiaSemanaDescripcion => DiaSemana.ATexto();
 
-	public TimeSpan HoraDesde { get; } = model.HoraDesde;
+	public TimeSpan HoraDesde { get; } = horarioDbModel.HoraDesde;
 	public string HoraDesdeStr => HoraDesde.ToString(@"hh\:mm");
 
-	public TimeSpan HoraHasta { get; } = model.HoraHasta;
+	public TimeSpan HoraHasta { get; } = horarioDbModel.HoraHasta;
 	public string HoraHastaStr => HoraHasta.ToString(@"hh\:mm");
 
-	public DateTime VigenteDesde { get; } = model.VigenteDesde;
-	public DateTime? VigenteHasta { get; } = model.VigenteHasta;
+	public DateTime VigenteDesde { get; } = horarioDbModel.VigenteDesde;
+	public DateTime? VigenteHasta { get; } = horarioDbModel.VigenteHasta?? DateTime.MaxValue;
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 }
@@ -48,7 +47,7 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 				OnPropertyChanged(nameof(SelectedMedicoNombreCompleto));
 
 				// Cargar horarios directamente desde SelectedMedico.Horarios
-				CargarHorariosDeMedicoSeleccionado();
+				_ = CargarHorariosDeMedicoSeleccionado();
 			}
 		}
 	}
@@ -80,23 +79,23 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 	internal async Task RefrescarMedicosAsync() {
 		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
 		//foreach (MedicoDbModel medico in medicos) {
-			//string horariosTexto =
-			//	medico.Horarios.Count == 0
-			//		? "SIN HORARIOS"
-			//		: string.Join(
-			//			"\n",
-			//			medico.Horarios.Select(h =>
-			//				$"{h.DiaSemana.ATexto()} " +
-			//				$"{h.HoraDesde:hh\\:mm}–{h.HoraHasta:hh\\:mm} " +
-			//				$"({h.VigenteDesde:dd/MM/yyyy} → " // +
-			//				//$"{(h.VigenteHasta.HasValue ? h.VigenteHasta.Value.ToString("dd/MM/yyyy") : "Indefinido")})"
-			//			)
-			//		);
+		//string horariosTexto =
+		//	medico.Horarios.Count == 0
+		//		? "SIN HORARIOS"
+		//		: string.Join(
+		//			"\n",
+		//			medico.Horarios.Select(h =>
+		//				$"{h.DiaSemana.ATexto()} " +
+		//				$"{h.HoraDesde:hh\\:mm}–{h.HoraHasta:hh\\:mm} " +
+		//				$"({h.VigenteDesde:dd/MM/yyyy} → " // +
+		//				//$"{(h.VigenteHasta.HasValue ? h.VigenteHasta.Value.ToString("dd/MM/yyyy") : "Indefinido")})"
+		//			)
+		//		);
 
-			//MessageBox.Show(
-			//	$"Cargando médico: {medico.Nombre}\n\nHorarios:\n{horariosTexto}",
-			//	"Debug horarios"
-			//);
+		//MessageBox.Show(
+		//	$"Cargando médico: {medico.Nombre}\n\nHorarios:\n{horariosTexto}",
+		//	"Debug horarios"
+		//);
 		//}
 
 		_todosLosMedicos = medicos;
@@ -121,16 +120,23 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 
 	public bool HayMedicoSeleccionado => SelectedMedico is not null;
 
-	private void CargarHorariosDeMedicoSeleccionado() {
+	private async Task CargarHorariosDeMedicoSeleccionado() {
 		HorariosViewModelList.Clear();
 
-		//if (SelectedMedico?.Horarios.Count == 0) {
-		//	MessageBox.Show($"{SelectedMedico?.Nombre} no tiene ningun horario cargado");
-		//} else {
-		//	foreach (var h in SelectedMedico.Horarios)
-		//		HorariosViewModelList.Add(new HorarioViewModel(h)); // Aquí estamos creando un ViewModel para cada HorarioDto
-		//}
+		if (SelectedMedico is null) {
+			MessageBox.Show("por que es null el selectmedico?");
+			return;
+		}
+		IReadOnlyList<HorarioDbModel>? horarios =
+			await App.Repositorio.SelectHorariosWhereMedicoId(SelectedMedico.Id);
+
+		if (horarios is null || horarios.Count == 0)
+			return;
+
+		foreach (var h in horarios)
+			HorariosViewModelList.Add(new HorarioViewModel(h));
 	}
+
 
 	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

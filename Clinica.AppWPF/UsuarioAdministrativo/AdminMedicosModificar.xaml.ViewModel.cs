@@ -101,7 +101,5 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 		bool test2 = grupos.Count() > 0;
 		bool test3 = HorariosAgrupados.Count > 0;
 		//bool test4 = TreeView.Items.Count > 0;
-
-
 	}
 }
