@@ -1,61 +1,80 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
-using Clinica.Dominio.TiposDeIdentificacion;
-using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
 
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public sealed class TurnoViewModel(TurnoDbModel model) {
-
-	public TurnoId Id { get; } = model.Id;
-	public PacienteDbModel? PacienteRelacionado => RepoCache.DictPacientes.GetValueOrDefault(model.PacienteId);
-	public MedicoDbModel? MedicoRelacionado => RepoCache.DictMedicos.GetValueOrDefault(model.MedicoId);
-	public string PacienteDisplayear => PacienteRelacionado is null ? "N/A" : $"{PacienteRelacionado.Dni}: {PacienteRelacionado.Nombre} {PacienteRelacionado.Apellido}";
-	public string MedicoDisplayear => MedicoRelacionado is null ? "N/A" : $"{MedicoRelacionado.Nombre} {MedicoRelacionado.Apellido} {MedicoRelacionado.Dni}";
-	public EspecialidadCodigo EspecialidadCodigo { get; } = model.EspecialidadCodigo;
-	public string FechaSolicitud { get; } = model.FechaDeCreacion.ATextoDiaYHoras();
-	public string FechaAsignada { get; } = model.FechaHoraAsignadaDesde.ATextoDiaYHoras();
-	public string HoraAsignada { get; } = model.FechaHoraAsignadaHasta.ATextoHoras();
-	public TurnoEstadoCodigo OutcomeEstado { get; } = model.OutcomeEstado;
-	public DateTime? OutcomeFecha { get; set; } = model.OutcomeFecha;
-	public string? OutcomeComentario { get; set; } = model.OutcomeComentario;
-
-	public TurnoDbModel Original => model;
-	//public readonly TurnoDbModel Original = model;
-}
 public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
-	public event PropertyChangedEventHandler? PropertyChanged;
 
 	// ================================================================
-	// TURNOS
+	// COLECCIONES
 	// ================================================================
 
-	private List<TurnoViewModel> _turnosOriginal = [];   // Original immutable list
-	private List<TurnoViewModel> _turnos = [];           // Filtered list for the UI
+	private List<TurnoViewModel> _todosLosTurnos = [];   // Original immutable list
+	public ObservableCollection<TurnoViewModel> TurnosList { get; } = [];
 
-	public List<TurnoViewModel> TurnosList {
-		get => _turnos;
-		private set {
-			_turnos = value;
-			OnPropertyChanged(nameof(TurnosList));
+
+	// ================================================================
+	// METODOS
+	// ================================================================
+
+	internal async Task RefrescarTurnosAsync() {
+		try {
+            List<TurnoDbModel> turnos = await App.Repositorio.SelectTurnos();
+			_todosLosTurnos = turnos.Select(t => new TurnoViewModel(t)).ToList();
+			SelectedTurno = null;
+		} catch (Exception ex) {
+			MessageBox.Show("Error cargando turnos: " + ex.Message);
+			return;
 		}
-	}
-
-	public void CargarTurnos(List<TurnoViewModel> turnos) {
-		_turnosOriginal = turnos;
-		_turnos = turnos;
-
-		// DEFAULT FILTER: only "Programado"
-		EstadoSeleccionado = TurnoEstadoCodigo.Programado;
+		//EstadoSeleccionado = TurnoEstadoCodigo.Programado; //nah, es molesto
 		AplicarFiltros();
 	}
 
+
+
+	private void AplicarFiltros() {
+        TurnoViewModel? seleccionado = SelectedTurno;
+
+		TurnosList.Clear();
+
+		IEnumerable<TurnoViewModel> origen = _todosLosTurnos;
+
+		// 🔹 Filtro por estado
+		if (EstadoSeleccionado.HasValue) {
+			origen = origen.Where(turno => turno.Original.OutcomeEstado == EstadoSeleccionado.Value);
+		}
+
+		// 🔹 Filtro por paciente
+		if (!string.IsNullOrWhiteSpace(FiltroTurnosPaciente)) {
+			var txt = FiltroTurnosPaciente.Trim();
+
+			origen = origen.Where(t =>
+				t.PacienteDisplayear.Contains(
+					txt,
+					StringComparison.InvariantCultureIgnoreCase
+				)
+			);
+		}
+
+		foreach (TurnoViewModel turno in origen)
+			TurnosList.Add(turno);
+
+		// 🔹 Restaurar selección si sigue visible
+		if (seleccionado != null && TurnosList.Contains(seleccionado))
+			SelectedTurno = seleccionado;
+		else
+			SelectedTurno = null;
+	}
+
+
 	// ================================================================
-	// SELECTED TURNO
+	// ITEM SELECCIONADO
 	// ================================================================
 
 	private TurnoViewModel? _turnoSeleccionado;
@@ -73,24 +92,6 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		}
 	}
 
-	public bool HayTurnoSeleccionado => SelectedTurno is not null;
-
-
-	// ================================================================
-	// FILTER: PACIENTE (search in PacienteDisplayear)
-	// ================================================================
-
-	private string _filtroTurnosPaciente = "";
-	public string FiltroTurnosPaciente {
-		get => _filtroTurnosPaciente;
-		set {
-			if (_filtroTurnosPaciente != value) {
-				_filtroTurnosPaciente = value;
-				OnPropertyChanged(nameof(FiltroTurnosPaciente));
-				AplicarFiltros();
-			}
-		}
-	}
 
 	// ================================================================
 	// FILTER: ESTADO
@@ -111,63 +112,76 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		}
 	}
 
+
 	// ================================================================
-	// APPLY FILTERS (ONLY TWO)
+	// FILTER: PACIENTE (search in PacienteDisplayear)
 	// ================================================================
 
-	private void AplicarFiltros() {
-		IEnumerable<TurnoViewModel> query = _turnosOriginal;
-
-		// Filtro por estado
-		if (EstadoSeleccionado is not null)
-			query = query.Where(t => t.OutcomeEstado == EstadoSeleccionado);
-
-		// Filtro por paciente: searches in PacienteDisplayear
-		if (!string.IsNullOrWhiteSpace(FiltroTurnosPaciente)) {
-			string txt = FiltroTurnosPaciente.Trim().ToLowerInvariant();
-			query = query.Where(t =>
-				t.PacienteDisplayear.Contains(txt, StringComparison.InvariantCultureIgnoreCase)
-            );
+	private string _filtroTurnosPaciente = "";
+	public string FiltroTurnosPaciente {
+		get => _filtroTurnosPaciente;
+		set {
+			if (_filtroTurnosPaciente != value) {
+				_filtroTurnosPaciente = value;
+				OnPropertyChanged(nameof(FiltroTurnosPaciente));
+				AplicarFiltros();
+			}
 		}
-
-		TurnosList = query.ToList();
 	}
 
+
+
+
 	// ================================================================
-	// POLICIES
+	// REGLAS
 	// ================================================================
 
 	public bool PuedeMarcarComoAusente =>
 		SelectedTurno != null &&
 		TurnoPolicyRaw.PuedeMarcarComoAusente(
-			SelectedTurno.OutcomeEstado,
+			SelectedTurno.Original.OutcomeEstado,
 			SelectedTurno.Original.FechaHoraAsignadaHasta,
-			SelectedTurno.OutcomeFecha is not null,
+			SelectedTurno.Original.OutcomeFecha is not null,
 			DateTime.Now
 		);
 
 	public bool PuedeConfirmarTurno =>
 		SelectedTurno != null &&
 		TurnoPolicyRaw.PuedeConfirmar(
-			SelectedTurno.OutcomeEstado,
+			SelectedTurno.Original.OutcomeEstado,
 			SelectedTurno.Original.FechaHoraAsignadaDesde,
-			SelectedTurno.OutcomeFecha is not null,
+			SelectedTurno.Original.OutcomeFecha is not null,
 			DateTime.Now
 		);
 
 	public bool PuedeCancelarTurno =>
 		SelectedTurno != null &&
 		TurnoPolicyRaw.PuedeCancelar(
-			SelectedTurno.OutcomeEstado,
+			SelectedTurno.Original.OutcomeEstado,
 			SelectedTurno.Original.FechaHoraAsignadaDesde,
-			SelectedTurno.OutcomeFecha is not null,
+			SelectedTurno.Original.OutcomeFecha is not null,
 			DateTime.Now
 		);
+
+	public bool HayTurnoSeleccionado => SelectedTurno is not null;
 
 	// ================================================================
 	// UTILS
 	// ================================================================
 
-	private void OnPropertyChanged(string prop) =>
-		PropertyChanged?.Invoke(this, new(prop));
+	public event PropertyChangedEventHandler? PropertyChanged;
+	private void OnPropertyChanged(string prop) => PropertyChanged?.Invoke(this, new(prop));
+}
+
+
+
+// ================================================================
+// VIEWMODELS PARA GRIDS
+// ================================================================
+public sealed class TurnoViewModel(TurnoDbModel model) {
+	public PacienteDbModel? PacienteRelacionado => RepoCache.DictPacientes.GetValueOrDefault(model.PacienteId);
+	public MedicoDbModel? MedicoRelacionado => RepoCache.DictMedicos.GetValueOrDefault(model.MedicoId);
+	public string PacienteDisplayear => PacienteRelacionado is null ? "N/A" : $"{PacienteRelacionado.Dni}: {PacienteRelacionado.Nombre} {PacienteRelacionado.Apellido}";
+	public string MedicoDisplayear => MedicoRelacionado is null ? "N/A" : $"{MedicoRelacionado.Nombre} {MedicoRelacionado.Apellido} {MedicoRelacionado.Dni}";
+	public TurnoDbModel Original => model;
 }

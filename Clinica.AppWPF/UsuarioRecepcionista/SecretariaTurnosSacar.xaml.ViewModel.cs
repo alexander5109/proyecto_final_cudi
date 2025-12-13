@@ -137,7 +137,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 	public async Task LoadMedicosTodosAsync() {
 		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
 
-		var tasks = medicos.Select(async medico => {
+        IEnumerable<Task<MedicoSimpleViewModel>> tasks = medicos.Select(async medico => {
 			IReadOnlyList<DayOfWeek>? dias =
 				await App.Repositorio.SelectDiasDeAtencionWhereMedicoId(medico.Id)
 				?? [];

@@ -11,7 +11,6 @@ public partial class MedicoMisPacientes : Window {
 		InitializeComponent();
 		VM = new MedicoMisPacientesViewModel();
 		DataContext = VM;
-
 		//Loaded += async (_, __) => await VM.RefrescarPacientesAsync();
 	}
 

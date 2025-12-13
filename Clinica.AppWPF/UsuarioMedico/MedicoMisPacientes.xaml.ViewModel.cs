@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
 using static Clinica.Shared.DbModels.DbModels;
 
@@ -29,16 +30,14 @@ public sealed class MedicoMisPacientesViewModel : INotifyPropertyChanged {
 			if (_filtroPacientesTexto != value) {
 				_filtroPacientesTexto = value;
 				OnPropertyChanged(nameof(FiltroPacientesTexto));
-				FiltrarPacientes(); // cada vez que cambia el texto, aplicamos el filtro
+				AplicarFiltros(); // cada vez que cambia el texto, aplicamos el filtro
 			}
 		}
 	}
 
-	private List<PacienteDbModel> _pacientes = [];
-	public List<PacienteDbModel> PacientesList {
-		get => _pacientes;
-		set { _pacientes = value; OnPropertyChanged(nameof(PacientesList)); }
-	}
+	public ObservableCollection<PacienteDbModel> PacientesList { get; } = [];
+
+
 	public bool ModificarPacienteCommand => SelectedPaciente is not null;
 
 
@@ -51,22 +50,30 @@ public sealed class MedicoMisPacientesViewModel : INotifyPropertyChanged {
 		} catch (Exception ex) {
 			MessageBox.Show("Error cargando pacientes: " + ex.Message);
 		}
-		FiltrarPacientes();
+		AplicarFiltros();
 	}
 
 
-	private void FiltrarPacientes() {
+
+	private void AplicarFiltros() {
+		PacientesList.Clear();
+
+		IEnumerable<PacienteDbModel> origen;
+
 		if (string.IsNullOrWhiteSpace(FiltroPacientesTexto)) {
-			PacientesList = [.. _todosLosPacientes];
+			origen = _todosLosPacientes;
 		} else {
-			var texto = FiltroPacientesTexto.Trim().ToLower();
-			PacientesList = [.. _todosLosPacientes
-				.Where(p =>
-					(p.Nombre?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
-					(p.Apellido?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
-					(p.Dni?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false)
-				)];
+			var texto = FiltroPacientesTexto.Trim();
+
+			origen = _todosLosPacientes.Where(x =>
+					(x.Nombre?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
+					(x.Apellido?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
+					(x.Dni?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false)
+			);
 		}
+
+		foreach (PacienteDbModel instance in origen)
+			PacientesList.Add(instance);
 	}
 
 

@@ -88,7 +88,7 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 			);
 		}
 
-		foreach (var medico in origen)
+		foreach (MedicoDbModel medico in origen)
 			MedicosList.Add(medico);
 	}
 
@@ -111,7 +111,7 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 		if (horarios is null || horarios.Count == 0)
 			return;
 
-		foreach (var h in horarios)
+		foreach (HorarioDbModel h in horarios)
 			HorariosViewModelList.Add(new HorarioViewModel(h));
 	}
 

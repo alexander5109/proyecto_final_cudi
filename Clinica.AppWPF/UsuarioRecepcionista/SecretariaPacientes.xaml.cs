@@ -11,23 +11,21 @@ public partial class SecretariaPacientes : Window {
 		InitializeComponent();
 		VM = new SecretariaPacientesViewModel();
 		DataContext = VM;
-
 		Loaded += async (_, __) => await VM.RefrescarPacientesAsync();
 	}
 
-	private void ButtonHome(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
-	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
-
-	private void ButtonAgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<SecretariaPacientesModificar>();
-
+	// ==========================================================
+	// BOTONES: SELECTED ITEM ACTIONS
+	// ==========================================================
+	private void Click_AgregarPaciente(object sender, RoutedEventArgs e) => this.AbrirComoDialogo<SecretariaPacientesModificar>();
 	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is not null) {
 			this.AbrirComoDialogo<SecretariaPacientesModificar>(VM.SelectedPaciente.Id);
 		} else {
-			MessageBox.Show("No hay paciente seleecionado");
+			MessageBox.Show("No hay paciente seleecionado. Pero este mensaje no deberia aparecer nunca porque el boton tendria que estar desabilitado.");
 		}
 	}
-	private void ButtonBuscarDisponibilidades(object sender, RoutedEventArgs e) {
+	private void ClickBoton_BuscarDisponibilidades(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is not null) {
 			this.AbrirComoDialogo<SecretariaTurnosSacar>(VM.SelectedPaciente);
 		} else {
@@ -35,8 +33,9 @@ public partial class SecretariaPacientes : Window {
 		}
 	}
 
-
-
+	// ==========================================================
+	// BOTONES: REFRESH
+	// ==========================================================
 
 	private bool _enCooldown;
 	private async void ClickBoton_Refrescar(object sender, RoutedEventArgs e) {
@@ -55,4 +54,20 @@ public partial class SecretariaPacientes : Window {
 			_enCooldown = false;
 		}
 	}
+
+
+	// ==========================================================
+	// BOTONES: NAV
+	// ==========================================================
+	private void ClickBoton_Home(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
+
+
+
+
+
+
+
+
+
 }

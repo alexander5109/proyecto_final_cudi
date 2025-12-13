@@ -23,7 +23,7 @@ public partial class SecretariaTurnosSacar : Window {
 			MessageBox.Show("por que nulo el paciente?");
 			throw new Exception("En realidad este scenario es imposbiel porque quien se encarga de llamar a este constructor valida al paciente tambien");
 		}
-		VM = new SecretariaTurnosSacarViewModel(turnoOriginal.PacienteRelacionado, turnoOriginal.EspecialidadCodigo);
+		VM = new SecretariaTurnosSacarViewModel(turnoOriginal.PacienteRelacionado, turnoOriginal.Original.EspecialidadCodigo);
 		DataContext = VM;
 		TurnoOriginal = turnoOriginal;
 
@@ -85,7 +85,7 @@ public partial class SecretariaTurnosSacar : Window {
 			}
 
 			ResultWpf<TurnoDbModel> resultt = await App.Repositorio.ReprogramarTurno(
-				TurnoOriginal.Id,
+				TurnoOriginal.Original.Id,
 				DateTime.Now,
 				comentario
 			);
