@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
 
@@ -37,7 +36,7 @@ public partial class AdminMedicosModificar : Window {
 
 	}
 
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<AdminMedicos>();
 
 	/*
 

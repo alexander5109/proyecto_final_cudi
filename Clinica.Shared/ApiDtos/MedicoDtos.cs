@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Clinica.Dominio.FunctionalToolkit;
+﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;

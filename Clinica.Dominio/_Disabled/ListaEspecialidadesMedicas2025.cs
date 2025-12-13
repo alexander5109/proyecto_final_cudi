@@ -7,7 +7,7 @@
 //public sealed record ListaEspecialidadesMedicas2025(
 //	IReadOnlyList<Especialidad2025> Valores
 //) : IComoTexto {
-//	public string ATexto() {
+//	public string ATextoDiaYHoras() {
 //		if (Valores is null || Valores.Count == 0)
 //			return "No hay especialidades asignadas.";
 
@@ -15,7 +15,7 @@
 //		sb.AppendLine("Listado de especialidades:");
 
 //		foreach (Especialidad2025 esp in Valores)
-//			sb.AppendLine($"  • {esp.ATexto()}");
+//			sb.AppendLine($"  • {esp.ATextoDiaYHoras()}");
 
 //		return sb.ToString();
 //	}

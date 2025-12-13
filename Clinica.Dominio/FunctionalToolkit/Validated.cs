@@ -34,7 +34,7 @@ public static class ValidatedExtensions {
 			v2 is Validated<T2>.Valid ok2)
 			return new Validated<(T1, T2)>.Valid((ok1.Value, ok2.Value));
 
-        List<string> errors = new List<string>();
+        List<string> errors = [];
 
 		if (v1 is Validated<T1>.Invalid e1)
 			errors.AddRange(e1.Errors);
@@ -70,7 +70,7 @@ public static class ValidatedCombine {
 		Validated<T4> v4,
 		Validated<T5> v5,
 		Validated<T6> v6) {
-        List<string> errors = new List<string>();
+        List<string> errors = [];
 
 		T1? t1 = default;
 		T2? t2 = default;
@@ -132,7 +132,7 @@ public static class ValidatedCombine {
 		Validated<T5> v5,
 		Validated<T6> v6,
 		Validated<T7> v7) {
-        List<string> errors = new List<string>();
+        List<string> errors = [];
 
 		T1? t1 = default;
 		T2? t2 = default;

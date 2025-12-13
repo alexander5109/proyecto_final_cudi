@@ -1,9 +1,7 @@
-﻿using System.Collections.Immutable;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 using Clinica.AppWPF.UsuarioRecepcionista;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEntidad;
@@ -69,7 +67,7 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 	private bool _haceGuardias;
 	public bool HaceGuardias { get => _haceGuardias; set { _haceGuardias = value; OnPropertyChanged(); } }
 
-	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = new();
+	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = [];
 
 	public AdminMedicosModificarViewModel(MedicoDbModel medicoDbModel) {
 		Id = medicoDbModel.Id;
@@ -85,7 +83,7 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 
 
 		EspecialidadesDisponiblesItemsSource.Clear();
-		foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => x.ToSimpleViewModel()))
+		foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => new EspecialidadViewModel(x)))
 			EspecialidadesDisponiblesItemsSource.Add(esp);
 
 
@@ -95,7 +93,7 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 		Especialidad2025.CrearResult(medicoDbModel.EspecialidadCodigo)
 			.MatchAndDo(
 				ok => {
-					SelectedEspecialidad = ok.ToSimpleViewModel();
+					SelectedEspecialidad = new EspecialidadViewModel(ok);
 				},
 				err => {
 					//MessageBox.Show($"El código de especialidad no existe <{(byte)medicoDbModel.EspecialidadCodigo}>");
@@ -131,7 +129,7 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 			HorariosAgrupados.Add(
 				new ViewModelHorarioAgrupado(
 					grupo.Key,
-					grupo.ToList()
+					[.. grupo]
 				)
 			);
 		}

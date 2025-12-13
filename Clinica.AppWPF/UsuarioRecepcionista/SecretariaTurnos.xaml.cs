@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
 using Microsoft.VisualBasic;
 using static Clinica.Shared.DbModels.DbModels;
@@ -13,47 +14,12 @@ public partial class SecretariaTurnos : Window {
 		VM = new SecretariaTurnosViewModel();
 		DataContext = VM;
 
-		Loaded += async (_, __) => await CargaInicialAsync();
+		Loaded += async (_, __) => await VM.RefrescarTurnosAsync();
 	}
 
 	// ==========================================================
-	// CARGA INICIAL
+	// BOTONES: SELECTED ITEM ACTIONS
 	// ==========================================================
-
-	private async Task CargaInicialAsync() {
-		await RefrescarTurnosAsync();
-		//await CargarPacientesYMedicosOnce();
-
-
-
-	}
-
-	private async Task RefrescarTurnosAsync() {
-		try {
-			List<TurnoDbModel> turnosDto = await App.Repositorio.SelectTurnos();
-            List<TurnoViewModel> lista = turnosDto.Select(t => new TurnoViewModel(t)).ToList();
-
-			VM.CargarTurnos(lista);
-			VM.SelectedTurno = null;
-		} catch (Exception ex) {
-			MessageBox.Show("Error cargando turnos: " + ex.Message);
-		}
-	}
-
-	// ==========================================================
-	// NAV
-	// ==========================================================
-
-	private void ButtonHome(object sender, RoutedEventArgs e)
-		=> this.IrARespectivaHome();
-
-	private void ClickBoton_Salir(object sender, RoutedEventArgs e)
-		=> this.Salir();
-
-	// ==========================================================
-	// HELPER PARA MOSTRAR ERRORES
-	// ==========================================================
-
 	private static bool MostrarErrorSiCorresponde<T>(ResultWpf<T> result) =>
 		result.MatchAndSet(
 			ok => true,
@@ -63,9 +29,6 @@ public partial class SecretariaTurnos : Window {
 			}
 		);
 
-	// ==========================================================
-	// ACCIONES DE TURNOS
-	// ==========================================================
 
 	private async void Button_ConfirmarTurnoAsistencia(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
@@ -83,14 +46,14 @@ public partial class SecretariaTurnos : Window {
 		) != MessageBoxResult.Yes) return;
 
 		ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoConcretado(
-			VM.SelectedTurno.Id,
+			VM.SelectedTurno.Original.Id,
 			hoy,
-			VM.SelectedTurno.OutcomeComentario
+			VM.SelectedTurno.Original.OutcomeComentario
 		);
 
 		if (!MostrarErrorSiCorresponde(result)) return;
 
-		await RefrescarTurnosAsync();
+		await VM.RefrescarTurnosAsync();
 	}
 
 	private async void Button_MarcarTurnoAusente(object sender, RoutedEventArgs e) {
@@ -99,17 +62,20 @@ public partial class SecretariaTurnos : Window {
 			MessageBox.Show("Esto no deberia aparecer nunca. Por que no hay selectedturno seleciconado?");
 			return;
 		}
-		string comentario = Interaction.InputBox("Ingrese algun comentario minimo sobre este turno. El paciente nunca se volvio a contactar?", "Cancelar turno", "");
-		if (comentario == null || comentario.Length < 10) {
+		string comentario = Interaction.InputBox("Ingrese algun comentario minimo sobre este turno. El paciente nunca se volvio a contactar?", "Comentario requerido", "");
+		if (comentario == "") {
+			return;
+		}
+		if (comentario.Length < 10) {
 			MessageBox.Show("Debe completar un comentario para marcar como ausente el turno.");
 		} else {
 			ResultWpf<TurnoDbModel> result = await App.Repositorio.MarcarTurnoComoAusente(
-			VM.SelectedTurno.Id,
+			VM.SelectedTurno.Original.Id,
 			DateTime.Now,
 			comentario
 		);
 			if (MostrarErrorSiCorresponde(result)) {
-				await RefrescarTurnosAsync();
+				await VM.RefrescarTurnosAsync();
 			}
 
 		}
@@ -126,13 +92,10 @@ public partial class SecretariaTurnos : Window {
 			MessageBox.Show("Paciente no encontrado.");
 			return;
 		}
-
-
-
 		// abre el formulario de reprogramación
-		this.AbrirComoDialogo<SecretariaTurnosSacar>(VM.SelectedTurno); //alreadyplays sound
+		this.NavegarA<SecretariaTurnosSacar>(VM.SelectedTurno); //alreadyplays sound
 
-		await RefrescarTurnosAsync();
+		await VM.RefrescarTurnosAsync();
 	}
 
 	private async void Button_CancelarTurno(object sender, RoutedEventArgs e) {
@@ -142,18 +105,59 @@ public partial class SecretariaTurnos : Window {
 			return;
 		}
 
-		string comentario = Interaction.InputBox("Ingrese la razón de la cancelación del turno:", "Cancelar turno", "");
-		if (comentario == null || comentario.Length < 10) {
+		string comentario = Interaction.InputBox("Ingrese la razón de la cancelación del turno:", "Comentario requerido", "");
+		if (comentario == "") {
+			return;
+		}
+		if (comentario.Length < 10) {
 			MessageBox.Show("Debe completar un comentario para cancelar el turno.");
+			return;
 		} else {
 			ResultWpf<TurnoDbModel> result = await App.Repositorio.CancelarTurno(
-				VM.SelectedTurno.Id,
+				VM.SelectedTurno.Original.Id,
 				DateTime.Now,
 				comentario
 			);
 			if (!MostrarErrorSiCorresponde(result)) return;
-			await RefrescarTurnosAsync();
+			await VM.RefrescarTurnosAsync();
 		}
 
 	}
+
+	// ==========================================================
+	// BOTONES: REFRESH
+	// ==========================================================
+
+	private bool _enCooldown;
+	private async void ClickBoton_Refrescar(object sender, RoutedEventArgs e) {
+		if (_enCooldown)
+			return;
+		try {
+			_enCooldown = true;
+			if (sender is Button btn)
+				btn.IsEnabled = false;
+			await VM.RefrescarTurnosAsync();
+		} finally {
+			await Task.Delay(2000);
+			if (sender is Button btn)
+				btn.IsEnabled = true;
+
+			_enCooldown = false;
+		}
+	}
+
+
+	// ==========================================================
+	// BOTONES: NAV
+	// ==========================================================
+
+	private void ClickBoton_Home(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
+
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
+
+
+
+
+
+
 }
