@@ -1,40 +1,35 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using static Clinica.Shared.ApiDtos.MedicoDtos;
+using Clinica.AppWPF.UsuarioAdministrativo;
 
 namespace Clinica.AppWPF.Ventanas;
 
 
 public partial class AdminMedicosModificarHorario : Window {
-	//	public HorarioModificarViewModel VM { get; }
+	private HorarioMedicoViewModel? _vm;
 
-	public AdminMedicosModificarHorario(MedicoDto medico) {
+	public AdminMedicosModificarHorario(HorarioMedicoViewModel vm) {
 		InitializeComponent();
-		//VM = new HorarioModificarViewModel(medico, horario, esNuevo);
-		//DataContext = VM;
+		_vm = vm;
+		// populate fields
+		comboDia.ItemsSource = Enum.GetValues(typeof(DayOfWeek));
+		comboDia.SelectedItem = vm.DiaSemana;
+		txtDesde.Text = vm.HoraDesde.ToString("HH:mm");
+		txtHasta.Text = vm.HoraHasta.ToString("HH:mm");
 	}
 
-	//	private bool ValidarHorario(MedicoDto medico, HorarioMedicoDto nuevo) {
-	//		return !medico.HorariosViewModelList.Any(h =>
-	//			h != nuevo &&
-	//			h.DiaSemana == nuevo.DiaSemana &&
-	//			!(nuevo.Hasta <= h.Desde || nuevo.Desde >= h.Hasta)
-	//		);
-	//	}
+	private void Aceptar_Click(object sender, RoutedEventArgs e) {
+		if (_vm is null) { DialogResult = false; return; }
+		if (comboDia.SelectedItem is DayOfWeek dia) _vm.DiaSemana = dia;
+		if (TimeSpan.TryParse(txtDesde.Text, out var desde)) _vm.HoraDesde = TimeOnly.FromTimeSpan(desde);
+		if (TimeSpan.TryParse(txtHasta.Text, out var hasta)) _vm.HoraHasta = TimeOnly.FromTimeSpan(hasta);
+		DialogResult = true;
+		Close();
+	}
 
-	//	private void Aceptar_Click(object sender, RoutedEventArgs e) {
-	//		if (!ValidarHorario(VM.Medico, VM.Horario)) {
-	//			MessageBox.Show("El horario colisiona con otro horario del médico.");
-	//			return;
-	//		}
-
-	//		if (VM.EsNuevo)
-	//			VM.Medico.HorariosViewModelList.Add(VM.Horario);
-
-	//		DialogResult = true;
-	//		Close();
-	//	}
-
-	//	private void Cancelar_Click(object sender, RoutedEventArgs e) {
-	//		Close();
-	//	}
+	private void Cancelar_Click(object sender, RoutedEventArgs e) {
+		DialogResult = false;
+		Close();
+	}
 }

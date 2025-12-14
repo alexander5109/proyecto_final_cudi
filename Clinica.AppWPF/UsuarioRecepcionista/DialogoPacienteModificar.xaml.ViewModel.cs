@@ -239,7 +239,7 @@ public class DialogoPacienteModificarVM : INotifyPropertyChanged {
 	}
 	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync(Paciente2025 paciente) {
 		return (await App.Repositorio.InsertPacienteReturnId(paciente))
-			.MatchTo<PacienteId, UnitWpf>(
+			.MatchTo(
 				ok => {
 					Id = ok;
 					OnPropertyChanged(nameof(Id));

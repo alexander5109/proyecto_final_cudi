@@ -17,7 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<SQLServerConnectionFactory>(sp =>
+builder.Services.AddSingleton(sp =>
 	new SQLServerConnectionFactory(
 		builder.Configuration.GetConnectionString("ClinicaMedica")
 			?? throw new InvalidOperationException("Connection string 'ClinicaMedica' not found")
@@ -45,7 +45,7 @@ builder.Services.AddSingleton<IServiciosDeDominio, ServiciosPublicos>();
 
 
 // JwtService (singleton)
-builder.Services.AddSingleton<JwtService>(sp => {
+builder.Services.AddSingleton(sp => {
 	// string? jwtKey = builder.Configuration["Jwt:Key"];
 	// if (string.IsNullOrWhiteSpace(jwtKey))
 	// throw new InvalidOperationException("Falta la clave JWT en configuración: 'Jwt:Key'");

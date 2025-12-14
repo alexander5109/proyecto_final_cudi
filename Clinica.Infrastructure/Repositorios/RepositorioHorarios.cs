@@ -51,7 +51,7 @@ public class RepositorioHorarios(SQLServerConnectionFactory factory) : Repositor
 
 
 	Task<Result<HorarioDbModel>> IRepositorioHorarios.UpdateHorarioWhereId(HorarioId id, Horario2025 instance)
-		=> TryAsync<HorarioDbModel>(async conn => {
+		=> TryAsync(async conn => {
 			// 1) Convertimos a DTO una sola vez
 			HorarioDbModel dto = instance.ToModel(id);
 

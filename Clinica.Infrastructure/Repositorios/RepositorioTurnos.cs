@@ -31,7 +31,7 @@ public class RepositorioTurnos(SQLServerConnectionFactory factory) : Repositorio
 		TurnoDbModel parametros = instance.ToModel(id);
 		Console.WriteLine(parametros.ToString());
 
-		return TryAsync<TurnoDbModel>(async conn => {
+		return TryAsync(async conn => {
 			// Enviar parámetros al SP
 			
 			// Ejecutar SP que devuelve int RowsAffected

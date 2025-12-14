@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.Ventanas;
 using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
 
@@ -24,91 +26,62 @@ public partial class AdminMedicosModificar : Window {
 		Loaded += async (_, _) => await VM.CargarHorariosAsync();
 	}
 
+	private object? GetSelectedTreeItem() => treeViewHorarios.SelectedItem;
+
 	// ==========================================================
 	// BOTONES: CRUD HORARIOS
 	// ==========================================================
 
 	private void ClickBoton_EditarHorario(object sender, RoutedEventArgs e) {
-
-	}
-
-	private void ClickBoton_AgregarHorario(object sender, RoutedEventArgs e) {
-
-	}
-
-	private void ClickBoton_EliminarHorario(object sender, RoutedEventArgs e) {
-
-	}
-
-
-	/*
-	private object? GetSelectedTreeItem() {
-		return treeViewHorarios.SelectedItem;
-	}
-
-	private void BtnAgregarHorarioFranja_Click(object sender, RoutedEventArgs e) {
 		object? selected = GetSelectedTreeItem();
-
-		DiaDeSemanaDto dia;
-
-		if (selected is DtoHorariosAgrupados grupo) {
-			dia = grupo.DiaSemana;
-		} else if (selected is HorarioMedicoDto horario) {
-			dia = horario.DiaSemana;
-		} else {
-			MessageBox.Show("Seleccione un día en el árbol para agregar un horario.");
-			return;
-		}
-
-		HorarioMedicoDto nuevoHorario = new() {
-			DiaSemana = dia,
-			Desde = new TimeOnly(8, 0),
-			Hasta = new TimeOnly(12, 0)
-		};
-
-		AdminMedicosModificarHorario win = new(SelectedMedico, nuevoHorario, esNuevo: true);
-
-		if (win.ShowDialog() == true) {
-			// Se agregó realmente dentro de AdminMedicosModificarHorario
-			// Ahora refrescamos los agrupados (INotifyPropertyChanged se encarga)
-			OnPropertyChanged(nameof(SelectedMedico.HorariosAgrupados));
-		}
-	}
-
-	private void BtnEditarHorario_Click(object sender, RoutedEventArgs e) {
-		object? selected = GetSelectedTreeItem();
-
-		if (selected is not HorarioMedicoDto horario) {
+		if (selected is not HorarioMedicoViewModel horario) {
 			MessageBox.Show("Seleccione un horario para editar.");
 			return;
 		}
+		this.AbrirComoDialogo<AdminMedicosModificarHorario>(horario);
+		//var win = new Clinica.AppWPF.Ventanas.AdminMedicosModificarHorario(horario);
+		//if (win.ShowDialog() == true) {
+		// horario object was modified by window binding; notify UI
+		// no extra action required
+		//}
+	}
 
-		AdminMedicosModificarHorario win = new(SelectedMedico, horario, esNuevo: false);
+	private void ClickBoton_AgregarHorario(object sender, RoutedEventArgs e) {
+		// Need to ask user which day to add or use selected group
+		object? selected = GetSelectedTreeItem();
+		DayOfWeek dia = DayOfWeek.Monday;
+		if (selected is ViewModelHorarioAgrupado grupo) dia = grupo.DiaSemana;
+		else if (selected is HorarioMedicoViewModel h) dia = h.DiaSemana;
 
-		if (win.ShowDialog() == true) {
-			// El horario ya está modificado (data binding)
-			OnPropertyChanged(nameof(SelectedMedico.HorariosAgrupados));
+		var nuevo = new HorarioMedicoViewModel(dia, new TimeOnly(8, 0), new TimeOnly(12, 0));
+		this.AbrirComoDialogo<AdminMedicosModificarHorario>(nuevo);
+		// add to group or create group
+		var grupoExistente = VM.HorariosAgrupados.FirstOrDefault(g => g.DiaSemana == nuevo.DiaSemana);
+		if (grupoExistente is not null) {
+			grupoExistente.Horarios.Add(nuevo);
+		} else {
+			VM.HorariosAgrupados.Add(new ViewModelHorarioAgrupado(nuevo.DiaSemana, []));
+			VM.HorariosAgrupados.Last().Horarios.Add(nuevo);
 		}
 	}
 
-	private void BtnEliminarHorario_Click(object sender, RoutedEventArgs e) {
+	private void ClickBoton_EliminarHorario(object sender, RoutedEventArgs e) {
 		object? selected = GetSelectedTreeItem();
-
-		if (selected is not HorarioMedicoDto horario) {
+		if (selected is not HorarioMedicoViewModel horario) {
 			MessageBox.Show("Seleccione un horario para eliminar.");
 			return;
 		}
 
-		if (MessageBox.Show("¿Eliminar este horario?", "Confirmar",
-			MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+		if (MessageBox.Show("¿Eliminar este horario?", "Confirmar", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
 			return;
 
-		SelectedMedico.HorariosViewModelList.Remove(horario);
-
-		// Forzar refresco para que se actualicen los días vacíos
-		OnPropertyChanged(nameof(SelectedMedico.HorariosAgrupados));
+		var grupo = VM.HorariosAgrupados.FirstOrDefault(g => g.DiaSemana == horario.DiaSemana);
+		if (grupo is null) return;
+		grupo.Horarios.Remove(horario);
+		// if group became empty remove it
+		if (!grupo.Horarios.Any()) VM.HorariosAgrupados.Remove(grupo);
 	}
-	*/
+
 
 	//------------------------Fin---------------------------//
 

@@ -535,4 +535,25 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return result;
 	}
 
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDtos.HorarioDto> horarios) {
+	var dtoMedico = instance.ToDto();
+	var payload = new {
+		Medico = dtoMedico,
+		Horarios = horarios
+	};
+
+	ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
+		() => Api.Cliente.PutAsJsonAsync(
+			$"api/medicos/{id.Valor}/con-horarios",
+			payload
+		),
+		onOk: async response => UnitWpf.Valor,
+		errorTitle: $"Error actualizando médico {id.Valor}"
+	);
+
+	_ = RefreshMedicos();
+	_ = RefreshHorarios();
+	return result;
+}
+
 }

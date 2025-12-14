@@ -95,7 +95,7 @@ public static class ControllerExtensions {
 		Func<TDomain, Task<Result<TResult>>> action,
 		string? notFoundMessage = null
 	) =>
-		controller.SafeExecute<TResult>(
+		controller.SafeExecute(
 			logger,
 			permiso,
 			async () => {

@@ -72,7 +72,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 		MedicoId id,
 		Medico2025 instance
 	)
-		=> TryAsync<MedicoDbModel>(async conn => {
+		=> TryAsync(async conn => {
 			// 1) Convertimos a DTO una sola vez
 			MedicoDbModel dto = instance.ToModel(id);
 

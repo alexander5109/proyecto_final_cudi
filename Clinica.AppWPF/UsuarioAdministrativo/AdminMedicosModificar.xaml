@@ -83,7 +83,8 @@
 			Grid.Column="1"
 			Margin="15,5,15,5"
 			Style="{StaticResource TextBoxLindo2}"
-			Text="{Binding Nombre}" />
+			Text="{Binding Nombre}"
+			Height="28" />
 		<Label
 			Content="Apellido"
 			Grid.Row="2"
@@ -95,7 +96,8 @@
 			MaxLength="50"
 			Margin="15,5,15,5"
 			Style="{StaticResource TextBoxLindo2}"
-			Text="{Binding Apellido}" />
+			Text="{Binding Apellido}"
+			Height="28" />
 		<Label
 			Content="DNI"
 			Grid.Row="3"
@@ -107,7 +109,8 @@
 			Margin="15,5,15,5"
 			MaxLength="8"
 			Style="{StaticResource TextBoxLindo2}"
-			Text="{Binding Dni}" />
+			Text="{Binding Dni}"
+			Height="28" />
 		<Label
 			Content="Email"
 			Grid.Row="4"
@@ -119,7 +122,8 @@
 			MaxLength="10"
 			Margin="15,5,15,5"
 			Style="{StaticResource TextBoxLindo2}"
-			Text="{Binding Email}" />
+			Text="{Binding Email}"
+			Height="28" />
 		<Label
 			Content="Teléfono"
 			Grid.Row="5"
@@ -131,7 +135,8 @@
 			MaxLength="10"
 			Margin="15,5,15,5"
 			Style="{StaticResource TextBoxLindo2}"
-			Text="{Binding Telefono}" />
+			Text="{Binding Telefono}"
+			Height="28" />
 		<Label
 			Content="Provincia"
 			Grid.Row="6"
@@ -144,7 +149,7 @@
 			SelectedItem="{Binding Provincia}"
 			Margin="15,5,15,5"
 			DisplayMemberPath="Nombre"
-			Height="21" />
+			Height="28" />
 		<Label
 			Content="Domicilio"
 			Grid.Row="7"
@@ -156,7 +161,8 @@
 			MaxLength="50"
 			Margin="15,5,15,5"
 			Style="{StaticResource TextBoxLindo2}"
-			Text="{Binding Domicilio}" />
+			Text="{Binding Domicilio}"
+			Height="28" />
 		<Label
 			Content="Localidad"
 			Grid.Row="8"
@@ -168,7 +174,8 @@
 			MaxLength="50"
 			Margin="15,5,15,5"
 			Style="{StaticResource TextBoxLindo2}"
-			Text="{Binding Localidad}" />
+			Text="{Binding Localidad}"
+			Height="28" />
 		<Label
 			Content="Especialidad"
 			Grid.Row="9"
@@ -179,8 +186,9 @@
 			Grid.Column="1"
 			ItemsSource="{Binding EspecialidadesDisponiblesItemsSource}"
 			DisplayMemberPath="NombreEspecialidad"
-			SelectedItem="{Binding SelectedEspecialidad, Mode=TwoWay}"
-			Margin="15,5,15,5" />
+			SelectedItem="{Binding Especialidad, Mode=TwoWay}"
+			Margin="15,5,15,5"
+			Height="28" />
 		<Label
 			Content="Realiza Guardia"
 			Grid.Row="11"
@@ -194,7 +202,7 @@
 			IsChecked="{Binding HaceGuardias, Mode=TwoWay}"
 			VerticalAlignment="Top"
 			HorizontalAlignment="Left"
-			Height="25" />
+			Height="28.4" />
 		<!-- ID PACIENTE -->
 		<Label
 			Content="Fecha de Ingreso"
@@ -202,7 +210,7 @@
 			Grid.Column="2"
 			VerticalAlignment="Center" />
 		<Label
-			Height="27"
+			Height="28"
 			Grid.Row="2"
 			Grid.Column="3"
 			Margin="15,5,15,5"
@@ -220,7 +228,8 @@
 			Margin="15,5,15,5"
 			Content="{Binding Id}"
 			Style="{StaticResource LabelLindoCuadroGrisSombreado}"
-			FontSize="12" />
+			FontSize="12"
+			Height="28" />
 		<!-- Agenda -->
 		<Label
 			Grid.Row="3"
@@ -230,12 +239,13 @@
 			FontWeight="Bold"
 			HorizontalAlignment="Center"
 			Margin="0,0,0,5"
-			FontSize="25"
+			FontSize="20"
 			VerticalAlignment="Center"
 			HorizontalContentAlignment="Center"
 			VerticalContentAlignment="Center" />
 		<!-- Agenda -->
 		<TreeView
+			x:Name="treeViewHorarios"
 			Grid.Row="4"
 			Grid.Column="2"
 			Grid.ColumnSpan="2"
@@ -310,8 +320,7 @@
 			Grid.RowSpan="15"
 			Orientation="Vertical"
 			HorizontalAlignment="Center"
-			VerticalAlignment="Bottom"
-			Margin="25,25,25,25"
+			VerticalAlignment="Center"
 			Grid.Row="1">
 			<Button
 				Content="Guardar cambios"

@@ -39,9 +39,8 @@
 				VerticalContentAlignment="Center"
 				FontFamily="Bahnschrift" />
 			<ComboBox
-				x:Name="txtComboBox"
-				ItemsSource="{Binding DiaSemana}"
-				SelectedItem="{Binding Horario.DiaSemana}"
+				x:Name="comboDia"
+				SelectedItem="{Binding DiaSemana, Mode=TwoWay}"
 				Margin="15,0,0,0"
 				VerticalAlignment="Center"
 				VerticalContentAlignment="Center"
@@ -62,7 +61,7 @@
 				VerticalContentAlignment="Center"
 				FontFamily="Bahnschrift" />
 			<TextBox
-				Text="{Binding Horario.Desde}"
+				x:Name="txtDesde"
 				Width="131"
 				VerticalAlignment="Center"
 				Margin="15,0,0,0"
@@ -81,7 +80,7 @@
 				VerticalContentAlignment="Center"
 				FontFamily="Bahnschrift" />
 			<TextBox
-				Text="{Binding Horario.Hasta}"
+				x:Name="txtHasta"
 				Width="130"
 				VerticalAlignment="Center"
 				Margin="15,0,0,0"
@@ -96,11 +95,15 @@
 			Height="123">
 			<Button
 				Content="Aceptar"
+				x:Name="btnAceptar"
+				Click="Aceptar_Click"
 				Width="110"
 				Height="30"
 				Style="{StaticResource BotonRedondeado}" />
 			<Button
 				Content="Cancelar"
+				x:Name="btnCancelar"
+				Click="Cancelar_Click"
 				Width="110"
 				Height="30"
 				Margin="5"

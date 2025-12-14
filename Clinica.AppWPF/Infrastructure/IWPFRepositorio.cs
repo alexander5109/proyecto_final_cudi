@@ -1,3 +1,4 @@
+using Clinica.Shared.ApiDtos;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
@@ -39,10 +40,12 @@ public static class IWPFRepositorioInterfaces {
 	}
 
 
+	
 	public interface IWPFRepositorioMedicos {
 		Task<ResultWpf<UnitWpf>> DeleteMedicoWhereId(MedicoId id);
 		Task<ResultWpf<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
 		Task<ResultWpf<UnitWpf>> UpdateMedicoWhereId(Medico2025Agg instance);
+		Task<ResultWpf<UnitWpf>> UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDtos.HorarioDto> horarios);
 		//Task<List<MedicoDbModel>> SelectMedicos();
 		Task<List<MedicoDbModel>> SelectMedicos();
 		Task EnsureMedicosLoaded();

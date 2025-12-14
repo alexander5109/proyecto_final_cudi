@@ -36,7 +36,7 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 		UsuarioId id,
 		Usuario2025 instance
 	)
-		=> TryAsync<UsuarioDbModel>(async conn => {
+		=> TryAsync(async conn => {
 			// 1) Convertimos solo UNA VEZ
 			UsuarioDbModel dto = instance.ToModel(id);
 

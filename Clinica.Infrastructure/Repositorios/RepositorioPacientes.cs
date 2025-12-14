@@ -51,7 +51,7 @@ public class RepositorioPacientes(SQLServerConnectionFactory factory) : Reposito
 		PacienteId id,
 		Paciente2025 instance
 	)
-		=> TryAsync<PacienteDbModel>(async conn => {
+		=> TryAsync(async conn => {
 			// 1) Convertimos a DTO una sola vez
 			PacienteDbModel dto = instance.ToModel(id);
 

@@ -22,7 +22,7 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 		TurnoId id,
 		Turno2025 instance
 	)
-		=> TryAsync<Turno2025>(async conn => {
+		=> TryAsync(async conn => {
             // Enviar parámetros al SP
             TurnoDbModel parametros = instance.ToModel(id);
 
@@ -100,7 +100,7 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 
 
 	Task<Result<Turno2025>> IRepositorioDominioServices.SelectTurnoWhereIdAsDomain(TurnoId id)
-		=> TryAsyncAndMap<TurnoDto, Turno2025>(
+		=> TryAsyncAndMap(
 			query: conn => conn.QuerySingleOrDefaultAsync<TurnoDto>(
 				"sp_SelectTurnoWhereId",
 				new { Id = id.Valor },

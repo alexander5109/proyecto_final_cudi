@@ -25,7 +25,7 @@ public static class ExtensionMethods {
 			return;
 		}
 
-		if (!TryCreateWindow<T>([arg1], out T? nuevaVentana))
+		if (!TryCreateWindow([arg1], out T? nuevaVentana))
 			return;
 
 		Application.Current.MainWindow = nuevaVentana;
@@ -41,7 +41,7 @@ public static class ExtensionMethods {
 			return;
 		}
 
-		if (!TryCreateWindow<T>([arg1, arg2], out T? nuevaVentana))
+		if (!TryCreateWindow([arg1, arg2], out T? nuevaVentana))
 			return;
 
 		Application.Current.MainWindow = nuevaVentana;
@@ -71,7 +71,7 @@ public static class ExtensionMethods {
 			return;
 		}
 
-		if (!TryCreateWindow<T>([arg1], out T? nuevaVentana))
+		if (!TryCreateWindow([arg1], out T? nuevaVentana))
 			return;
 
 		Application.Current.MainWindow = nuevaVentana;
@@ -87,7 +87,7 @@ public static class ExtensionMethods {
 			return;
 		}
 
-		if (!TryCreateWindow<T>([arg1, arg2], out T? nuevaVentana))
+		if (!TryCreateWindow([arg1, arg2], out T? nuevaVentana))
 			return;
 		Application.Current.MainWindow = nuevaVentana;
 		nuevaVentana?.ShowDialog();
