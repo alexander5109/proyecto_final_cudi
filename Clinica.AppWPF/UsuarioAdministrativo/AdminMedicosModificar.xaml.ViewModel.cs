@@ -35,8 +35,8 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 	private string _localidad;
 	public string Localidad { get => _localidad; set { _localidad = value; OnPropertyChanged(); } }
 
-	//private EspecialidadCodigo _especialidad;
-	//public EspecialidadCodigo Especialidad { get => _especialidad; set { _especialidad = value; OnPropertyChanged(); } }
+	//private EspecialidadEnumCodigo _especialidad;
+	//public EspecialidadEnumCodigo Especialidad { get => _especialidad; set { _especialidad = value; OnPropertyChanged(); } }
 
 
 	private EspecialidadViewModel? _selectedEspecialidad;
@@ -96,7 +96,7 @@ public class AdminMedicosModificarViewModel : INotifyPropertyChanged {
 					SelectedEspecialidad = new EspecialidadViewModel(ok);
 				},
 				err => {
-					//MessageBox.Show($"El código de especialidad no existe <{(byte)medicoDbModel.EspecialidadCodigo}>");
+					//MessageBox.Show($"El código de especialidad no existe <{(byte)medicoDbModel.EspecialidadEnumCodigo}>");
 				});
 
 	}

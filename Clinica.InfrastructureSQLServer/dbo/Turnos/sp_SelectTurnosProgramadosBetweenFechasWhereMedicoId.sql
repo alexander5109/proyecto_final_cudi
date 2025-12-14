@@ -5,6 +5,7 @@
 AS
 BEGIN
     SET NOCOUNT ON;
+
     SELECT 
         Id, 
         MedicoId, 
@@ -14,8 +15,9 @@ BEGIN
         OutcomeEstado
     FROM dbo.Turno
     WHERE MedicoId = @MedicoId
-      AND FechaHoraAsignadaDesde >= @FechaDesde
-      AND FechaHoraAsignadaDesde <  @FechaHasta
-      AND OutcomeEstado = 0  -- 0 = Programado (ajustar si tu enum cambia)
+      AND OutcomeEstado = 0 -- Programado
+      AND FechaHoraAsignadaDesde < @FechaHasta
+      AND FechaHoraAsignadaHasta > @FechaDesde
+    ORDER BY FechaHoraAsignadaDesde ASC;
 END
 GO

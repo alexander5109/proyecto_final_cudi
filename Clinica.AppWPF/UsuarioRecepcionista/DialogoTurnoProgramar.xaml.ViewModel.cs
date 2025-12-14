@@ -43,8 +43,7 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 		TurnoAReprogramar = turnoAReprogramar;
 		SelectedPaciente = paciente;
 		SelectedFecha = TurnoAReprogramar.FechaHoraAsignadaHasta;
-		SelectedDiaDeLaSemana = DiaDeSemanaViewModel.Todos.Find(x=> x.Value == turnoAReprogramar.FechaHoraAsignadaDesde.DayOfWeek);
-		EspecialidadCodigo especialidad = turnoAReprogramar.EspecialidadCodigo;
+		EspecialidadEnumCodigo especialidad = turnoAReprogramar.EspecialidadCodigo;
 		EspecialidadesDisponiblesItemsSource.Clear(); // <<---- importantísimo
 
 		Result<Especialidad2025> espResult = Especialidad2025.CrearResult(especialidad);
@@ -57,7 +56,6 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 			},
 			err => {
 				MessageBox.Show($"El código de especialidad no existe <{especialidad}>");
-
 				foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => new EspecialidadViewModel(x)))
 					EspecialidadesDisponiblesItemsSource.Add(esp);
 			});
@@ -174,6 +172,10 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 
 		DayOfWeek? diaSemanaSelected = SelectedDiaDeLaSemana?.Value;
 
+
+		//MessageBox.Show($"Selected dia de la semana que vamos a mandar: Desde: {desde}, solo dias {diaSemanaSelected}");
+
+
 		List<Disponibilidad2025> lista = await App.Repositorio.SelectDisponibilidades(
 			especialidad: esp.Codigo,
 			cuantos: 40,
@@ -201,14 +203,17 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 				new DiaDeSemanaViewModel(dia, dia.ATexto())
 			);
 		}
+		SelectedDiaDeLaSemana = TurnoAReprogramar is not null
+		? DiasSemanaItemsSource.FirstOrDefault(
+			x => x.Value == TurnoAReprogramar.FechaHoraAsignadaHasta.DayOfWeek)
+		: DiasSemanaItemsSource.FirstOrDefault();
 
-		//SelectedDiaDeLaSemana = DiasSemanaItemsSource.FirstOrDefault();
 	}
 
 
-	public async Task LoadMedicosPorEspecialidadAsync(EspecialidadCodigo? esp) {
+	public async Task LoadMedicosPorEspecialidadAsync(EspecialidadEnumCodigo? esp) {
 		MedicosEspecialistasItemsSource.Clear();
-		if (esp is not EspecialidadCodigo codigo) return;
+		if (esp is not EspecialidadEnumCodigo codigo) return;
 
 		if (MedicosTodos == null)
 			await LoadMedicosTodosAsync();
@@ -389,7 +394,7 @@ public record DisponibilidadEspecialidadModelView(
 
 public record MedicoSimpleViewModel(
 	MedicoId Id,
-	EspecialidadCodigo EspecialidadCodigo,
+	EspecialidadEnumCodigo EspecialidadCodigo,
 	string Displayear,
 	IReadOnlyList<DayOfWeek> DiasAtencion
 ) {

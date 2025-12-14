@@ -44,7 +44,7 @@ public static class MainProgram {
 		//RepositorioDapper repositorio = new(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
 		IRepositorioDominioServices repositorio = new RepositorioDominioServices(new SQLServerConnectionFactory(config.GetConnectionString("ClinicaMedica")!));
 
-		//var response = await http.GetAsync($"/disponibilidades?EspecialidadCodigo=3&cuantos=10");
+		//var response = await http.GetAsync($"/disponibilidades?EspecialidadEnumCodigo=3&cuantos=10");
 
 		UserName UserName = new ("admin1");
 		//var usuarioFakeResult = await repositorio.SelectUsuarioWhereNombre(UserName);

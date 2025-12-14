@@ -8,7 +8,7 @@ namespace Clinica.Shared.ApiDtos;
 public static class MedicoDtos {
 
 	public record MedicoDto(
-		EspecialidadCodigo EspecialidadCodigo,
+		EspecialidadEnumCodigo EspecialidadCodigo,
 		string Dni,
 		string Nombre,
 		string Apellido,

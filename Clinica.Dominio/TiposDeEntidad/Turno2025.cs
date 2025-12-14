@@ -85,7 +85,7 @@ public record Turno2025(
 		DateTime fechaCreacion,
 		PacienteId pacienteId,
 		MedicoId medicoId,
-		EspecialidadCodigo especialidadCododigo,
+		EspecialidadEnumCodigo especialidadCododigo,
 		DateTime desde,
 		DateTime hasta,
 		TurnoEstadoCodigo outcomeEstado,

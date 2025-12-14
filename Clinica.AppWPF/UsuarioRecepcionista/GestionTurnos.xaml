@@ -320,43 +320,43 @@
 				<StackPanel>
 					<Button
 						Content="Concretar"
-						Width="111"
-						Height="30"
+						Width="122"
+						Height="32"
 						IsEnabled="{Binding PuedeConfirmarTurno}"
 						Style="{StaticResource BotonRedondeado}"
 						Click="Button_ConfirmarTurnoAsistencia"
 						Margin="7,7,7,7"
-						FontSize="14" />
+						FontSize="16" />
 					<Button
 						Content="Ausente"
-						Width="111"
-						Height="30"
+						Width="122"
+						Height="32"
 						Margin="7,7,7,7"
 						IsEnabled="{Binding PuedeMarcarComoAusente}"
 						Style="{StaticResource BotonRedondeadoRojo}"
 						Click="Button_MarcarTurnoAusente"
-						FontSize="14"
+						FontSize="16"
 						FontWeight="Bold" />
 				</StackPanel>
 				<StackPanel>
 					<Button
 						Content="Reprogramar"
-						Width="111"
-						Height="30"
+						Width="122"
+						Height="32"
 						Margin="7,7,7,7"
 						IsEnabled="{Binding PuedeCancelarTurno}"
 						Style="{StaticResource BotonRedondeado}"
 						Click="Button_ReprogramarTurno"
-						FontSize="14" />
+						FontSize="16" />
 					<Button
 						Content="Cancelar"
-						Width="111"
-						Height="30"
+						Width="122"
+						Height="32"
 						IsEnabled="{Binding PuedeCancelarTurno}"
 						Style="{StaticResource BotonRedondeadoRojo}"
 						Click="Button_CancelarTurno"
 						Margin="7,7,7,7"
-						FontSize="14" />
+						FontSize="16" />
 				</StackPanel>
 			</StackPanel>
 		</StackPanel>

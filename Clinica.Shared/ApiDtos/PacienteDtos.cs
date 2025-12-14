@@ -17,7 +17,7 @@ namespace Clinica.Shared.ApiDtos;
 //	TurnoId Id,
 //	TimeSpan Hora,
 //	DateTime Fecha,
-//	EspecialidadCodigo EspecialidadCodigo,
+//	EspecialidadEnumCodigo EspecialidadEnumCodigo,
 //	TurnoEstadoCodigo Estado,
 //	MedicoId MedicoId
 //);
@@ -26,7 +26,7 @@ namespace Clinica.Shared.ApiDtos;
 //	string Dni,
 //	string Username,
 //	string Apellido,
-//	EspecialidadCodigo EspecialidadCodigo
+//	EspecialidadEnumCodigo EspecialidadEnumCodigo
 //);
 
 

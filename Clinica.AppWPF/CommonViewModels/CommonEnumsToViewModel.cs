@@ -20,7 +20,7 @@ public static class CommonEnumsToViewModel {
 
 
 	public record EspecialidadViewModel(
-		EspecialidadCodigo Codigo,
+		EspecialidadEnumCodigo Codigo,
 		string NombreEspecialidad,
 		int Duracion
 	) {

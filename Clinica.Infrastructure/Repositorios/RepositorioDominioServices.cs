@@ -44,7 +44,7 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 
 
 
-	Task<Result<IEnumerable<MedicoId>>> IRepositorioDominioServices.SelectMedicosIdWhereEspecialidadCodigo(EspecialidadCodigo code)
+	Task<Result<IEnumerable<MedicoId>>> IRepositorioDominioServices.SelectMedicosIdWhereEspecialidadCodigo(EspecialidadEnumCodigo code)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<MedicoId>(
 				"sp_SelectMedicosIdWhereEspecialidadCodigo",

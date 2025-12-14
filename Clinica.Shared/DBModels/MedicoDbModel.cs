@@ -8,7 +8,7 @@ namespace Clinica.Shared.DbModels;
 public static partial class DbModels {
 	public record MedicoDbModel(
 		MedicoId Id,
-		EspecialidadCodigo EspecialidadCodigo,
+		EspecialidadEnumCodigo EspecialidadCodigo,
 		string Dni,
 		string Nombre,
 		string Apellido,
@@ -71,7 +71,7 @@ public static partial class DbModels {
 			Medico2025.CrearResult(
 				NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
 
-				Especialidad2025.CrearResult(dbModel.EspecialidadCodigo),
+				Especialidad2025.CrearResult(dbModel.EspecialidadEnumCodigo),
 
 				DniArgentino2025.CrearResult(dbModel.Dni),
 

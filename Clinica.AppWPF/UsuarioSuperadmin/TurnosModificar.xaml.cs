@@ -29,7 +29,7 @@ public partial class TurnosModificar : Window {
 	//---------------------Visualizacion-comboboxes-------------------//
 	async private void LLenarComboBoxes()  //por defecto llenamos todos los comboboxes
 	{
-		txtEspecialidades.ItemsSource = new List<EspecialidadCodigo>(); //await App.Repositorio.SelectDistinctEspecialidades();
+		txtEspecialidades.ItemsSource = new List<EspecialidadEnumCodigo>(); //await App.Repositorio.SelectDistinctEspecialidades();
 
 		txtPacientes.ItemsSource = await App.Repositorio.SelectPacientes();
 		txtPacientes.DisplayMemberPath = "Displayear";  //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
@@ -38,7 +38,7 @@ public partial class TurnosModificar : Window {
 		txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 	}
 	async private void txtEspecialidades_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		//txtMedicos.ItemsSource = txtEspecialidades.SelectedItem is null? await App.Repositorio.SelectMedicosWhereEspecialidadCodigo((EspecialidadCodigo)txtEspecialidades.SelectedItem): [];
+		//txtMedicos.ItemsSource = txtEspecialidades.SelectedItem is null? await App.Repositorio.SelectMedicosWhereEspecialidadCodigo((EspecialidadEnumCodigo)txtEspecialidades.SelectedItem): [];
 		txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 	}
 

@@ -43,6 +43,8 @@ public partial class DialogoTurnoProgramar : Window {
 	private async void ClickBoton_Consultar(object sender, RoutedEventArgs e) {
 		if (_enCooldown)
 			return;
+
+
 		try {
 			_enCooldown = true;
 			if (sender is Button btn)

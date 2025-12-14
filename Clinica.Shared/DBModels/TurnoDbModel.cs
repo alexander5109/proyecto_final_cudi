@@ -13,7 +13,7 @@ public static partial class DbModels {
 		DateTime FechaDeCreacion,
 		PacienteId PacienteId,
 		MedicoId MedicoId,
-		EspecialidadCodigo EspecialidadCodigo,
+		EspecialidadEnumCodigo EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
 		TurnoEstadoCodigo OutcomeEstado,

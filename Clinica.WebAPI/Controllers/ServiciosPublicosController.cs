@@ -20,27 +20,25 @@ namespace Clinica.WebAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class ServiciosPublicosController(
-	IRepositorioDominioServices repositorio, 
-	IServiciosDeDominio servicios, 
+	IRepositorioDominioServices repositorio,
+	IServiciosDeDominio servicios,
 	ILogger<ServiciosPublicosController> logger
 ) : ControllerBase {
 
 	[HttpGet("Turnos/Disponibilidades")]
 	public async Task<IActionResult> VerDisponibilidades(
-		[FromQuery] EspecialidadCodigo EspecialidadCodigo,
-		[FromQuery] int cuantos,
-		[FromQuery, DefaultValue("2025-12-03T00:00:00")] DateTime? aPartirDeCuando,
-		[FromQuery] DayOfWeek? diaSemanaPreferido
+		[FromQuery] SolicitarDisponibilidadesDto dto
 	) {
-		DateTime desde = aPartirDeCuando ?? DateTime.Now; // default real acá
+		DateTime desde = dto.APartirDeCuando ?? DateTime.Now;
 
-		Result<IReadOnlyList<Disponibilidad2025>> result = await servicios.SolicitarDisponibilidades(
-			EspecialidadCodigo,
-			desde,
-			cuantos,
-			diaSemanaPreferido,
-			repositorio
-		);
+		Result<IReadOnlyList<Disponibilidad2025>> result =
+			await servicios.SolicitarDisponibilidades(
+				dto.EspecialidadCodigo,
+				desde,
+				dto.Cuantos,
+				dto.DiaSemanaPreferido,
+				repositorio
+			);
 
 		return result switch {
 			Result<IReadOnlyList<Disponibilidad2025>>.Ok ok =>
@@ -58,8 +56,11 @@ public class ServiciosPublicosController(
 
 
 
+
 	[HttpPost("Turnos/Programar")]
-	public Task<ActionResult<Turno2025Agg>> ProgramarTurno([FromBody] ProgramarTurnoDto dto) {
+	public Task<ActionResult<Turno2025Agg>> ProgramarTurno(
+		[FromBody] ProgramarTurnoDto dto
+	) {
 		return this.SafeExecuteApi(
 			logger,
 			PermisosAccionesCodigo.GestionDeTurnos,
@@ -75,8 +76,10 @@ public class ServiciosPublicosController(
 	}
 
 	[HttpPut("Turnos/Cancelar")]
-	public async Task<ActionResult<TurnoDto>> CancelarTurno([FromBody] ModificarTurnoDto dto) {
-        Result<Turno2025> result = await servicios.PersistirComoCanceladoAsync(
+	public async Task<ActionResult<TurnoDto>> CancelarTurno(
+		[FromBody] ModificarTurnoDto dto
+	) {
+		Result<Turno2025> result = await servicios.PersistirComoCanceladoAsync(
 			dto.TurnoId,
 			dto.FechaSolicitud,
 			dto.Comentario,
@@ -93,7 +96,9 @@ public class ServiciosPublicosController(
 
 
 	[HttpPut("Turnos/Reprogramar")]
-	public Task<ActionResult<Turno2025>> ReprogramarTurno([FromBody] ModificarTurnoDto dto) {
+	public Task<ActionResult<Turno2025>> ReprogramarTurno(
+		[FromBody] ModificarTurnoDto dto
+	) {
 		//if (dto.Comentario is null) {
 		//	return new BadRequestObjectResult("El comentario es obligatorio");
 		//}
@@ -114,7 +119,9 @@ public class ServiciosPublicosController(
 
 
 	[HttpPut("Turnos/Concretar")]
-	public Task<ActionResult<Turno2025>> ConcretarTurno([FromBody] ConcretarTurnoDto dto) {
+	public Task<ActionResult<Turno2025>> ConcretarTurno(
+		[FromBody] ConcretarTurnoDto dto
+	) {
 		return this.SafeExecuteApi(
 			logger,
 			PermisosAccionesCodigo.GestionDeTurnos,
@@ -131,7 +138,9 @@ public class ServiciosPublicosController(
 
 
 	[HttpPut("Turnos/ConcretarComoAusente")]
-	public Task<ActionResult<Turno2025>> ConcretarTurno([FromBody] ModificarTurnoDto dto) {
+	public Task<ActionResult<Turno2025>> ConcretarTurno(
+		[FromBody] ModificarTurnoDto dto
+	) {
 		return this.SafeExecuteApi(
 			logger,
 			PermisosAccionesCodigo.GestionDeTurnos,

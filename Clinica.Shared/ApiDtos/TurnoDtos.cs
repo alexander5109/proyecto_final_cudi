@@ -12,7 +12,7 @@ public static class TurnoDtos {
 		DateTime FechaDeCreacion,
 		PacienteId PacienteId,
 		MedicoId MedicoId,
-		EspecialidadCodigo EspecialidadCodigo,
+		EspecialidadEnumCodigo EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
 		TurnoEstadoCodigo OutcomeEstado,

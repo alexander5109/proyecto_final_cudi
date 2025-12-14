@@ -40,7 +40,7 @@ public class MedicosController(
 
 
 	[HttpGet("por-especialidad/{code}")]
-	public Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicosWhereEspecialidadCodigo([FromRoute] EspecialidadCodigo code)
+	public Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicosWhereEspecialidadCodigo([FromRoute] EspecialidadEnumCodigo code)
 		=> this.SafeExecute(
 			logger,
 			PermisosAccionesCodigo.VerMedicos,

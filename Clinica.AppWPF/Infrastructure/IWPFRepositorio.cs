@@ -48,7 +48,7 @@ public static class IWPFRepositorioInterfaces {
 		//Task<List<MedicoDbModel>> SelectMedicos();
 		Task<List<MedicoDbModel>> SelectMedicos();
 		Task EnsureMedicosLoaded();
-		Task<List<MedicoDbModel>> SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code);
+		Task<List<MedicoDbModel>> SelectMedicosWhereEspecialidadCodigo(EspecialidadEnumCodigo code);
 		Task<MedicoDbModel?> SelectMedicoWhereId(MedicoId id);
 	}
 
@@ -63,7 +63,7 @@ public static class IWPFRepositorioInterfaces {
 
 	public interface IWPFRepositorioDominio {
 		Task<List<Disponibilidad2025>> SelectDisponibilidades(
-			EspecialidadCodigo especialidad,
+			EspecialidadEnumCodigo especialidad,
 			int cuantos,
 			DateTime apartirDeCuando,
 			DayOfWeek? diaSemanaPreferido
@@ -131,7 +131,7 @@ public static class IWPFRepositorioInterfaces {
 //// Filtros
 //Task<List<WindowModificarTurnoViewModel>> ReadTurnosWhereMedicoId(int? medicoId);
 //Task<List<WindowModificarTurnoViewModel>> ReadTurnosWherePacienteId(int? SelectedPacienteId);
-//Task<List<MedicoViewModel2025>> ReadMedicosWhereEspecialidad(int? EspecialidadCodigo);
+//Task<List<MedicoViewModel2025>> ReadMedicosWhereEspecialidad(int? EspecialidadEnumCodigo);
 
 //}
 

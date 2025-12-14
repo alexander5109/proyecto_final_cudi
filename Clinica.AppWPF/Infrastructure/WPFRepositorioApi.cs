@@ -87,7 +87,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicosWhereEspecialidadCodigo(EspecialidadCodigo code) {
+	async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicosWhereEspecialidadCodigo(EspecialidadEnumCodigo code) {
 		await EnsureMedicosLoaded();
 		return [.. RepoCache.DictMedicos
 			.Values
@@ -355,24 +355,45 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	}
 
 
+	private static string BuildQuery(string baseUrl, object dto) {
+		var query = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+		foreach (var prop in dto.GetType().GetProperties()) {
+			object? value = prop.GetValue(dto);
+			if (value is null)
+				continue;
+
+			if (value is DateTime dt)
+				query[prop.Name] = dt.ToString("O");
+			else
+				query[prop.Name] = value.ToString();
+		}
+
+		return $"{baseUrl}?{query}";
+	}
 
 
 
 
 	async Task<List<Disponibilidad2025>> IWPFRepositorioDominio.SelectDisponibilidades(
-		EspecialidadCodigo especialidad,
+		EspecialidadEnumCodigo especialidad,
 		int cuantos,
-		DateTime apartirDeCuando,
+		DateTime aPartirDeCuando,
 		DayOfWeek? diaSemanaPreferido
 	) {
-		string url =
-			$"api/ServiciosPublicos/Turnos/Disponibilidades" +
-			$"?EspecialidadCodigo={(byte)especialidad}" +
-			$"&cuantos={cuantos}" +
-			$"&aPartirDeCuando={apartirDeCuando:O}" +
-			$"&diaSemanaPreferido={(diaSemanaPreferido is not null? (byte)diaSemanaPreferido: null)}";
-		return await Api.TryGetJsonAsync<List<Disponibilidad2025>>(url, defaultValue: []);
+		var dto = new SolicitarDisponibilidadesDto {
+			EspecialidadCodigo = especialidad,
+			Cuantos = cuantos,
+			APartirDeCuando = aPartirDeCuando,
+			DiaSemanaPreferido = diaSemanaPreferido
+		};
+
+		return await Api.TryGetJsonAsync<List<Disponibilidad2025>>(
+			BuildQuery("api/ServiciosPublicos/Turnos/Disponibilidades", dto),
+			defaultValue: []
+		);
 	}
+
 
 
 	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereId(Medico2025Agg aggrg) {
@@ -408,7 +429,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	}
 
 	async Task<UsuarioDbModel?> IWPFRepositorioUsuarios.SelectUsuarioProfileWhereUsername(string username) {
-        UsuarioDbModel? response = await Api.TryGetJsonOrNullAsync<UsuarioDbModel>($"api/usuarios/por-nombre/{username}");
+		UsuarioDbModel? response = await Api.TryGetJsonOrNullAsync<UsuarioDbModel>($"api/usuarios/por-nombre/{username}");
 		//MessageBox.Show($"{response?.ToString()}");
 		return response;
 	}
