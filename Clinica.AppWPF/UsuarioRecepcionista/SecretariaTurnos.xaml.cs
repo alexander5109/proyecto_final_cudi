@@ -2,7 +2,6 @@
 using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
 using Microsoft.VisualBasic;
-using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
@@ -17,8 +16,30 @@ public partial class SecretariaTurnos : Window {
 		Loaded += async (_, __) => await VM.RefrescarTurnosAsync();
 	}
 
+	// ==========================================================
+	// METHODS
+	// ==========================================================
+	private async Task EjecutarAccionAsync(Func<Task<ResultWpf<UnitWpf>>> accion) {
+		ResultWpf<UnitWpf> result = await accion();
+		result.MatchAndDo(
+			ok => _ = VM.RefrescarTurnosAsync(),
+			error => error.ShowMessageBox()
+		);
+	}
+	private static string? PedirComentario(string titulo) {
+		string comentario = Interaction.InputBox(titulo, "Comentario requerido", "");
+		if (string.IsNullOrWhiteSpace(comentario)) return null;
+		if (comentario.Length < 10) {
+			MessageBox.Show("Debe completar un comentario válido.");
+			return null;
+		}
+		return comentario;
+	}
 
 
+	// ==========================================================
+	// BOTONES: DOMINIO
+	// ==========================================================
 	private async void Button_ConfirmarTurnoAsistencia(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 
@@ -34,7 +55,6 @@ public partial class SecretariaTurnos : Window {
 
 		await EjecutarAccionAsync(() => VM.ConfirmarAsistenciaAsync(hoy));
 	}
-
 
 
 	private void Button_ReprogramarTurno(object sender, RoutedEventArgs e) {
@@ -57,7 +77,7 @@ public partial class SecretariaTurnos : Window {
 		string? comentario = PedirComentario("Ingrese la razón de la cancelación del turno:");
 		if (comentario is null) return;
 
-		await EjecutarAccionAsync(() => VM.CancelarTurnoAsync(comentario));
+		await EjecutarAccionAsync(() => VM.CancelarTurnoAsync(comentario, DateTime.Now));
 	}
 
 
@@ -70,35 +90,12 @@ public partial class SecretariaTurnos : Window {
 		);
 		if (comentario is null) return;
 
-		await EjecutarAccionAsync(() => VM.MarcarAusenteAsync(comentario));
-	}
-
-
-
-	// ==========================================================
-	// METHODS
-	// ==========================================================
-	private async Task EjecutarAccionAsync(Func<Task<ResultWpf<UnitWpf>>> accion) {
-		ResultWpf<UnitWpf> result = await accion();
-		result.MatchAndDo(
-			ok => _ = VM.RefrescarTurnosAsync(),
-			error => error.ShowMessageBox()
-		);
-	}
-	private static string? PedirComentario(string titulo) {
-		string comentario = Interaction.InputBox(titulo, "Comentario requerido", "");
-		if (string.IsNullOrWhiteSpace(comentario)) return null;
-		if (comentario.Length < 10) {
-			MessageBox.Show("Debe completar un comentario válido.");
-			return null;
-		}
-		return comentario;
+		await EjecutarAccionAsync(() => VM.MarcarAusenteAsync(comentario, DateTime.Now));
 	}
 
 	// ==========================================================
 	// BOTONES: REFRESH
 	// ==========================================================
-
 	private bool _enCooldown;
 	private async void ClickBoton_Refrescar(object sender, RoutedEventArgs e) {
 		if (_enCooldown)
@@ -121,8 +118,6 @@ public partial class SecretariaTurnos : Window {
 	// ==========================================================
 	// BOTONES: NAV
 	// ==========================================================
-
 	private void ClickBoton_Home(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
-
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 }
