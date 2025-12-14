@@ -134,7 +134,7 @@
 							<GridViewColumn.CellTemplate>
 								<DataTemplate>
 									<TextBlock
-										Text="{Binding FechaIngreso, StringFormat={}{0:yyyy/MM/dd}}" />
+										Text="{Binding FechaIngreso, StringFormat={}{0:dd/MM/yyyy}}" />
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>

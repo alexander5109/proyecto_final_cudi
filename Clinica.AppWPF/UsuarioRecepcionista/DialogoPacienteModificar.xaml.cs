@@ -5,20 +5,20 @@ using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class SecretariaPacientesModificar : Window {
-	public SecretariaPacientesModificarViewModel VM { get; private set; }
+public partial class DialogoPacienteModificar : Window {
+	public DialogoPacienteModificarVM VM { get; private set; }
 
 	// ==========================================================
 	// CONSTRUCTORES
 	// ==========================================================
 
-	public SecretariaPacientesModificar() {
+	public DialogoPacienteModificar() {
 		InitializeComponent();
 		VM = new();
 		DataContext = VM;
 	}
 
-	public SecretariaPacientesModificar(PacienteDbModel pacientedbModel) {
+	public DialogoPacienteModificar(PacienteDbModel pacientedbModel) {
 		InitializeComponent();
 		VM = new(pacientedbModel);
 		DataContext = VM;
@@ -66,7 +66,8 @@ public partial class SecretariaPacientesModificar : Window {
 	// BOTONES: NAV
 	// ==========================================================
 
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientes>();
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
+	//private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<GestionPacientes>();
 
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 

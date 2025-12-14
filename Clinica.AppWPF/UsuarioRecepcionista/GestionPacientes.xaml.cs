@@ -4,12 +4,12 @@ using Clinica.AppWPF.Infrastructure;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class SecretariaPacientes : Window {
-	public SecretariaPacientesViewModel VM { get; }
+public partial class GestionPacientes : Window {
+	public GestionPacientesVM VM { get; }
 
-	public SecretariaPacientes() {
+	public GestionPacientes() {
 		InitializeComponent();
-		VM = new SecretariaPacientesViewModel();
+		VM = new GestionPacientesVM();
 		DataContext = VM;
 		Loaded += async (_, __) => await VM.RefrescarPacientesAsync();
 	}
@@ -17,17 +17,21 @@ public partial class SecretariaPacientes : Window {
 	// ==========================================================
 	// BOTONES: SELECTED ITEM ACTIONS
 	// ==========================================================
-	private void Click_AgregarPaciente(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientesModificar>();
-	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
+	private async void Click_AgregarPaciente(object sender, RoutedEventArgs e) {
+		this.AbrirComoDialogo<DialogoPacienteModificar>();
+		await VM.RefrescarPacientesAsync();
+	}
+	private async void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is not null) {
-			this.NavegarA<SecretariaPacientesModificar>(VM.SelectedPaciente);
+			this.AbrirComoDialogo<DialogoPacienteModificar>(VM.SelectedPaciente);
+			await VM.RefrescarPacientesAsync();
 		} else {
 			MessageBox.Show("No hay paciente seleecionado. Pero este mensaje no deberia aparecer nunca porque el boton tendria que estar desabilitado.");
 		}
 	}
 	private void ClickBoton_BuscarDisponibilidades(object sender, RoutedEventArgs e) {
 		if (VM.SelectedPaciente is not null) {
-			this.NavegarA<SecretariaTurnosSacar>(VM.SelectedPaciente);
+			this.AbrirComoDialogo<DialogoTurnoProgramar>(VM.SelectedPaciente);
 		} else {
 			MessageBox.Show("No hay paciente seleecionado");
 		}

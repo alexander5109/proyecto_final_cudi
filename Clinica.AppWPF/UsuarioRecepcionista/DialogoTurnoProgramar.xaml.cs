@@ -7,32 +7,29 @@ using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public partial class SecretariaTurnosSacar : Window {
-	internal SecretariaTurnosSacarViewModel VM { get; }
+public partial class DialogoTurnoProgramar : Window {
+	internal DialogoTurnoProgramarVM VM { get; }
 	//bool EsReprogramacion = false;
-	readonly TurnoViewModel? TurnoOriginal;
 
 
 
 	// ==========================================================
 	// CONSTRUCTORES
 	// ==========================================================
-	public SecretariaTurnosSacar(PacienteDbModel paciente) {
+	public DialogoTurnoProgramar(PacienteDbModel paciente) {
 		InitializeComponent();
-		VM = new SecretariaTurnosSacarViewModel(paciente);
+		VM = new DialogoTurnoProgramarVM(paciente);
 		DataContext = VM;
-		TurnoOriginal = null;
 	}
 
-	public SecretariaTurnosSacar(TurnoViewModel turnoOriginal) {
+	public DialogoTurnoProgramar(TurnoViewModel turnoAReprogramar) {
 		InitializeComponent();
-		if (turnoOriginal.PacienteRelacionado == null) {
+		if (turnoAReprogramar.PacienteRelacionado == null) {
 			MessageBox.Show("por que nulo el paciente?");
 			throw new Exception("En realidad este scenario es imposbiel porque quien se encarga de llamar a este constructor valida al paciente tambien");
 		}
-		VM = new SecretariaTurnosSacarViewModel(turnoOriginal.PacienteRelacionado, turnoOriginal.Original.EspecialidadCodigo);
+		VM = new DialogoTurnoProgramarVM(turnoAReprogramar.PacienteRelacionado, turnoAReprogramar.Original);
 		DataContext = VM;
-		TurnoOriginal = turnoOriginal;
 
 	}
 
@@ -62,6 +59,29 @@ public partial class SecretariaTurnosSacar : Window {
 
 
 	// ==========================================================
+	// METHODS
+	// ==========================================================
+
+	private static string? PedirComentario(string titulo) {
+		string comentario = Interaction.InputBox(titulo, "Comentario requerido", "");
+		if (string.IsNullOrWhiteSpace(comentario)) return null;
+		if (comentario.Length < 10) {
+			MessageBox.Show("Debe completar un comentario válido.");
+			return null;
+		}
+		return comentario;
+	}
+
+	private async Task EjecutarAccionAsync(Func<Task<ResultWpf<UnitWpf>>> accion) {
+		ResultWpf<UnitWpf> result = await accion();
+		result.MatchAndDo(
+			ok => { this.Close(); },
+			error => error.ShowMessageBox()
+		);
+	}
+
+
+	// ==========================================================
 	// BOTONES: PERSISTENCIA
 	// ==========================================================
 	private static bool MatchAndSetBooleano<T>(ResultWpf<T> result)
@@ -81,56 +101,37 @@ public partial class SecretariaTurnosSacar : Window {
 			return;
 		}
 
-		if (TurnoOriginal is not null) {
-			//await ReprogramarAsync();
-			//await AgendarNuevoAsync();
+		if (VM.HayQueMarcarComoReprogramado) {
+			string? comentario = PedirComentario("Ingrese la razón de la reprogramacion del turno:");
+			if (comentario is null) return;
 
+			DateTime hoy = DateTime.Now;
 
+			await EjecutarAccionAsync(() => VM.ConfirmarReprogramacionAsync(hoy, comentario));
 
-			string comentario = Interaction.InputBox(
-				"Ingrese la razón de la reprogramacion del turno:",
-				"Continuar con la reprogramación del turno",
-				""
-			);
-
-			if (comentario == "") {
-				return;
-			}
-			if (comentario.Length < 7) {
-				MessageBox.Show("Debe completar un comentario para cancelar el turno.");
-				return;
-			}
-
-			ResultWpf<UnitWpf> resultt = await App.Repositorio.ReprogramarTurno(
-				TurnoOriginal.Original.Id,
+		} else {
+			ResultWpf<UnitWpf> result = await App.Repositorio.AgendarNuevoTurno(
+				VM.SelectedPaciente.Id,
 				DateTime.Now,
-				comentario
+				VM.SelectedDisponibilidad.Original
 			);
-			if (!MatchAndSetBooleano(resultt)) {
-				//this.NavegarA<SecretariaPacientes>();
-				this.IrARespectivaHome();
-				return;
-			}
+			result.MatchAndDo(
+				caseOk => {
+					MessageBox.Show("Turno reservado exitosamente.", "Éxito", MessageBoxButton.OK);
+					//this.NavegarA<GestionPacientes>();
+					//this.IrARespectivaHome();
+					this.Cerrar();
+				},
+				caseError => {
+					caseError.ShowMessageBox();
+					//MessageBox.Show($"VM.SelectedDisponibilidad.Original: {VM.SelectedDisponibilidad.Original}");
+				}
+			);
+
 		}
 
-		ResultWpf<UnitWpf> result = await App.Repositorio.AgendarNuevoTurno(
-			VM.SelectedPaciente.Id,
-			DateTime.Now,
-			VM.SelectedDisponibilidad.Original
-		);
-		result.MatchAndDo(
-			caseOk => {
-				MessageBox.Show("Turno reservado exitosamente.", "Éxito", MessageBoxButton.OK);
-				//this.NavegarA<SecretariaPacientes>();
-				this.IrARespectivaHome();
-			},
-			caseError => {
-				caseError.ShowMessageBox();
-				MessageBox.Show($"VM.SelectedDisponibilidad.Original: {VM.SelectedDisponibilidad.Original}");
-			}
-		);
 
-		//App.Repositorio.Refres();
+
 
 	}
 
@@ -167,7 +168,8 @@ public partial class SecretariaTurnosSacar : Window {
 	// ==========================================================
 	// BOTONES: NAV
 	// ==========================================================
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientes>();
+	//private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<GestionPacientes>();
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
 
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 }

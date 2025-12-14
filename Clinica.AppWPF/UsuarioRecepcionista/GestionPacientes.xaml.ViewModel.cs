@@ -5,7 +5,7 @@ using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public sealed class SecretariaPacientesViewModel : INotifyPropertyChanged {
+public sealed class GestionPacientesVM : INotifyPropertyChanged {
 
 	// ================================================================
 	// COLECCIONES

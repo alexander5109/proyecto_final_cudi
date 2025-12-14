@@ -1,5 +1,5 @@
 ﻿<Window
-	x:Class="Clinica.AppWPF.UsuarioRecepcionista.SecretariaPacientes"
+	x:Class="Clinica.AppWPF.UsuarioRecepcionista.GestionPacientes"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -51,8 +51,8 @@
 			<Label
 				Grid.Column="0"
 				Grid.Row="0"
-				Content="Pacientes"
-				FontSize="55"
+				Content="Gestión Pacientes"
+				FontSize="45"
 				FontFamily="Segoe UI Historic"
 				FlowDirection="RightToLeft"
 				Style="{StaticResource LabelLindoConPiu}"

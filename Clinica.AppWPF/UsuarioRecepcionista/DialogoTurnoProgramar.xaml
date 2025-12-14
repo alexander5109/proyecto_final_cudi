@@ -1,5 +1,5 @@
 ﻿<Window
-	x:Class="Clinica.AppWPF.UsuarioRecepcionista.SecretariaTurnosSacar"
+	x:Class="Clinica.AppWPF.UsuarioRecepcionista.DialogoTurnoProgramar"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:usuariorecepcionista="clr-namespace:Clinica.AppWPF.UsuarioRecepcionista"
@@ -33,7 +33,7 @@
 		<Label
 			Grid.Column="0"
 			Grid.ColumnSpan="3"
-			Content="Buscador de disponibilidades"
+			Content="Programar/Reprogramar turno"
 			FontSize="33"
 			Style="{StaticResource LabelLindoConPiu}"
 			HorizontalContentAlignment="Center"
@@ -117,11 +117,12 @@
 			<ComboBox
 				ItemsSource="{Binding EspecialidadesDisponiblesItemsSource}"
 				DisplayMemberPath="NombreEspecialidad"
+				IsEnabled="{Binding EspecialidadEditable}"
 				SelectedItem="{Binding SelectedEspecialidad, Mode=TwoWay}"
 				Width="200"
 				Margin="0,5,0,5" />
 			<TextBlock
-				Text="Médico (opcional)"
+				Text="Médico"
 				FontWeight="Bold"
 				Margin="0,10,0,0"
 				HorizontalAlignment="Center" />
@@ -151,6 +152,8 @@
 				HorizontalAlignment="Center" />
 			<DatePicker
 				SelectedDate="{Binding SelectedFecha, Mode=TwoWay}"
+				SelectedDateFormat="Short"
+				Text="{Binding SelectedFecha, StringFormat=dd/MM/yyyy}"
 				Margin="0,5,0,5"
 				HorizontalAlignment="Center"
 				Width="200" />
@@ -190,7 +193,7 @@
 					<GridView>
 						<!-- Especialidad -->
 						<GridViewColumn
-							Width="80">
+							Width="auto">
 							<GridViewColumn.Header>
 								<GridViewColumnHeader
 									Content="Especialidad"
@@ -204,21 +207,21 @@
 						</GridViewColumn>
 						<!-- Fecha -->
 						<GridViewColumn
-							Width="90">
+							Width="auto">
 							<GridViewColumn.Header>
 								<GridViewColumnHeader
-									Content="Fecha"
+									Content="Fecha y hora"
 									Click="ClickCabecera_OrdenarFilas"
-									Tag="Fecha" />
+									Tag="Original.FechaHoraDesde" />
 							</GridViewColumn.Header>
 							<GridViewColumn.CellTemplate>
 								<DataTemplate>
 									<TextBlock
-										Text="{Binding Fecha, StringFormat={}{0:yyyy/MM/dd}}" />
+										Text="{Binding Original.FechaHoraDesde, StringFormat={}{0:dd/MM/yyyy HH:mm}}" />
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
-						<!-- Hora -->
+						<!-- Hora
 						<GridViewColumn
 							Width="40">
 							<GridViewColumn.Header>
@@ -232,9 +235,9 @@
 									Path="Hora" />
 							</GridViewColumn.DisplayMemberBinding>
 						</GridViewColumn>
-						<!-- Día -->
+						 Día -->
 						<GridViewColumn
-							Width="70">
+							Width="auto">
 							<GridViewColumn.Header>
 								<GridViewColumnHeader
 									Content="Día"
@@ -248,7 +251,7 @@
 						</GridViewColumn>
 						<!-- Médico -->
 						<GridViewColumn
-							Width="120">
+							Width="auto">
 							<GridViewColumn.Header>
 								<GridViewColumnHeader
 									Content="Médico"

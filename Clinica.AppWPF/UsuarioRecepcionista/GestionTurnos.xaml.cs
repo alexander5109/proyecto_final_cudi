@@ -58,7 +58,7 @@ public partial class SecretariaTurnos : Window {
 	}
 
 
-	private void Button_ReprogramarTurno(object sender, RoutedEventArgs e) {
+	private async void Button_ReprogramarTurno(object sender, RoutedEventArgs e) {
 		if (VM.SelectedTurno is null) {
 			MessageBox.Show("No hay turno seleccionado.");
 			return;
@@ -69,7 +69,8 @@ public partial class SecretariaTurnos : Window {
 			return;
 		}
 
-		this.NavegarA<SecretariaTurnosSacar>(VM.SelectedTurno);
+		this.AbrirComoDialogo<DialogoTurnoProgramar>(VM.SelectedTurno);
+		await VM.RefrescarTurnosAsync();
 	}
 
 	private async void Button_CancelarTurno(object sender, RoutedEventArgs e) {

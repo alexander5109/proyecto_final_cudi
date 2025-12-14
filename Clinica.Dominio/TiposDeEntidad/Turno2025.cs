@@ -65,21 +65,21 @@ public record Turno2025(
 	TurnoEstadoCodigo OutcomeEstado,
 	Option<DateTime> OutcomeFechaOption,
 	Option<string> OutcomeComentarioOption
-) : IComoTexto {
-
-	public string ATexto() {
-		string fecha = FechaHoraAsignadaDesdeValor.ToString("dddd dd/MM/yyyy");
-		string desde = FechaHoraAsignadaDesdeValor.ToString("HH:mm");
-		string hasta = FechaHoraAsignadaHastaValor.ToString("HH:mm");
-		double duracion = (FechaHoraAsignadaHastaValor - FechaHoraAsignadaDesdeValor).TotalMinutes;
-		return
-			$"Turno de {Especialidad.ATexto()}\n" +
-			$"  • PacienteId: {PacienteId}\n" +
-			$"  • Médico asignado: {MedicoId}\n" +
-			$"  • Fecha: {fecha}\n" +
-			$"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
-			$"  • OutcomeEstado: {OutcomeEstado}\n";
-	}
+){
+ // {
+	// public string ATexto() {
+		// string fecha = FechaHoraAsignadaDesdeValor.ToString("dddd dd/MM/yyyy");
+		// string desde = FechaHoraAsignadaDesdeValor.ToString("HH:mm");
+		// string hasta = FechaHoraAsignadaHastaValor.ToString("HH:mm");
+		// double duracion = (FechaHoraAsignadaHastaValor - FechaHoraAsignadaDesdeValor).TotalMinutes;
+		// return
+			// $"Turno de {Especialidad.ATexto()}\n" +
+			// $"  • PacienteId: {PacienteId}\n" +
+			// $"  • Médico asignado: {MedicoId}\n" +
+			// $"  • Fecha: {fecha}\n" +
+			// $"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
+			// $"  • OutcomeEstado: {OutcomeEstado}\n";
+	// }
 
 	public static Turno2025 Representar(
 		DateTime fechaCreacion,

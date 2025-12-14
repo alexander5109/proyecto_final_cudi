@@ -15,12 +15,12 @@ using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
 
-public class SecretariaPacientesModificarViewModel : INotifyPropertyChanged {
+public class DialogoPacienteModificarVM : INotifyPropertyChanged {
 
 	// ================================================================
 	// CONSTRUCTORES
 	// ================================================================
-	public SecretariaPacientesModificarViewModel() {
+	public DialogoPacienteModificarVM() {
 		_original = new PacienteEdicionSnapshot(
 			Id: null,  // o puede dejarse como 'null' sin especificar el nombre
 			Dni: "",
@@ -35,7 +35,7 @@ public class SecretariaPacientesModificarViewModel : INotifyPropertyChanged {
 			FechaNacimiento: DateTime.Today
 		);
 	}
-	public SecretariaPacientesModificarViewModel(PacienteDbModel original) {
+	public DialogoPacienteModificarVM(PacienteDbModel original) {
 		_original = new PacienteEdicionSnapshot(
 			Id: original.Id,
 			Dni: original.Dni,

@@ -45,10 +45,11 @@
 			Grid.Row="0"
 			Grid.ColumnSpan="2"
 			Style="{StaticResource LabelLindoConPiu}"
-			Content="Turnos"
+			Content="Gestión Turnos"
 			FontWeight="Bold"
 			HorizontalContentAlignment="Center"
-			Margin="45,0,45,15" />
+			Margin="45,0,45,15"
+			FontSize="45" />
 		<!-- ===== PANEL IZQUIERDO: BUSCAR TURNOS ===== -->
 		<Grid
 			Grid.Row="1"
@@ -105,7 +106,8 @@
 						Content="Filtrar por Estado:"
 						FontFamily="Palatino Linotype"
 						Margin="5"
-						FontWeight="Bold" />
+						FontWeight="Bold"
+						FontSize="15" />
 					<ComboBox
 						ItemsSource="{Binding Estados}"
 						Margin="5"
@@ -118,7 +120,8 @@
 						Content="Filtrar por paciente:"
 						Margin="5"
 						FontFamily="Palatino Linotype"
-						FontWeight="Bold" />
+						FontWeight="Bold"
+						FontSize="15" />
 					<TextBox
 						Margin="5"
 						Text="{Binding FiltroTurnosPaciente, UpdateSourceTrigger=PropertyChanged}" />
@@ -132,7 +135,8 @@
 						Content="Filtrar por Médico:"
 						Margin="5"
 						FontFamily="Palatino Linotype"
-						FontWeight="Bold" />
+						FontWeight="Bold"
+						FontSize="15" />
 					<TextBox
 						Margin="5"
 						Text="{Binding FiltroTurnosMedico, UpdateSourceTrigger=PropertyChanged}" />
@@ -145,18 +149,19 @@
 				SelectedItem="{Binding SelectedTurno}"
 				ScrollViewer.HorizontalScrollBarVisibility="Auto"
 				ScrollViewer.VerticalScrollBarVisibility="Auto"
-				Margin="10">
+				Margin="10"
+				FontSize="14">
 				<ListView.View>
 					<GridView>
-						<!-- Estado -->
+						<!-- Paciente -->
 						<GridViewColumn
 							Width="Auto"
-							DisplayMemberBinding="{Binding Original.OutcomeEstado}">
+							DisplayMemberBinding="{Binding PacienteDisplayear}">
 							<GridViewColumn.Header>
 								<GridViewColumnHeader
-									Content="Estado"
+									Content="Paciente"
 									Click="ClickCabecera_OrdenarFilas"
-									Tag="Original.OutcomeEstado" />
+									Tag="PacienteDisplayear" />
 							</GridViewColumn.Header>
 						</GridViewColumn>
 						<!-- FechaSolicitud -->
@@ -171,39 +176,7 @@
 							<GridViewColumn.CellTemplate>
 								<DataTemplate>
 									<TextBlock
-										Text="{Binding Original.FechaDeCreacion, StringFormat={}{0:yyyy/MM/dd HH:mm}}" />
-								</DataTemplate>
-							</GridViewColumn.CellTemplate>
-						</GridViewColumn>
-						<!-- FechaAsignada -->
-						<GridViewColumn
-							Width="Auto">
-							<GridViewColumn.Header>
-								<GridViewColumnHeader
-									Content="FechaAsignada"
-									Click="ClickCabecera_OrdenarFilas"
-									Tag="Original.FechaHoraAsignadaDesde" />
-							</GridViewColumn.Header>
-							<GridViewColumn.CellTemplate>
-								<DataTemplate>
-									<TextBlock
-										Text="{Binding Original.FechaHoraAsignadaDesde, StringFormat={}{0:yyyy/MM/dd HH:mm}}" />
-								</DataTemplate>
-							</GridViewColumn.CellTemplate>
-						</GridViewColumn>
-						<!-- FechaConfirm. -->
-						<GridViewColumn
-							Width="Auto">
-							<GridViewColumn.Header>
-								<GridViewColumnHeader
-									Content="FechaConfirm."
-									Click="ClickCabecera_OrdenarFilas"
-									Tag="Original.OutcomeFecha" />
-							</GridViewColumn.Header>
-							<GridViewColumn.CellTemplate>
-								<DataTemplate>
-									<TextBlock
-										Text="{Binding Original.OutcomeFecha, StringFormat={}{0:yyyy/MM/dd HH:mm}}" />
+										Text="{Binding Original.FechaDeCreacion, StringFormat={}{0:dd/MM/yyyy HH:mm}}" />
 								</DataTemplate>
 							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
@@ -218,15 +191,31 @@
 									Tag="Original.EspecialidadCodigo" />
 							</GridViewColumn.Header>
 						</GridViewColumn>
-						<!-- Paciente -->
+						<!-- FechaAsignada -->
 						<GridViewColumn
-							Width="Auto"
-							DisplayMemberBinding="{Binding PacienteDisplayear}">
+							Width="Auto">
 							<GridViewColumn.Header>
 								<GridViewColumnHeader
-									Content="Paciente"
+									Content="FechaAsignada"
 									Click="ClickCabecera_OrdenarFilas"
-									Tag="PacienteDisplayear" />
+									Tag="Original.FechaHoraAsignadaDesde" />
+							</GridViewColumn.Header>
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<TextBlock
+										Text="{Binding Original.FechaHoraAsignadaDesde, StringFormat={}{0:dd/MM/yyyy HH:mm}}" />
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+						<!-- FechaAsignadaDiaSemana -->
+						<GridViewColumn
+							Width="Auto"
+							DisplayMemberBinding="{Binding DiaSemana}">
+							<GridViewColumn.Header>
+								<GridViewColumnHeader
+									Content="DiaSemana"
+									Click="ClickCabecera_OrdenarFilas"
+									Tag="DiaSemana" />
 							</GridViewColumn.Header>
 						</GridViewColumn>
 						<!-- Médico -->
@@ -239,6 +228,33 @@
 									Click="ClickCabecera_OrdenarFilas"
 									Tag="MedicoDisplayear" />
 							</GridViewColumn.Header>
+						</GridViewColumn>
+						<!-- Estado -->
+						<GridViewColumn
+							Width="Auto"
+							DisplayMemberBinding="{Binding Original.OutcomeEstado}">
+							<GridViewColumn.Header>
+								<GridViewColumnHeader
+									Content="Estado"
+									Click="ClickCabecera_OrdenarFilas"
+									Tag="Original.OutcomeEstado" />
+							</GridViewColumn.Header>
+						</GridViewColumn>
+						<!-- FechaConfirm. -->
+						<GridViewColumn
+							Width="Auto">
+							<GridViewColumn.Header>
+								<GridViewColumnHeader
+									Content="FechaConfirm."
+									Click="ClickCabecera_OrdenarFilas"
+									Tag="Original.OutcomeFecha" />
+							</GridViewColumn.Header>
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<TextBlock
+										Text="{Binding Original.OutcomeFecha, StringFormat={}{0:dd/MM/yyyy HH:mm}}" />
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
 						</GridViewColumn>
 					</GridView>
 				</ListView.View>

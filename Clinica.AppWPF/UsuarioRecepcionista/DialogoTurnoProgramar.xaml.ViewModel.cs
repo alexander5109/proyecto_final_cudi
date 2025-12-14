@@ -13,12 +13,13 @@ using static Clinica.AppWPF.CommonViewModels.CommonEnumsToViewModel;
 using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
-public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
+public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 
 	// ================================================================
 	// CONSTRUCTORES Y CONTEXTO
 	// ================================================================
-	public SecretariaTurnosSacarViewModel(PacienteDbModel paciente) {
+	public DialogoTurnoProgramarVM(PacienteDbModel paciente) {
+		HayQueMarcarComoReprogramado = false;
 		SelectedPaciente = paciente;
 
 		EspecialidadesDisponiblesItemsSource.Clear();
@@ -34,8 +35,16 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 
 	}
 
-	public SecretariaTurnosSacarViewModel(PacienteDbModel paciente, EspecialidadCodigo especialidad) {
+	TurnoDbModel? TurnoAReprogramar;
+
+	public DialogoTurnoProgramarVM(PacienteDbModel paciente, TurnoDbModel turnoAReprogramar) {
+		HayQueMarcarComoReprogramado = true;
+
+		TurnoAReprogramar = turnoAReprogramar;
 		SelectedPaciente = paciente;
+		SelectedFecha = TurnoAReprogramar.FechaHoraAsignadaHasta;
+		EspecialidadCodigo especialidad = turnoAReprogramar.EspecialidadCodigo;
+
 
 		EspecialidadesDisponiblesItemsSource.Clear(); // <<---- importantísimo
 
@@ -63,8 +72,29 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 
 	}
 
+	internal bool HayQueMarcarComoReprogramado;
+	public bool EspecialidadEditable => !HayQueMarcarComoReprogramado;
 
 
+
+	public async Task<ResultWpf<UnitWpf>> ConfirmarReprogramacionAsync(DateTime fechaOutcome, string comentario) {
+		// 1️⃣ Validaciones de estado (UI-agnósticas)
+		if (TurnoAReprogramar is null) {
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo(
+				"No hay un turno a reprogramar.")
+			);
+		}
+		if (fechaOutcome == default) {
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo(
+				"La fecha de asistencia es inválida.")
+			);
+		}
+		return await App.Repositorio.ReprogramarTurno(
+			TurnoAReprogramar.Id,
+			DateTime.Now,
+			comentario
+		);
+	}
 
 
 
@@ -119,20 +149,23 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 			return $"Se va a reservar un turno para {SelectedPacienteNombreCompleto} " +
 				   $"para consulta de {SelectedEspecialidad.NombreEspecialidad} " +
 				   $"con el profesional {SelectedDisponibilidad.MedicoDisplayear} " +
-				   $"el día {SelectedDisponibilidad.Fecha} a las {SelectedDisponibilidad.Hora}. Confirmar?";
+				   $"el día {SelectedDisponibilidad.Original.FechaHoraDesde.Date} a las {SelectedDisponibilidad.Original.FechaHoraDesde.Hour}. Confirmar?";
 		}
 	}
 
 	// -----------------------------
 	// METHODS
 	// -----------------------------
-
+	private void InvalidateDisponibilidades() {
+		DisponibilidadesItemsSource.Clear();
+		SelectedDisponibilidad = null;
+		DisponibilidadesView?.Refresh();
+		OnPropertyChanged(nameof(BotonAgendar_Enabled));
+	}
 
 	public async Task RefreshDisponibilidadesAsync() {
 		if (SelectedEspecialidad is not EspecialidadViewModel esp) return;
-
-		DisponibilidadesItemsSource.Clear();
-		SelectedDisponibilidad = null;
+		InvalidateDisponibilidades();
 
 		int duracionMin = SelectedEspecialidad?.Duracion ?? 0;
 		DateTime desde = DateTime.SpecifyKind(
@@ -230,6 +263,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 			OnPropertyChanged(nameof(SelectedMedico));
 			OnPropertyChanged(nameof(BotonBuscar_Enabled));
 			OnPropertyChanged(nameof(ComboBoxMedicos_Enabled));
+			InvalidateDisponibilidades();
 
 			_ = LoadMedicosPorEspecialidadAsync(value?.Codigo);
 		}
@@ -248,6 +282,9 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 			OnPropertyChanged(nameof(ComboBoxDiasSemana_Enabled));
 			OnPropertyChanged(nameof(BotonBuscar_Enabled)); // <--- importante
 			OnPropertyChanged(nameof(BotonAgendar_Enabled));
+			InvalidateDisponibilidades();
+
+
 			ActualizarDiasSemana();
 			//CheckBoxDiaSemana_Enabled = SelectedMedico != null;
 
@@ -266,6 +303,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 			OnPropertyChanged(nameof(SelectedDiaDeLaSemana));
 			OnPropertyChanged(nameof(BotonBuscar_Enabled));
 			OnPropertyChanged(nameof(BotonAgendar_Enabled));
+			InvalidateDisponibilidades();
 		}
 	}
 
@@ -278,6 +316,7 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 			_selectedFecha = value;
 			OnPropertyChanged(nameof(SelectedFecha));
 			OnPropertyChanged(nameof(BotonBuscar_Enabled));
+			InvalidateDisponibilidades();
 		}
 	}
 
@@ -307,8 +346,6 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 	private void OnPropertyChanged(string name)
 		=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-
-
 }
 
 
@@ -328,16 +365,12 @@ public record DiaDeSemanaViewModel(DayOfWeek Value, string DiaNombre) {
 
 
 public record DisponibilidadEspecialidadModelView(
-	string Fecha,
-	string Hora,
 	string MedicoDisplayear,
 	DiaDeSemanaViewModel DiaSemana,
 	Disponibilidad2025 Original
 ) {
 	internal DisponibilidadEspecialidadModelView(Disponibilidad2025 domainValue)
 		: this(
-			Fecha: domainValue.FechaHoraDesde.ATextoDia(),
-			Hora: domainValue.FechaHoraDesde.ATextoHoras(),
 			MedicoDisplayear: BuildMedicoDisplay(domainValue.MedicoId),
 			DiaSemana: new DiaDeSemanaViewModel(
 				domainValue.FechaHoraDesde.DayOfWeek,

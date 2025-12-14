@@ -23,6 +23,6 @@ public partial class HomeRecepcionista : Window {
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 	private void ClickBoton_Logout(object sender, RoutedEventArgs e) => this.CerrarSesion();
 	private void ClickBoton_GestionTurnos(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaTurnos>();
-	private void ClickBoton_GestionPacientes(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaPacientes>();
+	private void ClickBoton_GestionPacientes(object sender, RoutedEventArgs e) => this.NavegarA<GestionPacientes>();
 
 }

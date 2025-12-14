@@ -6,6 +6,7 @@ using System.Windows.Data;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
 
 
@@ -300,6 +301,8 @@ public class TurnoViewModel(TurnoDbModel model) {
 		OnPropertyChanged(nameof(MedicoDisplayear));
 	}
 
+
+	public string DiaSemana => Original.FechaHoraAsignadaDesde.DayOfWeek.ATexto();
 
 
 	// ================================================================
