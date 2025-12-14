@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Data;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
@@ -11,10 +12,21 @@ namespace Clinica.AppWPF.UsuarioRecepcionista;
 
 public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	// ================================================================
+	// CONSTRUCTOR
+	// ================================================================
+	public SecretariaTurnosViewModel() {
+		TurnosView = CollectionViewSource.GetDefaultView(_todosLosTurnos);
+		TurnosView.Filter = FilterTurnos;
+	}
+
+
+
+	// ================================================================
 	// COLECCIONES
 	// ================================================================
-	private List<TurnoViewModel> _todosLosTurnos = [];   // Original immutable list
-	public ObservableCollection<TurnoViewModel> TurnosList { get; } = [];
+	private List<TurnoViewModel> _todosLosTurnos = [];
+	public ICollectionView TurnosView { get; private set; }
+
 	public List<TurnoEstadoCodigo> Estados { get; } = [.. Enum.GetValues<TurnoEstadoCodigo>()];
 
 
@@ -123,63 +135,44 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		//	return;
 		//}
 
-		List<TurnoDbModel> turnos = await App.Repositorio.SelectTurnos();
-		_todosLosTurnos = [.. turnos.Select(
-			async t => {
-				var vm = new TurnoViewModel(t);
-				await vm.LoadRelacionesAsync();
-				return vm;
-			}
-		).Select(
-			t => t.Result
-		)];
-		SelectedTurno = null;
+		var turnos = await App.Repositorio.SelectTurnos();
+		var turnoTasks = turnos.Select(async t => {
+			var vm = new TurnoViewModel(t);
+			await vm.LoadRelacionesAsync();
+			return vm;
+		});
+		_todosLosTurnos = (await Task.WhenAll(turnoTasks)).ToList();
 
-		//EstadoSeleccionado = TurnoEstadoCodigo.Programado; //nah, es molesto
+		// Reasignamos la vista para que refleje la nueva lista
+		TurnosView = CollectionViewSource.GetDefaultView(_todosLosTurnos);
+		TurnosView.Filter = FilterTurnos;
+
+		OnPropertyChanged(nameof(TurnosView));
+		SelectedTurno = null;
 		AplicarFiltros();
 	}
 
+	private bool FilterTurnos(object obj) {
+		if (obj is not TurnoViewModel t) return false;
+
+		if (EstadoSeleccionado.HasValue && t.Original.OutcomeEstado != EstadoSeleccionado.Value)
+			return false;
+
+		if (!string.IsNullOrWhiteSpace(FiltroTurnosPaciente) &&
+			!t.PacienteDisplayear.Contains(FiltroTurnosPaciente.Trim(), StringComparison.InvariantCultureIgnoreCase))
+			return false;
+
+		if (!string.IsNullOrWhiteSpace(FiltroTurnosMedico) &&
+			!t.MedicoDisplayear.Contains(FiltroTurnosMedico.Trim(), StringComparison.InvariantCultureIgnoreCase))
+			return false;
+
+		return true;
+	}
+
 	private void AplicarFiltros() {
-		TurnoViewModel? seleccionado = SelectedTurno;
-		TurnosList.Clear();
-		IEnumerable<TurnoViewModel> origen = _todosLosTurnos;
-
-		// 🔹 Filtro por estado
-		if (EstadoSeleccionado.HasValue) {
-			origen = origen.Where(turno => turno.Original.OutcomeEstado == EstadoSeleccionado.Value);
-		}
-
-		// 🔹 Filtro por paciente
-		if (!string.IsNullOrWhiteSpace(FiltroTurnosPaciente)) {
-			var txt = FiltroTurnosPaciente.Trim();
-
-			origen = origen.Where(t =>
-				t.PacienteDisplayear.Contains(
-					txt,
-					StringComparison.InvariantCultureIgnoreCase
-				)
-			);
-		}
-
-		// 🔹 Filtro por medico
-		if (!string.IsNullOrWhiteSpace(FiltroTurnosMedico)) {
-			var txt = FiltroTurnosMedico.Trim();
-
-			origen = origen.Where(t =>
-				t.MedicoDisplayear.Contains(
-					txt,
-					StringComparison.InvariantCultureIgnoreCase
-				)
-			);
-		}
-
-		foreach (TurnoViewModel turno in origen)
-			TurnosList.Add(turno);
-
-		// 🔹 Restaurar selección si sigue visible
-		if (seleccionado != null && TurnosList.Contains(seleccionado))
-			SelectedTurno = seleccionado;
-		else
+		TurnosView.Refresh();
+		// Restaurar selección si sigue visible
+		if (SelectedTurno != null && !TurnosView.Cast<TurnoViewModel>().Contains(SelectedTurno))
 			SelectedTurno = null;
 	}
 
