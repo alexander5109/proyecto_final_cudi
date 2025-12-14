@@ -9,6 +9,15 @@ using Clinica.Dominio.TiposExtensiones;
 namespace Clinica.Shared.DbModels;
 
 public static partial class DbModels {
+
+
+	public sealed record UsuarioAutenticadoDbModel(
+		UsuarioId Id,
+		string UserName,
+		UsuarioRoleCodigo EnumRole
+	);
+
+
 	public record UsuarioDbModel(
 		UsuarioId Id,
 		string UserName,

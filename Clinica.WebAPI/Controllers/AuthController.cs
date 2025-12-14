@@ -21,16 +21,16 @@ public class AuthController(
 ) : ControllerBase {
 
 	[HttpPost("login")]
-	public async Task<ActionResult<UsuarioAutenticadoDto>> Login([FromBody] UsuarioLoginRequestDto dto) {
+	public async Task<ActionResult<UsuarioAutenticadoDbModel>> Login([FromBody] UsuarioLoginRequestDto dto) {
 
-        Result<UsuarioAutenticadoDto> result = await ServicioAuth.ValidarCredenciales(
+		Result<UsuarioAutenticadoDbModel> result = await ServicioAuth.ValidarCredenciales(
 			dto.Username,
 			dto.UserPassword,
 			repositorio
 		);
 
 		// MatchAndSet -> produce directamente un IActionResult
-		return result.MatchAndSet<UsuarioAutenticadoDto, ActionResult>(
+		return result.MatchAndSet<UsuarioAutenticadoDbModel, ActionResult>(
 			ok => Ok(new UsuarioLoginResponseDto(
 				ok.UserName,
 				ok.EnumRole,
@@ -48,7 +48,7 @@ public class AuthController(
 public class AuthMiddleware(RequestDelegate next) {
 	private readonly RequestDelegate _next = next;
 
-    public async Task Invoke(HttpContext context) {
+	public async Task Invoke(HttpContext context) {
 		ClaimsPrincipal user = context.User;
 
 		if (user.Identity?.IsAuthenticated == true) {
@@ -71,16 +71,15 @@ public class AuthMiddleware(RequestDelegate next) {
 
 
 public class JwtService(string jwtKey) {
-	public string EmitirJwt(UsuarioAutenticadoDto u) {
+	public string EmitirJwt(UsuarioAutenticadoDbModel usuarioAutenticado) {
 		JwtSecurityTokenHandler handler = new();
 
 		byte[] key = Encoding.ASCII.GetBytes(jwtKey);
 
-		List<Claim> claims =
-		[
-			new("userid", u.Id.Valor.ToString()),
-		new("username", u.UserName),
-		new("role", u.EnumRole.ToString())
+		List<Claim> claims = [
+			new("userid", usuarioAutenticado.Id.Valor.ToString()),
+			new("username", usuarioAutenticado.UserName),
+			new("role", usuarioAutenticado.EnumRole.ToString())
 		];
 
 		SecurityTokenDescriptor descriptor = new() {
@@ -102,23 +101,23 @@ public class JwtService(string jwtKey) {
 
 public static class ServicioAuth {
 
-	public static async Task<Result<UsuarioAutenticadoDto>> ValidarCredenciales(
+	public static async Task<Result<UsuarioAutenticadoDbModel>> ValidarCredenciales(
 		string username,
 		string passwordRaw,
 		IRepositorioUsuarios repo
 	) {
-        Result<UsuarioDbModel> dbResult = await repo.SelectUsuarioProfileWhereUsername(new UserName(username));
+		Result<UsuarioDbModel> dbResult = await repo.SelectUsuarioProfileWhereUsername(new UserName(username));
 
-		if (dbResult.IsError) { 
-			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDto>();
+		if (dbResult.IsError) {
+			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDbModel>();
 		}
-        UsuarioDbModel db = dbResult.UnwrapAsOk();
+		UsuarioDbModel db = dbResult.UnwrapAsOk();
 		// VALIDAR PASSWORD
 		if (!ContraseñaHasheada.RawIdenticalToHashed(passwordRaw, db.PasswordHash))
-			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDto>();
+			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDbModel>();
 
 		// CONSTRUIR RESULTADO
-		return new UsuarioAutenticadoDto(
+		return new UsuarioAutenticadoDbModel(
 			db.Id,
 			db.UserName,
 			db.EnumRole
