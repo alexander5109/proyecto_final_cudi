@@ -62,7 +62,12 @@ public static class IWPFRepositorioInterfaces {
 	}
 
 	public interface IWPFRepositorioDominio {
-		Task<List<Disponibilidad2025>> SelectDisponibilidades(EspecialidadCodigo especialidad, int cuantos, DateTime apartirDeCuando);
+		Task<List<Disponibilidad2025>> SelectDisponibilidades(
+			EspecialidadCodigo especialidad,
+			int cuantos,
+			DateTime apartirDeCuando,
+			DayOfWeek? diaSemanaPreferido
+		);
 
 	}
 

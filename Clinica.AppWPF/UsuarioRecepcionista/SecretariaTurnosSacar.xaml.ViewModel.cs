@@ -140,10 +140,13 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 			DateTimeKind.Local
 		).AddMinutes(duracionMin);
 
+		DayOfWeek? diaSemanaSelected = SelectedDiaDeLaSemana?.Value;
+
 		List<Disponibilidad2025> lista = await App.Repositorio.SelectDisponibilidades(
 			especialidad: esp.Codigo,
 			cuantos: 40,
-			apartirDeCuando: desde
+			apartirDeCuando: desde,
+			diaSemanaPreferido: diaSemanaSelected
 		);
 
 		foreach (Disponibilidad2025 d in lista)
@@ -155,13 +158,19 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 
 	private void ActualizarDiasSemana() {
 		DiasSemanaItemsSource.Clear();
+
+		// 🔴 CLAVE: resetear explícitamente
+		SelectedDiaDeLaSemana = null;
+
 		if (SelectedMedico is null) return;
 
 		foreach (DayOfWeek dia in SelectedMedico.DiasAtencion) {
-			DiasSemanaItemsSource.Add(new DiaDeSemanaViewModel(dia, dia.ATexto()));
+			DiasSemanaItemsSource.Add(
+				new DiaDeSemanaViewModel(dia, dia.ATexto())
+			);
 		}
 
-		SelectedDiaValue = DiasSemanaItemsSource.FirstOrDefault();
+		//SelectedDiaDeLaSemana = DiasSemanaItemsSource.FirstOrDefault();
 	}
 
 
@@ -249,12 +258,12 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 
 
 	private DiaDeSemanaViewModel? _selectedDiaValue;
-	public DiaDeSemanaViewModel? SelectedDiaValue {
+	public DiaDeSemanaViewModel? SelectedDiaDeLaSemana {
 		get => _selectedDiaValue;
 		set {
 			if (_selectedDiaValue == value) return;
 			_selectedDiaValue = value;
-			OnPropertyChanged(nameof(SelectedDiaValue));
+			OnPropertyChanged(nameof(SelectedDiaDeLaSemana));
 			OnPropertyChanged(nameof(BotonBuscar_Enabled));
 			OnPropertyChanged(nameof(BotonAgendar_Enabled));
 		}

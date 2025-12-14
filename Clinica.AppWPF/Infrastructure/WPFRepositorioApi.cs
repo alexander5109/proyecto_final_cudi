@@ -70,7 +70,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		if (resultad is null) {
 			return null;
 		}
-		return [.. resultad.Select(x => x.DiaSemana).Distinct()];
+		return [.. resultad.Select(x => x.DiaSemana).Distinct().OrderBy(d => d)];
 	}
 
 
@@ -362,14 +362,15 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	async Task<List<Disponibilidad2025>> IWPFRepositorioDominio.SelectDisponibilidades(
 		EspecialidadCodigo especialidad,
 		int cuantos,
-		DateTime apartirDeCuando
+		DateTime apartirDeCuando,
+		DayOfWeek? diaSemanaPreferido
 	) {
 		string url =
 			$"api/ServiciosPublicos/Turnos/Disponibilidades" +
 			$"?EspecialidadCodigo={(byte)especialidad}" +
 			$"&cuantos={cuantos}" +
-			$"&aPartirDeCuando={apartirDeCuando:O}";
-
+			$"&aPartirDeCuando={apartirDeCuando:O}" +
+			$"&diaSemanaPreferido={(diaSemanaPreferido is not null? (byte)diaSemanaPreferido: null)}";
 		return await Api.TryGetJsonAsync<List<Disponibilidad2025>>(url, defaultValue: []);
 	}
 
