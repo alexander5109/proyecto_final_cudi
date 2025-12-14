@@ -122,9 +122,7 @@ public partial class SecretariaTurnos : Window {
 	private GridViewColumnHeader? _lastHeaderClicked = null;
 	private ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
-
-
-	private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e) {
+	private void ClickCabecera_OrdenarFilas(object sender, RoutedEventArgs e) {
 		if (sender is not GridViewColumnHeader header || header.Tag == null) return;
 
 		string sortBy = header.Tag.ToString()!;
