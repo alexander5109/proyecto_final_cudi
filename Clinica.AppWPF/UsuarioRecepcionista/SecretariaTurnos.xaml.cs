@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
 using Microsoft.VisualBasic;
@@ -112,6 +113,32 @@ public partial class SecretariaTurnos : Window {
 
 			_enCooldown = false;
 		}
+	}
+
+
+	// ==========================================================
+	// BOTONES: ORDENAR
+	// ==========================================================
+	private GridViewColumnHeader? _lastHeaderClicked = null;
+	private ListSortDirection _lastDirection = ListSortDirection.Ascending;
+
+
+
+	private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e) {
+		if (sender is not GridViewColumnHeader header || header.Tag == null) return;
+
+		string sortBy = header.Tag.ToString()!;
+		ListSortDirection direction = ListSortDirection.Ascending;
+
+		if (_lastHeaderClicked == header && _lastDirection == ListSortDirection.Ascending)
+			direction = ListSortDirection.Descending;
+
+		VM.TurnosView.SortDescriptions.Clear();
+		VM.TurnosView.SortDescriptions.Add(new SortDescription(sortBy, direction));
+		VM.TurnosView.Refresh();
+
+		_lastHeaderClicked = header;
+		_lastDirection = direction;
 	}
 
 

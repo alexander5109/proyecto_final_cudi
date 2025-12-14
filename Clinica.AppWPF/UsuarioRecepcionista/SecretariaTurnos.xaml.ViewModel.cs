@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeEntidad;
@@ -152,30 +153,12 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		AplicarFiltros();
 	}
 
-	private bool FilterTurnos(object obj) {
-		if (obj is not TurnoViewModel t) return false;
-
-		if (EstadoSeleccionado.HasValue && t.Original.OutcomeEstado != EstadoSeleccionado.Value)
-			return false;
-
-		if (!string.IsNullOrWhiteSpace(FiltroTurnosPaciente) &&
-			!t.PacienteDisplayear.Contains(FiltroTurnosPaciente.Trim(), StringComparison.InvariantCultureIgnoreCase))
-			return false;
-
-		if (!string.IsNullOrWhiteSpace(FiltroTurnosMedico) &&
-			!t.MedicoDisplayear.Contains(FiltroTurnosMedico.Trim(), StringComparison.InvariantCultureIgnoreCase))
-			return false;
-
-		return true;
-	}
-
 	private void AplicarFiltros() {
 		TurnosView.Refresh();
 		// Restaurar selección si sigue visible
 		if (SelectedTurno != null && !TurnosView.Cast<TurnoViewModel>().Contains(SelectedTurno))
 			SelectedTurno = null;
 	}
-
 	// ================================================================
 	// FILTROS
 	// ================================================================
@@ -216,6 +199,23 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		}
 	}
 
+
+	private bool FilterTurnos(object obj) {
+		if (obj is not TurnoViewModel t) return false;
+
+		if (EstadoSeleccionado.HasValue && t.Original.OutcomeEstado != EstadoSeleccionado.Value)
+			return false;
+
+		if (!string.IsNullOrWhiteSpace(FiltroTurnosPaciente) &&
+			!t.PacienteDisplayear.Contains(FiltroTurnosPaciente.Trim(), StringComparison.InvariantCultureIgnoreCase))
+			return false;
+
+		if (!string.IsNullOrWhiteSpace(FiltroTurnosMedico) &&
+			!t.MedicoDisplayear.Contains(FiltroTurnosMedico.Trim(), StringComparison.InvariantCultureIgnoreCase))
+			return false;
+
+		return true;
+	}
 
 
 
