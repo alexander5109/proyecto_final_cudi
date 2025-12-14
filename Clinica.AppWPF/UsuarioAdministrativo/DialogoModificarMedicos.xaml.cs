@@ -38,8 +38,8 @@ public partial class AdminMedicosModificar : Window {
 			MessageBox.Show("Seleccione un horario para editar.");
 			return;
 		}
-		this.AbrirComoDialogo<AdminMedicosModificarHorario>(horario);
-		//var win = new Clinica.AppWPF.Ventanas.AdminMedicosModificarHorario(horario);
+		this.AbrirComoDialogo<DialogoModificarHorarios>(horario);
+		//var win = new Clinica.AppWPF.Ventanas.DialogoModificarHorarios(horario);
 		//if (win.ShowDialog() == true) {
 		// horario object was modified by window binding; notify UI
 		// no extra action required
@@ -54,7 +54,7 @@ public partial class AdminMedicosModificar : Window {
 		else if (selected is HorarioMedicoViewModel h) dia = h.DiaSemana;
 
 		var nuevo = new HorarioMedicoViewModel(dia, new TimeOnly(8, 0), new TimeOnly(12, 0));
-		this.AbrirComoDialogo<AdminMedicosModificarHorario>(nuevo);
+		this.AbrirComoDialogo<DialogoModificarHorarios>(nuevo);
 		// add to group or create group
 		var grupoExistente = VM.HorariosAgrupados.FirstOrDefault(g => g.DiaSemana == nuevo.DiaSemana);
 		if (grupoExistente is not null) {

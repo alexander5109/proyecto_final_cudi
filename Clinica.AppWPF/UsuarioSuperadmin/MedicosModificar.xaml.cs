@@ -80,14 +80,14 @@ public partial class MedicosModificar : Window {
 			return;
 		}
 
-		//if (SelectedMedico is null) {
-		//	SelectedMedico = new Medico(this);
-		//	if (App.BaseDeDatos.CreateMedico(SelectedMedico)) {
+		//if (ActiveMedicoModel is null) {
+		//	ActiveMedicoModel = new Medico(this);
+		//	if (App.BaseDeDatos.CreateMedico(ActiveMedicoModel)) {
 		//		this.Cerrar();
 		//	}
 		//} else {
-		//	SelectedMedico.LeerDesdeVentana(this);
-		//	if (App.BaseDeDatos.UpdateMedico(SelectedMedico)) {
+		//	ActiveMedicoModel.LeerDesdeVentana(this);
+		//	if (App.BaseDeDatos.UpdateMedico(ActiveMedicoModel)) {
 		//		this.Cerrar();
 		//	}
 		//}
@@ -107,7 +107,7 @@ public partial class MedicosModificar : Window {
 			return;
 		}
 		//---------Eliminar-----------//
-		//if (App.BaseDeDatos.DeleteMedico(SelectedMedico)) {
+		//if (App.BaseDeDatos.DeleteMedico(ActiveMedicoModel)) {
 		//	this.Cerrar(); // this.NavegarA<Medicos>();
 		//}
 	}

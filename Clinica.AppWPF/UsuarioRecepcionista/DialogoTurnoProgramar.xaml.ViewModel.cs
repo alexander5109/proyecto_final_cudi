@@ -288,9 +288,9 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 
 
 			ActualizarDiasSemana();
-			//CheckBoxDiaSemana_Enabled = SelectedMedico != null;
+			//CheckBoxDiaSemana_Enabled = ActiveMedicoModel != null;
 
-			//MessageBox.Show(SelectedMedico?.ToString());
+			//MessageBox.Show(ActiveMedicoModel?.ToString());
 
 		}
 	}

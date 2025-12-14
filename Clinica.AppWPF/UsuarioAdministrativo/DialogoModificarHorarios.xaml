@@ -1,0 +1,323 @@
+﻿<Window
+	x:Class="Clinica.AppWPF.UsuarioAdministrativo.DialogoModificarHorarios"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioAdministrativo"
+	mc:Ignorable="d"
+	Width="1024"
+	Height="600"
+	Title="AdminHorariosModificar">
+	<Window.Background>
+		<ImageBrush
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025admin.jpg" />
+	</Window.Background>
+	<Grid
+		Margin="25">
+		<!-- Filas: Título | Contenido | Botones inferiores -->
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="Auto" />
+			<RowDefinition
+				Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="auto" />
+			<ColumnDefinition
+				Width="*" />
+			<ColumnDefinition
+				Width="auto" />
+		</Grid.ColumnDefinitions>
+		<!-- Título -->
+		<Label
+			Grid.Column="0"
+			Grid.ColumnSpan="3"
+			Content="Horarios de Médico"
+			FontSize="33"
+			Style="{StaticResource LabelLindoConPiu}"
+			HorizontalContentAlignment="Center"
+			FontWeight="Bold"
+			VerticalContentAlignment="Center"
+			VerticalAlignment="Center"
+			Margin="50,0,50,15" />
+		<StackPanel
+			Grid.Column="0"
+			Grid.Row="1"
+			Margin="25,25,25,25"
+			VerticalAlignment="Top">
+			<Label
+				Content="Médico"
+				FontSize="20"
+				FontFamily="Segoe UI Historic"
+				FlowDirection="RightToLeft"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center"
+				VerticalAlignment="Center"
+				FontWeight="Bold"
+				HorizontalAlignment="Center" />
+			<TextBlock
+				Text="Nombre completo:"
+				FontWeight="Bold"
+				HorizontalAlignment="Center" />
+			<TextBlock
+				Text="{Binding ActiveMedicoNombreCompleto}"
+				HorizontalAlignment="Center"
+				MinWidth="100" />
+			<TextBlock
+				FontWeight="Bold"
+				Margin="0,10,0,0"
+				HorizontalAlignment="Center"><Run
+					Language="es-es"
+					Text="Especialidad" /></TextBlock>
+			<TextBlock
+				Text="{Binding ActiveMedicoEspecialidad}"
+				HorizontalAlignment="Center"
+				MinWidth="100" />
+			<TextBlock
+				Text="Teléfono:"
+				FontWeight="Bold"
+				Margin="0,10,0,0"
+				HorizontalAlignment="Center" />
+			<TextBlock
+				Text="{Binding ActiveMedicoModel.Telefono}"
+				MinWidth="100"
+				HorizontalAlignment="Center" />
+			<TextBlock
+				Text="Email:"
+				FontWeight="Bold"
+				Margin="0,10,0,0"
+				HorizontalAlignment="Center" />
+			<TextBlock
+				Text="{Binding ActiveMedicoModel.Email}"
+				MinWidth="100"
+				HorizontalAlignment="Center" />
+		</StackPanel>
+		<StackPanel
+			Grid.Row="1"
+			Orientation="Vertical"
+			HorizontalAlignment="Left"
+			Margin="25"
+			VerticalAlignment="Bottom">
+			<Button
+				Content="Cancelar"
+				Width="120"
+				Height="35"
+				Style="{StaticResource BotonRedondeado}"
+				Click="ClickBoton_Cancelar"
+				Margin="7,7,7,7" />
+			<Button
+				Content="Salir"
+				Width="120"
+				Height="35"
+				Style="{StaticResource BotonRedondeado}"
+				Click="ClickBoton_Salir"
+				Margin="7,7,7,7" />
+		</StackPanel>
+		<StackPanel
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			Grid.Column="1"
+			Margin="25,25,25,25">
+			<Label
+				Content="Sus horarios"
+				FontSize="20"
+				FontFamily="Segoe UI Historic"
+				FlowDirection="RightToLeft"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center"
+				VerticalAlignment="Center"
+				FontWeight="Bold"
+				HorizontalAlignment="Center" />
+			<TreeView
+				Grid.Row="4"
+				Grid.Column="0"
+				Grid.ColumnSpan="2"
+				Grid.RowSpan="6"
+				ItemsSource="{Binding HorariosAgrupados}"
+				Margin="5,5,5,5"
+				MinHeight="150">
+				<TreeView.Resources>
+					<HierarchicalDataTemplate
+						DataType="{x:Type local:ViewModelHorarioAgrupado}"
+						ItemsSource="{Binding Horarios}">
+						<TextBlock
+							Text="{Binding DiaSemanaNombre}"
+							FontWeight="Bold" />
+					</HierarchicalDataTemplate>
+					<DataTemplate
+						DataType="{x:Type local:HorarioMedicoViewModel}">
+						<StackPanel
+							Orientation="Horizontal"
+							Margin="15,0,0,0">
+							<TextBlock
+								Text="{Binding Desde}"
+								Width="50" />
+							<TextBlock
+								Text=" - " />
+							<TextBlock
+								Text="{Binding Hasta}"
+								Width="50" />
+						</StackPanel>
+					</DataTemplate>
+				</TreeView.Resources>
+			</TreeView>
+		</StackPanel>
+		<StackPanel
+			Grid.Row="1"
+			Grid.Column="2"
+			Grid.RowSpan="2"
+			Margin="25,25,25,25">
+			<Label
+				Content="Franja seleccionada"
+				FontSize="20"
+				FontFamily="Segoe UI Historic"
+				FlowDirection="RightToLeft"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalContentAlignment="Center"
+				VerticalContentAlignment="Center"
+				VerticalAlignment="Center"
+				FontWeight="Bold"
+				HorizontalAlignment="Center" />
+			<StackPanel
+				Orientation="Horizontal"
+				Height="30">
+				<Label
+					Content="Día de la semana:"
+					Width="110"
+					VerticalAlignment="Center"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center"
+					FontFamily="Bahnschrift" />
+				<ComboBox
+					SelectedItem="{Binding DiaSemana, Mode=TwoWay}"
+					Margin="15,0,0,0"
+					VerticalAlignment="Center"
+					VerticalContentAlignment="Center"
+					HorizontalContentAlignment="Center"
+					Width="123"
+					Height="20" />
+			</StackPanel>
+			<StackPanel
+				Orientation="Horizontal"
+				Height="24.6">
+				<Label
+					Content="Hora Inicio:"
+					Width="100"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center"
+					FontFamily="Bahnschrift" />
+				<TextBox
+					Margin="15,0,0,0"
+					Width="122" />
+			</StackPanel>
+			<StackPanel
+				Orientation="Horizontal"
+				Height="24.6">
+				<Label
+					Content="Hora Fin:"
+					Width="100"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center"
+					FontFamily="Bahnschrift" />
+				<TextBox
+					Margin="15,0,0,0"
+					Width="122" />
+			</StackPanel>
+			<StackPanel
+				Orientation="Horizontal"
+				Height="30">
+				<Label
+					Content="Vigencia Inicio:"
+					Width="100"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center"
+					FontFamily="Bahnschrift" />
+				<DatePicker
+					VerticalAlignment="Center"
+					Margin="15,0,0,0" />
+			</StackPanel>
+			<StackPanel
+				Orientation="Horizontal"
+				Height="30">
+				<Label
+					Content="Vigencia Fin:"
+					Width="100"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center"
+					FontFamily="Bahnschrift" />
+				<DatePicker
+					VerticalAlignment="Center"
+					Margin="15,0,0,0" />
+			</StackPanel>
+			<StackPanel
+				Orientation="Horizontal"
+				Height="30">
+				<Label
+					Content="Id:"
+					Width="100"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center"
+					FontFamily="Bahnschrift" />
+				<Label
+				Style="{StaticResource LabelLindoCuadroGrisSombreado}"
+					Width="130"
+					VerticalAlignment="Center"
+					Margin="15,0,0,0"
+					Height="20" />
+			</StackPanel>
+			<StackPanel
+				Orientation="Horizontal">
+				<Button
+					Content="🗑 Eliminar"
+					IsEnabled="{Binding PuedeEditarHorario}"
+					Style="{StaticResource BotonRedondeado}"
+					Click="ClickBoton_EliminarHorario"
+					Margin="5"
+					Height="25"
+					Width="111"
+					FontSize="12" />
+				<Button
+					Content="➕ Agregar"
+					Style="{StaticResource BotonRedondeado}"
+					Click="ClickBoton_AgregarHorario"
+					Margin="5"
+					Height="25"
+					Width="111"
+					FontSize="12" />
+				<Button
+					Content="✏️ Editar"
+					IsEnabled="{Binding PuedeEditarHorario}"
+					Style="{StaticResource BotonRedondeado}"
+					Click="ClickBoton_EditarHorario"
+					Margin="5"
+					Height="25"
+					Width="111"
+					FontSize="12"
+					HorizontalContentAlignment="Center" />
+			</StackPanel>
+			<Button
+				Grid.Row="3"
+				Grid.Column="2"
+				Content="Guardar cambios"
+				Width="190"
+				Height="40"
+				Click="ClickBoton_GuardarCambios"
+				Style="{StaticResource BotonRedondeado}"
+				Margin="15" />
+		</StackPanel>
+	</Grid>
+</Window>

@@ -4,10 +4,10 @@ using Clinica.AppWPF.Ventanas;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
-public partial class AdminMedicos : Window {
+public partial class GestionMedicos : Window {
 	public AdminMedicosViewModel VM { get; }
 
-	public AdminMedicos() {
+	public GestionMedicos() {
 		InitializeComponent();
 		VM = new AdminMedicosViewModel();
 		DataContext = VM;
@@ -36,7 +36,7 @@ public partial class AdminMedicos : Window {
 
     async private void ClickBoton_ModificarMedicoHorarios(object sender, RoutedEventArgs e) {
 		if (VM.SelectedMedico is not null) {
-			this.AbrirComoDialogo<AdminMedicosModificarHorario>(VM.SelectedMedico);
+			this.AbrirComoDialogo<DialogoModificarHorarios>(VM.SelectedMedico);
 			await VM.RefrescarMedicosAsync();
 		} else {
 			MessageBox.Show("No hay médico seleccionado. (este boton deberia estar desabilitado)");

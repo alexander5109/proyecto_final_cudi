@@ -20,6 +20,6 @@ public partial class HomeAdministrativo : Window {
 	// ==========================================================
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 	private void ClickBoton_Logout(object sender, RoutedEventArgs e) => this.CerrarSesion();
-	private void ClickBoton_CuentasDeUsuario(object sender, RoutedEventArgs e) => this.NavegarA<AdminUsuarios>();
-	private void ClickBoton_GuestionPersonalMedico(object sender, RoutedEventArgs e) => this.NavegarA<AdminMedicos>();
+	private void ClickBoton_CuentasDeUsuario(object sender, RoutedEventArgs e) => this.NavegarA<GestionUsuarios>();
+	private void ClickBoton_GuestionPersonalMedico(object sender, RoutedEventArgs e) => this.NavegarA<GestionMedicos>();
 }

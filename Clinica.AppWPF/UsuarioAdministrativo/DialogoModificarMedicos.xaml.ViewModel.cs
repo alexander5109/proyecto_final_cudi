@@ -259,8 +259,7 @@ public class DialogoMedicoModificarVM : INotifyPropertyChanged {
 		_original.Telefono != Telefono ||
 		_original.Email != Email ||
 		_original.EspecialidadCodigo != Especialidad?.Codigo ||
-		_original.HaceGuardias != HaceGuardias ||
-		_
+		_original.HaceGuardias != HaceGuardias
 	);
 
 	// -----------------------------
