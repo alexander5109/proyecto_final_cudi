@@ -183,26 +183,22 @@
 			</CheckBox.Template>
 		</CheckBox>
 		<Label
-			Content="Bienvenido SuperAdmin Charles"
 			FontSize="24"
 			FontFamily="Palatino Linotype"
 			FontWeight="Bold"
 			Foreground="#FF0F0A2B"
-			Margin="4,0,0,25"
+			Margin="25,0,0,25"
 			HorizontalAlignment="Left"
 			VerticalAlignment="Bottom"
-			VerticalContentAlignment="Center"
-			HorizontalContentAlignment="Center"
-			Width="187"
-			Grid.ColumnSpan="2"
-			Grid.Column="1">
-			<Label.ContentTemplate>
-				<DataTemplate>
-					<TextBlock
-						Text="{Binding}"
-						TextWrapping="Wrap" />
-				</DataTemplate>
-			</Label.ContentTemplate>
+			Width="200">
+			<Label.Content>
+				<TextBlock
+					Text="{Binding MensajeBienvenida}"
+					TextTrimming="CharacterEllipsis"
+					TextAlignment="Center"
+					VerticalAlignment="Center"
+					TextWrapping="Wrap" />
+			</Label.Content>
 		</Label>
 	</Grid>
 </Window>

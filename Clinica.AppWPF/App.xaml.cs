@@ -4,6 +4,7 @@ using System.Windows;
 using Clinica.AppWPF.Infrastructure;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
+using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF;
 
@@ -13,7 +14,7 @@ namespace Clinica.AppWPF;
 public partial class App : Application {
 	public static ApiHelper Api = new();
 	public static IWPFRepositorio Repositorio = new WPFRepositorioApi(Api);
-	public static UsuarioDto? UsuarioActivo = null;
+	public static UsuarioDbModel? UsuarioActivo = null;
 	//public static Repositorio2024 BaseDeDatos;
 
 	protected override void OnStartup(StartupEventArgs e) {

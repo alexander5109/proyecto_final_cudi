@@ -37,7 +37,7 @@ public static class IWPFRepositorioInterfaces {
 		Task<ResultWpf<UsuarioId>> InsertUsuarioReturnId(Usuario2025 instance);
 		Task<ResultWpf<UnitWpf>> UpdateUsuarioWhereId(Usuario2025Agg instance);
 		Task<List<UsuarioDbModel>> SelectUsuarios();
-		Task<UsuarioDto?> SelectUsuarioProfileWhereUsername(UserName username);
+		Task<UsuarioDbModel?> SelectUsuarioProfileWhereUsername(string username);
 	}
 
 
@@ -62,7 +62,12 @@ public static class IWPFRepositorioInterfaces {
 	}
 
 	public interface IWPFRepositorioDominio {
-		Task<List<Disponibilidad2025>> SelectDisponibilidades(EspecialidadCodigo especialidad, int cuantos, DateTime apartirDeCuando);
+		Task<List<Disponibilidad2025>> SelectDisponibilidades(
+			EspecialidadCodigo especialidad,
+			int cuantos,
+			DateTime apartirDeCuando,
+			DayOfWeek? diaSemanaPreferido
+		);
 
 	}
 

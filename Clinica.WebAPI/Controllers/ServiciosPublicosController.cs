@@ -29,7 +29,8 @@ public class ServiciosPublicosController(
 	public async Task<IActionResult> VerDisponibilidades(
 		[FromQuery] EspecialidadCodigo EspecialidadCodigo,
 		[FromQuery] int cuantos,
-		[FromQuery, DefaultValue("2025-12-03T00:00:00")] DateTime? aPartirDeCuando
+		[FromQuery, DefaultValue("2025-12-03T00:00:00")] DateTime? aPartirDeCuando,
+		[FromQuery] DayOfWeek? diaSemanaPreferido
 	) {
 		DateTime desde = aPartirDeCuando ?? DateTime.Now; // default real acá
 
@@ -37,6 +38,7 @@ public class ServiciosPublicosController(
 			EspecialidadCodigo,
 			desde,
 			cuantos,
+			diaSemanaPreferido,
 			repositorio
 		);
 

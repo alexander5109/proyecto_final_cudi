@@ -24,24 +24,24 @@ internal static class _ServiciosPrivados {
 	//	);
 	//}
 
-	internal static Result<IReadOnlyList<Disponibilidad2025>> AplicarFiltrosOpcionales(this Result<IReadOnlyList<Disponibilidad2025>> disponibilidadesResult, SolicitudDeTurnoPreferencias preferencias) {
-		if (disponibilidadesResult is Result<IReadOnlyList<Disponibilidad2025>>.Error err)
-			return new Result<IReadOnlyList<Disponibilidad2025>>.Error(err.Mensaje);
+	//internal static Result<IReadOnlyList<Disponibilidad2025>> AplicarFiltrosOpcionales(this Result<IReadOnlyList<Disponibilidad2025>> disponibilidadesResult, SolicitudDeTurnoPreferencias preferencias) {
+	//	if (disponibilidadesResult is Result<IReadOnlyList<Disponibilidad2025>>.Error err)
+	//		return new Result<IReadOnlyList<Disponibilidad2025>>.Error(err.Mensaje);
 
-		IReadOnlyList<Disponibilidad2025> lista = ((Result<IReadOnlyList<Disponibilidad2025>>.Ok)disponibilidadesResult).Valor;
-		IEnumerable<Disponibilidad2025> filtradas = lista;
-		if (preferencias.DiaPreferido is DayOfWeek dia)
-			filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia);
+	//	IReadOnlyList<Disponibilidad2025> lista = ((Result<IReadOnlyList<Disponibilidad2025>>.Ok)disponibilidadesResult).Valor;
+	//	IEnumerable<Disponibilidad2025> filtradas = lista;
+	//	if (preferencias.DiaPreferido is DayOfWeek dia)
+	//		filtradas = filtradas.Where(d => d.FechaHoraDesde.DayOfWeek == dia);
 
-		if (preferencias.MomentoPreferido is TardeOMañana momento)
-			filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));
+	//	if (preferencias.MomentoPreferido is TardeOMañana momento)
+	//		filtradas = filtradas.Where(d => momento.AplicaA(d.FechaHoraDesde));
 
-		if (filtradas.Any()) {
-			return new Result<IReadOnlyList<Disponibilidad2025>>.Ok([.. filtradas]);
-		} else {
-			return new Result<IReadOnlyList<Disponibilidad2025>>.Error("No se encontraron disponibilidades");
-		}
-	}
+	//	if (filtradas.Any()) {
+	//		return new Result<IReadOnlyList<Disponibilidad2025>>.Ok([.. filtradas]);
+	//	} else {
+	//		return new Result<IReadOnlyList<Disponibilidad2025>>.Error("No se encontraron disponibilidades");
+	//	}
+	//}
 
 	/*
 	internal static async Task<Result<Disponibilidad2025>> EncontrarProximaDisponibilidad(
@@ -59,20 +59,21 @@ internal static class _ServiciosPrivados {
 	}
 	*/
 
-	internal static async IAsyncEnumerable<Result<Disponibilidad2025>>GenerarDisponibilidades(
+	internal static async IAsyncEnumerable<Result<Disponibilidad2025>> GenerarDisponibilidades(
 		Especialidad2025 especialidad,
 		DateTime aPartirDeCuando,
+		DayOfWeek? diaSemanaPreferido,
 		IRepositorioDominioServices repo
 	) {
-        Result<IEnumerable<MedicoId>> medicosResult = await repo.SelectMedicosIdWhereEspecialidadCodigo(especialidad.Codigo);
+		Result<IEnumerable<MedicoId>> medicosResult = await repo.SelectMedicosIdWhereEspecialidadCodigo(especialidad.Codigo);
 		if (medicosResult is Result<IEnumerable<MedicoId>>.Error errMed) {
 			yield return new Result<Disponibilidad2025>.Error(errMed.Mensaje);
 			yield break;
 		}
-        IEnumerable<MedicoId> medicos = ((Result<IEnumerable<MedicoId>>.Ok)medicosResult).Valor;
-        List<(MedicoId medico, DateTime slot)> ordenados = [];
+		IEnumerable<MedicoId> medicos = ((Result<IEnumerable<MedicoId>>.Ok)medicosResult).Valor;
+		List<(MedicoId medico, DateTime slot)> ordenados = [];
 		foreach (MedicoId medico in medicos) {
-            Result<DateTime> primero = await CalcularPrimerSlotDisponible(medico, especialidad, aPartirDeCuando, repo);
+			Result<DateTime> primero = await CalcularPrimerSlotDisponible(medico, especialidad, aPartirDeCuando, diaSemanaPreferido, repo);
 			if (primero is Result<DateTime>.Error errSlot) {
 				yield return new Result<Disponibilidad2025>.Error(errSlot.Mensaje);
 				yield break;
@@ -81,7 +82,7 @@ internal static class _ServiciosPrivados {
 		}
 		foreach ((MedicoId medico, DateTime slot) x in ordenados.OrderBy(t => t.slot)) {
 			await foreach (Result<Disponibilidad2025> disp in GenerarDisponibilidadesDeMedico(
-				especialidad, aPartirDeCuando, x.medico, repo)) {
+				especialidad, aPartirDeCuando, x.medico, diaSemanaPreferido, repo)) {
 				yield return disp;
 			}
 		}
@@ -93,6 +94,7 @@ internal static class _ServiciosPrivados {
 		Especialidad2025 solicitudEspecialidad,
 		DateTime aPartirDeCuando,
 		MedicoId medicoId,
+		DayOfWeek? diaSemanaPreferido,
 		IRepositorioDominioServices repositorio
 	) {
 		int duracion = solicitudEspecialidad.DuracionConsultaMinutos;
@@ -101,27 +103,30 @@ internal static class _ServiciosPrivados {
 		//DateTime desdeBusqueda = aPartirDeCuando.Date;
 		DateTime hastaBusqueda = aPartirDeCuando.Date.AddDays(7 * semanas);
 
-        Result<IEnumerable<TurnoQM>> turnosResult = (await repositorio.SelectTurnosProgramadosBetweenFechasWhereMedicoId(
+		Result<IEnumerable<TurnoQM>> turnosResult = (await repositorio.SelectTurnosProgramadosBetweenFechasWhereMedicoId(
 			medicoId, aPartirDeCuando, hastaBusqueda));
 
 		if (turnosResult.IsError) {
 			yield return new Result<Disponibilidad2025>.Error(turnosResult.UnwrapAsError());
 			yield break;
 		}
-        IEnumerable<TurnoQM> turnos = turnosResult.UnwrapAsOk();
+		IEnumerable<TurnoQM> turnos = turnosResult.UnwrapAsOk();
 
 
-        Result<IEnumerable<HorarioMedicoQM>> franjasResult = (await repositorio.SelectHorariosVigentesBetweenFechasWhereMedicoId(
+		Result<IEnumerable<HorarioMedicoQM>> franjasResult = (await repositorio.SelectHorariosVigentesBetweenFechasWhereMedicoId(
 			medicoId, aPartirDeCuando, hastaBusqueda));
 
 		if (franjasResult.IsError) {
 			yield return new Result<Disponibilidad2025>.Error(franjasResult.UnwrapAsError());
 			yield break;
 		}
-        IEnumerable<HorarioMedicoQM> franjas = franjasResult.UnwrapAsOk();
+		IEnumerable<HorarioMedicoQM> franjas = franjasResult.UnwrapAsOk();
 
 
 		foreach (HorarioMedicoQM? franja in franjas) {
+			if (diaSemanaPreferido is not null && franja.DiaSemana != diaSemanaPreferido) {
+				continue;
+			}
 			DateTime fecha = aPartirDeCuando;
 			while (fecha.DayOfWeek != franja.DiaSemana)
 				fecha = fecha.AddDays(1);
@@ -134,12 +139,12 @@ internal static class _ServiciosPrivados {
 					continue;
 
 				for (DateTime slot = desde; slot < hasta; slot = slot.AddMinutes(duracion)) {
-                    Disponibilidad2025 disp = new Disponibilidad2025(
-						solicitudEspecialidad.Codigo, 
+					Disponibilidad2025 disp = new Disponibilidad2025(
+						solicitudEspecialidad.Codigo,
 						medicoId,
-						slot, 
+						slot,
 						slot.AddMinutes(duracion)
-						//DiaSemana2025.CrearResult(slot.DayOfWeek)
+					//DiaSemana2025.CrearResult(slot.DayOfWeek)
 					);
 
 					bool solapa = false;
@@ -164,29 +169,33 @@ internal static class _ServiciosPrivados {
 		MedicoId medicoId,
 		Especialidad2025 especialidad,
 		DateTime aPartirDeCuando,
+		DayOfWeek? diaSemanaPreferido,
 		IRepositorioDominioServices repositorio
 	) {
 		int duracion = especialidad.DuracionConsultaMinutos;
 
 		DateTime hastaBusqueda = aPartirDeCuando.AddDays(7 * 30); // 30 semanas
 
-        // 1. Cargar turnos del médico en el rango
-        Result<IEnumerable<TurnoQM>> turnosResult = (await repositorio.SelectTurnosProgramadosBetweenFechasWhereMedicoId(medicoId, aPartirDeCuando, hastaBusqueda));
+		// 1. Cargar turnos del médico en el rango
+		Result<IEnumerable<TurnoQM>> turnosResult = (await repositorio.SelectTurnosProgramadosBetweenFechasWhereMedicoId(medicoId, aPartirDeCuando, hastaBusqueda));
 		if (turnosResult.IsError) {
 			return new Result<DateTime>.Error($"Error de la base de datos.\n\t No se pudo acceder a los turnos programados del MedicoId {medicoId}: \n\t\t Traceback: {turnosResult.UnwrapAsError()}");
 		}
-        IEnumerable<TurnoQM> turnos = turnosResult.UnwrapAsOk();
+		IEnumerable<TurnoQM> turnos = turnosResult.UnwrapAsOk();
 
-        // 2. Cargar sus horarios vigentes
-        Result<IEnumerable<HorarioMedicoQM>> franjasResult = (await repositorio.SelectHorariosVigentesBetweenFechasWhereMedicoId(
+		// 2. Cargar sus horarios vigentes
+		Result<IEnumerable<HorarioMedicoQM>> franjasResult = (await repositorio.SelectHorariosVigentesBetweenFechasWhereMedicoId(
 			medicoId, aPartirDeCuando, hastaBusqueda));
 		if (franjasResult.IsError) {
 			return new Result<DateTime>.Error($"Error de la base de datos.\n\tNo se pudo acceder a los horarios del MedicoId{medicoId}:\n\t\tTraceback: {turnosResult.UnwrapAsError()}");
 		}
-        IEnumerable<HorarioMedicoQM> franjas = franjasResult.UnwrapAsOk();
+		IEnumerable<HorarioMedicoQM> franjas = franjasResult.UnwrapAsOk();
 
 		foreach (HorarioMedicoQM franja in franjas) {
 			// Ubicar primer día coincidente con el DíaSemana de la franja
+			if (diaSemanaPreferido is not null && franja.DiaSemana != diaSemanaPreferido) {
+				continue;
+			}
 			DateTime fecha = aPartirDeCuando;
 			while (fecha.DayOfWeek != franja.DiaSemana)
 				fecha = fecha.AddDays(1);

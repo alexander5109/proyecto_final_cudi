@@ -70,7 +70,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		if (resultad is null) {
 			return null;
 		}
-		return [.. resultad.Select(x => x.DiaSemana).Distinct()];
+		return [.. resultad.Select(x => x.DiaSemana).Distinct().OrderBy(d => d)];
 	}
 
 
@@ -362,14 +362,15 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	async Task<List<Disponibilidad2025>> IWPFRepositorioDominio.SelectDisponibilidades(
 		EspecialidadCodigo especialidad,
 		int cuantos,
-		DateTime apartirDeCuando
+		DateTime apartirDeCuando,
+		DayOfWeek? diaSemanaPreferido
 	) {
 		string url =
 			$"api/ServiciosPublicos/Turnos/Disponibilidades" +
 			$"?EspecialidadCodigo={(byte)especialidad}" +
 			$"&cuantos={cuantos}" +
-			$"&aPartirDeCuando={apartirDeCuando:O}";
-
+			$"&aPartirDeCuando={apartirDeCuando:O}" +
+			$"&diaSemanaPreferido={(diaSemanaPreferido is not null? (byte)diaSemanaPreferido: null)}";
 		return await Api.TryGetJsonAsync<List<Disponibilidad2025>>(url, defaultValue: []);
 	}
 
@@ -406,8 +407,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return result;
 	}
 
-	async Task<UsuarioDto?> IWPFRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName username) {
-		return await Api.TryGetJsonOrNullAsync<UsuarioDto>($"api/usuarios/{username.Valor}");
+	async Task<UsuarioDbModel?> IWPFRepositorioUsuarios.SelectUsuarioProfileWhereUsername(string username) {
+        UsuarioDbModel? response = await Api.TryGetJsonOrNullAsync<UsuarioDbModel>($"api/usuarios/por-nombre/{username}");
+		//MessageBox.Show($"{response?.ToString()}");
+		return response;
 	}
 
 	async Task<ResultWpf<UnitWpf>> IWPFRepositorioTurnos.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad) {

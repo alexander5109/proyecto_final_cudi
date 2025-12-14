@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
@@ -10,32 +12,55 @@ using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
 public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
+	// ================================================================
+	// CONSTRUCTOR
+	// ================================================================
+	public SecretariaTurnosViewModel() {
+		TurnosView = CollectionViewSource.GetDefaultView(_todosLosTurnos);
+		TurnosView.Filter = FilterTurnos;
+	}
+
+
 
 	// ================================================================
 	// COLECCIONES
 	// ================================================================
+	private List<TurnoViewModel> _todosLosTurnos = [];
+	public ICollectionView TurnosView { get; private set; }
 
-	private List<TurnoViewModel> _todosLosTurnos = [];   // Original immutable list
-	public ObservableCollection<TurnoViewModel> TurnosList { get; } = [];
+	public List<TurnoEstadoCodigo> Estados { get; } = [.. Enum.GetValues<TurnoEstadoCodigo>()];
+
+
+
+
+	// ================================================================
+	// ITEM SELECCIONADO
+	// ================================================================
+
+	private TurnoViewModel? _turnoSeleccionado;
+	public TurnoViewModel? SelectedTurno {
+		get => _turnoSeleccionado;
+		set {
+			if (_turnoSeleccionado != value) {
+				_turnoSeleccionado = value;
+				OnPropertyChanged(nameof(SelectedTurno));
+				OnPropertyChanged(nameof(HayTurnoSeleccionado));
+				OnPropertyChanged(nameof(PuedeCancelarTurno));
+				OnPropertyChanged(nameof(PuedeConfirmarTurno));
+				OnPropertyChanged(nameof(PuedeMarcarComoAusente));
+			}
+		}
+	}
 
 
 	// ================================================================
 	// METODOS DE DOMINIO
 	// ================================================================
-
-
-	public async Task<ResultWpf<UnitWpf>> MarcarAusenteAsync(string comentario) {
+	public async Task<ResultWpf<UnitWpf>> MarcarAusenteAsync(string comentario, DateTime now) {
 		// 1️⃣ Validaciones de estado
 		if (SelectedTurno is null) {
 			return new ResultWpf<UnitWpf>.Error(new ErrorInfo(
 				"No hay un turno seleccionado para marcar como ausente.", MessageBoxImage.Information)
-			);
-		}
-
-		// 2️⃣ Validaciones de dominio mínimas
-		if (string.IsNullOrWhiteSpace(comentario)) {
-			return new ResultWpf<UnitWpf>.Error(new ErrorInfo(
-				"Debe ingresar un comentario.", MessageBoxImage.Information)
 			);
 		}
 
@@ -48,13 +73,13 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		// 3️⃣ Llamada al repositorio
 		return await App.Repositorio.MarcarTurnoComoAusente(
 			SelectedTurno.Original.Id,
-			DateTime.Now,
+			now,
 			comentario
 		);
 	}
 
 
-	public async Task<ResultWpf<UnitWpf>> CancelarTurnoAsync(string comentario) {
+	public async Task<ResultWpf<UnitWpf>> CancelarTurnoAsync(string comentario, DateTime now) {
 		if (SelectedTurno is null) {
 			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No hay turno seleccionado.", MessageBoxImage.Information));
 		}
@@ -64,7 +89,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 
 		return await App.Repositorio.CancelarTurno(
 			SelectedTurno.Original.Id,
-			DateTime.Now,
+			now,
 			comentario
 		);
 	}
@@ -97,102 +122,46 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	// ================================================================
 	// METODOS DE UI
 	// ================================================================
-
 	internal async Task RefrescarTurnosAsync() {
-
 		await App.Repositorio.EnsureMedicosLoaded(); //just to generate the dictionaries for the views.
 		await App.Repositorio.EnsurePacientesLoaded();
 
-		try {
-			List<TurnoDbModel> turnos = await App.Repositorio.SelectTurnos();
-			_todosLosTurnos = [.. turnos.Select(t => new TurnoViewModel(t))];
-			SelectedTurno = null;
-		} catch (Exception ex) {
-			MessageBox.Show("Error cargando turnos: " + ex.Message);
-			return;
-		}
-		//EstadoSeleccionado = TurnoEstadoCodigo.Programado; //nah, es molesto
+
+		// VOY A SACAR LOS TRY EXCEPT DE TODOS LOS LLAMADOS AL REPO.
+		// EL REPOSITORIO DEBERIA UTILIZAR EL SISTEMA ResultWpf. me falta implementarlo todavia. 
+		//try { 
+		// await App.Repositorio.SelectTurnos();
+		//} catch (Exception ex) {
+		//	MessageBox.Show("Error cargando turnos: " + ex.Message);
+		//	return;
+		//}
+
+		var turnos = await App.Repositorio.SelectTurnos();
+		var turnoTasks = turnos.Select(async t => {
+			var vm = new TurnoViewModel(t);
+			await vm.LoadRelacionesAsync();
+			return vm;
+		});
+		_todosLosTurnos = (await Task.WhenAll(turnoTasks)).ToList();
+
+		// Reasignamos la vista para que refleje la nueva lista
+		TurnosView = CollectionViewSource.GetDefaultView(_todosLosTurnos);
+		TurnosView.Filter = FilterTurnos;
+
+		OnPropertyChanged(nameof(TurnosView));
+		SelectedTurno = null;
 		AplicarFiltros();
 	}
 
-
-
 	private void AplicarFiltros() {
-		TurnoViewModel? seleccionado = SelectedTurno;
-
-		TurnosList.Clear();
-
-		IEnumerable<TurnoViewModel> origen = _todosLosTurnos;
-
-		// 🔹 Filtro por estado
-		if (EstadoSeleccionado.HasValue) {
-			origen = origen.Where(turno => turno.Original.OutcomeEstado == EstadoSeleccionado.Value);
-		}
-
-		// 🔹 Filtro por paciente
-		if (!string.IsNullOrWhiteSpace(FiltroTurnosPaciente)) {
-			var txt = FiltroTurnosPaciente.Trim();
-
-			origen = origen.Where(t =>
-				t.PacienteDisplayear.Contains(
-					txt,
-					StringComparison.InvariantCultureIgnoreCase
-				)
-			);
-		}
-
-		// 🔹 Filtro por paciente
-		if (!string.IsNullOrWhiteSpace(FiltroTurnosMedico)) {
-			var txt = FiltroTurnosMedico.Trim();
-
-			origen = origen.Where(t =>
-				t.MedicoDisplayear.Contains(
-					txt,
-					StringComparison.InvariantCultureIgnoreCase
-				)
-			);
-		}
-
-
-		
-
-		foreach (TurnoViewModel turno in origen)
-			TurnosList.Add(turno);
-
-		// 🔹 Restaurar selección si sigue visible
-		if (seleccionado != null && TurnosList.Contains(seleccionado))
-			SelectedTurno = seleccionado;
-		else
+		TurnosView.Refresh();
+		// Restaurar selección si sigue visible
+		if (SelectedTurno != null && !TurnosView.Cast<TurnoViewModel>().Contains(SelectedTurno))
 			SelectedTurno = null;
 	}
-
-
 	// ================================================================
-	// ITEM SELECCIONADO
+	// FILTROS
 	// ================================================================
-
-	private TurnoViewModel? _turnoSeleccionado;
-	public TurnoViewModel? SelectedTurno {
-		get => _turnoSeleccionado;
-		set {
-			if (_turnoSeleccionado != value) {
-				_turnoSeleccionado = value;
-				OnPropertyChanged(nameof(SelectedTurno));
-				OnPropertyChanged(nameof(HayTurnoSeleccionado));
-				OnPropertyChanged(nameof(PuedeCancelarTurno));
-				OnPropertyChanged(nameof(PuedeConfirmarTurno));
-				OnPropertyChanged(nameof(PuedeMarcarComoAusente));
-			}
-		}
-	}
-
-
-	// ================================================================
-	// FILTER: ESTADO
-	// ================================================================
-
-	public List<TurnoEstadoCodigo> Estados { get; }
-		= [.. Enum.GetValues<TurnoEstadoCodigo>()];
 
 	private TurnoEstadoCodigo? _estadoSeleccionado;
 	public TurnoEstadoCodigo? EstadoSeleccionado {
@@ -206,11 +175,6 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		}
 	}
 
-
-	// ================================================================
-	// FILTROS
-	// ================================================================
-
 	private string _filtroTurnosPaciente = "";
 	public string FiltroTurnosPaciente {
 		get => _filtroTurnosPaciente;
@@ -218,7 +182,6 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 			if (_filtroTurnosPaciente != value) {
 				_filtroTurnosPaciente = value;
 				OnPropertyChanged(nameof(FiltroTurnosPaciente));
-				OnPropertyChanged(nameof(FiltroTurnosMedico));
 				AplicarFiltros();
 			}
 		}
@@ -230,13 +193,29 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		set {
 			if (_filtroTurnosMedico != value) {
 				_filtroTurnosMedico = value;
-				OnPropertyChanged(nameof(FiltroTurnosPaciente));
 				OnPropertyChanged(nameof(FiltroTurnosMedico));
 				AplicarFiltros();
 			}
 		}
 	}
 
+
+	private bool FilterTurnos(object obj) {
+		if (obj is not TurnoViewModel t) return false;
+
+		if (EstadoSeleccionado.HasValue && t.Original.OutcomeEstado != EstadoSeleccionado.Value)
+			return false;
+
+		if (!string.IsNullOrWhiteSpace(FiltroTurnosPaciente) &&
+			!t.PacienteDisplayear.Contains(FiltroTurnosPaciente.Trim(), StringComparison.InvariantCultureIgnoreCase))
+			return false;
+
+		if (!string.IsNullOrWhiteSpace(FiltroTurnosMedico) &&
+			!t.MedicoDisplayear.Contains(FiltroTurnosMedico.Trim(), StringComparison.InvariantCultureIgnoreCase))
+			return false;
+
+		return true;
+	}
 
 
 
@@ -287,10 +266,46 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 // ================================================================
 // VIEWMODELS PARA GRIDS
 // ================================================================
-public sealed class TurnoViewModel(TurnoDbModel model) {
-	public PacienteDbModel? PacienteRelacionado => RepoCache.DictPacientes.GetValueOrDefault(model.PacienteId);
-	public MedicoDbModel? MedicoRelacionado => RepoCache.DictMedicos.GetValueOrDefault(model.MedicoId);
+
+
+
+public class TurnoViewModel(TurnoDbModel model) {
+	public TurnoDbModel Original { get; } = model;
+
+	internal async Task LoadRelacionesAsync() {
+		await LoadPacienteRelacionadoAsync();
+		await LoadMedicoRelacionadoAsync();
+	}
+
+
+	private PacienteDbModel? _pacienteRelacionado;
+	public PacienteDbModel? PacienteRelacionado => _pacienteRelacionado;
 	public string PacienteDisplayear => PacienteRelacionado is null ? "N/A" : $"{PacienteRelacionado.Dni}: {PacienteRelacionado.Nombre} {PacienteRelacionado.Apellido}";
+
+	public async Task LoadPacienteRelacionadoAsync() {
+		_pacienteRelacionado = await App.Repositorio.SelectPacienteWhereId(Original.PacienteId);
+		OnPropertyChanged(nameof(PacienteRelacionado));
+		OnPropertyChanged(nameof(PacienteDisplayear));
+	}
+
+
+
+	private MedicoDbModel? _medicoRelacionado;
+	public MedicoDbModel? MedicoRelacionado => _medicoRelacionado;
 	public string MedicoDisplayear => MedicoRelacionado is null ? "N/A" : $"{MedicoRelacionado.Nombre} {MedicoRelacionado.Apellido} {MedicoRelacionado.Dni}";
-	public TurnoDbModel Original => model;
+
+	public async Task LoadMedicoRelacionadoAsync() {
+		_medicoRelacionado = await App.Repositorio.SelectMedicoWhereId(Original.MedicoId);
+		OnPropertyChanged(nameof(MedicoRelacionado));
+		OnPropertyChanged(nameof(MedicoDisplayear));
+	}
+
+
+
+	// ================================================================
+	// INFRAESTRUCTURA
+	// ================================================================
+
+	public event PropertyChangedEventHandler? PropertyChanged;
+	private void OnPropertyChanged(string prop) => PropertyChanged?.Invoke(this, new(prop));
 }

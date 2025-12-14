@@ -18,12 +18,8 @@ public sealed class SecretariaPacientesViewModel : INotifyPropertyChanged {
 	// METODOS
 	// ================================================================
 	internal async Task RefrescarPacientesAsync() {
-		try {
-			List<PacienteDbModel> pacientes = await App.Repositorio.SelectPacientes();
-			_todosLosPacientes = pacientes;
-		} catch (Exception ex) {
-			MessageBox.Show("Error cargando pacientes: " + ex.Message);
-		}
+		List<PacienteDbModel> pacientes = await App.Repositorio.SelectPacientes();
+		_todosLosPacientes = pacientes;
 		AplicarFiltros();
 	}
 
@@ -73,7 +69,7 @@ public sealed class SecretariaPacientesViewModel : INotifyPropertyChanged {
 
 
 	// ================================================================
-	// FILTER: PACIENTE (search in PacienteDisplayear)
+	// FILTROS
 	// ================================================================
 
 	private string _filtroPacientesTexto = string.Empty;
@@ -100,13 +96,8 @@ public sealed class SecretariaPacientesViewModel : INotifyPropertyChanged {
 
 
 	// ================================================================
-	// UTILS
+	// INFRASTRUCTURE
 	// ================================================================(propertyName));
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void OnPropertyChanged(string prop) => PropertyChanged?.Invoke(this, new(prop));
 }
-
-
-// ================================================================
-// VIEWMODELS PARA SUB-COLLECTIONS
-// ================================================================

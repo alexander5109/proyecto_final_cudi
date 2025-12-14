@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Data;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEntidad;
@@ -25,6 +26,12 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 			EspecialidadesDisponiblesItemsSource.Add(esp);
 
 		_ = LoadMedicosTodosAsync();
+
+		DisponibilidadesView = CollectionViewSource.GetDefaultView(DisponibilidadesItemsSource);
+		DisponibilidadesView?.SortDescriptions.Clear();
+		// opcionalmente, podés definir un sort inicial
+		// DisponibilidadesView.SortDescriptions.Add(new SortDescription("Fecha", ListSortDirection.Ascending));
+
 	}
 
 	public SecretariaTurnosSacarViewModel(PacienteDbModel paciente, EspecialidadCodigo especialidad) {
@@ -48,6 +55,12 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 			});
 
 		_ = LoadMedicosTodosAsync();
+
+		DisponibilidadesView = CollectionViewSource.GetDefaultView(DisponibilidadesItemsSource);
+		DisponibilidadesView?.SortDescriptions.Clear();
+		// opcionalmente, podés definir un sort inicial
+		// DisponibilidadesView.SortDescriptions.Add(new SortDescription("Fecha", ListSortDirection.Ascending));
+
 	}
 
 
@@ -74,6 +87,15 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 	public IReadOnlyList<MedicoSimpleViewModel>? MedicosTodos { get; private set; }
 	public ObservableCollection<MedicoSimpleViewModel> MedicosEspecialistasItemsSource { get; } = [];
 
+	private ICollectionView? _disponibilidadesView;
+	public ICollectionView? DisponibilidadesView {
+		get => _disponibilidadesView;
+		private set {
+			if (_disponibilidadesView == value) return;
+			_disponibilidadesView = value;
+			OnPropertyChanged(nameof(DisponibilidadesView));
+		}
+	}
 
 	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; } = [];
 
@@ -118,26 +140,37 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 			DateTimeKind.Local
 		).AddMinutes(duracionMin);
 
+		DayOfWeek? diaSemanaSelected = SelectedDiaDeLaSemana?.Value;
+
 		List<Disponibilidad2025> lista = await App.Repositorio.SelectDisponibilidades(
 			especialidad: esp.Codigo,
 			cuantos: 40,
-			apartirDeCuando: desde
+			apartirDeCuando: desde,
+			diaSemanaPreferido: diaSemanaSelected
 		);
 
 		foreach (Disponibilidad2025 d in lista)
 			DisponibilidadesItemsSource.Add(new(d));
+
+		DisponibilidadesView?.Refresh();
 	}
 
 
 	private void ActualizarDiasSemana() {
 		DiasSemanaItemsSource.Clear();
+
+		// 🔴 CLAVE: resetear explícitamente
+		SelectedDiaDeLaSemana = null;
+
 		if (SelectedMedico is null) return;
 
 		foreach (DayOfWeek dia in SelectedMedico.DiasAtencion) {
-			DiasSemanaItemsSource.Add(new DiaDeSemanaViewModel(dia, dia.ATexto()));
+			DiasSemanaItemsSource.Add(
+				new DiaDeSemanaViewModel(dia, dia.ATexto())
+			);
 		}
 
-		SelectedDiaValue = DiasSemanaItemsSource.FirstOrDefault();
+		//SelectedDiaDeLaSemana = DiasSemanaItemsSource.FirstOrDefault();
 	}
 
 
@@ -225,12 +258,12 @@ public class SecretariaTurnosSacarViewModel : INotifyPropertyChanged {
 
 
 	private DiaDeSemanaViewModel? _selectedDiaValue;
-	public DiaDeSemanaViewModel? SelectedDiaValue {
+	public DiaDeSemanaViewModel? SelectedDiaDeLaSemana {
 		get => _selectedDiaValue;
 		set {
 			if (_selectedDiaValue == value) return;
 			_selectedDiaValue = value;
-			OnPropertyChanged(nameof(SelectedDiaValue));
+			OnPropertyChanged(nameof(SelectedDiaDeLaSemana));
 			OnPropertyChanged(nameof(BotonBuscar_Enabled));
 			OnPropertyChanged(nameof(BotonAgendar_Enabled));
 		}

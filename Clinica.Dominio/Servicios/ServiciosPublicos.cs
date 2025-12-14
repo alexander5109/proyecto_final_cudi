@@ -11,9 +11,15 @@ namespace Clinica.Dominio.Servicios;
 
 public class ServiciosPublicos : IServiciosDeDominio {
 
-	async Task<Result<IReadOnlyList<Disponibilidad2025>>> IServiciosDeDominio.SolicitarDisponibilidades(EspecialidadCodigo solicitudEspecialidadCodigo, DateTime aPartirDeCuando, int cuantos, IRepositorioDominioServices repositorio) {
+	async Task<Result<IReadOnlyList<Disponibilidad2025>>> IServiciosDeDominio.SolicitarDisponibilidades(
+		EspecialidadCodigo solicitudEspecialidadCodigo, 
+		DateTime aPartirDeCuando, 
+		int cuantos,
+		DayOfWeek? diaSemanaPreferido,
+		IRepositorioDominioServices repositorio
+	) {
 
-		if (cuantos > 50) {
+		if (cuantos > 80) {
 			return new Result<IReadOnlyList<Disponibilidad2025>>.Error("No vamos a producir tantas disponibilidades. Si quiere, adelante la fecha");
 		}
 
@@ -28,6 +34,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 			_ServiciosPrivados.GenerarDisponibilidades(
 				solicitudEspecialidad,
 				aPartirDeCuando,
+				diaSemanaPreferido,
 				repositorio)) {
 			if (dispResult.IsError) {
 				// Propagamos el error aguas arriba

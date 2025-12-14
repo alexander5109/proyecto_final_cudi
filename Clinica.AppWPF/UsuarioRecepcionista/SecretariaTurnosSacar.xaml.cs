@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
@@ -132,6 +133,36 @@ public partial class SecretariaTurnosSacar : Window {
 		//App.Repositorio.Refres();
 
 	}
+
+
+
+
+
+	// ==========================================================
+	// BOTONES: ORDENAR
+	// ==========================================================
+	private GridViewColumnHeader? _lastHeaderClicked = null;
+	private ListSortDirection _lastDirection = ListSortDirection.Ascending;
+
+	private void ClickCabecera_OrdenarFilas(object sender, RoutedEventArgs e) {
+		if (sender is not GridViewColumnHeader header || header.Tag == null) return;
+
+		string sortBy = header.Tag.ToString()!;
+		ListSortDirection direction = ListSortDirection.Ascending;
+
+		if (_lastHeaderClicked == header && _lastDirection == ListSortDirection.Ascending)
+			direction = ListSortDirection.Descending;
+
+		VM.DisponibilidadesView?.SortDescriptions.Clear();
+		VM.DisponibilidadesView?.SortDescriptions.Add(new SortDescription(sortBy, direction));
+		VM.DisponibilidadesView?.Refresh();
+
+		_lastHeaderClicked = header;
+		_lastDirection = direction;
+	}
+
+
+
 
 	// ==========================================================
 	// BOTONES: NAV

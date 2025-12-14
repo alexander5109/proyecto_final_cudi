@@ -20,7 +20,6 @@
 				Content="Sistema de Gestión"
 				FontSize="30"
 				FontFamily="SachaWynterTight Linotype"
-				Background="{x:Null}"
 				Foreground="#FF1F1F3C"
 				Padding="0,0,0,0"
 				HorizontalAlignment="Center" />
@@ -153,7 +152,6 @@
 			</CheckBox.Template>
 		</CheckBox>
 		<Label
-			Content="Bienvenido recepcionista Carla"
 			FontSize="24"
 			FontFamily="Palatino Linotype"
 			FontWeight="Bold"
@@ -161,16 +159,15 @@
 			Margin="25,0,0,25"
 			HorizontalAlignment="Left"
 			VerticalAlignment="Bottom"
-			VerticalContentAlignment="Center"
-			HorizontalContentAlignment="Center"
-			Width="187">
-			<Label.ContentTemplate>
-				<DataTemplate>
-					<TextBlock
-						Text="{Binding}"
-						TextWrapping="Wrap" />
-				</DataTemplate>
-			</Label.ContentTemplate>
+			Width="200">
+			<Label.Content>
+				<TextBlock
+					Text="{Binding MensajeBienvenida}"
+					TextTrimming="CharacterEllipsis"
+					TextAlignment="Center"
+					VerticalAlignment="Center"
+					TextWrapping="Wrap" />
+			</Label.Content>
 		</Label>
 	</Grid>
 </Window>
