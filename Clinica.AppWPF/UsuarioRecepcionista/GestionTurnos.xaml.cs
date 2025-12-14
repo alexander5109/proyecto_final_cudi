@@ -120,8 +120,8 @@ public partial class SecretariaTurnos : Window {
 	// ==========================================================
 	// BOTONES: ORDENAR
 	// ==========================================================
-	private GridViewColumnHeader? _lastHeaderClicked = null;
-	private ListSortDirection _lastDirection = ListSortDirection.Ascending;
+	private GridViewColumnHeader? _ultimaColumnaClicked = null;
+	private ListSortDirection _ultimaDireccion = ListSortDirection.Ascending;
 
 	private void ClickCabecera_OrdenarFilas(object sender, RoutedEventArgs e) {
 		if (sender is not GridViewColumnHeader header || header.Tag == null) return;
@@ -129,15 +129,15 @@ public partial class SecretariaTurnos : Window {
 		string sortBy = header.Tag.ToString()!;
 		ListSortDirection direction = ListSortDirection.Ascending;
 
-		if (_lastHeaderClicked == header && _lastDirection == ListSortDirection.Ascending)
+		if (_ultimaColumnaClicked == header && _ultimaDireccion == ListSortDirection.Ascending)
 			direction = ListSortDirection.Descending;
 
 		VM.TurnosView.SortDescriptions.Clear();
 		VM.TurnosView.SortDescriptions.Add(new SortDescription(sortBy, direction));
 		VM.TurnosView.Refresh();
 
-		_lastHeaderClicked = header;
-		_lastDirection = direction;
+		_ultimaColumnaClicked = header;
+		_ultimaDireccion = direction;
 	}
 
 

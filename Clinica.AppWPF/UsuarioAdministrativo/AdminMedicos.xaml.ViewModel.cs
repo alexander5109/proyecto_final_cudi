@@ -8,22 +8,13 @@ namespace Clinica.AppWPF.UsuarioAdministrativo;
 
 
 
-public class HorarioViewModel(HorarioDbModel horarioDbModel) {
-	public int MedicoId { get; } = horarioDbModel.MedicoId.Valor;
-	public DayOfWeek DiaSemana { get; } = horarioDbModel.DiaSemana;
-	public string DiaSemanaDescripcion => DiaSemana.ATexto();
-	public TimeSpan HoraDesde { get; } = horarioDbModel.HoraDesde;
-	public string HoraDesdeStr => HoraDesde.ToString(@"hh\:mm");
-	public TimeSpan HoraHasta { get; } = horarioDbModel.HoraHasta;
-	public string HoraHastaStr => HoraHasta.ToString(@"hh\:mm");
-	public DateTime VigenteDesde { get; } = horarioDbModel.VigenteDesde;
-	public DateTime? VigenteHasta { get; } = horarioDbModel.VigenteHasta ?? DateTime.MaxValue;
-}
-
 
 public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
-	public event PropertyChangedEventHandler? PropertyChanged;
 
+	// ==========================================================
+	// BOTONES: NAV
+	// ==========================================================
+	public event PropertyChangedEventHandler? PropertyChanged;
 	public ObservableCollection<HorarioViewModel> HorariosViewModelList { get; } = [];
 
 	private MedicoDbModel? _selectedMedico;
@@ -57,11 +48,16 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 		}
 	}
 
+
+	// ================================================================
+	// COLECCIONES
+	// ================================================================
+	private List<MedicoDbModel> _todosLosMedicos = []; // Copia completa para filtrar
 	public ObservableCollection<MedicoDbModel> MedicosList { get; } = [];
 
 
 
-	private List<MedicoDbModel> _todosLosMedicos = []; // Copia completa para filtrar
+
 	internal async Task RefrescarMedicosAsync() {
 		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
 
@@ -117,4 +113,16 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 
 
 	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+}
+
+public class HorarioViewModel(HorarioDbModel horarioDbModel) {
+	public int MedicoId { get; } = horarioDbModel.MedicoId.Valor;
+	public DayOfWeek DiaSemana { get; } = horarioDbModel.DiaSemana;
+	public string DiaSemanaDescripcion => DiaSemana.ATexto();
+	public TimeSpan HoraDesde { get; } = horarioDbModel.HoraDesde;
+	public string HoraDesdeStr => HoraDesde.ToString(@"hh\:mm");
+	public TimeSpan HoraHasta { get; } = horarioDbModel.HoraHasta;
+	public string HoraHastaStr => HoraHasta.ToString(@"hh\:mm");
+	public DateTime VigenteDesde { get; } = horarioDbModel.VigenteDesde;
+	public DateTime? VigenteHasta { get; } = horarioDbModel.VigenteHasta ?? DateTime.MaxValue;
 }

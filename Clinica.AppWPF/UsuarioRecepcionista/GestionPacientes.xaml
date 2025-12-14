@@ -131,7 +131,7 @@
 				Width="200" />
 			<ListView
 				Grid.Row="3"
-				ItemsSource="{Binding PacientesList}"
+				ItemsSource="{Binding PacientesView}"
 				SelectedItem="{Binding SelectedPaciente}"
 				ScrollViewer.VerticalScrollBarVisibility="Auto"
 				ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -140,21 +140,45 @@
 				<ListView.View>
 					<GridView>
 						<GridViewColumn
-							Header="Nombre"
-							Width="155"
-							DisplayMemberBinding="{Binding Nombre}" />
+							Width="auto"
+							DisplayMemberBinding="{Binding Nombre}">
+							<GridViewColumn.Header>
+								<GridViewColumnHeader
+									Content="Nombre"
+									Click="ClickCabecera_OrdenarFilas"
+									Tag="Nombre" />
+							</GridViewColumn.Header>
+						</GridViewColumn>
 						<GridViewColumn
-							Header="Apellido"
-							Width="155"
-							DisplayMemberBinding="{Binding Apellido}" />
+							Width="auto"
+							DisplayMemberBinding="{Binding Apellido}">
+							<GridViewColumn.Header>
+								<GridViewColumnHeader
+									Content="Apellido"
+									Click="ClickCabecera_OrdenarFilas"
+									Tag="Apellido" />
+							</GridViewColumn.Header>
+						</GridViewColumn>
 						<GridViewColumn
-							Header="DNI"
-							Width="75"
-							DisplayMemberBinding="{Binding Dni}" />
+							Width="auto"
+							DisplayMemberBinding="{Binding Dni}">
+							<GridViewColumn.Header>
+								<GridViewColumnHeader
+									Content="DNI"
+									Click="ClickCabecera_OrdenarFilas"
+									Tag="Dni"  />
+							</GridViewColumn.Header>
+						</GridViewColumn>
 						<GridViewColumn
-							Header="FechaIngreso"
-							Width="144"
-							DisplayMemberBinding="{Binding FechaIngreso}" />
+							Width="auto"
+							DisplayMemberBinding="{Binding FechaIngreso}">
+							<GridViewColumn.Header>
+								<GridViewColumnHeader
+									Content="Fecha ingreso"
+									Click="ClickCabecera_OrdenarFilas"
+									Tag="FechaIngreso"  />
+							</GridViewColumn.Header>
+						</GridViewColumn>
 					</GridView>
 				</ListView.View>
 			</ListView>

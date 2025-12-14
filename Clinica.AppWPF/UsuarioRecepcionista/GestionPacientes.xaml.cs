@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Clinica.AppWPF.Infrastructure;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
@@ -36,6 +38,32 @@ public partial class GestionPacientes : Window {
 			MessageBox.Show("No hay paciente seleecionado");
 		}
 	}
+
+
+	// ==========================================================
+	// BOTONES: ORDENAR
+	// ==========================================================
+	private GridViewColumnHeader? _ultimaColumnaClicked = null;
+	private ListSortDirection _ultimaDireccion = ListSortDirection.Ascending;
+
+	private void ClickCabecera_OrdenarFilas(object sender, RoutedEventArgs e) {
+		if (sender is not GridViewColumnHeader header || header.Tag == null) return;
+
+		string sortBy = header.Tag.ToString()!;
+		ListSortDirection direction = ListSortDirection.Ascending;
+
+		if (_ultimaColumnaClicked == header && _ultimaDireccion == ListSortDirection.Ascending)
+			direction = ListSortDirection.Descending;
+
+		VM.PacientesView.SortDescriptions.Clear();
+		VM.PacientesView.SortDescriptions.Add(new SortDescription(sortBy, direction));
+		VM.PacientesView.Refresh();
+
+		_ultimaColumnaClicked = header;
+		_ultimaDireccion = direction;
+	}
+
+
 
 	// ==========================================================
 	// BOTONES: REFRESH

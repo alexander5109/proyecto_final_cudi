@@ -7,11 +7,9 @@
 	mc:Ignorable="d"
 	Title="Clinica Medica – Gestión Integral"
 	WindowStartupLocation="CenterScreen"
-	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
-	WindowStyle="ThreeDBorderWindow"
 	Width="1024"
-	ResizeMode="CanResize"
-	Height="600">
+	Height="600"
+	Icon="pack://application:,,,/PublishedResources/icons/icono.png">
 	<!-- Fondo -->
 	<Window.Background>
 		<ImageBrush

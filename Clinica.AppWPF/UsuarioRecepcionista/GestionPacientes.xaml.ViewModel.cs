@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Data;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
@@ -8,43 +9,22 @@ namespace Clinica.AppWPF.UsuarioRecepcionista;
 public sealed class GestionPacientesVM : INotifyPropertyChanged {
 
 	// ================================================================
+	// CONSTRUCTOR
+	// ================================================================
+	public GestionPacientesVM() {
+		PacientesView = CollectionViewSource.GetDefaultView(_todosLosPacientes);
+		PacientesView.Filter = FilterPacientes;
+	}
+
+
+
+	// ================================================================
 	// COLECCIONES
 	// ================================================================
 
-	private List<PacienteDbModel> _todosLosPacientes = [];  // Original immutable list
+	private List<PacienteDbModel> _todosLosPacientes = [];
+	public ICollectionView PacientesView { get; private set; }
 	public ObservableCollection<PacienteDbModel> PacientesList { get; } = [];
-
-	// ================================================================
-	// METODOS
-	// ================================================================
-	internal async Task RefrescarPacientesAsync() {
-		List<PacienteDbModel> pacientes = await App.Repositorio.SelectPacientes();
-		_todosLosPacientes = pacientes;
-		AplicarFiltros();
-	}
-
-
-	private void AplicarFiltros() {
-		PacientesList.Clear();
-
-		IEnumerable<PacienteDbModel> origen;
-
-		if (string.IsNullOrWhiteSpace(FiltroPacientesTexto)) {
-			origen = _todosLosPacientes;
-		} else {
-			var texto = FiltroPacientesTexto.Trim();
-
-			origen = _todosLosPacientes.Where(x =>
-					(x.Nombre?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
-					(x.Apellido?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
-					(x.Dni?.ToLower().Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false)
-			);
-		}
-
-		foreach (PacienteDbModel instance in origen)
-			PacientesList.Add(instance);
-	}
-
 
 
 
@@ -67,6 +47,35 @@ public sealed class GestionPacientesVM : INotifyPropertyChanged {
 	}
 
 
+	// ================================================================
+	// METODOS DE UI
+	// ================================================================
+	internal async Task RefrescarPacientesAsync() {
+		var pacientes = await App.Repositorio.SelectPacientes();
+		_todosLosPacientes = pacientes;
+
+		// Reasignamos la vista para reflejar la nueva lista
+		PacientesView = CollectionViewSource.GetDefaultView(_todosLosPacientes);
+		PacientesView.Filter = FilterPacientes;
+
+		OnPropertyChanged(nameof(PacientesView));
+		SelectedPaciente = null;
+
+		AplicarFiltros();
+	}
+
+
+
+	private void AplicarFiltros() {
+		PacientesView.Refresh();
+
+		if (SelectedPaciente != null &&
+			!PacientesView.Cast<PacienteDbModel>().Contains(SelectedPaciente)) {
+			SelectedPaciente = null;
+		}
+	}
+
+
 
 	// ================================================================
 	// FILTROS
@@ -84,6 +93,20 @@ public sealed class GestionPacientesVM : INotifyPropertyChanged {
 		}
 	}
 
+	private bool FilterPacientes(object obj) {
+		if (obj is not PacienteDbModel p)
+			return false;
+
+		if (string.IsNullOrWhiteSpace(FiltroPacientesTexto))
+			return true;
+
+		string texto = FiltroPacientesTexto.Trim();
+
+		return
+			(p.Nombre?.Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
+			(p.Apellido?.Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
+			(p.Dni?.Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false);
+	}
 
 	// ================================================================
 	// REGLAS

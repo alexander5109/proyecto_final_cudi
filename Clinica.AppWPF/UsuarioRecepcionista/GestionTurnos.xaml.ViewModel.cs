@@ -28,7 +28,6 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	// ================================================================
 	private List<TurnoViewModel> _todosLosTurnos = [];
 	public ICollectionView TurnosView { get; private set; }
-
 	public List<TurnoEstadoCodigo> Estados { get; } = [.. Enum.GetValues<TurnoEstadoCodigo>()];
 
 
@@ -124,19 +123,8 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	// METODOS DE UI
 	// ================================================================
 	internal async Task RefrescarTurnosAsync() {
-		await App.Repositorio.EnsureMedicosLoaded(); //just to generate the dictionaries for the views.
+		await App.Repositorio.EnsureMedicosLoaded(); 
 		await App.Repositorio.EnsurePacientesLoaded();
-
-
-		// VOY A SACAR LOS TRY EXCEPT DE TODOS LOS LLAMADOS AL REPO.
-		// EL REPOSITORIO DEBERIA UTILIZAR EL SISTEMA ResultWpf. me falta implementarlo todavia. 
-		//try { 
-		// await App.Repositorio.SelectTurnos();
-		//} catch (Exception ex) {
-		//	MessageBox.Show("Error cargando turnos: " + ex.Message);
-		//	return;
-		//}
-
 		var turnos = await App.Repositorio.SelectTurnos();
 		var turnoTasks = turnos.Select(async t => {
 			var vm = new TurnoViewModel(t);
@@ -156,7 +144,6 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 
 	private void AplicarFiltros() {
 		TurnosView.Refresh();
-		// Restaurar selección si sigue visible
 		if (SelectedTurno != null && !TurnosView.Cast<TurnoViewModel>().Contains(SelectedTurno))
 			SelectedTurno = null;
 	}
@@ -267,9 +254,6 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 // ================================================================
 // VIEWMODELS PARA GRIDS
 // ================================================================
-
-
-
 public class TurnoViewModel(TurnoDbModel model) {
 	public TurnoDbModel Original { get; } = model;
 
