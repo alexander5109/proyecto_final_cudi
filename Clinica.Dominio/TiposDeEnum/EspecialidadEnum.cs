@@ -1,7 +1,7 @@
 ﻿namespace Clinica.Dominio.TiposDeEnum;
 
 // Enum simple para DTOs y mapeo automático
-public enum EspecialidadEnumCodigo : byte {
+public enum EspecialidadEnum : byte {
 	ClinicoGeneral = 1,
 	Cardiologo = 2,
 	Oftalmologo = 3,

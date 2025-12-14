@@ -13,7 +13,7 @@ namespace Clinica.Dominio.Servicios;
 public class ServiciosPublicos : IServiciosDeDominio {
 
 	async Task<Result<IReadOnlyList<Disponibilidad2025>>>IServiciosDeDominio.SolicitarDisponibilidades(
-		EspecialidadEnumCodigo especialidadCodigo,
+		EspecialidadEnum especialidadCodigo,
 		DateTime aPartirDeCuando,
 		int cuantos,
 		DayOfWeek? diaSemanaPreferido,
@@ -104,7 +104,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 						bool solapa = turnos.Any(t =>
 							t.EspecialidadCodigo == especialidad.Codigo &&
-							t.OutcomeEstado == TurnoEstadoCodigo.Programado &&
+							t.OutcomeEstado == TurnoEstadoEnum.Programado &&
 							t.FechaHoraAsignadaDesde < slotHasta &&
 							slot < t.FechaHoraAsignadaHasta
 						);

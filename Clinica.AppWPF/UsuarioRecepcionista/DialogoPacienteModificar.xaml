@@ -198,7 +198,7 @@
 					Style="{StaticResource BotonRedondeado}"
 					FontFamily="Baskerville Old Face"
 					IsEnabled="{Binding PuedeGuardarCambios}"
-					Click="ButtonGuardar"
+					Click="ClickBoton_GuardarCambios"
 					Background="Black"
 					Foreground="#FF162F28"
 					FontSize="20" />
@@ -210,7 +210,7 @@
 					Style="{StaticResource BotonRedondeado}"
 					FontFamily="Baskerville Old Face"
 					IsEnabled="{Binding PuedeEliminar}"
-					Click="ButtonEliminar"
+					Click="ClickBoton_Eliminar"
 					FontSize="20" />
 			</StackPanel>
 			<StackPanel

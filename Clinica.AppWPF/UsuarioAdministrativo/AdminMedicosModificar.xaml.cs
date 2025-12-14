@@ -1,88 +1,47 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
+﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.TiposExtensiones;
+using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
-
-//public record HorarioDb(int Id, int MedicoId, int DiaSemana, TimeSpan HoraDesde, TimeSpan HoraHasta);
-
-
-
 public partial class AdminMedicosModificar : Window {
-	public AdminMedicosModificarViewModel VM { get; }
+	public DialogoMedicoModificarVM VM { get; }
 
+	// ==========================================================
+	// CONSTRUCTORES
+	// ==========================================================
 	public AdminMedicosModificar() {
 		InitializeComponent();
-		VM = new AdminMedicosModificarViewModel(new MedicoDbModel());
+		VM = new DialogoMedicoModificarVM(new MedicoDbModel());
 		DataContext = VM;
 	}
 
 	public AdminMedicosModificar(MedicoDbModel model) {
 		InitializeComponent();
-		VM = new AdminMedicosModificarViewModel(model);
+		VM = new DialogoMedicoModificarVM(model);
 		DataContext = VM;
 		Loaded += async (_, _) => await VM.CargarHorariosAsync();
 	}
 
-    private void ClickBoton_GuardarCambios(object sender, RoutedEventArgs e) {
-		MessageBox.Show("Falta implementar el guardado de cambios");
+	// ==========================================================
+	// BOTONES: CRUD HORARIOS
+	// ==========================================================
+
+	private void ClickBoton_EditarHorario(object sender, RoutedEventArgs e) {
+
 	}
 
-    private void ClickBoton_EliminarMedico(object sender, RoutedEventArgs e) {
-		MessageBox.Show("Falta implementar la eliminacion de medico");
+	private void ClickBoton_AgregarHorario(object sender, RoutedEventArgs e) {
 
 	}
 
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<AdminMedicos>();
+	private void ClickBoton_EliminarHorario(object sender, RoutedEventArgs e) {
+
+	}
+
 
 	/*
-
-	//---------------------botones.GuardarCambios-------------------//
-	private void ButtonGuardar(object sender, RoutedEventArgs e) {
-		SoundsService.PlayClickSound();
-		ResultWpf<Medico2025> resultado = SelectedMedico.ToDomain();
-
-		resultado.Switch(
-			ok => {
-				bool exito = false;
-				if (SelectedMedico.Id is null) {
-					// _ValidarRepositorios nuevo médico
-					//exito = App.BaseDeDatos.CreateMedico(RelatedMedico);
-				} else {
-					// Actualizar médico existente
-					//exito = App.BaseDeDatos.UpdateMedico(RelatedMedico);
-				}
-				if (exito)
-					this.Cerrar();
-			},
-			error => {
-				MessageBox.Show(
-					$"No se puede guardar el médico: {error}",
-					"Error de ingreso",
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning
-				);
-			}
-		);
-	}
-	//---------------------botones.Eliminar-------------------//
-	private void ButtonEliminar(object sender, RoutedEventArgs e) {
-		SoundsService.PlayClickSound();
-		if (MessageBox.Show($"¿Está seguro que desea eliminar este médico? {SelectedMedico.Name}", "Confirmar Eliminación", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK) {
-			return;
-		}
-		//if (App.BaseDeDatos.DeleteMedico(RelatedMedico)) {
-		//	this.Cerrar(); // this.NavegarA<WindowListarMedicos>();
-		//}
-	}
-
-	//---------------------botones.Salida-------------------//
-	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
-
-	//---------------------botones.HorariosViewModelList-------------------//
 	private object? GetSelectedTreeItem() {
 		return treeViewHorarios.SelectedItem;
 	}
@@ -153,17 +112,58 @@ public partial class AdminMedicosModificar : Window {
 
 	//------------------------Fin---------------------------//
 
-}
 
-public class ViewModelHorarioAgrupado(DayOfWeek dia, List<HorarioDbModel> horarios) {
-	public string DiaSemanaNombre { get; } = dia.ATexto();
-	//public string DiaSemanaNombre { get; } = CultureInfo.GetCultureInfo("es-AR").DateTimeFormat.DayNames[dia];
-	public ObservableCollection<HorarioMedicoViewModel> Horarios { get; } = new ObservableCollection<HorarioMedicoViewModel>(
-			horarios.Select(h => new HorarioMedicoViewModel(h))
+
+
+
+
+	// ==========================================================
+	// BOTONES: PERSISTENCIA
+	// ==========================================================
+
+	private async void ClickBoton_GuardarCambios(object sender, RoutedEventArgs e) {
+		SoundsService.PlayClickSound();
+		ResultWpf<UnitWpf> result = await VM.GuardarAsync();
+		result.MatchAndDo(
+			caseOk => MessageBox.Show("Cambios guardados.", "Éxito", MessageBoxButton.OK),
+			caseError => caseError.ShowMessageBox()
 		);
-}
+	}
 
-public class HorarioMedicoViewModel(HorarioDbModel h) {
-	public string Desde { get; } = h.HoraDesde.ToString(@"hh\:mm");
-	public string Hasta { get; } = h.HoraHasta.ToString(@"hh\:mm");
+	private async void ClickBoton_Eliminar(object sender, RoutedEventArgs e) {
+		if (
+			VM.Id is not MedicoId idGood || (
+			MessageBox.Show("¿Esta seguro que desea eliminar este paciente?",
+			"Confirmación", MessageBoxButton.YesNo) == MessageBoxResult.No)
+		) return;
+
+		ResultWpf<UnitWpf> result = await App.Repositorio.DeleteMedicoWhereId(idGood);
+		result.MatchAndDo(
+			caseOk => {
+				MessageBox.Show("PacienteExtensiones eliminado.", "Éxito", MessageBoxButton.OK);
+				Close();
+			},
+			caseError => caseError.ShowMessageBox()
+		);
+	}
+
+
+
+
+	// ==========================================================
+	// BOTONES: REFRESH
+	// ==========================================================
+
+	// I guess i could implement it on the viewmodel and call it through the button here. It's just a matter of calling refresh pacientes and selectonebyid (which we have)
+
+
+
+
+
+	// ==========================================================
+	// BOTONES: NAV
+	// ==========================================================
+
+	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 }

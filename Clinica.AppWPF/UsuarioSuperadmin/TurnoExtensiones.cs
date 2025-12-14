@@ -18,7 +18,7 @@ public static class TurnoExtensiones {
 		if (instance is null) return;
 		ventana.txtMedicos.SelectedValue = instance.MedicoId.Valor;
 		ventana.txtPacientes.SelectedValue = instance.PacienteId.Valor;
-		//ventana.txtEspecialidades.SelectedItem = instance.MedicoRelacionado?.EspecialidadEnumCodigo.ToString();
+		//ventana.txtEspecialidades.SelectedItem = instance.MedicoRelacionado?.EspecialidadEnum.ToString();
 		ventana.txtId.Content = instance.Id.Valor;
 		ventana.txtFecha.SelectedDate = instance.FechaHoraAsignadaDesde;
 		ventana.txtHora.Text = instance.FechaHoraAsignadaDesde.ATextoHoras();

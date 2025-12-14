@@ -86,7 +86,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicosWhereEspecialidadCodigo(EspecialidadEnumCodigo code) {
+	async Task<List<MedicoDbModel>> IWPFRepositorioMedicos.SelectMedicosWhereEspecialidadCodigo(EspecialidadEnum code) {
 		await EnsureMedicosLoaded();
 		return [.. RepoCache.DictMedicos
 			.Values
@@ -375,7 +375,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 	async Task<List<Disponibilidad2025>> IWPFRepositorioDominio.SelectDisponibilidades(
-		EspecialidadEnumCodigo especialidad,
+		EspecialidadEnum especialidad,
 		int cuantos,
 		DateTime aPartirDeCuando,
 		DayOfWeek? diaSemanaPreferido

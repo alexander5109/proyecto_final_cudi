@@ -12,10 +12,10 @@ public static class TurnoDtos {
 		DateTime FechaDeCreacion,
 		PacienteId PacienteId,
 		MedicoId MedicoId,
-		EspecialidadEnumCodigo EspecialidadCodigo,
+		EspecialidadEnum EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
-		TurnoEstadoCodigo OutcomeEstado,
+		TurnoEstadoEnum OutcomeEstado,
 		DateTime? OutcomeFecha,
 		string? OutcomeComentario
 	) {

@@ -6,11 +6,9 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="clr-namespace:Clinica.AppWPF.Ventanas"
 	mc:Ignorable="d"
-	Width="1024"
-	Height="600"
+	Width="512"
+	Height="300"
 	Title="EditarFranjaHorarioDialog">
-	<!-- ===== ESTILO DE BOTONES (mismo que en las otras pantallas) ===== -->
-	<!-- Fondo -->
 	<Window.Background>
 		<ImageBrush
 			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg"
@@ -42,7 +40,7 @@
 				FontFamily="Bahnschrift" />
 			<ComboBox
 				x:Name="txtComboBox"
-				ItemsSource="{Binding DiaSemanaValues}"
+				ItemsSource="{Binding DiaSemana}"
 				SelectedItem="{Binding Horario.DiaSemana}"
 				Margin="15,0,0,0"
 				VerticalAlignment="Center"

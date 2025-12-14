@@ -14,7 +14,7 @@ public static partial class DbModels {
 	public sealed record UsuarioAutenticadoDbModel(
 		UsuarioId Id,
 		string UserName,
-		UsuarioRoleCodigo EnumRole
+		UsuarioRoleEnum EnumRole
 	);
 
 
@@ -24,7 +24,7 @@ public static partial class DbModels {
 		string Nombre,
 		string Apellido,
 		string PasswordHash,
-		UsuarioRoleCodigo EnumRole,
+		UsuarioRoleEnum EnumRole,
 		string Email,
 		string Telefono
 	) {

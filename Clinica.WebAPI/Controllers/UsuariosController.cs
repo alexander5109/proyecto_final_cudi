@@ -21,7 +21,7 @@ public class UsuariosController(
 	public Task<ActionResult<IEnumerable<UsuarioDbModel>>> GetUsuarios()
 	=> this.SafeExecute(
 		logger,
-		PermisosAccionesCodigo.VerUsuarios,
+		PermisosAccionesEnum.VerUsuarios,
 		() => repositorio.SelectUsuarios()
 	);
 
@@ -31,7 +31,7 @@ public class UsuariosController(
 	public Task<ActionResult<UsuarioDbModel?>> GetUsuarioPorId(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesCodigo.VerUsuarios,
+			PermisosAccionesEnum.VerUsuarios,
 			() => repositorio.SelectUsuarioWhereId(new UsuarioId(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
@@ -41,7 +41,7 @@ public class UsuariosController(
 	public Task<ActionResult<UsuarioDbModel>> GetUsuarioProfileByUsername(string username)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesCodigo.VerUsuarios,
+			PermisosAccionesEnum.VerUsuarios,
 			() => repositorio.SelectUsuarioProfileWhereUsername(new UserName(username)),
 			notFoundMessage: $"No existe usuario con nombre: {username}"
 		);
@@ -51,7 +51,7 @@ public class UsuariosController(
 	public Task<ActionResult<Unit>> DeleteUsuario(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesCodigo.DeleteEntidades,
+			PermisosAccionesEnum.DeleteEntidades,
 			() => repositorio.DeleteUsuarioWhereId(new UsuarioId(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
@@ -62,7 +62,7 @@ public class UsuariosController(
 	public Task<ActionResult<UsuarioDbModel>> UpdateUsuario(int id, [FromBody] UsuarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisosAccionesCodigo.UpdateEntidades,
+		PermisosAccionesEnum.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
 		usuario => repositorio.UpdateUsuarioWhereId(new UsuarioId(id), usuario),
@@ -75,7 +75,7 @@ public class UsuariosController(
 	public Task<ActionResult<UsuarioId>> CrearUsuario([FromBody] UsuarioDto dto)
 		=> this.SafeExecuteWithDomain(
 			logger,
-			PermisosAccionesCodigo.CrearUsuarios,
+			PermisosAccionesEnum.CrearUsuarios,
 			dto,
 			x => x.ToDomain(),
 			usuario => repositorio.InsertUsuarioReturnId(usuario)

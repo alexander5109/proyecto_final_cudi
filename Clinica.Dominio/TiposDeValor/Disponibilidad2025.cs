@@ -4,7 +4,7 @@ using Clinica.Dominio.TiposDeIdentificacion;
 namespace Clinica.Dominio.TiposDeValor;
 
 public readonly record struct Disponibilidad2025( //este tipo de valor es la mejor utilizacion de un struct in c#
-	EspecialidadEnumCodigo EspecialidadCodigo,
+	EspecialidadEnum EspecialidadCodigo,
 	MedicoId MedicoId,
 	DateTime FechaHoraDesde,
 	DateTime FechaHoraHasta
@@ -15,7 +15,7 @@ public readonly record struct Disponibilidad2025( //este tipo de valor es la mej
         // string desde = FechaHoraDesde.ToString("HH:mm");
         // string hasta = FechaHoraHasta.ToString("HH:mm");
 		// return
-			// $"Disponibilidad de {EspecialidadEnumCodigo}\n" +
+			// $"Disponibilidad de {EspecialidadEnum}\n" +
 			// $"  • Médico: {MedicoId}\n" +
 			//$"  • Médico: {Medico.NombreCompleto.ATextoDia()}\n" +
 			// $"  • Fecha: {fecha}\n" +

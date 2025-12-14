@@ -123,16 +123,16 @@ public static class ExtensionMethods {
 			MessageBox.Show($"No hay usuario logueado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 		} else {
 			switch (usuarioLogueado.EnumRole) {
-				case UsuarioRoleCodigo.Nivel1Superadmin:
+				case UsuarioRoleEnum.Nivel1Superadmin:
 					previousWindow.NavegarA<HomeSuperadmin>();
 					break;
-				case UsuarioRoleCodigo.Nivel2Administrativo:
+				case UsuarioRoleEnum.Nivel2Administrativo:
 					previousWindow.NavegarA<HomeAdministrativo>();
 					break;
-				case UsuarioRoleCodigo.Nivel3Recepcionista:
+				case UsuarioRoleEnum.Nivel3Recepcionista:
 					previousWindow.NavegarA<HomeRecepcionista>();
 					break;
-				case UsuarioRoleCodigo.Nivel4Medico:
+				case UsuarioRoleEnum.Nivel4Medico:
 					previousWindow.NavegarA<HomeMedico>();
 					break;
 				default:

@@ -1,4 +1,5 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.Dominio.TiposDeEntidad;

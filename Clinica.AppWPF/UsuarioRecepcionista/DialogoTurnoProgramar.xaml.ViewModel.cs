@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Data;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
@@ -23,7 +22,7 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 		SelectedPaciente = paciente;
 
 		EspecialidadesDisponiblesItemsSource.Clear();
-		foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => new EspecialidadViewModel(x)))
+		foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => x.ToViewModel()))
 			EspecialidadesDisponiblesItemsSource.Add(esp);
 
 		_ = LoadMedicosTodosAsync();
@@ -43,20 +42,20 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 		TurnoAReprogramar = turnoAReprogramar;
 		SelectedPaciente = paciente;
 		SelectedFecha = TurnoAReprogramar.FechaHoraAsignadaHasta;
-		EspecialidadEnumCodigo especialidad = turnoAReprogramar.EspecialidadCodigo;
+		EspecialidadEnum especialidad = turnoAReprogramar.EspecialidadCodigo;
 		EspecialidadesDisponiblesItemsSource.Clear(); // <<---- importantísimo
 
 		Result<Especialidad2025> espResult = Especialidad2025.CrearResult(especialidad);
 
 		espResult.MatchAndDo(
 			ok => {
-				EspecialidadViewModel vm = new(ok);
+				EspecialidadViewModel vm = ok.ToViewModel();
 				SelectedEspecialidad = vm;
 				EspecialidadesDisponiblesItemsSource.Add(vm);
 			},
 			err => {
 				MessageBox.Show($"El código de especialidad no existe <{especialidad}>");
-				foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => new EspecialidadViewModel(x)))
+				foreach (EspecialidadViewModel? esp in Especialidad2025.Todas.Select(x => x.ToViewModel()))
 					EspecialidadesDisponiblesItemsSource.Add(esp);
 			});
 
@@ -210,9 +209,9 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 	}
 
 
-	public async Task LoadMedicosPorEspecialidadAsync(EspecialidadEnumCodigo? esp) {
+	public async Task LoadMedicosPorEspecialidadAsync(EspecialidadEnum? esp) {
 		MedicosEspecialistasItemsSource.Clear();
-		if (esp is not EspecialidadEnumCodigo codigo) return;
+		if (esp is not EspecialidadEnum codigo) return;
 
 		if (MedicosTodos == null)
 			await LoadMedicosTodosAsync();
@@ -393,7 +392,7 @@ public record DisponibilidadEspecialidadModelView(
 
 public record MedicoSimpleViewModel(
 	MedicoId Id,
-	EspecialidadEnumCodigo EspecialidadCodigo,
+	EspecialidadEnum EspecialidadCodigo,
 	string Displayear,
 	IReadOnlyList<DayOfWeek> DiasAtencion
 ) {

@@ -1,6 +1,6 @@
 ﻿namespace Clinica.Dominio.TiposDeEnum;
 
-public enum UsuarioRoleCodigo : byte {
+public enum UsuarioRoleEnum : byte {
 	Nivel1Superadmin = 1,
 	Nivel2Administrativo = 2,
 	Nivel3Recepcionista = 3,

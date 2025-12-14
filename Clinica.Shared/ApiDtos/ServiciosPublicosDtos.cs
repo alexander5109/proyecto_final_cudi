@@ -7,7 +7,7 @@ namespace Clinica.Shared.ApiDtos;
 public static class ServiciosPublicosDtos {
 
 	public sealed class SolicitarDisponibilidadesDto {
-		public EspecialidadEnumCodigo EspecialidadCodigo { get; init; }
+		public EspecialidadEnum EspecialidadCodigo { get; init; }
 		public int Cuantos { get; init; }
 		public DateTime? APartirDeCuando { get; init; }
 		public DayOfWeek? DiaSemanaPreferido { get; init; }
@@ -33,7 +33,7 @@ public static class ServiciosPublicosDtos {
 		Disponibilidad2025 Disponibilidad
 	);
 	//public sealed record DisponibilidadDto( //usemos el del domino
-	//	EspecialidadEnumCodigo EspecialidadEnumCodigo,
+	//	EspecialidadEnum EspecialidadEnum,
 	//	MedicoId MedicoId,
 	//	DateTime FechaHoraDesde,
 	//	DateTime FechaHoraHasta

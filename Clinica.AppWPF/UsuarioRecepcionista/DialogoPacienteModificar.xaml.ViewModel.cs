@@ -76,11 +76,10 @@ public class DialogoPacienteModificarVM : INotifyPropertyChanged {
 
 	private bool EstaCreando => Id is null;
 	private bool EstaEditando => Id is not null;
-
-
-	//directamente ligados a la ui
 	public bool PuedeEliminar => EstaEditando;
 	public bool PuedeGuardarCambios => TieneCambios;
+
+
 	// -----------------------------
 	// PROPERTIES
 	// -----------------------------
@@ -294,7 +293,7 @@ internal record PacienteEdicionSnapshot(
 	DateTime FechaIngreso,
 	string Domicilio,
 	string Localidad,
-	ProvinciaCodigo? Provincia,
+	ProvinciaEnum? Provincia,
 	string Telefono,
 	string Email,
 	DateTime FechaNacimiento

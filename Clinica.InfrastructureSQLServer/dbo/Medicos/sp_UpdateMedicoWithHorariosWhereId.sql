@@ -41,8 +41,21 @@ BEGIN
 
 
         -- 3) Insertar horarios nuevos
-        INSERT INTO dbo.Horario (MedicoId, DiaSemana, HoraDesde, HoraHasta)
-        SELECT @Id, DiaSemana, HoraDesde, HoraHasta
+        INSERT INTO dbo.Horario (
+            MedicoId,
+            DiaSemana,
+            HoraDesde,
+            HoraHasta,
+            VigenteDesde,
+            VigenteHasta
+        )
+        SELECT
+            @Id,
+            DiaSemana,
+            HoraDesde,
+            HoraHasta,
+            VigenteDesde,
+            VigenteHasta
         FROM @Horarios;
 
 

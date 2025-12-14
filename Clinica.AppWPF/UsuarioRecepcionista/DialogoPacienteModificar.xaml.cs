@@ -28,7 +28,7 @@ public partial class DialogoPacienteModificar : Window {
 	// BOTONES: PERSISTENCIA
 	// ==========================================================
 
-	private async void ButtonGuardar(object sender, RoutedEventArgs e) {
+	private async void ClickBoton_GuardarCambios(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 		ResultWpf<UnitWpf> result = await VM.GuardarAsync();
 		result.MatchAndDo(
@@ -37,7 +37,7 @@ public partial class DialogoPacienteModificar : Window {
 		);
 	}
 
-	private async void ButtonEliminar(object sender, RoutedEventArgs e) {
+	private async void ClickBoton_Eliminar(object sender, RoutedEventArgs e) {
 		if (
 			VM.Id is not PacienteId idGood || (
 			MessageBox.Show("¿Esta seguro que desea eliminar este paciente?",
@@ -67,8 +67,6 @@ public partial class DialogoPacienteModificar : Window {
 	// ==========================================================
 
 	private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.Cerrar();
-	//private void ClickBoton_Cancelar(object sender, RoutedEventArgs e) => this.NavegarA<GestionPacientes>();
-
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 
 }

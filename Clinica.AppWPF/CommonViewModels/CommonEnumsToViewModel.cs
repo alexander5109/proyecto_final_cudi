@@ -1,5 +1,4 @@
-﻿using Clinica.Dominio.TiposDeEntidad;
-using Clinica.Dominio.TiposDeEnum;
+﻿using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposExtensiones;
 // ================================================================
 // VIEWMODELS PARA SUB-COLLECTIONS
@@ -10,31 +9,38 @@ namespace Clinica.AppWPF.CommonViewModels;
 
 public static class CommonEnumsToViewModel {
 	public record ProvinciaVmItem(
-		ProvinciaCodigo Codigo,
+		ProvinciaEnum Codigo,
 		string Nombre
 	);
-	public static ProvinciaVmItem ToViewModel(this ProvinciaCodigo enumm) => new(Codigo: enumm, Nombre: enumm.ATexto());
+	public static ProvinciaVmItem ToViewModel(this ProvinciaEnum enumm) => new(Codigo: enumm, Nombre: enumm.ATexto());
 	public static ProvinciaVmItem ToViewModel(this ProvinciaArgentina2025 domain) => new(Codigo: domain.CodigoInternoValor, Nombre: domain.NombreValor);
 
 
 
 
+
 	public record EspecialidadViewModel(
-		EspecialidadEnumCodigo Codigo,
+		EspecialidadEnum Codigo,
 		string NombreEspecialidad,
 		int Duracion
-	) {
-		internal EspecialidadViewModel(Especialidad2025 instance)
-			: this(
-				Codigo: instance.Codigo,
-				NombreEspecialidad: instance.Titulo,
-				Duracion: instance.DuracionConsultaMinutos
-			) {
-		}
+	);
+	public static EspecialidadViewModel ToViewModel(this Especialidad2025 instance) {
+		return new(
+			Codigo: instance.Codigo,
+			NombreEspecialidad: instance.Titulo,
+			Duracion: instance.DuracionConsultaMinutos
+		);
+
 	}
+	public static EspecialidadViewModel ToViewModel(this EspecialidadEnum enumm) {
+		var instance = Especialidad2025.Representar(enumm);
+		return new(
+			Codigo: instance.Codigo,
+			NombreEspecialidad: instance.Titulo,
+			Duracion: instance.DuracionConsultaMinutos
+		);
 
-
-
+	}
 
 
 

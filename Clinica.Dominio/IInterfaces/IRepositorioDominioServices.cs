@@ -10,10 +10,10 @@ public static class QueryModels {
 	public sealed record TurnoQM(
 		TurnoId Id,
 		MedicoId MedicoId,
-		EspecialidadEnumCodigo EspecialidadCodigo,
+		EspecialidadEnum EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
-		TurnoEstadoCodigo OutcomeEstado // ej: "Programado"
+		TurnoEstadoEnum OutcomeEstado // ej: "Programado"
 	) {
 		public TurnoQM()
 			: this(default!, default!, default, default, default, default) { }
@@ -32,7 +32,7 @@ public static class QueryModels {
 public interface IRepositorioDominioServices {
 	Task<Result<IEnumerable<TurnoQM>>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta);
 	Task<Result<IEnumerable<HorarioMedicoQM>>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta);
-	Task<Result<IEnumerable<MedicoId>>> SelectMedicosIdWhereEspecialidadCodigo(EspecialidadEnumCodigo code);
+	Task<Result<IEnumerable<MedicoId>>> SelectMedicosIdWhereEspecialidadCodigo(EspecialidadEnum code);
 	Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance); //this 2 can stay cause doesnt ask a model
 	Task<Result<Turno2025>> UpdateTurnoWhereIdAndReturnAsDomain(TurnoId id, Turno2025 instance); //this 2 can stay cause doesnt ask a model
 	Task<Result<Usuario2025>> SelectUsuarioWhereIdAsDomain(UsuarioId id); //need domain entitiy because this is not really data to query, it's data that immediatly needs domain methods.

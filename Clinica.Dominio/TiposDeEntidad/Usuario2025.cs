@@ -11,7 +11,7 @@ public sealed record Usuario2025(
 	UserName UserName,
 	NombreCompleto2025 NombreCompleto,
 	ContraseñaHasheada PasswordHash,
-	UsuarioRoleCodigo EnumRole,
+	UsuarioRoleEnum EnumRole,
 	Email2025 Email,
 	Telefono2025 Telefono
 ) : IComoTexto {
@@ -22,7 +22,7 @@ public sealed record Usuario2025(
 		Result<UserName> userNameResult,
 		Result<NombreCompleto2025> nombreCompletoResult,
 		Result<ContraseñaHasheada> passwordHashResult,
-		Result<UsuarioRoleCodigo> enumRoleResult,
+		Result<UsuarioRoleEnum> enumRoleResult,
 		Result<Email2025> telefonoResult,
 		Result<Telefono2025> emailResult
 	)

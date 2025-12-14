@@ -24,7 +24,7 @@ public static class EnumATextoExtensions {
 	};
 
 
-	public static string ATexto(this ProvinciaCodigo codigo) {
+	public static string ATexto(this ProvinciaEnum codigo) {
 		Result<ProvinciaArgentina2025> resultado = ProvinciaArgentina2025.CrearResultPorCodigo(codigo);
 		if (resultado is Result<ProvinciaArgentina2025>.Ok ok)
 			return ok.Valor.NombreValor;

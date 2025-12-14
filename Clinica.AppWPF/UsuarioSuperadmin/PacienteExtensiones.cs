@@ -16,7 +16,7 @@ public static class PacienteExtensiones {
 		//instance.FechaNacimiento = (DateTime)window.txtFechaNacimiento.SelectedDate;
 		//instance.Domicilio = window.txtDomicilio.Text;
 		//instance.Localidad = window.txtLocalidad.Text;
-		//instance.ProvinciaCodigo = window.txtProvincia.Text;
+		//instance.ProvinciaEnum = window.txtProvincia.Text;
 	}
 
 

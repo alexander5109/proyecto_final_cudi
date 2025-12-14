@@ -5,22 +5,22 @@ namespace Clinica.Dominio.TiposExtensiones;
 
 public static class EnumFactoryExtentions {
 
-	public static Result<TurnoEstadoCodigo> CrearResult(this TurnoEstadoCodigo codigo) {
-		if (!Enum.IsDefined(typeof(TurnoEstadoCodigo), codigo)) {
-			return new Result<TurnoEstadoCodigo>.Error($"Valor de TurnoEstadoCodigo inválido: {codigo}");
+	public static Result<TurnoEstadoEnum> CrearResult(this TurnoEstadoEnum codigo) {
+		if (!Enum.IsDefined(typeof(TurnoEstadoEnum), codigo)) {
+			return new Result<TurnoEstadoEnum>.Error($"Valor de TurnoEstadoEnum inválido: {codigo}");
 		}
-		return new Result<TurnoEstadoCodigo>.Ok(codigo);
+		return new Result<TurnoEstadoEnum>.Ok(codigo);
 	}
 
 
-	public static Result<UsuarioRoleCodigo> CrearResult(this UsuarioRoleCodigo raw) =>
+	public static Result<UsuarioRoleEnum> CrearResult(this UsuarioRoleEnum raw) =>
 		raw switch {
-			UsuarioRoleCodigo.Nivel1Superadmin
-			or UsuarioRoleCodigo.Nivel2Administrativo
-			or UsuarioRoleCodigo.Nivel3Recepcionista
-			or UsuarioRoleCodigo.Nivel4Medico
-				=> new Result<UsuarioRoleCodigo>.Ok(raw),
+			UsuarioRoleEnum.Nivel1Superadmin
+			or UsuarioRoleEnum.Nivel2Administrativo
+			or UsuarioRoleEnum.Nivel3Recepcionista
+			or UsuarioRoleEnum.Nivel4Medico
+				=> new Result<UsuarioRoleEnum>.Ok(raw),
 
-			_ => new Result<UsuarioRoleCodigo>.Error($"El rol '{raw}' no es válido.")
+			_ => new Result<UsuarioRoleEnum>.Error($"El rol '{raw}' no es válido.")
 		};
 }

@@ -8,45 +8,45 @@ namespace Clinica.Dominio.TiposDeEntidad;
 
 public static class TurnoPolicyRaw {
 	public static bool PuedeMarcarComoAusente(
-		TurnoEstadoCodigo estado,
+		TurnoEstadoEnum estado,
 		DateTime fechaAsignadaHasta,
 		bool tieneOutcome,
 		DateTime ahora
 	) {
-		return estado == TurnoEstadoCodigo.Programado
+		return estado == TurnoEstadoEnum.Programado
 			&& !tieneOutcome
 			&& ahora >= fechaAsignadaHasta;
 	}
 
 	public static bool PuedeConfirmar(
-		TurnoEstadoCodigo estado,
+		TurnoEstadoEnum estado,
 		DateTime fechaAsignadaDesde,
 		bool tieneOutcome,
 		DateTime ahora
 	) {
-		return estado == TurnoEstadoCodigo.Programado
+		return estado == TurnoEstadoEnum.Programado
 			&& !tieneOutcome
 			&& ahora.Date >= fechaAsignadaDesde.Date;
 	}
 
 	public static bool PuedeCancelar(
-		TurnoEstadoCodigo estado,
+		TurnoEstadoEnum estado,
 		DateTime fechaAsignadaDesde,
 		bool tieneOutcome,
 		DateTime ahora
 	) {
-		return estado == TurnoEstadoCodigo.Programado
+		return estado == TurnoEstadoEnum.Programado
 			&& !tieneOutcome
 			&& ahora.Date < fechaAsignadaDesde.Date;
 	}
 
 	public static bool PuedeReprogramar(
-		TurnoEstadoCodigo estado,
+		TurnoEstadoEnum estado,
 		DateTime fechaAsignadaHasta,
 		bool tieneOutcome,
 		DateTime ahora
 	) {
-		return estado == TurnoEstadoCodigo.Programado
+		return estado == TurnoEstadoEnum.Programado
 			&& !tieneOutcome
 			&& ahora < fechaAsignadaHasta;
 	}
@@ -61,7 +61,7 @@ public record Turno2025(
 	Especialidad2025 Especialidad,
 	DateTime FechaHoraAsignadaDesdeValor,
 	DateTime FechaHoraAsignadaHastaValor,
-	TurnoEstadoCodigo OutcomeEstado,
+	TurnoEstadoEnum OutcomeEstado,
 	Option<DateTime> OutcomeFechaOption,
 	Option<string> OutcomeComentarioOption
 ){
@@ -84,10 +84,10 @@ public record Turno2025(
 		DateTime fechaCreacion,
 		PacienteId pacienteId,
 		MedicoId medicoId,
-		EspecialidadEnumCodigo especialidadCododigo,
+		EspecialidadEnum especialidadCododigo,
 		DateTime desde,
 		DateTime hasta,
-		TurnoEstadoCodigo outcomeEstado,
+		TurnoEstadoEnum outcomeEstado,
 		DateTime? outcomeFecha,
 		string? outcomeComentario
 	) {
@@ -113,7 +113,7 @@ public record Turno2025(
 		Result<Especialidad2025> especialidadResult,
 		DateTime desde,
 		DateTime hasta,
-		Result<TurnoEstadoCodigo> outcomeEstadoResult,
+		Result<TurnoEstadoEnum> outcomeEstadoResult,
 		Option<DateTime> outcomeFecha,
 		Option<string> outcomeComentario
 	) {
@@ -171,7 +171,7 @@ public record Turno2025(
 			Especialidad: Especialidad2025.Representar(disp.EspecialidadCodigo),
 			FechaHoraAsignadaDesdeValor: disp.FechaHoraDesde,
 			FechaHoraAsignadaHastaValor: disp.FechaHoraHasta,
-			OutcomeEstado: TurnoEstadoCodigo.Programado,
+			OutcomeEstado: TurnoEstadoEnum.Programado,
 			OutcomeFechaOption: Option<DateTime>.None,
 			OutcomeComentarioOption: Option<string>.None
 		));
@@ -198,13 +198,13 @@ public static class TurnoExtentions {
 		if (comentario is null)
 			return new Result<Turno2025>.Error("El comentario es obligatorio al marcar como ausente un turno.");
 
-		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
+		if (turnoOriginal.OutcomeEstado != TurnoEstadoEnum.Programado)
 			return new Result<Turno2025>.Error("Solo puede marcarse como ausente un turno que esté programado.");
 
 
 		return new Result<Turno2025>.Ok(
 			turnoOriginal with {
-				OutcomeEstado = TurnoEstadoCodigo.Ausente,
+				OutcomeEstado = TurnoEstadoEnum.Ausente,
 				OutcomeFechaOption = Option<DateTime>.Some(fechaEvento),
 				OutcomeComentarioOption = Option<string>.Some(comentario)
 			}
@@ -217,7 +217,7 @@ public static class TurnoExtentions {
 		string? comentario //INTENDED TO BE OPTIONAL
 	) {
 
-		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
+		if (turnoOriginal.OutcomeEstado != TurnoEstadoEnum.Programado)
 			return new Result<Turno2025>.Error("Solo puede concretarse un turno que esté programado.");
 
 		if (fechaEvento.Date < turnoOriginal.FechaHoraAsignadaDesdeValor.Date)
@@ -225,7 +225,7 @@ public static class TurnoExtentions {
 
 		return new Result<Turno2025>.Ok(
 			turnoOriginal with {
-				OutcomeEstado = TurnoEstadoCodigo.Concretado,
+				OutcomeEstado = TurnoEstadoEnum.Concretado,
 				OutcomeFechaOption = Option<DateTime>.Some(fechaEvento),
 				OutcomeComentarioOption = comentario is null ? Option<string>.None : Option<string>.Some(comentario)
 			}
@@ -240,7 +240,7 @@ public static class TurnoExtentions {
 		if (comentario is null)
 			return new Result<Turno2025>.Error("El comentario es obligatorio para cancelar un turno.");
 
-		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
+		if (turnoOriginal.OutcomeEstado != TurnoEstadoEnum.Programado)
 			return new Result<Turno2025>.Error("Solo puede cancelarse un turno que esté programado.");
 
 		if (turnoOriginal.OutcomeFechaOption.HasValor)
@@ -257,7 +257,7 @@ public static class TurnoExtentions {
 
 		return new Result<Turno2025>.Ok(
 			turnoOriginal with {
-				OutcomeEstado = TurnoEstadoCodigo.Cancelado,
+				OutcomeEstado = TurnoEstadoEnum.Cancelado,
 				OutcomeFechaOption = Option<DateTime>.Some(fechaEvento),
 				OutcomeComentarioOption = Option<string>.Some(comentario)
 			}
@@ -272,7 +272,7 @@ public static class TurnoExtentions {
 		if (comentario is null)
 			return new Result<Turno2025>.Error("El comentario es obligatorio al marcar querer reprogramar un turno.");
 
-		if (turnoOriginal.OutcomeEstado != TurnoEstadoCodigo.Programado)
+		if (turnoOriginal.OutcomeEstado != TurnoEstadoEnum.Programado)
 			return new Result<Turno2025>.Error("Solo puede reprogramarse un turno que esté programado.");
 
 		if (turnoOriginal.OutcomeFechaOption.HasValor)
@@ -284,7 +284,7 @@ public static class TurnoExtentions {
 
 		return new Result<Turno2025>.Ok(
 			turnoOriginal with {
-				OutcomeEstado = TurnoEstadoCodigo.Reprogramado,
+				OutcomeEstado = TurnoEstadoEnum.Reprogramado,
 				OutcomeFechaOption = Option<DateTime>.Some(fechaEvento),
 				OutcomeComentarioOption = Option<string>.Some(comentario)
 			}

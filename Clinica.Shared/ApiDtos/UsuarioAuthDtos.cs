@@ -12,7 +12,7 @@ public static class UsuarioAuthDtos {
 
 	public record UsuarioLoginResponseDto(
 		string Username,
-		UsuarioRoleCodigo EnumRole,
+		UsuarioRoleEnum EnumRole,
 		string Token
 	);
 	public record UsuarioSignUpDto(
@@ -20,7 +20,7 @@ public static class UsuarioAuthDtos {
 		string Nombre,
 		string Apellido,
 		string PasswordRaw,
-		UsuarioRoleCodigo EnumRole,
+		UsuarioRoleEnum EnumRole,
 		string Email,
 		string Telefono
 	);
@@ -36,7 +36,7 @@ public static class UsuarioAuthDtos {
 		string Nombre,
 		string Apellido,
 		string PasswordHash,
-		UsuarioRoleCodigo EnumRole,
+		UsuarioRoleEnum EnumRole,
 		string Email,
 		string Telefono
 	) {

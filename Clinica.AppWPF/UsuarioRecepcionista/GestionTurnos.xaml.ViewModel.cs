@@ -26,7 +26,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	// ================================================================
 	private List<TurnoViewModel> _todosLosTurnos = [];
 	public ICollectionView TurnosView { get; private set; }
-	public List<TurnoEstadoCodigo> Estados { get; } = [.. Enum.GetValues<TurnoEstadoCodigo>()];
+	public List<TurnoEstadoEnum> Estados { get; } = [.. Enum.GetValues<TurnoEstadoEnum>()];
 
 
 
@@ -149,8 +149,8 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	// FILTROS
 	// ================================================================
 
-	private TurnoEstadoCodigo? _estadoSeleccionado;
-	public TurnoEstadoCodigo? EstadoSeleccionado {
+	private TurnoEstadoEnum? _estadoSeleccionado;
+	public TurnoEstadoEnum? EstadoSeleccionado {
 		get => _estadoSeleccionado;
 		set {
 			if (_estadoSeleccionado != value) {

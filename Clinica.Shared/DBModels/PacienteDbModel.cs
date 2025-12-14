@@ -16,7 +16,7 @@ public static partial class DbModels {
 		DateTime FechaIngreso,
 		string Domicilio,
 		string Localidad,
-		ProvinciaCodigo ProvinciaCodigo,
+		ProvinciaEnum ProvinciaCodigo,
 		string Telefono,
 		string Email,
 		DateTime FechaNacimiento

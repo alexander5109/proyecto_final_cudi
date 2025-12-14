@@ -11,7 +11,7 @@ namespace Clinica.Dominio.IInterfaces;
 
 public interface IServiciosDeDominio {
 	Task<Result<IReadOnlyList<Disponibilidad2025>>> SolicitarDisponibilidades(
-		EspecialidadEnumCodigo solicitudEspecialidadCodigo, 
+		EspecialidadEnum solicitudEspecialidadCodigo, 
 		DateTime aPartirDeCuando, 
 		int cuantos,
 		DayOfWeek? diaSemanaPreferido,

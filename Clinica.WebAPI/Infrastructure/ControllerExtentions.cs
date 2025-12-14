@@ -10,7 +10,7 @@ public static class ControllerExtensions {
 	// ------------------------------
 	private static bool TryGetUsuarioRole(
 		this ControllerBase controller,
-		out UsuarioRoleCodigo role
+		out UsuarioRoleEnum role
 	) {
 		role = default;
 
@@ -42,12 +42,12 @@ public static class ControllerExtensions {
 	public static async Task<ActionResult<T>> SafeExecute<T>(
 		this ControllerBase controller,
 		ILogger logger,
-		PermisosAccionesCodigo permiso,
+		PermisosAccionesEnum permiso,
 		Func<Task<Result<T>>> action,
 		string? notFoundMessage = null
 	) {
 		// 1️⃣ Usuario
-		if (!controller.TryGetUsuarioRole(out UsuarioRoleCodigo role))
+		if (!controller.TryGetUsuarioRole(out UsuarioRoleEnum role))
 			return controller.ToActionResult(UsuarioNoAutorizado<T>());
 
 		// 2️⃣ Permiso
@@ -89,7 +89,7 @@ public static class ControllerExtensions {
 	public static Task<ActionResult<TResult>> SafeExecuteWithDomain<TDto, TDomain, TResult>(
 		this ControllerBase controller,
 		ILogger logger,
-		PermisosAccionesCodigo permiso,
+		PermisosAccionesEnum permiso,
 		TDto dto,
 		Func<TDto, Result<TDomain>> toDomain,
 		Func<TDomain, Task<Result<TResult>>> action,
@@ -114,7 +114,7 @@ public static class ControllerExtensions {
 	public static Task<ActionResult<T>> SafeExecuteApi<T>(
 		this ControllerBase controller,
 		ILogger logger,
-		PermisosAccionesCodigo permiso,
+		PermisosAccionesEnum permiso,
 		Func<Task<ApiResult<T>>> operation,
 		string? notFoundMessage = null
 	) =>

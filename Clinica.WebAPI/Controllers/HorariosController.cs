@@ -20,7 +20,7 @@ public class HorariosController(
 	public Task<ActionResult<IEnumerable<HorarioDbModel>>> GetHorarios()
 	=> this.SafeExecute(
 		logger,
-		PermisosAccionesCodigo.VerHorarios,
+		PermisosAccionesEnum.VerHorarios,
 		() => repositorio.SelectHorarios()
 	);
 
@@ -30,7 +30,7 @@ public class HorariosController(
 	public Task<ActionResult<HorarioDbModel?>> GetHorarioPorId(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesCodigo.VerHorarios,
+			PermisosAccionesEnum.VerHorarios,
 			() => repositorio.SelectHorarioWhereId(new HorarioId(id)),
 			notFoundMessage: $"No existe horario con id {id}"
 		);
@@ -40,7 +40,7 @@ public class HorariosController(
 	public Task<ActionResult<Unit>> DeleteHorario(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesCodigo.DeleteEntidades,
+			PermisosAccionesEnum.DeleteEntidades,
 			() => repositorio.DeleteHorarioWhereId(new HorarioId(id)),
 			notFoundMessage: $"No existe horario con id {id}"
 		);
@@ -51,7 +51,7 @@ public class HorariosController(
 	public Task<ActionResult<HorarioDbModel>> UpdateHorario(int id, [FromBody] HorarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisosAccionesCodigo.UpdateHorarios,
+		PermisosAccionesEnum.UpdateHorarios,
 		dto,
 		x => x.ToDomain(),
 		horario => repositorio.UpdateHorarioWhereId(new HorarioId(id), horario),
@@ -64,7 +64,7 @@ public class HorariosController(
 	public Task<ActionResult<HorarioId>> CrearHorario([FromBody] HorarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisosAccionesCodigo.CrearHorarios,
+		PermisosAccionesEnum.CrearHorarios,
 		dto,
 		x => x.ToDomain(),
 		horario => repositorio.InsertHorarioReturnId(horario)

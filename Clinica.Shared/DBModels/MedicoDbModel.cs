@@ -8,14 +8,14 @@ namespace Clinica.Shared.DbModels;
 public static partial class DbModels {
 	public record MedicoDbModel(
 		MedicoId Id,
-		EspecialidadEnumCodigo EspecialidadCodigo,
+		EspecialidadEnum EspecialidadCodigo,
 		string Dni,
 		string Nombre,
 		string Apellido,
 		DateTime FechaIngreso,
 		string Domicilio,
 		string Localidad,
-		ProvinciaCodigo ProvinciaCodigo,
+		ProvinciaEnum ProvinciaCodigo,
 		string Telefono,
 		string Email,
 		bool HaceGuardias
@@ -71,12 +71,12 @@ public static partial class DbModels {
 			Medico2025.CrearResult(
 				NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
 
-				Especialidad2025.CrearResult(dbModel.EspecialidadEnumCodigo),
+				Especialidad2025.CrearResult(dbModel.EspecialidadEnum),
 
 				DniArgentino2025.CrearResult(dbModel.Dni),
 
 				DomicilioArgentino2025.CrearResult(
-					LocalidadDeProvincia2025.CrearResult(dbModel.Localidad, ProvinciaArgentina2025.CrearResultPorCodigo(dbModel.ProvinciaCodigo))
+					LocalidadDeProvincia2025.CrearResult(dbModel.Localidad, ProvinciaArgentina2025.CrearResultPorCodigo(dbModel.ProvinciaEnum))
 					, dbModel.Domicilio
 				),
 				Telefono2025.CrearResult(dbModel.Telefono),

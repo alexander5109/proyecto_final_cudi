@@ -115,7 +115,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 	//		);
 	//	});
 
-	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicosWhereEspecialidadCodigo(EspecialidadEnumCodigo code)
+	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicosWhereEspecialidadCodigo(EspecialidadEnum code)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<MedicoDbModel>(
 				"sp_SelectMedicosWhereEspecialidadCodigo",
