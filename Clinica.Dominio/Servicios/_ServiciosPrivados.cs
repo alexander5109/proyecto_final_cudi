@@ -128,8 +128,15 @@ internal static class _ServiciosPrivados {
 				continue;
 			}
 			DateTime fecha = aPartirDeCuando;
-			while (fecha.DayOfWeek != franja.DiaSemana)
-				fecha = fecha.AddDays(1);
+
+			int diaActual = (int)fecha.DayOfWeek;
+			int diaObjetivo = (int)franja.DiaSemana;
+
+			// Calcula cuántos días sumar para llegar al próximo día deseado
+			int diasASumar = (diaObjetivo - diaActual + 7) % 7;
+
+			// Si hoy ya es el día correcto, no sumamos nada
+			fecha = fecha.AddDays(diasASumar);
 
 			for (int semana = 0; semana < semanas; semana++, fecha = fecha.AddDays(7)) {
 				DateTime desde = fecha + franja.HoraDesde;
@@ -197,8 +204,15 @@ internal static class _ServiciosPrivados {
 				continue;
 			}
 			DateTime fecha = aPartirDeCuando;
-			while (fecha.DayOfWeek != franja.DiaSemana)
-				fecha = fecha.AddDays(1);
+
+			int diaActual = (int)fecha.DayOfWeek;
+			int diaObjetivo = (int)franja.DiaSemana;
+
+			// Calcula cuántos días sumar para llegar al próximo día deseado
+			int diasASumar = (diaObjetivo - diaActual + 7) % 7;
+
+			// Si hoy ya es el día correcto, no sumamos nada
+			fecha = fecha.AddDays(diasASumar);
 
 			// 3. Iterar por semanas
 			for (int semana = 0; semana < 30; semana++, fecha = fecha.AddDays(7)) {

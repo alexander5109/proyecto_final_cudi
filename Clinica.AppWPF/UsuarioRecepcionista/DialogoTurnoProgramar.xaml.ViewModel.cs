@@ -43,9 +43,8 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 		TurnoAReprogramar = turnoAReprogramar;
 		SelectedPaciente = paciente;
 		SelectedFecha = TurnoAReprogramar.FechaHoraAsignadaHasta;
+		SelectedDiaDeLaSemana = DiaDeSemanaViewModel.Todos.Find(x=> x.Value == turnoAReprogramar.FechaHoraAsignadaDesde.DayOfWeek);
 		EspecialidadCodigo especialidad = turnoAReprogramar.EspecialidadCodigo;
-
-
 		EspecialidadesDisponiblesItemsSource.Clear(); // <<---- importantísimo
 
 		Result<Especialidad2025> espResult = Especialidad2025.CrearResult(especialidad);

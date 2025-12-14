@@ -119,7 +119,6 @@ public static class ExtensionMethods {
 
 
 	public static void IrARespectivaHome(this Window previousWindow) {
-		SoundsService.PlayClickSound();
 		if (App.Api.UsuarioActual is not UsuarioLoginResponseDto usuarioLogueado) {
 			MessageBox.Show($"No hay usuario logueado.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 		} else {
