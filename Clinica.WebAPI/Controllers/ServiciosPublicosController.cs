@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Clinica.Dominio.FunctionalToolkit;
+﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;

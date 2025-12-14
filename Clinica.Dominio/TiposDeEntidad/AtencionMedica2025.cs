@@ -1,10 +1,4 @@
-﻿using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.IInterfaces;
-using Clinica.Dominio.TiposDeEnum;
-using Clinica.Dominio.TiposDeIdentificacion;
-using Clinica.Dominio.TiposDeValor;
-
-namespace Clinica.Dominio.TiposDeEntidad;
+﻿namespace Clinica.Dominio.TiposDeEntidad;
 
 /*
 public sealed class AtencionMedica {

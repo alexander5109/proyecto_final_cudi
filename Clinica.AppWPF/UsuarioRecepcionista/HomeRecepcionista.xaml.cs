@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.TiposDeValor;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 

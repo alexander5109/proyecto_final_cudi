@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using Clinica.AppWPF.Infrastructure;
 
 namespace Clinica.AppWPF.UsuarioRecepcionista;

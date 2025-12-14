@@ -79,6 +79,7 @@
 			VerticalAlignment="Center" />
 		<TextBox
 			Grid.Row="1"
+			MaxLength="50"
 			Grid.Column="1"
 			Margin="15,5,15,5"
 			Style="{StaticResource TextBoxLindo2}"
@@ -91,6 +92,7 @@
 		<TextBox
 			Grid.Row="2"
 			Grid.Column="1"
+			MaxLength="50"
 			Margin="15,5,15,5"
 			Style="{StaticResource TextBoxLindo2}"
 			Text="{Binding Apellido, UpdateSourceTrigger=PropertyChanged}" />
@@ -103,6 +105,7 @@
 			Grid.Row="3"
 			Grid.Column="1"
 			Margin="15,5,15,5"
+			MaxLength="8"
 			Style="{StaticResource TextBoxLindo2}"
 			Text="{Binding Dni, UpdateSourceTrigger=PropertyChanged}" />
 		<Label
@@ -113,6 +116,7 @@
 		<TextBox
 			Grid.Row="4"
 			Grid.Column="1"
+			MaxLength="10"
 			Margin="15,5,15,5"
 			Style="{StaticResource TextBoxLindo2}"
 			Text="{Binding Telefono, UpdateSourceTrigger=PropertyChanged}" />
@@ -135,6 +139,7 @@
 		<TextBox
 			Grid.Row="6"
 			Grid.Column="1"
+			MaxLength="50"
 			Margin="15,5,15,5"
 			Style="{StaticResource TextBoxLindo2}"
 			Text="{Binding Domicilio, UpdateSourceTrigger=PropertyChanged}" />
@@ -146,6 +151,7 @@
 		<TextBox
 			Grid.Row="7"
 			Grid.Column="1"
+			MaxLength="50"
 			Margin="15,5,15,5"
 			Style="{StaticResource TextBoxLindo2}"
 			Text="{Binding Localidad, UpdateSourceTrigger=PropertyChanged}" />
@@ -172,8 +178,6 @@
 			Grid.Column="1"
 			Margin="15,5,15,5"
 			IsChecked="{Binding HaceGuardias, Mode=TwoWay}" />
-		
-		
 		<Label
 			Content="Fecha de Ingreso"
 			Grid.Row="11"

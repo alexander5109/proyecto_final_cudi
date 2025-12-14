@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows;
 using System.Windows.Data;
 using static Clinica.Shared.DbModels.DbModels;
 
@@ -24,7 +23,6 @@ public sealed class GestionPacientesVM : INotifyPropertyChanged {
 
 	private List<PacienteDbModel> _todosLosPacientes = [];
 	public ICollectionView PacientesView { get; private set; }
-	public ObservableCollection<PacienteDbModel> PacientesList { get; } = [];
 
 
 

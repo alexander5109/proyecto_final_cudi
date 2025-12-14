@@ -3,7 +3,6 @@ using System.Windows;
 //using Clinica.AppWPF.UsuarioSuperadmin;
 using Clinica.AppWPF.Infrastructure;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
-using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF;

@@ -112,7 +112,6 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 	// ================================================================
 
 	public IReadOnlyList<MedicoSimpleViewModel>? MedicosTodos { get; private set; }
-	public ObservableCollection<MedicoSimpleViewModel> MedicosEspecialistasItemsSource { get; } = [];
 
 	private ICollectionView? _disponibilidadesView;
 	public ICollectionView? DisponibilidadesView {
@@ -124,10 +123,10 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 		}
 	}
 
+	public ObservableCollection<MedicoSimpleViewModel> MedicosEspecialistasItemsSource { get; } = [];
 	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; } = [];
 
-	public ObservableCollection<DiaDeSemanaViewModel> DiasSemanaItemsSource { get; } =
-		[.. DiaDeSemanaViewModel.Todos];
+	public ObservableCollection<DiaDeSemanaViewModel> DiasSemanaItemsSource { get; } = [.. DiaDeSemanaViewModel.Todos];
 	public ObservableCollection<DisponibilidadEspecialidadModelView> DisponibilidadesItemsSource { get; } = [];
 
 

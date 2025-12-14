@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 
 
