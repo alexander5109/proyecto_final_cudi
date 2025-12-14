@@ -150,6 +150,14 @@
 					Height="30"
 					Click="ButtonAgregarMedico"
 					Style="{StaticResource BotonRedondeado}" />
+				<Button
+					Content="Modificar Medico"
+					Width="180"
+					Height="30"
+					IsEnabled="{Binding HayMedicoSeleccionado}"
+					Click="ClickBoton_ModificarMedico"
+					Style="{StaticResource BotonRedondeado}"
+					Margin="7" />
 			</StackPanel>
 		</StackPanel>
 		<StackPanel
@@ -221,11 +229,11 @@
 			</StackPanel>
 			<StackPanel>
 				<Button
-					Content="Modificar datos"
+					Content="Modificar Horarios"
 					Width="180"
 					Height="30"
 					IsEnabled="{Binding HayMedicoSeleccionado}"
-					Click="ClickBoton_ModificarMedico"
+					Click="ClickBoton_ModificarMedicoHorarios"
 					Style="{StaticResource BotonRedondeado}"
 					Margin="7" />
 			</StackPanel>

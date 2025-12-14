@@ -6,8 +6,8 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="clr-namespace:Clinica.AppWPF.Ventanas"
 	mc:Ignorable="d"
-	Width="512"
-	Height="300"
+	Width="1024"
+	Height="600"
 	Title="EditarFranjaHorarioDialog">
 	<Window.Background>
 		<ImageBrush
