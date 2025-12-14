@@ -111,26 +111,25 @@ public partial class DialogoTurnoProgramar : Window {
 
 			await EjecutarAccionAsync(() => VM.ConfirmarReprogramacionAsync(hoy, comentario));
 
-		} else {
-			ResultWpf<UnitWpf> result = await App.Repositorio.AgendarNuevoTurno(
-				VM.SelectedPaciente.Id,
-				DateTime.Now,
-				VM.SelectedDisponibilidad.Original
-			);
-			result.MatchAndDo(
-				caseOk => {
-					MessageBox.Show("Turno reservado exitosamente.", "Éxito", MessageBoxButton.OK);
-					//this.NavegarA<GestionPacientes>();
-					//this.IrARespectivaHome();
-					this.Cerrar();
-				},
-				caseError => {
-					caseError.ShowMessageBox();
-					//MessageBox.Show($"VM.SelectedDisponibilidad.Original: {VM.SelectedDisponibilidad.Original}");
-				}
-			);
-
 		}
+		ResultWpf<UnitWpf> result = await App.Repositorio.AgendarNuevoTurno(
+			VM.SelectedPaciente.Id,
+			DateTime.Now,
+			VM.SelectedDisponibilidad.Original
+		);
+		result.MatchAndDo(
+			caseOk => {
+				MessageBox.Show("Turno reservado exitosamente.", "Éxito", MessageBoxButton.OK);
+				//this.NavegarA<GestionPacientes>();
+				//this.IrARespectivaHome();
+				this.Cerrar();
+			},
+			caseError => {
+				caseError.ShowMessageBox();
+				//MessageBox.Show($"VM.SelectedDisponibilidad.Original: {VM.SelectedDisponibilidad.Original}");
+			}
+		);
+
 
 
 
