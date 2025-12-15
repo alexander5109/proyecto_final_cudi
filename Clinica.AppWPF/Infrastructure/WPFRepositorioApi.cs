@@ -380,7 +380,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		DateTime aPartirDeCuando,
 		DayOfWeek? diaSemanaPreferido
 	) {
-		var dto = new SolicitarDisponibilidadesDto {
+        SolicitarDisponibilidadesDto dto = new() {
 			EspecialidadCodigo = especialidad,
 			Cuantos = cuantos,
 			APartirDeCuando = aPartirDeCuando,

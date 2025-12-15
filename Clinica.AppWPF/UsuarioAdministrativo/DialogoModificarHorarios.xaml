@@ -144,14 +144,14 @@
 				MinHeight="150">
 				<TreeView.Resources>
 					<HierarchicalDataTemplate
-						DataType="{x:Type local:ViewModelHorarioAgrupado}"
+						DataType="{x:Type local:NodoDiaSemanaViewModel}"
 						ItemsSource="{Binding Horarios}">
 						<TextBlock
 							Text="{Binding DiaSemanaNombre}"
 							FontWeight="Bold" />
 					</HierarchicalDataTemplate>
 					<DataTemplate
-						DataType="{x:Type local:HorarioMedicoViewModel}">
+						DataType="{x:Type local:NodoFranjaHorariaViewModel}">
 						<StackPanel
 							Orientation="Horizontal"
 							Margin="15,0,0,0">
@@ -208,13 +208,13 @@
 					Orientation="Horizontal"
 					HorizontalAlignment="Right">
 					<Label
-						Content="Hora Inicio:"
+						Content="Hora Desde:"
 						HorizontalContentAlignment="Center"
 						VerticalContentAlignment="Center"
 						FontFamily="Bahnschrift" />
 					<TextBox
 						Style="{StaticResource TextBoxLindo2}"
-						Text="{Binding HorarioSeleccionado.HoraDesde}"
+						Text="{Binding FormHoraDesde, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 						Width="150"
 						Height="30" />
 				</StackPanel>
@@ -223,13 +223,13 @@
 					Orientation="Horizontal"
 					HorizontalAlignment="Right">
 					<Label
-						Content="Hora Fin:"
+						Content="Hora Hasta:"
 						HorizontalContentAlignment="Center"
 						VerticalContentAlignment="Center"
 						FontFamily="Bahnschrift" />
 					<TextBox
 						Style="{StaticResource TextBoxLindo2}"
-						Text="{Binding HorarioSeleccionado.HoraHasta}"
+						Text="{Binding FormHoraHasta, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 						Width="150"
 						Height="30" />
 				</StackPanel>
@@ -238,13 +238,13 @@
 					Margin="5"
 					HorizontalAlignment="Right">
 					<Label
-						Content="Vigencia Inicio:"
+						Content="Vigencia Desde:"
 						HorizontalContentAlignment="Center"
 						VerticalContentAlignment="Center"
 						FontFamily="Bahnschrift" />
 					<DatePicker
 						Width="150"
-						Text="{Binding HorarioSeleccionado.VigenteDesde}"
+						SelectedDate="{Binding FormVigenteDesde, Mode=TwoWay}"
 						VerticalAlignment="Center"
 						Height="30" />
 				</StackPanel>
@@ -260,7 +260,7 @@
 					<DatePicker
 						Width="150"
 						VerticalAlignment="Center"
-						Text="{Binding HorarioSeleccionado.VigenteHasta}"
+						SelectedDate="{Binding FormVigenteHasta, Mode=TwoWay}"
 						Height="30" />
 				</StackPanel>
 				<StackPanel
@@ -301,8 +301,8 @@
 					Width="111"
 					FontSize="12" />
 				<Button
-					Content="✏️ Editar"
-					IsEnabled="{Binding PuedeEditarHorario}"
+					Content="✏️ Aplicar"
+					IsEnabled="{Binding PuedeAplicar}"
 					Style="{StaticResource BotonRedondeadoVioletaAzul}"
 					Click="ClickBoton_EditarHorario"
 					Margin="5"

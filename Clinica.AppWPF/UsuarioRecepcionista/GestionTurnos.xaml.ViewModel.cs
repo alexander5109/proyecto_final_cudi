@@ -125,7 +125,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		await App.Repositorio.EnsurePacientesLoaded();
 		var turnos = await App.Repositorio.SelectTurnos();
 		var turnoTasks = turnos.Select(async t => {
-			var vm = new TurnoViewModel(t);
+            TurnoViewModel vm = new(t);
 			await vm.LoadRelacionesAsync();
 			return vm;
 		});

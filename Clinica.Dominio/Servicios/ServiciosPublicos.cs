@@ -46,7 +46,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 			return new Result<IReadOnlyList<Disponibilidad2025>>
 				.Error(medicosResult.UnwrapAsError());
 
-		var disponibilidades = new List<Disponibilidad2025>();
+        List<Disponibilidad2025> disponibilidades = new();
 
 		foreach (MedicoId medicoId in medicosResult.UnwrapAsOk()) {
 
@@ -59,7 +59,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 				return new Result<IReadOnlyList<Disponibilidad2025>>
 					.Error(turnosResult.UnwrapAsError());
 
-			var turnos = turnosResult.UnwrapAsOk().ToList();
+            List<TurnoQM> turnos = turnosResult.UnwrapAsOk().ToList();
 
 			// 3️⃣ Horarios vigentes
 			var horariosResult =
@@ -122,7 +122,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 			}
 		}
 
-		var resultado = disponibilidades
+        List<Disponibilidad2025> resultado = disponibilidades
 			.OrderBy(d => d.FechaHoraDesde)
 			.Take(cuantos)
 			.ToList();

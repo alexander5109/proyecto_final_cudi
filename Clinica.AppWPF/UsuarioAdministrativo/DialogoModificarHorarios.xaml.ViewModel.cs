@@ -48,7 +48,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	// WINDOW.COLLECTIONS
 	// ================================================================
 
-	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = [];
+	public ObservableCollection<NodoDiaSemanaViewModel> HorariosAgrupados { get; } = [];
 
 	private List<HorarioDto> _snapshotOriginal = [];
 
@@ -58,8 +58,8 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	// ================================================================
 
 
-	private ViewModelHorarioAgrupado? _diaSeleccionado;
-	public ViewModelHorarioAgrupado? DiaSeleccionado {
+	private NodoDiaSemanaViewModel? _diaSeleccionado;
+	public NodoDiaSemanaViewModel? DiaSeleccionado {
 		get => _diaSeleccionado;
 		private set {
 			_diaSeleccionado = value;
@@ -68,8 +68,8 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		}
 	}
 
-	private HorarioMedicoViewModel? _horarioSeleccionado;
-	public HorarioMedicoViewModel? HorarioSeleccionado {
+	private NodoFranjaHorariaViewModel? _horarioSeleccionado;
+	public NodoFranjaHorariaViewModel? HorarioSeleccionado {
 		get => _horarioSeleccionado;
 		private set {
 			_horarioSeleccionado = value;
@@ -91,7 +91,10 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 	public bool PuedeGuardarCambios => TieneCambios;
 
-
+	public bool PuedeAplicar => HorarioSeleccionado != null &&
+		FormHoraDesde.HasValue &&
+		FormHoraHasta.HasValue &&
+		FormHoraDesde < FormHoraHasta;
 
 	// -----------------------------
 	// WINDOW.DETECTAR CAMBIOS
@@ -106,43 +109,18 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		);
 
 	// -----------------------------
-	// WINDOW.METHODS
+	// WINDOW.METHODS.PRIVATE
 	// -----------------------------
-
-	public void OnTreeSelectionChanged(object? selected) {
-		if (selected is ViewModelHorarioAgrupado dia) {
-			DiaSeleccionado = dia;
-			HorarioSeleccionado = null;
-			LimpiarFormulario();
-		} else if (selected is HorarioMedicoViewModel horario) {
-			HorarioSeleccionado = horario;
-			DiaSeleccionado = HorariosAgrupados
-				.First(g => g.DiaSemana == horario.DiaSemana);
-
-			CargarFormularioDesdeHorario(horario);
-		}
-	}
-
-	public static bool HorariosIguales(
+	private static bool HorariosIguales(
 		IEnumerable<HorarioDto> a,
 		IEnumerable<HorarioDto> b) {
-		var comparer = new HorarioDtoComparer();
+		HorarioDtoComparer comparer = new();
 
 		return a.Count() == b.Count()
 			&& !a.Except(b, comparer).Any()
 			&& !b.Except(a, comparer).Any();
 	}
 
-	public void AplicarCambios() {
-		if (HorarioSeleccionado is null) return;
-
-		HorarioSeleccionado.HoraDesde = FormHoraDesde!.Value;
-		HorarioSeleccionado.HoraHasta = FormHoraHasta!.Value;
-		HorarioSeleccionado.VigenteDesde = FormVigenteDesde!.Value;
-		HorarioSeleccionado.VigenteHasta = FormVigenteHasta!.Value;
-
-		//TieneCambios = true;
-	}
 
 
 	private void LimpiarFormulario() {
@@ -151,18 +129,35 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		FormHoraHasta = null;
 		FormVigenteDesde = null;
 		FormVigenteHasta = null;
-		OnPropertyChanged(string.Empty);
 	}
 
-	private void CargarFormularioDesdeHorario(HorarioMedicoViewModel h) {
+	private void CargarFormularioDesdeHorario(NodoFranjaHorariaViewModel h) {
 		FormDia = h.DiaSemana;
 		FormHoraDesde = h.HoraDesde;
 		FormHoraHasta = h.HoraHasta;
 		FormVigenteDesde = h.VigenteDesde;
 		FormVigenteHasta = h.VigenteHasta;
-		OnPropertyChanged(string.Empty);
 	}
 
+
+
+	// -----------------------------
+	// WINDOW.METHODS.PUBLIC
+	// -----------------------------
+
+	public void OnTreeSelectionChanged(object? selected) {
+		if (selected is NodoDiaSemanaViewModel dia) {
+			DiaSeleccionado = dia;
+			HorarioSeleccionado = null;
+			LimpiarFormulario();
+		} else if (selected is NodoFranjaHorariaViewModel horario) {
+			HorarioSeleccionado = horario;
+			DiaSeleccionado = HorariosAgrupados
+				.First(g => g.DiaSemana == horario.DiaSemana);
+
+			CargarFormularioDesdeHorario(horario);
+		}
+	}
 
 
 	public async Task<ResultWpf<UnitWpf>> GuardarAsync() {
@@ -191,13 +186,61 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	}
 
 
+
+	public void AgregarHorario() {
+		if (DiaSeleccionado is null) return;
+
+		NodoFranjaHorariaViewModel nuevo = new(
+			DiaSeleccionado.DiaSemana,
+			ClinicaNegocio.Atencion.DesdeHs,
+			ClinicaNegocio.Atencion.HastaHs,
+			DateTime.Today,
+			DateTime.Today.AddYears(10)
+		);
+
+		DiaSeleccionado.Horarios.Add(nuevo);
+
+		HorarioSeleccionado = nuevo;
+		CargarFormularioDesdeHorario(nuevo);
+
+		OnPropertyChanged(nameof(TieneCambios));
+		OnPropertyChanged(nameof(PuedeGuardarCambios));
+	}
+
+	public void EliminarHorario() {
+		if (HorarioSeleccionado is null) return;
+		if (DiaSeleccionado is null) return;
+
+		DiaSeleccionado.Horarios.Remove(HorarioSeleccionado);
+
+		HorarioSeleccionado = null;
+		LimpiarFormulario();
+
+		OnPropertyChanged(nameof(TieneCambios));
+		OnPropertyChanged(nameof(PuedeGuardarCambios));
+	}
+
+	public void AplicarCambios() {
+		if (HorarioSeleccionado is null) return;
+
+		HorarioSeleccionado.HoraDesde = FormHoraDesde!.Value;
+		HorarioSeleccionado.HoraHasta = FormHoraHasta!.Value;
+		HorarioSeleccionado.VigenteDesde = FormVigenteDesde!.Value;
+		HorarioSeleccionado.VigenteHasta = FormVigenteHasta!.Value;
+
+		OnPropertyChanged(nameof(TieneCambios));
+		OnPropertyChanged(nameof(PuedeGuardarCambios));
+	}
+
+
+
 	public async Task CargarHorariosAsync(MedicoId idGood) {
 		HorariosAgrupados.Clear();
 
 		var horarios = await App.Repositorio.SelectHorariosWhereMedicoId(idGood)
 					   ?? [];
 
-		var dict = horarios
+		Dictionary<DayOfWeek, List<HorarioDbModel>> dict = horarios
 			.GroupBy(h => h.DiaSemana)
 			.ToDictionary(g => g.Key, g => g.ToList());
 
@@ -205,7 +248,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			dict.TryGetValue(dia, out var lista);
 
 			HorariosAgrupados.Add(
-				new ViewModelHorarioAgrupado(
+				new NodoDiaSemanaViewModel(
 					dia,
 					lista ?? []
 				)
@@ -243,24 +286,24 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 // ================================================================
 
 
-public class ViewModelHorarioAgrupado(DayOfWeek dia, List<HorarioDbModel> horarios) {
+public class NodoDiaSemanaViewModel(DayOfWeek dia, List<HorarioDbModel> horarios) {
 
 	// ================================================================
 	// GROUPER_DIA.CONSTRUCTOR
 	// ================================================================
 	public DayOfWeek DiaSemana { get; } = dia;
 	public string DiaSemanaNombre { get; } = dia.ATexto();
-	public ObservableCollection<HorarioMedicoViewModel> Horarios { get; } = new ObservableCollection<HorarioMedicoViewModel>(
-			horarios.Select(h => new HorarioMedicoViewModel(h))
+	public ObservableCollection<NodoFranjaHorariaViewModel> Horarios { get; } = new ObservableCollection<NodoFranjaHorariaViewModel>(
+			horarios.Select(h => new NodoFranjaHorariaViewModel(h))
 		);
 }
 
-public class HorarioMedicoViewModel : INotifyPropertyChanged {
+public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 
 	// ================================================================
 	// HORARIO_ITEM.CONSTRUCTOR
 	// ================================================================
-	public HorarioMedicoViewModel(HorarioDbModel h) {
+	public NodoFranjaHorariaViewModel(HorarioDbModel h) {
 		Model = h;
 		_dia = h.DiaSemana;
 		_horaDesde = TimeOnly.FromTimeSpan(h.HoraDesde);
@@ -269,13 +312,13 @@ public class HorarioMedicoViewModel : INotifyPropertyChanged {
 		VigenteHasta = h.VigenteHasta ?? DateTime.MaxValue; // coalesce nullable
 	}
 
-	public HorarioMedicoViewModel(DayOfWeek dia, TimeOnly desde, TimeOnly hasta) {
+	public NodoFranjaHorariaViewModel(DayOfWeek dia, TimeOnly desde, TimeOnly hasta, DateTime vigenteDesde, DateTime vigenteHasta) {
 		Model = new HorarioDbModel();
 		_dia = dia;
 		_horaDesde = desde;
 		_horaHasta = hasta;
-		VigenteDesde = DateTime.Today;
-		VigenteHasta = DateTime.MaxValue;
+		VigenteDesde = vigenteDesde;
+		VigenteHasta = vigenteHasta;
 	}
 	public HorarioDbModel Model { get; private set; }
 
@@ -289,18 +332,31 @@ public class HorarioMedicoViewModel : INotifyPropertyChanged {
 	private DayOfWeek _dia;
 	public DayOfWeek DiaSemana {
 		get => _dia;
-		set { _dia = value; OnPropertyChanged(nameof(DiaSemana)); OnPropertyChanged(nameof(Desde)); OnPropertyChanged(nameof(Hasta)); }
+		set {
+			_dia = value;
+			OnPropertyChanged(nameof(DiaSemana));
+			OnPropertyChanged(nameof(Desde));
+			OnPropertyChanged(nameof(Hasta));
+		}
 	}
 
 	private TimeOnly _horaDesde;
 	public TimeOnly HoraDesde {
 		get => _horaDesde;
-		set { _horaDesde = value; OnPropertyChanged(nameof(HoraDesde)); OnPropertyChanged(nameof(Desde)); }
+		set {
+			_horaDesde = value;
+			OnPropertyChanged(nameof(HoraDesde));
+			OnPropertyChanged(nameof(Desde));
+		}
 	}
 	private TimeOnly _horaHasta;
 	public TimeOnly HoraHasta {
 		get => _horaHasta;
-		set { _horaHasta = value; OnPropertyChanged(nameof(HoraHasta)); OnPropertyChanged(nameof(Hasta)); }
+		set {
+			_horaHasta = value;
+			OnPropertyChanged(nameof(HoraHasta));
+			OnPropertyChanged(nameof(Hasta));
+		}
 	}
 
 	public DateTime VigenteDesde { get; set; }
