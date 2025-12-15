@@ -138,7 +138,11 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 
 
 	public bool ComboBoxMedicos_Enabled => MedicosEspecialistasItemsSource.Any();
-	public bool BotonBuscar_Enabled => SelectedMedico != null && SelectedMedico.DiasAtencion.Any();
+
+
+	private bool _enCooldown;
+	public bool BotonBuscar_Enabled => !_enCooldown && SelectedMedico != null && SelectedMedico.DiasAtencion.Any();
+
 	public bool BotonAgendar_Enabled => DisponibilidadesItemsSource.Any() && SelectedDisponibilidad != null;
 
 	public string InformeReservaDeTurno {
@@ -149,6 +153,10 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 				   $"con el profesional {SelectedDisponibilidad.MedicoDisplayear} " +
 				   $"el día {SelectedDisponibilidad.Original.FechaHoraDesde.Date} a las {SelectedDisponibilidad.Original.FechaHoraDesde.Hour}. Confirmar?";
 		}
+	}
+	public void SetCooldown(bool valor) {
+		_enCooldown = valor;
+		OnPropertyChanged(nameof(BotonBuscar_Enabled));
 	}
 
 	// -----------------------------

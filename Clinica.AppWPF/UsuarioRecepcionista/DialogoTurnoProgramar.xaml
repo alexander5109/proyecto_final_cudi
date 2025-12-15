@@ -193,7 +193,7 @@
 					<GridView>
 						<!-- Especialidad -->
 						<GridViewColumn
-							Width="auto">
+							Width="80">
 							<GridViewColumn.Header>
 								<GridViewColumnHeader
 									Content="Especialidad"
@@ -207,7 +207,7 @@
 						</GridViewColumn>
 						<!-- Fecha -->
 						<GridViewColumn
-							Width="auto">
+							Width="140">
 							<GridViewColumn.Header>
 								<GridViewColumnHeader
 									Content="Fecha y hora"
@@ -237,7 +237,7 @@
 						</GridViewColumn>
 						 Día -->
 						<GridViewColumn
-							Width="auto">
+							Width="80">
 							<GridViewColumn.Header>
 								<GridViewColumnHeader
 									Content="Día"

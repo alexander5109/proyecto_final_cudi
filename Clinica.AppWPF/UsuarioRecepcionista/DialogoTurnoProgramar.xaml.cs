@@ -39,25 +39,19 @@ public partial class DialogoTurnoProgramar : Window {
 	// BOTONES: REFRESH
 	// ==========================================================
 
-	private bool _enCooldown;
 	private async void ClickBoton_Consultar(object sender, RoutedEventArgs e) {
-		if (_enCooldown)
+		if (!VM.BotonBuscar_Enabled)
 			return;
 
-
 		try {
-			_enCooldown = true;
-			if (sender is Button btn)
-				btn.IsEnabled = false;
+			VM.SetCooldown(true);
 			await VM.RefreshDisponibilidadesAsync();
 		} finally {
 			await Task.Delay(2000);
-			if (sender is Button btn)
-				btn.IsEnabled = true;
-
-			_enCooldown = false;
+			VM.SetCooldown(false);
 		}
 	}
+
 
 
 	// ==========================================================
