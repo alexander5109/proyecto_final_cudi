@@ -214,22 +214,32 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 	private Result<HorariosMedicos2026Agg> ConstruirAgregadoDominio() {
 
-		var franjas = HorariosAgrupados
+        List<Result<HorarioFranja2026>> resultados = [.. HorariosAgrupados
 			.SelectMany(d => d.Horarios)
-			.Select(h => HorarioFranja2026.Crear(
+			.Select(h => HorarioFranja2026.CrearResult(
 				h.DiaSemana,
 				h.HoraDesde,
 				h.HoraHasta,
 				DateOnly.FromDateTime(h.VigenteDesde),
-				h.VigenteHasta == DateTime.MaxValue
-					? null
-					: DateOnly.FromDateTime(h.VigenteHasta)
+				h.VigenteHasta == DateTime.MaxValue? null: DateOnly.FromDateTime(h.VigenteHasta)
 			))
-			.ToList()
-			.AsReadOnly();
+		];
 
-		return HorariosMedicos2026Agg.CrearResult(MedicoId, franjas);
+		List<Result<HorarioFranja2026>> errores = [.. resultados.Where(r => r.IsError)];
+
+		if (errores.Count != 0)
+			return new Result<HorariosMedicos2026Agg>.Error(
+				string.Join(
+					"\n",
+					errores.Select(e => e.UnwrapAsError())
+				)
+			);
+
+		IReadOnlyCollection<HorarioFranja2026> franjasValidas = [.. resultados.Select(r => r.UnwrapAsOk())];
+
+		return HorariosMedicos2026Agg.CrearResult(MedicoId, franjasValidas);
 	}
+
 
 
 	public void OnTreeSelectionChanged(object? selected) {
@@ -253,13 +263,9 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 				new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information)
 			);
 
-		ResultWpf<HorariosMedicos2026Agg> resultadoAgg =
-			ConstruirAgregadoDominio()
-				.ToWpf(MessageBoxImage.Information);
-
+		ResultWpf<HorariosMedicos2026Agg> resultadoAgg = ConstruirAgregadoDominio().ToWpf(MessageBoxImage.Warning);
 		return await resultadoAgg.Bind(
 			agregado => App.Repositorio.UpdateHorariosWhereMedicoId(agregado)
-
 		);
 	}
 

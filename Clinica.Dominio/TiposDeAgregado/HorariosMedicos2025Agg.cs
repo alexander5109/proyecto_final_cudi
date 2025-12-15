@@ -15,16 +15,15 @@ public record HorarioFranja2026(
    DateOnly VigenteDesde,
    DateOnly? VigenteHasta
 ) {
-	public static HorarioFranja2026 Crear(
-		//MedicoId medicoId,
-		DayOfWeek dia,
-		TimeOnly desde,
-		TimeOnly hasta,
-		DateOnly vigenteDesde,
-		DateOnly? vigenteHasta
-	) {
-		return new HorarioFranja2026(dia, desde, hasta, vigenteDesde, vigenteHasta);
-	}
+	//public static HorarioFranja2026 Crear(
+	//	DayOfWeek dia,
+	//	TimeOnly desde,
+	//	TimeOnly hasta,
+	//	DateOnly vigenteDesde,
+	//	DateOnly? vigenteHasta
+	//) {
+	//	return new HorarioFranja2026(dia, desde, hasta, vigenteDesde, vigenteHasta);
+	//}
 
 	public bool SeSolapaCon(HorarioFranja2026 other) {
 		if (DiaSemana != other.DiaSemana)
@@ -59,11 +58,12 @@ public record HorarioFranja2026(
 		TimeOnly desde,
 		TimeOnly hasta,
 		DateOnly vigenteDesde,
-		DateOnly vigenteHasta
+		DateOnly? vigenteHasta
 	) {
 		// -----------------------------
 		// VALIDACIONES TEMPORALES
 		// -----------------------------
+
 		if (desde >= hasta)
 			return new Result<HorarioFranja2026>.Error(
 				"La hora de inicio debe ser anterior a la hora de fin."
@@ -81,7 +81,7 @@ public record HorarioFranja2026(
 
 		if (desde < atencion.DesdeHs || hasta > atencion.HastaHs)
 			return new Result<HorarioFranja2026>.Error(
-				$"El horario debe estar dentro del horario de atención de la clínica " +
+				$"El horario {desde}-{hasta} del {dia.ATexto()} debe estar dentro del horario de atención de la clínica " +
 				$"({atencion.DesdeHs} – {atencion.HastaHs})."
 			);
 
@@ -99,14 +99,15 @@ public readonly record struct HorariosMedicos2026Agg(
 ) {
 	public static Result<HorariosMedicos2026Agg> CrearResult(
 		MedicoId medicoId,
-		IReadOnlyCollection<HorarioFranja2026> franjas) {
-		var lista = franjas.ToList();
+		IReadOnlyCollection<HorarioFranja2026> franjas
+	) {
+		List<HorarioFranja2026> lista = [.. franjas];
 
 		for (int i = 0; i < lista.Count; i++) {
 			for (int j = i + 1; j < lista.Count; j++) {
 				if (lista[i].SeSolapaCon(lista[j])) {
 					return new Result<HorariosMedicos2026Agg>.Error(
-						$"Solapamiento detectado: {lista[i]} / {lista[j]}"
+						$"Solapamiento detectado: \n {lista[i]}\n solapa con:\n{lista[j]}"
 					);
 				}
 			}
