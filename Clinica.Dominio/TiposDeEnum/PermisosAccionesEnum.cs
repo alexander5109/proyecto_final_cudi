@@ -4,6 +4,7 @@ namespace Clinica.Dominio.TiposDeEnum;
 
 
 public enum PermisosAccionesEnum {
+	Publico,
 	VerPacientes,
 	VerTurnos,
 	VerMedicos,
@@ -87,6 +88,18 @@ public static class PermisoSistema {
 		],
 	};
 
-	public static bool TienePermisosPara(this UsuarioRoleEnum rol, PermisosAccionesEnum permiso) => rol is UsuarioRoleEnum.Nivel1Superadmin || tabla.TryGetValue(rol, out HashSet<PermisosAccionesEnum>? set) && set.Contains(permiso);
+	public static bool TienePermisosPara(
+		this UsuarioRoleEnum rol,
+		PermisosAccionesEnum permiso
+	) {
+		if (permiso == PermisosAccionesEnum.Publico)
+			return true;
+
+		if (rol == UsuarioRoleEnum.Nivel1Superadmin)
+			return true;
+
+		return tabla.TryGetValue(rol, out var set)
+			   && set.Contains(permiso);
+	}
 	public static bool HasPermission(this Usuario2025 u, PermisosAccionesEnum permiso) => TienePermisosPara(u.EnumRole, permiso);
 }
