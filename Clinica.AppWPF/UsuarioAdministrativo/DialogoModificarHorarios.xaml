@@ -9,6 +9,10 @@
 	Width="1024"
 	Height="600"
 	Title="AdminHorariosModificar">
+	<Window.Resources>
+		<local:TimeOnly24hConverter
+			x:Key="TimeOnly24hConverter" />
+	</Window.Resources>
 	<Window.Background>
 		<ImageBrush
 			ImageSource="pack://application:,,,/PublishedResources/images2025sol/FondoMedicosLila.jpeg" />
@@ -213,7 +217,10 @@
 						FontFamily="Bahnschrift" />
 					<TextBox
 						Style="{StaticResource TextBoxLindo2}"
-						Text="{Binding FormHoraDesde, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						Text="{Binding FormHoraDesde,
+           Mode=TwoWay,
+           UpdateSourceTrigger=PropertyChanged,
+           Converter={StaticResource TimeOnly24hConverter}}"
 						Width="150"
 						Height="30" />
 				</StackPanel>
@@ -228,7 +235,10 @@
 						FontFamily="Bahnschrift" />
 					<TextBox
 						Style="{StaticResource TextBoxLindo2}"
-						Text="{Binding FormHoraHasta, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+						Text="{Binding FormHoraHasta,
+           Mode=TwoWay,
+           UpdateSourceTrigger=PropertyChanged,
+           Converter={StaticResource TimeOnly24hConverter}}"
 						Width="150"
 						Height="30" />
 				</StackPanel>

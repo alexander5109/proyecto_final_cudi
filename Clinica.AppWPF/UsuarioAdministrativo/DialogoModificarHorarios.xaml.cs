@@ -27,13 +27,18 @@ public partial class DialogoModificarHorarios : Window {
 	// BOTONES CRUD
 	// ==========================================================
 
-	private void ClickBoton_AgregarHorario(object sender, RoutedEventArgs e)
-		=> VM.AgregarHorario();
+	private void ClickBoton_AgregarHorario(object sender, RoutedEventArgs e) {
+		SoundsService.PlayClickSound();
+		VM.AgregarHorario();
+	}
 
-	private void ClickBoton_EditarHorario(object sender, RoutedEventArgs e)
-		=> VM.AplicarCambios();
+	private void ClickBoton_EditarHorario(object sender, RoutedEventArgs e) {
+		SoundsService.PlayClickSound();
+		VM.AplicarCambios();
+	}
 
 	private void ClickBoton_EliminarHorario(object sender, RoutedEventArgs e) {
+		SoundsService.PlayClickSound();
 		if (MessageBox.Show("¿Eliminar este horario?", "Confirmar",
 				MessageBoxButton.YesNo, MessageBoxImage.Warning)
 			== MessageBoxResult.Yes) {

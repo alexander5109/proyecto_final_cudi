@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using Clinica.AppWPF.CommonViewModels;
@@ -214,7 +215,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 	private Result<HorariosMedicos2026Agg> ConstruirAgregadoDominio() {
 
-        List<Result<HorarioFranja2026>> resultados = [.. HorariosAgrupados
+		List<Result<HorarioFranja2026>> resultados = [.. HorariosAgrupados
 			.SelectMany(d => d.Horarios)
 			.Select(h => HorarioFranja2026.CrearResult(
 				h.DiaSemana,
@@ -495,4 +496,25 @@ public sealed class HorarioDtoComparer : IEqualityComparer<HorarioDto> {
 
 	private static bool NullableEquals(DateTime? a, DateTime? b)
 		=> a?.Date == b?.Date;
+}
+
+
+public class TimeOnly24hConverter : IValueConverter {
+	private const string Format = "HH:mm";
+
+	public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+		if (value is TimeOnly time)
+			return time.ToString(Format);
+
+		return string.Empty;
+	}
+
+	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+		if (value is string text &&
+			TimeOnly.TryParseExact(text, Format, culture, DateTimeStyles.None, out var time)) {
+			return time;
+		}
+
+		return Binding.DoNothing;
+	}
 }
