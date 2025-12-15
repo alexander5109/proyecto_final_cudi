@@ -167,12 +167,12 @@
 							Orientation="Horizontal"
 							Margin="15,0,0,0">
 							<TextBlock
-								Text="{Binding HoraDesde, StringFormat={}{0:HH\\:mm}}"
+								Text="{Binding HoraDesde, Mode=TwoWay, StringFormat={}{0:HH\\:mm}}"
 								Width="50" />
 							<TextBlock
 								Text=" - " />
 							<TextBlock
-								Text="{Binding HoraHasta, StringFormat={}{0:HH\\:mm}}"
+								Text="{Binding HoraHasta, Mode=TwoWay, StringFormat={}{0:HH\\:mm}}"
 								Width="50" />
 						</StackPanel>
 					</DataTemplate>
@@ -317,8 +317,8 @@
 					Height="25"
 					Width="111"
 					FontSize="12" />
-				<Button
-					Content="✏️ Aplicar"
+				<!--<Button
+					Content="Restaurar"
 					IsEnabled="{Binding PuedeAplicar}"
 					Style="{StaticResource BotonRedondeadoVioletaAzul}"
 					Click="ClickBoton_EditarHorario"
@@ -326,7 +326,7 @@
 					Height="25"
 					Width="111"
 					FontSize="12"
-					HorizontalContentAlignment="Center" />
+					HorizontalContentAlignment="Center" />-->
 			</StackPanel>
 			<Button
 				Grid.Row="3"

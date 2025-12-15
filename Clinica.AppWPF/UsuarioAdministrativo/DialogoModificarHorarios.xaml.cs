@@ -32,10 +32,10 @@ public partial class DialogoModificarHorarios : Window {
 		VM.AgregarHorario();
 	}
 
-	private void ClickBoton_EditarHorario(object sender, RoutedEventArgs e) {
-		SoundsService.PlayClickSound();
-		VM.AplicarCambios();
-	}
+	//private void ClickBoton_EditarHorario(object sender, RoutedEventArgs e) {
+	//	SoundsService.PlayClickSound();
+	//	VM.AplicarCambios();
+	//}
 
 	private void ClickBoton_EliminarHorario(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();

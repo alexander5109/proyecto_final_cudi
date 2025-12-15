@@ -75,8 +75,9 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		private set {
 			_horarioSeleccionado = value;
 			OnPropertyChanged(nameof(HorarioSeleccionado));
-			OnPropertyChanged(nameof(PuedeEditarHorario));
+			//OnPropertyChanged(nameof(PuedeEditarHorario));
 			OnPropertyChanged(nameof(PuedeEliminar));
+			OnPropertyChanged(nameof(OnHorarioEditado));
 		}
 	}
 
@@ -85,6 +86,11 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	// ================================================================
 	// WINDOW.SELECTED FORM
 	// ================================================================
+	private void OnHorarioEditado() {
+		OnPropertyChanged(nameof(TieneCambios));
+		OnPropertyChanged(nameof(PuedeGuardarCambios));
+	}
+
 
 
 	private DayOfWeek? _formDia;
@@ -94,7 +100,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			if (_formDia != value) {
 				_formDia = value;
 				OnPropertyChanged(nameof(FormDia));
-				OnPropertyChanged(nameof(PuedeAplicar));
+				//OnPropertyChanged(nameof(PuedeAplicar));
 			}
 		}
 	}
@@ -107,7 +113,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			if (_formHoraDesde != value) {
 				_formHoraDesde = value;
 				OnPropertyChanged(nameof(FormHoraDesde));
-				OnPropertyChanged(nameof(PuedeAplicar));
+				//OnPropertyChanged(nameof(PuedeAplicar));
 			}
 		}
 	}
@@ -119,7 +125,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			if (_formHoraHasta != value) {
 				_formHoraHasta = value;
 				OnPropertyChanged(nameof(FormHoraHasta));
-				OnPropertyChanged(nameof(PuedeAplicar));
+				//OnPropertyChanged(nameof(PuedeAplicar));
 			}
 		}
 	}
@@ -152,17 +158,17 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	// ================================================================
 	// WINDOW.REGLAS
 	// ================================================================
-
+	public bool PuedeRestaurar => TieneCambios;
 	public bool PuedeAgregar => DiaSeleccionado != null;
-	public bool PuedeEditarHorario => HorarioSeleccionado != null;
+	//public bool PuedeEditarHorario => HorarioSeleccionado != null;
 	public bool PuedeEliminar => HorarioSeleccionado != null;
 
 	public bool PuedeGuardarCambios => TieneCambios;
 
-	public bool PuedeAplicar => HorarioSeleccionado != null &&
-		FormHoraDesde.HasValue &&
-		FormHoraHasta.HasValue &&
-		FormHoraDesde < FormHoraHasta;
+	//public bool PuedeAplicar => HorarioSeleccionado != null &&
+	//	FormHoraDesde.HasValue &&
+	//	FormHoraHasta.HasValue &&
+	//	FormHoraDesde < FormHoraHasta;
 
 	// -----------------------------
 	// WINDOW.DETECTAR CAMBIOS
@@ -175,7 +181,6 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 				.SelectMany(g => g.Horarios)
 				.Select(h => h.ToDto())
 		);
-
 	// -----------------------------
 	// WINDOW.METHODS.PRIVATE
 	// -----------------------------
@@ -212,6 +217,20 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	// -----------------------------
 	// WINDOW.METHODS.PUBLIC
 	// -----------------------------
+	public async Task RestaurarAsync() {
+		if (!TieneCambios) return;
+
+		if (MessageBox.Show(
+			"¿Descartar todos los cambios?",
+			"Restaurar horarios",
+			MessageBoxButton.YesNo,
+			MessageBoxImage.Warning
+		) != MessageBoxResult.Yes)
+			return;
+
+		await CargarHorariosAsync();
+	}
+
 
 	private Result<HorariosMedicos2026Agg> ConstruirAgregadoDominio() {
 
@@ -263,6 +282,14 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			return new ResultWpf<UnitWpf>.Error(
 				new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information)
 			);
+		if (MessageBox.Show(
+			"¿Guardar los cambios realizados?",
+			"Confirmar guardado",
+			MessageBoxButton.YesNo,
+			MessageBoxImage.Question
+		) != MessageBoxResult.Yes)
+			return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
+
 
 		ResultWpf<HorariosMedicos2026Agg> resultadoAgg = ConstruirAgregadoDominio().ToWpf(MessageBoxImage.Warning);
 		return await resultadoAgg.Bind(
@@ -426,6 +453,7 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 		set {
 			_horaDesde = value;
 			OnPropertyChanged(nameof(HoraDesde));
+
 		}
 	}
 	private TimeOnly _horaHasta;
