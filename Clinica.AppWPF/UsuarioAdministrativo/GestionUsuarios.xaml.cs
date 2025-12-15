@@ -4,12 +4,12 @@ using System.Windows.Controls;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 
-public partial class AdminUsuarios : Window {
-	//private MedicoDto? SelectedMedico = null;
+public partial class GestionUsuarios : Window {
+	//private MedicoDto? ActiveMedicoModel = null;
 	//private TurnoDto? SelectedTurno = null;
 	//private PacienteDto? PacienteRelacionado = null;
 
-	public AdminUsuarios() {
+	public GestionUsuarios() {
 		InitializeComponent();
 		//_ = CargaInicialAsync();
 	}
@@ -28,12 +28,12 @@ public partial class AdminUsuarios : Window {
 	//=============================================================
 	private async Task ActualizarMedicoUIAsync() {
 		//medicosListView.ItemsSource = await App.BaseDeDatos.SelectMedicos();
-		//ClickBoton_ModificarMedico.IsEnabled = SelectedMedico != null;
+		//ClickBoton_ModificarMedico.IsEnabled = ActiveMedicoModel != null;
 	}
 
 	private async Task ActualizarTurnoUIAsync() {
-		//if (SelectedMedico != null) {
-		//	turnosListView.ItemsSource = await App.BaseDeDatos.SelectTurnosWhereMedicoId(SelectedMedico.Id);
+		//if (ActiveMedicoModel != null) {
+		//	turnosListView.ItemsSource = await App.BaseDeDatos.SelectTurnosWhereMedicoId(ActiveMedicoModel.MedicoId);
 		//} else {
 		//	turnosListView.ItemsSource = null;
 		//}
@@ -68,7 +68,7 @@ public partial class AdminUsuarios : Window {
 	}
 
 	private async void MedicosListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-		//SelectedMedico = medicosListView.SelectedItem as MedicoDto;
+		//ActiveMedicoModel = medicosListView.SelectedItem as MedicoDto;
 		//await ActualizarMedicoUIAsync();
 		//await ActualizarTurnoUIAsync();
 		//ActualizarPacienteUI();
@@ -89,8 +89,8 @@ public partial class AdminUsuarios : Window {
 	}
 
 	private void ClickBoton_ModificarMedico(object sender, RoutedEventArgs e) {
-		//if (SelectedMedico != null)
-		//	this.NavegarA<AdminMedicosModificar>(SelectedMedico);
+		//if (ActiveMedicoModel != null)
+		//	this.NavegarA<AdminMedicosModificar>(ActiveMedicoModel);
 	}
 
 	private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {

@@ -38,7 +38,7 @@ public partial class MedicosModificar : Window {
 			this.txtSueldoMinimoGarantizado.Text is null
 			|| this.txtDni.Text is null
 			|| this.txtFechaIngreso.SelectedDate is null
-			|| this.txtGuardia.IsChecked is null
+			|| this.txtHaceGuardias.IsChecked is null
 		) {
 			MessageBox.Show($"Error: Faltan datos obligatorios por completar.", "Error de ingreso.", MessageBoxButton.OK, MessageBoxImage.Warning);
 			return false;
@@ -80,14 +80,14 @@ public partial class MedicosModificar : Window {
 			return;
 		}
 
-		//if (SelectedMedico is null) {
-		//	SelectedMedico = new Medico(this);
-		//	if (App.BaseDeDatos.CreateMedico(SelectedMedico)) {
+		//if (ActiveMedicoModel is null) {
+		//	ActiveMedicoModel = new Medico(this);
+		//	if (App.BaseDeDatos.CreateMedico(ActiveMedicoModel)) {
 		//		this.Cerrar();
 		//	}
 		//} else {
-		//	SelectedMedico.LeerDesdeVentana(this);
-		//	if (App.BaseDeDatos.UpdateMedico(SelectedMedico)) {
+		//	ActiveMedicoModel.LeerDesdeVentana(this);
+		//	if (App.BaseDeDatos.UpdateMedico(ActiveMedicoModel)) {
 		//		this.Cerrar();
 		//	}
 		//}
@@ -107,7 +107,7 @@ public partial class MedicosModificar : Window {
 			return;
 		}
 		//---------Eliminar-----------//
-		//if (App.BaseDeDatos.DeleteMedico(SelectedMedico)) {
+		//if (App.BaseDeDatos.DeleteMedico(ActiveMedicoModel)) {
 		//	this.Cerrar(); // this.NavegarA<Medicos>();
 		//}
 	}

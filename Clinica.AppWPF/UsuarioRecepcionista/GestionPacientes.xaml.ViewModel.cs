@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows.Data;
 using static Clinica.Shared.DbModels.DbModels;
 
@@ -49,7 +48,7 @@ public sealed class GestionPacientesVM : INotifyPropertyChanged {
 	// METODOS DE UI
 	// ================================================================
 	internal async Task RefrescarPacientesAsync() {
-		var pacientes = await App.Repositorio.SelectPacientes();
+        List<PacienteDbModel> pacientes = await App.Repositorio.SelectPacientes();
 		_todosLosPacientes = pacientes;
 
 		// Reasignamos la vista para reflejar la nueva lista

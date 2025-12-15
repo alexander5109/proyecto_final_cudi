@@ -21,7 +21,7 @@ public partial class MedicoMisPacientes : Window {
 
 	//private void ClickBoton_ModificarPaciente(object sender, RoutedEventArgs e) {
 	//	if (VM.SelectedPaciente is not null) {
-	//		this.AbrirComoDialogo<MedicoMisPacientesModificar>(VM.SelectedPaciente.Id);
+	//		this.AbrirComoDialogo<MedicoMisPacientesModificar>(VM.SelectedPaciente.MedicoId);
 	//	} else {
 	//		MessageBox.Show("No hay paciente seleecionado");
 	//	}

@@ -40,7 +40,10 @@ public sealed record Especialidad2025(
 	public static Especialidad2025 Representar(EspecialidadEnum codigo) => Todas.FirstOrDefault(e => e.Codigo == codigo)!;
 
 
-	public static Result<Especialidad2025> CrearResult(EspecialidadEnum codigo) {
+	public static Result<Especialidad2025> CrearResult(EspecialidadEnum? codigo) {
+		if (codigo == null) {
+			return new Result<Especialidad2025>.Error($"No se pudo validar la especialidad con codigo nulo");
+		}
 		Especialidad2025? esp = Todas.FirstOrDefault(e => e.Codigo == codigo);
 		return esp is not null
 			? new Result<Especialidad2025>.Ok(esp)

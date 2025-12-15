@@ -9,7 +9,7 @@
     @Telefono               CHAR(10),
     @Email                  VARCHAR(320),
     @EspecialidadCodigo TINYINT,
-    @Guardia                BIT,
+    @HaceGuardias                BIT,
     @Horarios               dbo.HorarioMedicoTableType READONLY
 AS
 BEGIN
@@ -42,7 +42,7 @@ BEGIN
             ProvinciaCodigo,
             Telefono,
             Email,
-            Guardia
+            HaceGuardias
         )
         VALUES (
             @EspecialidadCodigo,
@@ -55,7 +55,7 @@ BEGIN
             @ProvinciaCodigo,
             @Telefono,
             @Email,
-            @Guardia
+            @HaceGuardias
         );
 
         DECLARE @NuevoMedicoId INT = SCOPE_IDENTITY();

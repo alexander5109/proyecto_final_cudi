@@ -123,9 +123,9 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	internal async Task RefrescarTurnosAsync() {
 		await App.Repositorio.EnsureMedicosLoaded(); 
 		await App.Repositorio.EnsurePacientesLoaded();
-		var turnos = await App.Repositorio.SelectTurnos();
-		var turnoTasks = turnos.Select(async t => {
-			var vm = new TurnoViewModel(t);
+        List<TurnoDbModel> turnos = await App.Repositorio.SelectTurnos();
+        IEnumerable<Task<TurnoViewModel>> turnoTasks = turnos.Select(async t => {
+            TurnoViewModel vm = new(t);
 			await vm.LoadRelacionesAsync();
 			return vm;
 		});

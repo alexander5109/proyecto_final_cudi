@@ -10,5 +10,5 @@
     ProvinciaCodigo TINYINT NOT NULL,
     Telefono CHAR(10) NOT NULL,  -- 1138844770 sin espacios ni otra cosa
     Email VARCHAR(320) NOT NULL,          -- mejor que NVARCHAR(50)
-    Guardia BIT NOT NULL
+    [HaceGuardias] BIT NOT NULL
 )

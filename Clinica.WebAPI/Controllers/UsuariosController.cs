@@ -3,6 +3,7 @@ using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.IRepositorios;
+using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;

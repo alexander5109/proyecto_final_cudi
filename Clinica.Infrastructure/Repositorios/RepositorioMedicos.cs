@@ -5,7 +5,6 @@ using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
 using Dapper;
-using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.ApiDtos.MedicoDtos;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
 using static Clinica.Shared.DbModels.DbModels;
@@ -20,7 +19,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 	Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWhereId(MedicoId id)
 		=> TryAsync(async conn => {
 			return await conn.QuerySingleOrDefaultAsync<MedicoDbModel>(
-				"sp_SelectMedicoWithHorariosWhereId",
+				"sp_SelectMedicoWhereId",
 				new { Id = id.Valor },
 				commandType: CommandType.StoredProcedure
 			);
@@ -78,7 +77,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 
 			// 2) Ejecutamos el SP y obtenemos @@ROWCOUNT
 			int rowsAffected = await conn.ExecuteScalarAsync<int>(
-				"sp_UpdateMedicoWithHorariosWhereId",
+				"sp_UpdateMedicoWhereId",
 				dto,
 				commandType: CommandType.StoredProcedure
 			);
@@ -103,7 +102,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 	Task<Result<IEnumerable<MedicoDbModel>>> IRepositorioMedicos.SelectMedicos()
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<MedicoDbModel>(
-				"sp_SelectMedicosWithHorarios",
+				"sp_SelectMedicos",
 				commandType: CommandType.StoredProcedure
 			);
 		});

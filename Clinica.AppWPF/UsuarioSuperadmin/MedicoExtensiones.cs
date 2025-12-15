@@ -44,7 +44,7 @@ public static class MedicoExtensiones {
 		//instance.Localidad = window.txtLocalidad.Text;
 		//instance.Especialidad = window.txtEspecialidad.Text;
 		//instance.FechaIngreso = (DateTime)window.txtFechaIngreso.SelectedDate;
-		//instance.Guardia = (bool)window.txtGuardia.IsChecked;
+		//instance.HaceGuardias = (bool)window.txtHaceGuardias.IsChecked;
 		//this.DiasDeAtencion = //Al haber pasado los datos como List de HorariosMedicos, los objetos originales fueron modificados in-place. Assi que aca no hay que hacer nada.
 	//}
 
@@ -59,7 +59,7 @@ public static class MedicoExtensiones {
 		ventana.txtLocalidad.Text = instance.Localidad;
 		ventana.txtEspecialidad.Text = instance.EspecialidadCodigo.ToString();
 		ventana.txtFechaIngreso.SelectedDate = instance.FechaIngreso;
-		ventana.txtGuardia.IsChecked = instance.HaceGuardias;
+		ventana.txtHaceGuardias.IsChecked = instance.HaceGuardias;
 		//ventana.txtDiasDeAtencion.ItemsSource = instance.DiasDeAtencion.Values.ToList();
 	}
 

@@ -231,10 +231,10 @@ public class DialogoPacienteModificarVM : INotifyPropertyChanged {
 	}
 	private async Task<ResultWpf<UnitWpf>> GuardarEdicionAsync(Paciente2025 paciente) {
 		if (Id is PacienteId idNotNull) {
-			var agg = new Paciente2025Agg(idNotNull, paciente);
+            Paciente2025Agg agg = new(idNotNull, paciente);
 			return await App.Repositorio.UpdatePacienteWhereId(agg);
 		} else {
-			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No se puede guardar, la entidad no tiene Id.", MessageBoxImage.Information));
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No se puede guardar, la entidad no tiene MedicoId.", MessageBoxImage.Information));
 		}
 	}
 	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync(Paciente2025 paciente) {
@@ -265,7 +265,7 @@ public class DialogoPacienteModificarVM : INotifyPropertyChanged {
 			),
 			FechaDeNacimiento2025.CrearResult(FechaNacimiento),
 			fechaIngreso
-		).ToWpf();
+		).ToWpf(MessageBoxImage.Information);
 	}
 
 

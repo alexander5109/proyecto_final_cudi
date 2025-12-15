@@ -10,7 +10,7 @@
     @ProvinciaCodigo TINYINT,
     @Telefono CHAR(10),
     @Email VARCHAR(320),
-    @Guardia BIT
+    @HaceGuardias BIT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -41,7 +41,7 @@ BEGIN
         ProvinciaCodigo = @ProvinciaCodigo,
         Telefono       = @Telefono,
         Email          = @Email,
-        Guardia        = @Guardia
+        HaceGuardias        = @HaceGuardias
     WHERE Id = @Id;
 
     SELECT @@ROWCOUNT AS RowsAffected;

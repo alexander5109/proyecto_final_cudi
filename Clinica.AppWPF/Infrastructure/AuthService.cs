@@ -1,57 +1,56 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Windows;
+using Clinica.Shared.ApiDtos;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 
 namespace Clinica.AppWPF.Infrastructure;
 
 public static class AuthService {
+	private static readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
+
 	public static async Task<ResultWpf<UsuarioLoginResponseDto>> LoginAsync(
 		ApiHelper api,
 		UsuarioLoginRequestDto request) {
 		try {
-			HttpResponseMessage response =
-				await api.Cliente.PostAsJsonAsync("/auth/login", request);
+			HttpResponseMessage response = await api.Cliente.PostAsJsonAsync("/auth/login", request);
 
 			// ------------------------------
 			// ❌ Caso: error HTTP
 			// ------------------------------
 			if (!response.IsSuccessStatusCode) {
-				string serverError = await response.Content.ReadAsStringAsync();
+				string rawError = await response.Content.ReadAsStringAsync();
 
-				return response.StatusCode switch {
-					HttpStatusCode.Unauthorized =>
-						new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
-							Mensaje: "Credenciales incorrectas.",
-							Icono: MessageBoxImage.Warning,
-							Detalle: serverError,
-							HttpStatus: 401
-						)),
+				// Intentar parsear ApiErrorDto
+				ApiErrorDto? apiError = null;
+				try {
+					apiError = JsonSerializer.Deserialize<ApiErrorDto>(rawError, _jsonOptions);
+				} catch {
+					// ignorar si no se puede parsear
+				}
 
-					HttpStatusCode.Forbidden =>
-						new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
-							Mensaje: "No tenés permisos para acceder.",
-							Icono: MessageBoxImage.Warning,
-							Detalle: serverError,
-							HttpStatus: 403
-						)),
+				// Fallback seguro si el parse falla
+				apiError ??= new ApiErrorDto(
+					Title: "Error desconocido del servidor",
+					Status: response.StatusCode
+				);
 
-					_ =>
-						new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
-							Mensaje: $"Error del servidor ({(int)response.StatusCode}).",
-							Icono: MessageBoxImage.Error,
-							Detalle: serverError,
-							HttpStatus: (int)response.StatusCode
-						))
-				};
+				// Construir ErrorInfo final
+				return new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
+					Mensaje: apiError.Title, // mensaje amigable al usuario
+					Icono: IconForStatus((int)apiError.Status),
+					Detalle: $"HTTP {(int)apiError.Status}", // detalle técnico simple
+					HttpStatus: apiError.Status
+				));
 			}
 
 			// ------------------------------
-			// ❌ Caso: ok pero no se pudo leer JSON
+			// ✔ Caso: OK
 			// ------------------------------
 			UsuarioLoginResponseDto? data =
-				await response.Content.ReadFromJsonAsync<UsuarioLoginResponseDto>();
+				await response.Content.ReadFromJsonAsync<UsuarioLoginResponseDto>(_jsonOptions);
 
 			if (data is null) {
 				return new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
@@ -61,14 +60,8 @@ public static class AuthService {
 				));
 			}
 
-			// ------------------------------
-			// ✔ OK
-			// ------------------------------
 			return new ResultWpf<UsuarioLoginResponseDto>.Ok(data);
 		} catch (Exception ex) {
-			// ------------------------------
-			// ❌ Error de red/excepción
-			// ------------------------------
 			return new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
 				Mensaje: "Error de conexión con el servidor.",
 				Icono: MessageBoxImage.Error,
@@ -76,4 +69,11 @@ public static class AuthService {
 			));
 		}
 	}
+
+	private static MessageBoxImage IconForStatus(int status)
+		=> status switch {
+			>= 400 and < 500 => MessageBoxImage.Warning,
+			>= 500 => MessageBoxImage.Error,
+			_ => MessageBoxImage.Information
+		};
 }

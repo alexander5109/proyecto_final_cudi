@@ -33,7 +33,7 @@ public static class CommonEnumsToViewModel {
 
 	}
 	public static EspecialidadViewModel ToViewModel(this EspecialidadEnum enumm) {
-		var instance = Especialidad2025.Representar(enumm);
+        Especialidad2025 instance = Especialidad2025.Representar(enumm);
 		return new(
 			Codigo: instance.Codigo,
 			NombreEspecialidad: instance.Titulo,

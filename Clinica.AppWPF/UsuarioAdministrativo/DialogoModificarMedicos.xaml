@@ -1,0 +1,257 @@
+﻿<Window
+	x:Class="Clinica.AppWPF.UsuarioAdministrativo.DialogoModificarMedicos"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioAdministrativo"
+	mc:Ignorable="d"
+	Title="Clinica Medica - Medicos"
+	Width="1024"
+	Height="600">
+	<Window.Background>
+		<ImageBrush
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/FondoMedicosLila.jpeg" />
+	</Window.Background>
+	<!-- GRID PRINCIPAL -->
+	<Grid
+		Margin="25,25,25,25">
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="Auto" />
+			<RowDefinition
+				Height="Auto" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="*" />
+			<ColumnDefinition
+				Width="*" />
+			<ColumnDefinition
+				Width="*" />
+		</Grid.ColumnDefinitions>
+		<!-- ========================================================= -->
+		<!-- HEADER PRINCIPAL -->
+		<!-- ========================================================= -->
+		<Label
+			Grid.ColumnSpan="2"
+			Content="Modificar/Agregar Médico"
+			FontSize="33"
+			Style="{StaticResource LabelLindoConPiu}"
+			HorizontalContentAlignment="Center"
+			FontWeight="Bold"
+			VerticalContentAlignment="Center"
+			VerticalAlignment="Center" />
+		<!-- HEADER SECUNDARIO (vacío pero reservado) -->
+		<Border
+			Grid.Row="1"
+			Grid.ColumnSpan="2"
+			Height="10" />
+		<!-- ========================================================= -->
+		<!-- FORMULARIO -->
+		<!-- ========================================================= -->
+		<StackPanel
+			Grid.Row="2"
+			Grid.Column="0"
+			Margin="20,5,20,5">
+			<!-- NOMBRE -->
+			<StackPanel
+				Margin="5">
+				<Label
+					Content="Nombre" />
+				<TextBox
+					Height="30"
+					MaxLength="50"
+					Text="{Binding Nombre}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- APELLIDO -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Apellido" />
+				<TextBox
+					Height="30"
+					MaxLength="50"
+					Text="{Binding Apellido}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- DNI -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="DNI" />
+				<TextBox
+					Height="30"
+					MaxLength="8"
+					Text="{Binding Dni}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- EMAIL -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Email" />
+				<TextBox
+					Height="30"
+					Text="{Binding Email}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- TELEFONO -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Teléfono" />
+				<TextBox
+					Height="30"
+					MaxLength="10"
+					Text="{Binding Telefono}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- FECHA NACIMIENTO -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Especialidad" />
+				<ComboBox
+					ItemsSource="{Binding EspecialidadesDisponiblesItemsSource}"
+					DisplayMemberPath="NombreEspecialidad"
+					SelectedItem="{Binding Especialidad, Mode=TwoWay}"
+					Height="30" />
+			</StackPanel>
+		</StackPanel>
+		<!-- Columna 2 -->
+		<StackPanel
+			Grid.Row="2"
+			Grid.Column="1"
+			Margin="20,5,20,5">
+			<!-- PROVINCIA -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Provincia" />
+				<ComboBox
+					ItemsSource="{Binding Provincias}"
+					SelectedItem="{Binding Provincia}"
+					Height="30"
+					DisplayMemberPath="Nombre" />
+			</StackPanel>
+			<!-- DOMICILIO -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Domicilio" />
+				<TextBox
+					Height="30"
+					MaxLength="50"
+					Text="{Binding Domicilio}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- LOCALIDAD -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Localidad" />
+				<TextBox
+					Height="30"
+					MaxLength="50"
+					Text="{Binding Localidad}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- GUARDIA -->
+			<StackPanel
+				Margin="0,20,0,7"
+				Orientation="Horizontal">
+				<Label
+					Content="Hace guardias: " />
+				<CheckBox
+					IsChecked="{Binding HaceGuardias, Mode=TwoWay}"
+					Height="30"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center" />
+			</StackPanel>
+			<!-- FECHA INGRESO -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Fecha de ingreso" />
+				<Label
+					Height="30"
+					Content="{Binding FechaIngreso}"
+					Style="{StaticResource LabelLindoCuadroGrisSombreado}"
+					FontSize="12" />
+			</StackPanel>
+			<!-- ID MEDICO -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Médico Id" />
+				<Label
+					Height="30"
+					Content="{Binding Id}"
+					Style="{StaticResource LabelLindoCuadroGrisSombreado}"
+					FontSize="12" />
+			</StackPanel>
+		</StackPanel>
+		<!-- ========================================================= -->
+		<!-- BOTONES A LA DERECHA -->
+		<!-- ========================================================= -->
+		<StackPanel
+			Grid.Column="2"
+			Margin="0,25,0,25"
+			Grid.RowSpan="3"
+			VerticalAlignment="Bottom">
+			<StackPanel
+				Margin="15"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center">
+				<Button
+					Content="Guardar cambios"
+					Width="200"
+					Height="35"
+					Margin="7,7,7,7"
+					Style="{StaticResource BotonRedondeadoVioletaAzul}"
+					FontFamily="Baskerville Old Face"
+					IsEnabled="{Binding PuedeGuardarCambios}"
+					Click="ClickBoton_GuardarCambios"
+					Background="Black"
+					Foreground="#FF162F28"
+					FontSize="20" />
+				<Button
+					Content="Eliminar médico"
+					Width="200"
+					Height="35"
+					Margin="7,7,7,7"
+					Style="{StaticResource BotonRedondeadoVioletaAzul}"
+					FontFamily="Baskerville Old Face"
+					IsEnabled="{Binding PuedeEliminar}"
+					Click="ClickBoton_Eliminar"
+					FontSize="20" />
+			</StackPanel>
+			<StackPanel
+				Margin="15"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center">
+				<Button
+					Content="Salir"
+					Width="170"
+					Height="37"
+					Margin="7,7,7,7"
+					Click="ClickBoton_Salir"
+					FontSize="20"
+					Style="{StaticResource BotonRedondeadoVioletaAzul}" />
+				<Button
+					Content="Volver"
+					Width="155"
+					Height="35"
+					Style="{StaticResource BotonRedondeadoVioletaAzul}"
+					FontFamily="Baskerville Old Face"
+					Click="ClickBoton_Cancelar"
+					FontSize="20"
+					Margin="7,7,7,7" />
+			</StackPanel>
+		</StackPanel>
+	</Grid>
+</Window>

@@ -1,9 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.IRepositorios;
+using Clinica.Shared.ApiDtos;
+using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
@@ -17,29 +21,40 @@ namespace Clinica.WebAPI.Controllers;
 [Route("auth")]
 public class AuthController(
 	IRepositorioUsuarios repositorio,
+	ILogger<HorariosController> logger,
 	JwtService jwtService
 ) : ControllerBase {
-
 	[HttpPost("login")]
-	public async Task<ActionResult<UsuarioAutenticadoDbModel>> Login([FromBody] UsuarioLoginRequestDto dto) {
+	public async Task<ActionResult<UsuarioLoginResponseDto>> Login([FromBody] UsuarioLoginRequestDto dto) {
+		// Validar credenciales
+		Result<UsuarioAutenticadoDbModel> result =
+			await ServicioAuth.ValidarCredenciales(dto.Username, dto.UserPassword, repositorio);
 
-		Result<UsuarioAutenticadoDbModel> result = await ServicioAuth.ValidarCredenciales(
-			dto.Username,
-			dto.UserPassword,
-			repositorio
-		);
-
-		// MatchAndSet -> produce directamente un IActionResult
+		// MatchAndSet → produce IActionResult
 		return result.MatchAndSet<UsuarioAutenticadoDbModel, ActionResult>(
-			ok => Ok(new UsuarioLoginResponseDto(
-				ok.UserName,
-				ok.EnumRole,
-				jwtService.EmitirJwt(ok) // ver punto 3 abajo
-			)),
-			err => Unauthorized(new { error = err })
+			ok => {
+				// Login OK → devolver DTO con JWT
+				var responseDto = new UsuarioLoginResponseDto(
+					ok.UserName,
+					ok.EnumRole,
+					jwtService.EmitirJwt(ok)
+				);
+
+				return Ok(responseDto);
+			},
+			err => {
+				// Login fallido → devolver siempre ApiErrorDto dentro de un envelope
+				var errorDto = new ApiErrorDto(
+					Title: "Usuario o contraseña incorrectos",
+					Status: HttpStatusCode.Unauthorized
+				);
+
+				//var envelope = new ApiErrorDto(errorDto);
+
+				return Unauthorized(errorDto);
+			}
 		);
 	}
-
 }
 
 

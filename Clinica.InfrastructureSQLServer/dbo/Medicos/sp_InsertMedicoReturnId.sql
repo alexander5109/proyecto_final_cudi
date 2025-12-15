@@ -9,7 +9,7 @@
     @ProvinciaCodigo TINYINT,
     @Telefono CHAR(10),
     @Email VARCHAR(320),
-    @Guardia BIT
+    @HaceGuardias BIT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -23,12 +23,12 @@ BEGIN
     INSERT INTO dbo.Medico (
         EspecialidadCodigo, Dni, Nombre, Apellido,
         FechaIngreso, Domicilio, Localidad, ProvinciaCodigo,
-        Telefono, Email, Guardia
+        Telefono, Email, HaceGuardias
     )
     VALUES (
         @EspecialidadCodigo, @Dni, @Nombre, @Apellido,
         @FechaIngreso, @Domicilio, @Localidad, @ProvinciaCodigo,
-        @Telefono, @Email, @Guardia
+        @Telefono, @Email, @HaceGuardias
     );
 
     SELECT SCOPE_IDENTITY() AS NewId;

@@ -1,4 +1,3 @@
-using Clinica.Shared.ApiDtos;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
@@ -29,8 +28,7 @@ public static class IWPFRepositorioInterfaces {
 		Task RefreshPacientes();
 		Task RefreshUsuarios();
 		Task RefreshHorarios();
-
-	}
+    }
 	public interface IWPFRepositorioUsuarios {
 		Task<ResultWpf<UnitWpf>> DeleteUsuarioWhereId(UsuarioId id);
 		Task<ResultWpf<UsuarioId>> InsertUsuarioReturnId(Usuario2025 instance);
@@ -45,7 +43,7 @@ public static class IWPFRepositorioInterfaces {
 		Task<ResultWpf<UnitWpf>> DeleteMedicoWhereId(MedicoId id);
 		Task<ResultWpf<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
 		Task<ResultWpf<UnitWpf>> UpdateMedicoWhereId(Medico2025Agg instance);
-		Task<ResultWpf<UnitWpf>> UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDtos.HorarioDto> horarios);
+		//Task<ResultWpf<UnitWpf>> UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDtos.HorarioDto> horarios);
 		//Task<List<MedicoDbModel>> SelectMedicos();
 		Task<List<MedicoDbModel>> SelectMedicos();
 		Task EnsureMedicosLoaded();
@@ -76,6 +74,7 @@ public static class IWPFRepositorioInterfaces {
 		//Task<List<HorarioDbModel>> SelectHorarios();
 		Task<IReadOnlyList<HorarioDbModel>?> SelectHorariosWhereMedicoId(MedicoId id);
 		Task<IReadOnlyList<DayOfWeek>?> SelectDiasDeAtencionWhereMedicoId(MedicoId id);
+		Task<ResultWpf<UnitWpf>> UpdateHorariosWhereMedicoId(HorariosMedicos2026Agg agregado);
 	}
 
 	public interface IWPFRepositorioTurnos {

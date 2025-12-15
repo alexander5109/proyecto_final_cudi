@@ -15,7 +15,7 @@ BEGIN
         M.ProvinciaCodigo,
         M.Telefono,
         M.Email,
-        M.Guardia,
+        M.HaceGuardias,
         (
             SELECT 
                 H.Id,

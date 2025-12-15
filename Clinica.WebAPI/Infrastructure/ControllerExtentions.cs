@@ -1,7 +1,13 @@
-﻿using Clinica.Dominio.FunctionalToolkit;
+﻿using System.Net;
+using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+
+
+namespace Clinica.WebAPI.Infrastructure;
+
 
 public static class ControllerExtensions {
 
@@ -27,12 +33,12 @@ public static class ControllerExtensions {
 	// ------------------------------
 	private static ApiResult<T> UsuarioNoAutorizado<T>()
 		=> new ApiResult<T>.Error(
-			new ApiError("No se encontró información del usuario.", StatusCodes.Status401Unauthorized)
+			new ApiErrorDto("No se encontró información del usuario.", HttpStatusCode.Unauthorized)
 		);
 
 	private static ApiResult<T> PermisoDenegado<T>()
 		=> new ApiResult<T>.Error(
-			new ApiError("No posee permisos para acceder a este recurso.", StatusCodes.Status403Forbidden)
+			new ApiErrorDto("No posee permisos para acceder a esta función.", HttpStatusCode.Forbidden)
 		);
 
 
@@ -55,9 +61,9 @@ public static class ControllerExtensions {
 			return controller.ToActionResult(PermisoDenegado<T>());
 
 		try {
-            // 3️⃣ Ejecutar acción
-            Result<T> result = await action();
-            ApiResult<T> apiResult = result.ToApi();
+			// 3️⃣ Ejecutar acción
+			Result<T> result = await action();
+			ApiResult<T> apiResult = result.ToApi();
 
 			// 4️⃣ Caso especial: Ok pero null
 			if (apiResult.IsOk && (apiResult as ApiResult<T>.Ok)!.Value is null) {
@@ -72,10 +78,9 @@ public static class ControllerExtensions {
 			logger.LogError(ex, "Error inesperado en SafeExecute");
 			return controller.ToActionResult(
 				new ApiResult<T>.Error(
-					new ApiError(
-						"Error inesperado al procesar la solicitud",
-						StatusCodes.Status500InternalServerError,
-						ex.Message
+					new ApiErrorDto(
+						$"Error inesperado al procesar la solicitud. \n {ex.Message}",
+						HttpStatusCode.InternalServerError
 					)
 				)
 			);
@@ -99,7 +104,7 @@ public static class ControllerExtensions {
 			logger,
 			permiso,
 			async () => {
-                Result<TDomain> dom = toDomain(dto);
+				Result<TDomain> dom = toDomain(dto);
 				return dom.IsError
 					? new Result<TResult>.Error(dom.UnwrapAsError())
 					: await action(dom.UnwrapAsOk());
@@ -122,12 +127,12 @@ public static class ControllerExtensions {
 			logger,
 			permiso,
 			async () => {
-                ApiResult<T> api = await operation();
+				ApiResult<T> api = await operation();
 
 				if (api.IsOk)
 					return new Result<T>.Ok((api as ApiResult<T>.Ok)!.Value);
 
-				return new Result<T>.Error((api as ApiResult<T>.Error)!.ErrorInfo.Message);
+				return new Result<T>.Error((api as ApiResult<T>.Error)!.ErrorInfo.Title);
 			},
 			notFoundMessage
 		);

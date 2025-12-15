@@ -48,7 +48,7 @@ public abstract class RepositorioBase(SQLServerConnectionFactory factory) {
 		} catch (SqlException ex) {
 			return new Result<T>.Error($"Error SQL: {ex.Message}");
 		} catch (Exception ex) {
-			return new Result<T>.Error($"Error inesperado: {ex.Message}");
+			return new Result<T>.Error($"Error en repositorio: Inesperado {ex.Message}");
 		}
 	}
 
@@ -65,7 +65,7 @@ public abstract class RepositorioBase(SQLServerConnectionFactory factory) {
 		} catch (SqlException ex) {
 			return new Result<T>.Error($"Error SQL: {ex.Message}");
 		} catch (Exception ex) {
-			return new Result<T>.Error($"Error inesperado: {ex.Message}");
+			return new Result<T>.Error($"Error inesperado en repositorio: {ex.Message}");
 		}
 	}
 
@@ -95,13 +95,13 @@ public abstract class RepositorioBase(SQLServerConnectionFactory factory) {
 			await action(conn);
 			return new Result<Unit>.Ok(Unit.Valor);
 		} catch (SqlException ex) when (ex.Number == 547) {
-			return new Result<Unit>.Error("No se puede eliminar porque tiene referencias asociadas.");
+			return new Result<Unit>.Error("Error en repositorio: No se puede eliminar porque tiene referencias asociadas.");
 		} catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601) {
-			return new Result<Unit>.Error("Duplicado: ya existe un registro con estos valores.");
+			return new Result<Unit>.Error("Error en repositorio: Duplicado: ya existe un registro con estos valores.");
 		} catch (SqlException ex) {
-			return new Result<Unit>.Error($"Error SQL ({ex.Number}): {ex.Message}");
+			return new Result<Unit>.Error($"Error en repositorio: Error SQL ({ex.Number}): {ex.Message}");
 		} catch (Exception ex) {
-			return new Result<Unit>.Error($"Error inesperado: {ex.Message}");
+			return new Result<Unit>.Error($"Error en repositorio: Inesperado: {ex.Message}");
 		}
 	}
 

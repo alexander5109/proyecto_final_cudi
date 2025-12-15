@@ -11,7 +11,7 @@ public partial class TurnosModificar2025 : Window, INotifyPropertyChanged {
 
 
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public TurnoDbModel _selectedTurnoView = new TurnoDbModel();
+	public TurnoDbModel _selectedTurnoView = new();
 	public TurnoDbModel SelectedTurno { get => _selectedTurnoView; set { _selectedTurnoView = value; OnPropertyChanged(nameof(SelectedTurno)); } }
 	protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 

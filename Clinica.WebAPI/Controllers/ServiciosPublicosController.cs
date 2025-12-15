@@ -1,15 +1,17 @@
-﻿using Clinica.Dominio.FunctionalToolkit;
+﻿using System.Net;
+using Azure;
+using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.IInterfaces;
+using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeValor;
 using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
 using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
-using Clinica.Dominio.IInterfaces;
-using Clinica.Dominio.TiposDeValor;
-using Clinica.Dominio.TiposDeEnum;
-using Clinica.Dominio.TiposDeEntidad;
 using static Clinica.Shared.ApiDtos.TurnoDtos;
-using Clinica.Dominio.TiposDeAgregado;
 namespace Clinica.WebAPI.Controllers;
 
 
@@ -70,7 +72,7 @@ public class ServiciosPublicosController(
 					dto.Disponibilidad.ToDomain(),
 					repositorio
 				)
-			).ToApi(statusCodeOnError: 409)
+			).ToApi(statusCodeOnError: HttpStatusCode.Conflict)
 		);
 	}
 
@@ -111,7 +113,7 @@ public class ServiciosPublicosController(
 					dto.Comentario,
 					repositorio
 				)
-			).ToApi(statusCodeOnError: 409)
+			).ToApi(statusCodeOnError: HttpStatusCode.Conflict)
 		);
 	}
 
@@ -131,7 +133,7 @@ public class ServiciosPublicosController(
 					dto.Comentario,
 					repositorio
 				)
-			).ToApi(statusCodeOnError: 409)
+			).ToApi(statusCodeOnError: HttpStatusCode.Conflict)
 		);
 	}
 
@@ -150,7 +152,7 @@ public class ServiciosPublicosController(
 					dto.Comentario,
 					repositorio
 				)
-			).ToApi(statusCodeOnError: 409)
+			).ToApi(statusCodeOnError: HttpStatusCode.Conflict)
 		);
 	}
 
