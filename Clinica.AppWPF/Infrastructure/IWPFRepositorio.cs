@@ -1,4 +1,3 @@
-using Clinica.Shared.ApiDtos;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;

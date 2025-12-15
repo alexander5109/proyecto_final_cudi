@@ -1,8 +1,6 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
-using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.TiposExtensiones;
 
 namespace Clinica.Dominio.TiposDeAgregado;
@@ -15,6 +13,19 @@ public record HorarioFranja2026(
    DateOnly VigenteDesde,
    DateOnly? VigenteHasta
 ) {
+	public string AString() {
+		string dia = DiaSemana.ATexto();
+
+		string horas =
+			$"{HoraDesde:HH\\:mm}–{HoraHasta:HH\\:mm}";
+
+		string vigencia = VigenteHasta is null
+			? $"Vigente desde {VigenteDesde:dd/MM/yyyy}"
+			: $"Vigente desde {VigenteDesde:dd/MM/yyyy} hasta {VigenteHasta:dd/MM/yyyy}";
+
+		return $"{dia} {horas}\n{vigencia}";
+	}
+
 	//public static HorarioFranja2026 Crear(
 	//	DayOfWeek dia,
 	//	TimeOnly desde,
@@ -107,7 +118,7 @@ public readonly record struct HorariosMedicos2026Agg(
 			for (int j = i + 1; j < lista.Count; j++) {
 				if (lista[i].SeSolapaCon(lista[j])) {
 					return new Result<HorariosMedicos2026Agg>.Error(
-						$"Solapamiento detectado: \n {lista[i]}\n solapa con:\n{lista[j]}"
+						$"Solapamiento detectado: \n {lista[i].AString()}\n solapa con:\n{lista[j].AString()}"
 					);
 				}
 			}

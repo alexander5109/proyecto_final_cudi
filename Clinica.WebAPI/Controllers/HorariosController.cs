@@ -2,11 +2,9 @@
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
-using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.IRepositorios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.WebAPI.Controllers;

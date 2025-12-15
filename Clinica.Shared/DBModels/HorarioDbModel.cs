@@ -1,7 +1,5 @@
 ﻿using System.Data;
-using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeAgregado;
-using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.Shared.DbModels;

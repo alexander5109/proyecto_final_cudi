@@ -3,17 +3,14 @@ using System.ComponentModel;
 using System.Windows;
 using Clinica.AppWPF.CommonViewModels;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.UsuarioRecepcionista;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Dominio.TiposExtensiones;
 using static Clinica.AppWPF.CommonViewModels.CommonEnumsToViewModel;
 using static Clinica.Shared.DbModels.DbModels;
-using Clinica.Shared.ApiDtos;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
 

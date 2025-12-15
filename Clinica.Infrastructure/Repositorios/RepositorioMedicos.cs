@@ -5,7 +5,6 @@ using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
 using Dapper;
-using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.ApiDtos.MedicoDtos;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
 using static Clinica.Shared.DbModels.DbModels;

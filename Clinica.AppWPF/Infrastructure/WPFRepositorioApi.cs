@@ -8,7 +8,6 @@ using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Shared.ApiDtos;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
-using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
 using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;

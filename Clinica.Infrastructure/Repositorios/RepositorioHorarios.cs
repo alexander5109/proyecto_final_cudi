@@ -1,13 +1,9 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeAgregado;
-using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
-using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.IRepositorios;
 using Dapper;
-using static Clinica.Shared.ApiDtos.HorarioDtos;
-using static Clinica.Shared.ApiDtos.MedicoDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.Infrastructure.Repositorios;

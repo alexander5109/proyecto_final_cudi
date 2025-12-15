@@ -1,9 +1,4 @@
-﻿using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeAgregado;
-using Clinica.Dominio.TiposDeEntidad;
-using Clinica.Dominio.TiposDeIdentificacion;
-
-namespace Clinica.Shared.ApiDtos;
+﻿namespace Clinica.Shared.ApiDtos;
 
 public static class HorarioDtos {
 	public record HorarioDto(

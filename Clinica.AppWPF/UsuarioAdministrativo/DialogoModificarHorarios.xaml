@@ -147,6 +147,14 @@
 				MinHeight="150"
 				Background="#F4F4F4"
 				BorderBrush="#D0D0D0">
+				<TreeView.ItemContainerStyle>
+					<Style
+						TargetType="TreeViewItem">
+						<Setter
+							Property="IsExpanded"
+							Value="True" />
+					</Style>
+				</TreeView.ItemContainerStyle>
 				<TreeView.Resources>
 					<HierarchicalDataTemplate
 						DataType="{x:Type local:NodoDiaSemanaViewModel}"
