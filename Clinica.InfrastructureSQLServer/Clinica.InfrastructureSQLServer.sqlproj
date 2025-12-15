@@ -117,6 +117,7 @@
     <Build Include="dbo\Turnos\sp_SelectTurnosWherePacienteId.sql" />
     <Build Include="dbo\Usuarios\sp_SelectUsuarioWhereNombre.sql" />
     <Build Include="dbo\Medicos\sp_SelectMedicosWhereEspecialidadCodigo.sql" />
+    <Build Include="dbo\HorariosMedicos\udtt_HorarioFranjaUDTT.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Clinica.InfrastructureSQLServer.publish.xml" />

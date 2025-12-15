@@ -1,4 +1,5 @@
-﻿using Clinica.Dominio.FunctionalToolkit;
+﻿using System.Data;
+using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
@@ -17,6 +18,39 @@ public static partial class DbModels {
 	) {
 		public HorarioDbModel()
 			: this(default, default, default, default, default, default, default) { }
+	}
+	public sealed record HorariosMedicosUpsertDbModel(
+		int MedicoId,
+		DataTable Franjas
+	);
+	//public sealed record HorariosMedicosUpsertDto(
+	//	int MedicoId,
+	//	IReadOnlyCollection<HorarioDto> Franjas
+	//);
+
+
+	public static HorariosMedicosUpsertDbModel ToUpsertDto(this HorariosMedicos2025Agg agg) {
+		var table = new DataTable();
+		table.Columns.Add("DiaSemana", typeof(byte));
+		table.Columns.Add("HoraDesde", typeof(TimeSpan));
+		table.Columns.Add("HoraHasta", typeof(TimeSpan));
+		table.Columns.Add("VigenteDesde", typeof(DateOnly));
+		table.Columns.Add("VigenteHasta", typeof(DateOnly));
+
+		foreach (var f in agg.Franjas) {
+			table.Rows.Add(
+				(byte)f.DiaSemana,
+				f.HoraDesde.ToTimeSpan(),
+				f.HoraHasta.ToTimeSpan(),
+				f.VigenteDesde,
+				f.VigenteHasta
+			);
+		}
+
+		return new HorariosMedicosUpsertDbModel(
+			agg.MedicoId.Valor,
+			table
+		);
 	}
 
 

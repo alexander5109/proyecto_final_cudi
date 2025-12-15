@@ -297,6 +297,12 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 		OnPropertyChanged(nameof(TieneCambios));
 		OnPropertyChanged(nameof(PuedeGuardarCambios));
+
+
+
+
+
+
 	}
 
 

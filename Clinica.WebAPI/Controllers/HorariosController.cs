@@ -1,6 +1,7 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.IRepositorios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -71,5 +72,56 @@ public class HorariosController(
 	);
 
 
+
+
+
+
+	//--------------------------------------------------MERGING-------------------------------------------------//
+
+	//[HttpGet]
+	//public Task<ActionResult<IEnumerable<HorarioFranja2025WithMedicoId>>> GetHorarios()
+	//	=> this.SafeExecute(
+	//		logger,
+	//		PermisosAccionesEnum.VerHorarios,
+	//		() => repositorio.SelectHorarios()
+	//	);
+
+
+	//[HttpGet("/medicos/{medicoId:int}/horarios")]
+	//public Task<ActionResult<IEnumerable<HorarioFranja2025WithMedicoId>>> GetHorariosPorMedico(int medicoId)
+	//	=> this.SafeExecute(
+	//		logger,
+	//		PermisosAccionesEnum.VerHorarios,
+	//		() => repositorio.SelectHorariosWhereMedicoId(new MedicoId(medicoId)),
+	//		notFoundMessage: $"No existen horarios para el médico {medicoId}"
+	//	);
+
+
+
+
+	//[HttpPut("/medicos/{medicoId:int}/horarios")]
+	//public Task<ActionResult<Unit>> UpsertHorarios(
+	//	int medicoId,
+	//	[FromBody] HorariosMedicosDto dto
+	//) =>
+	//	this.SafeExecuteWithDomain(
+	//		logger,
+	//		PermisosAccionesEnum.UpdateHorarios,
+	//		dto,
+	//		x => x.ToDomain(medicoId),
+	//		agg => repositorio.UpsertHorariosWhereMedicoId(agg)
+	//	);
+
+
+
+
+	//[HttpDelete("/medicos/{medicoId:int}/horarios")]
+	//public Task<ActionResult<Unit>> DeleteHorariosPorMedico(int medicoId)
+	//	=> this.SafeExecute(
+	//		logger,
+	//		PermisosAccionesEnum.DeleteEntidades,
+	//		() => repositorio.DeleteHorariosWhereMedicoId(new MedicoId(medicoId)),
+	//		notFoundMessage: $"No existen horarios para el médico {medicoId}"
+	//	);
 
 }
