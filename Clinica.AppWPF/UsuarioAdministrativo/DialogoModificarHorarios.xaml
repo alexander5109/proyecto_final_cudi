@@ -225,10 +225,7 @@
 						FontFamily="Bahnschrift" />
 					<TextBox
 						Style="{StaticResource TextBoxLindo2}"
-						Text="{Binding FormHoraDesde,
-           Mode=TwoWay,
-           UpdateSourceTrigger=PropertyChanged,
-           Converter={StaticResource TimeOnly24hConverter}}"
+						Text="{Binding HorarioSeleccionado.HoraDesde, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource TimeOnly24hConverter}}"
 						Width="150"
 						Height="30" />
 				</StackPanel>
@@ -243,7 +240,7 @@
 						FontFamily="Bahnschrift" />
 					<TextBox
 						Style="{StaticResource TextBoxLindo2}"
-						Text="{Binding FormHoraHasta,
+						Text="{Binding HorarioSeleccionado.HoraHasta,
            Mode=TwoWay,
            UpdateSourceTrigger=PropertyChanged,
            Converter={StaticResource TimeOnly24hConverter}}"
@@ -261,7 +258,7 @@
 						FontFamily="Bahnschrift" />
 					<DatePicker
 						Width="150"
-						SelectedDate="{Binding FormVigenteDesde, Mode=TwoWay}"
+						SelectedDate="{Binding  HorarioSeleccionado.VigenteDesde, Mode=TwoWay}"
 						VerticalAlignment="Center"
 						Height="30" />
 				</StackPanel>
@@ -277,7 +274,7 @@
 					<DatePicker
 						Width="150"
 						VerticalAlignment="Center"
-						SelectedDate="{Binding FormVigenteHasta, Mode=TwoWay}"
+						SelectedDate="{Binding HorarioSeleccionado.VigenteHasta, Mode=TwoWay}"
 						Height="30" />
 				</StackPanel>
 				<StackPanel

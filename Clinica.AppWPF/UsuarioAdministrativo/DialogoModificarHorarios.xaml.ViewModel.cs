@@ -106,53 +106,53 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	}
 
 
-	private TimeOnly? _formHoraDesde;
-	public TimeOnly? FormHoraDesde {
-		get => _formHoraDesde;
-		set {
-			if (_formHoraDesde != value) {
-				_formHoraDesde = value;
-				OnPropertyChanged(nameof(FormHoraDesde));
-				//OnPropertyChanged(nameof(PuedeAplicar));
-			}
-		}
-	}
+	//private TimeOnly? _formHoraDesde;
+	//public TimeOnly? FormHoraDesde {
+	//	get => _formHoraDesde;
+	//	set {
+	//		if (_formHoraDesde != value) {
+	//			_formHoraDesde = value;
+	//			OnPropertyChanged(nameof(FormHoraDesde));
+	//			//OnPropertyChanged(nameof(PuedeAplicar));
+	//		}
+	//	}
+	//}
 
-	private TimeOnly? _formHoraHasta;
-	public TimeOnly? FormHoraHasta {
-		get => _formHoraHasta;
-		set {
-			if (_formHoraHasta != value) {
-				_formHoraHasta = value;
-				OnPropertyChanged(nameof(FormHoraHasta));
-				//OnPropertyChanged(nameof(PuedeAplicar));
-			}
-		}
-	}
+	//private TimeOnly? _formHoraHasta;
+	//public TimeOnly? FormHoraHasta {
+	//	get => _formHoraHasta;
+	//	set {
+	//		if (_formHoraHasta != value) {
+	//			_formHoraHasta = value;
+	//			OnPropertyChanged(nameof(FormHoraHasta));
+	//			//OnPropertyChanged(nameof(PuedeAplicar));
+	//		}
+	//	}
+	//}
 
 
 
-	private DateTime? _formVigenteDesde;
-	public DateTime? FormVigenteDesde {
-		get => _formVigenteDesde;
-		set {
-			if (_formVigenteDesde != value) {
-				_formVigenteDesde = value;
-				OnPropertyChanged(nameof(FormVigenteDesde));
-			}
-		}
-	}
+	//private DateTime? _formVigenteDesde;
+	//public DateTime? FormVigenteDesde {
+	//	get => _formVigenteDesde;
+	//	set {
+	//		if (_formVigenteDesde != value) {
+	//			_formVigenteDesde = value;
+	//			OnPropertyChanged(nameof(FormVigenteDesde));
+	//		}
+	//	}
+	//}
 
-	private DateTime? _formVigenteHasta;
-	public DateTime? FormVigenteHasta {
-		get => _formVigenteHasta;
-		set {
-			if (_formVigenteHasta != value) {
-				_formVigenteHasta = value;
-				OnPropertyChanged(nameof(FormVigenteHasta));
-			}
-		}
-	}
+	//private DateTime? _formVigenteHasta;
+	//public DateTime? FormVigenteHasta {
+	//	get => _formVigenteHasta;
+	//	set {
+	//		if (_formVigenteHasta != value) {
+	//			_formVigenteHasta = value;
+	//			OnPropertyChanged(nameof(FormVigenteHasta));
+	//		}
+	//	}
+	//}
 
 
 	// ================================================================
@@ -198,18 +198,18 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 	private void LimpiarFormulario() {
 		FormDia = DiaSeleccionado?.DiaSemana;
-		FormHoraDesde = null;
-		FormHoraHasta = null;
-		FormVigenteDesde = null;
-		FormVigenteHasta = null;
+		//FormHoraDesde = null;
+		//FormHoraHasta = null;
+		//FormVigenteDesde = null;
+		//FormVigenteHasta = null;
 	}
 
 	private void CargarFormularioDesdeHorario(NodoFranjaHorariaViewModel h) {
 		FormDia = h.DiaSemana;
-		FormHoraDesde = h.HoraDesde;
-		FormHoraHasta = h.HoraHasta;
-		FormVigenteDesde = h.VigenteDesde;
-		FormVigenteHasta = h.VigenteHasta;
+		//FormHoraDesde = h.HoraDesde;
+		//FormHoraHasta = h.HoraHasta;
+		//FormVigenteDesde = h.VigenteDesde;
+		//FormVigenteHasta = h.VigenteHasta;
 	}
 
 
@@ -282,16 +282,18 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			return new ResultWpf<UnitWpf>.Error(
 				new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information)
 			);
-		if (MessageBox.Show(
-			"¿Guardar los cambios realizados?",
-			"Confirmar guardado",
-			MessageBoxButton.YesNo,
-			MessageBoxImage.Question
-		) != MessageBoxResult.Yes)
-			return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
-
 
 		ResultWpf<HorariosMedicos2026Agg> resultadoAgg = ConstruirAgregadoDominio().ToWpf(MessageBoxImage.Warning);
+		if (!resultadoAgg.IsError) {
+			if (MessageBox.Show(
+				"¿Esta seguro de guardar los cambios realizados?",
+				"Confirmar guardado",
+				MessageBoxButton.YesNo,
+				MessageBoxImage.Question
+			) != MessageBoxResult.Yes)
+				return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
+		}
+
 		return await resultadoAgg.Bind(
 			agregado => App.Repositorio.UpdateHorariosWhereMedicoId(agregado)
 		);
@@ -331,23 +333,17 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		OnPropertyChanged(nameof(PuedeGuardarCambios));
 	}
 
-	public void AplicarCambios() {
-		if (HorarioSeleccionado is null) return;
+	//public void AplicarCambios() {
+	//	if (HorarioSeleccionado is null) return;
 
-		HorarioSeleccionado.HoraDesde = FormHoraDesde!.Value;
-		HorarioSeleccionado.HoraHasta = FormHoraHasta!.Value;
-		HorarioSeleccionado.VigenteDesde = FormVigenteDesde!.Value;
-		HorarioSeleccionado.VigenteHasta = FormVigenteHasta!.Value;
+	//HorarioSeleccionado.HoraDesde = FormHoraDesde!.Value;
+	//HorarioSeleccionado.HoraHasta = FormHoraHasta!.Value;
+	//HorarioSeleccionado.VigenteDesde = FormVigenteDesde!.Value;
+	//HorarioSeleccionado.VigenteHasta = FormVigenteHasta!.Value;
 
-		OnPropertyChanged(nameof(TieneCambios));
-		OnPropertyChanged(nameof(PuedeGuardarCambios));
-
-
-
-
-
-
-	}
+	//	OnPropertyChanged(nameof(TieneCambios));
+	//	OnPropertyChanged(nameof(PuedeGuardarCambios));
+	//}
 
 
 
@@ -444,6 +440,7 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 			OnPropertyChanged(nameof(DiaSemana));
 			OnPropertyChanged(nameof(HoraDesde));
 			OnPropertyChanged(nameof(HoraHasta));
+			NotifyEdit();
 		}
 	}
 
@@ -453,7 +450,7 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 		set {
 			_horaDesde = value;
 			OnPropertyChanged(nameof(HoraDesde));
-
+			NotifyEdit();
 		}
 	}
 	private TimeOnly _horaHasta;
@@ -462,11 +459,29 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 		set {
 			_horaHasta = value;
 			OnPropertyChanged(nameof(HoraHasta));
+			NotifyEdit();
 		}
 	}
 
-	public DateTime VigenteDesde { get; set; }
-	public DateTime VigenteHasta { get; set; } // Changed to non-nullable
+
+	private DateTime _vigenteDesde;
+	public DateTime VigenteDesde {
+		get => _vigenteDesde;
+		set {
+			_vigenteDesde = value;
+			OnPropertyChanged(nameof(VigenteDesde));
+			NotifyEdit();
+		}
+	}
+	private DateTime _vigenteHasta;
+	public DateTime VigenteHasta {
+		get => _vigenteHasta;
+		set {
+			_vigenteHasta = value;
+			OnPropertyChanged(nameof(VigenteHasta));
+			NotifyEdit();
+		}
+	}
 
 
 
@@ -485,6 +500,9 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 	// ================================================================
 	// HORARIO_ITEM.INFRAESTRUCTURA
 	// ================================================================
+	public Action? OnEdited { get; set; }
+	private void NotifyEdit() => OnEdited?.Invoke();
+
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new(name));
 }
