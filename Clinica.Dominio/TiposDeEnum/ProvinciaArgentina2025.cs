@@ -1,4 +1,5 @@
-﻿using Clinica.Dominio.FunctionalToolkit;
+﻿using System.Collections.Frozen;
+using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.IInterfaces;
 
 namespace Clinica.Dominio.TiposDeEnum;
@@ -33,40 +34,39 @@ public enum ProvinciaEnum : byte {
 
 
 public record struct ProvinciaArgentina2025(ProvinciaEnum CodigoInternoValor, string NombreValor) : IComoTexto {
-	public string ATexto() => NombreValor;
+	public readonly string ATexto() => NombreValor;
 	public static IReadOnlyList<ProvinciaArgentina2025> Todas() => [.. _nombresPorCodigo.Select(kvp => new ProvinciaArgentina2025(kvp.Key, kvp.Value))];
 
 	// Diccionario privado para lookup rápido
-	private static readonly IReadOnlyDictionary<ProvinciaEnum, string> _nombresPorCodigo = new Dictionary<ProvinciaEnum, string>
-	{
-		{ ProvinciaEnum.BuenosAires, "Buenos Aires" },
-		{ ProvinciaEnum.CiudadAutonomaBuenosAires, "Ciudad Autónoma de Buenos Aires" },
-		{ ProvinciaEnum.Catamarca, "Catamarca" },
-		{ ProvinciaEnum.Chaco, "Chaco" },
-		{ ProvinciaEnum.Chubut, "Chubut" },
-		{ ProvinciaEnum.Cordoba, "Córdoba" },
-		{ ProvinciaEnum.Corrientes, "Corrientes" },
-		{ ProvinciaEnum.EntreRios, "Entre Ríos" },
-		{ ProvinciaEnum.Formosa, "Formosa" },
-		{ ProvinciaEnum.Jujuy, "Jujuy" },
-		{ ProvinciaEnum.LaPampa, "La Pampa" },
-		{ ProvinciaEnum.LaRioja, "La Rioja" },
-		{ ProvinciaEnum.Mendoza, "Mendoza" },
-		{ ProvinciaEnum.Misiones, "Misiones" },
-		{ ProvinciaEnum.Neuquen, "Neuquén" },
-		{ ProvinciaEnum.RioNegro, "Río Negro" },
-		{ ProvinciaEnum.Salta, "Salta" },
-		{ ProvinciaEnum.SanJuan, "San Juan" },
-		{ ProvinciaEnum.SanLuis, "San Luis" },
-		{ ProvinciaEnum.SantaCruz, "Santa Cruz" },
-		{ ProvinciaEnum.SantaFe, "Santa Fe" },
-		{ ProvinciaEnum.SantiagoDelEstero, "Santiago del Estero" },
-		{ ProvinciaEnum.TierraDelFuego, "Tierra del Fuego" },
-		{ ProvinciaEnum.Tucuman, "Tucumán" }
-	};
+	private static readonly FrozenDictionary<ProvinciaEnum, string> _nombresPorCodigo =
+		new Dictionary<ProvinciaEnum, string> {
+			[ProvinciaEnum.BuenosAires] = "Buenos Aires",
+			[ProvinciaEnum.CiudadAutonomaBuenosAires] = "Ciudad Autónoma de Buenos Aires",
+			[ProvinciaEnum.Catamarca] = "Catamarca",
+			[ProvinciaEnum.Chaco] = "Chaco",
+			[ProvinciaEnum.Chubut] = "Chubut",
+			[ProvinciaEnum.Cordoba] = "Córdoba",
+			[ProvinciaEnum.Corrientes] = "Corrientes",
+			[ProvinciaEnum.EntreRios] = "Entre Ríos",
+			[ProvinciaEnum.Formosa] = "Formosa",
+			[ProvinciaEnum.Jujuy] = "Jujuy",
+			[ProvinciaEnum.LaPampa] = "La Pampa",
+			[ProvinciaEnum.LaRioja] = "La Rioja",
+			[ProvinciaEnum.Mendoza] = "Mendoza",
+			[ProvinciaEnum.Misiones] = "Misiones",
+			[ProvinciaEnum.Neuquen] = "Neuquén",
+			[ProvinciaEnum.RioNegro] = "Río Negro",
+			[ProvinciaEnum.Salta] = "Salta",
+			[ProvinciaEnum.SanJuan] = "San Juan",
+			[ProvinciaEnum.SanLuis] = "San Luis",
+			[ProvinciaEnum.SantaCruz] = "Santa Cruz",
+			[ProvinciaEnum.SantaFe] = "Santa Fe",
+			[ProvinciaEnum.SantiagoDelEstero] = "Santiago del Estero",
+			[ProvinciaEnum.TierraDelFuego] = "Tierra del Fuego",
+			[ProvinciaEnum.Tucuman] = "Tucumán"
+		}.ToFrozenDictionary();
 
-	private static readonly IReadOnlyDictionary<string, ProvinciaEnum> _codigoPorNombre =
-		_nombresPorCodigo.ToDictionary(kvp => kvp.Value.ToLowerInvariant(), kvp => kvp.Key);
+	private static readonly Dictionary<string, ProvinciaEnum> _codigoPorNombre = _nombresPorCodigo.ToDictionary(kvp => kvp.Value.ToLowerInvariant(), kvp => kvp.Key);
 
 	//public static IReadOnlyCollection<string> ProvinciasValidas => _nombresPorCodigo.Values;
 
@@ -93,7 +93,7 @@ public record struct ProvinciaArgentina2025(ProvinciaEnum CodigoInternoValor, st
 
 	// ---------------- FACTORY POR NOMBRE ----------------
 	public static Result<ProvinciaArgentina2025> CrearResult(string? input) {
-		
+
 		if (string.IsNullOrWhiteSpace(input))
 			return new Result<ProvinciaArgentina2025>.Error("La provincia no puede estar vacía.");
 

@@ -96,7 +96,6 @@ public class DialogoMedicoModificarVM : INotifyPropertyChanged {
 	private bool EstaEditando => Id is not null;
 	public bool PuedeEliminar => EstaEditando;
 	public bool PuedeGuardarCambios => TieneCambios;
-	public bool PuedeEditarHorario => true; // UI can open horarios dialog
 
 
 	// -----------------------------
@@ -264,7 +263,7 @@ public class DialogoMedicoModificarVM : INotifyPropertyChanged {
 		if (!PuedeGuardarCambios)
 			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information));
 
-		return await ToDomain(fechaIngreso: DateTime.Now)
+		return await this.ToDomain()
 			.Bind(medico => EstaEditando
 				? GuardarEdicionAsync(medico)
 				: GuardarCreacionAsync(medico)
@@ -294,15 +293,15 @@ public class DialogoMedicoModificarVM : INotifyPropertyChanged {
 	}
 
 
-	private ResultWpf<Medico2025> ToDomain(DateTime fechaIngreso) {
+	private ResultWpf<Medico2025> ToDomain() {
 		return Medico2025.CrearResult(
 			NombreCompleto2025.CrearResult(Nombre, Apellido),
-			Especialidad2025.CrearResult(Especialidad.Codigo),
+			Especialidad2025.CrearResult(Especialidad?.Codigo),
 			DniArgentino2025.CrearResult(Dni),
 			DomicilioArgentino2025.CrearResult(
 				LocalidadDeProvincia2025.CrearResult(
 					Localidad,
-					ProvinciaArgentina2025.CrearResultPorCodigo(Provincia.Codigo)),
+					ProvinciaArgentina2025.CrearResultPorCodigo(Provincia?.Codigo)),
 				Domicilio
 			),
 			Telefono2025.CrearResult(Telefono),

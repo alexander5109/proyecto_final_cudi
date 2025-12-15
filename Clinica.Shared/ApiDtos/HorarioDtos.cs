@@ -7,7 +7,7 @@ namespace Clinica.Shared.ApiDtos;
 
 public static class HorarioDtos {
 	public record HorarioDto(
-		MedicoId MedicoId,
+		//MedicoId MedicoId,
 		DayOfWeek DiaSemana,
 		TimeSpan HoraDesde,
 		TimeSpan HoraHasta,
@@ -15,7 +15,7 @@ public static class HorarioDtos {
 		DateTime? VigenteHasta
 	) {
 		public HorarioDto()
-			: this(default, default, default, default, default, default) { }
+			: this(default, default, default, default, default) { }
 	}
 	//public static HorarioDto ToDto(this Horario2025 instance) {
 	//	return new HorarioDto {

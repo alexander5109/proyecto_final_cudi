@@ -539,26 +539,26 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return result;
 	}
 
-	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDto> horarios) {
-		MedicoDtos.MedicoDto dtoMedico = instance.ToDto();
-		var payload = new {
-			Medico = dtoMedico,
-			Horarios = horarios
-		};
+	//async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDto> horarios) {
+	//	MedicoDtos.MedicoDto dtoMedico = instance.ToDto();
+	//	var payload = new {
+	//		Medico = dtoMedico,
+	//		Horarios = horarios
+	//	};
 
-		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
-			() => Api.Cliente.PutAsJsonAsync(
-				$"api/medicos/{id.Valor}/con-horarios",
-				payload
-			),
-			onOk: async response => UnitWpf.Valor,
-			errorTitle: $"Error actualizando médico {id.Valor}"
-		);
+	//	ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
+	//		() => Api.Cliente.PutAsJsonAsync(
+	//			$"api/medicos/{id.Valor}/con-horarios",
+	//			payload
+	//		),
+	//		onOk: async response => UnitWpf.Valor,
+	//		errorTitle: $"Error actualizando médico {id.Valor}"
+	//	);
 
-		_ = RefreshMedicos();
-		_ = RefreshHorarios();
-		return result;
-	}
+	//	_ = RefreshMedicos();
+	//	_ = RefreshHorarios();
+	//	return result;
+	//}
 
 	//async Task<ResultWpf<UnitWpf>> IWPFRepositorioHorarios.UpdateHorariosWhereMedicoId(MedicoId id, IEnumerable<HorarioDto> horarios) {
 	//	_ = RefreshHorarios();

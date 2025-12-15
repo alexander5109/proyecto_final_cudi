@@ -44,7 +44,7 @@ public static class IWPFRepositorioInterfaces {
 		Task<ResultWpf<UnitWpf>> DeleteMedicoWhereId(MedicoId id);
 		Task<ResultWpf<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
 		Task<ResultWpf<UnitWpf>> UpdateMedicoWhereId(Medico2025Agg instance);
-		Task<ResultWpf<UnitWpf>> UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDtos.HorarioDto> horarios);
+		//Task<ResultWpf<UnitWpf>> UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDtos.HorarioDto> horarios);
 		//Task<List<MedicoDbModel>> SelectMedicos();
 		Task<List<MedicoDbModel>> SelectMedicos();
 		Task EnsureMedicosLoaded();
@@ -75,9 +75,6 @@ public static class IWPFRepositorioInterfaces {
 		//Task<List<HorarioDbModel>> SelectHorarios();
 		Task<IReadOnlyList<HorarioDbModel>?> SelectHorariosWhereMedicoId(MedicoId id);
 		Task<IReadOnlyList<DayOfWeek>?> SelectDiasDeAtencionWhereMedicoId(MedicoId id);
-		// New: update all horarios for a medico (in-memory UI will call this)
-
-
 		Task<ResultWpf<UnitWpf>> UpdateHorariosWhereMedicoId(HorariosMedicos2026Agg agregado);
 	}
 

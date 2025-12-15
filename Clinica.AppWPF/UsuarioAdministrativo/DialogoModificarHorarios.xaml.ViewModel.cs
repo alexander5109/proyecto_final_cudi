@@ -172,7 +172,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			_snapshotOriginal,
 			HorariosAgrupados
 				.SelectMany(g => g.Horarios)
-				.Select(h => h.ToDto(MedicoId))
+				.Select(h => h.ToDto())
 		);
 
 	// -----------------------------
@@ -338,7 +338,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			);
 		}
 
-		_snapshotOriginal = [.. HorariosAgrupados.SelectMany(g => g.Horarios).Select(h => h.ToDto(MedicoId))];
+		_snapshotOriginal = [.. HorariosAgrupados.SelectMany(g => g.Horarios).Select(h => h.ToDto())];
 	}
 
 
@@ -443,8 +443,8 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 	// ================================================================
 	// HORARIO_ITEM.METHODS
 	// ================================================================
-	public HorarioDto ToDto(MedicoId medicoId) => new() {
-		MedicoId = medicoId,
+	public HorarioDto ToDto() => new() {
+		//MedicoId = medicoId,
 		DiaSemana = DiaSemana,
 		HoraDesde = HoraDesde.ToTimeSpan(),
 		HoraHasta = HoraHasta.ToTimeSpan(),
