@@ -39,11 +39,9 @@ public partial class DialogoModificarHorarios : Window {
 
 	private void ClickBoton_EliminarHorario(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
-		if (MessageBox.Show("¿Eliminar este horario?", "Confirmar",
-				MessageBoxButton.YesNo, MessageBoxImage.Warning)
-			== MessageBoxResult.Yes) {
-			VM.EliminarHorario();
-		}
+		//if (MessageBox.Show("¿Eliminar este horario?", "Confirmar",MessageBoxButton.YesNo, MessageBoxImage.Warning)== MessageBoxResult.Yes) {
+		VM.EliminarHorario();
+		//}
 	}
 
 	private async void ClickBoton_GuardarCambios(object sender, RoutedEventArgs e) {

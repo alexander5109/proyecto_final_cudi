@@ -144,14 +144,22 @@
 				ItemsSource="{Binding HorariosAgrupados}"
 				SelectedItemChanged="TreeView_SelectedItemChanged"
 				Margin="5,5,5,5"
-				MinHeight="150">
+				MinHeight="150"
+				Background="#F4F4F4"
+				BorderBrush="#D0D0D0">
 				<TreeView.Resources>
 					<HierarchicalDataTemplate
 						DataType="{x:Type local:NodoDiaSemanaViewModel}"
 						ItemsSource="{Binding Horarios}">
-						<TextBlock
-							Text="{Binding DiaSemanaNombre}"
-							FontWeight="Bold" />
+						<StackPanel>
+							<TextBlock
+								Text="{Binding DiaSemanaNombre}"
+								FontWeight="Bold"
+								FontSize="14"
+								Foreground="#2C3E50"
+								Margin="5,0"
+								VerticalAlignment="Center" />
+						</StackPanel>
 					</HierarchicalDataTemplate>
 					<DataTemplate
 						DataType="{x:Type local:NodoFranjaHorariaViewModel}">
@@ -159,12 +167,12 @@
 							Orientation="Horizontal"
 							Margin="15,0,0,0">
 							<TextBlock
-								Text="{Binding Desde}"
+								Text="{Binding HoraDesde, StringFormat={}{0:HH\\:mm}}"
 								Width="50" />
 							<TextBlock
 								Text=" - " />
 							<TextBlock
-								Text="{Binding Hasta}"
+								Text="{Binding HoraHasta, StringFormat={}{0:HH\\:mm}}"
 								Width="50" />
 						</StackPanel>
 					</DataTemplate>

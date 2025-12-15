@@ -153,7 +153,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	// WINDOW.REGLAS
 	// ================================================================
 
-	public bool PuedeAgregar => DiaSeleccionado != null && HorarioSeleccionado == null;
+	public bool PuedeAgregar => DiaSeleccionado != null;
 	public bool PuedeEditarHorario => HorarioSeleccionado != null;
 	public bool PuedeEliminar => HorarioSeleccionado != null;
 
@@ -415,8 +415,8 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 		set {
 			_dia = value;
 			OnPropertyChanged(nameof(DiaSemana));
-			OnPropertyChanged(nameof(Desde));
-			OnPropertyChanged(nameof(Hasta));
+			OnPropertyChanged(nameof(HoraDesde));
+			OnPropertyChanged(nameof(HoraHasta));
 		}
 	}
 
@@ -426,7 +426,6 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 		set {
 			_horaDesde = value;
 			OnPropertyChanged(nameof(HoraDesde));
-			OnPropertyChanged(nameof(Desde));
 		}
 	}
 	private TimeOnly _horaHasta;
@@ -435,15 +434,11 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 		set {
 			_horaHasta = value;
 			OnPropertyChanged(nameof(HoraHasta));
-			OnPropertyChanged(nameof(Hasta));
 		}
 	}
 
 	public DateTime VigenteDesde { get; set; }
 	public DateTime VigenteHasta { get; set; } // Changed to non-nullable
-
-	public string Desde => HoraDesde.ToString("hh\\:mm");
-	public string Hasta => HoraHasta.ToString("hh\\:mm");
 
 
 
