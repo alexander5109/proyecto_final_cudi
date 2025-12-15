@@ -66,12 +66,12 @@ public record HorarioFranja2026(
 
 		if (desde >= hasta)
 			return new Result<HorarioFranja2026>.Error(
-				"La hora de inicio debe ser anterior a la hora de fin."
+				"Error en horario {dia.ATexto()} {desde}-{hasta}: \n   La hora de inicio debe ser anterior a la hora de fin."
 			);
 
 		if (vigenteDesde >= vigenteHasta)
 			return new Result<HorarioFranja2026>.Error(
-				"La fecha de inicio de vigencia debe ser anterior a la fecha de fin."
+				"Error en horario {dia.ATexto()} {desde}-{hasta} vigente entre {vigenteDesde}{vigenteHasta}: \n   La fecha de inicio de vigencia debe ser anterior a la fecha de fin."
 			);
 
 		// -----------------------------

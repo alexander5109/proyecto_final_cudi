@@ -34,6 +34,16 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 	// ================================================================
+	// WINDOW.COLLECTIONS
+	// ================================================================
+
+	public ObservableCollection<NodoDiaSemanaViewModel> HorariosAgrupados { get; } = [];
+
+	private List<HorarioDto> _snapshotOriginal = [];
+
+
+
+	// ================================================================
 	// WINDOW.CONTEXTO
 	// ================================================================
 
@@ -44,19 +54,14 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	public string? ActiveMedicoNombreCompleto => $"{ActiveMedicoModel?.Nombre} {ActiveMedicoModel?.Apellido}";
 
 
-
-	// ================================================================
-	// WINDOW.COLLECTIONS
-	// ================================================================
-
-	public ObservableCollection<NodoDiaSemanaViewModel> HorariosAgrupados { get; } = [];
-
-	private List<HorarioDto> _snapshotOriginal = [];
-
-
 	// ================================================================
 	// WINDOW.SELECTED ITEM
 	// ================================================================
+	private void OnHorarioEditado() {
+		OnPropertyChanged(nameof(TieneCambios));
+		OnPropertyChanged(nameof(PuedeGuardarCambios));
+		OnPropertyChanged(nameof(PuedeRestaurar));
+	}
 
 
 	private NodoDiaSemanaViewModel? _diaSeleccionado;
@@ -197,19 +202,19 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 	//private void LimpiarFormulario() {
-		//FormDia = DiaSeleccionado?.DiaSemana;
-		//FormHoraDesde = null;
-		//FormHoraHasta = null;
-		//FormVigenteDesde = null;
-		//FormVigenteHasta = null;
+	//FormDia = DiaSeleccionado?.DiaSemana;
+	//FormHoraDesde = null;
+	//FormHoraHasta = null;
+	//FormVigenteDesde = null;
+	//FormVigenteHasta = null;
 	//}
 
 	//private void CargarFormularioDesdeHorario(NodoFranjaHorariaViewModel h) {
-		//FormDia = h.DiaSemana;
-		//FormHoraDesde = h.HoraDesde;
-		//FormHoraHasta = h.HoraHasta;
-		//FormVigenteDesde = h.VigenteDesde;
-		//FormVigenteHasta = h.VigenteHasta;
+	//FormDia = h.DiaSemana;
+	//FormHoraDesde = h.HoraDesde;
+	//FormHoraHasta = h.HoraHasta;
+	//FormVigenteDesde = h.VigenteDesde;
+	//FormVigenteHasta = h.VigenteHasta;
 	//}
 
 
@@ -363,11 +368,15 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			HorariosAgrupados.Add(
 				new NodoDiaSemanaViewModel(
 					dia,
-					lista ?? []
+					lista ?? [],
+					OnHorarioEditado
 				)
 			);
 		}
 
+		//foreach (var h in Horarios) {
+		//	h.OnEdited = OnHorarioEditado;
+		//}
 		_snapshotOriginal = [.. HorariosAgrupados.SelectMany(g => g.Horarios).Select(h => h.ToDto())];
 	}
 
@@ -388,23 +397,27 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 // MINIVIEWMODELS
 // ================================================================
 
-
-public class NodoDiaSemanaViewModel(DayOfWeek dia, List<HorarioDbModel> horarios) {
+public class NodoDiaSemanaViewModel(DayOfWeek dia, List<HorarioDbModel> horarios, Action onHorarioEditado) {
 
 	// ================================================================
-	// GROUPER_DIA.CONSTRUCTOR
+	// NODO_DIA.PROPS
 	// ================================================================
 	public DayOfWeek DiaSemana { get; } = dia;
 	public string DiaSemanaNombre { get; } = dia.ATexto();
 	public ObservableCollection<NodoFranjaHorariaViewModel> Horarios { get; } = new ObservableCollection<NodoFranjaHorariaViewModel>(
-			horarios.Select(h => new NodoFranjaHorariaViewModel(h))
+			horarios.Select(h => {
+				var vm = new NodoFranjaHorariaViewModel(h) {
+					OnEdited = onHorarioEditado
+				};
+				return vm;
+			})
 		);
 }
 
 public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 
 	// ================================================================
-	// HORARIO_ITEM.CONSTRUCTOR
+	// NODO_FRANJA.CONSTRUCTOR
 	// ================================================================
 	public NodoFranjaHorariaViewModel(HorarioDbModel h) {
 		Model = h;
@@ -429,7 +442,7 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 
 
 	// ================================================================
-	// HORARIO_ITEM.PROPIEDADES
+	// NODO_FRANJA.PROPS
 	// ================================================================
 
 	private DayOfWeek _dia;
@@ -484,7 +497,7 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 	}
 
 	// ================================================================
-	// HORARIO_ITEM.INFRAESTRUCTURA
+	// NODO_FRANJA.INFRAESTRUCTURA
 	// ================================================================
 	public Action? OnEdited { get; set; }
 	private void NotifyEdit() => OnEdited?.Invoke();
@@ -495,7 +508,7 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 
 
 	// ================================================================
-	// HORARIO_ITEM.METHODS
+	// NODO_FRANJA.METHODS
 	// ================================================================
 	public HorarioDto ToDto() => new() {
 		//MedicoId = medicoId,
