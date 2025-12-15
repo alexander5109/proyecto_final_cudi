@@ -1,4 +1,5 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
@@ -48,16 +49,16 @@ public class HorariosController(
 
 
 
-	[HttpPut("{id:int}")]
-	public Task<ActionResult<HorarioDbModel>> UpdateHorario(int id, [FromBody] HorarioDto dto)
-	=> this.SafeExecuteWithDomain(
-		logger,
-		PermisosAccionesEnum.UpdateHorarios,
-		dto,
-		x => x.ToDomain(),
-		horario => repositorio.UpdateHorarioWhereId(new HorarioId(id), horario),
-		notFoundMessage: $"No existe horario con id {id}"
-	);
+	//[HttpPut("{id:int}")]
+	//public Task<ActionResult<HorarioDbModel>> UpdateHorario(int id, [FromBody] HorarioDto dto)
+	//=> this.SafeExecuteWithDomain(
+	//	logger,
+	//	PermisosAccionesEnum.UpdateHorarios,
+	//	dto,
+	//	x => x.ToDomain(),
+	//	horario => repositorio.UpdateHorarioWhereId(new HorarioId(id), horario),
+	//	notFoundMessage: $"No existe horario con id {id}"
+	//);
 
 
 
@@ -99,19 +100,17 @@ public class HorariosController(
 
 
 
-	//[HttpPut("/medicos/{medicoId:int}/horarios")]
-	//public Task<ActionResult<Unit>> UpsertHorarios(
-	//	int medicoId,
-	//	[FromBody] HorariosMedicosDto dto
-	//) =>
-	//	this.SafeExecuteWithDomain(
-	//		logger,
-	//		PermisosAccionesEnum.UpdateHorarios,
-	//		dto,
-	//		x => x.ToDomain(medicoId),
-	//		agg => repositorio.UpsertHorariosWhereMedicoId(agg)
-	//	);
-
+	[HttpPut("/horarios/{medicoId:int}")]
+	public Task<ActionResult<Unit>> UpsertHorarios(
+		int medicoId,
+		[FromBody] IReadOnlyCollection<HorarioFranja2025> franjasDto
+	) => this.SafeExecuteWithDomain(
+			logger,
+			PermisosAccionesEnum.UpdateHorarios,
+			franjasDto,
+			x => HorariosMedicos2025Agg.CrearResult(new MedicoId(medicoId), franjasDto),
+			agg => repositorio.UpsertHorariosWhereMedicoId(agg)
+		);
 
 
 

@@ -27,7 +27,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	public DialogoModificarHorariosVM(MedicoDbModel medico) {
 		ActiveMedicoModel = medico;
 		MedicoId = medico.Id;
-		_ = CargarHorariosAsync(medico.Id);
+		_ = CargarHorariosAsync();
 	}
 
 
@@ -212,6 +212,26 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	// WINDOW.METHODS.PUBLIC
 	// -----------------------------
 
+	private Result<HorariosMedicos2025Agg> ConstruirAgregadoDominio() {
+
+		var franjas = HorariosAgrupados
+			.SelectMany(d => d.Horarios)
+			.Select(h => HorarioFranja2025.Crear(
+				h.DiaSemana,
+				h.HoraDesde,
+				h.HoraHasta,
+				DateOnly.FromDateTime(h.VigenteDesde),
+				h.VigenteHasta == DateTime.MaxValue
+					? null
+					: DateOnly.FromDateTime(h.VigenteHasta)
+			))
+			.ToList()
+			.AsReadOnly();
+
+		return HorariosMedicos2025Agg.CrearResult(MedicoId, franjas);
+	}
+
+
 	public void OnTreeSelectionChanged(object? selected) {
 		if (selected is NodoDiaSemanaViewModel dia) {
 			DiaSeleccionado = dia;
@@ -229,29 +249,19 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 	public async Task<ResultWpf<UnitWpf>> GuardarAsync() {
 		if (!PuedeGuardarCambios)
-			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information));
+			return new ResultWpf<UnitWpf>.Error(
+				new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information)
+			);
 
-		//if (MedicoId is not MedicoId idGood)
-		//	return new ResultWpf<UnitWpf>.Error(new ErrorInfo("El médico no tiene MedicoId.", MessageBoxImage.Error));
+		ResultWpf<HorariosMedicos2025Agg> resultadoAgg =
+			ConstruirAgregadoDominio()
+				.ToWpf(MessageBoxImage.Information);
 
-		List<HorarioDto> horarios = [];
-		foreach (NodoDiaSemanaViewModel grupo in HorariosAgrupados) {
-			foreach (NodoFranjaHorariaViewModel h in grupo.Horarios) {
-				horarios.Add(new HorarioDto {
-					MedicoId = MedicoId,
-					DiaSemana = h.DiaSemana,
-					HoraDesde = h.HoraDesde.ToTimeSpan(),
-					HoraHasta = h.HoraHasta.ToTimeSpan(),
-					VigenteDesde = h.VigenteDesde,
-					VigenteHasta = h.VigenteHasta
-				});
-			}
-		}
+		return await resultadoAgg.Bind(
+			agregado => App.Repositorio.UpdateHorariosWhereMedicoId(agregado)
 
-		// call repository method that updates only horarios for a medico
-		return await App.Repositorio.UpdateHorariosWhereMedicoId(MedicoId, horarios);
+		);
 	}
-
 
 
 	public void AgregarHorario() {
@@ -307,10 +317,10 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 
-	public async Task CargarHorariosAsync(MedicoId idGood) {
+	public async Task CargarHorariosAsync() {
 		HorariosAgrupados.Clear();
 
-        IReadOnlyList<HorarioDbModel> horarios = await App.Repositorio.SelectHorariosWhereMedicoId(idGood)
+		IReadOnlyList<HorarioDbModel> horarios = await App.Repositorio.SelectHorariosWhereMedicoId(MedicoId)
 					   ?? [];
 
 		Dictionary<DayOfWeek, List<HorarioDbModel>> dict = horarios

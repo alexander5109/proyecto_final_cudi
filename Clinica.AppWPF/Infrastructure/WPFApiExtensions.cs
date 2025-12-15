@@ -8,6 +8,8 @@ namespace Clinica.AppWPF.Infrastructure;
 
 
 public static class ApiExtensions {
+
+
 	public static async Task<ResultWpf<T>> TryApiCallAsync<T>(
 		this ApiHelper api,
 		Func<Task<HttpResponseMessage>> httpCall,
@@ -24,17 +26,27 @@ public static class ApiExtensions {
 					return new ResultWpf<T>.Ok(mapped);
 				}
 
-				// Modo automático: intenta deserializar el body a T
+				if (response.Content.Headers.ContentLength == 0)
+					return new ResultWpf<T>.Ok(default!);
+
 				T? data = await response.Content.ReadFromJsonAsync<T>();
 				return new ResultWpf<T>.Ok(data!);
 			}
 
 			return await HandleHttpError<T>(response, errorTitle);
 
+		} catch (HttpRequestException ex) {
+			return new ResultWpf<T>.Error(
+				new ErrorInfo(
+					$"{ex.Message}",
+					MessageBoxImage.Error
+				)
+			);
 		} catch (Exception ex) {
 			return HandleException<T>(ex, errorTitle);
 		}
 	}
+
 
 
 	public static async Task<T> TryGetJsonAsync<T>(
@@ -117,8 +129,8 @@ public static class ApiExtensions {
 	}
 
 	static ResultWpf<T> HandleException<T>(Exception ex, string title) {
-        // Creamos ErrorInfo enriquecido
-        ErrorInfo info = new(
+		// Creamos ErrorInfo enriquecido
+		ErrorInfo info = new(
 			Mensaje: $"{title}: {ex.Message}",
 			Icono: MessageBoxImage.Error,
 			Detalle: ex.ToString()

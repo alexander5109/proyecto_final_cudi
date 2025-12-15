@@ -133,27 +133,27 @@ public class RepositorioHorarios(SQLServerConnectionFactory factory) : Repositor
 	//		);
 	//	});
 
-	//Task<Result<Unit>> IRepositorioHorarios.UpsertHorariosWhereMedicoId(
-	//	HorariosMedicos2025Agg agg
-	//) =>
-	//	TryAsync(async conn => {
- //           HorariosMedicosUpsertDbModel dto = agg.ToUpsertDto();
+	Task<Result<Unit>> IRepositorioHorarios.UpsertHorariosWhereMedicoId(
+		HorariosMedicos2025Agg agg
+	) =>
+		TryAsync(async conn => {
+			HorariosMedicosUpsertDbModel dto = agg.ToUpsertDto();
 
- //           DynamicParameters parameters = new DynamicParameters();
-	//		parameters.Add("@MedicoId", dto.MedicoId);
-	//		parameters.Add(
-	//			"@Franjas",
-	//			dto.Franjas.AsTableValuedParameter("dbo.HorarioFranjaUDTT")
-	//		);
+			DynamicParameters parameters = new();
+			parameters.Add("@MedicoId", dto.MedicoId);
+			parameters.Add(
+				"@Franjas",
+				dto.Franjas.AsTableValuedParameter("dbo.HorarioFranjaUDTT")
+			);
 
-	//		await conn.ExecuteAsync(
-	//			"sp_UpsertHorariosWhereMedicoId",
-	//			parameters,
-	//			commandType: CommandType.StoredProcedure
-	//		);
+			await conn.ExecuteAsync(
+				"sp_UpsertHorariosWhereMedicoId",
+				parameters,
+				commandType: CommandType.StoredProcedure
+			);
 
-	//		return Unit.Valor;
-	//	});
+			return Unit.Valor;
+		});
 
 
 

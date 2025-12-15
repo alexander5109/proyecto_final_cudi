@@ -265,7 +265,7 @@ public class DialogoPacienteModificarVM : INotifyPropertyChanged {
 			),
 			FechaDeNacimiento2025.CrearResult(FechaNacimiento),
 			fechaIngreso
-		).ToWpf();
+		).ToWpf(MessageBoxImage.Information);
 	}
 
 

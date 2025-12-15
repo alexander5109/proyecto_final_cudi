@@ -29,8 +29,7 @@ public static class IWPFRepositorioInterfaces {
 		Task RefreshPacientes();
 		Task RefreshUsuarios();
 		Task RefreshHorarios();
-
-	}
+    }
 	public interface IWPFRepositorioUsuarios {
 		Task<ResultWpf<UnitWpf>> DeleteUsuarioWhereId(UsuarioId id);
 		Task<ResultWpf<UsuarioId>> InsertUsuarioReturnId(Usuario2025 instance);
@@ -77,7 +76,9 @@ public static class IWPFRepositorioInterfaces {
 		Task<IReadOnlyList<HorarioDbModel>?> SelectHorariosWhereMedicoId(MedicoId id);
 		Task<IReadOnlyList<DayOfWeek>?> SelectDiasDeAtencionWhereMedicoId(MedicoId id);
 		// New: update all horarios for a medico (in-memory UI will call this)
-		Task<ResultWpf<UnitWpf>> UpdateHorariosWhereMedicoId(MedicoId id, IEnumerable<HorarioDtos.HorarioDto> horarios);
+
+
+		Task<ResultWpf<UnitWpf>> UpdateHorariosWhereMedicoId(HorariosMedicos2025Agg agregado);
 	}
 
 	public interface IWPFRepositorioTurnos {

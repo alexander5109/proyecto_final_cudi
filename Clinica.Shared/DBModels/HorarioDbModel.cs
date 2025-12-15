@@ -34,16 +34,16 @@ public static partial class DbModels {
 		table.Columns.Add("DiaSemana", typeof(byte));
 		table.Columns.Add("HoraDesde", typeof(TimeSpan));
 		table.Columns.Add("HoraHasta", typeof(TimeSpan));
-		table.Columns.Add("VigenteDesde", typeof(DateOnly));
-		table.Columns.Add("VigenteHasta", typeof(DateOnly));
+		table.Columns.Add("VigenteDesde", typeof(DateTime));
+		table.Columns.Add("VigenteHasta", typeof(DateTime));
 
 		foreach (var f in agg.Franjas) {
 			table.Rows.Add(
 				(byte)f.DiaSemana,
 				f.HoraDesde.ToTimeSpan(),
 				f.HoraHasta.ToTimeSpan(),
-				f.VigenteDesde,
-				f.VigenteHasta
+				f.VigenteDesde.ToDateTime(TimeOnly.MinValue),
+				f.VigenteHasta?.ToDateTime(TimeOnly.MinValue)
 			);
 		}
 

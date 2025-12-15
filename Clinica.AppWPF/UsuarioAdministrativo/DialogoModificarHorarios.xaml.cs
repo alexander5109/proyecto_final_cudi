@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 
 using Clinica.AppWPF.Infrastructure;
+using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioAdministrativo;
@@ -13,7 +14,7 @@ public partial class DialogoModificarHorarios : Window {
 		InitializeComponent();
 		VM = new DialogoModificarHorariosVM(model);
 		DataContext = VM;
-		Loaded += async (_, _) => await VM.CargarHorariosAsync(model.Id);
+		Loaded += async (_, _) => await VM.CargarHorariosAsync();
 	}
 
 	// ==========================================================
@@ -42,10 +43,14 @@ public partial class DialogoModificarHorarios : Window {
 
 	private async void ClickBoton_GuardarCambios(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
-        ResultWpf<UnitWpf> result = await VM.GuardarAsync();
 
+
+		ResultWpf<UnitWpf> result = await VM.GuardarAsync();
 		result.MatchAndDo(
-			_ => MessageBox.Show("Cambios guardados.", "Éxito"),
+			async _ => {
+				MessageBox.Show("Cambios guardados.", "Éxito");
+				await VM.CargarHorariosAsync();
+			},
 			err => err.ShowMessageBox()
 		);
 	}

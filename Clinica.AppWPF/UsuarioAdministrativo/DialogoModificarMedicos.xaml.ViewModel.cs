@@ -309,7 +309,7 @@ public class DialogoMedicoModificarVM : INotifyPropertyChanged {
 			Email2025.CrearResult(Email),
 			FechaIngreso,
 			HaceGuardias
-		).ToWpf();
+		).ToWpf(MessageBoxImage.Information);
 	}
 
 

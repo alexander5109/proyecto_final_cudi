@@ -351,14 +351,15 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error actualizando usuario {aggrg.Id.Valor}"
 		);
-
-		_ = RefreshUsuarios();
+		if (result.IsOk) {
+			_ = RefreshUsuarios();
+		}
 		return result;
 	}
 
 
 	private static string BuildQuery(string baseUrl, object dto) {
-        NameValueCollection query = System.Web.HttpUtility.ParseQueryString(string.Empty);
+		NameValueCollection query = System.Web.HttpUtility.ParseQueryString(string.Empty);
 
 		foreach (PropertyInfo prop in dto.GetType().GetProperties()) {
 			object? value = prop.GetValue(dto);
@@ -539,7 +540,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	}
 
 	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDto> horarios) {
-        MedicoDtos.MedicoDto dtoMedico = instance.ToDto();
+		MedicoDtos.MedicoDto dtoMedico = instance.ToDto();
 		var payload = new {
 			Medico = dtoMedico,
 			Horarios = horarios
@@ -559,10 +560,21 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return result;
 	}
 
-	async Task<ResultWpf<UnitWpf>> IWPFRepositorioHorarios.UpdateHorariosWhereMedicoId(MedicoId id, IEnumerable<HorarioDto> horarios) {
-		// Temporary stub: accept the list and refresh cache
-		_ = RefreshHorarios();
-		return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
-	}
+	//async Task<ResultWpf<UnitWpf>> IWPFRepositorioHorarios.UpdateHorariosWhereMedicoId(MedicoId id, IEnumerable<HorarioDto> horarios) {
+	//	_ = RefreshHorarios();
+	//	return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
+	//}
 
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioHorarios.UpdateHorariosWhereMedicoId(HorariosMedicos2025Agg agregado) {
+		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
+			() => Api.Cliente.PutAsJsonAsync(
+				$"api/horarios/{agregado.MedicoId.Valor}",
+				agregado.Franjas
+			),
+			onOk: async response => UnitWpf.Valor,
+			errorTitle: $"Error actualizando médico {agregado.MedicoId.Valor}"
+		);
+		_ = RefreshHorarios();
+		return result;
+	}
 }

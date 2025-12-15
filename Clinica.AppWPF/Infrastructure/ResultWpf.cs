@@ -8,12 +8,12 @@ public readonly struct UnitWpf {
 }
 public abstract class ResultWpf<T> {
 	public sealed class Ok(T valor) : ResultWpf<T> {
-        public T Valor { get; } = valor;
-    }
+		public T Valor { get; } = valor;
+	}
 
 	public sealed class Error(ErrorInfo info) : ResultWpf<T> {
-        public ErrorInfo Info { get; } = info;
-    }
+		public ErrorInfo Info { get; } = info;
+	}
 
 	public bool IsOk => this is Ok;
 	public bool IsError => this is Error;
@@ -29,11 +29,11 @@ public record ErrorInfo(
 public static class ResultToWpfAdapter {
 
 	//Sin referencias todavia
-	public static ResultWpf<T> ToWpf<T>(this Result<T> result) {
+	public static ResultWpf<T> ToWpf<T>(this Result<T> result, MessageBoxImage icon) {
 		return result switch {
 			Result<T>.Ok ok => new ResultWpf<T>.Ok(ok.Valor),
 			Result<T>.Error err => new ResultWpf<T>.Error(
-				new ErrorInfo(err.Mensaje, MessageBoxImage.Warning)
+				new ErrorInfo(err.Mensaje, icon)
 			),
 			_ => throw new InvalidOperationException()
 		};
@@ -98,6 +98,16 @@ public static class WpfResultExtensions {
 			_ => throw new InvalidOperationException()
 		};
 	}
+
+	//public static async Task<ResultWpf<T>> TapAsync<T>(
+	//	this ResultWpf<T> result,
+	//	Func<T, Task> onOk
+	//) {
+	//	if (result is ResultWpf<T>.Ok ok)
+	//		await onOk(ok.Valor);
+
+	//	return result;
+	//}
 
 
 	public static void ShowMessageBox(this ErrorInfo error) {

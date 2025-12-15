@@ -24,6 +24,6 @@ public interface IRepositorioHorarios {
 
 	//Task<Result<IEnumerable<HorarioDbModel>>> SelectHorarios();
 	//Task<Result<IEnumerable<HorarioDbModel>>> SelectHorariosWhereMedicoId(MedicoId medicoId);
-	//Task<Result<Unit>> UpsertHorariosWhereMedicoId(HorariosMedicos2025Agg aggrg);
+	Task<Result<Unit>> UpsertHorariosWhereMedicoId(HorariosMedicos2025Agg aggrg);
 	//Task<Result<Unit>> DeleteHorariosWhereMedicoId(MedicoId medicoId);
 }
