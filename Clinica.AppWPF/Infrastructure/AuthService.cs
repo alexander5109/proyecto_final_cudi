@@ -8,77 +8,72 @@ using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
 
 namespace Clinica.AppWPF.Infrastructure;
 
-public static class AuthService
-{
-    public static async Task<ResultWpf<UsuarioLoginResponseDto>> LoginAsync(
-        ApiHelper api,
-        UsuarioLoginRequestDto request)
-    {
-        try
-        {
-            HttpResponseMessage response = await api.Cliente.PostAsJsonAsync("/auth/login", request);
+public static class AuthService {
+	private static readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
 
-            // ------------------------------
-            // ❌ Caso: error HTTP
-            // ------------------------------
-            if (!response.IsSuccessStatusCode)
-            {
-                // Leer el body del servidor
-                string rawError = await response.Content.ReadAsStringAsync();
+	public static async Task<ResultWpf<UsuarioLoginResponseDto>> LoginAsync(
+		ApiHelper api,
+		UsuarioLoginRequestDto request) {
+		try {
+			HttpResponseMessage response = await api.Cliente.PostAsJsonAsync("/auth/login", request);
 
-                // Intentar parsear ApiErrorDto / ProblemDetails
-                ApiErrorDto? apiError = null;
-                try
-                {
-                    // Primero contrato propio
-                    var envelope = JsonSerializer.Deserialize<ApiErrorDto>(rawError);
-                    if (envelope?.Title is not null)
-                        apiError = envelope;
-                }
-                catch { }
+			// ------------------------------
+			// ❌ Caso: error HTTP
+			// ------------------------------
+			if (!response.IsSuccessStatusCode) {
+				string rawError = await response.Content.ReadAsStringAsync();
 
-                // Fallback
-                //apiError ??= new ApiErrorDto("Credenciales incorrectas.", response.StatusCode);
+				// Intentar parsear ApiErrorDto
+				ApiErrorDto? apiError = null;
+				try {
+					apiError = JsonSerializer.Deserialize<ApiErrorDto>(rawError, _jsonOptions);
+				} catch {
+					// ignorar si no se puede parsear
+				}
 
-                return new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
-                    Mensaje: "Credenciales incorrectas.",
-                    Icono: IconForStatus((int)response.StatusCode),
-                    Detalle: apiError?.Title,
-                    HttpStatus: apiError?.Status
-                ));
-            }
+				// Fallback seguro si el parse falla
+				apiError ??= new ApiErrorDto(
+					Title: "Error desconocido del servidor",
+					Status: response.StatusCode
+				);
 
-            // ------------------------------
-            // ✔ Caso: OK
-            // ------------------------------
-            UsuarioLoginResponseDto? data = await response.Content.ReadFromJsonAsync<UsuarioLoginResponseDto>();
+				// Construir ErrorInfo final
+				return new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
+					Mensaje: apiError.Title, // mensaje amigable al usuario
+					Icono: IconForStatus((int)apiError.Status),
+					Detalle: $"HTTP {(int)apiError.Status}", // detalle técnico simple
+					HttpStatus: apiError.Status
+				));
+			}
 
-            if (data is null)
-            {
-                return new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
-                    Mensaje: "Error inesperado: el servidor no devolvió datos válidos.",
-                    Icono: MessageBoxImage.Error,
-                    Detalle: "El cuerpo JSON vino vacío o mal formado."
-                ));
-            }
+			// ------------------------------
+			// ✔ Caso: OK
+			// ------------------------------
+			UsuarioLoginResponseDto? data =
+				await response.Content.ReadFromJsonAsync<UsuarioLoginResponseDto>(_jsonOptions);
 
-            return new ResultWpf<UsuarioLoginResponseDto>.Ok(data);
-        }
-        catch (Exception ex)
-        {
-            return new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
-                Mensaje: "Error de conexión con el servidor.",
-                Icono: MessageBoxImage.Error,
-                Detalle: ex.ToString()
-            ));
-        }
-    }
+			if (data is null) {
+				return new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
+					Mensaje: "Error inesperado: el servidor no devolvió datos válidos.",
+					Icono: MessageBoxImage.Error,
+					Detalle: "El cuerpo JSON vino vacío o mal formado."
+				));
+			}
 
-    private static MessageBoxImage IconForStatus(int status)
-        => status switch
-        {
-            >= 400 and < 500 => MessageBoxImage.Warning,
-            >= 500           => MessageBoxImage.Error,
-            _                => MessageBoxImage.Information
-        };
+			return new ResultWpf<UsuarioLoginResponseDto>.Ok(data);
+		} catch (Exception ex) {
+			return new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
+				Mensaje: "Error de conexión con el servidor.",
+				Icono: MessageBoxImage.Error,
+				Detalle: ex.ToString()
+			));
+		}
+	}
+
+	private static MessageBoxImage IconForStatus(int status)
+		=> status switch {
+			>= 400 and < 500 => MessageBoxImage.Warning,
+			>= 500 => MessageBoxImage.Error,
+			_ => MessageBoxImage.Information
+		};
 }

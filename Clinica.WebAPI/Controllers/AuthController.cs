@@ -1,10 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Infrastructure.IRepositorios;
+using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -19,26 +21,32 @@ namespace Clinica.WebAPI.Controllers;
 [Route("auth")]
 public class AuthController(
 	IRepositorioUsuarios repositorio,
-	ILogger<HorariosController> logger
+	ILogger<HorariosController> logger,
+	JwtService jwtService
 ) : ControllerBase {
 
 
 
 
 	[HttpPost("login")]
-	public Task<ActionResult<UsuarioAutenticadoDbModel>> Login(UsuarioLoginRequestDto dto) {
-		return this.SafeExecute(
-			logger,
-			PermisosAccionesEnum.Publico, // o algo equivalente
-			async () => await ServicioAuth.ValidarCredenciales(
-				dto.Username,
-				dto.UserPassword,
-				repositorio
-			)
+	public async Task<ActionResult<UsuarioAutenticadoDbModel>> Login([FromBody] UsuarioLoginRequestDto dto) {
+
+		Result<UsuarioAutenticadoDbModel> result = await ServicioAuth.ValidarCredenciales(
+			dto.Username,
+			dto.UserPassword,
+			repositorio
+		);
+
+		// MatchAndSet -> produce directamente un IActionResult
+		return result.MatchAndSet<UsuarioAutenticadoDbModel, ActionResult>(
+			ok => Ok(new UsuarioLoginResponseDto(
+				ok.UserName,
+				ok.EnumRole,
+				jwtService.EmitirJwt(ok) // ver punto 3 abajo
+			)),
+			err => Unauthorized(new { error = err })
 		);
 	}
-
-
 
 
 }
