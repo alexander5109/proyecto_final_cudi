@@ -212,11 +212,11 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	// WINDOW.METHODS.PUBLIC
 	// -----------------------------
 
-	private Result<HorariosMedicos2025Agg> ConstruirAgregadoDominio() {
+	private Result<HorariosMedicos2026Agg> ConstruirAgregadoDominio() {
 
 		var franjas = HorariosAgrupados
 			.SelectMany(d => d.Horarios)
-			.Select(h => HorarioFranja2025.Crear(
+			.Select(h => HorarioFranja2026.Crear(
 				h.DiaSemana,
 				h.HoraDesde,
 				h.HoraHasta,
@@ -228,7 +228,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			.ToList()
 			.AsReadOnly();
 
-		return HorariosMedicos2025Agg.CrearResult(MedicoId, franjas);
+		return HorariosMedicos2026Agg.CrearResult(MedicoId, franjas);
 	}
 
 
@@ -253,7 +253,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 				new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information)
 			);
 
-		ResultWpf<HorariosMedicos2025Agg> resultadoAgg =
+		ResultWpf<HorariosMedicos2026Agg> resultadoAgg =
 			ConstruirAgregadoDominio()
 				.ToWpf(MessageBoxImage.Information);
 

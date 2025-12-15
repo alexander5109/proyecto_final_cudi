@@ -24,12 +24,12 @@ public class HorariosController(
 	[HttpPut("{medicoId:int}")]
 	public Task<ActionResult<Unit>> UpsertHorarios(
 		int medicoId,
-		[FromBody] IReadOnlyCollection<HorarioFranja2025> franjasDto
+		[FromBody] IReadOnlyCollection<HorarioFranja2026> franjasDto
 	) => this.SafeExecuteWithDomain(
 			logger,
 			PermisosAccionesEnum.UpdateHorarios,
 			franjasDto,
-			x => HorariosMedicos2025Agg.CrearResult(new MedicoId(medicoId), franjasDto),
+			x => HorariosMedicos2026Agg.CrearResult(new MedicoId(medicoId), franjasDto),
 			agg => repositorio.UpsertHorariosWhereMedicoId(agg)
 		);
 

@@ -12,10 +12,10 @@ public interface IRepositorioHorarios {
 
 
 	Task<Result<Unit>> DeleteHorarioWhereId(HorarioId id);
-	Task<Result<HorarioId>> InsertHorarioReturnId(Horario2025 instance);
+	//Task<Result<HorarioId>> InsertHorarioReturnId(Horario2025 instance);
 	Task<Result<IEnumerable<HorarioDbModel>>> SelectHorarios();
 	Task<Result<HorarioDbModel?>> SelectHorarioWhereId(HorarioId id);
-	Task<Result<HorarioDbModel>> UpdateHorarioWhereId(HorarioId id, Horario2025 instance);
+	//Task<Result<HorarioDbModel>> UpdateHorarioWhereId(HorarioId id, Horario2025 instance);
 
 
 
@@ -24,6 +24,6 @@ public interface IRepositorioHorarios {
 
 	//Task<Result<IEnumerable<HorarioDbModel>>> SelectHorarios();
 	//Task<Result<IEnumerable<HorarioDbModel>>> SelectHorariosWhereMedicoId(MedicoId medicoId);
-	Task<Result<Unit>> UpsertHorariosWhereMedicoId(HorariosMedicos2025Agg aggrg);
+	Task<Result<Unit>> UpsertHorariosWhereMedicoId(HorariosMedicos2026Agg aggrg);
 	//Task<Result<Unit>> DeleteHorariosWhereMedicoId(MedicoId medicoId);
 }

@@ -29,7 +29,7 @@ public static partial class DbModels {
 	//);
 
 
-	public static HorariosMedicosUpsertDbModel ToUpsertDto(this HorariosMedicos2025Agg agg) {
+	public static HorariosMedicosUpsertDbModel ToUpsertDto(this HorariosMedicos2026Agg agg) {
 		var table = new DataTable();
 		table.Columns.Add("DiaSemana", typeof(byte));
 		table.Columns.Add("HoraDesde", typeof(TimeSpan));
@@ -54,40 +54,40 @@ public static partial class DbModels {
 	}
 
 
-	public static HorarioDbModel ToModel(this Horario2025Agg aggrg) {
-		return new HorarioDbModel(
-			Id: aggrg.Id,
-			MedicoId: aggrg.Horario.MedicoId,
-			DiaSemana: aggrg.Horario.DiaSemana,
-			HoraDesde: aggrg.Horario.HoraDesde.ToTimeSpan(),
-			HoraHasta: aggrg.Horario.HoraHasta.ToTimeSpan(),
-			VigenteDesde: aggrg.Horario.VigenteDesde.ToDateTime(TimeOnly.MaxValue),
-			VigenteHasta: aggrg.Horario.VigenteHasta.ToDateTime(TimeOnly.MaxValue)
-		);
-	}
-	public static HorarioDbModel ToModel(this Horario2025 instance, HorarioId id) {
-		return new HorarioDbModel(
-			Id: id,
-			MedicoId: instance.MedicoId,
-			DiaSemana: instance.DiaSemana,
-			HoraDesde: instance.HoraDesde.ToTimeSpan(),
-			HoraHasta: instance.HoraHasta.ToTimeSpan(),
-			VigenteDesde: instance.VigenteDesde.ToDateTime(TimeOnly.MaxValue),
-			VigenteHasta: instance.VigenteHasta.ToDateTime(TimeOnly.MaxValue)
-		);
-	}
+	//public static HorarioDbModel ToModel(this Horario2025Agg aggrg) {
+	//	return new HorarioDbModel(
+	//		Id: aggrg.Id,
+	//		MedicoId: aggrg.Horario.MedicoId,
+	//		DiaSemana: aggrg.Horario.DiaSemana,
+	//		HoraDesde: aggrg.Horario.HoraDesde.ToTimeSpan(),
+	//		HoraHasta: aggrg.Horario.HoraHasta.ToTimeSpan(),
+	//		VigenteDesde: aggrg.Horario.VigenteDesde.ToDateTime(TimeOnly.MaxValue),
+	//		VigenteHasta: aggrg.Horario.VigenteHasta.ToDateTime(TimeOnly.MaxValue)
+	//	);
+	//}
+	//public static HorarioDbModel ToModel(this Horario2025 instance, HorarioId id) {
+	//	return new HorarioDbModel(
+	//		Id: id,
+	//		MedicoId: instance.MedicoId,
+	//		DiaSemana: instance.DiaSemana,
+	//		HoraDesde: instance.HoraDesde.ToTimeSpan(),
+	//		HoraHasta: instance.HoraHasta.ToTimeSpan(),
+	//		VigenteDesde: instance.VigenteDesde.ToDateTime(TimeOnly.MaxValue),
+	//		VigenteHasta: instance.VigenteHasta.ToDateTime(TimeOnly.MaxValue)
+	//	);
+	//}
 
-	public static Result<Horario2025Agg> ToDomainAgg(this HorarioDbModel dbModel) {
-		return Horario2025Agg.CrearResult(
-			HorarioId.CrearResult(dbModel.Id),
-			Horario2025.CrearResult(
-			dbModel.MedicoId,
-			dbModel.DiaSemana,
-			TimeOnly.FromTimeSpan(dbModel.HoraDesde),
-			TimeOnly.FromTimeSpan(dbModel.HoraHasta),
-			new DateOnly(2014, 1, 1),
-			new DateOnly(2026, 1, 1)
-		));
-	}
+	//public static Result<Horario2025Agg> ToDomainAgg(this HorarioDbModel dbModel) {
+	//	return Horario2025Agg.CrearResult(
+	//		HorarioId.CrearResult(dbModel.Id),
+	//		Horario2025.CrearResult(
+	//		dbModel.MedicoId,
+	//		dbModel.DiaSemana,
+	//		TimeOnly.FromTimeSpan(dbModel.HoraDesde),
+	//		TimeOnly.FromTimeSpan(dbModel.HoraHasta),
+	//		new DateOnly(2014, 1, 1),
+	//		new DateOnly(2026, 1, 1)
+	//	));
+	//}
 
 }

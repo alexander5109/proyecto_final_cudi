@@ -78,7 +78,7 @@ public static class IWPFRepositorioInterfaces {
 		// New: update all horarios for a medico (in-memory UI will call this)
 
 
-		Task<ResultWpf<UnitWpf>> UpdateHorariosWhereMedicoId(HorariosMedicos2025Agg agregado);
+		Task<ResultWpf<UnitWpf>> UpdateHorariosWhereMedicoId(HorariosMedicos2026Agg agregado);
 	}
 
 	public interface IWPFRepositorioTurnos {

@@ -565,7 +565,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	//	return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
 	//}
 
-	async Task<ResultWpf<UnitWpf>> IWPFRepositorioHorarios.UpdateHorariosWhereMedicoId(HorariosMedicos2025Agg agregado) {
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioHorarios.UpdateHorariosWhereMedicoId(HorariosMedicos2026Agg agregado) {
 		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PutAsJsonAsync(
 				$"api/horarios/{agregado.MedicoId.Valor}",
