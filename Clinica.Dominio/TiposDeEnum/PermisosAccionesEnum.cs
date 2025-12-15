@@ -47,6 +47,7 @@ public static class PermisoSistema {
 			PermisosAccionesEnum.CancelarTurno,
 			PermisosAccionesEnum.ReprogramarTurno,
 			PermisosAccionesEnum.SolicitarTurno,
+			PermisosAccionesEnum.UpdateHorarios,
 
 			PermisosAccionesEnum.UpdateEntidades,
 			PermisosAccionesEnum.VerUsuarios

@@ -102,18 +102,17 @@
 			Margin="25"
 			VerticalAlignment="Bottom">
 			<Button
-				Content="Cancelar"
-				Width="120"
-				Height="35"
-				Style="{StaticResource BotonRedondeadoVioletaAzul}"
-				Click="ClickBoton_Cancelar"
-				Margin="7,7,7,7" />
-			<Button
 				Content="Salir"
 				Width="120"
 				Height="35"
 				Style="{StaticResource BotonRedondeadoVioletaAzul}"
-				Click="ClickBoton_Salir"
+				Click="ClickBoton_Salir" />
+			<Button
+				Content="Volver"
+				Width="120"
+				Height="35"
+				Style="{StaticResource BotonRedondeadoVioletaAzul}"
+				Click="ClickBoton_Cancelar"
 				Margin="7,7,7,7" />
 		</StackPanel>
 		<StackPanel

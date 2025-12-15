@@ -1,8 +1,91 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.IInterfaces;
+using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposExtensiones;
 
 namespace Clinica.Dominio.TiposDeAgregado;
+
+
+public readonly record struct Horario2025(
+   MedicoId MedicoId,
+   DayOfWeek DiaSemana,
+   TimeOnly HoraDesde,
+   TimeOnly HoraHasta,
+   DateOnly VigenteDesde,
+   DateOnly VigenteHasta
+) : IComoTexto {
+	public string ATexto()
+		=> $"{DiaSemana.ATexto()}: {HoraDesde.ATextoHoras()} — {HoraHasta.ATextoHoras()} (vigencia {VigenteDesde.ATexto()} → {VigenteHasta.ATexto()}";
+
+	public static Horario2025 Crear(
+		MedicoId medicoId,
+		DayOfWeek dia,
+		TimeOnly desde,
+		TimeOnly hasta,
+		DateOnly vigenteDesde,
+		DateOnly vigenteHasta
+	) {
+		return new Horario2025(medicoId, dia, desde, hasta, vigenteDesde, vigenteHasta);
+	}
+
+
+	public static Result<Horario2025> CrearResult(
+		MedicoId medicoId,
+		DayOfWeek dia,
+		TimeOnly desde,
+		TimeOnly hasta,
+		DateOnly vigenteDesde,
+		DateOnly vigenteHasta
+	) {
+		// -----------------------------
+		// VALIDACIONES TEMPORALES
+		// -----------------------------
+		if (desde >= hasta)
+			return new Result<Horario2025>.Error(
+				"La hora de inicio debe ser anterior a la hora de fin."
+			);
+
+		if (vigenteDesde >= vigenteHasta)
+			return new Result<Horario2025>.Error(
+				"La fecha de inicio de vigencia debe ser anterior a la fecha de fin."
+			);
+
+		// -----------------------------
+		// REGLAS DE NEGOCIO (CLÍNICA)
+		// -----------------------------
+		var atencion = ClinicaNegocio.Atencion;
+
+		if (desde < atencion.DesdeHs || hasta > atencion.HastaHs)
+			return new Result<Horario2025>.Error(
+				$"El horario debe estar dentro del horario de atención de la clínica " +
+				$"({atencion.DesdeHs} – {atencion.HastaHs})."
+			);
+
+		return new Result<Horario2025>.Ok(
+			new Horario2025(medicoId, dia, desde, hasta, vigenteDesde, vigenteHasta)
+		);
+	}
+
+}
+
+
+
+public readonly record struct Horario2025Agg(HorarioId Id, Horario2025 Horario) {
+	public static Horario2025Agg Crear(HorarioId id, Horario2025 turno) => new(id, turno);
+	public static Result<Horario2025Agg> CrearResult(
+		Result<HorarioId> idResult,
+		Result<Horario2025> pacienteResult
+	)
+		=> from id in idResult
+		   from paciente in pacienteResult
+		   select new Horario2025Agg(
+			   id,
+			   paciente
+		   );
+}
+
 
 
 public record HorarioFranja2025WithMedicoId(
@@ -83,7 +166,7 @@ public record HorarioFranja2025(
 
 
 
-public readonly record struct  HorariosMedicos2025Agg(MedicoId MedicoId, IReadOnlyCollection<HorarioFranja2025> Franjas) {
+public readonly record struct HorariosMedicos2025Agg(MedicoId MedicoId, IReadOnlyCollection<HorarioFranja2025> Franjas) {
 	public static Result<HorariosMedicos2025Agg> CrearResult(
 		MedicoId medicoId,
 		IReadOnlyCollection<HorarioFranja2025> franjas) {
@@ -196,3 +279,78 @@ public readonly record struct HorariosMedicos2025Agg(
 
 }
 */
+
+
+
+public readonly record struct ListaHorarioMedicos2025(
+	IReadOnlyList<Horario2025> Valores
+) : IComoTexto {
+	public string ATexto() {
+		if (Valores.Count == 0)
+			return "Lista de horarios: (vacía)";
+		IEnumerable<string> lineas = Valores
+			.Select(v => "- " + v.ATexto());
+		return "Lista de horarios:\n" + string.Join("\n", lineas);
+	}
+
+	public static Result<ListaHorarioMedicos2025> CrearResult(IEnumerable<Horario2025>? horariosInput) {
+		if (horariosInput is null)
+			return new Result<ListaHorarioMedicos2025>.Error("La lista de horarios no puede ser nula.");
+
+		// Materializamos
+		List<Horario2025> lista = [.. horariosInput];
+
+		if (lista.Count == 0)
+			return new Result<ListaHorarioMedicos2025>.Error("La lista de horarios no puede estar vacía.");
+
+		// VALIDACION INDIVIDUAL
+		List<string> errores = [];
+
+		foreach (Horario2025 h in lista) {
+			if (h.HoraDesde >= h.HoraHasta)
+				errores.Add($"El horario {h} tiene un rango horario inválido: Desde debe ser < Hasta.");
+
+			if (h.VigenteDesde > h.VigenteHasta)
+				errores.Add($"El horario {h} tiene un rango de vigencia inválido: VigenteDesde debe ser <= VigenteHasta.");
+		}
+
+		if (errores.Count > 0)
+			return new Result<ListaHorarioMedicos2025>.Error(string.Join("\n", errores));
+
+		// VALIDACION DE SUPERPOSICIONES
+		// Agrupar por médico y día
+		IEnumerable<IGrouping<(MedicoId MedicoId, DayOfWeek DiaSemana), Horario2025>> grupos = lista
+			.GroupBy(h => (h.MedicoId, h.DiaSemana));
+
+		foreach (IGrouping<(MedicoId MedicoId, DayOfWeek DiaSemana), Horario2025> g in grupos) {
+			List<Horario2025> horarios = [.. g.OrderBy(h => h.HoraDesde)];
+
+			for (int i = 0; i < horarios.Count - 1; i++) {
+				Horario2025 actual = horarios[i];
+				Horario2025 siguiente = horarios[i + 1];
+
+				// Superposición si actual termina después de que empieza el siguiente
+				if (actual.HoraHasta > siguiente.HoraDesde) {
+					errores.Add(
+						$"Superposición detectada para el médico {actual.MedicoId} " +
+						$"el día {actual.DiaSemana}: " +
+						$"({actual.HoraDesde} - {actual.HoraHasta}) se solapa con " +
+						$"({siguiente.HoraDesde} - {siguiente.HoraHasta})."
+					);
+				}
+			}
+		}
+
+		if (errores.Count > 0)
+			return new Result<ListaHorarioMedicos2025>.Error(string.Join("\n", errores));
+
+		// Todo ok
+		return new Result<ListaHorarioMedicos2025>.Ok(
+			new ListaHorarioMedicos2025(lista)
+		);
+	}
+
+
+
+
+}
