@@ -33,7 +33,7 @@
 		<!-- Título -->
 		<Label
 			Grid.Column="0"
-			Grid.ColumnSpan="3"
+			Grid.ColumnSpan="2"
 			Content="Horarios de Médico"
 			FontSize="33"
 			Style="{StaticResource LabelLindoConPiu}"
@@ -139,6 +139,7 @@
 				Grid.ColumnSpan="2"
 				Grid.RowSpan="6"
 				ItemsSource="{Binding HorariosAgrupados}"
+				SelectedItemChanged="TreeView_SelectedItemChanged"
 				Margin="5,5,5,5"
 				MinHeight="150">
 				<TreeView.Resources>
@@ -168,10 +169,10 @@
 			</TreeView>
 		</StackPanel>
 		<StackPanel
-			Grid.Row="1"
+			Grid.Row="0"
 			Grid.Column="2"
 			Grid.RowSpan="2"
-			Margin="25,25,25,25">
+			Margin="25,50,25,25">
 			<Label
 				Margin="15"
 				Content="Franja seleccionada"
@@ -278,7 +279,7 @@
 				Orientation="Horizontal">
 				<Button
 					Content="🗑 Eliminar"
-					IsEnabled="{Binding PuedeEditarHorario}"
+					IsEnabled="{Binding PuedeEliminar}"
 					Style="{StaticResource BotonRedondeadoVioletaAzul}"
 					Click="ClickBoton_EliminarHorario"
 					Margin="5"
@@ -288,6 +289,7 @@
 				<Button
 					Content="➕ Agregar"
 					Style="{StaticResource BotonRedondeadoVioletaAzul}"
+					IsEnabled="{Binding PuedeAgregar}"
 					Click="ClickBoton_AgregarHorario"
 					Margin="5"
 					Height="25"

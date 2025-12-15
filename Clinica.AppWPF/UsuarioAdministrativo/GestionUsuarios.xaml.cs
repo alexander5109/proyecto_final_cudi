@@ -33,7 +33,7 @@ public partial class GestionUsuarios : Window {
 
 	private async Task ActualizarTurnoUIAsync() {
 		//if (ActiveMedicoModel != null) {
-		//	turnosListView.ItemsSource = await App.BaseDeDatos.SelectTurnosWhereMedicoId(ActiveMedicoModel.Id);
+		//	turnosListView.ItemsSource = await App.BaseDeDatos.SelectTurnosWhereMedicoId(ActiveMedicoModel.MedicoId);
 		//} else {
 		//	turnosListView.ItemsSource = null;
 		//}

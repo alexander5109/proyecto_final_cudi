@@ -88,6 +88,14 @@ public partial class DialogoModificarHorarios : Window {
 
 
 	// ==========================================================
+	// DELEGAR A VM:
+	// ==========================================================
+	private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+		VM.OnTreeSelectionChanged(e.NewValue);
+	}
+
+
+	// ==========================================================
 	// BOTONES: NAV
 	// ==========================================================
 

@@ -275,7 +275,7 @@ public class DialogoMedicoModificarVM : INotifyPropertyChanged {
 			var agg = new Medico2025Agg(idNotNull, medico);
 			return await App.Repositorio.UpdateMedicoWhereId(agg);
 		} else {
-			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No se puede guardar, la entidad no tiene Id.", MessageBoxImage.Information));
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No se puede guardar, la entidad no tiene MedicoId.", MessageBoxImage.Information));
 		}
 	}
 	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync(Medico2025 medico) {
