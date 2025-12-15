@@ -24,31 +24,37 @@ public class AuthController(
 	ILogger<HorariosController> logger,
 	JwtService jwtService
 ) : ControllerBase {
-
-
-
-
 	[HttpPost("login")]
-	public async Task<ActionResult<UsuarioAutenticadoDbModel>> Login([FromBody] UsuarioLoginRequestDto dto) {
+	public async Task<ActionResult<UsuarioLoginResponseDto>> Login([FromBody] UsuarioLoginRequestDto dto) {
+		// Validar credenciales
+		Result<UsuarioAutenticadoDbModel> result =
+			await ServicioAuth.ValidarCredenciales(dto.Username, dto.UserPassword, repositorio);
 
-		Result<UsuarioAutenticadoDbModel> result = await ServicioAuth.ValidarCredenciales(
-			dto.Username,
-			dto.UserPassword,
-			repositorio
-		);
-
-		// MatchAndSet -> produce directamente un IActionResult
+		// MatchAndSet → produce IActionResult
 		return result.MatchAndSet<UsuarioAutenticadoDbModel, ActionResult>(
-			ok => Ok(new UsuarioLoginResponseDto(
-				ok.UserName,
-				ok.EnumRole,
-				jwtService.EmitirJwt(ok) // ver punto 3 abajo
-			)),
-			err => Unauthorized(new { error = err })
+			ok => {
+				// Login OK → devolver DTO con JWT
+				var responseDto = new UsuarioLoginResponseDto(
+					ok.UserName,
+					ok.EnumRole,
+					jwtService.EmitirJwt(ok)
+				);
+
+				return Ok(responseDto);
+			},
+			err => {
+				// Login fallido → devolver siempre ApiErrorDto dentro de un envelope
+				var errorDto = new ApiErrorDto(
+					Title: "Usuario o contraseña incorrectos",
+					Status: HttpStatusCode.Unauthorized
+				);
+
+				//var envelope = new ApiErrorDto(errorDto);
+
+				return Unauthorized(errorDto);
+			}
 		);
 	}
-
-
 }
 
 

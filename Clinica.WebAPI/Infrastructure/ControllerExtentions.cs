@@ -38,7 +38,7 @@ public static class ControllerExtensions {
 
 	private static ApiResult<T> PermisoDenegado<T>()
 		=> new ApiResult<T>.Error(
-			new ApiErrorDto("No posee permisos para acceder a este recurso.", HttpStatusCode.Forbidden)
+			new ApiErrorDto("No posee permisos para acceder a esta función.", HttpStatusCode.Forbidden)
 		);
 
 

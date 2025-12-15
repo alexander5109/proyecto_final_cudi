@@ -13,7 +13,7 @@ public partial class DialogoModificarMedicos : Window {
 	// ==========================================================
 	public DialogoModificarMedicos() {
 		InitializeComponent();
-		VM = new DialogoMedicoModificarVM(new MedicoDbModel());
+		VM = new();
 		DataContext = VM;
 	}
 
