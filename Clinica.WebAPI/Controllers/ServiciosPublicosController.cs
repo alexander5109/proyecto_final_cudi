@@ -38,6 +38,7 @@ public class ServiciosPublicosController(
 				desde,
 				dto.Cuantos,
 				dto.DiaSemanaPreferido,
+				dto.MedicoPreferido,
 				repositorio
 			);
 

@@ -377,21 +377,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<List<Disponibilidad2025>> IWPFRepositorioDominio.SelectDisponibilidades(
-		EspecialidadEnum especialidad,
-		int cuantos,
-		DateTime aPartirDeCuando,
-		DayOfWeek? diaSemanaPreferido
-	) {
-		SolicitarDisponibilidadesDto dto = new() {
-			EspecialidadCodigo = especialidad,
-			Cuantos = cuantos,
-			APartirDeCuando = aPartirDeCuando,
-			DiaSemanaPreferido = diaSemanaPreferido
-		};
+	async Task<List<Disponibilidad2025>> IWPFRepositorioDominio.SelectDisponibilidades(SolicitarDisponibilidadesDto solicitud) {
 
 		return await Api.TryGetJsonAsync<List<Disponibilidad2025>>(
-			BuildQuery("api/ServiciosPublicos/Turnos/Disponibilidades", dto),
+			BuildQuery("api/ServiciosPublicos/Turnos/Disponibilidades", solicitud),
 			defaultValue: []
 		);
 	}

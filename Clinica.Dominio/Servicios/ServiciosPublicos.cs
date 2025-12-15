@@ -12,11 +12,12 @@ namespace Clinica.Dominio.Servicios;
 
 public class ServiciosPublicos : IServiciosDeDominio {
 
-	async Task<Result<IReadOnlyList<Disponibilidad2025>>>IServiciosDeDominio.SolicitarDisponibilidades(
+	async Task<Result<IReadOnlyList<Disponibilidad2025>>> IServiciosDeDominio.SolicitarDisponibilidades(
 		EspecialidadEnum especialidadCodigo,
 		DateTime aPartirDeCuando,
 		int cuantos,
 		DayOfWeek? diaSemanaPreferido,
+		MedicoId? medicoPreferidoId,
 		IRepositorioDominioServices repo
 	) {
 
@@ -30,7 +31,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 			return new Result<IReadOnlyList<Disponibilidad2025>>
 				.Error("No vamos a producir tantas disponibilidades.");
 
-        Result<Especialidad2025> espResult = Especialidad2025.CrearResult(especialidadCodigo);
+		Result<Especialidad2025> espResult = Especialidad2025.CrearResult(especialidadCodigo);
 		if (espResult.IsError)
 			return new Result<IReadOnlyList<Disponibilidad2025>>.Error(espResult.UnwrapAsError());
 
@@ -38,20 +39,34 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 		DateTime hastaBusqueda = aPartirDeCuando.Date.AddDays(7 * 30);
 
-        // 1️⃣ Médicos de la especialidad
-        Result<IEnumerable<MedicoId>> medicosResult =
+		// 1️⃣ Médicos de la especialidad
+
+		Result<IEnumerable<MedicoId>> medicosResult =
 			await repo.SelectMedicosIdWhereEspecialidadCodigo(especialidadCodigo);
 
+
+
 		if (medicosResult.IsError)
-			return new Result<IReadOnlyList<Disponibilidad2025>>
-				.Error(medicosResult.UnwrapAsError());
+			return new Result<IReadOnlyList<Disponibilidad2025>>.Error(medicosResult.UnwrapAsError());
 
-        List<Disponibilidad2025> disponibilidades = new();
+		List<Disponibilidad2025> disponibilidades = new();
 
-		foreach (MedicoId medicoId in medicosResult.UnwrapAsOk()) {
+		IEnumerable<MedicoId> medicos = medicosResult.UnwrapAsOk();
 
-            // 2️⃣ Turnos existentes
-            Result<IEnumerable<TurnoQM>> turnosResult =
+		if (medicoPreferidoId is not null) {
+			if (!medicos.Contains(medicoPreferidoId.Value)) {
+				return new Result<IReadOnlyList<Disponibilidad2025>>.Error(
+					"El médico seleccionado no pertenece a la especialidad indicada."
+				);
+			}
+			medicos = [ medicoPreferidoId.Value ];
+		}
+
+
+		foreach (MedicoId medicoId in medicos) {
+
+			// 2️⃣ Turnos existentes
+			Result<IEnumerable<TurnoQM>> turnosResult =
 				await repo.SelectTurnosProgramadosBetweenFechasWhereMedicoId(
 					medicoId, aPartirDeCuando, hastaBusqueda);
 
@@ -59,10 +74,10 @@ public class ServiciosPublicos : IServiciosDeDominio {
 				return new Result<IReadOnlyList<Disponibilidad2025>>
 					.Error(turnosResult.UnwrapAsError());
 
-            List<TurnoQM> turnos = turnosResult.UnwrapAsOk().ToList();
+			List<TurnoQM> turnos = turnosResult.UnwrapAsOk().ToList();
 
-            // 3️⃣ Horarios vigentes
-            Result<IEnumerable<HorarioMedicoQM>> horariosResult =
+			// 3️⃣ Horarios vigentes
+			Result<IEnumerable<HorarioMedicoQM>> horariosResult =
 				await repo.SelectHorariosVigentesBetweenFechasWhereMedicoId(
 					medicoId, aPartirDeCuando, hastaBusqueda);
 
@@ -122,7 +137,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 			}
 		}
 
-        List<Disponibilidad2025> resultado = disponibilidades
+		List<Disponibilidad2025> resultado = disponibilidades
 			.OrderBy(d => d.FechaHoraDesde)
 			.Take(cuantos)
 			.ToList();

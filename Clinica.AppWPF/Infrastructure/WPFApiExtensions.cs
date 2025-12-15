@@ -79,8 +79,9 @@ public static class ApiExtensions {
 									   ?? raw; // fallback
 
 				MessageBox.Show(
-					$"Error al obtener datos:\n{errorMessage}\n\nURL: {url}",
-					"Error de API",
+					// $"Error al obtener datos:\n{errorMessage}\n\nURL: {url}",
+					$"Error al obtener datos:\n{errorMessage}\n",
+					"Error en API",
 					MessageBoxButton.OK,
 					MessageBoxImage.Warning
 				);

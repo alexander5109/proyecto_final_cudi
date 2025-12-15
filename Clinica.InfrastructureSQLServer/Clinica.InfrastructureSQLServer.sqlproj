@@ -123,7 +123,4 @@
   <ItemGroup>
     <None Include="Clinica.InfrastructureSQLServer.publish.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <RefactorLog Include="Clinica.InfrastructureSQLServer.refactorlog" />
-  </ItemGroup>
 </Project>

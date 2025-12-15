@@ -3,6 +3,7 @@ using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
+using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.Infrastructure;
@@ -61,12 +62,7 @@ public static class IWPFRepositorioInterfaces {
 	}
 
 	public interface IWPFRepositorioDominio {
-		Task<List<Disponibilidad2025>> SelectDisponibilidades(
-			EspecialidadEnum especialidad,
-			int cuantos,
-			DateTime apartirDeCuando,
-			DayOfWeek? diaSemanaPreferido
-		);
+		Task<List<Disponibilidad2025>> SelectDisponibilidades(SolicitarDisponibilidadesDto solicitud);
 
 	}
 

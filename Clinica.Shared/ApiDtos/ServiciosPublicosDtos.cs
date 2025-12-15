@@ -6,14 +6,13 @@ namespace Clinica.Shared.ApiDtos;
 
 public static class ServiciosPublicosDtos {
 
-	public sealed class SolicitarDisponibilidadesDto {
-		public EspecialidadEnum EspecialidadCodigo { get; init; }
-		public int Cuantos { get; init; }
-		public DateTime? APartirDeCuando { get; init; }
-		public DayOfWeek? DiaSemanaPreferido { get; init; }
-	}
-
-
+	public record SolicitarDisponibilidadesDto(
+		EspecialidadEnum EspecialidadCodigo,
+		int Cuantos,
+		DateTime? APartirDeCuando = null,
+		DayOfWeek? DiaSemanaPreferido = null,
+		MedicoId? MedicoPreferido = null
+	);
 
 
 
