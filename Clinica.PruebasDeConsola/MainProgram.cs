@@ -73,12 +73,14 @@ public static class MainProgram {
 			Especialidad2025.ClinicoGeneral.Codigo,
 			DateTime.Now,
 			4,
+			DayOfWeek.Sunday,
 			repositorio
 		));
 		//disponibilidades.PrintAndContinue("Disponbiildiades encontradas::");
 		IReadOnlyList<Disponibilidad2025> lista = disponibilidades.GetOrRaise();
 		foreach (Disponibilidad2025 d in lista)
-			Console.WriteLine(d.ATexto());
+			Console.WriteLine(d.ToString());
+			//Console.WriteLine(d.ATexto());
 
 		// Caso de uso 2
 		//Result<Turno2025> turno = (await servicios.SolicitarTurnoEnLaPrimeraDisponibilidad(

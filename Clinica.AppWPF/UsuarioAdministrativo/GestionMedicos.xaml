@@ -104,7 +104,6 @@
 			<ListView
 				ItemsSource="{Binding MedicosList}"
 				SelectedItem="{Binding SelectedMedico}"
-				Height="139"
 				Margin="10,10,10,10"
 				ScrollViewer.VerticalScrollBarVisibility="Auto"
 				HorizontalContentAlignment="Center">
@@ -141,32 +140,13 @@
 					</GridView>
 				</ListView.View>
 			</ListView>
-			<StackPanel
-				Margin="10"
-				HorizontalAlignment="Center">
-				<Button
-					Content="Agregar Medico"
-					Width="180"
-					Height="30"
-					Click="ButtonAgregarMedico"
-					Style="{StaticResource BotonRedondeado}" />
-				<Button
-					Content="Modificar Medico"
-					Width="180"
-					Height="30"
-					IsEnabled="{Binding HayMedicoSeleccionado}"
-					Click="ClickBoton_ModificarMedico"
-					Style="{StaticResource BotonRedondeado}"
-					Margin="7" />
-			</StackPanel>
 		</StackPanel>
 		<StackPanel
 			Orientation="Vertical"
 			HorizontalAlignment="Center"
-			Grid.Row="0"
-			Grid.RowSpan="3"
-			Grid.Column="1"
-			Margin="10,70,10,70">
+			Grid.Row="1"
+			Grid.RowSpan="2"
+			Grid.Column="1">
 			<Label
 				Content="Medico seleccionado"
 				FontSize="25"
@@ -186,9 +166,7 @@
 					Margin="25,0,25,0"
 					FontWeight="Bold" />
 				<ListView
-					ItemsSource="{Binding HorariosViewModelList}"
-					Width="388"
-					MinHeight="200">
+					ItemsSource="{Binding HorariosViewModelList}">
 					<ListView.View>
 						<GridView>
 							<GridViewColumn
@@ -227,15 +205,40 @@
 					</ListView.View>
 				</ListView>
 			</StackPanel>
+		</StackPanel>
+		<StackPanel
+			Grid.Row="3"
+			Grid.Column="1"
+			Margin="10"
+			HorizontalAlignment="Center"
+			Orientation="Horizontal">
+			<Button
+				Content=" ➕ Nuevo Médico"
+				Width="155"
+				Height="30"
+				Click="ButtonAgregarMedico"
+				Style="{StaticResource BotonRedondeado}"
+				FontSize="15"
+				Margin="7,7,7,7" />
 			<StackPanel>
 				<Button
-					Content="Modificar Horarios"
-					Width="180"
+					Content="✏ Editar Datos"
+					Width="155"
+					Height="30"
+					IsEnabled="{Binding HayMedicoSeleccionado}"
+					Click="ClickBoton_ModificarMedico"
+					Style="{StaticResource BotonRedondeado}"
+					Margin="7,7,7,7"
+					FontSize="15" />
+				<Button
+					Content="✏Editar Horarios"
+					Width="155"
 					Height="30"
 					IsEnabled="{Binding HayMedicoSeleccionado}"
 					Click="ClickBoton_ModificarMedicoHorarios"
 					Style="{StaticResource BotonRedondeado}"
-					Margin="7" />
+					Margin="7,7,7,7"
+					FontSize="15" />
 			</StackPanel>
 		</StackPanel>
 	</Grid>

@@ -28,24 +28,24 @@ public static class AsyncRepositorioHardCoded {
 				),
 				Telefono2025.CrearResult("1133832021"),
 				Email2025.CrearResult("carlosmerkeir@gmail.com"),
-				ListaHorarioMedicos2025.CrearResult([
-					Horario2025.Crear(
-						new MedicoId(2341456),
-						DayOfWeek.Monday,
-						new TimeOnly(09,00),
-						new TimeOnly(15,00),
-						new DateOnly(2024, 1, 1),
-						new DateOnly(2026, 1, 1)
-					),
-					Horario2025.Crear(
-						new MedicoId(2311056),
-						DayOfWeek.Wednesday,
-						new TimeOnly(09,00),
-						new TimeOnly(15,00),
-						new DateOnly(2024, 1, 1),
-						new DateOnly(2026, 1, 1)
-					)
-				]),
+				//ListaHorarioMedicos2025.CrearResult([
+				//	Horario2025.Crear(
+				//		new MedicoId(2341456),
+				//		DayOfWeek.Monday,
+				//		new TimeOnly(09,00),
+				//		new TimeOnly(15,00),
+				//		new DateOnly(2024, 1, 1),
+				//		new DateOnly(2026, 1, 1)
+				//	),
+				//	Horario2025.Crear(
+				//		new MedicoId(2311056),
+				//		DayOfWeek.Wednesday,
+				//		new TimeOnly(09,00),
+				//		new TimeOnly(15,00),
+				//		new DateOnly(2024, 1, 1),
+				//		new DateOnly(2026, 1, 1)
+				//	)
+				//]),
 				new DateTime(2014,12,12),
 				false
 			)
@@ -71,24 +71,24 @@ public static class AsyncRepositorioHardCoded {
 				),
 				Telefono2025.CrearResult("1163632071"),
 				Email2025.CrearResult("jorgepereiyra@gmail.com"),
-				ListaHorarioMedicos2025.CrearResult([
-					Horario2025.Crear(
-						new MedicoId(231156),
-						DayOfWeek.Tuesday,
-						new TimeOnly(08, 0),
-						new TimeOnly(18, 00),
-						new DateOnly(2024, 1, 12),
-						new DateOnly(2026, 1, 12)
-					),
-					Horario2025.Crear(
-						new MedicoId(23156),
-						DayOfWeek.Thursday,
-						new TimeOnly(08,00),
-						new TimeOnly(18,0),
-						new DateOnly(2024, 1, 12),
-						new DateOnly(2026, 1, 12)
-					)
-				]),
+				//ListaHorarioMedicos2025.CrearResult([
+				//	Horario2025.Crear(
+				//		new MedicoId(231156),
+				//		DayOfWeek.Tuesday,
+				//		new TimeOnly(08, 0),
+				//		new TimeOnly(18, 00),
+				//		new DateOnly(2024, 1, 12),
+				//		new DateOnly(2026, 1, 12)
+				//	),
+				//	Horario2025.Crear(
+				//		new MedicoId(23156),
+				//		DayOfWeek.Thursday,
+				//		new TimeOnly(08,00),
+				//		new TimeOnly(18,0),
+				//		new DateOnly(2024, 1, 12),
+				//		new DateOnly(2026, 1, 12)
+				//	)
+				//]),
 				new DateTime(2014, 12, 12),
 				false
 			)
@@ -113,32 +113,32 @@ public static class AsyncRepositorioHardCoded {
 				),
 				Telefono2025.CrearResult("1149920537"),
 				Email2025.CrearResult("martaalgerich@gmail.com"),
-				ListaHorarioMedicos2025.CrearResult([
-					Horario2025.Crear(
-						new MedicoId(156),
-						DayOfWeek.Monday,
-						new TimeOnly(08,00),
-						new TimeOnly(12,00),
-						new DateOnly(2022, 1, 12),
-						new DateOnly(2024, 1, 12)
-					),
-					Horario2025.Crear(
-						new MedicoId(1256),
-						DayOfWeek.Wednesday,
-						new TimeOnly(08,00),
-						new TimeOnly(12,00),
-						new DateOnly(2022, 1, 12),
-						new DateOnly(2024, 1, 12)
-					),
-					Horario2025.Crear(
-						new MedicoId(12756),
-						DayOfWeek.Friday,
-						new TimeOnly(08,00),
-						new TimeOnly(12,00),
-						new DateOnly(2022, 1, 12),
-						new DateOnly(2024, 1, 12)
-					)
-				]),
+				//ListaHorarioMedicos2025.CrearResult([
+				//	Horario2025.Crear(
+				//		new MedicoId(156),
+				//		DayOfWeek.Monday,
+				//		new TimeOnly(08,00),
+				//		new TimeOnly(12,00),
+				//		new DateOnly(2022, 1, 12),
+				//		new DateOnly(2024, 1, 12)
+				//	),
+				//	Horario2025.Crear(
+				//		new MedicoId(1256),
+				//		DayOfWeek.Wednesday,
+				//		new TimeOnly(08,00),
+				//		new TimeOnly(12,00),
+				//		new DateOnly(2022, 1, 12),
+				//		new DateOnly(2024, 1, 12)
+				//	),
+				//	Horario2025.Crear(
+				//		new MedicoId(12756),
+				//		DayOfWeek.Friday,
+				//		new TimeOnly(08,00),
+				//		new TimeOnly(12,00),
+				//		new DateOnly(2022, 1, 12),
+				//		new DateOnly(2024, 1, 12)
+				//	)
+				//]),
 				new DateTime(2013, 12,12),
 				false
 			)

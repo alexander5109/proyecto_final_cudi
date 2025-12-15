@@ -556,4 +556,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	return result;
 }
 
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioHorarios.UpdateHorariosWhereMedicoId(MedicoId id, IEnumerable<HorarioDtos.HorarioDto> horarios) {
+		// Temporary stub: accept the list and refresh cache
+		_ = RefreshHorarios();
+		return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
+	}
+
 }

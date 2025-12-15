@@ -16,8 +16,11 @@ public partial class DialogoModificarHorarios : Window {
 		InitializeComponent();
 		VM = new DialogoModificarHorariosVM(model);
 		DataContext = VM;
-		Loaded += async (_, _) => await VM.CargarHorariosAsync();
+		Loaded += async (_, _) => await VM.CargarHorariosAsync(model.Id);
 	}
+
+	private object? GetSelectedTreeItem() => treeHorarios.SelectedItem;
+
 	// ==========================================================
 	// BOTONES: PERSISTENCIA
 	// ==========================================================
@@ -51,7 +54,7 @@ public partial class DialogoModificarHorarios : Window {
 		if (grupoExistente is not null) {
 			grupoExistente.Horarios.Add(nuevo);
 		} else {
-			VM.HorariosAgrupados.Add(new ViewModelHorarioAgrupado(nuevo.DiaSemana, []));
+			VM.HorariosAgrupados.Add(new ViewModelHorarioAgrupado(nuevo.DiaSemana, new List<HorarioDbModel>()));
 			VM.HorariosAgrupados.Last().Horarios.Add(nuevo);
 		}
 	}

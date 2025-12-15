@@ -26,17 +26,17 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	// ================================================================
 	public DialogoModificarHorariosVM(MedicoDbModel medico) {
 		ActiveMedicoModel = medico;
+		Id = medico.Id;
 
 		_ = CargarHorariosAsync(medico.Id);
 	}
-
 
 
 	// ================================================================
 	// COLLECTIONS
 	// ================================================================
 
-	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = [];
+	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = new ObservableCollection<ViewModelHorarioAgrupado>();
 
 
 	// ================================================================
@@ -51,8 +51,6 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 
-
-
 	// ================================================================
 	// CONTEXTO DE TURNO
 	// ================================================================
@@ -62,7 +60,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	public string? ActiveMedicoEspecialidad => ActiveMedicoModel?.EspecialidadCodigo.ToString();
 	public string? ActiveMedicoNombreCompleto => $"{ActiveMedicoModel?.Nombre} {ActiveMedicoModel?.Apellido}";
 
-
+	public MedicoId? Id { get; private set; }
 
 
 
@@ -70,7 +68,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	// DETECTAR CAMBIOS
 	// -----------------------------
 
-	public bool TieneCambios => true;
+	public bool TieneCambios => true; // UI can be used to decide enabling
 
 	// -----------------------------
 	// METHODS
@@ -80,60 +78,34 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		if (!PuedeGuardarCambios)
 			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information));
 
-		return await ToDomain(fechaIngreso: DateTime.Now)
-			.Bind(medico => EstaEditando
-				? GuardarEdicionAsync(medico)
-				: GuardarCreacionAsync(medico)
-			);
-	}
-	private async Task<ResultWpf<UnitWpf>> GuardarEdicionAsync(Medico2025 medico) {
-		if (Id is MedicoId idNotNull) {
-			var agg = new Medico2025Agg(idNotNull, medico);
-			// Build horarios DTOs from HorariosAgrupados
-			List<HorarioDto> horarios = [];
-			foreach (var grupo in HorariosAgrupados) {
-				foreach (var h in grupo.Horarios) {
-					horarios.Add(new HorarioDto {
-						MedicoId = idNotNull,
-						DiaSemana = h.DiaSemana,
-						HoraDesde = h.HoraDesde.ToTimeSpan(),
-						HoraHasta = h.HoraHasta.ToTimeSpan(),
-						VigenteDesde = h.VigenteDesde,
-						VigenteHasta = h.VigenteHasta // now non-nullable in viewmodel
-					});
-				}
-			}
+		if (Id is not MedicoId idGood)
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("El médico no tiene Id.", MessageBoxImage.Error));
 
-			return await App.Repositorio.UpdateMedicoWhereIdWithHorarios(idNotNull, medico, horarios);
-		} else {
-			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No se puede guardar, la entidad no tiene Id.", MessageBoxImage.Information));
+		List<Clinica.Shared.ApiDtos.HorarioDtos.HorarioDto> horarios = new List<Clinica.Shared.ApiDtos.HorarioDtos.HorarioDto>();
+		foreach (var grupo in HorariosAgrupados) {
+			foreach (var h in grupo.Horarios) {
+				horarios.Add(new Clinica.Shared.ApiDtos.HorarioDtos.HorarioDto {
+					MedicoId = idGood,
+					DiaSemana = h.DiaSemana,
+					HoraDesde = h.HoraDesde.ToTimeSpan(),
+					HoraHasta = h.HoraHasta.ToTimeSpan(),
+					VigenteDesde = h.VigenteDesde,
+					VigenteHasta = h.VigenteHasta
+				});
+			}
 		}
-	}
-	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync(Medico2025 medico) {
-		return (await App.Repositorio.InsertMedicoReturnId(medico))
-			.MatchTo(
-				ok => {
-					Id = ok;
-					OnPropertyChanged(nameof(Id));
-					OnPropertyChanged(nameof(EstaCreando));
-					OnPropertyChanged(nameof(EstaEditando));
-					OnPropertyChanged(nameof(PuedeEliminar));
-					return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
-				},
-				error => new ResultWpf<UnitWpf>.Error(error)
-			);
+
+		// call repository method that updates only horarios for a medico
+		return await App.Repositorio.UpdateHorariosWhereMedicoId(idGood, horarios);
 	}
 
 
 	public async Task CargarHorariosAsync(MedicoId idGood) {
 		HorariosAgrupados.Clear();
-		//if (Id is not MedicoId idGood) {
-		//	MessageBox.Show("why is medicoid null?");
-		//	return;
-		//}
+
 		IReadOnlyList<HorarioDbModel>? horarios = await App.Repositorio.SelectHorariosWhereMedicoId(idGood);
 		if (horarios == null) {
-			MessageBox.Show("why is horarios null?");
+			MessageBox.Show("No se pudieron cargar los horarios.");
 			return;
 		}
 
@@ -172,7 +144,6 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 public class ViewModelHorarioAgrupado(DayOfWeek dia, List<HorarioDbModel> horarios) {
 	public DayOfWeek DiaSemana { get; } = dia;
 	public string DiaSemanaNombre { get; } = dia.ATexto();
-	//public string DiaSemanaNombre { get; } = CultureInfo.GetCultureInfo("es-AR").DateTimeFormat.DayNames[dia];
 	public ObservableCollection<HorarioMedicoViewModel> Horarios { get; } = new ObservableCollection<HorarioMedicoViewModel>(
 			horarios.Select(h => new HorarioMedicoViewModel(h))
 		);

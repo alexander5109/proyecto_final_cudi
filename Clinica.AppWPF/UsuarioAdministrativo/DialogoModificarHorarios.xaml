@@ -133,6 +133,7 @@
 				FontWeight="Bold"
 				HorizontalAlignment="Center" />
 			<TreeView
+				x:Name="treeHorarios"
 				Grid.Row="4"
 				Grid.Column="0"
 				Grid.ColumnSpan="2"
