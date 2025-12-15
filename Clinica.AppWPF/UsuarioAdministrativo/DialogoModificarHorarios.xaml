@@ -200,7 +200,7 @@
 					<Label
 						Style="{StaticResource LabelLindoCuadroGrisSombreado}"
 						Width="150"
-						Content="{Binding DiaSemana}"
+						Content="{Binding DiaSeleccionado.DiaSemanaNombre}"
 						Height="30" />
 				</StackPanel>
 				<StackPanel
@@ -214,6 +214,7 @@
 						FontFamily="Bahnschrift" />
 					<TextBox
 						Style="{StaticResource TextBoxLindo2}"
+						Text="{Binding HorarioSeleccionado.HoraDesde}"
 						Width="150"
 						Height="30" />
 				</StackPanel>
@@ -228,6 +229,7 @@
 						FontFamily="Bahnschrift" />
 					<TextBox
 						Style="{StaticResource TextBoxLindo2}"
+						Text="{Binding HorarioSeleccionado.HoraHasta}"
 						Width="150"
 						Height="30" />
 				</StackPanel>
@@ -242,6 +244,7 @@
 						FontFamily="Bahnschrift" />
 					<DatePicker
 						Width="150"
+						Text="{Binding HorarioSeleccionado.VigenteDesde}"
 						VerticalAlignment="Center"
 						Height="30" />
 				</StackPanel>
@@ -257,6 +260,7 @@
 					<DatePicker
 						Width="150"
 						VerticalAlignment="Center"
+						Text="{Binding HorarioSeleccionado.VigenteHasta}"
 						Height="30" />
 				</StackPanel>
 				<StackPanel
@@ -270,6 +274,7 @@
 						FontFamily="Bahnschrift" />
 					<Label
 						Style="{StaticResource LabelLindoCuadroGrisSombreado}"
+						Content="{Binding HorarioSeleccionado.Model.Id.Valor}"
 						VerticalAlignment="Center"
 						Width="150"
 						Height="30" />
@@ -310,6 +315,7 @@
 				Grid.Row="3"
 				Grid.Column="2"
 				Content="Guardar cambios"
+				IsEnabled="{Binding PuedeGuardarCambios}"
 				Width="180"
 				Height="35"
 				Click="ClickBoton_GuardarCambios"

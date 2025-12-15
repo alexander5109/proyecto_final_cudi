@@ -22,18 +22,30 @@ namespace Clinica.AppWPF.UsuarioAdministrativo;
 public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 	// ================================================================
-	// CONSTRUCTORES Y CONTEXTO
+	// WINDOW.CONSTRUCTOR
 	// ================================================================
 	public DialogoModificarHorariosVM(MedicoDbModel medico) {
 		ActiveMedicoModel = medico;
 		MedicoId = medico.Id;
-
 		_ = CargarHorariosAsync(medico.Id);
 	}
 
 
+
 	// ================================================================
-	// COLLECTIONS
+	// WINDOW.CONTEXTO
+	// ================================================================
+
+
+	public MedicoDbModel ActiveMedicoModel { get; private set; }
+	public MedicoId MedicoId { get; private set; }
+	public string? ActiveMedicoEspecialidad => ActiveMedicoModel?.EspecialidadCodigo.ToString();
+	public string? ActiveMedicoNombreCompleto => $"{ActiveMedicoModel?.Nombre} {ActiveMedicoModel?.Apellido}";
+
+
+
+	// ================================================================
+	// WINDOW.COLLECTIONS
 	// ================================================================
 
 	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = [];
@@ -42,22 +54,8 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 	// ================================================================
-	// SELECTED ITEM
+	// WINDOW.SELECTED ITEM
 	// ================================================================
-
-	public void OnTreeSelectionChanged(object? selected) {
-		if (selected is ViewModelHorarioAgrupado dia) {
-			DiaSeleccionado = dia;
-			HorarioSeleccionado = null;
-			LimpiarFormulario();
-		} else if (selected is HorarioMedicoViewModel horario) {
-			HorarioSeleccionado = horario;
-			DiaSeleccionado = HorariosAgrupados
-				.First(g => g.DiaSemana == horario.DiaSemana);
-
-			CargarFormularioDesdeHorario(horario);
-		}
-	}
 
 
 	private ViewModelHorarioAgrupado? _diaSeleccionado;
@@ -84,8 +82,9 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 	// ================================================================
-	// REGLAS
+	// WINDOW.REGLAS
 	// ================================================================
+
 	public bool PuedeAgregar => DiaSeleccionado != null && HorarioSeleccionado == null;
 	public bool PuedeEditarHorario => HorarioSeleccionado != null;
 	public bool PuedeEliminar => HorarioSeleccionado != null;
@@ -94,28 +93,46 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 
-	// ================================================================
-	// CONTEXTO DE TURNO
-	// ================================================================
-
-
-	public MedicoDbModel ActiveMedicoModel { get; private set; }
-	public string? ActiveMedicoEspecialidad => ActiveMedicoModel?.EspecialidadCodigo.ToString();
-	public string? ActiveMedicoNombreCompleto => $"{ActiveMedicoModel?.Nombre} {ActiveMedicoModel?.Apellido}";
-
-	public MedicoId MedicoId { get; private set; }
-
-
-
 	// -----------------------------
 	// WINDOW.DETECTAR CAMBIOS
 	// -----------------------------
 
-	public bool TieneCambios { get; private set; }
+	public bool TieneCambios =>
+		!HorariosIguales(
+			_snapshotOriginal,
+			HorariosAgrupados
+				.SelectMany(g => g.Horarios)
+				.Select(h => h.ToDto(MedicoId))
+		);
 
 	// -----------------------------
 	// WINDOW.METHODS
 	// -----------------------------
+
+	public void OnTreeSelectionChanged(object? selected) {
+		if (selected is ViewModelHorarioAgrupado dia) {
+			DiaSeleccionado = dia;
+			HorarioSeleccionado = null;
+			LimpiarFormulario();
+		} else if (selected is HorarioMedicoViewModel horario) {
+			HorarioSeleccionado = horario;
+			DiaSeleccionado = HorariosAgrupados
+				.First(g => g.DiaSemana == horario.DiaSemana);
+
+			CargarFormularioDesdeHorario(horario);
+		}
+	}
+
+	public static bool HorariosIguales(
+		IEnumerable<HorarioDto> a,
+		IEnumerable<HorarioDto> b) {
+		var comparer = new HorarioDtoComparer();
+
+		return a.Count() == b.Count()
+			&& !a.Except(b, comparer).Any()
+			&& !b.Except(a, comparer).Any();
+	}
+
 	public void AplicarCambios() {
 		if (HorarioSeleccionado is null) return;
 
@@ -124,7 +141,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		HorarioSeleccionado.VigenteDesde = FormVigenteDesde!.Value;
 		HorarioSeleccionado.VigenteHasta = FormVigenteHasta!.Value;
 
-		TieneCambios = true;
+		//TieneCambios = true;
 	}
 
 
@@ -195,11 +212,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			);
 		}
 
-		_snapshotOriginal = HorariosAgrupados
-	.SelectMany(g => g.Horarios)
-	.Select(h => h.ToDto(MedicoId!))
-	.ToList();
-
+		_snapshotOriginal = [.. HorariosAgrupados.SelectMany(g => g.Horarios).Select(h => h.ToDto(MedicoId))];
 	}
 
 
@@ -231,6 +244,10 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 public class ViewModelHorarioAgrupado(DayOfWeek dia, List<HorarioDbModel> horarios) {
+
+	// ================================================================
+	// GROUPER_DIA.CONSTRUCTOR
+	// ================================================================
 	public DayOfWeek DiaSemana { get; } = dia;
 	public string DiaSemanaNombre { get; } = dia.ATexto();
 	public ObservableCollection<HorarioMedicoViewModel> Horarios { get; } = new ObservableCollection<HorarioMedicoViewModel>(
@@ -311,4 +328,36 @@ public class HorarioMedicoViewModel : INotifyPropertyChanged {
 	// ================================================================
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new(name));
+}
+
+
+
+
+public sealed class HorarioDtoComparer : IEqualityComparer<HorarioDto> {
+	public bool Equals(HorarioDto? x, HorarioDto? y) {
+		if (ReferenceEquals(x, y)) return true;
+		if (x is null || y is null) return false;
+
+		return
+			x.DiaSemana == y.DiaSemana &&
+			x.HoraDesde == y.HoraDesde &&
+			x.HoraHasta == y.HoraHasta &&
+			x.VigenteDesde.Date == y.VigenteDesde.Date &&
+			NullableEquals(x.VigenteHasta, y.VigenteHasta);
+	}
+
+	public int GetHashCode(HorarioDto obj) {
+		unchecked {
+			int hash = 17;
+			hash = hash * 23 + obj.DiaSemana.GetHashCode();
+			hash = hash * 23 + obj.HoraDesde.GetHashCode();
+			hash = hash * 23 + obj.HoraHasta.GetHashCode();
+			hash = hash * 23 + obj.VigenteDesde.Date.GetHashCode();
+			hash = hash * 23 + (obj.VigenteHasta?.Date.GetHashCode() ?? 0);
+			return hash;
+		}
+	}
+
+	private static bool NullableEquals(DateTime? a, DateTime? b)
+		=> a?.Date == b?.Date;
 }

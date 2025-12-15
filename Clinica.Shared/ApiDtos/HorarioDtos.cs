@@ -11,7 +11,7 @@ public static class HorarioDtos {
 		TimeSpan HoraDesde,
 		TimeSpan HoraHasta,
 		DateTime VigenteDesde,
-		DateTime VigenteHasta
+		DateTime? VigenteHasta
 	) {
 		public HorarioDto()
 			: this(default, default, default, default, default, default) { }
