@@ -54,7 +54,7 @@ public partial class DialogoModificarHorarios : Window {
 		if (grupoExistente is not null) {
 			grupoExistente.Horarios.Add(nuevo);
 		} else {
-			VM.HorariosAgrupados.Add(new ViewModelHorarioAgrupado(nuevo.DiaSemana, new List<HorarioDbModel>()));
+			VM.HorariosAgrupados.Add(new ViewModelHorarioAgrupado(nuevo.DiaSemana, []));
 			VM.HorariosAgrupados.Last().Horarios.Add(nuevo);
 		}
 	}

@@ -70,7 +70,7 @@ public partial class TurnosModificar : Window {
 		}
 		//---------Crear-----------//
 		if (SelectedTurno is null) {
-            TurnoDbModel newturno = new TurnoDbModel();
+            TurnoDbModel newturno = new();
 			newturno.LeerDesdeVentana(this);
 			//if (App.BaseDeDatos.CreateTurno(newturno)) {
 			//	this.Cerrar();

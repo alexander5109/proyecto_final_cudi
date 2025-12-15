@@ -36,7 +36,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	// COLLECTIONS
 	// ================================================================
 
-	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = new ObservableCollection<ViewModelHorarioAgrupado>();
+	public ObservableCollection<ViewModelHorarioAgrupado> HorariosAgrupados { get; } = [];
 
 
 	// ================================================================
@@ -81,10 +81,10 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		if (Id is not MedicoId idGood)
 			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("El médico no tiene Id.", MessageBoxImage.Error));
 
-		List<Clinica.Shared.ApiDtos.HorarioDtos.HorarioDto> horarios = new List<Clinica.Shared.ApiDtos.HorarioDtos.HorarioDto>();
+		List<HorarioDto> horarios = [];
 		foreach (var grupo in HorariosAgrupados) {
 			foreach (var h in grupo.Horarios) {
-				horarios.Add(new Clinica.Shared.ApiDtos.HorarioDtos.HorarioDto {
+				horarios.Add(new HorarioDto {
 					MedicoId = idGood,
 					DiaSemana = h.DiaSemana,
 					HoraDesde = h.HoraDesde.ToTimeSpan(),
@@ -193,7 +193,7 @@ public class HorarioMedicoViewModel : INotifyPropertyChanged {
 	public string Desde => HoraDesde.ToString("hh\\:mm");
 	public string Hasta => HoraHasta.ToString("hh\\:mm");
 
-	public HorarioDto ToDto(MedicoId medicoId) => new HorarioDto {
+	public HorarioDto ToDto(MedicoId medicoId) => new() {
 		MedicoId = medicoId,
 		DiaSemana = DiaSemana,
 		HoraDesde = HoraDesde.ToTimeSpan(),

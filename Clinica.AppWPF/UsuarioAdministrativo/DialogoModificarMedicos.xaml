@@ -11,7 +11,7 @@
 	Height="600">
 	<Window.Background>
 		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images/doctor.jpg" />
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/FondoMedicosLila.jpeg" />
 	</Window.Background>
 	<!-- GRID PRINCIPAL -->
 	<Grid
@@ -212,7 +212,7 @@
 					Width="200"
 					Height="35"
 					Margin="7,7,7,7"
-					Style="{StaticResource BotonRedondeado}"
+					Style="{StaticResource BotonRedondeadoVioletaAzul}"
 					FontFamily="Baskerville Old Face"
 					IsEnabled="{Binding PuedeGuardarCambios}"
 					Click="ClickBoton_GuardarCambios"
@@ -224,7 +224,7 @@
 					Width="200"
 					Height="35"
 					Margin="7,7,7,7"
-					Style="{StaticResource BotonRedondeado}"
+					Style="{StaticResource BotonRedondeadoVioletaAzul}"
 					FontFamily="Baskerville Old Face"
 					IsEnabled="{Binding PuedeEliminar}"
 					Click="ClickBoton_Eliminar"
@@ -241,12 +241,12 @@
 					Margin="7,7,7,7"
 					Click="ClickBoton_Salir"
 					FontSize="20"
-					Style="{StaticResource BotonRedondeado}" />
+					Style="{StaticResource BotonRedondeadoVioletaAzul}" />
 				<Button
 					Content="Volver"
 					Width="155"
 					Height="35"
-					Style="{StaticResource BotonRedondeado}"
+					Style="{StaticResource BotonRedondeadoVioletaAzul}"
 					FontFamily="Baskerville Old Face"
 					Click="ClickBoton_Cancelar"
 					FontSize="20"

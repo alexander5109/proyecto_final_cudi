@@ -118,7 +118,7 @@ public static class ApiExtensions {
 
 	static ResultWpf<T> HandleException<T>(Exception ex, string title) {
         // Creamos ErrorInfo enriquecido
-        ErrorInfo info = new ErrorInfo(
+        ErrorInfo info = new(
 			Mensaje: $"{title}: {ex.Message}",
 			Icono: MessageBoxImage.Error,
 			Detalle: ex.ToString()

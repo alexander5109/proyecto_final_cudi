@@ -61,7 +61,7 @@ public partial class Login : Window {
 
 
 		} finally {
-			await Task.Delay(2000);
+			await Task.Delay(1000);
 			if (sender is Button btn)
 				btn.IsEnabled = true;
 

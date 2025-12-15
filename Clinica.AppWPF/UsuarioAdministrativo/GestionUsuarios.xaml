@@ -13,8 +13,7 @@
 	<!-- ============== FONDO GENERAL ============== -->
 	<Window.Background>
 		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg"
-			Stretch="Fill" />
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/FondoMedicosLila.jpeg" />
 	</Window.Background>
 	<!-- ============== CONTENIDO ============== -->
 	<Grid
@@ -67,7 +66,7 @@
 					FontFamily="Baskerville Old Face"
 					FontWeight="Bold"
 					BorderBrush="Transparent"
-					Style="{StaticResource BotonRedondeado}" />
+					Style="{StaticResource BotonRedondeadoVioletaAzul}" />
 				<!-- Botón Modificar -->
 				<Button
 					x:Name="x_BotonModificarMedico"
@@ -80,7 +79,7 @@
 					FontFamily="Baskerville Old Face"
 					FontWeight="Bold"
 					BorderBrush="Transparent"
-					Style="{StaticResource BotonRedondeado}"
+					Style="{StaticResource BotonRedondeadoVioletaAzul}"
 					IsEnabled="False" />
 			</StackPanel>
 		</StackPanel>
@@ -106,7 +105,7 @@
 			FontSize="20"
 			FontFamily="Baskerville Old Face"
 			Margin="898,171,0,0"
-			Style="{StaticResource BotonRedondeado}" />
+			Style="{StaticResource BotonRedondeadoVioletaAzul}" />
 		<Button
 			Content="Salir"
 			HorizontalAlignment="Left"
@@ -117,7 +116,7 @@
 			FontSize="20"
 			FontFamily="Baskerville Old Face"
 			Margin="898,229,0,0"
-			Style="{StaticResource BotonRedondeado}" />
+			Style="{StaticResource BotonRedondeadoVioletaAzul}" />
 		<!-- espacio libre a la derecha para futuro contenido -->
 	</Grid>
 </Window>

@@ -11,7 +11,7 @@
 	Title="DialogoModificarUsuario">
 	<Window.Background>
 		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg" />
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/FondoMedicosLila.jpeg" />
 	</Window.Background>
 	<Grid
 		Margin="25">
@@ -182,7 +182,7 @@
 				HorizontalAlignment="Center">
 				<Button
 					Content="Salir"
-					Style="{StaticResource BotonRedondeado}"
+					Style="{StaticResource BotonRedondeadoVioletaAzul}"
 					Width="110"
 					Height="38"
 					FontSize="20"
@@ -190,7 +190,7 @@
 					Margin="0,10,0,10" />
 				<Button
 					Content="Cancelar"
-					Style="{StaticResource BotonRedondeado}"
+					Style="{StaticResource BotonRedondeadoVioletaAzul}"
 					Width="110"
 					Height="38"
 					FontSize="20"
