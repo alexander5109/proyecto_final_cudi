@@ -65,7 +65,11 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		private set {
 			_diaSeleccionado = value;
 			OnPropertyChanged(nameof(DiaSeleccionado));
+
+			OnPropertyChanged(nameof(PuedeEliminar));
+			OnPropertyChanged(nameof(TieneCambios));
 			OnPropertyChanged(nameof(PuedeAgregar));
+			OnPropertyChanged(nameof(PuedeGuardarCambios));
 		}
 	}
 
@@ -76,34 +80,30 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			_horarioSeleccionado = value;
 			OnPropertyChanged(nameof(HorarioSeleccionado));
 			//OnPropertyChanged(nameof(PuedeEditarHorario));
+
 			OnPropertyChanged(nameof(PuedeEliminar));
-			OnPropertyChanged(nameof(OnHorarioEditado));
+			OnPropertyChanged(nameof(TieneCambios));
+			OnPropertyChanged(nameof(PuedeAgregar));
+			OnPropertyChanged(nameof(PuedeGuardarCambios));
 		}
 	}
-
 
 
 	// ================================================================
 	// WINDOW.SELECTED FORM
 	// ================================================================
-	private void OnHorarioEditado() {
-		OnPropertyChanged(nameof(TieneCambios));
-		OnPropertyChanged(nameof(PuedeGuardarCambios));
-	}
 
-
-
-	private DayOfWeek? _formDia;
-	public DayOfWeek? FormDia {
-		get => _formDia;
-		set {
-			if (_formDia != value) {
-				_formDia = value;
-				OnPropertyChanged(nameof(FormDia));
-				//OnPropertyChanged(nameof(PuedeAplicar));
-			}
-		}
-	}
+	//private DayOfWeek? _formDia;
+	//public DayOfWeek? FormDia {
+	//	get => _formDia;
+	//	set {
+	//		if (_formDia != value) {
+	//			_formDia = value;
+	//			OnPropertyChanged(nameof(FormDia));
+	//			//OnPropertyChanged(nameof(PuedeAplicar));
+	//		}
+	//	}
+	//}
 
 
 	//private TimeOnly? _formHoraDesde;
@@ -196,21 +196,21 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 
-	private void LimpiarFormulario() {
-		FormDia = DiaSeleccionado?.DiaSemana;
+	//private void LimpiarFormulario() {
+		//FormDia = DiaSeleccionado?.DiaSemana;
 		//FormHoraDesde = null;
 		//FormHoraHasta = null;
 		//FormVigenteDesde = null;
 		//FormVigenteHasta = null;
-	}
+	//}
 
-	private void CargarFormularioDesdeHorario(NodoFranjaHorariaViewModel h) {
-		FormDia = h.DiaSemana;
+	//private void CargarFormularioDesdeHorario(NodoFranjaHorariaViewModel h) {
+		//FormDia = h.DiaSemana;
 		//FormHoraDesde = h.HoraDesde;
 		//FormHoraHasta = h.HoraHasta;
 		//FormVigenteDesde = h.VigenteDesde;
 		//FormVigenteHasta = h.VigenteHasta;
-	}
+	//}
 
 
 
@@ -266,13 +266,13 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		if (selected is NodoDiaSemanaViewModel dia) {
 			DiaSeleccionado = dia;
 			HorarioSeleccionado = null;
-			LimpiarFormulario();
+			//LimpiarFormulario();
 		} else if (selected is NodoFranjaHorariaViewModel horario) {
 			HorarioSeleccionado = horario;
 			DiaSeleccionado = HorariosAgrupados
 				.First(g => g.DiaSemana == horario.DiaSemana);
 
-			CargarFormularioDesdeHorario(horario);
+			//CargarFormularioDesdeHorario(horario);
 		}
 	}
 
@@ -314,7 +314,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		DiaSeleccionado.Horarios.Add(nuevo);
 
 		HorarioSeleccionado = nuevo;
-		CargarFormularioDesdeHorario(nuevo);
+		//CargarFormularioDesdeHorario(nuevo);
 
 		OnPropertyChanged(nameof(TieneCambios));
 		OnPropertyChanged(nameof(PuedeGuardarCambios));
@@ -327,7 +327,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		DiaSeleccionado.Horarios.Remove(HorarioSeleccionado);
 
 		HorarioSeleccionado = null;
-		LimpiarFormulario();
+		//LimpiarFormulario();
 
 		OnPropertyChanged(nameof(TieneCambios));
 		OnPropertyChanged(nameof(PuedeGuardarCambios));
@@ -483,6 +483,15 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 		}
 	}
 
+	// ================================================================
+	// HORARIO_ITEM.INFRAESTRUCTURA
+	// ================================================================
+	public Action? OnEdited { get; set; }
+	private void NotifyEdit() => OnEdited?.Invoke();
+
+	public event PropertyChangedEventHandler? PropertyChanged;
+	private void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new(name));
+
 
 
 	// ================================================================
@@ -496,15 +505,6 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 		VigenteDesde = VigenteDesde,
 		VigenteHasta = VigenteHasta
 	};
-
-	// ================================================================
-	// HORARIO_ITEM.INFRAESTRUCTURA
-	// ================================================================
-	public Action? OnEdited { get; set; }
-	private void NotifyEdit() => OnEdited?.Invoke();
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-	private void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new(name));
 }
 
 

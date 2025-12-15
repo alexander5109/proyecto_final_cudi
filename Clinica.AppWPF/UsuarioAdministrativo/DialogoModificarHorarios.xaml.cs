@@ -51,7 +51,7 @@ public partial class DialogoModificarHorarios : Window {
 		ResultWpf<UnitWpf> result = await VM.GuardarAsync();
 		result.MatchAndDo(
 			async _ => {
-				MessageBox.Show("Cambios guardados.", "Éxito");
+				//MessageBox.Show("Cambios guardados.", "Éxito");
 				await VM.CargarHorariosAsync();
 			},
 			err => err.ShowMessageBox()
