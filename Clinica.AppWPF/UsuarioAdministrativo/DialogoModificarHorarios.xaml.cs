@@ -42,7 +42,7 @@ public partial class DialogoModificarHorarios : Window {
 
 	private async void ClickBoton_GuardarCambios(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
-		var result = await VM.GuardarAsync();
+        ResultWpf<UnitWpf> result = await VM.GuardarAsync();
 
 		result.MatchAndDo(
 			_ => MessageBox.Show("Cambios guardados.", "Éxito"),

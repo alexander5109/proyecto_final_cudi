@@ -1,4 +1,6 @@
-﻿using System.Net.Http.Json;
+﻿using System.Collections.Specialized;
+using System.Net.Http.Json;
+using System.Reflection;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
@@ -6,6 +8,7 @@ using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Shared.ApiDtos;
 using static Clinica.AppWPF.Infrastructure.IWPFRepositorioInterfaces;
+using static Clinica.Shared.ApiDtos.HorarioDtos;
 using static Clinica.Shared.ApiDtos.PacienteDtos;
 using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
 using static Clinica.Shared.ApiDtos.UsuarioAuthDtos;
@@ -355,9 +358,9 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 	private static string BuildQuery(string baseUrl, object dto) {
-		var query = System.Web.HttpUtility.ParseQueryString(string.Empty);
+        NameValueCollection query = System.Web.HttpUtility.ParseQueryString(string.Empty);
 
-		foreach (var prop in dto.GetType().GetProperties()) {
+		foreach (PropertyInfo prop in dto.GetType().GetProperties()) {
 			object? value = prop.GetValue(dto);
 			if (value is null)
 				continue;
@@ -380,7 +383,7 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		DateTime aPartirDeCuando,
 		DayOfWeek? diaSemanaPreferido
 	) {
-        SolicitarDisponibilidadesDto dto = new() {
+		SolicitarDisponibilidadesDto dto = new() {
 			EspecialidadCodigo = especialidad,
 			Cuantos = cuantos,
 			APartirDeCuando = aPartirDeCuando,
@@ -535,28 +538,28 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return result;
 	}
 
-	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDtos.HorarioDto> horarios) {
-	var dtoMedico = instance.ToDto();
-	var payload = new {
-		Medico = dtoMedico,
-		Horarios = horarios
-	};
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDto> horarios) {
+        MedicoDtos.MedicoDto dtoMedico = instance.ToDto();
+		var payload = new {
+			Medico = dtoMedico,
+			Horarios = horarios
+		};
 
-	ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
-		() => Api.Cliente.PutAsJsonAsync(
-			$"api/medicos/{id.Valor}/con-horarios",
-			payload
-		),
-		onOk: async response => UnitWpf.Valor,
-		errorTitle: $"Error actualizando médico {id.Valor}"
-	);
+		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
+			() => Api.Cliente.PutAsJsonAsync(
+				$"api/medicos/{id.Valor}/con-horarios",
+				payload
+			),
+			onOk: async response => UnitWpf.Valor,
+			errorTitle: $"Error actualizando médico {id.Valor}"
+		);
 
-	_ = RefreshMedicos();
-	_ = RefreshHorarios();
-	return result;
-}
+		_ = RefreshMedicos();
+		_ = RefreshHorarios();
+		return result;
+	}
 
-	async Task<ResultWpf<UnitWpf>> IWPFRepositorioHorarios.UpdateHorariosWhereMedicoId(MedicoId id, IEnumerable<HorarioDtos.HorarioDto> horarios) {
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioHorarios.UpdateHorariosWhereMedicoId(MedicoId id, IEnumerable<HorarioDto> horarios) {
 		// Temporary stub: accept the list and refresh cache
 		_ = RefreshHorarios();
 		return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);

@@ -383,7 +383,7 @@ public record DisponibilidadEspecialidadModelView(
 	}
 
 	private static string BuildMedicoDisplay(MedicoId medicoId) {
-		var medico = RepoCache.DictMedicos.GetValueOrDefault(medicoId);
+        MedicoDbModel? medico = RepoCache.DictMedicos.GetValueOrDefault(medicoId);
 		return medico is null ? "Médico desconocido" : $"{medico.Nombre} {medico.Apellido}";
 	}
 }

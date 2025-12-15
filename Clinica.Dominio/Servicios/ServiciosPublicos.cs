@@ -30,7 +30,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 			return new Result<IReadOnlyList<Disponibilidad2025>>
 				.Error("No vamos a producir tantas disponibilidades.");
 
-		var espResult = Especialidad2025.CrearResult(especialidadCodigo);
+        Result<Especialidad2025> espResult = Especialidad2025.CrearResult(especialidadCodigo);
 		if (espResult.IsError)
 			return new Result<IReadOnlyList<Disponibilidad2025>>.Error(espResult.UnwrapAsError());
 
@@ -38,8 +38,8 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 		DateTime hastaBusqueda = aPartirDeCuando.Date.AddDays(7 * 30);
 
-		// 1️⃣ Médicos de la especialidad
-		var medicosResult =
+        // 1️⃣ Médicos de la especialidad
+        Result<IEnumerable<MedicoId>> medicosResult =
 			await repo.SelectMedicosIdWhereEspecialidadCodigo(especialidadCodigo);
 
 		if (medicosResult.IsError)
@@ -50,8 +50,8 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 		foreach (MedicoId medicoId in medicosResult.UnwrapAsOk()) {
 
-			// 2️⃣ Turnos existentes
-			var turnosResult =
+            // 2️⃣ Turnos existentes
+            Result<IEnumerable<TurnoQM>> turnosResult =
 				await repo.SelectTurnosProgramadosBetweenFechasWhereMedicoId(
 					medicoId, aPartirDeCuando, hastaBusqueda);
 
@@ -61,8 +61,8 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
             List<TurnoQM> turnos = turnosResult.UnwrapAsOk().ToList();
 
-			// 3️⃣ Horarios vigentes
-			var horariosResult =
+            // 3️⃣ Horarios vigentes
+            Result<IEnumerable<HorarioMedicoQM>> horariosResult =
 				await repo.SelectHorariosVigentesBetweenFechasWhereMedicoId(
 					medicoId, aPartirDeCuando, hastaBusqueda);
 

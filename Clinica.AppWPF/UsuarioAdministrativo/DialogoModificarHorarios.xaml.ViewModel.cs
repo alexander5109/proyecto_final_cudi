@@ -82,6 +82,73 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 	// ================================================================
+	// WINDOW.SELECTED FORM
+	// ================================================================
+
+
+	private DayOfWeek? _formDia;
+	public DayOfWeek? FormDia {
+		get => _formDia;
+		set {
+			if (_formDia != value) {
+				_formDia = value;
+				OnPropertyChanged(nameof(FormDia));
+				OnPropertyChanged(nameof(PuedeAplicar));
+			}
+		}
+	}
+
+
+	private TimeOnly? _formHoraDesde;
+	public TimeOnly? FormHoraDesde {
+		get => _formHoraDesde;
+		set {
+			if (_formHoraDesde != value) {
+				_formHoraDesde = value;
+				OnPropertyChanged(nameof(FormHoraDesde));
+				OnPropertyChanged(nameof(PuedeAplicar));
+			}
+		}
+	}
+
+	private TimeOnly? _formHoraHasta;
+	public TimeOnly? FormHoraHasta {
+		get => _formHoraHasta;
+		set {
+			if (_formHoraHasta != value) {
+				_formHoraHasta = value;
+				OnPropertyChanged(nameof(FormHoraHasta));
+				OnPropertyChanged(nameof(PuedeAplicar));
+			}
+		}
+	}
+
+
+
+	private DateTime? _formVigenteDesde;
+	public DateTime? FormVigenteDesde {
+		get => _formVigenteDesde;
+		set {
+			if (_formVigenteDesde != value) {
+				_formVigenteDesde = value;
+				OnPropertyChanged(nameof(FormVigenteDesde));
+			}
+		}
+	}
+
+	private DateTime? _formVigenteHasta;
+	public DateTime? FormVigenteHasta {
+		get => _formVigenteHasta;
+		set {
+			if (_formVigenteHasta != value) {
+				_formVigenteHasta = value;
+				OnPropertyChanged(nameof(FormVigenteHasta));
+			}
+		}
+	}
+
+
+	// ================================================================
 	// WINDOW.REGLAS
 	// ================================================================
 
@@ -168,8 +235,8 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		//	return new ResultWpf<UnitWpf>.Error(new ErrorInfo("El médico no tiene MedicoId.", MessageBoxImage.Error));
 
 		List<HorarioDto> horarios = [];
-		foreach (var grupo in HorariosAgrupados) {
-			foreach (var h in grupo.Horarios) {
+		foreach (NodoDiaSemanaViewModel grupo in HorariosAgrupados) {
+			foreach (NodoFranjaHorariaViewModel h in grupo.Horarios) {
 				horarios.Add(new HorarioDto {
 					MedicoId = MedicoId,
 					DiaSemana = h.DiaSemana,
@@ -237,7 +304,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	public async Task CargarHorariosAsync(MedicoId idGood) {
 		HorariosAgrupados.Clear();
 
-		var horarios = await App.Repositorio.SelectHorariosWhereMedicoId(idGood)
+        IReadOnlyList<HorarioDbModel> horarios = await App.Repositorio.SelectHorariosWhereMedicoId(idGood)
 					   ?? [];
 
 		Dictionary<DayOfWeek, List<HorarioDbModel>> dict = horarios
@@ -245,7 +312,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 			.ToDictionary(g => g.Key, g => g.ToList());
 
 		foreach (DayOfWeek dia in Enum.GetValues<DayOfWeek>()) {
-			dict.TryGetValue(dia, out var lista);
+			dict.TryGetValue(dia, out List<HorarioDbModel>? lista);
 
 			HorariosAgrupados.Add(
 				new NodoDiaSemanaViewModel(
@@ -258,16 +325,6 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		_snapshotOriginal = [.. HorariosAgrupados.SelectMany(g => g.Horarios).Select(h => h.ToDto(MedicoId))];
 	}
 
-
-	// ================================================================
-	// WINDOW.PROPIEDADES
-	// ================================================================
-
-	public DayOfWeek? FormDia { get; set; }
-	public TimeOnly? FormHoraDesde { get; set; }
-	public TimeOnly? FormHoraHasta { get; set; }
-	public DateTime? FormVigenteDesde { get; set; }
-	public DateTime? FormVigenteHasta { get; set; }
 
 
 	// ================================================================
