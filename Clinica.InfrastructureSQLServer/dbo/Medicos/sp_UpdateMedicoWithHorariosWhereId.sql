@@ -8,7 +8,7 @@
     @Localidad NVARCHAR(100),
     @EspecialidadCodigo INT,
     @Telefono NVARCHAR(50),
-    @Guardia BIT,
+    @HaceGuardias BIT,
     @FechaIngreso DATE,
     @Horarios dbo.HorarioMedicoTableType READONLY
 AS
@@ -30,7 +30,7 @@ BEGIN
             [Localidad] = @Localidad,
             EspecialidadCodigo = @EspecialidadCodigo,
             [Telefono] = @Telefono,
-            [Guardia] = @Guardia,
+            [HaceGuardias] = @HaceGuardias,
             [FechaIngreso] = @FechaIngreso
         WHERE [Id] = @Id;
 

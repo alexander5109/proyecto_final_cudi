@@ -215,7 +215,7 @@
 				HorizontalAlignment="Right"
 				VerticalAlignment="Center" />
 			<CheckBox
-				x:Name="txtGuardia"
+				x:Name="txtHaceGuardias"
 				Grid.Row="10"
 				Grid.Column="1"
 				HorizontalAlignment="Center"

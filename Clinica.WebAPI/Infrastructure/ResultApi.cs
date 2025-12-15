@@ -1,21 +1,18 @@
-﻿using Clinica.Dominio.FunctionalToolkit;
+﻿using System.Net;
+using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Shared.ApiDtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clinica.WebAPI.Infrastructure;
 
-public record ApiError(
-	string Message,
-	int StatusCode,
-	string? Detail = null
-);
 
 public abstract class ApiResult<T> {
 	public sealed class Ok(T value) : ApiResult<T> {
         public T Value { get; } = value;
     }
 
-	public sealed class Error(ApiError errorInfo) : ApiResult<T> {
-        public ApiError ErrorInfo { get; } = errorInfo;
+	public sealed class Error(ApiErrorDto errorInfo) : ApiResult<T> {
+        public ApiErrorDto ErrorInfo { get; } = errorInfo;
     }
 
 	public bool IsOk => this is Ok;
@@ -23,17 +20,16 @@ public abstract class ApiResult<T> {
 }
 
 public static class ResultToApiAdapter {
-	public static ApiResult<T> ToApi<T>(this Result<T> result, int statusCodeOnError = 400) {
+	public static ApiResult<T> ToApi<T>(this Result<T> result, HttpStatusCode statusCodeOnError = HttpStatusCode.BadRequest) {
 		return result switch {
 			Result<T>.Ok ok =>
 				new ApiResult<T>.Ok(ok.Valor),
 
 			Result<T>.Error err =>
 				new ApiResult<T>.Error(
-					new ApiError(
-						Message: err.Mensaje,
-						StatusCode: statusCodeOnError,
-						Detail: ""
+					new ApiErrorDto(
+						Title: err.Mensaje,
+						Status: statusCodeOnError
 					)
 				),
 
@@ -69,7 +65,7 @@ public static class ApiResultExtensions {
 	public static TResult Match<T, TResult>(
 		this ApiResult<T> result,
 		Func<T, TResult> ok,
-		Func<ApiError, TResult> error
+		Func<ApiErrorDto, TResult> error
 	) => result switch {
 		ApiResult<T>.Ok o => ok(o.Value),
 		ApiResult<T>.Error e => error(e.ErrorInfo),
@@ -84,9 +80,8 @@ public static class ApiResultExtensions {
 		return result.Match(
 			ok => controller.Ok(ok),
 			err => controller.Problem(
-				detail: err.Detail,
-				statusCode: err.StatusCode,
-				title: err.Message
+				title: err.Title,
+				statusCode: (int)err.Status
 			)
 		);
 	}

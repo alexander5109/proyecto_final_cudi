@@ -38,7 +38,7 @@ public partial class MedicosModificar : Window {
 			this.txtSueldoMinimoGarantizado.Text is null
 			|| this.txtDni.Text is null
 			|| this.txtFechaIngreso.SelectedDate is null
-			|| this.txtGuardia.IsChecked is null
+			|| this.txtHaceGuardias.IsChecked is null
 		) {
 			MessageBox.Show($"Error: Faltan datos obligatorios por completar.", "Error de ingreso.", MessageBoxButton.OK, MessageBoxImage.Warning);
 			return false;

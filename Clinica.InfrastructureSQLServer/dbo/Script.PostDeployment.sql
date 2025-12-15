@@ -32,7 +32,7 @@ IF NOT EXISTS (SELECT 1 FROM dbo.Medico)
 BEGIN
     SET IDENTITY_INSERT dbo.Medico ON;
     INSERT INTO dbo.Medico 
-        (Id, Email, Nombre, Apellido, ProvinciaCodigo, Domicilio, Localidad, EspecialidadCodigo, Telefono, Guardia, FechaIngreso, Dni)
+        (Id, Email, Nombre, Apellido, ProvinciaCodigo, Domicilio, Localidad, EspecialidadCodigo, Telefono, HaceGuardias, FechaIngreso, Dni)
     VALUES 
         (1, 'Ricardo@gmail.com', 'Dr. Ricardo', 'Arjona', 1, 'Av. Siempre Viva 123', 'Capital Federal', 1, '1234567890', 1, '20220115', '12345678'),
         (2, 'TocandoShells@gmail.com', 'Dr. Tocando', 'Shells', 2, 'Calle Falsa 456', 'Villa Carlos Paz', 9, '2345678901', 0, '20210520', '87654321'),

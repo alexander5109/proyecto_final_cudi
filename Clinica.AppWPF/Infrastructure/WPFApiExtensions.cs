@@ -3,11 +3,21 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Windows;
+using Clinica.Shared.ApiDtos;
 
 namespace Clinica.AppWPF.Infrastructure;
 
 
 public static class ApiExtensions {
+	static async Task<ApiErrorDto?> ReadApiError(HttpResponseMessage response) {
+		try {
+			var envelope = await response.Content.ReadFromJsonAsync<ApiErrorDto>();
+
+			return envelope;
+		} catch {
+			return null;
+		}
+	}
 
 
 	public static async Task<ResultWpf<T>> TryApiCallAsync<T>(
@@ -144,29 +154,23 @@ public static class ApiExtensions {
 		HttpResponseMessage response,
 		string title
 	) {
-		string detalle = await response.Content.ReadAsStringAsync();
+		ApiErrorDto? apiError = await ReadApiError(response);
 
-		return response.StatusCode switch {
-			HttpStatusCode.Unauthorized =>
-				new ResultWpf<T>.Error(new ErrorInfo("No estás autenticado.", MessageBoxImage.Warning, detalle, 401)),
+		if (apiError is not null) {
+			return new ResultWpf<T>.Error(
+				new ErrorInfo(
+					apiError.Title,
+					MessageBoxImage.Warning
+				)
+			);
+		}
 
-			HttpStatusCode.Forbidden =>
-				new ResultWpf<T>.Error(new ErrorInfo("No tenés permisos.", MessageBoxImage.Warning, detalle, 403)),
-
-			HttpStatusCode.NotFound =>
-				new ResultWpf<T>.Error(new ErrorInfo("Recurso no encontrado.", MessageBoxImage.Information, detalle, 404)),
-
-			HttpStatusCode.BadRequest =>
-				new ResultWpf<T>.Error(new ErrorInfo(detalle, MessageBoxImage.Warning, detalle, 400)),
-
-			_ =>
-				new ResultWpf<T>.Error(new ErrorInfo(
-					$"{title}: HTTP {(int)response.StatusCode}",
-					MessageBoxImage.Error,
-					detalle,
-					(int)response.StatusCode
-				))
-		};
+		return new ResultWpf<T>.Error(
+			new ErrorInfo(
+				$"{title}: HTTP {(int)response.StatusCode}",
+				MessageBoxImage.Error
+			)
+		);
 	}
 
 

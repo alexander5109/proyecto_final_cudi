@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Net;
+using System.Windows;
 using Clinica.Dominio.FunctionalToolkit;
 
 namespace Clinica.AppWPF.Infrastructure;
@@ -23,7 +24,7 @@ public record ErrorInfo(
 	string Mensaje,
 	MessageBoxImage Icono = MessageBoxImage.Error,
 	string? Detalle = null,
-	int? HttpStatus = null
+	HttpStatusCode? HttpStatus = null
 );
 
 public static class ResultToWpfAdapter {

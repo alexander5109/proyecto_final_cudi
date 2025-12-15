@@ -26,23 +26,23 @@ public static class AuthService {
 							Mensaje: "Credenciales incorrectas.",
 							Icono: MessageBoxImage.Warning,
 							Detalle: serverError,
-							HttpStatus: 401
+							HttpStatus: response.StatusCode
 						)),
 
-					HttpStatusCode.Forbidden =>
-						new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
-							Mensaje: "No tenés permisos para acceder.",
-							Icono: MessageBoxImage.Warning,
-							Detalle: serverError,
-							HttpStatus: 403
-						)),
+					// HttpStatusCode.Forbidden =>
+						// new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
+							// Mensaje: "No tenés permisos para acceder.",
+							// Icono: MessageBoxImage.Warning,
+							// Detalle: serverError,
+							// HttpStatus: response.StatusCode
+						// )),
 
 					_ =>
 						new ResultWpf<UsuarioLoginResponseDto>.Error(new ErrorInfo(
-							Mensaje: $"Error del servidor ({(int)response.StatusCode}).",
+							Mensaje: $"Error del servidor ({response.StatusCode}).",
 							Icono: MessageBoxImage.Error,
 							Detalle: serverError,
-							HttpStatus: (int)response.StatusCode
+							HttpStatus: response.StatusCode
 						))
 				};
 			}

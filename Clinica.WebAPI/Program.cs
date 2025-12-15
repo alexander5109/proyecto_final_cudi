@@ -1,9 +1,12 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
 using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.Servicios;
 using Clinica.Infrastructure.IRepositorios;
 using Clinica.Infrastructure.Repositorios;
+using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Controllers;
+using Clinica.WebAPI.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 
 
@@ -141,6 +144,20 @@ if (app.Environment.IsDevelopment() == false) {
 	app.UseHttpsRedirection();
 }
 
+
+//app.UseExceptionHandler(appBuilder => {
+//	appBuilder.Run(async context => {
+//		context.Response.ContentType = "application/json";
+
+//		var error = new ApiErrorDto(
+//			"Error inesperado del servidor",
+//			HttpStatusCode.InternalServerError
+//		);
+
+//		context.Response.StatusCode = (int)error.Status;
+//		await context.Response.WriteAsJsonAsync(new { error });
+//	});
+//});
 
 
 app.UseCors("AllowAll");

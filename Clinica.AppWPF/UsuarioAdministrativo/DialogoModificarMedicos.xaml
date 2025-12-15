@@ -183,7 +183,7 @@
 					Style="{StaticResource LabelLindoCuadroGrisSombreado}"
 					FontSize="12" />
 			</StackPanel>
-			<!-- ID PACIENTE -->
+			<!-- ID MEDICO -->
 			<StackPanel
 				Margin="0,5">
 				<Label

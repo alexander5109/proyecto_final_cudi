@@ -39,15 +39,15 @@ public partial class DialogoModificarMedicos : Window {
 	private async void ClickBoton_Eliminar(object sender, RoutedEventArgs e) {
 		if (
 			VM.Id is not MedicoId idGood || (
-			MessageBox.Show("¿Esta seguro que desea eliminar este paciente?",
+			MessageBox.Show("¿Esta seguro que desea eliminar este médico?",
 			"Confirmación", MessageBoxButton.YesNo) == MessageBoxResult.No)
 		) return;
 
 		ResultWpf<UnitWpf> result = await App.Repositorio.DeleteMedicoWhereId(idGood);
 		result.MatchAndDo(
 			caseOk => {
-				MessageBox.Show("PacienteExtensiones eliminado.", "Éxito", MessageBoxButton.OK);
-				Close();
+				MessageBox.Show("Paciente eliminado.", "Éxito", MessageBoxButton.OK);
+				this.Cerrar();
 			},
 			caseError => caseError.ShowMessageBox()
 		);
