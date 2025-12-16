@@ -8,7 +8,7 @@ public partial class MedicoAtencionDelDia : Window {
 
 	public MedicoAtencionDelDia() {
 		InitializeComponent();
-		VM = new MedicoAtencionDelDiaVM();
+		VM = new MedicoAtencionDelDiaVM(App.UsuarioActivo.MedicoRelacionadoId);
 		DataContext = VM;
 
 		Loaded += async (_, __) => await VM.RefrescarMisTurnosAsync();
