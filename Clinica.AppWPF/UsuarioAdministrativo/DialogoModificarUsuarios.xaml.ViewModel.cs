@@ -23,6 +23,8 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	public DialogoUsuarioModificarVM() {
 		_original = new UsuarioEdicionSnapshot();
 
+
+
 	}
 
 
@@ -150,6 +152,17 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		}
 	}
 
+	private MedicoId? _medicoRelacionadoId;
+	public MedicoId? MedicoRelacionadoId {
+		get => _medicoRelacionadoId;
+		set {
+			_medicoRelacionadoId = value;
+			OnPropertyChanged(nameof(MedicoRelacionadoId));
+			OnPropertyChanged(nameof(TieneCambios));
+			OnPropertyChanged(nameof(PuedeGuardarCambios));
+		}
+	}
+
 	// -----------------------------
 	// DETECTAR CAMBIOS
 	// -----------------------------
@@ -225,7 +238,9 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			CrearNuevaPasswordSiCorresponde(),
 			EnumRole.CrearResult(),
 			Email2025.CrearResult(Email),
-			Telefono2025.CrearResult(Telefono)
+			Telefono2025.CrearResult(Telefono),
+			MedicoRelacionadoId
+
 		).ToWpf(MessageBoxImage.Information);
 	}
 	private ResultWpf<Usuario2025> ToCreacionDomain() {
@@ -236,7 +251,8 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			ContraseñaHasheada2025.CrearResultFromRaw(NuevaPassword!), // obligatoria
 			EnumRole.CrearResult(),
 			Email2025.CrearResult(Email),
-			Telefono2025.CrearResult(Telefono)
+			Telefono2025.CrearResult(Telefono),
+			MedicoRelacionadoId
 		).ToWpf(MessageBoxImage.Information);
 	}
 

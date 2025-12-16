@@ -222,7 +222,7 @@
 					Width="144"
 					Height="35"
 					IsEnabled="{Binding HayMedicoSeleccionado}"
-					Click="ClickBoton_ModificarMedicoHorarios"
+					Click="ClickBoton_ConfirmarObservacion"
 					Style="{StaticResource BotonRedondeadoCeleste}"
 					HorizontalAlignment="Center"
 					Margin="0,10,0,0" />

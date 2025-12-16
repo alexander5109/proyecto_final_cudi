@@ -26,4 +26,8 @@ public partial class MedicoAtencionDelDia : Window {
 	// ==========================================================
 	private void ClickBoton_Home(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
+
+    async private void ClickBoton_ConfirmarObservacion(object sender, RoutedEventArgs e) {
+		await VM.ConfirmarDiagnosticoAsync();
+	}
 }

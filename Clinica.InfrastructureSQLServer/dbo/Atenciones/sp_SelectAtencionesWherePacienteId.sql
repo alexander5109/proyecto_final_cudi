@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.sp_SelectAtencionesPorPaciente
+﻿CREATE PROCEDURE dbo.sp_SelectAtencionesWherePacienteId
     @PacienteId INT
 AS
 BEGIN

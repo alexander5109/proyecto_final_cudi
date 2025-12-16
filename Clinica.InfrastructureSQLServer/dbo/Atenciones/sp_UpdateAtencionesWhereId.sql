@@ -1,5 +1,5 @@
-﻿CREATE PROCEDURE dbo.sp_ActualizarObservaciones
-    @Id UNIQUEIDENTIFIER,
+﻿CREATE PROCEDURE dbo.sp_UpdateAtencionesWhereId
+    @Id INT,
     @Observaciones NVARCHAR(MAX)
 AS
 BEGIN

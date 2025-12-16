@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.sp_SelectAtencionPorTurno
+﻿CREATE PROCEDURE dbo.sp_SelectAtencionesWhereTurnoId
     @TurnoId INT
 AS
 BEGIN

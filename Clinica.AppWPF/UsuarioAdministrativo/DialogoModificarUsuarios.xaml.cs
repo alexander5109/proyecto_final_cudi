@@ -15,6 +15,9 @@ public partial class DialogoModificarUsuarios : Window {
 		InitializeComponent();
 		VM = new();
 		DataContext = VM;
+
+		//DEFINIR MedicosDisponibles //PARA COMBOBOX
+		//DEFINIR MedicoRelacionado //COMO VIEWMODEL
 	}
 
 	public DialogoModificarUsuarios(UsuarioDbModel model) {

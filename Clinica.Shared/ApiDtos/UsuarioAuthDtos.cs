@@ -18,8 +18,8 @@ public static class UsuarioAuthDtos {
 	public record UsuarioLoginResponseDto(
 		string Username,
 		UsuarioRoleEnum EnumRole,
-		string Token,
-		MedicoId? MedicoRelacionadoId
+		string Token
+		//MedicoId? MedicoRelacionadoId
 	);
 	public record UsuarioLoginRequestDto(
 		string Username,
