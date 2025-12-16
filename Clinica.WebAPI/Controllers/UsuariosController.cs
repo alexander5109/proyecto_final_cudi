@@ -52,7 +52,7 @@ public class UsuariosController(
 	public Task<ActionResult<Unit>> DeleteUsuario(int id)
 		=> this.SafeExecute(
 			logger,
-			AccionesDeUsuarioEnum.DeleteEntidades,
+			AccionesDeUsuarioEnum.EliminarEntidades,
 			() => repositorio.DeleteUsuarioWhereId(new UsuarioId(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
@@ -63,7 +63,7 @@ public class UsuariosController(
 	public Task<ActionResult<UsuarioDbModel>> UpdateUsuario(int id, [FromBody] UsuarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		AccionesDeUsuarioEnum.UpdateEntidades,
+		AccionesDeUsuarioEnum.ModificarEntidades,
 		dto,
 		x => x.ToDomain(),
 		usuario => repositorio.UpdateUsuarioWhereId(new UsuarioId(id), usuario),

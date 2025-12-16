@@ -65,7 +65,7 @@ public class TurnosController(
 	public Task<ActionResult<Unit>> DeleteTurno(int id)
 	=> this.SafeExecute(
 		logger,
-		AccionesDeUsuarioEnum.DeleteEntidades,
+		AccionesDeUsuarioEnum.EliminarEntidades,
 		() => repositorio.DeleteTurnoWhereId(new TurnoId(id)),
 		notFoundMessage: $"No existe turno con id {id}"
 	);
@@ -76,7 +76,7 @@ public class TurnosController(
 	public Task<ActionResult<TurnoDbModel>> UpdateTurno(int id, [FromBody] TurnoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		AccionesDeUsuarioEnum.UpdateEntidades,
+		AccionesDeUsuarioEnum.ModificarEntidades,
 		dto,
 		x => x.ToDomain(),
 		turno => repositorio.UpdateTurnoWhereId(new TurnoId(id), turno),

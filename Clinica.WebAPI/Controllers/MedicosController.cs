@@ -75,7 +75,7 @@ public class MedicosController(
 	public Task<ActionResult<Unit>> DeleteMedico(int id)
 		=> this.SafeExecute(
 			logger,
-			AccionesDeUsuarioEnum.DeleteEntidades,
+			AccionesDeUsuarioEnum.EliminarEntidades,
 			() => repositorio.DeleteMedicoWhereId(new MedicoId(id)),
 			notFoundMessage: $"No existe medico con id {id}"
 		);
@@ -86,7 +86,7 @@ public class MedicosController(
 	public Task<ActionResult<MedicoDbModel>> UpdateMedico(int id, [FromBody] MedicoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		AccionesDeUsuarioEnum.UpdateEntidades,
+		AccionesDeUsuarioEnum.ModificarEntidades,
 		dto,
 		x => x.ToDomain(),
 		medico => repositorio.UpdateMedicoWhereId(new MedicoId(id), medico),

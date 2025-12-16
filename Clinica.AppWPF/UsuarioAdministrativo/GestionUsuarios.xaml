@@ -30,16 +30,16 @@
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition
-				Width="2*" />
+				Width="*" />
 			<!-- Búsqueda + lista -->
 			<ColumnDefinition
-				Width="1*" />
+				Width="auto" />
 			<!-- Estado del turno -->
 		</Grid.ColumnDefinitions>
 		<Label
 			Grid.Column="0"
 			Grid.Row="0"
-			Grid.ColumnSpan="2"
+			Grid.ColumnSpan="1"
 			Content="Gestión de usuarios"
 			FontSize="55"
 			FontFamily="Segoe UI Historic"
@@ -125,15 +125,15 @@
 					<GridView>
 						<GridViewColumn
 							Header="Rol"
-							Width="120"
+							Width="140"
 							DisplayMemberBinding="{Binding EnumRole}" />
 						<GridViewColumn
 							Header="Username"
-							Width="100"
+							Width="80"
 							DisplayMemberBinding="{Binding UserName}" />
 						<GridViewColumn
 							Header="Nombre"
-							Width="100"
+							Width="80"
 							DisplayMemberBinding="{Binding Nombre}" />
 						<GridViewColumn
 							Header="Apellido"
@@ -145,7 +145,7 @@
 							DisplayMemberBinding="{Binding Email}" />
 						<GridViewColumn
 							Header="Telefono"
-							Width="100"
+							Width="90"
 							DisplayMemberBinding="{Binding Telefono}" />
 					</GridView>
 				</ListView.View>
@@ -173,8 +173,9 @@
 		</Grid>
 		<Grid
 			Grid.Column="1"
-			Grid.Row="1"
-			Margin="15">
+			Grid.Row="0"
+			Grid.RowSpan="3"
+			Margin="15,35,15,35">
 			<Grid.RowDefinitions>
 				<RowDefinition
 					Height="Auto" />
@@ -199,17 +200,21 @@
 			<ListView
 				Grid.Row="2"
 				Margin="10"
-				ItemsSource="{Binding EnumRolesViewModelList}">
+				ItemsSource="{Binding RolesViewModelList}">
 				<ListView.View>
 					<GridView>
+						<!--<GridViewColumn
+							Header="Rol"
+							Width="95"
+							DisplayMemberBinding="{Binding Rol}" />-->
 						<GridViewColumn
-							Header="Acciones"
-							Width="180"
-							DisplayMemberBinding="{Binding Acciones}" />
+							Header="Accion"
+							Width="155"
+							DisplayMemberBinding="{Binding Accion}" />
 						<GridViewColumn
 							Header="Tiene Permiso"
-							Width="90"
-							DisplayMemberBinding="{Binding HoraDesdeStr}" />
+							Width="85"
+							DisplayMemberBinding="{Binding TienePermiso}" />
 					</GridView>
 				</ListView.View>
 			</ListView>

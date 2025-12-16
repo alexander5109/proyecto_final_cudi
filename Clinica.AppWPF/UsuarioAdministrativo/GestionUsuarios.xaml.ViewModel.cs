@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
+using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeEnum;
 using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.UsuarioAdministrativo;
@@ -15,7 +16,7 @@ public sealed class GestionUsuariosVM : INotifyPropertyChanged {
 	// BOTONES: NAV
 	// ==========================================================
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public ObservableCollection<AccionesDeUsuarioEnum> RolesViewModelList { get; } = [];
+	public ObservableCollection<PermisosViewModel> RolesViewModelList { get; } = [];
 
 	private UsuarioDbModel? _selectedUsuario;
 	public UsuarioDbModel? SelectedUsuario {
@@ -96,24 +97,21 @@ public sealed class GestionUsuariosVM : INotifyPropertyChanged {
 			// MessageBox.Show("por que es null el selectusuario?"); // porque se actualizo el listview de usuarios tras usarse un filtro!
 			return;
 		}
-		IReadOnlyCollection<AccionesDeUsuarioEnum> permisosAcciones = await App.Repositorio.SelectPermisosAccionesWhereEnumRole(SelectedUsuario.EnumRole);
+		IReadOnlyCollection<AccionesDeUsuarioEnum> permisosAcciones = await App.Repositorio.SelectAccionesDeUsuario();
+		//IReadOnlyCollection<AccionesDeUsuarioEnum> permisosAcciones = await App.Repositorio.SelectAccionesDeUsuarioWhereEnumRole(SelectedUsuario.EnumRole);
 
-		foreach (AccionesDeUsuarioEnum accion in permisosAcciones)
-			RolesViewModelList.Add(accion);
+		foreach (AccionesDeUsuarioEnum accionEnum in permisosAcciones)
+			RolesViewModelList.Add(new PermisosViewModel(accionEnum, SelectedUsuario.EnumRole.TienePermisosPara(accionEnum)));
+			//RolesViewModelList.Add(new PermisosViewModel(SelectedUsuario.EnumRole, accionEnum, SelectedUsuario.EnumRole.TienePermisosPara(accionEnum)));
 	}
 
 
 	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
 
-//public class EnumRoleViewModel(UsuarioRoleEnum horarioDbModel) {
-//	public int UsuarioId { get; } = horarioDbModel.UsuarioId.Valor;
-//	public DayOfWeek DiaSemana { get; } = horarioDbModel.DiaSemana;
-//	public string DiaSemanaDescripcion => DiaSemana.ATexto();
-//	public TimeSpan HoraDesde { get; } = horarioDbModel.HoraDesde;
-//	public string HoraDesdeStr => HoraDesde.ToString(@"hh\:mm");
-//	public TimeSpan HoraHasta { get; } = horarioDbModel.HoraHasta;
-//	public string HoraHastaStr => HoraHasta.ToString(@"hh\:mm");
-//	public DateTime VigenteDesde { get; } = horarioDbModel.VigenteDesde;
-//	public DateTime? VigenteHasta { get; } = horarioDbModel.VigenteHasta ?? DateTime.MaxValue;
-//}
+public class PermisosViewModel(AccionesDeUsuarioEnum accionEnum, bool tienePermiso) {
+//public class PermisosViewModel(UsuarioRoleEnum usuarioRoleEnum, AccionesDeUsuarioEnum accionEnum, bool tienePermiso) {
+	//public string Rol { get; } = usuarioRoleEnum.ToString();
+	public string Accion { get; } = accionEnum.ToString();
+	public string TienePermiso => tienePermiso is false ? "No" : "Si";
+}

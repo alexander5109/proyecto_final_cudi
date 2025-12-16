@@ -14,7 +14,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 
 
-	public static IReadOnlyCollection<AccionesDeUsuarioEnum>GetPermisosParaRol(UsuarioRoleEnum rol) {
+	public static IReadOnlyCollection<AccionesDeUsuarioEnum> GetAccionesDeUsuarioParaRol(UsuarioRoleEnum rol) {
 		if (rol == UsuarioRoleEnum.Nivel1Superadmin)
 			return Enum.GetValues<AccionesDeUsuarioEnum>();
 
@@ -22,6 +22,9 @@ public class ServiciosPublicos : IServiciosDeDominio {
 			return Array.Empty<AccionesDeUsuarioEnum>();
 
 		return permisos;
+	}
+	public static IReadOnlyCollection<AccionesDeUsuarioEnum> GetTodasLasAcciones() {
+		return Enum.GetValues<AccionesDeUsuarioEnum>();
 	}
 
 

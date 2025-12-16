@@ -25,7 +25,7 @@ public static class RepoCache {
 }
 
 
-public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
+ public class WPFRepositorio(ApiHelper Api) : IWPFRepositorio {
 
 
 
@@ -568,7 +568,11 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		return result;
 	}
 
-	Task<IReadOnlyCollection<AccionesDeUsuarioEnum>> IWPFRepositorioUsuarios.SelectPermisosAccionesWhereEnumRole(UsuarioRoleEnum enumRole) {
-		return Task.FromResult(ServiciosPublicos.GetPermisosParaRol(enumRole));
+	Task<IReadOnlyCollection<AccionesDeUsuarioEnum>> IWPFRepositorioUsuarios.SelectAccionesDeUsuarioWhereEnumRole(UsuarioRoleEnum enumRole) {
+		return Task.FromResult(ServiciosPublicos.GetAccionesDeUsuarioParaRol(enumRole));
+	}
+
+	Task<IReadOnlyCollection<AccionesDeUsuarioEnum>> IWPFRepositorioUsuarios.SelectAccionesDeUsuario() {
+		return Task.FromResult(ServiciosPublicos.GetTodasLasAcciones());
 	}
 }

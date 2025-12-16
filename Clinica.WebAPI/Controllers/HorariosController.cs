@@ -26,7 +26,7 @@ public class HorariosController(
 		[FromBody] IReadOnlyCollection<HorarioFranja2026> franjasDto
 	) => this.SafeExecuteWithDomain(
 			logger,
-			AccionesDeUsuarioEnum.UpdateHorarios,
+			AccionesDeUsuarioEnum.ModificarHorarios,
 			franjasDto,
 			x => HorariosMedicos2026Agg.CrearResult(new MedicoId(medicoId), franjasDto),
 			agg => repositorio.UpsertHorariosWhereMedicoId(agg)
@@ -58,7 +58,7 @@ public class HorariosController(
 	//public Task<ActionResult<Unit>> DeleteHorario(int id)
 	//	=> this.SafeExecute(
 	//		logger,
-	//		AccionesDeUsuarioEnum.DeleteEntidades,
+	//		AccionesDeUsuarioEnum.EliminarEntidades,
 	//		() => repositorio.DeleteHorarioWhereId(new HorarioId(id)),
 	//		notFoundMessage: $"No existe horario con id {id}"
 	//	);
@@ -69,7 +69,7 @@ public class HorariosController(
 	//public Task<ActionResult<HorarioDbModel>> UpdateHorario(int id, [FromBody] HorarioDto dto)
 	//=> this.SafeExecuteWithDomain(
 	//	logger,
-	//	AccionesDeUsuarioEnum.UpdateHorarios,
+	//	AccionesDeUsuarioEnum.ModificarHorarios,
 	//	dto,
 	//	x => x.ToDomain(),
 	//	horario => repositorio.UpdateHorarioWhereId(new HorarioId(id), horario),
@@ -119,7 +119,7 @@ public class HorariosController(
 	//public Task<ActionResult<Unit>> DeleteHorariosPorMedico(int medicoId)
 	//	=> this.SafeExecute(
 	//		logger,
-	//		AccionesDeUsuarioEnum.DeleteEntidades,
+	//		AccionesDeUsuarioEnum.EliminarEntidades,
 	//		() => repositorio.DeleteHorariosWhereMedicoId(new MedicoId(medicoId)),
 	//		notFoundMessage: $"No existen horarios para el médico {medicoId}"
 	//	);

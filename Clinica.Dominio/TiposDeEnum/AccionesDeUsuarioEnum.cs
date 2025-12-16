@@ -4,29 +4,29 @@ namespace Clinica.Dominio.TiposDeEnum;
 
 
 public enum AccionesDeUsuarioEnum {
+	EliminarEntidades,
+
+	ModificarEntidades,
+	ModificarHorarios,
+	ModificarPacientes,
+
 	Publico,
 	VerPacientes,
 	VerTurnos,
 	VerMedicos,
 	VerUsuarios,
+	VerHorarios,
+
 	CrearPacientes,
 	CrearMedicos,
 	CrearTurnos,
 	CrearUsuarios,
+	CrearHorarios,
+
 	CancelarTurno,
 	ReprogramarTurno,
-
-	DeleteEntidades,
-	UpdateEntidades,
-	UpdateHorarios,
-	UpdatePacientes,
-	CrearHorarios,
-	VerHorarios,
-
-
 	SolicitarTurno,
-	GestionDeTurnos
-
+	GestionDeTurnosCompleta
 }
 
 
@@ -48,9 +48,9 @@ public static class PermisoSistema {
 			AccionesDeUsuarioEnum.CancelarTurno,
 			AccionesDeUsuarioEnum.ReprogramarTurno,
 			AccionesDeUsuarioEnum.SolicitarTurno,
-			AccionesDeUsuarioEnum.UpdateHorarios,
+			AccionesDeUsuarioEnum.ModificarHorarios,
 
-			AccionesDeUsuarioEnum.UpdateEntidades,
+			AccionesDeUsuarioEnum.ModificarEntidades,
 			AccionesDeUsuarioEnum.VerUsuarios
             // No borra entidades sensibles
 
@@ -63,16 +63,16 @@ public static class PermisoSistema {
 			AccionesDeUsuarioEnum.VerMedicos,
 			AccionesDeUsuarioEnum.VerHorarios,
 
-			AccionesDeUsuarioEnum.UpdatePacientes,
+			AccionesDeUsuarioEnum.ModificarPacientes,
 			AccionesDeUsuarioEnum.CrearPacientes,
 			AccionesDeUsuarioEnum.CrearTurnos,
 
 			AccionesDeUsuarioEnum.CancelarTurno,
 			AccionesDeUsuarioEnum.SolicitarTurno,
-			AccionesDeUsuarioEnum.GestionDeTurnos,
+			AccionesDeUsuarioEnum.GestionDeTurnosCompleta,
 			AccionesDeUsuarioEnum.VerUsuarios,
 
-			AccionesDeUsuarioEnum.UpdateEntidades // ← Puede modificar pacientes
+			AccionesDeUsuarioEnum.ModificarEntidades // ← Puede modificar pacientes
             // No puede reprogramar turnos (opcional: lo podés habilitar)
             // No puede crear médicos/usuarios/horarios
             // No borra entidades

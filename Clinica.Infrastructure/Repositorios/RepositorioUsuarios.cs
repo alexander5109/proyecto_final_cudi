@@ -72,7 +72,7 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 	Task<Result<IEnumerable<UsuarioDbModel>>> IRepositorioUsuarios.SelectUsuarios()
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<UsuarioDbModel>(
-				"sp_SelectUsuarios",
+				"sp_SelectUsuariosFull",
 				commandType: CommandType.StoredProcedure
 			);
 		});
