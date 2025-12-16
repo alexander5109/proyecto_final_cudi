@@ -7,7 +7,8 @@ public record AtencionDbModel(
 	AtencionId Id,
 	TurnoId TurnoId,
 	PacienteId PacienteId,
-	DateTime Fecha,
+	MedicoId MedicoId,
+	DateTime FechaHora,
 	string Observaciones
 );
 

@@ -68,7 +68,7 @@ public class RepositorioTurnosWPF : IRepositorioTurnosWPF {
 			},
 			errorTitle: "Error agendando turno"
 		);
-		//_ = RefreshPacientes();
+		//_ = RefreshCache();
 		return response;
 	}
 

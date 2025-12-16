@@ -39,8 +39,6 @@ public sealed class MedicoAtencionDelDiaVM : INotifyPropertyChanged {
 				_selectedPaciente = value;
 				OnPropertyChanged(nameof(SelectedPaciente));
 				OnPropertyChanged(nameof(HayPacienteSeleccionado));
-				OnPropertyChanged(nameof(SelectedPacienteDomicilioCompleto));
-				OnPropertyChanged(nameof(SelectedPacienteNombreCompleto));
 				OnSelectedPacienteChanged();
 			}
 		}
@@ -70,19 +68,22 @@ public sealed class MedicoAtencionDelDiaVM : INotifyPropertyChanged {
 
 
 
+	// ================================================================
+	// METHODS
+	// ================================================================
 
 	internal async Task RefrescarMisTurnosAsync() {
 		List<TurnoDbModel> turnos = await App.Repositorio.Turnos.SelectTurnosWhereMedicoId(CurrentMedicoId);
-
-
+		await App.Repositorio.Pacientes.RefreshCache();
+		await App.Repositorio.Medicos.RefreshCache();
 
 		_todosLosTurnos = turnos;
-
-
-
 		TurnosList.Clear();
+
+
 		foreach (TurnoDbModel t in turnos.OrderBy(t => t.FechaHoraAsignadaDesde)) {
-			PacienteDbModel? paciente = await App.Repositorio.Pacientes.SelectPacienteWhereId(t.PacienteId); // cache de pacientes
+			//PacienteDbModel? paciente = await App.Repositorio.Pacientes.SelectPacienteWhereId(t.PacienteId); // cache de pacientes
+			PacienteDbModel? paciente = App.Repositorio.Pacientes.GetFromCachePacienteWhereId(t.PacienteId);
 			if (paciente == null) continue;
 
 			TurnosList.Add(new TurnoDeHoyVM(
@@ -94,38 +95,41 @@ public sealed class MedicoAtencionDelDiaVM : INotifyPropertyChanged {
 		}
 	}
 
-	private string CalcularEdad(DateTime fechaNacimiento) =>
-		(DateTime.Today.Year - fechaNacimiento.Year - (DateTime.Today < fechaNacimiento.AddYears(DateTime.Today.Year - fechaNacimiento.Year) ? 1 : 0)).ToString();
-
-
-	public string? SelectedPacienteDomicilioCompleto => SelectedPaciente is null ? null : $"{SelectedPaciente?.Localidad}, {SelectedPaciente?.Domicilio}";
-	public string? SelectedPacienteNombreCompleto => SelectedPaciente is null ? null : $"{SelectedPaciente?.Nombre} {SelectedPaciente?.Apellido}";
-
-	public bool HayPacienteSeleccionado => SelectedPaciente is not null;
 
 	private async Task CargarAtencionesDePacienteSeleccionado() {
 		AtencionesViewModelList.Clear();
 
-		if (SelectedPaciente is null) {
-			return;
-		}
-		IReadOnlyList<AtencionDbModel>? Atenciones = await App.Repositorio.Atenciones.SelectAtencionesWherePacienteId(SelectedPaciente.Id);
+		if (SelectedPaciente is null) return;
 
-		if (Atenciones is null || Atenciones.Count == 0)
-			return;
+        List<AtencionDbModel>? atenciones = await App.Repositorio.Atenciones.SelectAtencionesWherePacienteId(SelectedPaciente.Id);
 
-		foreach (AtencionDbModel h in Atenciones) {
-			AtencionesViewModelList.Add(
-				new AtencionPreviaVM(
-					Hora: "",
-					PacienteNombreApellido: "",
-					PacienteEdad: "",
-					FueAtendido: ""
-				)
-			);
+		if (atenciones is null || atenciones.Count == 0) return;
+
+
+		foreach (AtencionDbModel atencion in atenciones.OrderByDescending(x => x.FechaHora)) {
+            TurnoDbModel? turno = _todosLosTurnos.FirstOrDefault(t => t.Id == atencion.TurnoId);
+            string horaStr = turno?.FechaHoraAsignadaDesde.ToString("HH:mm") ?? "";
+
+
+			string selectedMedicoNombreCompleto = App.Repositorio.Medicos.GetFromCacheMedicoDisplayWhereId(atencion.MedicoId);
+
+			AtencionesViewModelList.Add(new AtencionPreviaVM(
+				FechaHora: atencion.FechaHora.ToString("%f"), //i intend 2025-12-31 17:30 format here
+				MedicoNombreApellido: selectedMedicoNombreCompleto!,
+				Observaciones: atencion.Observaciones
+			));
 		}
 	}
 
+	private string CalcularEdad(DateTime fechaNacimiento) =>
+		(DateTime.Today.Year - fechaNacimiento.Year - (DateTime.Today < fechaNacimiento.AddYears(DateTime.Today.Year - fechaNacimiento.Year) ? 1 : 0)).ToString();
+
+
+	// ================================================================
+	// METHODS
+	// ================================================================
+
+	public bool HayPacienteSeleccionado => SelectedPaciente is not null;
 
 	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
@@ -133,4 +137,4 @@ public sealed class MedicoAtencionDelDiaVM : INotifyPropertyChanged {
 
 public record TurnoDeHoyVM(string Hora, string PacienteNombreApellido, string PacienteEdad, string FueAtendido);
 
-public record AtencionPreviaVM(string Hora, string PacienteNombreApellido, string PacienteEdad, string FueAtendido);
+public record AtencionPreviaVM(string FechaHora, string MedicoNombreApellido, string Observaciones);

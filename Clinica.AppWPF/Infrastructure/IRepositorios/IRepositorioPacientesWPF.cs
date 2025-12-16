@@ -13,4 +13,6 @@ public interface IRepositorioPacientesWPF {
 	Task<List<PacienteDbModel>> SelectPacientes();
 	Task<PacienteDbModel?> SelectPacienteWhereId(PacienteId id);
 	Task<ResultWpf<UnitWpf>> UpdatePacienteWhereId(Paciente2025Agg instance);
+    Task RefreshCache();
+    PacienteDbModel? GetFromCachePacienteWhereId(PacienteId pacienteId);
 }
