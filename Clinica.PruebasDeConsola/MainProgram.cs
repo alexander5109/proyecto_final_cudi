@@ -5,6 +5,7 @@ using Clinica.Dominio.IInterfaces;
 using Clinica.Infrastructure.Repositorios;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.PruebasDeConsola;
 
@@ -74,6 +75,7 @@ public static class MainProgram {
 			DateTime.Now,
 			4,
 			DayOfWeek.Sunday,
+			new MedicoId(1),
 			repositorio
 		));
 		//disponibilidades.PrintAndContinue("Disponbiildiades encontradas::");

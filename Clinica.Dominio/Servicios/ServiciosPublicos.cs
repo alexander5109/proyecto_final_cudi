@@ -12,6 +12,19 @@ namespace Clinica.Dominio.Servicios;
 
 public class ServiciosPublicos : IServiciosDeDominio {
 
+
+
+	public static IReadOnlyCollection<AccionesDeUsuarioEnum>GetPermisosParaRol(UsuarioRoleEnum rol) {
+		if (rol == UsuarioRoleEnum.Nivel1Superadmin)
+			return Enum.GetValues<AccionesDeUsuarioEnum>();
+
+		if (!PermisoSistema.DiccionarioDeRoles.TryGetValue(rol, out var permisos))
+			return Array.Empty<AccionesDeUsuarioEnum>();
+
+		return permisos;
+	}
+
+
 	async Task<Result<IReadOnlyList<Disponibilidad2025>>> IServiciosDeDominio.SolicitarDisponibilidades(
 		EspecialidadEnum especialidadCodigo,
 		DateTime aPartirDeCuando,
@@ -59,7 +72,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 					"El médico seleccionado no pertenece a la especialidad indicada."
 				);
 			}
-			medicos = [ medicoPreferidoId.Value ];
+			medicos = [medicoPreferidoId.Value];
 		}
 
 

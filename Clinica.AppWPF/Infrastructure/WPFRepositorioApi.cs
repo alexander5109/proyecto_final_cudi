@@ -1,6 +1,8 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net.Http.Json;
 using System.Reflection;
+using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
@@ -564,5 +566,9 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		);
 		_ = RefreshHorarios();
 		return result;
+	}
+
+	Task<IReadOnlyCollection<AccionesDeUsuarioEnum>> IWPFRepositorioUsuarios.SelectPermisosAccionesWhereEnumRole(UsuarioRoleEnum enumRole) {
+		return Task.FromResult(ServiciosPublicos.GetPermisosParaRol(enumRole));
 	}
 }

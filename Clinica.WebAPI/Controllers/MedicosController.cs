@@ -25,7 +25,7 @@ public class MedicosController(
 	public async Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicos() {
         ActionResult<IEnumerable<MedicoDbModel>> response = await this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.VerMedicos,
+			AccionesDeUsuarioEnum.VerMedicos,
 			() => repositorio.SelectMedicos()
 		);
         ActionResult? test = response.Result;
@@ -35,7 +35,7 @@ public class MedicosController(
 	//[HttpGet("con-horarios/")]
 	//public Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicosWithHorarios() => this.SafeExecute(
 	//	logger,
-	//	PermisosAccionesEnum.VerMedicos,
+	//	AccionesDeUsuarioEnum.VerMedicos,
 	//	() => repositorio.SelectMedicosWithHorarios()
 	//);
 
@@ -44,7 +44,7 @@ public class MedicosController(
 	public Task<ActionResult<IEnumerable<MedicoDbModel>>> GetMedicosWhereEspecialidadCodigo([FromRoute] EspecialidadEnum code)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.VerMedicos,
+			AccionesDeUsuarioEnum.VerMedicos,
 			() => repositorio.SelectMedicosWhereEspecialidadCodigo(code)
 		);
 
@@ -54,7 +54,7 @@ public class MedicosController(
 	public Task<ActionResult<MedicoDbModel?>> GetMedicoWhereId(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.VerMedicos,
+			AccionesDeUsuarioEnum.VerMedicos,
 			() => repositorio.SelectMedicoWhereId(new MedicoId(id)),
 			notFoundMessage: $"No existe medico con id {id}"
 		);
@@ -64,7 +64,7 @@ public class MedicosController(
 	public Task<ActionResult<IEnumerable<TurnoDbModel>>> GetTurnosPorMedico([FromRoute] int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.VerTurnos,
+			AccionesDeUsuarioEnum.VerTurnos,
 			() => repositorio.SelectTurnosWhereMedicoId(new MedicoId(id)),
 			notFoundMessage: $"No existen turnos con medicoid {id}"
 		);
@@ -75,7 +75,7 @@ public class MedicosController(
 	public Task<ActionResult<Unit>> DeleteMedico(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.DeleteEntidades,
+			AccionesDeUsuarioEnum.DeleteEntidades,
 			() => repositorio.DeleteMedicoWhereId(new MedicoId(id)),
 			notFoundMessage: $"No existe medico con id {id}"
 		);
@@ -86,7 +86,7 @@ public class MedicosController(
 	public Task<ActionResult<MedicoDbModel>> UpdateMedico(int id, [FromBody] MedicoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisosAccionesEnum.UpdateEntidades,
+		AccionesDeUsuarioEnum.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
 		medico => repositorio.UpdateMedicoWhereId(new MedicoId(id), medico),
@@ -99,7 +99,7 @@ public class MedicosController(
 	public Task<ActionResult<MedicoId>> CrearMedico([FromBody] MedicoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisosAccionesEnum.CrearMedicos,
+		AccionesDeUsuarioEnum.CrearMedicos,
 		dto,
 		x => x.ToDomain(),
 		medico => repositorio.InsertMedicoReturnId(medico)

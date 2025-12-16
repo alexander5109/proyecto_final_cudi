@@ -65,7 +65,7 @@ public class ServiciosPublicosController(
 	) {
 		return this.SafeExecuteApi(
 			logger,
-			PermisosAccionesEnum.GestionDeTurnos,
+			AccionesDeUsuarioEnum.GestionDeTurnos,
 			operation: async () => (
 				await servicios.PersistirProgramarTurnoAsync(
 					dto.PacienteId,
@@ -106,7 +106,7 @@ public class ServiciosPublicosController(
 		//}
 		return this.SafeExecuteApi(
 			logger,
-			PermisosAccionesEnum.GestionDeTurnos,
+			AccionesDeUsuarioEnum.GestionDeTurnos,
 			operation: async () => (
 				await servicios.PersistirComoReprogramado(
 					dto.TurnoId,
@@ -126,7 +126,7 @@ public class ServiciosPublicosController(
 	) {
 		return this.SafeExecuteApi(
 			logger,
-			PermisosAccionesEnum.GestionDeTurnos,
+			AccionesDeUsuarioEnum.GestionDeTurnos,
 			operation: async () => (
 				await servicios.PersistirComoConcretadoAsync(
 					dto.TurnoId,
@@ -145,7 +145,7 @@ public class ServiciosPublicosController(
 	) {
 		return this.SafeExecuteApi(
 			logger,
-			PermisosAccionesEnum.GestionDeTurnos,
+			AccionesDeUsuarioEnum.GestionDeTurnos,
 			operation: async () => (
 				await servicios.PersistirComoAusenteAsync(
 					dto.TurnoId,

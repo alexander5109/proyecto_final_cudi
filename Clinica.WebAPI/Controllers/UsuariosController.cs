@@ -22,7 +22,7 @@ public class UsuariosController(
 	public Task<ActionResult<IEnumerable<UsuarioDbModel>>> GetUsuarios()
 	=> this.SafeExecute(
 		logger,
-		PermisosAccionesEnum.VerUsuarios,
+		AccionesDeUsuarioEnum.VerUsuarios,
 		() => repositorio.SelectUsuarios()
 	);
 
@@ -32,7 +32,7 @@ public class UsuariosController(
 	public Task<ActionResult<UsuarioDbModel?>> GetUsuarioPorId(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.VerUsuarios,
+			AccionesDeUsuarioEnum.VerUsuarios,
 			() => repositorio.SelectUsuarioWhereId(new UsuarioId(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
@@ -42,7 +42,7 @@ public class UsuariosController(
 	public Task<ActionResult<UsuarioDbModel>> GetUsuarioProfileByUsername(string username)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.VerUsuarios,
+			AccionesDeUsuarioEnum.VerUsuarios,
 			() => repositorio.SelectUsuarioProfileWhereUsername(new UserName(username)),
 			notFoundMessage: $"No existe usuario con nombre: {username}"
 		);
@@ -52,7 +52,7 @@ public class UsuariosController(
 	public Task<ActionResult<Unit>> DeleteUsuario(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.DeleteEntidades,
+			AccionesDeUsuarioEnum.DeleteEntidades,
 			() => repositorio.DeleteUsuarioWhereId(new UsuarioId(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
@@ -63,7 +63,7 @@ public class UsuariosController(
 	public Task<ActionResult<UsuarioDbModel>> UpdateUsuario(int id, [FromBody] UsuarioDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisosAccionesEnum.UpdateEntidades,
+		AccionesDeUsuarioEnum.UpdateEntidades,
 		dto,
 		x => x.ToDomain(),
 		usuario => repositorio.UpdateUsuarioWhereId(new UsuarioId(id), usuario),
@@ -76,7 +76,7 @@ public class UsuariosController(
 	public Task<ActionResult<UsuarioId>> CrearUsuario([FromBody] UsuarioDto dto)
 		=> this.SafeExecuteWithDomain(
 			logger,
-			PermisosAccionesEnum.CrearUsuarios,
+			AccionesDeUsuarioEnum.CrearUsuarios,
 			dto,
 			x => x.ToDomain(),
 			usuario => repositorio.InsertUsuarioReturnId(usuario)

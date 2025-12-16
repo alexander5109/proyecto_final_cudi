@@ -48,7 +48,7 @@ public static class ControllerExtensions {
 	public static async Task<ActionResult<T>> SafeExecute<T>(
 		this ControllerBase controller,
 		ILogger logger,
-		PermisosAccionesEnum permiso,
+		AccionesDeUsuarioEnum permiso,
 		Func<Task<Result<T>>> action,
 		string? notFoundMessage = null
 	) {
@@ -94,7 +94,7 @@ public static class ControllerExtensions {
 	public static Task<ActionResult<TResult>> SafeExecuteWithDomain<TDto, TDomain, TResult>(
 		this ControllerBase controller,
 		ILogger logger,
-		PermisosAccionesEnum permiso,
+		AccionesDeUsuarioEnum permiso,
 		TDto dto,
 		Func<TDto, Result<TDomain>> toDomain,
 		Func<TDomain, Task<Result<TResult>>> action,
@@ -119,7 +119,7 @@ public static class ControllerExtensions {
 	public static Task<ActionResult<T>> SafeExecuteApi<T>(
 		this ControllerBase controller,
 		ILogger logger,
-		PermisosAccionesEnum permiso,
+		AccionesDeUsuarioEnum permiso,
 		Func<Task<ApiResult<T>>> operation,
 		string? notFoundMessage = null
 	) =>

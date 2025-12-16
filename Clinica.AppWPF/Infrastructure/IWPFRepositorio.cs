@@ -36,6 +36,9 @@ public static class IWPFRepositorioInterfaces {
 		Task<ResultWpf<UnitWpf>> UpdateUsuarioWhereId(Usuario2025Agg instance);
 		Task<List<UsuarioDbModel>> SelectUsuarios();
 		Task<UsuarioDbModel?> SelectUsuarioProfileWhereUsername(string username);
+		Task<IReadOnlyCollection<AccionesDeUsuarioEnum>> SelectPermisosAccionesWhereEnumRole(UsuarioRoleEnum enumRole);
+
+
 	}
 
 
