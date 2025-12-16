@@ -44,7 +44,7 @@ public partial class DialogoPacienteModificar : Window {
 			"Confirmación", MessageBoxButton.YesNo) == MessageBoxResult.No)
 		) return;
 
-		ResultWpf<UnitWpf> result = await App.Repositorio.DeletePacienteWhereId(idGood);
+		ResultWpf<UnitWpf> result = await App.Repositorio.Pacientes.DeletePacienteWhereId(idGood);
 		result.MatchAndDo(
 			caseOk => {
 				MessageBox.Show("PacienteExtensiones eliminado.", "Éxito", MessageBoxButton.OK);

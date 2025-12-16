@@ -48,7 +48,7 @@ public sealed class GestionPacientesVM : INotifyPropertyChanged {
 	// METODOS DE UI
 	// ================================================================
 	internal async Task RefrescarPacientesAsync() {
-        List<PacienteDbModel> pacientes = await App.Repositorio.SelectPacientes();
+        List<PacienteDbModel> pacientes = await App.Repositorio.Pacientes.SelectPacientes();
 		_todosLosPacientes = pacientes;
 
 		// Reasignamos la vista para reflejar la nueva lista

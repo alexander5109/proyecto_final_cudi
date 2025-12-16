@@ -20,8 +20,6 @@ public readonly record struct ConsultaId(int Valor) {
 		id = default;
 		return false;
 	}
-	public readonly override string ToString() {
-		return Valor.ToString();
-	}
+	public readonly override string ToString() => Valor.ToString();
 
 }

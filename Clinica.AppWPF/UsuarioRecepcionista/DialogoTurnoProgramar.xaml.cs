@@ -106,7 +106,7 @@ public partial class DialogoTurnoProgramar : Window {
 			await EjecutarAccionAsync(() => VM.ConfirmarReprogramacionAsync(hoy, comentario));
 
 		}
-		ResultWpf<UnitWpf> result = await App.Repositorio.AgendarNuevoTurno(
+		ResultWpf<UnitWpf> result = await App.Repositorio.Turnos.AgendarNuevoTurno(
 			VM.SelectedPaciente.Id,
 			DateTime.Now,
 			VM.SelectedDisponibilidad.Original

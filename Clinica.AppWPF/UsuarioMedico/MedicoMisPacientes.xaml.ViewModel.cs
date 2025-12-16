@@ -45,7 +45,7 @@ public sealed class MedicoMisPacientesViewModel : INotifyPropertyChanged {
 	private List<PacienteDbModel> _todosLosPacientes = []; // copia completa para filtrar
 	internal async Task RefrescarPacientesAsync() {
 		try {
-			List<PacienteDbModel> pacientes = await App.Repositorio.SelectPacientes();
+			List<PacienteDbModel> pacientes = await App.Repositorio.Pacientes.SelectPacientes();
 			_todosLosPacientes = pacientes;
 		} catch (Exception ex) {
 			MessageBox.Show("Error cargando pacientes: " + ex.Message);

@@ -232,13 +232,13 @@ public class DialogoPacienteModificarVM : INotifyPropertyChanged {
 	private async Task<ResultWpf<UnitWpf>> GuardarEdicionAsync(Paciente2025 paciente) {
 		if (Id is PacienteId idNotNull) {
             Paciente2025Agg agg = new(idNotNull, paciente);
-			return await App.Repositorio.UpdatePacienteWhereId(agg);
+			return await App.Repositorio.Pacientes.UpdatePacienteWhereId(agg);
 		} else {
 			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No se puede guardar, la entidad no tiene MedicoId.", MessageBoxImage.Information));
 		}
 	}
 	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync(Paciente2025 paciente) {
-		return (await App.Repositorio.InsertPacienteReturnId(paciente))
+		return (await App.Repositorio.Pacientes.InsertPacienteReturnId(paciente))
 			.MatchTo(
 				ok => {
 					Id = ok;

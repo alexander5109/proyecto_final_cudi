@@ -294,7 +294,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		}
 
 		return await resultadoAgg.Bind(
-			agregado => App.Repositorio.UpdateHorariosWhereMedicoId(agregado)
+			agregado => App.Repositorio.Horarios.UpdateHorariosWhereMedicoId(agregado)
 		);
 	}
 
@@ -349,7 +349,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	public async Task CargarHorariosAsync() {
 		HorariosAgrupados.Clear();
 
-		IReadOnlyList<HorarioDbModel> horarios = await App.Repositorio.SelectHorariosWhereMedicoId(MedicoId)
+		IReadOnlyList<HorarioDbModel> horarios = await App.Repositorio.Horarios.SelectHorariosWhereMedicoId(MedicoId)
 					   ?? [];
 
 		Dictionary<DayOfWeek, List<HorarioDbModel>> dict = horarios

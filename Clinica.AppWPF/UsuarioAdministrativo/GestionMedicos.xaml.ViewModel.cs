@@ -59,7 +59,7 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 
 
 	internal async Task RefrescarMedicosAsync() {
-		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
+		List<MedicoDbModel> medicos = await App.Repositorio.Medicos.SelectMedicos();
 
 		_todosLosMedicos = medicos;
 		FiltrarMedicos();
@@ -102,7 +102,7 @@ public sealed class AdminMedicosViewModel : INotifyPropertyChanged {
 			return;
 		}
 		IReadOnlyList<HorarioDbModel>? horarios =
-			await App.Repositorio.SelectHorariosWhereMedicoId(SelectedMedico.Id);
+			await App.Repositorio.Horarios.SelectHorariosWhereMedicoId(SelectedMedico.Id);
 
 		if (horarios is null || horarios.Count == 0)
 			return;

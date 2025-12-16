@@ -1,10 +1,8 @@
 ﻿using System.Net;
-using System.Security.Claims;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Shared.ApiDtos;
-using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 

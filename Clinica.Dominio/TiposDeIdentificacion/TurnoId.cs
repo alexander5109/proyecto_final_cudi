@@ -20,8 +20,5 @@ public record struct TurnoId(int Valor) {
 		id = default;
 		return false;
 	}
-
-	public override string ToString() {
-		return Valor.ToString();
-	}
+	public readonly override string ToString() => Valor.ToString();
 }

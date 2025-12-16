@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Text;
-using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeEnum;
 using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.UsuarioAdministrativo;
@@ -58,7 +54,7 @@ public sealed class GestionUsuariosVM : INotifyPropertyChanged {
 
 
 	internal async Task RefrescarUsuariosAsync() {
-		List<UsuarioDbModel> usuarios = await App.Repositorio.SelectUsuarios();
+		List<UsuarioDbModel> usuarios = await App.Repositorio.Usuarios.SelectUsuarios();
 
 		_todosLosUsuarios = usuarios;
 		FiltrarUsuarios();
@@ -97,7 +93,7 @@ public sealed class GestionUsuariosVM : INotifyPropertyChanged {
 			// MessageBox.Show("por que es null el selectusuario?"); // porque se actualizo el listview de usuarios tras usarse un filtro!
 			return;
 		}
-		IReadOnlyCollection<AccionesDeUsuarioEnum> permisosAcciones = await App.Repositorio.SelectAccionesDeUsuario();
+		IReadOnlyCollection<AccionesDeUsuarioEnum> permisosAcciones = await App.Repositorio.Usuarios.SelectAccionesDeUsuario();
 		//IReadOnlyCollection<AccionesDeUsuarioEnum> permisosAcciones = await App.Repositorio.SelectAccionesDeUsuarioWhereEnumRole(SelectedUsuario.EnumRole);
 
 		foreach (AccionesDeUsuarioEnum accionEnum in permisosAcciones)

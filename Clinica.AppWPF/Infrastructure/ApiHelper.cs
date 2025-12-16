@@ -34,4 +34,11 @@ public class ApiHelper {
 		UsuarioActual = usuario;
 		SetToken(usuario.Token);
 	}
+
+
+
+
+
+
+
 }

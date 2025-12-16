@@ -1,6 +1,4 @@
-﻿using Clinica.Dominio.TiposDeEntidad;
-
-namespace Clinica.Dominio.TiposDeEnum;
+﻿namespace Clinica.Dominio.TiposDeEnum;
 
 
 public enum AccionesDeUsuarioEnum {
@@ -50,10 +48,6 @@ public static class PermisoSistema {
 			AccionesDeUsuarioEnum.CrearMedicos,
 			AccionesDeUsuarioEnum.CrearHorarios,
 			AccionesDeUsuarioEnum.CrearUsuarios,
-
-			AccionesDeUsuarioEnum.CancelarTurno,
-			AccionesDeUsuarioEnum.ReprogramarTurno,
-			AccionesDeUsuarioEnum.SolicitarTurno,
 			AccionesDeUsuarioEnum.ModificarHorarios,
 
 
@@ -75,10 +69,13 @@ public static class PermisoSistema {
 
 
 			AccionesDeUsuarioEnum.ProgramarTurno,
-			AccionesDeUsuarioEnum.CancelarTurno,
 			AccionesDeUsuarioEnum.SolicitarTurno,
 			AccionesDeUsuarioEnum.ConcretarTurno,
 			AccionesDeUsuarioEnum.ConcretarComoAusente,
+			AccionesDeUsuarioEnum.CancelarTurno,
+			AccionesDeUsuarioEnum.ReprogramarTurno,
+
+
 
 			AccionesDeUsuarioEnum.VerUsuarios,
 

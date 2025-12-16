@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Windows;
 using Clinica.AppWPF.CommonViewModels;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.UsuarioSuperadmin;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
@@ -190,7 +189,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		return await ToEdicionDomain()
 			.Bind(edicion => {
 				var agg = Usuario2025EdicionAgg.Crear(id, edicion);
-				return App.Repositorio.UpdateUsuarioWhereId(agg);
+				return App.Repositorio.Usuarios.UpdateUsuarioWhereId(agg);
 			});
 	}
 
@@ -199,7 +198,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync() {
 		return await ToCreacionDomain()
 			.Bind(async usuario => {
-				var result = await App.Repositorio.InsertUsuarioReturnId(usuario);
+				var result = await App.Repositorio.Usuarios.InsertUsuarioReturnId(usuario);
 
 				return result.MatchTo(
 					ok => {

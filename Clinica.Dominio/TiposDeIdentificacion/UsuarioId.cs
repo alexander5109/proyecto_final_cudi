@@ -8,4 +8,5 @@ public readonly record struct UsuarioId(int Valor) {
 		id is int idGood
 		? new Result<UsuarioId>.Ok(new UsuarioId(idGood))
 		: new Result<UsuarioId>.Error("El id no puede ser nulo.");
+	public readonly override string ToString() => Valor.ToString();
 }

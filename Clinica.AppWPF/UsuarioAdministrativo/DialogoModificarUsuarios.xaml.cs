@@ -43,7 +43,7 @@ public partial class DialogoModificarUsuarios : Window {
 			"Confirmación", MessageBoxButton.YesNo) == MessageBoxResult.No)
 		) return;
 
-		ResultWpf<UnitWpf> result = await App.Repositorio.DeleteUsuarioWhereId(idGood);
+		ResultWpf<UnitWpf> result = await App.Repositorio.Usuarios.DeleteUsuarioWhereId(idGood);
 		result.MatchAndDo(
 			caseOk => {
 				MessageBox.Show("Usuario eliminado.", "Éxito", MessageBoxButton.OK);
