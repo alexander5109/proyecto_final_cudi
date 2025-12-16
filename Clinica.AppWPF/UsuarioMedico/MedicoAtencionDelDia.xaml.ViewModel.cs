@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using Clinica.Dominio.TiposExtensiones;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioMedico;
@@ -15,7 +14,7 @@ public sealed class MedicoAtencionDelDiaVM : INotifyPropertyChanged {
 	// BOTONES: NAV
 	// ==========================================================
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public ObservableCollection<AtencionViewModel> AtencionesViewModelList { get; } = [];
+	public ObservableCollection<AtencionPreviaVM> AtencionesViewModelList { get; } = [];
 
 	private PacienteDbModel? _selectedPaciente;
 	public PacienteDbModel? SelectedPaciente {
@@ -81,7 +80,7 @@ public sealed class MedicoAtencionDelDiaVM : INotifyPropertyChanged {
 			return;
 
 		foreach (AtencionDbModel h in Atenciones)
-			AtencionesViewModelList.Add(new AtencionViewModel(h));
+			AtencionesViewModelList.Add(new AtencionPreviaVM(h));
 	}
 
 

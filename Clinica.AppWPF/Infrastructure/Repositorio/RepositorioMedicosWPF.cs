@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Json;
-using Clinica.AppWPF.UsuarioSuperadmin;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;

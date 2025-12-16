@@ -1,4 +1,3 @@
-using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
 

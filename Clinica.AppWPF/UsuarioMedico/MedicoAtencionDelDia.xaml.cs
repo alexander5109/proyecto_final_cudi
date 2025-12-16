@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.UsuarioAdministrativo;
 
 namespace Clinica.AppWPF.UsuarioMedico;
 
