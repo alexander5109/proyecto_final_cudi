@@ -9,6 +9,7 @@ public interface IRepositorioWPF {
 	IRepositorioTurnosWPF Turnos { get; }
 	IRepositorioHorariosWPF Horarios { get; }
 	IRepositorioUsuariosWPF Usuarios { get; }
+	IRepositorioAtencionesWPF Atenciones { get; }
 }
 
 

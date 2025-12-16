@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using Clinica.AppWPF.Infrastructure.IRepositorios;
+using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioMedico;
@@ -9,6 +11,18 @@ namespace Clinica.AppWPF.UsuarioMedico;
 
 
 public sealed class MedicoAtencionDelDiaVM : INotifyPropertyChanged {
+
+
+
+	// ================================================================
+	// CONSTRUCTOIR
+	// ================================================================
+
+
+	private MedicoId CurrentMedicoId;
+
+
+
 
 	// ==========================================================
 	// BOTONES: NAV
@@ -79,8 +93,16 @@ public sealed class MedicoAtencionDelDiaVM : INotifyPropertyChanged {
 		if (Atenciones is null || Atenciones.Count == 0)
 			return;
 
-		foreach (AtencionDbModel h in Atenciones)
-			AtencionesViewModelList.Add(new AtencionPreviaVM(h));
+		foreach (AtencionDbModel h in Atenciones) {
+			AtencionesViewModelList.Add(
+				new AtencionPreviaVM(
+					Hora: "",
+					PacienteNombreApellido: "",
+					PacienteEdad: "",
+					FueAtendido: ""
+				)
+			);
+		}
 	}
 
 
