@@ -33,7 +33,7 @@
 				Width="*" />
 			<!-- Búsqueda + lista -->
 			<ColumnDefinition
-				Width="auto" />
+				Width="350" />
 			<!-- Estado del turno -->
 		</Grid.ColumnDefinitions>
 		<Label
@@ -209,7 +209,7 @@
 							DisplayMemberBinding="{Binding Rol}" />-->
 						<GridViewColumn
 							Header="Accion"
-							Width="155"
+							Width="180"
 							DisplayMemberBinding="{Binding Accion}" />
 						<GridViewColumn
 							Header="Tiene Permiso"

@@ -23,10 +23,13 @@ public enum AccionesDeUsuarioEnum {
 	CrearUsuarios,
 	CrearHorarios,
 
+	ProgramarTurno,
 	CancelarTurno,
 	ReprogramarTurno,
 	SolicitarTurno,
-	GestionDeTurnosCompleta
+	ConcretarTurno,
+	ConcretarComoAusente,
+	//GestionDeTurnosCompleta
 }
 
 
@@ -65,11 +68,14 @@ public static class PermisoSistema {
 
 			AccionesDeUsuarioEnum.ModificarPacientes,
 			AccionesDeUsuarioEnum.CrearPacientes,
-			AccionesDeUsuarioEnum.CrearTurnos,
 
+
+			AccionesDeUsuarioEnum.ProgramarTurno,
 			AccionesDeUsuarioEnum.CancelarTurno,
 			AccionesDeUsuarioEnum.SolicitarTurno,
-			AccionesDeUsuarioEnum.GestionDeTurnosCompleta,
+			AccionesDeUsuarioEnum.ConcretarTurno,
+			AccionesDeUsuarioEnum.ConcretarComoAusente,
+
 			AccionesDeUsuarioEnum.VerUsuarios,
 
 			AccionesDeUsuarioEnum.ModificarEntidades // ← Puede modificar pacientes
