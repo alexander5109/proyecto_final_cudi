@@ -49,9 +49,10 @@ public static partial class DbModels {
 		string Apellido,
 		string Telefono,
 		string Email,
-		UsuarioRoleEnum EnumRole
+		UsuarioRoleEnum EnumRole,
+		MedicoId? MedicoRelacionadoId
 	) {
-		public UsuarioDbModel() : this(default, "", "", "", "", "", "", default) { }
+		public UsuarioDbModel() : this(default, "", "", "", "", "", "", default, default) { }
 	}
 
 	public static UsuarioDbModel ToModel(this Usuario2025Edicion edicion, UsuarioId id)
@@ -63,7 +64,8 @@ public static partial class DbModels {
 			Apellido: edicion.NombreCompleto.ApellidoValor,
 			Telefono: edicion.Telefono.Valor,
 			Email: edicion.Email.Valor,
-			EnumRole: edicion.EnumRole
+			EnumRole: edicion.EnumRole,
+			MedicoRelacionadoId: edicion.MedicoRelacionadoId
 		);
 
 
@@ -76,7 +78,8 @@ public static partial class DbModels {
 			aggrg.Usuario.NombreCompleto.ApellidoValor,
 			aggrg.Usuario.Telefono.Valor,
 			aggrg.Usuario.Email.Valor,
-			aggrg.Usuario.EnumRole
+			aggrg.Usuario.EnumRole,
+			aggrg.Usuario.MedicoRelacionadoId
 		);
 	}
 	public static UsuarioDbModel ToModel(this Usuario2025EdicionAgg aggrg) {
@@ -88,7 +91,8 @@ public static partial class DbModels {
 			aggrg.Usuario.NombreCompleto.ApellidoValor,
 			aggrg.Usuario.Telefono.Valor,
 			aggrg.Usuario.Email.Valor,
-			aggrg.Usuario.EnumRole
+			aggrg.Usuario.EnumRole,
+			aggrg.Usuario.MedicoRelacionadoId
 		);
 	}
 	public static UsuarioDbModel ToModel(this Usuario2025 instance, UsuarioId id) {
@@ -100,7 +104,8 @@ public static partial class DbModels {
 			instance.NombreCompleto.ApellidoValor,
 			instance.Telefono.Valor,
 			instance.Email.Valor,
-			instance.EnumRole
+			instance.EnumRole,
+			instance.MedicoRelacionadoId
 		);
 	}
 

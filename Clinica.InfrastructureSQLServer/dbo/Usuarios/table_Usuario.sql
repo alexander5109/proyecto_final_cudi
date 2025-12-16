@@ -6,5 +6,7 @@
     Apellido NVARCHAR(50) NOT NULL,
     Telefono CHAR(10) NOT NULL,
     Email VARCHAR(320) NOT NULL,
-    EnumRole TINYINT NOT NULL CHECK (EnumRole BETWEEN 1 AND 10)
+    EnumRole TINYINT NOT NULL CHECK (EnumRole BETWEEN 1 AND 10),
+    MedicoRelacionadoId INT,
+    CONSTRAINT FK_Usuario_Medico FOREIGN KEY (MedicoRelacionadoId) REFERENCES Medico(Id)
 );

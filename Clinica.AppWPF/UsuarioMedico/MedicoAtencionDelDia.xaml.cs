@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.AppWPF.UsuarioMedico;
 
@@ -8,7 +9,12 @@ public partial class MedicoAtencionDelDia : Window {
 
 	public MedicoAtencionDelDia() {
 		InitializeComponent();
-		VM = new MedicoAtencionDelDiaVM(App.UsuarioActivo.MedicoRelacionadoId);
+		if (App.UsuarioActivo!.MedicoRelacionadoId is not MedicoId medicoIdGood) {
+			MessageBox.Show("Su usuario no tiene un medico relacionado. Voy a crashear");
+			throw new Exception("Su usuario no tiene un medico relacionado. Voy a crashear");
+		}
+
+		VM = new MedicoAtencionDelDiaVM(medicoIdGood);
 		DataContext = VM;
 
 		Loaded += async (_, __) => await VM.RefrescarMisTurnosAsync();

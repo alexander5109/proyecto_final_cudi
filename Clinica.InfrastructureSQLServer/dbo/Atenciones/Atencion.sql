@@ -1,0 +1,4 @@
+﻿CREATE TABLE [dbo].[Atencion]
+(
+	[Id] INT NOT NULL PRIMARY KEY
+)

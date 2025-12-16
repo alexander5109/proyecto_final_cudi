@@ -5,11 +5,12 @@
 	@Apellido NVARCHAR(50),
 	@Telefono CHAR(10),
 	@Email VARCHAR(320),
-    @EnumRole TINYINT
+    @EnumRole TINYINT,
+    @MedicoRelacionadoId INT
 AS
 BEGIN
-    INSERT INTO Usuario (UserName, PasswordHash, Nombre, Apellido, Telefono, Email, EnumRole)
-    VALUES (@UserName, @PasswordHash, @Nombre, @Apellido, @Telefono, @Email, @EnumRole);
+    INSERT INTO Usuario (UserName, PasswordHash, Nombre, Apellido, Telefono, Email, EnumRole, MedicoRelacionadoId)
+    VALUES (@UserName, @PasswordHash, @Nombre, @Apellido, @Telefono, @Email, @EnumRole, @MedicoRelacionadoId);
 
     SELECT SCOPE_IDENTITY() AS NewId;
 END
