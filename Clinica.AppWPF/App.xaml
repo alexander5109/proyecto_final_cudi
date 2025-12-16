@@ -22,7 +22,7 @@
 							ClipToBounds="True">
 							<!-- Imagen de fondo -->
 							<Image
-								Source="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg"
+								Source="pack://application:,,,/PublishedResources/images2025sol/fondoCeleste2025.jpg"
 								Stretch="UniformToFill">
 								<Image.Effect>
 									<BlurEffect
@@ -65,7 +65,7 @@
 							BorderThickness="1">
 							<Border.Background>
 								<ImageBrush
-									ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg"
+									ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoCeleste2025.jpg"
 									Stretch="UniformToFill" />
 							</Border.Background>
 							<!-- Overlay para suavizar -->

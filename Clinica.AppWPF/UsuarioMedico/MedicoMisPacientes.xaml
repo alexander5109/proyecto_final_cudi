@@ -80,7 +80,7 @@
 				Margin="10,0,10,10"
 				Click="ButtonHome"
 				FontSize="20"
-				Style="{StaticResource BotonRedondeado}" />
+				Style="{StaticResource BotonRedondeadoVioletaAzul}" />
 			<Button
 				Content="Salir"
 				Width="170"
@@ -88,7 +88,7 @@
 				Margin="10,0,10,10"
 				Click="ClickBoton_Salir"
 				FontSize="20"
-				Style="{StaticResource BotonRedondeado}" />
+				Style="{StaticResource BotonRedondeadoVioletaAzul}" />
 		</StackPanel>
 		<StackPanel
 			Grid.Column="0"

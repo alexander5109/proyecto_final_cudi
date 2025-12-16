@@ -12,7 +12,7 @@
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png">
 	<Window.Background>
 		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg" />
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoCeleste2025.jpg" />
 	</Window.Background>
 	<!-- ===================== LAYOUT GENERAL ===================== -->
 	<Grid

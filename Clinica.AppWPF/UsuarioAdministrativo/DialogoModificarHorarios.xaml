@@ -15,7 +15,7 @@
 	</Window.Resources>
 	<Window.Background>
 		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/FondoMedicosLila.jpeg" />
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoLila2025.jpeg" />
 	</Window.Background>
 	<Grid
 		Margin="25">
