@@ -10,6 +10,15 @@
 
 
 PRINT 'Ejecutando Post-Deployment...Haciendo unos inserts... incluyendo usuarios';
+
+
+
+-- Índices recomendados
+CREATE INDEX IX_Atencion_TurnoId ON Atencion(TurnoId);
+CREATE INDEX IX_Atencion_PacienteId ON Atencion(PacienteId);
+CREATE INDEX IX_Atencion_MedicoId ON Atencion(MedicoId);
+
+
 ----------------------------------------------------
 -- Cargar datos de ejemplo en Usuario
 ----------------------------------------------------

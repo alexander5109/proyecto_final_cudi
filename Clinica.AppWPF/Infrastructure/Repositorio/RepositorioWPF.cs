@@ -10,6 +10,7 @@ public sealed class RepositorioWPF : IRepositorioWPF {
 	public IRepositorioTurnosWPF Turnos { get; }
 	public IRepositorioHorariosWPF Horarios { get; }
 	public IRepositorioUsuariosWPF Usuarios { get; }
+	public IRepositorioAtencionesWPF Atenciones { get; }
 
 	public RepositorioWPF() {
 		Medicos = new RepositorioMedicosWPF();
@@ -18,5 +19,6 @@ public sealed class RepositorioWPF : IRepositorioWPF {
 		Turnos = new RepositorioTurnosWPF();
 		Horarios = new RepositorioHorariosWPF();
 		Usuarios = new RepositorioUsuariosWPF();
+		Atenciones = new RepositorioAtencionesWPF();
 	}
 }

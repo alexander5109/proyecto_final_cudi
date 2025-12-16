@@ -62,6 +62,7 @@
     <Folder Include="dbo\Pacientes" />
     <Folder Include="dbo\Medicos" />
     <Folder Include="dbo\HorariosMedicos" />
+    <Folder Include="dbo\Atenciones" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="dbo\Script.PostDeployment.sql" />
@@ -119,6 +120,12 @@
     <Build Include="dbo\Medicos\sp_SelectMedicosWhereEspecialidadCodigo.sql" />
     <Build Include="dbo\HorariosMedicos\udtt_HorarioFranjaUDTT.sql" />
     <Build Include="dbo\HorariosMedicos\sp_UpsertHorariosWhereMedicoId.sql" />
+    <Build Include="dbo\Atenciones\Atencion.sql" />
+    <Build Include="dbo\Atenciones\sp_InsertAtencion.sql" />
+    <Build Include="dbo\Atenciones\sp_SelectAtenciones.sql" />
+    <Build Include="dbo\Atenciones\sp_SelectAtencionesWherePacienteId.sql" />
+    <Build Include="dbo\Atenciones\sp_SelectAtencionesWhereTurnoId.sql" />
+    <Build Include="dbo\Atenciones\sp_UpdateAtencionesWhereId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Clinica.InfrastructureSQLServer.publish.xml" />

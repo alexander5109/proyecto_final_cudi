@@ -1,6 +1,7 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.TiposExtensiones;
 
@@ -17,7 +18,8 @@ public static class UsuarioAuthDtos {
 	public record UsuarioLoginResponseDto(
 		string Username,
 		UsuarioRoleEnum EnumRole,
-		string Token
+		string Token,
+		MedicoId? MedicoRelacionadoId
 	);
 	public record UsuarioLoginRequestDto(
 		string Username,
@@ -50,7 +52,8 @@ public static class UsuarioAuthDtos {
 		string? NuevaPassword, // 👈 opcional
 		UsuarioRoleEnum EnumRole,
 		string Email,
-		string Telefono
+		string Telefono,
+		MedicoId? MedicoRelacionadoId
 	);
 	public static Result<Usuario2025Edicion> ToDomain(this UsuarioEditarDto dto) {
 		Result<ContraseñaHasheada2025?> contraseña =
@@ -65,7 +68,9 @@ public static class UsuarioAuthDtos {
 			contraseña,
 			dto.EnumRole.CrearResult(),
 			Email2025.CrearResult(dto.Email),
-			Telefono2025.CrearResult(dto.Telefono)
+			Telefono2025.CrearResult(dto.Telefono),
+			dto.MedicoRelacionadoId
+
 		);
 	}
 	// ==========================================================
@@ -78,9 +83,10 @@ public static class UsuarioAuthDtos {
 		string PasswordHash,
 		UsuarioRoleEnum EnumRole,
 		string Email,
-		string Telefono
+		string Telefono,
+		MedicoId? MedicoRelacionadoId
 	) {
-		public UsuarioCrearDto() : this("", "", "", "", default, "", "") { }
+		public UsuarioCrearDto() : this("", "", "", "", default, "", "", default) { }
 	}
 
 	public static UsuarioCrearDto ToDto(this Usuario2025 entidad) {
@@ -91,7 +97,8 @@ public static class UsuarioAuthDtos {
 			entidad.PasswordHash.Valor,
 			entidad.EnumRole,
 			entidad.Email.Valor,
-			entidad.Telefono.Valor
+			entidad.Telefono.Valor,
+			entidad.MedicoRelacionadoId
 		);
 	}
 
@@ -102,7 +109,8 @@ public static class UsuarioAuthDtos {
 			ContraseñaHasheada2025.CrearResult(dto.PasswordHash),
 			dto.EnumRole.CrearResult(),
 			Email2025.CrearResult(dto.Email),
-			Telefono2025.CrearResult(dto.Telefono)
+			Telefono2025.CrearResult(dto.Telefono),
+			dto.MedicoRelacionadoId
 		);
 
 }
