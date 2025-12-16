@@ -115,7 +115,6 @@
 					Content="Email" />
 				<TextBox
 					Height="30"
-					MaxLength="10"
 					Text="{Binding Email}"
 					Style="{StaticResource TextBoxLindo2}" />
 			</StackPanel>
@@ -186,7 +185,7 @@
 					Foreground="#FF162F28"
 					FontSize="20" />
 				<Button
-					Content="Eliminar médico"
+					Content="Eliminar usuario"
 					Width="200"
 					Height="35"
 					Margin="7,7,7,7"

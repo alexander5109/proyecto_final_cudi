@@ -25,10 +25,10 @@ public static class IWPFRepositorioInterfaces {
 		IWPFRepositorioHorarios,
 		IWPFRepositorioUsuarios {
 
-		Task RefreshMedicos();
-		Task RefreshPacientes();
-		Task RefreshUsuarios();
-		Task RefreshHorarios();
+		//Task RefreshMedicos();
+		//Task RefreshPacientes();
+		//Task RefreshUsuarios();
+		//Task RefreshHorarios();
     }
 	public interface IWPFRepositorioUsuarios {
 		Task<ResultWpf<UnitWpf>> DeleteUsuarioWhereId(UsuarioId id);

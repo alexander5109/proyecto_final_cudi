@@ -94,7 +94,7 @@
     <Build Include="dbo\Usuarios\sp_InsertUsuarioReturnId.sql" />
     <Build Include="dbo\Usuarios\sp_SelectUsuariosFull.sql" />
     <Build Include="dbo\Usuarios\sp_SelectUsuarioWhereId.sql" />
-    <Build Include="dbo\Usuarios\sp_UpdateUsuarioWhereId.sql" />
+    <Build Include="dbo\Usuarios\sp_UpdateUsuarioCoalescePassWhereId.sql" />
     <Build Include="dbo\Usuarios\table_Usuario.sql" />
     <Build Include="dbo\Medicos\sp_SelectMedicoWithHorariosWhereId.sql" />
     <Build Include="dbo\Turnos\sp_DeleteTurnoWhereId.sql" />

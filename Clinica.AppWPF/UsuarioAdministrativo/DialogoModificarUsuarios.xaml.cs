@@ -39,14 +39,14 @@ public partial class DialogoModificarUsuarios : Window {
 	private async void ClickBoton_Eliminar(object sender, RoutedEventArgs e) {
 		if (
 			VM.Id is not UsuarioId idGood || (
-			MessageBox.Show("¿Esta seguro que desea eliminar este médico?",
+			MessageBox.Show("¿Esta seguro que desea eliminar este usuario?",
 			"Confirmación", MessageBoxButton.YesNo) == MessageBoxResult.No)
 		) return;
 
 		ResultWpf<UnitWpf> result = await App.Repositorio.DeleteUsuarioWhereId(idGood);
 		result.MatchAndDo(
 			caseOk => {
-				MessageBox.Show("Paciente eliminado.", "Éxito", MessageBoxButton.OK);
+				MessageBox.Show("Usuario eliminado.", "Éxito", MessageBoxButton.OK);
 				this.Cerrar();
 			},
 			caseError => caseError.ShowMessageBox()

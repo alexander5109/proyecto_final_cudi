@@ -5,6 +5,7 @@ namespace Clinica.Dominio.TiposDeEnum;
 
 public enum AccionesDeUsuarioEnum {
 	EliminarEntidades,
+	EliminarUsuarios,
 
 	ModificarEntidades,
 	ModificarHorarios,
@@ -38,6 +39,7 @@ public static class PermisoSistema {
 		[UsuarioRoleEnum.Nivel1Superadmin] = [], //TIENE TODOS LOS PERMISOS
 
 		[UsuarioRoleEnum.Nivel2Administrativo] = [
+			AccionesDeUsuarioEnum.EliminarUsuarios,
 			AccionesDeUsuarioEnum.VerPacientes,
 			AccionesDeUsuarioEnum.VerTurnos,
 			AccionesDeUsuarioEnum.VerMedicos,
@@ -47,11 +49,13 @@ public static class PermisoSistema {
 			AccionesDeUsuarioEnum.CrearTurnos,
 			AccionesDeUsuarioEnum.CrearMedicos,
 			AccionesDeUsuarioEnum.CrearHorarios,
+			AccionesDeUsuarioEnum.CrearUsuarios,
 
 			AccionesDeUsuarioEnum.CancelarTurno,
 			AccionesDeUsuarioEnum.ReprogramarTurno,
 			AccionesDeUsuarioEnum.SolicitarTurno,
 			AccionesDeUsuarioEnum.ModificarHorarios,
+
 
 			AccionesDeUsuarioEnum.ModificarEntidades,
 			AccionesDeUsuarioEnum.VerUsuarios

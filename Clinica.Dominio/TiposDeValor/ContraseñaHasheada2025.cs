@@ -9,9 +9,9 @@ public readonly record struct ContraseñaHasheada2025(string Valor) {
 	private const int MinLength = 6;
 	private const int MaxLength = 64;
 
-	public static Result<ContraseñaHasheada2025> CrearResult(string? hash) {
-		if (string.IsNullOrWhiteSpace(hash))
-			return new Result<ContraseñaHasheada2025>.Error("El hash no puede estar vacío.");
+	public static Result<ContraseñaHasheada2025> CrearResult(string hash) {
+		//if (string.IsNullOrWhiteSpace(hash))
+		//	return new Result<ContraseñaHasheada2025>.Error("El hash no puede estar vacío.");
 
 		if (hash.Length != 64 && hash.Length != 128)
 			return new Result<ContraseñaHasheada2025>.Error("El hash tiene un largo inválido.");

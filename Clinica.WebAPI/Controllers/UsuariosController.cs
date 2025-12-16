@@ -52,7 +52,7 @@ public class UsuariosController(
 	public Task<ActionResult<Unit>> DeleteUsuario(int id)
 		=> this.SafeExecute(
 			logger,
-			AccionesDeUsuarioEnum.EliminarEntidades,
+			AccionesDeUsuarioEnum.EliminarUsuarios,
 			() => repositorio.DeleteUsuarioWhereId(new UsuarioId(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
@@ -60,12 +60,12 @@ public class UsuariosController(
 
 
 	[HttpPut("{id:int}")]
-	public Task<ActionResult<UsuarioDbModel>> UpdateUsuario(int id, [FromBody] UsuarioDto dto)
+	public Task<ActionResult<UsuarioDbModel>> UpdateUsuario(int id, [FromBody] UsuarioEditarDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		AccionesDeUsuarioEnum.ModificarEntidades,
 		dto,
-		x => x.ToDomain(),
+		x => x.ToDomain(), ///here validation or insta return bad request + domain error. requires 
 		usuario => repositorio.UpdateUsuarioWhereId(new UsuarioId(id), usuario),
 		notFoundMessage: $"No existe usuario con id {id}"
 	);
@@ -73,15 +73,18 @@ public class UsuariosController(
 
 
 	[HttpPost]
-	public Task<ActionResult<UsuarioId>> CrearUsuario([FromBody] UsuarioDto dto)
-		=> this.SafeExecuteWithDomain(
-			logger,
-			AccionesDeUsuarioEnum.CrearUsuarios,
-			dto,
-			x => x.ToDomain(),
-			usuario => repositorio.InsertUsuarioReturnId(usuario)
-		);
+	public Task<ActionResult<UsuarioId>> CrearUsuario([FromBody] UsuarioCrearDto dto) {
 
+		Console.WriteLine(dto.ToString());
+
+		return this.SafeExecuteWithDomain(
+				logger,
+				AccionesDeUsuarioEnum.CrearUsuarios,
+				dto,
+				x => x.ToDomain(),
+				usuario => repositorio.InsertUsuarioReturnId(usuario)
+			);
+	}
 
 
 }

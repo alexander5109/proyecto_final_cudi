@@ -5,12 +5,12 @@ namespace Clinica.Dominio.TiposExtensiones;
 
 public static class EnumFactoryExtentions {
 
-	public static Result<TurnoEstadoEnum> CrearResult(this TurnoEstadoEnum codigo) {
-		if (!Enum.IsDefined(typeof(TurnoEstadoEnum), codigo)) {
-			return new Result<TurnoEstadoEnum>.Error($"Valor de TurnoEstadoEnum inválido: {codigo}");
-		}
-		return new Result<TurnoEstadoEnum>.Ok(codigo);
-	}
+	//public static Result<TurnoEstadoEnum> CrearResult(this TurnoEstadoEnum codigo) {
+	//	if (!Enum.IsDefined(typeof(TurnoEstadoEnum), codigo)) {
+	//		return new Result<TurnoEstadoEnum>.Error($"Valor de TurnoEstadoEnum inválido: {codigo}");
+	//	}
+	//	return new Result<TurnoEstadoEnum>.Ok(codigo);
+	//}
 
 	public static Result<TEnum> CrearResult<TEnum>(this TEnum? value)
 		where TEnum : struct, Enum {

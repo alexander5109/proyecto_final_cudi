@@ -31,15 +31,15 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		_original = new UsuarioEdicionSnapshot(
 			Id: original.Id,
 			UserName: original.UserName,
-			PasswordHash: original.PasswordHash,
 			Nombre: original.Nombre,
 			Apellido: original.Apellido,
 			Telefono: original.Telefono,
 			Email: original.Email,
 			EnumRole: original.EnumRole
 		);
+
 		Id = original.Id;
-		UserName = original.UserName;
+		UserName = original.UserName;   // ← OK
 		Nombre = original.Nombre;
 		Apellido = original.Apellido;
 		Telefono = original.Telefono;
@@ -47,6 +47,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		EnumRole = original.EnumRole;
 		NuevaPassword = null;
 	}
+
 
 
 	// ================================================================
@@ -218,6 +219,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	// METHODS.VALIDACION
 	// ================================================================
 	private ResultWpf<Usuario2025Edicion> ToEdicionDomain() {
+		MessageBox.Show($"ToEdicionDomain: {UserName}, {Nombre}, {Apellido}");
 		return Usuario2025Edicion.CrearResult(
 			UserName2025.CrearResult(UserName),
 			NombreCompleto2025.CrearResult(Nombre, Apellido),
@@ -228,6 +230,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		).ToWpf(MessageBoxImage.Information);
 	}
 	private ResultWpf<Usuario2025> ToCreacionDomain() {
+		MessageBox.Show($"ToCreacionDomain: {UserName}, {Nombre}, {Apellido}, {EnumRole}");
 		return Usuario2025.CrearResult(
 			UserName2025.CrearResult(UserName),
 			NombreCompleto2025.CrearResult(Nombre, Apellido),
@@ -269,13 +272,13 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 internal record UsuarioEdicionSnapshot(
 	UsuarioId Id,
 	string UserName,
-	string PasswordHash,
+	//string PasswordHash,
 	string Nombre,
 	string Apellido,
 	string Telefono,
 	string Email,
 	UsuarioRoleEnum EnumRole
 ) {
-	public UsuarioEdicionSnapshot() : this(default, "", "", "", "", "", "", default) { }
+	public UsuarioEdicionSnapshot() : this(default, "", "", "", "", "", default) { }
 }
 
