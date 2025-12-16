@@ -25,7 +25,7 @@ public static class RepoCache {
 }
 
 
- public class WPFRepositorio(ApiHelper Api) : IWPFRepositorio {
+public class WPFRepositorio(ApiHelper Api) : IWPFRepositorio {
 
 
 
@@ -342,12 +342,15 @@ public static class RepoCache {
 	}
 
 	async Task<ResultWpf<UnitWpf>> IWPFRepositorioUsuarios.UpdateUsuarioWhereId(
-		Usuario2025Agg aggrg
+		Usuario2025EdicionAgg aggrg
 	) {
 		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			httpCall: () => Api.Cliente.PutAsJsonAsync(
 				$"api/usuarios/{aggrg.Id.Valor}",
-				aggrg.ToModel()
+				new UsuarioDbModel(
+
+
+					)
 			),
 			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error actualizando usuario {aggrg.Id.Valor}"

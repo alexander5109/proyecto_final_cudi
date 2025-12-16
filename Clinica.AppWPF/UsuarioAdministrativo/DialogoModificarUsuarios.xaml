@@ -69,12 +69,11 @@
 			<StackPanel
 				Margin="0,5">
 				<Label
-					Content="Contraseña" />
+					Content="Nueva contraseña?" />
 				<TextBox
 					Height="30"
 					MaxLength="50"
-					IsEnabled="{Binding PuedeEscribirContraseña}"
-					Text="{Binding PasswordHash}"
+					Text="{Binding NuevaPassword}"
 					Style="{StaticResource TextBoxLindo2}" />
 			</StackPanel>
 			<!-- DNI -->

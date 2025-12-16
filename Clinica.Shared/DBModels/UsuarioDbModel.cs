@@ -11,6 +11,31 @@ namespace Clinica.Shared.DbModels;
 public static partial class DbModels {
 
 
+	public sealed record UsuarioPersistido(
+		UsuarioId Id,
+		UserName2025 UserName,
+		ContraseñaHasheada2025 Password,
+		NombreCompleto2025 Nombre,
+		UsuarioRoleEnum Role,
+		Email2025 Email,
+		Telefono2025 Telefono
+	) {
+		public UsuarioPersistido Aplicar(Usuario2025Edicion edicion) {
+			return this with {
+				UserName = edicion.UserName,
+				Nombre = edicion.NombreCompleto,
+				Role = edicion.EnumRole,
+				Email = edicion.Email,
+				Telefono = edicion.Telefono,
+				Password = edicion.NuevaContraseña ?? this.Password
+			};
+		}
+
+
+	}
+
+
+
 	public sealed record UsuarioAutenticadoDbModel(
 		UsuarioId Id,
 		string UserName,
@@ -21,7 +46,7 @@ public static partial class DbModels {
 	public record UsuarioDbModel(
 		UsuarioId Id,
 		string UserName,
-		string PasswordHash,
+		string? PasswordHash,
 		string Nombre,
 		string Apellido,
 		string Telefono,
@@ -36,6 +61,18 @@ public static partial class DbModels {
 			aggrg.Id,
 			aggrg.Usuario.UserName.Valor,
 			aggrg.Usuario.PasswordHash.Valor,
+			aggrg.Usuario.NombreCompleto.NombreValor,
+			aggrg.Usuario.NombreCompleto.ApellidoValor,
+			aggrg.Usuario.Telefono.Valor,
+			aggrg.Usuario.Email.Valor,
+			aggrg.Usuario.EnumRole
+		);
+	}
+	public static UsuarioDbModel ToModel(this Usuario2025EdicionAgg aggrg) {
+		return new UsuarioDbModel(
+			aggrg.Id,
+			aggrg.Usuario.UserName.Valor,
+			aggrg.Usuario.NuevaContraseña?.Valor,
 			aggrg.Usuario.NombreCompleto.NombreValor,
 			aggrg.Usuario.NombreCompleto.ApellidoValor,
 			aggrg.Usuario.Telefono.Valor,

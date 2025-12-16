@@ -400,7 +400,7 @@ public class NodoDiaSemanaViewModel(DayOfWeek dia, List<HorarioDbModel> horarios
 	public string DiaSemanaNombre { get; } = dia.ATexto();
 	public ObservableCollection<NodoFranjaHorariaViewModel> Horarios { get; } = new ObservableCollection<NodoFranjaHorariaViewModel>(
 			horarios.Select(h => {
-				var vm = new NodoFranjaHorariaViewModel(h) {
+                NodoFranjaHorariaViewModel vm = new NodoFranjaHorariaViewModel(h) {
 					OnEdited = onHorarioEditado
 				};
 				return vm;

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using Clinica.AppWPF.CommonViewModels;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.UsuarioSuperadmin;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
@@ -39,12 +40,12 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		);
 		Id = original.Id;
 		UserName = original.UserName;
-		PasswordHash = original.PasswordHash;
 		Nombre = original.Nombre;
 		Apellido = original.Apellido;
 		Telefono = original.Telefono;
 		Email = original.Email;
 		EnumRole = original.EnumRole;
+		NuevaPassword = null;
 	}
 
 
@@ -84,14 +85,13 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		}
 	}
 
-	private string _passwordHash = "";
-	public string PasswordHash {
-		get => _passwordHash;
+	private string? _nuevaPassword;
+	public string? NuevaPassword {
+		get => _nuevaPassword;
 		set {
-			_passwordHash = value;
-			OnPropertyChanged(nameof(PasswordHash));
+			_nuevaPassword = value;
+			OnPropertyChanged(nameof(NuevaPassword));
 			OnPropertyChanged(nameof(TieneCambios));
-			OnPropertyChanged(nameof(PuedeGuardarCambios));
 		}
 	}
 
@@ -156,7 +156,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 
 	public bool TieneCambios => (
 		_original.UserName != UserName ||
-		_original.PasswordHash != PasswordHash ||
+		!string.IsNullOrWhiteSpace(NuevaPassword) || // 👈 clave
 		_original.Nombre != Nombre ||
 		_original.Apellido != Apellido ||
 		_original.Telefono != Telefono ||
@@ -164,54 +164,89 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		_original.EnumRole != EnumRole
 	);
 
-	// -----------------------------
-	// METHODS
-	// -----------------------------
 
+	// -----------------------------
+	// METHODS.PERSISTENCIA
+	// -----------------------------
 	public async Task<ResultWpf<UnitWpf>> GuardarAsync() {
 		if (!PuedeGuardarCambios)
-			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information));
-
-		return await this.ToDomain()
-			.Bind(usuario => EstaEditando
-				? GuardarEdicionAsync(usuario)
-				: GuardarCreacionAsync(usuario)
+			return new ResultWpf<UnitWpf>.Error(
+				new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information)
 			);
+		return EstaEditando
+			? await GuardarEdicionAsync()
+			: await GuardarCreacionAsync();
 	}
-	private async Task<ResultWpf<UnitWpf>> GuardarEdicionAsync(Usuario2025 usuario) {
-		if (Id is UsuarioId idNotNull) {
-			Usuario2025Agg agg = new(idNotNull, usuario);
-			return await App.Repositorio.UpdateUsuarioWhereId(agg);
-		} else {
-			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No se puede guardar, la entidad no tiene UsuarioId.", MessageBoxImage.Information));
-		}
-	}
-	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync(Usuario2025 usuario) {
-		return (await App.Repositorio.InsertUsuarioReturnId(usuario))
-			.MatchTo(
-				ok => {
-					Id = ok;
-					OnPropertyChanged(nameof(Id));
-					OnPropertyChanged(nameof(EstaCreando));
-					OnPropertyChanged(nameof(EstaEditando));
-					OnPropertyChanged(nameof(PuedeEliminar));
-					return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
-				},
-				error => new ResultWpf<UnitWpf>.Error(error)
+	private async Task<ResultWpf<UnitWpf>> GuardarEdicionAsync() {
+		if (Id is not UsuarioId id)
+			return new ResultWpf<UnitWpf>.Error(
+				new ErrorInfo(
+					"No se puede guardar, la entidad no tiene UsuarioId.",
+					MessageBoxImage.Information
+				)
 			);
+
+		return await ToEdicionDomain()
+			.Bind(edicion => {
+				var agg = Usuario2025EdicionAgg.Crear(id, edicion);
+				return App.Repositorio.UpdateUsuarioWhereId(agg);
+			});
 	}
 
 
-	private ResultWpf<Usuario2025> ToDomain() {
-		return Usuario2025.CrearResult(
+
+	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync() {
+		return await ToCreacionDomain()
+			.Bind(async usuario => {
+				var result = await App.Repositorio.InsertUsuarioReturnId(usuario);
+
+				return result.MatchTo(
+					ok => {
+						Id = ok;
+						OnPropertyChanged(nameof(Id));
+						return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
+					},
+					error => new ResultWpf<UnitWpf>.Error(error)
+				);
+			});
+	}
+
+
+
+
+	// ================================================================
+	// METHODS.VALIDACION
+	// ================================================================
+	private ResultWpf<Usuario2025Edicion> ToEdicionDomain() {
+		return Usuario2025Edicion.CrearResult(
 			UserName2025.CrearResult(UserName),
 			NombreCompleto2025.CrearResult(Nombre, Apellido),
-			ContraseñaHasheada2025.CrearResult(PasswordHash),
+			CrearNuevaPasswordSiCorresponde(),
 			EnumRole.CrearResult(),
 			Email2025.CrearResult(Email),
 			Telefono2025.CrearResult(Telefono)
 		).ToWpf(MessageBoxImage.Information);
 	}
+	private ResultWpf<Usuario2025> ToCreacionDomain() {
+		return Usuario2025.CrearResult(
+			UserName2025.CrearResult(UserName),
+			NombreCompleto2025.CrearResult(Nombre, Apellido),
+			ContraseñaHasheada2025.CrearResultFromRaw(NuevaPassword!), // obligatoria
+			EnumRole.CrearResult(),
+			Email2025.CrearResult(Email),
+			Telefono2025.CrearResult(Telefono)
+		).ToWpf(MessageBoxImage.Information);
+	}
+
+	private Result<ContraseñaHasheada2025?> CrearNuevaPasswordSiCorresponde() {
+		if (string.IsNullOrWhiteSpace(NuevaPassword))
+			return new Result<ContraseñaHasheada2025?>.Ok(null);
+
+		return ContraseñaHasheada2025
+			.CrearResultFromRaw(NuevaPassword)
+			.Map(p => (ContraseñaHasheada2025?)p);
+	}
+
 
 
 	// ================================================================

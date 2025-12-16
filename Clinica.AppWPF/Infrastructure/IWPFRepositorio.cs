@@ -33,7 +33,7 @@ public static class IWPFRepositorioInterfaces {
 	public interface IWPFRepositorioUsuarios {
 		Task<ResultWpf<UnitWpf>> DeleteUsuarioWhereId(UsuarioId id);
 		Task<ResultWpf<UsuarioId>> InsertUsuarioReturnId(Usuario2025 instance);
-		Task<ResultWpf<UnitWpf>> UpdateUsuarioWhereId(Usuario2025Agg instance);
+		Task<ResultWpf<UnitWpf>> UpdateUsuarioWhereId(Usuario2025EdicionAgg instance);
 		Task<List<UsuarioDbModel>> SelectUsuarios();
 		Task<UsuarioDbModel?> SelectUsuarioProfileWhereUsername(string username);
 		Task<IReadOnlyCollection<AccionesDeUsuarioEnum>> SelectAccionesDeUsuarioWhereEnumRole(UsuarioRoleEnum enumRole);
