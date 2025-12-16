@@ -7,8 +7,6 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Shared.DbModels;
 
 public static partial class DbModels {
-
-
 	public sealed record UsuarioPersistido(
 		UsuarioId Id,
 		UserName2025 UserName,

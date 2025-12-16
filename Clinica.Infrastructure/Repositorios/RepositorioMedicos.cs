@@ -34,11 +34,11 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 	//	});
 
 	Task<Result<MedicoId>> IRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance)
-		=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<MedicoId>(
 			"sp_InsertMedicoReturnId",
 			instance.ToDto(),
 			commandType: CommandType.StoredProcedure
-		)).MapAsync(newId => MedicoId.Crear(newId));
+		));
 
 
 

@@ -16,11 +16,11 @@ public class RepositorioTurnos(SQLServerConnectionFactory factory) : Repositorio
 
 
 	Task<Result<TurnoId>> IRepositorioTurnos.InsertTurnoReturnId(Turno2025 instance)
-		=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<TurnoId>(
 			"sp_InsertTurnoReturnId",
 			instance.ToDto(),
 			commandType: CommandType.StoredProcedure
-		)).MapAsync(newId => TurnoId.Crear(newId));
+		));
 
 
 

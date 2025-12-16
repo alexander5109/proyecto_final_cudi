@@ -1,16 +1,9 @@
 using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
+using static Clinica.Shared.DBModels.DbModels;
 
 namespace Clinica.AppWPF.Infrastructure.IRepositorios;
 
-public record AtencionDbModel(
-	AtencionId Id,
-	TurnoId TurnoId,
-	PacienteId PacienteId,
-	MedicoId MedicoId,
-	DateTime FechaHora,
-	string Observaciones
-);
 
 
 public interface IRepositorioAtencionesWPF {

@@ -87,11 +87,11 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 
 
 	Task<Result<UsuarioId>> IRepositorioUsuarios.InsertUsuarioReturnId(Usuario2025 instance)
-		=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<UsuarioId>(
 			"sp_InsertUsuarioReturnId",
 			instance.ToDto(),
 			commandType: CommandType.StoredProcedure
-		)).MapAsync(newId => UsuarioId.Crear(newId));
+		));
 
 
 
