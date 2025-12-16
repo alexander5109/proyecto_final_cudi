@@ -8,10 +8,7 @@ public record struct HorarioId(int Valor) {
 		? new Result<HorarioId>.Ok(idGood)
 		: new Result<HorarioId>.Error("El id no puede ser nulo o negativo.");
 
-	public static Result<HorarioId> Crear(int? id) =>
-		id is int idGood
-		? new Result<HorarioId>.Ok(new HorarioId(idGood))
-		: new Result<HorarioId>.Error("El id no puede ser nulo.");
+	public static HorarioId Crear(int id) => new(id);
 	public static bool TryParse(string? s, out HorarioId id) {
 		if (int.TryParse(s, out int value)) {
 			id = new HorarioId(value);

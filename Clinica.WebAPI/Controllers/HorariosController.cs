@@ -28,7 +28,7 @@ public class HorariosController(
 			logger,
 			AccionesDeUsuarioEnum.ModificarHorarios,
 			franjasDto,
-			x => HorariosMedicos2026Agg.CrearResult(new MedicoId(medicoId), franjasDto),
+			x => HorariosMedicos2026Agg.CrearResult(MedicoId.Crear(medicoId), franjasDto),
 			agg => repositorio.UpsertHorariosWhereMedicoId(agg)
 		);
 
@@ -109,7 +109,7 @@ public class HorariosController(
 	//	=> this.SafeExecute(
 	//		logger,
 	//		AccionesDeUsuarioEnum.VerHorarios,
-	//		() => repositorio.SelectHorariosWhereMedicoId(new MedicoId(medicoId)),
+	//		() => repositorio.SelectHorariosWhereMedicoId(MedicoId.Crear(medicoId)),
 	//		notFoundMessage: $"No existen horarios para el médico {medicoId}"
 	//	);
 
@@ -120,7 +120,7 @@ public class HorariosController(
 	//	=> this.SafeExecute(
 	//		logger,
 	//		AccionesDeUsuarioEnum.EliminarEntidades,
-	//		() => repositorio.DeleteHorariosWhereMedicoId(new MedicoId(medicoId)),
+	//		() => repositorio.DeleteHorariosWhereMedicoId(MedicoId.Crear(medicoId)),
 	//		notFoundMessage: $"No existen horarios para el médico {medicoId}"
 	//	);
 

@@ -21,7 +21,7 @@ public abstract class RepositorioBase(SQLServerConnectionFactory factory) {
 			"sp_InsertTurnoReturnId",
 			instance.ToDto(),
 			commandType: CommandType.StoredProcedure
-		)).MapAsync(newId => new TurnoId(newId));
+		)).MapAsync(newId => TurnoId.Crear(newId));
 
 
 

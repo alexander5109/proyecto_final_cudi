@@ -10,7 +10,7 @@ public class TurnoIdHandler : SqlMapper.TypeHandler<TurnoId> {
 	}
 
 	public override TurnoId Parse(object value) {
-		return new TurnoId(Convert.ToInt32(value)); // read from DB as int
+		return TurnoId.Crear(Convert.ToInt32(value)); // read from DB as int
 	}
 }
 
@@ -19,7 +19,7 @@ public class MedicoIdHandler : SqlMapper.TypeHandler<MedicoId> {
 		parameter.Value = value.Valor; // store as int in DB
 	}
 	public override MedicoId Parse(object value) {
-		return new MedicoId(Convert.ToInt32(value)); // read from DB as int
+		return MedicoId.Crear(Convert.ToInt32(value)); // read from DB as int
 	}
 }
 
@@ -28,7 +28,7 @@ public class HorarioIdHandler : SqlMapper.TypeHandler<HorarioId> {
 		parameter.Value = value.Valor; // store as int in DB
 	}
 	public override HorarioId Parse(object value) {
-		return new HorarioId(Convert.ToInt32(value)); // read from DB as int
+		return HorarioId.Crear(Convert.ToInt32(value)); // read from DB as int
 	}
 }
 
@@ -38,7 +38,7 @@ public class PacienteIdHandler : SqlMapper.TypeHandler<PacienteId> {
 	}
 
 	public override PacienteId Parse(object value) {
-		return new PacienteId(Convert.ToInt32(value)); // read from DB as int
+		return PacienteId.Crear(Convert.ToInt32(value)); // read from DB as int
 	}
 }
 
@@ -50,7 +50,7 @@ public class UsuarioIdHandler : SqlMapper.TypeHandler<UsuarioId> {
 	}
 
 	public override UsuarioId Parse(object value) {
-		return new UsuarioId(Convert.ToInt32(value)); // read from DB as int
+		return UsuarioId.Crear(Convert.ToInt32(value)); // read from DB as int
 	}
 }
 

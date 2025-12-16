@@ -38,7 +38,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 			"sp_InsertMedicoReturnId",
 			instance.ToDto(),
 			commandType: CommandType.StoredProcedure
-		)).MapAsync(newId => new MedicoId(newId));
+		)).MapAsync(newId => MedicoId.Crear(newId));
 
 
 

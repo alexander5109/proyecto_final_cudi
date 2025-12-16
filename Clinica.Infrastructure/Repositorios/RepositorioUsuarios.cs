@@ -91,7 +91,7 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 			"sp_InsertUsuarioReturnId",
 			instance.ToDto(),
 			commandType: CommandType.StoredProcedure
-		)).MapAsync(newId => new UsuarioId(newId));
+		)).MapAsync(newId => UsuarioId.Crear(newId));
 
 
 

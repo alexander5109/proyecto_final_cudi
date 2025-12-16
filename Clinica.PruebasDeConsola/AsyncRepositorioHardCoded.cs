@@ -30,7 +30,7 @@ public static class AsyncRepositorioHardCoded {
 				Email2025.CrearResult("carlosmerkeir@gmail.com"),
 				//ListaHorarioMedicos2025.CrearResult([
 				//	Horario2025.Crear(
-				//		new MedicoId(2341456),
+				//		MedicoId.Crear(2341456),
 				//		DayOfWeek.Monday,
 				//		new TimeOnly(09,00),
 				//		new TimeOnly(15,00),
@@ -38,7 +38,7 @@ public static class AsyncRepositorioHardCoded {
 				//		new DateOnly(2026, 1, 1)
 				//	),
 				//	Horario2025.Crear(
-				//		new MedicoId(2311056),
+				//		MedicoId.Crear(2311056),
 				//		DayOfWeek.Wednesday,
 				//		new TimeOnly(09,00),
 				//		new TimeOnly(15,00),
@@ -73,7 +73,7 @@ public static class AsyncRepositorioHardCoded {
 				Email2025.CrearResult("jorgepereiyra@gmail.com"),
 				//ListaHorarioMedicos2025.CrearResult([
 				//	Horario2025.Crear(
-				//		new MedicoId(231156),
+				//		MedicoId.Crear(231156),
 				//		DayOfWeek.Tuesday,
 				//		new TimeOnly(08, 0),
 				//		new TimeOnly(18, 00),
@@ -81,7 +81,7 @@ public static class AsyncRepositorioHardCoded {
 				//		new DateOnly(2026, 1, 12)
 				//	),
 				//	Horario2025.Crear(
-				//		new MedicoId(23156),
+				//		MedicoId.Crear(23156),
 				//		DayOfWeek.Thursday,
 				//		new TimeOnly(08,00),
 				//		new TimeOnly(18,0),
@@ -115,7 +115,7 @@ public static class AsyncRepositorioHardCoded {
 				Email2025.CrearResult("martaalgerich@gmail.com"),
 				//ListaHorarioMedicos2025.CrearResult([
 				//	Horario2025.Crear(
-				//		new MedicoId(156),
+				//		MedicoId.Crear(156),
 				//		DayOfWeek.Monday,
 				//		new TimeOnly(08,00),
 				//		new TimeOnly(12,00),
@@ -123,7 +123,7 @@ public static class AsyncRepositorioHardCoded {
 				//		new DateOnly(2024, 1, 12)
 				//	),
 				//	Horario2025.Crear(
-				//		new MedicoId(1256),
+				//		MedicoId.Crear(1256),
 				//		DayOfWeek.Wednesday,
 				//		new TimeOnly(08,00),
 				//		new TimeOnly(12,00),
@@ -131,7 +131,7 @@ public static class AsyncRepositorioHardCoded {
 				//		new DateOnly(2024, 1, 12)
 				//	),
 				//	Horario2025.Crear(
-				//		new MedicoId(12756),
+				//		MedicoId.Crear(12756),
 				//		DayOfWeek.Friday,
 				//		new TimeOnly(08,00),
 				//		new TimeOnly(12,00),

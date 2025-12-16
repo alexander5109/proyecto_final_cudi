@@ -14,18 +14,18 @@ public static class MainProgram {
 
 
 
-    private static void CifrarContraseña() {
-		string? rawPassword = null;
-		while (string.IsNullOrWhiteSpace(rawPassword)) {
-			Console.Write("Ingrese contraseña directamente: ");
-			rawPassword = Console.ReadLine();
-			if (string.IsNullOrWhiteSpace(rawPassword)) Console.WriteLine("La contraseña no puede estar vacía.\n");
-		}
-		Console.WriteLine($"\nHashed:");
-		Console.WriteLine($"Raw: {rawPassword}\nHashed: {ContraseñaHasheada2025.CrearFromRaw(rawPassword).Valor}");
-		Console.WriteLine("\nPresione ENTER para continuar...");
-		Console.ReadLine();
-	}
+  //  private static void CifrarContraseña() {
+		//string? rawPassword = null;
+		//while (string.IsNullOrWhiteSpace(rawPassword)) {
+		//	Console.Write("Ingrese contraseña directamente: ");
+		//	rawPassword = Console.ReadLine();
+		//	if (string.IsNullOrWhiteSpace(rawPassword)) Console.WriteLine("La contraseña no puede estar vacía.\n");
+		//}
+		//Console.WriteLine($"\nHashed:");
+		//Console.WriteLine($"Raw: {rawPassword}\nHashed: {ContraseñaHasheada2025.CrearResultFromRaw(rawPassword).Valor}");
+	//	Console.WriteLine("\nPresione ENTER para continuar...");
+	//	Console.ReadLine();
+	//}
 
 
 
@@ -75,7 +75,7 @@ public static class MainProgram {
 			DateTime.Now,
 			4,
 			DayOfWeek.Sunday,
-			new MedicoId(1),
+			MedicoId.Crear(1),
 			repositorio
 		));
 		//disponibilidades.PrintAndContinue("Disponbiildiades encontradas::");
@@ -86,7 +86,7 @@ public static class MainProgram {
 
 		// Caso de uso 2
 		//Result<Turno2025> turno = (await servicios.SolicitarTurnoEnLaPrimeraDisponibilidad(
-		//	new PacienteId(1),
+		//	PacienteId.Crear(1),
 		//	Especialidad2025.ClinicoGeneral.Codigo,
 		//	DateTime.Now,
 		//	repositorio

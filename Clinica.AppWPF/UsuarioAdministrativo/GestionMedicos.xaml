@@ -39,7 +39,7 @@
 		<Label
 			Grid.Column="0"
 			Grid.Row="0"
-			Content="Medicos"
+			Content="Personal médico"
 			FontSize="55"
 			FontFamily="Segoe UI Historic"
 			Style="{StaticResource LabelLindoConPiu}"

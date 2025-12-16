@@ -35,7 +35,7 @@ public class PacientesController(
 	//	=> this.SafeExecute(
 	//		logger,
 	//		AccionesDeUsuarioEnum.VerPacientes,
-	//		() => repositorio.SelectPacienteWhereTurnoId(new TurnoId(id)),
+	//		() => repositorio.SelectPacienteWhereTurnoId(TurnoId.Crear(id)),
 	//		notFoundMessage: $"No existe paciente con id {id}"
 	//	);
 
@@ -70,7 +70,7 @@ public class PacientesController(
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.VerPacientes,
-			() => repositorio.SelectPacienteWhereId(new PacienteId(id)),
+			() => repositorio.SelectPacienteWhereId(PacienteId.Crear(id)),
 			notFoundMessage: $"No existe paciente con id {id}"
 		);
 
@@ -82,7 +82,7 @@ public class PacientesController(
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.VerTurnos,
-			() => repositorio.SelectTurnosWherePacienteId(new PacienteId(id)),
+			() => repositorio.SelectTurnosWherePacienteId(PacienteId.Crear(id)),
 			notFoundMessage: $"No existen turnos con pacienteid {id}"
 		);
 
@@ -93,7 +93,7 @@ public class PacientesController(
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.EliminarEntidades,
-			() => repositorio.DeletePacienteWhereId(new PacienteId(id)),
+			() => repositorio.DeletePacienteWhereId(PacienteId.Crear(id)),
 			notFoundMessage: $"No existe paciente con id {id}"
 		);
 
@@ -106,7 +106,7 @@ public class PacientesController(
 		AccionesDeUsuarioEnum.ModificarPacientes,
 		dto,
 		x => x.ToDomain(),
-		paciente => repositorio.UpdatePacienteWhereId(new PacienteId(id), paciente),
+		paciente => repositorio.UpdatePacienteWhereId(PacienteId.Crear(id), paciente),
 		notFoundMessage: $"No existe paciente con id {id}"
 	);
 

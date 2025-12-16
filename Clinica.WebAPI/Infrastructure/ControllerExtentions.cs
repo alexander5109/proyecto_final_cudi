@@ -102,7 +102,7 @@ public static class ControllerExtensions {
 		if (!int.TryParse(idStr, out int id))
 			return false;
 
-		usuarioId = new UsuarioId(id);
+		usuarioId = UsuarioId.Crear(id);
 		return true;
 	}
 
