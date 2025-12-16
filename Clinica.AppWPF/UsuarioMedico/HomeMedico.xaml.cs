@@ -22,6 +22,5 @@ public partial class HomeMedico : Window {
 	// ==========================================================
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 	private void ClickBoton_Logout(object sender, RoutedEventArgs e) => this.CerrarSesion();
-	private void ClickBoton_MisPacientes(object sender, RoutedEventArgs e) => this.NavegarA<MedicoMisPacientes>();
-    private void MetodoMisTurnos(object sender, RoutedEventArgs e) => this.NavegarA<SecretariaTurnos>();
+    private void ClickBoton_AtencionDelDia(object sender, RoutedEventArgs e) => this.NavegarA<MedicoAtencionDelDia>();
 }

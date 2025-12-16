@@ -50,7 +50,7 @@
 					Style="{StaticResource BotonRedondeadoCeleste}"
 					FontWeight="Bold"
 					BorderBrush="#FF0E0D0D"
-					Click="ClickBoton_MisPacientes"
+					Click="ClickBoton_AtencionDelDia"
 					Margin="7,7,7,7"
 					Foreground="White" />
 			</StackPanel>

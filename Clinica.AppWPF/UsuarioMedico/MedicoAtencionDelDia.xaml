@@ -14,13 +14,13 @@
 	</Window.Background>
 	<!-- ===================== LAYOUT GENERAL ===================== -->
 	<Grid
-		Margin="15">
+		Margin="25">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition
 				Width="*" />
 			<!-- Columna izquierda: turnos + botón -->
 			<ColumnDefinition
-				Width="2*" />
+				Width="*" />
 			<!-- Columna derecha: paciente + historial + diagnóstico -->
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
@@ -86,7 +86,11 @@
 						<GridViewColumn
 							Header="Paciente"
 							Width="155"
-							DisplayMemberBinding="{Binding NombrePaciente}" />
+							DisplayMemberBinding="{Binding PacienteNombreApellido}" />
+						<GridViewColumn
+							Header="PacienteEdad"
+							Width="155"
+							DisplayMemberBinding="{Binding PacienteEdad}" />
 						<GridViewColumn
 							Header="Atendido"
 							Width="55"
@@ -152,7 +156,7 @@
 				</Grid.RowDefinitions>
 				<Label
 					Grid.Row="0"
-					Content="Historial de consultas"
+					Content="Historial de consultas en su especialidad"
 					FontSize="20"
 					Style="{StaticResource LabelLindoConTextoSombra}"
 					HorizontalAlignment="Center"
@@ -170,28 +174,13 @@
 								Width="80"
 								DisplayMemberBinding="{Binding Fecha}" />
 							<GridViewColumn
-								Header="Desde Hs"
+								Header="Medico"
 								Width="70"
-								DisplayMemberBinding="{Binding HoraDesde}" />
+								DisplayMemberBinding="{Binding Medico}" />
 							<GridViewColumn
-								Header="Hasta Hs"
+								Header="Observaciones"
 								Width="70"
-								DisplayMemberBinding="{Binding HoraHasta}" />
-							<GridViewColumn
-								Header="Vigencia"
-								Width="165">
-								<GridViewColumn.CellTemplate>
-									<DataTemplate>
-										<TextBlock>
-                                            <Run
-												Text="{Binding VigenteDesde, StringFormat={}{0:dd/MM/yyyy}}" />
-                                            <Run
-												Text=" → " />
-                                            <Run
-												Text="{Binding VigenteHasta, TargetNullValue=Indefinido, StringFormat={}{0:dd/MM/yyyy}}" /></TextBlock>
-									</DataTemplate>
-								</GridViewColumn.CellTemplate>
-							</GridViewColumn>
+								DisplayMemberBinding="{Binding Observaciones}" />
 						</GridView>
 					</ListView.View>
 				</ListView>
