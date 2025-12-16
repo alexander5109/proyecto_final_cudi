@@ -3,6 +3,7 @@ using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
+using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
 using static Clinica.Shared.DbModels.DbModels;
 
 namespace Clinica.AppWPF.Infrastructure;
@@ -24,17 +25,21 @@ public static class IWPFRepositorioInterfaces {
 		IWPFRepositorioHorarios,
 		IWPFRepositorioUsuarios {
 
-		Task RefreshMedicos();
-		Task RefreshPacientes();
-		Task RefreshUsuarios();
-		Task RefreshHorarios();
+		//Task RefreshMedicos();
+		//Task RefreshPacientes();
+		//Task RefreshUsuarios();
+		//Task RefreshHorarios();
     }
 	public interface IWPFRepositorioUsuarios {
 		Task<ResultWpf<UnitWpf>> DeleteUsuarioWhereId(UsuarioId id);
 		Task<ResultWpf<UsuarioId>> InsertUsuarioReturnId(Usuario2025 instance);
-		Task<ResultWpf<UnitWpf>> UpdateUsuarioWhereId(Usuario2025Agg instance);
+		Task<ResultWpf<UnitWpf>> UpdateUsuarioWhereId(Usuario2025EdicionAgg instance);
 		Task<List<UsuarioDbModel>> SelectUsuarios();
 		Task<UsuarioDbModel?> SelectUsuarioProfileWhereUsername(string username);
+		Task<IReadOnlyCollection<AccionesDeUsuarioEnum>> SelectAccionesDeUsuarioWhereEnumRole(UsuarioRoleEnum enumRole);
+		Task<IReadOnlyCollection<AccionesDeUsuarioEnum>> SelectAccionesDeUsuario();
+
+
 	}
 
 
@@ -61,12 +66,7 @@ public static class IWPFRepositorioInterfaces {
 	}
 
 	public interface IWPFRepositorioDominio {
-		Task<List<Disponibilidad2025>> SelectDisponibilidades(
-			EspecialidadEnum especialidad,
-			int cuantos,
-			DateTime apartirDeCuando,
-			DayOfWeek? diaSemanaPreferido
-		);
+		Task<List<Disponibilidad2025>> SelectDisponibilidades(SolicitarDisponibilidadesDto solicitud);
 
 	}
 

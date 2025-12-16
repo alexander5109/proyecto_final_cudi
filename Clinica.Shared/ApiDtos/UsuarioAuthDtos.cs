@@ -10,11 +10,24 @@ public static class UsuarioAuthDtos {
 
 
 
+	// ==========================================================
+	// LOGIN
+	// ==========================================================
+
 	public record UsuarioLoginResponseDto(
 		string Username,
 		UsuarioRoleEnum EnumRole,
 		string Token
 	);
+	public record UsuarioLoginRequestDto(
+		string Username,
+		string UserPassword
+	);
+
+
+	// ==========================================================
+	// SIGNUP
+	// ==========================================================
 	public record UsuarioSignUpDto(
 		string UserName,
 		string Nombre,
@@ -26,12 +39,39 @@ public static class UsuarioAuthDtos {
 	);
 
 
-	public record UsuarioLoginRequestDto(
-		string Username,
-		string UserPassword
-	);
+	// ==========================================================
+	// EDITAR USUARIO
+	// ==========================================================
 
-	public record UsuarioDto(
+	public record UsuarioEditarDto(
+		string UserName,
+		string Nombre,
+		string Apellido,
+		string? NuevaPassword, // 👈 opcional
+		UsuarioRoleEnum EnumRole,
+		string Email,
+		string Telefono
+	);
+	public static Result<Usuario2025Edicion> ToDomain(this UsuarioEditarDto dto) {
+		Result<ContraseñaHasheada2025?> contraseña =
+			string.IsNullOrWhiteSpace(dto.NuevaPassword)
+				? new Result<ContraseñaHasheada2025?>.Ok(null)
+				: ContraseñaHasheada2025
+					.CrearResultFromRaw(dto.NuevaPassword)
+					.Map(x => (ContraseñaHasheada2025?)x);
+		return Usuario2025Edicion.CrearResult(
+			UserName2025.CrearResult(dto.UserName),
+			NombreCompleto2025.CrearResult(dto.Nombre, dto.Apellido),
+			contraseña,
+			dto.EnumRole.CrearResult(),
+			Email2025.CrearResult(dto.Email),
+			Telefono2025.CrearResult(dto.Telefono)
+		);
+	}
+	// ==========================================================
+	// CREAR USUARIO
+	// ==========================================================
+	public record UsuarioCrearDto(
 		string UserName,
 		string Nombre,
 		string Apellido,
@@ -40,11 +80,11 @@ public static class UsuarioAuthDtos {
 		string Email,
 		string Telefono
 	) {
-		public UsuarioDto() : this("", "", "", "", default, "", "") { }
+		public UsuarioCrearDto() : this("", "", "", "", default, "", "") { }
 	}
 
-	public static UsuarioDto ToDto(this Usuario2025 entidad) {
-		return new UsuarioDto(
+	public static UsuarioCrearDto ToDto(this Usuario2025 entidad) {
+		return new UsuarioCrearDto(
 			entidad.UserName.Valor,
 			entidad.NombreCompleto.NombreValor,
 			entidad.NombreCompleto.ApellidoValor,
@@ -55,11 +95,11 @@ public static class UsuarioAuthDtos {
 		);
 	}
 
-	public static Result<Usuario2025> ToDomain(this UsuarioDto dto)
+	public static Result<Usuario2025> ToDomain(this UsuarioCrearDto dto)
 		=> Usuario2025.CrearResult(
-			UserName.CrearResult(dto.UserName),
+			UserName2025.CrearResult(dto.UserName),
 			NombreCompleto2025.CrearResult(dto.Nombre, dto.Apellido),
-			ContraseñaHasheada.CrearResult(dto.PasswordHash),
+			ContraseñaHasheada2025.CrearResult(dto.PasswordHash),
 			dto.EnumRole.CrearResult(),
 			Email2025.CrearResult(dto.Email),
 			Telefono2025.CrearResult(dto.Telefono)

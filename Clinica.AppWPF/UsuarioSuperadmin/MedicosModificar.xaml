@@ -68,6 +68,9 @@
 				Content="Nombre"
 				Grid.Row="0"
 				Grid.Column="0"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				HorizontalAlignment="Right"
 				Width="Auto"
 				VerticalAlignment="Center" />
@@ -81,6 +84,9 @@
 			<Label
 				Content="Apellido"
 				Grid.Row="1"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				Grid.Column="0"
 				HorizontalAlignment="Right"
 				Width="Auto"
@@ -95,6 +101,9 @@
 			<Label
 				Content="DNI"
 				Grid.Row="2"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				Grid.Column="0"
 				HorizontalAlignment="Right"
 				Width="Auto"
@@ -111,6 +120,9 @@
 				Content="Teléfono"
 				Grid.Row="3"
 				Grid.Column="0"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				HorizontalAlignment="Right"
 				Width="Auto"
 				VerticalAlignment="Center" />
@@ -126,6 +138,9 @@
 				Content="Provincia"
 				Grid.Row="4"
 				Grid.Column="0"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				HorizontalAlignment="Right"
 				Width="Auto"
 				VerticalAlignment="Center" />
@@ -140,6 +155,9 @@
 				Content="Domicilio"
 				Grid.Row="5"
 				Grid.Column="0"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				HorizontalAlignment="Right"
 				Width="Auto"
 				VerticalAlignment="Center" />
@@ -154,6 +172,9 @@
 				Content="Localidad"
 				Grid.Row="6"
 				Grid.Column="0"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				HorizontalAlignment="Right"
 				Width="Auto"
 				VerticalAlignment="Center" />
@@ -169,6 +190,9 @@
 				Grid.Row="7"
 				Grid.Column="0"
 				Width="Auto"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				VerticalAlignment="Center"
 				HorizontalAlignment="Right" />
 			<TextBox
@@ -184,6 +208,9 @@
 				Width="Auto"
 				Grid.Column="0"
 				HorizontalContentAlignment="Center"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				HorizontalAlignment="Right"
 				VerticalAlignment="Center" />
 			<TextBox
@@ -197,6 +224,9 @@
 				Grid.Row="9"
 				Grid.Column="0"
 				Width="Auto"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				Height="Auto"
 				HorizontalAlignment="Right"
 				VerticalAlignment="Center" />
@@ -212,6 +242,9 @@
 				Grid.Column="0"
 				Width="Auto"
 				Height="Auto"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				HorizontalAlignment="Right"
 				VerticalAlignment="Center" />
 			<CheckBox
@@ -228,6 +261,9 @@
 				Content="Días de atención"
 				Grid.Row="11"
 				Grid.Column="0"
+				FontSize="14"
+				Foreground="Black"
+				FontWeight="Bold"
 				HorizontalAlignment="Right"
 				Width="Auto"
 				Height="Auto"
@@ -287,7 +323,7 @@
 			FontSize="20"
 			Content="Volver"
 			HorizontalAlignment="Left"
-			Style="{StaticResource BotonRedondeado}"
+			Style="{StaticResource BotonRedondeadoViejo}"
 			Height="43"
 			VerticalAlignment="Top"
 			Width="188"
@@ -304,7 +340,7 @@
 			Height="38"
 			VerticalAlignment="Top"
 			Width="190"
-			Style="{StaticResource BotonRedondeado}"
+			Style="{StaticResource BotonRedondeadoViejo}"
 			BorderBrush="Black"
 			Background="White"
 			FontFamily="Baskerville Old Face"
@@ -317,7 +353,7 @@
 			HorizontalAlignment="Left"
 			Height="38"
 			Margin="65,435,0,0"
-			Style="{StaticResource BotonRedondeado}"
+			Style="{StaticResource BotonRedondeadoViejo}"
 			VerticalAlignment="Top"
 			Width="188"
 			Click="ButtonEliminar"

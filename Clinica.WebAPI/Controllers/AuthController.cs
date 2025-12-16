@@ -33,8 +33,8 @@ public class AuthController(
 		// MatchAndSet → produce IActionResult
 		return result.MatchAndSet<UsuarioAutenticadoDbModel, ActionResult>(
 			ok => {
-				// Login OK → devolver DTO con JWT
-				var responseDto = new UsuarioLoginResponseDto(
+                // Login OK → devolver DTO con JWT
+                UsuarioLoginResponseDto responseDto = new UsuarioLoginResponseDto(
 					ok.UserName,
 					ok.EnumRole,
 					jwtService.EmitirJwt(ok)
@@ -43,8 +43,8 @@ public class AuthController(
 				return Ok(responseDto);
 			},
 			err => {
-				// Login fallido → devolver siempre ApiErrorDto dentro de un envelope
-				var errorDto = new ApiErrorDto(
+                // Login fallido → devolver siempre ApiErrorDto dentro de un envelope
+                ApiErrorDto errorDto = new ApiErrorDto(
 					Title: "Usuario o contraseña incorrectos",
 					Status: HttpStatusCode.Unauthorized
 				);
@@ -121,14 +121,14 @@ public static class ServicioAuth {
 		string passwordRaw,
 		IRepositorioUsuarios repo
 	) {
-		Result<UsuarioDbModel> dbResult = await repo.SelectUsuarioProfileWhereUsername(new UserName(username));
+		Result<UsuarioDbModel> dbResult = await repo.SelectUsuarioProfileWhereUsername(new UserName2025(username));
 
 		if (dbResult.IsError) {
 			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDbModel>();
 		}
 		UsuarioDbModel db = dbResult.UnwrapAsOk();
 		// VALIDAR PASSWORD
-		if (!ContraseñaHasheada.RawIdenticalToHashed(passwordRaw, db.PasswordHash))
+		if (!ContraseñaHasheada2025.RawIdenticalToHashed(passwordRaw, db.PasswordHash))
 			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDbModel>();
 
 		// CONSTRUIR RESULTADO

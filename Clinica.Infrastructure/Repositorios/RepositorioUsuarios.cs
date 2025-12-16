@@ -32,17 +32,14 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 
 
 
-	Task<Result<UsuarioDbModel>> IRepositorioUsuarios.UpdateUsuarioWhereId(
-		UsuarioId id,
-		Usuario2025 instance
-	)
+	Task<Result<UsuarioDbModel>> IRepositorioUsuarios.UpdateUsuarioWhereId(UsuarioId id,Usuario2025Edicion instance)
 		=> TryAsync(async conn => {
 			// 1) Convertimos solo UNA VEZ
-			UsuarioDbModel dto = instance.ToModel(id);
+			UsuarioDbModel dto = instance.ToModel(id); //need to implement ToModel(dto with Id), or use an anonymous object
 
 			// 2) Ejecutamos el SP que devuelve @@ROWCOUNT
 			int rowsAffected = await conn.ExecuteScalarAsync<int>(
-				"sp_UpdateUsuarioWhereId",
+				"sp_UpdateUsuarioCoalescePassWhereId",
 				dto,
 				commandType: CommandType.StoredProcedure
 			);
@@ -72,17 +69,17 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 	Task<Result<IEnumerable<UsuarioDbModel>>> IRepositorioUsuarios.SelectUsuarios()
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<UsuarioDbModel>(
-				"sp_SelectUsuarios",
+				"sp_SelectUsuariosFull",
 				commandType: CommandType.StoredProcedure
 			);
 		});
 
-	Task<Result<UsuarioDbModel>> IRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName nombre)
+	Task<Result<UsuarioDbModel>> IRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName2025 nombre)
 		=> TryAsync(async conn => await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
 				"sp_SelectUsuarioWhereNombre",
 				new { UserName = nombre.Valor },
 				commandType: CommandType.StoredProcedure
-			) ?? throw new Exception($"Usuario con UserName={nombre.Valor} no encontrado.")
+			) ?? throw new Exception($"Usuario con UserName2025={nombre.Valor} no encontrado.")
 		);
 
 

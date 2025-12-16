@@ -15,6 +15,7 @@ public interface IServiciosDeDominio {
 		DateTime aPartirDeCuando, 
 		int cuantos,
 		DayOfWeek? diaSemanaPreferido,
+		MedicoId? medicoPreferido,
 		IRepositorioDominioServices repositorio
 	);
 	Task<Result<Turno2025Agg>> PersistirProgramarTurnoAsync(PacienteId pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad, IRepositorioDominioServices repositorio);
@@ -24,3 +25,4 @@ public interface IServiciosDeDominio {
 	Task<Result<Turno2025>> PersistirComoAusenteAsync(TurnoId turnoOriginalId, DateTime outcomeFecha, string? outcomeComentario, IRepositorioDominioServices repositorio);
 	Task<Result<Turno2025>> PersistirComoConcretadoAsync(TurnoId turnoOriginalId, DateTime outcomeFecha, string? outcomeComentario, IRepositorioDominioServices repositorio);
 }
+		

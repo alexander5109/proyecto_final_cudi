@@ -12,6 +12,10 @@
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 	WindowStartupLocation="CenterScreen"
 	Padding="10,10,10,10">
+	<Window.Background>
+		<ImageBrush
+			ImageSource="pack://application:,,,/PublishedResources/images/falopa.jpg" />
+	</Window.Background>
 	<Grid
 		Width="801">
 		<Label
@@ -74,7 +78,7 @@
 		<Button
 			FontSize="20"
 			Content="Volver"
-			Style="{StaticResource BotonRedondeado}"
+			Style="{StaticResource BotonRedondeadoViejo}"
 			HorizontalAlignment="Left"
 			Height="38"
 			VerticalAlignment="Top"
@@ -92,14 +96,14 @@
 			HorizontalAlignment="Left"
 			Height="37"
 			VerticalAlignment="Top"
-			Style="{StaticResource BotonRedondeado}"
+			Style="{StaticResource BotonRedondeadoViejo}"
 			Width="144"
 			FontFamily="Baskerville Old Face"
 			Margin="605,207,0,0"
 			Click="ButtonGuardar" />
 		<Button
 			x:Name="buttonEliminar"
-			Style="{StaticResource BotonRedondeado}"
+			Style="{StaticResource BotonRedondeadoViejo}"
 			FontSize="20"
 			Content="Eliminar turno"
 			HorizontalAlignment="Left"
@@ -182,8 +186,4 @@
 			VerticalContentAlignment="Center"
 			HorizontalContentAlignment="Right" />
 	</Grid>
-	<Window.Background>
-		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images/MedicosFondo.jpg" />
-	</Window.Background>
 </Window>

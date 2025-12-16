@@ -12,13 +12,13 @@
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 	WindowStartupLocation="CenterScreen"
 	Activated="Window_Activated">
+	<Window.Background>
+		<ImageBrush
+			ImageSource="/PublishedResources/images/otroFondo.png" />
+	</Window.Background>
 	<Grid
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch">
-		<Grid.Background>
-			<ImageBrush
-				ImageSource="pack://application:,,,/PublishedResources/images/falopa.jpg" />
-		</Grid.Background>
 		<ContentControl
 			Style="{StaticResource ContentControlGlass}"
 			Margin="512,17,22,180">
@@ -99,7 +99,7 @@
 						Width="150"
 						Click="ButtonAgregarPaciente"
 						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						FontWeight="Bold"
 						BorderBrush="#FF0E0D0D"
 						FontFamily="Baskerville Old Face"
@@ -112,7 +112,7 @@
 						Height="35"
 						Click="ClickBoton_ModificarPaciente"
 						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						FontWeight="Bold"
 						BorderBrush="#FF0E0D0D"
 						FontFamily="Baskerville Old Face"
@@ -130,7 +130,7 @@
 			Width="170"
 			Click="ButtonHome"
 			FontSize="20"
-			Style="{StaticResource BotonRedondeado}"
+			Style="{StaticResource BotonRedondeadoViejo}"
 			FontWeight="Bold"
 			BorderBrush="#FF0E0D0D"
 			Margin="810,446,0,0"
@@ -143,7 +143,7 @@
 			Width="170"
 			Click="ClickBoton_Salir"
 			FontSize="20"
-			Style="{StaticResource BotonRedondeado}"
+			Style="{StaticResource BotonRedondeadoViejo}"
 			FontWeight="Bold"
 			BorderBrush="#FF0E0D0D"
 			Margin="810,501,0,0"
@@ -198,7 +198,7 @@
 						Height="30"
 						Click="ClickBoton_ModificarTurno"
 						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						FontWeight="Bold"
 						BorderBrush="#FF0E0D0D"
 						FontFamily="Baskerville Old Face"
@@ -264,7 +264,7 @@
 						Height="30"
 						Click="ClickBoton_ModificarMedico"
 						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						FontWeight="Bold"
 						BorderBrush="#FF0E0D0D"
 						FontFamily="Baskerville Old Face"

@@ -5,118 +5,219 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioAdministrativo"
-	mc:Ignorable="d"
-	Title="Gestión de Usuarios"
-	Height="620"
-	Width="1157"
+	Title="Clinica Medica - Usuarios"
+	Height="600"
+	Width="1024"
+	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 	WindowStartupLocation="CenterScreen">
-	<!-- ============== FONDO GENERAL ============== -->
 	<Window.Background>
 		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/FondoMedicosLila.jpeg" />
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoVerde2025.jpg" />
 	</Window.Background>
-	<!-- ============== CONTENIDO ============== -->
+	<!-- ===================== LAYOUT GENERAL ===================== -->
 	<Grid
-		Margin="25">
+		Margin="15,15,15,15">
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="Auto" />
+			<!-- Título -->
+			<RowDefinition
+				Height="*" />
+			<!-- Contenido -->
+			<RowDefinition
+				Height="Auto" />
+			<!-- Botones inferiores -->
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="*" />
+			<!-- Búsqueda + lista -->
+			<ColumnDefinition
+				Width="350" />
+			<!-- Estado del turno -->
+		</Grid.ColumnDefinitions>
+		<Label
+			Grid.Column="0"
+			Grid.Row="0"
+			Grid.ColumnSpan="1"
+			Content="Gestión de usuarios"
+			FontSize="55"
+			FontFamily="Segoe UI Historic"
+			Style="{StaticResource LabelLindoConPiu}"
+			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
+			VerticalAlignment="Center"
+			Margin="55,0,55,0"
+			FontWeight="Bold" />
 		<StackPanel
-			Orientation="Vertical"
-			Background="Transparent"
-			HorizontalAlignment="Center"
-			Margin="0,106,0,0">
+			Grid.Row="2"
+			Orientation="Horizontal"
+			HorizontalAlignment="Left"
+			Margin="15,15,15,15"
+			Width="380"
+			VerticalAlignment="Bottom">
+			<Button
+				Content="Home"
+				Width="170"
+				Height="37"
+				Margin="10,0,10,10"
+				Click="ButtonHome"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeadoVerde}" />
+			<Button
+				Content="Salir"
+				Width="170"
+				Height="37"
+				Margin="10,0,10,10"
+				Click="ClickBoton_Salir"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeadoVerde}" />
+		</StackPanel>
+		<Grid
+			Grid.Column="0"
+			Grid.Row="1"
+			Margin="10,15,10,15">
+			<Grid.RowDefinitions>
+				<RowDefinition
+					Height="Auto" />
+				<!-- Título -->
+				<RowDefinition
+					Height="Auto" />
+				<!-- Subtítulo -->
+				<RowDefinition
+					Height="Auto" />
+				<!-- Filtro -->
+				<RowDefinition
+					Height="*" />
+				<!-- LISTVIEW -->
+				<RowDefinition
+					Height="Auto" />
+				<!-- Botones -->
+			</Grid.RowDefinitions>
+			<Label
+				Grid.Row="0"
+				Content="Cuentas"
+				FontSize="25"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalAlignment="Center"
+				FontWeight="Bold" />
+			<Label
+				Grid.Row="1"
+				Content="Filtrar por Nombre, Apellido o Rol"
+				FontFamily="Palatino Linotype"
+				FontWeight="Bold"
+				HorizontalAlignment="Center"
+				Margin="10,10,10,0" />
+			<TextBox
+				Grid.Row="2"
+				Text="{Binding FiltroUsuariosTexto, UpdateSourceTrigger=PropertyChanged}"
+				Width="200"
+				HorizontalAlignment="Center"
+				Margin="10,0,10,10" />
 			<ListView
-				Height="374"
-				Background="#80FFFFFF"
-				BorderThickness="1"
-				BorderBrush="#72828790"
-				SelectionChanged="MedicosListView_SelectionChanged"
-				HorizontalContentAlignment="Stretch"
-				ScrollViewer.HorizontalScrollBarVisibility="Auto"
-				ScrollViewer.VerticalScrollBarVisibility="Auto"
-				Width="605">
+				Grid.Row="3"
+				ItemsSource="{Binding UsuariosList}"
+				SelectedItem="{Binding SelectedUsuario}"
+				Margin="10"
+				ScrollViewer.VerticalScrollBarVisibility="Auto">
+				<!-- GridView igual que ahora -->
 				<ListView.View>
 					<GridView>
 						<GridViewColumn
-							Header="Nombre de usuario"
-							DisplayMemberBinding="{Binding UserName}"
-							Width="140" />
-						<GridViewColumn
 							Header="Rol"
-							DisplayMemberBinding="{Binding UsuarioRol}"
-							Width="100" />
+							Width="140"
+							DisplayMemberBinding="{Binding EnumRole}" />
 						<GridViewColumn
-							Header="Médico relacionado"
-							DisplayMemberBinding="{Binding MedicoRelacionado}"
-							Width="150" />
+							Header="Username"
+							Width="80"
+							DisplayMemberBinding="{Binding UserName}" />
+						<GridViewColumn
+							Header="Nombre"
+							Width="80"
+							DisplayMemberBinding="{Binding Nombre}" />
+						<GridViewColumn
+							Header="Apellido"
+							Width="100"
+							DisplayMemberBinding="{Binding Apellido}" />
+						<GridViewColumn
+							Header="Email"
+							Width="100"
+							DisplayMemberBinding="{Binding Email}" />
+						<GridViewColumn
+							Header="Telefono"
+							Width="90"
+							DisplayMemberBinding="{Binding Telefono}" />
 					</GridView>
 				</ListView.View>
 			</ListView>
-			<!-- Botones inferiores -->
 			<StackPanel
+				Grid.Row="4"
 				Orientation="Horizontal"
-				Background="Transparent"
 				HorizontalAlignment="Center">
-				<!-- Botón Agregar -->
 				<Button
-					Content="Agregar nuevo"
-					Width="170"
-					Height="40"
-					Margin="10"
-					Click="ButtonAgregarMedico"
-					FontSize="18"
-					FontFamily="Baskerville Old Face"
-					FontWeight="Bold"
-					BorderBrush="Transparent"
-					Style="{StaticResource BotonRedondeadoVioletaAzul}" />
-				<!-- Botón Modificar -->
+					Content=" ➕ Nuevo Usuario"
+					Width="166"
+					Height="30"
+					Click="ButtonAgregarUsuario"
+					Style="{StaticResource BotonRedondeadoVerde}"
+					Margin="7" />
 				<Button
-					x:Name="x_BotonModificarMedico"
-					Content="Modificar"
-					Width="170"
-					Height="40"
-					Margin="10"
-					Click="ClickBoton_ModificarMedico"
-					FontSize="18"
-					FontFamily="Baskerville Old Face"
-					FontWeight="Bold"
-					BorderBrush="Transparent"
-					Style="{StaticResource BotonRedondeadoVioletaAzul}"
-					IsEnabled="False" />
+					Content="✏ Editar Datos"
+					Width="155"
+					Height="30"
+					IsEnabled="{Binding HayUsuarioSeleccionado}"
+					Click="ClickBoton_ModificarUsuario"
+					Style="{StaticResource BotonRedondeadoVerde}"
+					Margin="7" />
 			</StackPanel>
-		</StackPanel>
-		<Label
-			Style="{StaticResource LabelLindoConPiu}"
+		</Grid>
+		<Grid
+			Grid.Column="1"
 			Grid.Row="0"
-			Content="Cuentas de usuario"
-			FontSize="40"
-			FontFamily="Ringbearer"
-			FontWeight="Bold"
-			HorizontalAlignment="Center"
-			VerticalAlignment="Top"
-			HorizontalContentAlignment="Center"
-			VerticalContentAlignment="Center"
-			Grid.RowSpan="7" />
-		<Button
-			Content="Home"
-			HorizontalAlignment="Left"
-			VerticalAlignment="Top"
-			Height="37"
-			Width="170"
-			Click="ButtonHome"
-			FontSize="20"
-			FontFamily="Baskerville Old Face"
-			Margin="898,171,0,0"
-			Style="{StaticResource BotonRedondeadoVioletaAzul}" />
-		<Button
-			Content="Salir"
-			HorizontalAlignment="Left"
-			VerticalAlignment="Top"
-			Height="37"
-			Width="170"
-			Click="ClickBoton_Salir"
-			FontSize="20"
-			FontFamily="Baskerville Old Face"
-			Margin="898,229,0,0"
-			Style="{StaticResource BotonRedondeadoVioletaAzul}" />
-		<!-- espacio libre a la derecha para futuro contenido -->
+			Grid.RowSpan="3"
+			Margin="15,35,15,35">
+			<Grid.RowDefinitions>
+				<RowDefinition
+					Height="Auto" />
+				<!-- Título -->
+				<RowDefinition
+					Height="Auto" />
+				<!-- Subtítulo -->
+				<RowDefinition
+					Height="*" />
+				<!-- LISTVIEW -->
+				<RowDefinition
+					Height="Auto" />
+				<!-- Botón -->
+			</Grid.RowDefinitions>
+			<Label
+				Grid.Row="0"
+				Content="Permisos de rol"
+				FontSize="25"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalAlignment="Center"
+				FontWeight="Bold" />
+			<ListView
+				Grid.Row="2"
+				Margin="10"
+				ItemsSource="{Binding RolesViewModelList}">
+				<ListView.View>
+					<GridView>
+						<!--<GridViewColumn
+							Header="Rol"
+							Width="95"
+							DisplayMemberBinding="{Binding Rol}" />-->
+						<GridViewColumn
+							Header="Accion"
+							Width="180"
+							DisplayMemberBinding="{Binding Accion}" />
+						<GridViewColumn
+							Header="Tiene Permiso"
+							Width="85"
+							DisplayMemberBinding="{Binding TienePermiso}" />
+					</GridView>
+				</ListView.View>
+			</ListView>
+		</Grid>
 	</Grid>
 </Window>

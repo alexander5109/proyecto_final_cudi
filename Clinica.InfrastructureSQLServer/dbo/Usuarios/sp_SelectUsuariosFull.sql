@@ -1,0 +1,8 @@
+﻿CREATE PROCEDURE sp_SelectUsuariosFull
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT * FROM Usuario;
+END;
+GO

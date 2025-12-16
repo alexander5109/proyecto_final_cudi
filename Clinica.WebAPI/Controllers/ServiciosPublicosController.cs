@@ -38,6 +38,7 @@ public class ServiciosPublicosController(
 				desde,
 				dto.Cuantos,
 				dto.DiaSemanaPreferido,
+				dto.MedicoPreferido,
 				repositorio
 			);
 
@@ -64,7 +65,7 @@ public class ServiciosPublicosController(
 	) {
 		return this.SafeExecuteApi(
 			logger,
-			PermisosAccionesEnum.GestionDeTurnos,
+			AccionesDeUsuarioEnum.ProgramarTurno,
 			operation: async () => (
 				await servicios.PersistirProgramarTurnoAsync(
 					dto.PacienteId,
@@ -105,7 +106,7 @@ public class ServiciosPublicosController(
 		//}
 		return this.SafeExecuteApi(
 			logger,
-			PermisosAccionesEnum.GestionDeTurnos,
+			AccionesDeUsuarioEnum.ReprogramarTurno,
 			operation: async () => (
 				await servicios.PersistirComoReprogramado(
 					dto.TurnoId,
@@ -125,7 +126,7 @@ public class ServiciosPublicosController(
 	) {
 		return this.SafeExecuteApi(
 			logger,
-			PermisosAccionesEnum.GestionDeTurnos,
+			AccionesDeUsuarioEnum.ConcretarTurno,
 			operation: async () => (
 				await servicios.PersistirComoConcretadoAsync(
 					dto.TurnoId,
@@ -139,12 +140,12 @@ public class ServiciosPublicosController(
 
 
 	[HttpPut("Turnos/ConcretarComoAusente")]
-	public Task<ActionResult<Turno2025>> ConcretarTurno(
+	public Task<ActionResult<Turno2025>> MarcarTurnoComoAusente(
 		[FromBody] ModificarTurnoDto dto
 	) {
 		return this.SafeExecuteApi(
 			logger,
-			PermisosAccionesEnum.GestionDeTurnos,
+			AccionesDeUsuarioEnum.ConcretarComoAusente,
 			operation: async () => (
 				await servicios.PersistirComoAusenteAsync(
 					dto.TurnoId,

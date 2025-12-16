@@ -11,6 +11,31 @@ namespace Clinica.Shared.DbModels;
 public static partial class DbModels {
 
 
+	public sealed record UsuarioPersistido(
+		UsuarioId Id,
+		UserName2025 UserName,
+		ContraseñaHasheada2025 Password,
+		NombreCompleto2025 Nombre,
+		UsuarioRoleEnum Role,
+		Email2025 Email,
+		Telefono2025 Telefono
+	) {
+		public UsuarioPersistido Aplicar(Usuario2025Edicion edicion) {
+			return this with {
+				UserName = edicion.UserName,
+				Nombre = edicion.NombreCompleto,
+				Role = edicion.EnumRole,
+				Email = edicion.Email,
+				Telefono = edicion.Telefono,
+				Password = edicion.NuevaContraseña ?? this.Password
+			};
+		}
+
+
+	}
+
+
+
 	public sealed record UsuarioAutenticadoDbModel(
 		UsuarioId Id,
 		string UserName,
@@ -21,51 +46,76 @@ public static partial class DbModels {
 	public record UsuarioDbModel(
 		UsuarioId Id,
 		string UserName,
+		string? PasswordHash,
 		string Nombre,
 		string Apellido,
-		string PasswordHash,
-		UsuarioRoleEnum EnumRole,
+		string Telefono,
 		string Email,
-		string Telefono
+		UsuarioRoleEnum EnumRole
 	) {
-		public UsuarioDbModel() : this(default, "", "", "", "", default, "", "") { }
+		public UsuarioDbModel() : this(default, "", "", "", "", "", "", default) { }
 	}
+
+	public static UsuarioDbModel ToModel(this Usuario2025Edicion edicion, UsuarioId id)
+		=> new(
+			Id: id,
+			UserName: edicion.UserName.Valor,
+			PasswordHash: edicion.NuevaContraseña?.Valor,
+			Nombre: edicion.NombreCompleto.NombreValor,
+			Apellido: edicion.NombreCompleto.ApellidoValor,
+			Telefono: edicion.Telefono.Valor,
+			Email: edicion.Email.Valor,
+			EnumRole: edicion.EnumRole
+		);
+
 
 	public static UsuarioDbModel ToModel(this Usuario2025Agg aggrg) {
 		return new UsuarioDbModel(
 			aggrg.Id,
 			aggrg.Usuario.UserName.Valor,
+			aggrg.Usuario.PasswordHash.Valor,
 			aggrg.Usuario.NombreCompleto.NombreValor,
 			aggrg.Usuario.NombreCompleto.ApellidoValor,
-			aggrg.Usuario.PasswordHash.Valor,
-			aggrg.Usuario.EnumRole,
+			aggrg.Usuario.Telefono.Valor,
 			aggrg.Usuario.Email.Valor,
-			aggrg.Usuario.Telefono.Valor
+			aggrg.Usuario.EnumRole
+		);
+	}
+	public static UsuarioDbModel ToModel(this Usuario2025EdicionAgg aggrg) {
+		return new UsuarioDbModel(
+			aggrg.Id,
+			aggrg.Usuario.UserName.Valor,
+			aggrg.Usuario.NuevaContraseña?.Valor,
+			aggrg.Usuario.NombreCompleto.NombreValor,
+			aggrg.Usuario.NombreCompleto.ApellidoValor,
+			aggrg.Usuario.Telefono.Valor,
+			aggrg.Usuario.Email.Valor,
+			aggrg.Usuario.EnumRole
 		);
 	}
 	public static UsuarioDbModel ToModel(this Usuario2025 instance, UsuarioId id) {
 		return new UsuarioDbModel(
 			id,
 			instance.UserName.Valor,
+			instance.PasswordHash.Valor,
 			instance.NombreCompleto.NombreValor,
 			instance.NombreCompleto.ApellidoValor,
-			instance.PasswordHash.Valor,
-			instance.EnumRole,
+			instance.Telefono.Valor,
 			instance.Email.Valor,
-			instance.Telefono.Valor
+			instance.EnumRole
 		);
 	}
 
-	public static Result<Usuario2025Agg> ToDomainAgg(this UsuarioDbModel dbModel)
-		=> Usuario2025Agg.CrearResult(
-			UsuarioId.CrearResult(dbModel.Id.Valor),
-			Usuario2025.CrearResult(
-				UserName.CrearResult(dbModel.UserName),
-				NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
-				ContraseñaHasheada.CrearResult(dbModel.PasswordHash),
-				dbModel.EnumRole.CrearResult(),
-				Email2025.CrearResult(dbModel.Email),
-				Telefono2025.CrearResult(dbModel.Telefono)
-			)
-		);
+	//public static Result<Usuario2025Agg> ToDomainAgg(this UsuarioDbModel dbModel)
+	//	=> Usuario2025Agg.CrearResult(
+	//		UsuarioId.CrearResult(dbModel.Id.Valor),
+	//		Usuario2025.CrearResult(
+	//			UserName2025.CrearResult(dbModel.UserName),
+	//			NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
+	//			ContraseñaHasheada2025.CrearResult(dbModel.PasswordHash),
+	//			dbModel.EnumRole.CrearResult(),
+	//			Email2025.CrearResult(dbModel.Email),
+	//			Telefono2025.CrearResult(dbModel.Telefono)
+	//		)
+	//	);
 }

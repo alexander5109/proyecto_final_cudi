@@ -8,7 +8,7 @@
 	WindowStartupLocation="CenterScreen">
 	<Window.Background>
 		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/FondoMedicosLila.jpeg" />
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoVerde2025.jpg" />
 	</Window.Background>
 	<Grid
 		Margin="25,25,25,25">
@@ -44,7 +44,7 @@
 				<Button
 					Content="Gestionar personal Médico"
 					HorizontalAlignment="Center"
-					Style="{StaticResource BotonRedondeadoVioletaAzul}"
+					Style="{StaticResource BotonRedondeadoVerde}"
 					BorderBrush="#FF0E0D0D"
 					FontFamily="Baskerville Old Face"
 					Click="ClickBoton_GuestionPersonalMedico"
@@ -57,7 +57,7 @@
 					Height="35"
 					Width="270"
 					FontSize="20"
-					Style="{StaticResource BotonRedondeadoVioletaAzul}"
+					Style="{StaticResource BotonRedondeadoVerde}"
 					FontWeight="Bold"
 					BorderBrush="#FF0E0D0D"
 					FontFamily="Baskerville Old Face"
@@ -69,7 +69,7 @@
 				Height="35"
 				Width="150"
 				Click="ClickBoton_Logout"
-				Style="{StaticResource BotonRedondeadoVioletaAzul}"
+				Style="{StaticResource BotonRedondeadoVerde}"
 				FontSize="18"
 				FontWeight="Bold"
 				Margin="7,7,7,7" />
@@ -78,7 +78,7 @@
 				Height="35"
 				Width="150"
 				Click="ClickBoton_Salir"
-				Style="{StaticResource BotonRedondeadoVioletaAzul}"
+				Style="{StaticResource BotonRedondeadoVerde}"
 				FontSize="18"
 				Margin="7,7,7,7"
 				FontWeight="Bold" />

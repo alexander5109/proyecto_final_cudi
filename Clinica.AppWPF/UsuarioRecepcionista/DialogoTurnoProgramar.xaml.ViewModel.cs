@@ -9,6 +9,7 @@ using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.TiposExtensiones;
 using static Clinica.AppWPF.CommonViewModels.CommonEnumsToViewModel;
+using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
 using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.UsuarioRecepcionista;
 
@@ -133,9 +134,15 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 	// ================================================================
 	// REGLAS
 	// ================================================================
-	public bool ComboBoxMedicos_Enabled => MedicosEspecialistasItemsSource.Any();
 	public bool ComboBoxDiasSemana_Enabled => SelectedMedico != null && SelectedMedico.DiasAtencion.Any();
-	public bool BotonBuscar_Enabled => SelectedMedico != null && SelectedMedico.DiasAtencion.Any();
+
+
+	public bool ComboBoxMedicos_Enabled => MedicosEspecialistasItemsSource.Any();
+
+
+	private bool _enCooldown;
+	public bool BotonBuscar_Enabled => !_enCooldown && SelectedMedico != null && SelectedMedico.DiasAtencion.Any();
+
 	public bool BotonAgendar_Enabled => DisponibilidadesItemsSource.Any() && SelectedDisponibilidad != null;
 
 	public string InformeReservaDeTurno {
@@ -146,6 +153,10 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 				   $"con el profesional {SelectedDisponibilidad.MedicoDisplayear} " +
 				   $"el día {SelectedDisponibilidad.Original.FechaHoraDesde.Date} a las {SelectedDisponibilidad.Original.FechaHoraDesde.Hour}. Confirmar?";
 		}
+	}
+	public void SetCooldown(bool valor) {
+		_enCooldown = valor;
+		OnPropertyChanged(nameof(BotonBuscar_Enabled));
 	}
 
 	// -----------------------------
@@ -174,12 +185,16 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 		//MessageBox.Show($"Selected dia de la semana que vamos a mandar: Desde: {desde}, solo dias {diaSemanaSelected}");
 
 
-		List<Disponibilidad2025> lista = await App.Repositorio.SelectDisponibilidades(
-			especialidad: esp.Codigo,
-			cuantos: 40,
-			apartirDeCuando: desde,
-			diaSemanaPreferido: diaSemanaSelected
+		SolicitarDisponibilidadesDto solicitudDto = new(
+			EspecialidadCodigo: esp.Codigo,
+			Cuantos: 40,
+			APartirDeCuando: desde,
+			DiaSemanaPreferido: diaSemanaSelected,
+			MedicoPreferido: SelectedMedico?.Id
 		);
+
+
+		List<Disponibilidad2025> lista = await App.Repositorio.SelectDisponibilidades(solicitudDto);
 
 		foreach (Disponibilidad2025 d in lista)
 			DisponibilidadesItemsSource.Add(new(d));
@@ -331,8 +346,8 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 			if (_selectedDisponibilidad == value) return;
 			_selectedDisponibilidad = value;
 			OnPropertyChanged(nameof(SelectedDisponibilidad));
-			OnPropertyChanged(nameof(BotonBuscar_Enabled));
 			OnPropertyChanged(nameof(ComboBoxDiasSemana_Enabled));
+			OnPropertyChanged(nameof(BotonBuscar_Enabled));
 			OnPropertyChanged(nameof(InformeReservaDeTurno));
 			OnPropertyChanged(nameof(BotonAgendar_Enabled));
 		}

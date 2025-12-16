@@ -74,12 +74,11 @@
 			<Button
 				x:Name="iniciarSesionButton"
 				Content="Iniciar sesión"
-				Style="{StaticResource BotonRedondeado}"
+				Style="{StaticResource BotonRedondeadoVerde}"
 				Width="220"
 				Height="45"
 				IsDefault="True"
 				FontSize="20"
-				Background="#FF7FC7FA"
 				Click="ClickBoton_IniciarSesion" />
 		</StackPanel>
 		<ContentControl
@@ -133,7 +132,7 @@
 			Margin="25,25,25,25">
 			<Button
 				Content="Salir"
-				Style="{StaticResource BotonRedondeado}"
+				Style="{StaticResource BotonRedondeadoVerde}"
 				Width="110"
 				Height="38"
 				FontSize="20"

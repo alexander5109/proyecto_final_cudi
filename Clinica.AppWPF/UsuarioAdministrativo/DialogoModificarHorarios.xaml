@@ -15,7 +15,7 @@
 	</Window.Resources>
 	<Window.Background>
 		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/FondoMedicosLila.jpeg" />
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoVerde2025.jpg" />
 	</Window.Background>
 	<Grid
 		Margin="25">
@@ -109,13 +109,13 @@
 				Content="Salir"
 				Width="120"
 				Height="35"
-				Style="{StaticResource BotonRedondeadoVioletaAzul}"
+				Style="{StaticResource BotonRedondeadoVerde}"
 				Click="ClickBoton_Salir" />
 			<Button
 				Content="Volver"
 				Width="120"
 				Height="35"
-				Style="{StaticResource BotonRedondeadoVioletaAzul}"
+				Style="{StaticResource BotonRedondeadoVerde}"
 				Click="ClickBoton_Cancelar"
 				Margin="7,7,7,7" />
 		</StackPanel>
@@ -307,7 +307,7 @@
 				<Button
 					Content="🗑 Eliminar"
 					IsEnabled="{Binding PuedeEliminar}"
-					Style="{StaticResource BotonRedondeadoVioletaAzul}"
+					Style="{StaticResource BotonRedondeadoVerde}"
 					Click="ClickBoton_EliminarHorario"
 					Margin="5"
 					Height="25"
@@ -315,7 +315,7 @@
 					FontSize="12" />
 				<Button
 					Content="➕ Agregar"
-					Style="{StaticResource BotonRedondeadoVioletaAzul}"
+					Style="{StaticResource BotonRedondeadoVerde}"
 					IsEnabled="{Binding PuedeAgregar}"
 					Click="ClickBoton_AgregarHorario"
 					Margin="5"
@@ -325,7 +325,7 @@
 				<!--<Button
 					Content="Restaurar"
 					IsEnabled="{Binding PuedeAplicar}"
-					Style="{StaticResource BotonRedondeadoVioletaAzul}"
+					Style="{StaticResource BotonRedondeadoVerde}"
 					Click="ClickBoton_EditarHorario"
 					Margin="5"
 					Height="25"
@@ -341,7 +341,7 @@
 				Width="180"
 				Height="35"
 				Click="ClickBoton_GuardarCambios"
-				Style="{StaticResource BotonRedondeadoVioletaAzul}"
+				Style="{StaticResource BotonRedondeadoVerde}"
 				Margin="10,10,10,10" />
 		</StackPanel>
 	</Grid>

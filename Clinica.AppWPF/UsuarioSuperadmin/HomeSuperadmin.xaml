@@ -8,7 +8,7 @@
 	WindowStartupLocation="CenterScreen">
 	<Window.Background>
 		<ImageBrush
-			ImageSource="/PublishedResources/images2025sol/fondoAbstracto2025.jpg" />
+			ImageSource="/PublishedResources/images/falopa.jpg" />
 	</Window.Background>
 	<Grid
 		Margin="25,25,25,25">
@@ -33,7 +33,7 @@
 				Margin="0,0,0,25" />
 			<Label
 				Content="Home SuperAdmin"
-				Style="{StaticResource LabelLindoConPiu}"
+				Style="{StaticResource LabelLindoConTextoSombra}"
 				FontSize="30"
 				HorizontalContentAlignment="Center"
 				FontWeight="Bold"
@@ -52,7 +52,7 @@
 						Height="37"
 						Width="170"
 						Click="ClickBoton_GestionMedicos"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						FontWeight="Bold"
 						BorderBrush="#FF0E0D0D"
 						Margin="14,7,14,7"></Button>
@@ -64,7 +64,7 @@
 						Width="170"
 						Click="ClickBoton_GestionPacientes"
 						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						FontWeight="Bold"
 						BorderBrush="#FF0E0D0D"
 						FontFamily="Baskerville Old Face"
@@ -78,14 +78,14 @@
 						Height="37"
 						Width="170"
 						Click="ClickBoton_GestionTurnos"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						Margin="14,7,14,7"></Button>
 					<Button
 						Content="Ver Usuarios"
 						Height="37"
 						Width="170"
 						Click="ClickBoton_GestionUsuarios"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						Margin="14,7,14,7" />
 				</StackPanel>
 			</StackPanel>
@@ -94,7 +94,7 @@
 				Height="35"
 				Width="150"
 				Click="ClickBoton_Logout"
-				Style="{StaticResource BotonRedondeado}"
+				Style="{StaticResource BotonRedondeadoViejo}"
 				FontSize="18"
 				FontWeight="Bold"
 				Margin="7,7,7,7" />
@@ -103,7 +103,7 @@
 				Height="35"
 				Width="150"
 				Click="ClickBoton_Salir"
-				Style="{StaticResource BotonRedondeado}"
+				Style="{StaticResource BotonRedondeadoViejo}"
 				FontSize="18"
 				Margin="7,7,7,7"
 				FontWeight="Bold" />

@@ -1,6 +1,9 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net.Http.Json;
 using System.Reflection;
+using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.Servicios;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
@@ -23,7 +26,7 @@ public static class RepoCache {
 }
 
 
-public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
+public class WPFRepositorio(ApiHelper Api) : IWPFRepositorio {
 
 
 
@@ -196,23 +199,22 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 	}
 
 
-	public async Task RefreshMedicos() {
+	private async Task RefreshMedicos() {
 		_medicosLoaded = false;
 		await EnsureMedicosLoaded();
 	}
 
-
-	public async Task RefreshPacientes() {
+	private async Task RefreshPacientes() {
 		_pacientesLoaded = false;
 		await EnsurePacientesLoaded();
 	}
 
-	public async Task RefreshUsuarios() {
+	private async Task RefreshUsuarios() {
 		_usuariosLoaded = false;
 		await EnsureUsuariosLoaded();
 	}
 
-	public async Task RefreshHorarios() {
+	private async Task RefreshHorarios() {
 		_horariosLoaded = false;
 		await EnsureHorariosLoaded();
 	}
@@ -231,7 +233,9 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			},
 			errorTitle: "Error creando paciente"
 		);
-		_ = RefreshPacientes();
+		if (response.IsOk) {
+			_ = RefreshPacientes();
+		}
 		return response;
 	}
 	async Task<ResultWpf<MedicoId>> IWPFRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance) {
@@ -245,23 +249,11 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			},
 			errorTitle: "Error creando médico"
 		);
-		_ = RefreshMedicos();
+		if (result.IsOk) {
+			_ = RefreshMedicos();
+		}
 		return result;
 	}
-	async Task<ResultWpf<UsuarioId>> IWPFRepositorioUsuarios.InsertUsuarioReturnId(Usuario2025 instance) {
-		ResultWpf<UsuarioId> result = await Api.TryApiCallAsync(
-			() => Api.Cliente.PostAsJsonAsync(
-				"api/medicos",
-				instance.ToDto()
-			),
-			onOk: async response => {
-				return await response.Content.ReadFromJsonAsync<UsuarioId>();
-			},
-			errorTitle: "Error creando usuario"
-		);
-		return result;
-	}
-
 
 
 
@@ -301,9 +293,9 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error eliminando paciente {id.Valor}"
 		);
-
-		_ = RefreshPacientes();
-
+		if (result.IsOk) {
+			_ = RefreshPacientes();
+		}
 		return result;
 	}
 
@@ -313,18 +305,16 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error eliminando médico {id.Valor}"
 		);
-
-		_ = RefreshMedicos();
-
+		if (result.IsOk) {
+			_ = RefreshMedicos();
+		}
 		return result;
 	}
 
 
 
 
-	async Task<ResultWpf<UnitWpf>> IWPFRepositorioPacientes.UpdatePacienteWhereId(
-		Paciente2025Agg aggrg
-	) {
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioPacientes.UpdatePacienteWhereId(Paciente2025Agg aggrg) {
 		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			() => Api.Cliente.PutAsJsonAsync(
 				$"api/pacientes/{aggrg.Id.Valor}",
@@ -333,15 +323,14 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error actualizando el agregado {aggrg.Id.Valor}"
 		);
-
-		_ = RefreshPacientes();
+		if (result.IsOk) {
+			_ = RefreshPacientes();
+		}
 
 		return result;
 	}
 
-	async Task<ResultWpf<UnitWpf>> IWPFRepositorioUsuarios.UpdateUsuarioWhereId(
-		Usuario2025Agg aggrg
-	) {
+	async Task<ResultWpf<UnitWpf>> IWPFRepositorioUsuarios.UpdateUsuarioWhereId(Usuario2025EdicionAgg aggrg) {
 		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
 			httpCall: () => Api.Cliente.PutAsJsonAsync(
 				$"api/usuarios/{aggrg.Id.Valor}",
@@ -355,6 +344,24 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 		}
 		return result;
 	}
+	async Task<ResultWpf<UsuarioId>> IWPFRepositorioUsuarios.InsertUsuarioReturnId(Usuario2025 instance) {
+		ResultWpf<UsuarioId> result = await Api.TryApiCallAsync(
+			() => Api.Cliente.PostAsJsonAsync(
+				"api/usuarios",
+				instance.ToDto()
+			),
+			onOk: async response => {
+				return await response.Content.ReadFromJsonAsync<UsuarioId>();
+			},
+			errorTitle: "Error creando usuario"
+		);
+		if (result.IsOk) {
+			_ = RefreshUsuarios();
+		}
+		return result;
+	}
+
+
 
 
 	private static string BuildQuery(string baseUrl, object dto) {
@@ -377,21 +384,10 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 
 
 
-	async Task<List<Disponibilidad2025>> IWPFRepositorioDominio.SelectDisponibilidades(
-		EspecialidadEnum especialidad,
-		int cuantos,
-		DateTime aPartirDeCuando,
-		DayOfWeek? diaSemanaPreferido
-	) {
-		SolicitarDisponibilidadesDto dto = new() {
-			EspecialidadCodigo = especialidad,
-			Cuantos = cuantos,
-			APartirDeCuando = aPartirDeCuando,
-			DiaSemanaPreferido = diaSemanaPreferido
-		};
+	async Task<List<Disponibilidad2025>> IWPFRepositorioDominio.SelectDisponibilidades(SolicitarDisponibilidadesDto solicitud) {
 
 		return await Api.TryGetJsonAsync<List<Disponibilidad2025>>(
-			BuildQuery("api/ServiciosPublicos/Turnos/Disponibilidades", dto),
+			BuildQuery("api/ServiciosPublicos/Turnos/Disponibilidades", solicitud),
 			defaultValue: []
 		);
 	}
@@ -407,7 +403,9 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			onOk: async response => UnitWpf.Valor,   // Se ignora el body, pero se respeta la firma
 			errorTitle: $"Error actualizando médico {aggrg.Id.Valor}"
 		);
-		//_ = RefreshMedicos();
+		if (result.IsOk) {
+			_ = RefreshMedicos();
+		}
 		return result;
 	}
 
@@ -533,36 +531,11 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error eliminando usuario {id.Valor}"
 		);
-
-		_ = RefreshUsuarios();
+		if (result.IsOk) {
+			_ = RefreshUsuarios();
+		}
 		return result;
 	}
-
-	//async Task<ResultWpf<UnitWpf>> IWPFRepositorioMedicos.UpdateMedicoWhereIdWithHorarios(MedicoId id, Medico2025 instance, IEnumerable<HorarioDto> horarios) {
-	//	MedicoDtos.MedicoDto dtoMedico = instance.ToDto();
-	//	var payload = new {
-	//		Medico = dtoMedico,
-	//		Horarios = horarios
-	//	};
-
-	//	ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
-	//		() => Api.Cliente.PutAsJsonAsync(
-	//			$"api/medicos/{id.Valor}/con-horarios",
-	//			payload
-	//		),
-	//		onOk: async response => UnitWpf.Valor,
-	//		errorTitle: $"Error actualizando médico {id.Valor}"
-	//	);
-
-	//	_ = RefreshMedicos();
-	//	_ = RefreshHorarios();
-	//	return result;
-	//}
-
-	//async Task<ResultWpf<UnitWpf>> IWPFRepositorioHorarios.UpdateHorariosWhereMedicoId(MedicoId id, IEnumerable<HorarioDto> horarios) {
-	//	_ = RefreshHorarios();
-	//	return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
-	//}
 
 	async Task<ResultWpf<UnitWpf>> IWPFRepositorioHorarios.UpdateHorariosWhereMedicoId(HorariosMedicos2026Agg agregado) {
 		ResultWpf<UnitWpf> result = await Api.TryApiCallAsync(
@@ -573,7 +546,17 @@ public class WPFRepositorioApi(ApiHelper Api) : IWPFRepositorio {
 			onOk: async response => UnitWpf.Valor,
 			errorTitle: $"Error actualizando médico {agregado.MedicoId.Valor}"
 		);
-		_ = RefreshHorarios();
+		if (result.IsOk) {
+			_ = RefreshHorarios();
+		}
 		return result;
+	}
+
+	Task<IReadOnlyCollection<AccionesDeUsuarioEnum>> IWPFRepositorioUsuarios.SelectAccionesDeUsuarioWhereEnumRole(UsuarioRoleEnum enumRole) {
+		return Task.FromResult(ServiciosPublicos.GetAccionesDeUsuarioParaRol(enumRole));
+	}
+
+	Task<IReadOnlyCollection<AccionesDeUsuarioEnum>> IWPFRepositorioUsuarios.SelectAccionesDeUsuario() {
+		return Task.FromResult(ServiciosPublicos.GetTodasLasAcciones());
 	}
 }

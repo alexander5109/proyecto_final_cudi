@@ -12,7 +12,7 @@ namespace Clinica.AppWPF;
 
 public partial class App : Application {
 	public static ApiHelper Api = new();
-	public static IWPFRepositorio Repositorio = new WPFRepositorioApi(Api);
+	public static IWPFRepositorio Repositorio = new WPFRepositorio(Api);
 	public static UsuarioDbModel? UsuarioActivo = null;
 	//public static Repositorio2024 BaseDeDatos;
 
@@ -24,13 +24,13 @@ public partial class App : Application {
 		System.Diagnostics.PresentationTraceSources.Refresh();
 		//System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
 		//Api = new ApiHelper();
-		//Repositorio = new WPFRepositorioApi(Api);
+		//Repositorio = new WPFRepositorio(Api);
 
 
 	}
 	/*
 	public static void UpdateLabelDataBaseModo(Label label) {
-		if (App.BaseDeDatos is WPFRepositorioApi) {
+		if (App.BaseDeDatos is WPFRepositorio) {
 			//if (App.Repositorio is BaseDeDatosJSON) {
 			//label.Content = "Modo JSON";
 			//} else if (App.Repositorio is RepositorioApi) {

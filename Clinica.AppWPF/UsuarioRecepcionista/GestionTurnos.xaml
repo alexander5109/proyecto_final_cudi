@@ -13,7 +13,7 @@
 	<!-- Fondo -->
 	<Window.Background>
 		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg"
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoLila2025.jpg"
 			Stretch="Fill" />
 	</Window.Background>
 	<!-- ===================== LAYOUT GENERAL ===================== -->
@@ -321,7 +321,7 @@
 						Width="122"
 						Height="32"
 						IsEnabled="{Binding PuedeConfirmarTurno}"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoLila}"
 						Click="Button_ConfirmarTurnoAsistencia"
 						Margin="7,7,7,7"
 						FontSize="16" />
@@ -343,7 +343,7 @@
 						Height="32"
 						Margin="7,7,7,7"
 						IsEnabled="{Binding PuedeCancelarTurno}"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoLila}"
 						Click="Button_ReprogramarTurno"
 						FontSize="16" />
 					<Button
@@ -373,7 +373,7 @@
 				Margin="10,0,10,10"
 				Click="ClickBoton_Home"
 				FontSize="20"
-				Style="{StaticResource BotonRedondeado}" />
+				Style="{StaticResource BotonRedondeadoLila}" />
 			<Button
 				Content="Salir"
 				Width="170"
@@ -381,7 +381,7 @@
 				Margin="10,0,10,10"
 				Click="ClickBoton_Salir"
 				FontSize="20"
-				Style="{StaticResource BotonRedondeado}" />
+				Style="{StaticResource BotonRedondeadoLila}" />
 		</StackPanel>
 	</Grid>
 </Window>

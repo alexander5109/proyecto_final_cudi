@@ -1,0 +1,284 @@
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows;
+using Clinica.AppWPF.CommonViewModels;
+using Clinica.AppWPF.Infrastructure;
+using Clinica.AppWPF.UsuarioSuperadmin;
+using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeAgregado;
+using Clinica.Dominio.TiposDeEntidad;
+using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Dominio.TiposDeValor;
+using Clinica.Dominio.TiposExtensiones;
+using static Clinica.AppWPF.CommonViewModels.CommonEnumsToViewModel;
+using static Clinica.Shared.DbModels.DbModels;
+
+namespace Clinica.AppWPF.UsuarioAdministrativo;
+
+public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
+
+	// ================================================================
+	// CONSTRUCTORES
+	// ================================================================
+	public DialogoUsuarioModificarVM() {
+		_original = new UsuarioEdicionSnapshot();
+
+	}
+
+
+	public DialogoUsuarioModificarVM(UsuarioDbModel original) {
+		_original = new UsuarioEdicionSnapshot(
+			Id: original.Id,
+			UserName: original.UserName,
+			Nombre: original.Nombre,
+			Apellido: original.Apellido,
+			Telefono: original.Telefono,
+			Email: original.Email,
+			EnumRole: original.EnumRole
+		);
+
+		Id = original.Id;
+		UserName = original.UserName;   // ← OK
+		Nombre = original.Nombre;
+		Apellido = original.Apellido;
+		Telefono = original.Telefono;
+		Email = original.Email;
+		EnumRole = original.EnumRole;
+		NuevaPassword = null;
+	}
+
+
+
+	// ================================================================
+	// READ_ONLIES
+	// ================================================================
+
+	private readonly UsuarioEdicionSnapshot _original;
+	public IReadOnlyList<UsuarioRoleEnum> EnumRoles { get; } = Enum.GetValues<UsuarioRoleEnum>();
+
+	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; } = [.. Especialidad2025.Todas.Select(x => x.ToViewModel())];
+
+	// ================================================================
+	// REGLAS
+	// ================================================================
+
+	private bool EstaCreando => Id is null;
+	private bool EstaEditando => Id is not null;
+	public bool PuedeEliminar => EstaEditando;
+	public bool PuedeGuardarCambios => TieneCambios;
+
+
+	// -----------------------------
+	// PROPERTIES
+	// -----------------------------
+
+	public UsuarioId? Id { get; private set; }
+
+	private string _userName = "";
+	public string UserName {
+		get => _userName;
+		set {
+			_userName = value;
+			OnPropertyChanged(nameof(UserName));
+			OnPropertyChanged(nameof(TieneCambios));
+			OnPropertyChanged(nameof(PuedeGuardarCambios));
+		}
+	}
+
+	private string? _nuevaPassword;
+	public string? NuevaPassword {
+		get => _nuevaPassword;
+		set {
+			_nuevaPassword = value;
+			OnPropertyChanged(nameof(NuevaPassword));
+			OnPropertyChanged(nameof(TieneCambios));
+		}
+	}
+
+	private string _nombre = "";
+	public string Nombre {
+		get => _nombre;
+		set {
+			_nombre = value;
+			OnPropertyChanged(nameof(Nombre));
+			OnPropertyChanged(nameof(TieneCambios));
+			OnPropertyChanged(nameof(PuedeGuardarCambios));
+		}
+	}
+
+	private string _apellido = "";
+	public string Apellido {
+		get => _apellido;
+		set {
+			_apellido = value;
+			OnPropertyChanged(nameof(Apellido));
+			OnPropertyChanged(nameof(TieneCambios));
+			OnPropertyChanged(nameof(PuedeGuardarCambios));
+		}
+	}
+
+	private string _telefono = "";
+	public string Telefono {
+		get => _telefono;
+		set {
+			_telefono = value;
+			OnPropertyChanged(nameof(Telefono));
+			OnPropertyChanged(nameof(TieneCambios));
+			OnPropertyChanged(nameof(PuedeGuardarCambios));
+		}
+	}
+
+	private string _email = "";
+	public string Email {
+		get => _email;
+		set {
+			_email = value;
+			OnPropertyChanged(nameof(Email));
+			OnPropertyChanged(nameof(TieneCambios));
+			OnPropertyChanged(nameof(PuedeGuardarCambios));
+		}
+	}
+
+	private UsuarioRoleEnum? _enumRole;
+	public UsuarioRoleEnum? EnumRole {
+		get => _enumRole;
+		set {
+			_enumRole = value;
+			OnPropertyChanged(nameof(EnumRole));
+			OnPropertyChanged(nameof(TieneCambios));
+			OnPropertyChanged(nameof(PuedeGuardarCambios));
+		}
+	}
+
+	// -----------------------------
+	// DETECTAR CAMBIOS
+	// -----------------------------
+
+	public bool TieneCambios => (
+		_original.UserName != UserName ||
+		!string.IsNullOrWhiteSpace(NuevaPassword) || // 👈 clave
+		_original.Nombre != Nombre ||
+		_original.Apellido != Apellido ||
+		_original.Telefono != Telefono ||
+		_original.Email != Email ||
+		_original.EnumRole != EnumRole
+	);
+
+
+	// -----------------------------
+	// METHODS.PERSISTENCIA
+	// -----------------------------
+	public async Task<ResultWpf<UnitWpf>> GuardarAsync() {
+		if (!PuedeGuardarCambios)
+			return new ResultWpf<UnitWpf>.Error(
+				new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information)
+			);
+		return EstaEditando
+			? await GuardarEdicionAsync()
+			: await GuardarCreacionAsync();
+	}
+	private async Task<ResultWpf<UnitWpf>> GuardarEdicionAsync() {
+		if (Id is not UsuarioId id)
+			return new ResultWpf<UnitWpf>.Error(
+				new ErrorInfo(
+					"No se puede guardar, la entidad no tiene UsuarioId.",
+					MessageBoxImage.Information
+				)
+			);
+
+		return await ToEdicionDomain()
+			.Bind(edicion => {
+				var agg = Usuario2025EdicionAgg.Crear(id, edicion);
+				return App.Repositorio.UpdateUsuarioWhereId(agg);
+			});
+	}
+
+
+
+	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync() {
+		return await ToCreacionDomain()
+			.Bind(async usuario => {
+				var result = await App.Repositorio.InsertUsuarioReturnId(usuario);
+
+				return result.MatchTo(
+					ok => {
+						Id = ok;
+						OnPropertyChanged(nameof(Id));
+						return new ResultWpf<UnitWpf>.Ok(UnitWpf.Valor);
+					},
+					error => new ResultWpf<UnitWpf>.Error(error)
+				);
+			});
+	}
+
+
+
+
+	// ================================================================
+	// METHODS.VALIDACION
+	// ================================================================
+	private ResultWpf<Usuario2025Edicion> ToEdicionDomain() {
+		//MessageBox.Show($"ToEdicionDomain: {UserName}, {Nombre}, {Apellido}");
+		return Usuario2025Edicion.CrearResult(
+			UserName2025.CrearResult(UserName),
+			NombreCompleto2025.CrearResult(Nombre, Apellido),
+			CrearNuevaPasswordSiCorresponde(),
+			EnumRole.CrearResult(),
+			Email2025.CrearResult(Email),
+			Telefono2025.CrearResult(Telefono)
+		).ToWpf(MessageBoxImage.Information);
+	}
+	private ResultWpf<Usuario2025> ToCreacionDomain() {
+		//MessageBox.Show($"ToCreacionDomain: {UserName}, {Nombre}, {Apellido}, {EnumRole}");
+		return Usuario2025.CrearResult(
+			UserName2025.CrearResult(UserName),
+			NombreCompleto2025.CrearResult(Nombre, Apellido),
+			ContraseñaHasheada2025.CrearResultFromRaw(NuevaPassword!), // obligatoria
+			EnumRole.CrearResult(),
+			Email2025.CrearResult(Email),
+			Telefono2025.CrearResult(Telefono)
+		).ToWpf(MessageBoxImage.Information);
+	}
+
+	private Result<ContraseñaHasheada2025?> CrearNuevaPasswordSiCorresponde() {
+		if (string.IsNullOrWhiteSpace(NuevaPassword))
+			return new Result<ContraseñaHasheada2025?>.Ok(null);
+
+		return ContraseñaHasheada2025
+			.CrearResultFromRaw(NuevaPassword)
+			.Map(p => (ContraseñaHasheada2025?)p);
+	}
+
+
+
+	// ================================================================
+	// INFRAESTRUCTURA
+	// ================================================================
+
+	public event PropertyChangedEventHandler? PropertyChanged;
+	private void OnPropertyChanged(string prop) => PropertyChanged?.Invoke(this, new(prop));
+
+}
+
+
+
+
+
+// ================================================================
+// SNAPSHOTS
+// ================================================================
+
+internal record UsuarioEdicionSnapshot(
+	UsuarioId Id,
+	string UserName,
+	//string PasswordHash,
+	string Nombre,
+	string Apellido,
+	string Telefono,
+	string Email,
+	UsuarioRoleEnum EnumRole
+) {
+	public UsuarioEdicionSnapshot() : this(default, "", "", "", "", "", default) { }
+}
+

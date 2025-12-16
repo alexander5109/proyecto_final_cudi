@@ -28,7 +28,7 @@ public static partial class DbModels {
 
 
 	public static HorariosMedicosUpsertDbModel ToUpsertDto(this HorariosMedicos2026Agg agg) {
-		var table = new DataTable();
+        DataTable table = new DataTable();
 		table.Columns.Add("DiaSemana", typeof(byte));
 		table.Columns.Add("HoraDesde", typeof(TimeSpan));
 		table.Columns.Add("HoraHasta", typeof(TimeSpan));

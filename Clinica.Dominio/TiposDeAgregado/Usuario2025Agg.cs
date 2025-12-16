@@ -10,11 +10,26 @@ public record Usuario2025Agg(UsuarioId Id, Usuario2025 Usuario) {
 		UsuarioId id,
 		Usuario2025 instance
 	) => new(id, instance);
-
 	public static Result<Usuario2025Agg> CrearResult(Result<UsuarioId> idResult, Result<Usuario2025> instanceResult)
 		=> from id in idResult
 		   from instance in instanceResult
 		   select new Usuario2025Agg(
+			   id,
+			   instance
+		   );
+
+}
+
+public record Usuario2025EdicionAgg(UsuarioId Id, Usuario2025Edicion Usuario) {
+
+	public static Usuario2025EdicionAgg Crear(
+		UsuarioId id,
+		Usuario2025Edicion instance
+	) => new(id, instance);
+	public static Result<Usuario2025EdicionAgg> CrearResult(Result<UsuarioId> idResult, Result<Usuario2025Edicion> instanceResult)
+		=> from id in idResult
+		   from instance in instanceResult
+		   select new Usuario2025EdicionAgg(
 			   id,
 			   instance
 		   );

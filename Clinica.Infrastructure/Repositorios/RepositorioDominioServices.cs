@@ -85,8 +85,8 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 
 	Task<Result<Usuario2025>> IRepositorioDominioServices.SelectUsuarioWhereIdAsDomain(UsuarioId id)
 		=> TryResultAsync(async conn => {
-			UsuarioDto? dto =
-				await conn.QuerySingleOrDefaultAsync<UsuarioDto>(
+			UsuarioCrearDto? dto =
+				await conn.QuerySingleOrDefaultAsync<UsuarioCrearDto>(
 					"sp_SelectUsuarioWhereId",
 					new { Id = id.Valor },
 					commandType: CommandType.StoredProcedure

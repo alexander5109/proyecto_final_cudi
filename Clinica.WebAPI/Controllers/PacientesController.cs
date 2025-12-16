@@ -24,7 +24,7 @@ public class PacientesController(
 	public Task<ActionResult<IEnumerable<PacienteDbModel>>> GetPacientes()
 	=> this.SafeExecute(
 		logger,
-		PermisosAccionesEnum.VerPacientes,
+		AccionesDeUsuarioEnum.VerPacientes,
 		() => repositorio.SelectPacientes()
 	);
 
@@ -34,7 +34,7 @@ public class PacientesController(
 	//public Task<ActionResult<Carajo>> GetPacientePorTurnoId(int id)
 	//	=> this.SafeExecute(
 	//		logger,
-	//		PermisosAccionesEnum.VerPacientes,
+	//		AccionesDeUsuarioEnum.VerPacientes,
 	//		() => repositorio.SelectPacienteWhereTurnoId(new TurnoId(id)),
 	//		notFoundMessage: $"No existe paciente con id {id}"
 	//	);
@@ -69,7 +69,7 @@ public class PacientesController(
 	public Task<ActionResult<PacienteDbModel?>> GetPacientePorId(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.VerPacientes,
+			AccionesDeUsuarioEnum.VerPacientes,
 			() => repositorio.SelectPacienteWhereId(new PacienteId(id)),
 			notFoundMessage: $"No existe paciente con id {id}"
 		);
@@ -81,7 +81,7 @@ public class PacientesController(
 	public Task<ActionResult<IEnumerable<TurnoDbModel>>> GetTurnosPorPaciente([FromRoute] int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.VerTurnos,
+			AccionesDeUsuarioEnum.VerTurnos,
 			() => repositorio.SelectTurnosWherePacienteId(new PacienteId(id)),
 			notFoundMessage: $"No existen turnos con pacienteid {id}"
 		);
@@ -92,7 +92,7 @@ public class PacientesController(
 	public Task<ActionResult<Unit>> DeletePaciente(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.DeleteEntidades,
+			AccionesDeUsuarioEnum.EliminarEntidades,
 			() => repositorio.DeletePacienteWhereId(new PacienteId(id)),
 			notFoundMessage: $"No existe paciente con id {id}"
 		);
@@ -103,7 +103,7 @@ public class PacientesController(
 	public Task<ActionResult<PacienteDbModel>> UpdatePaciente(int id, [FromBody] PacienteDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisosAccionesEnum.UpdatePacientes,
+		AccionesDeUsuarioEnum.ModificarPacientes,
 		dto,
 		x => x.ToDomain(),
 		paciente => repositorio.UpdatePacienteWhereId(new PacienteId(id), paciente),
@@ -118,7 +118,7 @@ public class PacientesController(
 
 		return this.SafeExecuteWithDomain(
 		   logger,
-		   PermisosAccionesEnum.CrearPacientes,
+		   AccionesDeUsuarioEnum.CrearPacientes,
 		   dto,
 		   x => x.ToDomain(),
 		   paciente => repositorio.InsertPacienteReturnId(paciente)

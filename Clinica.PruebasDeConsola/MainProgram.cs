@@ -5,6 +5,7 @@ using Clinica.Dominio.IInterfaces;
 using Clinica.Infrastructure.Repositorios;
 using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.PruebasDeConsola;
 
@@ -21,7 +22,7 @@ public static class MainProgram {
 			if (string.IsNullOrWhiteSpace(rawPassword)) Console.WriteLine("La contraseña no puede estar vacía.\n");
 		}
 		Console.WriteLine($"\nHashed:");
-		Console.WriteLine($"Raw: {rawPassword}\nHashed: {ContraseñaHasheada.CrearFromRaw(rawPassword).Valor}");
+		Console.WriteLine($"Raw: {rawPassword}\nHashed: {ContraseñaHasheada2025.CrearFromRaw(rawPassword).Valor}");
 		Console.WriteLine("\nPresione ENTER para continuar...");
 		Console.ReadLine();
 	}
@@ -46,10 +47,10 @@ public static class MainProgram {
 
 		//var response = await http.GetAsync($"/disponibilidades?EspecialidadEnum=3&cuantos=10");
 
-		UserName UserName = new ("admin1");
-		//var usuarioFakeResult = await repositorio.SelectUsuarioWhereNombre(UserName);
+		UserName2025 UserName = new ("admin1");
+		//var usuarioFakeResult = await repositorio.SelectUsuarioWhereNombre(UserName2025);
 		//if (usuarioFakeResult.IsError) {
-		//	Console.WriteLine($"No se encontro el usuario {UserName}");
+		//	Console.WriteLine($"No se encontro el usuario {UserName2025}");
 		//	return;
 		//}
         //Usuario2025 usuarioFake = usuarioFakeResult.UnwrapAsOk();
@@ -74,6 +75,7 @@ public static class MainProgram {
 			DateTime.Now,
 			4,
 			DayOfWeek.Sunday,
+			new MedicoId(1),
 			repositorio
 		));
 		//disponibilidades.PrintAndContinue("Disponbiildiades encontradas::");

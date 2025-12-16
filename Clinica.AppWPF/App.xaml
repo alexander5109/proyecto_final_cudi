@@ -22,7 +22,7 @@
 							ClipToBounds="True">
 							<!-- Imagen de fondo -->
 							<Image
-								Source="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg"
+								Source="pack://application:,,,/PublishedResources/images2025sol/fondoCeleste2025.jpg"
 								Stretch="UniformToFill">
 								<Image.Effect>
 									<BlurEffect
@@ -65,7 +65,7 @@
 							BorderThickness="1">
 							<Border.Background>
 								<ImageBrush
-									ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoClaro2025.jpg"
+									ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoCeleste2025.jpg"
 									Stretch="UniformToFill" />
 							</Border.Background>
 							<!-- Overlay para suavizar -->
@@ -654,7 +654,116 @@
 		</Style>
 		<!-- ,,,,,,,,,,,,,,,,,,,,,,,,,,BOTONES (NUEVO ESTILO VERDE/AZUL) ,,,,,,,,,,,,,,,,,,,,,,,,,, -->
 		<Style
-			x:Key="BotonRedondeadoVioletaAzul"
+			x:Key="BotonRedondeadoLila"
+			TargetType="{x:Type Button}">
+			<!-- Puedes dejar estos EventSetter si tenés el manejador en código.
+                 Si te da error, simplemente borrá los EventSetter. -->
+			<!--<EventSetter Event="MouseEnter" Handler="StyleButton_MouseEnter" />-->
+			<Setter
+				Property="Foreground"
+				Value="White" />
+			<Setter
+				Property="FontWeight"
+				Value="Bold" />
+			<Setter
+				Property="FontSize"
+				Value="18" />
+			<Setter
+				Property="Width"
+				Value="180" />
+			<Setter
+				Property="Height"
+				Value="35" />
+			<Setter
+				Property="FontFamily"
+				Value="Baskerville Old Face" />
+			<Setter
+				Property="BorderThickness"
+				Value="0" />
+			<Setter
+				Property="Cursor"
+				Value="Hand" />
+			<Setter
+				Property="RenderTransformOrigin"
+				Value="0.5,0.5" />
+			<Setter
+				Property="RenderTransform">
+				<Setter.Value>
+					<ScaleTransform
+						ScaleX="1"
+						ScaleY="1" />
+				</Setter.Value>
+			</Setter>
+			<Setter
+				Property="Template">
+				<Setter.Value>
+					<ControlTemplate
+						TargetType="{x:Type Button}">
+						<Grid>
+							<Border
+								x:Name="border"
+								CornerRadius="15">
+								<Border.Background>
+									<!-- Imagen verde/azul de los botones -->
+									<ImageBrush
+										ImageSource="/PublishedResources/images2025sol/bluepurple1.jpeg"
+										Stretch="Fill" />
+								</Border.Background>
+								<TextBlock
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									Text="{TemplateBinding Content}"
+									Foreground="{TemplateBinding Foreground}" />
+							</Border>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<!-- Hover -->
+							<Trigger
+								Property="IsMouseOver"
+								Value="True">
+								<Setter
+									TargetName="border"
+									Property="Opacity"
+									Value="0.9" />
+								<Setter
+									Property="RenderTransform">
+									<Setter.Value>
+										<ScaleTransform
+											ScaleX="1.05"
+											ScaleY="1.05" />
+									</Setter.Value>
+								</Setter>
+							</Trigger>
+							<!-- Deshabilitado -->
+							<Trigger
+								Property="IsEnabled"
+								Value="False">
+								<Setter
+									TargetName="border"
+									Property="Opacity"
+									Value="0.5" />
+								<Setter
+									Property="Foreground"
+									Value="#FFCCCCCC" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter
+				Property="Effect">
+				<Setter.Value>
+					<DropShadowEffect
+						Color="Black"
+						BlurRadius="15"
+						Opacity="1"
+						ShadowDepth="10" />
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<!-- ,,,,,,,,,,,,,,,,,,,,,,,,,,BOTONES (NUEVO ESTILO VERDE/AZUL) ,,,,,,,,,,,,,,,,,,,,,,,,,, -->
+		<Style
+			x:Key="BotonRedondeadoCeleste"
 			TargetType="{x:Type Button}">
 			<!-- Puedes dejar estos EventSetter si tenés el manejador en código.
                  Si te da error, simplemente borrá los EventSetter. -->
@@ -763,7 +872,7 @@
 		</Style>
 		<!-- ,,,,,,,,,,,,,,,,,,,,,,,,,,BOTONES (NUEVO ESTILO VERDE/AZUL) ,,,,,,,,,,,,,,,,,,,,,,,,,, -->
 		<Style
-			x:Key="BotonRedondeado"
+			x:Key="BotonRedondeadoVerde"
 			TargetType="{x:Type Button}">
 			<!-- Puedes dejar estos EventSetter si tenés el manejador en código.
                  Si te da error, simplemente borrá los EventSetter. -->

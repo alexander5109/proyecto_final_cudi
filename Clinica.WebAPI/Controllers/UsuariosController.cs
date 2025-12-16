@@ -22,7 +22,7 @@ public class UsuariosController(
 	public Task<ActionResult<IEnumerable<UsuarioDbModel>>> GetUsuarios()
 	=> this.SafeExecute(
 		logger,
-		PermisosAccionesEnum.VerUsuarios,
+		AccionesDeUsuarioEnum.VerUsuarios,
 		() => repositorio.SelectUsuarios()
 	);
 
@@ -32,7 +32,7 @@ public class UsuariosController(
 	public Task<ActionResult<UsuarioDbModel?>> GetUsuarioPorId(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.VerUsuarios,
+			AccionesDeUsuarioEnum.VerUsuarios,
 			() => repositorio.SelectUsuarioWhereId(new UsuarioId(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
@@ -42,30 +42,31 @@ public class UsuariosController(
 	public Task<ActionResult<UsuarioDbModel>> GetUsuarioProfileByUsername(string username)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.VerUsuarios,
-			() => repositorio.SelectUsuarioProfileWhereUsername(new UserName(username)),
+			AccionesDeUsuarioEnum.VerUsuarios,
+			() => repositorio.SelectUsuarioProfileWhereUsername(new UserName2025(username)),
 			notFoundMessage: $"No existe usuario con nombre: {username}"
 		);
-
 
 	[HttpDelete("{id:int}")]
 	public Task<ActionResult<Unit>> DeleteUsuario(int id)
 		=> this.SafeExecute(
 			logger,
-			PermisosAccionesEnum.DeleteEntidades,
-			() => repositorio.DeleteUsuarioWhereId(new UsuarioId(id)),
+			AccionesDeUsuarioEnum.EliminarUsuarios,
+			currentUserId => repositorio.DeleteUsuarioWhereId(new UsuarioId(id)),
+			precondicion: currentUserId => currentUserId.Valor != id,
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
 
 
 
+
 	[HttpPut("{id:int}")]
-	public Task<ActionResult<UsuarioDbModel>> UpdateUsuario(int id, [FromBody] UsuarioDto dto)
+	public Task<ActionResult<UsuarioDbModel>> UpdateUsuario(int id, [FromBody] UsuarioEditarDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
-		PermisosAccionesEnum.UpdateEntidades,
+		AccionesDeUsuarioEnum.ModificarEntidades,
 		dto,
-		x => x.ToDomain(),
+		x => x.ToDomain(), ///here validation or insta return bad request + domain error. requires 
 		usuario => repositorio.UpdateUsuarioWhereId(new UsuarioId(id), usuario),
 		notFoundMessage: $"No existe usuario con id {id}"
 	);
@@ -73,15 +74,18 @@ public class UsuariosController(
 
 
 	[HttpPost]
-	public Task<ActionResult<UsuarioId>> CrearUsuario([FromBody] UsuarioDto dto)
-		=> this.SafeExecuteWithDomain(
-			logger,
-			PermisosAccionesEnum.CrearUsuarios,
-			dto,
-			x => x.ToDomain(),
-			usuario => repositorio.InsertUsuarioReturnId(usuario)
-		);
+	public Task<ActionResult<UsuarioId>> CrearUsuario([FromBody] UsuarioCrearDto dto) {
 
+		Console.WriteLine(dto.ToString());
+
+		return this.SafeExecuteWithDomain(
+				logger,
+				AccionesDeUsuarioEnum.CrearUsuarios,
+				dto,
+				x => x.ToDomain(),
+				usuario => repositorio.InsertUsuarioReturnId(usuario)
+			);
+	}
 
 
 }
