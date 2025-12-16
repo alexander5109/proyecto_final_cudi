@@ -9,120 +9,86 @@ namespace Clinica.AppWPF.UsuarioMedico;
 
 
 
-public sealed class MedicoAtencionDelDiaViewModel : INotifyPropertyChanged {
+public sealed class MedicoAtencionDelDiaVM : INotifyPropertyChanged {
 
 	// ==========================================================
 	// BOTONES: NAV
 	// ==========================================================
 	public event PropertyChangedEventHandler? PropertyChanged;
-	public ObservableCollection<HorarioViewModel> HorariosViewModelList { get; } = [];
+	public ObservableCollection<AtencionViewModel> AtencionesViewModelList { get; } = [];
 
-	private MedicoDbModel? _selectedMedico;
-	public MedicoDbModel? SelectedMedico {
-		get => _selectedMedico;
+	private PacienteDbModel? _selectedPaciente;
+	public PacienteDbModel? SelectedPaciente {
+		get => _selectedPaciente;
 		set {
-			if (_selectedMedico != value) {
-				_selectedMedico = value;
-				OnPropertyChanged(nameof(SelectedMedico));
-				OnPropertyChanged(nameof(HayMedicoSeleccionado));
-				OnPropertyChanged(nameof(SelectedMedicoDomicilioCompleto));
-				OnPropertyChanged(nameof(SelectedMedicoNombreCompleto));
-				OnSelectedMedicoChanged();
+			if (_selectedPaciente != value) {
+				_selectedPaciente = value;
+				OnPropertyChanged(nameof(SelectedPaciente));
+				OnPropertyChanged(nameof(HayPacienteSeleccionado));
+				OnPropertyChanged(nameof(SelectedPacienteDomicilioCompleto));
+				OnPropertyChanged(nameof(SelectedPacienteNombreCompleto));
+				OnSelectedPacienteChanged();
 			}
 		}
 	}
 
-	private async void OnSelectedMedicoChanged() {
-		await CargarHorariosDeMedicoSeleccionado();
+	private async void OnSelectedPacienteChanged() {
+		await CargarAtencionesDePacienteSeleccionado();
 	}
 
-	private string _filtroMedicosTexto = string.Empty;
-	public string FiltroMedicosTexto {
-		get => _filtroMedicosTexto;
+
+	private string? _diagnosticoText;
+	public string? DiagnosticoText {
+		get => _diagnosticoText;
 		set {
-			if (_filtroMedicosTexto != value) {
-				_filtroMedicosTexto = value;
-				OnPropertyChanged(nameof(FiltroMedicosTexto));
-				FiltrarMedicos(); // Aplica el filtro cada vez que cambia el texto
+			if (_diagnosticoText != value) {
+				_diagnosticoText = value;
+				OnPropertyChanged(nameof(DiagnosticoText));
 			}
 		}
 	}
-
 
 	// ================================================================
 	// COLECCIONES
 	// ================================================================
-	private List<MedicoDbModel> _todosLosMedicos = []; // Copia completa para filtrar
-	public ObservableCollection<MedicoDbModel> MedicosList { get; } = [];
+	private List<TurnoDbModel> _todosLosTurnos = []; // Copia completa para filtrar
+	public ObservableCollection<TurnoDbModel> TurnosList { get; } = [];
 
 
 
 
-	internal async Task RefrescarMedicosAsync() {
-		List<MedicoDbModel> medicos = await App.Repositorio.Medicos.SelectMedicos();
+	internal async Task RefrescarMisTurnosAsync() {
+		List<TurnoDbModel> turnos = await App.Repositorio.Turnos.SelectTurnos();
 
-		_todosLosMedicos = medicos;
-		FiltrarMedicos();
-	}
-
-	private void FiltrarMedicos() {
-		MedicosList.Clear();
-
-		IEnumerable<MedicoDbModel> origen;
-
-		if (string.IsNullOrWhiteSpace(FiltroMedicosTexto)) {
-			origen = _todosLosMedicos;
-		} else {
-			var texto = FiltroMedicosTexto.Trim();
-
-			origen = _todosLosMedicos.Where(m =>
-				(m.Nombre?.Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
-				(m.Apellido?.Contains(texto, StringComparison.CurrentCultureIgnoreCase) ?? false) ||
-				m.EspecialidadCodigo
-					.ToString()
-					.Contains(texto, StringComparison.CurrentCultureIgnoreCase)
-			);
-		}
-
-		foreach (MedicoDbModel medico in origen)
-			MedicosList.Add(medico);
+		_todosLosTurnos = turnos;
 	}
 
 
-	public string? SelectedMedicoDomicilioCompleto => SelectedMedico is null ? null : $"{SelectedMedico?.Localidad}, {SelectedMedico?.Domicilio}";
-	public string? SelectedMedicoNombreCompleto => SelectedMedico is null ? null : $"{SelectedMedico?.Nombre} {SelectedMedico?.Apellido}";
+	public string? SelectedPacienteDomicilioCompleto => SelectedPaciente is null ? null : $"{SelectedPaciente?.Localidad}, {SelectedPaciente?.Domicilio}";
+	public string? SelectedPacienteNombreCompleto => SelectedPaciente is null ? null : $"{SelectedPaciente?.Nombre} {SelectedPaciente?.Apellido}";
 
-	public bool HayMedicoSeleccionado => SelectedMedico is not null;
+	public bool HayPacienteSeleccionado => SelectedPaciente is not null;
 
-	private async Task CargarHorariosDeMedicoSeleccionado() {
-		HorariosViewModelList.Clear();
+	private async Task CargarAtencionesDePacienteSeleccionado() {
+		AtencionesViewModelList.Clear();
 
-		if (SelectedMedico is null) {
-			// MessageBox.Show("por que es null el selectmedico?"); // porque se actualizo el listview de medicos tras usarse un filtro!
+		if (SelectedPaciente is null) {
 			return;
 		}
-		IReadOnlyList<HorarioDbModel>? horarios =
-			await App.Repositorio.Horarios.SelectHorariosWhereMedicoId(SelectedMedico.Id);
+		IReadOnlyList<AtencionDbModel>? Atenciones = await App.Repositorio.Atenciones.SelectAtencionesWherePacienteId(SelectedPaciente.Id);
 
-		if (horarios is null || horarios.Count == 0)
+		if (Atenciones is null || Atenciones.Count == 0)
 			return;
 
-		foreach (HorarioDbModel h in horarios)
-			HorariosViewModelList.Add(new HorarioViewModel(h));
+		foreach (AtencionDbModel h in Atenciones)
+			AtencionesViewModelList.Add(new AtencionViewModel(h));
 	}
 
 
 	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
 
-public class HorarioViewModel(HorarioDbModel horarioDbModel) {
-	public int MedicoId { get; } = horarioDbModel.MedicoId.Valor;
-	public DayOfWeek DiaSemana { get; } = horarioDbModel.DiaSemana;
-	public string DiaSemanaDescripcion => DiaSemana.ATexto();
-	public TimeSpan HoraDesde { get; } = horarioDbModel.HoraDesde;
-	public string HoraDesdeStr => HoraDesde.ToString(@"hh\:mm");
-	public TimeSpan HoraHasta { get; } = horarioDbModel.HoraHasta;
-	public string HoraHastaStr => HoraHasta.ToString(@"hh\:mm");
-	public DateTime VigenteDesde { get; } = horarioDbModel.VigenteDesde;
-	public DateTime? VigenteHasta { get; } = horarioDbModel.VigenteHasta ?? DateTime.MaxValue;
-}
+
+public record TurnoDeHoyVM(string Hora, string PacienteNombreApellido, string PacienteEdad, string FueAtendido);
+
+public record AtencionPreviaVM(string Hora, string PacienteNombreApellido, string PacienteEdad, string FueAtendido);

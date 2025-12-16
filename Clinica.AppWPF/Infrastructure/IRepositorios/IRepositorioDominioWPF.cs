@@ -4,23 +4,12 @@ using static Clinica.Shared.ApiDtos.ServiciosPublicosDtos;
 
 namespace Clinica.AppWPF.Infrastructure.IRepositorios;
 
-public record TurnoDelDia(
-	TurnoId TurnoId,
-	DateTime Hora,
-	PacienteId PacienteId,
-	string NombrePaciente,
-	DateOnly FechaNacimiento,
-	bool TieneConsultaRegistrada
-);
 
 
 
 public interface IRepositorioDominioWPF {
 	Task<List<Disponibilidad2025>> SelectDisponibilidades(SolicitarDisponibilidadesDto solicitud);
-
-
-
-	Task<IReadOnlyList<TurnoDelDia>> GetTurnosConcretadosAsync(MedicoId medicoId, DateOnly fecha);
+	//Task<IReadOnlyList<TurnoDelDia>> GetTurnosConcretadosAsync(MedicoId medicoId, DateOnly fecha);
 
 
 }

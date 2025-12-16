@@ -3,7 +3,7 @@
 namespace Clinica.Dominio.TiposDeEntidad;
 
 public record Consulta2025(
-	ConsultaId Id,
+	AtencionId Id,
 	PacienteId PacienteId,
 	MedicoId MedicoId,
 	DateTime Fecha,

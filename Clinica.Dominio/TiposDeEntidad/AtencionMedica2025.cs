@@ -1,18 +1,16 @@
 ﻿namespace Clinica.Dominio.TiposDeEntidad;
 
-/*
-public sealed class AtencionMedica {
-	public AtencionId Id { get; }
-	public TurnoId TurnoId { get; }
-	public MedicoId MedicoId { get; }
-	public DateTime Fecha { get; }
+//public sealed class AtencionMedica {
+//	public AtencionId Id { get; }
+//	public TurnoId TurnoId { get; }
+//	public MedicoId MedicoId { get; }
+//	public DateTime Fecha { get; }
 
-	public Diagnostico Diagnostico { get; private set; }
-	public Observaciones Observaciones { get; private set; }
+//	public Diagnostico Diagnostico { get; private set; }
+//	public Observaciones Observaciones { get; private set; }
 
-	public void RegistrarDiagnostico(...) { }
-}
-*/
+//	public void RegistrarDiagnostico(...) { }
+//}
 
 // ✔️ Para la siguiente iteración
 

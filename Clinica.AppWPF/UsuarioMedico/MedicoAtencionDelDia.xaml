@@ -84,7 +84,7 @@
 							Width="70"
 							DisplayMemberBinding="{Binding HoraDesde}" />
 						<GridViewColumn
-							Header="Paciente"
+							Header="PacienteNombreApellido"
 							Width="155"
 							DisplayMemberBinding="{Binding PacienteNombreApellido}" />
 						<GridViewColumn
@@ -92,9 +92,9 @@
 							Width="155"
 							DisplayMemberBinding="{Binding PacienteEdad}" />
 						<GridViewColumn
-							Header="Atendido"
+							Header="FueAtendido"
 							Width="55"
-							DisplayMemberBinding="{Binding TieneConsulta}" />
+							DisplayMemberBinding="{Binding FueAtendido}" />
 					</GridView>
 				</ListView.View>
 			</ListView>
@@ -108,7 +108,7 @@
 					Width="170"
 					Height="37"
 					Margin="0,0,0,10"
-					Click="ButtonHome"
+					Click="ClickBoton_Home"
 					FontSize="20"
 					Style="{StaticResource BotonRedondeadoCeleste}" />
 				<Button
