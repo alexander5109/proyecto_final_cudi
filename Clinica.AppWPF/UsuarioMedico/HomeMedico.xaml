@@ -42,7 +42,7 @@
 			<StackPanel
 				Margin="25,25,25,25">
 				<Button
-					Content="Mis Pacientes"
+					Content="Atención del dia"
 					HorizontalAlignment="Center"
 					Height="37"
 					Width="275"
@@ -51,17 +51,6 @@
 					FontWeight="Bold"
 					BorderBrush="#FF0E0D0D"
 					Click="ClickBoton_MisPacientes"
-					Margin="7,7,7,7"
-					Foreground="White" />
-				<Button
-					Content="Mis Turnos"
-					Height="37"
-					Width="275"
-					FontSize="20"
-					Style="{StaticResource BotonRedondeadoCeleste}"
-					FontWeight="Bold"
-					BorderBrush="#FF0E0D0D"
-					Click="MetodoMisTurnos"
 					Margin="7,7,7,7"
 					Foreground="White" />
 			</StackPanel>

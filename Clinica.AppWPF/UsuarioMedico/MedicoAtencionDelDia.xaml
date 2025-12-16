@@ -1,0 +1,237 @@
+﻿<Window
+	x:Class="Clinica.AppWPF.UsuarioMedico.MedicoAtencionDelDia"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Clinica Medica - Home"
+	Width="1024"
+	Height="600"
+	WindowStartupLocation="CenterScreen">
+	<Window.Background>
+		<ImageBrush
+			ImageSource="/PublishedResources/images2025sol/fondoCeleste2024medico.jpg" />
+	</Window.Background>
+	<!-- ===================== LAYOUT GENERAL ===================== -->
+	<Grid
+		Margin="15,15,15,15">
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="Auto" />
+			<!-- Título -->
+			<RowDefinition
+				Height="*" />
+			<!-- Contenido -->
+			<RowDefinition
+				Height="Auto" />
+			<RowDefinition
+				Height="Auto" />
+			<!-- Botones inferiores -->
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="*" />
+			<!-- Búsqueda + lista -->
+			<ColumnDefinition
+				Width="*" />
+			<!-- Estado del turno -->
+		</Grid.ColumnDefinitions>
+		<Label
+			Grid.Column="0"
+			Grid.Row="0"
+			Content="Atención del día"
+			FontSize="55"
+			FontFamily="Segoe UI Historic"
+			Style="{StaticResource LabelLindoConPiu}"
+			HorizontalContentAlignment="Center"
+			VerticalContentAlignment="Center"
+			VerticalAlignment="Center"
+			Margin="25,0,25,0"
+			FontWeight="Bold" />
+		<!-- ===================== PANEL 2 - ESTADO DEL TURNO ===================== -->
+		<!-- ===================== PANEL 3 - BUSCAR PACIENTE ===================== -->
+		<!-- ===================== BOTONES INFERIORES ===================== -->
+		<!-- ===== BOTONES INFERIORES (HOME / SALIR) ===== -->
+		<StackPanel
+			Grid.Row="2"
+			Orientation="Horizontal"
+			HorizontalAlignment="Left"
+			Margin="15,15,15,15"
+			Width="380"
+			VerticalAlignment="Bottom">
+			<Button
+				Content="Home"
+				Width="170"
+				Height="37"
+				Margin="10,0,10,10"
+				Click="ButtonHome"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeadoCeleste}" />
+			<Button
+				Content="Salir"
+				Width="170"
+				Height="37"
+				Margin="10,0,10,10"
+				Click="ClickBoton_Salir"
+				FontSize="20"
+				Style="{StaticResource BotonRedondeadoCeleste}" />
+		</StackPanel>
+		<Grid
+			Grid.Column="0"
+			Grid.Row="1"
+			Grid.RowSpan="1"
+			Margin="10,15,10,15">
+			<Grid.RowDefinitions>
+				<RowDefinition
+					Height="Auto" />
+				<!-- Título -->
+				<RowDefinition
+					Height="Auto" />
+				<!-- Subtítulo -->
+				<RowDefinition
+					Height="Auto" />
+				<!-- Filtro -->
+				<RowDefinition
+					Height="*" />
+				<!-- LISTVIEW -->
+				<RowDefinition
+					Height="Auto" />
+				<!-- Botones -->
+			</Grid.RowDefinitions>
+			<Label
+				Grid.Row="0"
+				Content="Mis turnos"
+				FontSize="25"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalAlignment="Center"
+				FontWeight="Bold" />
+			<ListView
+				Grid.Row="3"
+				ItemsSource="{Binding MedicosList}"
+				SelectedItem="{Binding SelectedMedico}"
+				Margin="10"
+				ScrollViewer.VerticalScrollBarVisibility="Auto">
+				<!-- GridView igual que ahora -->
+				<ListView.View>
+					<GridView>
+						<GridViewColumn
+							Header="Especialidad"
+							Width="120"
+							DisplayMemberBinding="{Binding EspecialidadCodigo}" />
+						<GridViewColumn
+							Header="Nombre"
+							Width="100"
+							DisplayMemberBinding="{Binding Nombre}" />
+						<GridViewColumn
+							Header="Apellido"
+							Width="100"
+							DisplayMemberBinding="{Binding Apellido}" />
+						<!-- ===================== 
+						<GridViewColumn
+				Header="DNI"
+				Width="75"
+				DisplayMemberBinding="{Binding Dni}" />
+				===================== -->
+						<GridViewColumn
+							Header="FechaIngreso"
+							Width="80">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<TextBlock
+										Text="{Binding FechaIngreso, StringFormat={}{0:dd/MM/yyyy}}" />
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+					</GridView>
+				</ListView.View>
+			</ListView>
+			<StackPanel
+				Grid.Row="4"
+				Orientation="Horizontal"
+				HorizontalAlignment="Center" />
+		</Grid>
+		<Grid
+			Grid.Column="1"
+			Grid.Row="0"
+			Grid.RowSpan="2"
+			Margin="15">
+			<Grid.RowDefinitions>
+				<RowDefinition
+					Height="Auto" />
+				<!-- Título -->
+				<RowDefinition
+					Height="Auto" />
+				<!-- Subtítulo -->
+				<RowDefinition
+					Height="*" />
+				<!-- LISTVIEW -->
+				<RowDefinition
+					Height="Auto" />
+				<!-- Botón -->
+			</Grid.RowDefinitions>
+			<Label
+				Grid.Row="0"
+				Content="Paciente seleccionado"
+				FontSize="25"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalAlignment="Center"
+				FontWeight="Bold" />
+			<Label
+				Grid.Row="1"
+				Content="Historial de consultas"
+				FontSize="20"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalAlignment="Center"
+				FontWeight="Bold"
+				Margin="0,10" />
+			<ListView
+				Grid.Row="2"
+				ItemsSource="{Binding HorariosViewModelList}">
+				<ListView.View>
+					<GridView>
+						<GridViewColumn
+							Header="Días"
+							Width="65"
+							DisplayMemberBinding="{Binding DiaSemanaDescripcion}" />
+						<GridViewColumn
+							Header="Desde Hs"
+							Width="70"
+							DisplayMemberBinding="{Binding HoraDesdeStr}" />
+						<GridViewColumn
+							Header="Hasta Hs"
+							Width="70"
+							DisplayMemberBinding="{Binding HoraHastaStr}" />
+						<GridViewColumn
+							Header="Vigencia"
+							Width="165">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate>
+									<TextBlock>
+            <Run
+											Text="{Binding VigenteDesde,
+                               Mode=OneWay,
+                               StringFormat={}{0:dd/MM/yyyy}}" />
+            <Run
+											Text=" → " />
+            <Run
+											Text="{Binding VigenteHasta,
+                               Mode=OneWay,
+                               TargetNullValue=Indefinido,
+                               StringFormat={}{0:dd/MM/yyyy}}" /></TextBlock>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+					</GridView>
+				</ListView.View>
+			</ListView>
+			<Button
+				Grid.Row="3"
+				Content="✏Editar Horarios"
+				Width="155"
+				Height="30"
+				IsEnabled="{Binding HayMedicoSeleccionado}"
+				Click="ClickBoton_ModificarMedicoHorarios"
+				Style="{StaticResource BotonRedondeadoCeleste}"
+				HorizontalAlignment="Center"
+				Margin="10" />
+		</Grid>
+	</Grid>
+</Window>
