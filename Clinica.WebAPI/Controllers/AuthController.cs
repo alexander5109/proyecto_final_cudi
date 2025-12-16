@@ -121,14 +121,14 @@ public static class ServicioAuth {
 		string passwordRaw,
 		IRepositorioUsuarios repo
 	) {
-		Result<UsuarioDbModel> dbResult = await repo.SelectUsuarioProfileWhereUsername(new UserName(username));
+		Result<UsuarioDbModel> dbResult = await repo.SelectUsuarioProfileWhereUsername(new UserName2025(username));
 
 		if (dbResult.IsError) {
 			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDbModel>();
 		}
 		UsuarioDbModel db = dbResult.UnwrapAsOk();
 		// VALIDAR PASSWORD
-		if (!ContraseñaHasheada.RawIdenticalToHashed(passwordRaw, db.PasswordHash))
+		if (!ContraseñaHasheada2025.RawIdenticalToHashed(passwordRaw, db.PasswordHash))
 			return "Usuario o contraseña incorrectos.".ToError<UsuarioAutenticadoDbModel>();
 
 		// CONSTRUIR RESULTADO

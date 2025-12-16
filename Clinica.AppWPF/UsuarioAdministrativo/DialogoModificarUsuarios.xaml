@@ -6,197 +6,219 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="clr-namespace:Clinica.AppWPF.UsuarioAdministrativo"
 	mc:Ignorable="d"
+	Title="Clinica Medica - Usuarios"
 	Width="1024"
-	Height="600"
-	Title="DialogoModificarUsuario">
+	Height="600">
 	<Window.Background>
 		<ImageBrush
 			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoVerde2025.jpg" />
 	</Window.Background>
+	<!-- GRID PRINCIPAL -->
 	<Grid
-		Margin="25">
-		<Grid
-			Margin="25">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition
-					Width="auto" />
-				<ColumnDefinition
-					Width="*" />
-				<ColumnDefinition
-					Width="200" />
-			</Grid.ColumnDefinitions>
+		Margin="25,25,25,25">
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="Auto" />
+			<RowDefinition
+				Height="Auto" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="*" />
+			<ColumnDefinition
+				Width="*" />
+			<ColumnDefinition
+				Width="*" />
+		</Grid.ColumnDefinitions>
+		<!-- ========================================================= -->
+		<!-- HEADER PRINCIPAL -->
+		<!-- ========================================================= -->
+		<Label
+			Grid.ColumnSpan="2"
+			Content="Modificar/Agregar Usuario"
+			FontSize="33"
+			Style="{StaticResource LabelLindoConPiu}"
+			HorizontalContentAlignment="Center"
+			FontWeight="Bold"
+			VerticalContentAlignment="Center"
+			VerticalAlignment="Center" />
+		<!-- HEADER SECUNDARIO (vacío pero reservado) -->
+		<Border
+			Grid.Row="1"
+			Grid.ColumnSpan="2"
+			Height="10" />
+		<!-- ========================================================= -->
+		<!-- FORMULARIO -->
+		<!-- ========================================================= -->
+		<StackPanel
+			Grid.Row="2"
+			Grid.Column="0"
+			Margin="20,5,20,5">
+			<!-- NOMBRE -->
 			<StackPanel
-				VerticalAlignment="Center"
-				Grid.Column="1">
-				<Border
-					Grid.Row="0"
-					Grid.ColumnSpan="2"
-					Margin="25,15,25,15">
-					<Label
-						Content="Modificacion de Usuarios"
-						FontSize="44"
-						FontFamily="Javanese Text"
-						FlowDirection="RightToLeft"
-						Style="{StaticResource LabelLindoConPiu}"
-						HorizontalContentAlignment="Center"
-						FontWeight="Bold"
-						VerticalContentAlignment="Center"
-						VerticalAlignment="Center"
-						Margin="25,0,25,0" />
-				</Border>
-				<StackPanel
-					Orientation="Horizontal"
-					HorizontalAlignment="Right">
-					<TextBlock
-						Text="UserName"
-						FontFamily="Bahnschrift Light"
-						FontSize="20"
-						HorizontalAlignment="Center"
-						Margin="15,15,15,15" />
-					<TextBox
-						Style="{StaticResource TextBoxLindo2}"
-						Width="220"
-						Height="32"
-						FontSize="16"
-						Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
-						HorizontalAlignment="Center"
-						Margin="15,15,15,15" />
-				</StackPanel>
-				<StackPanel
-					Orientation="Horizontal"
-					HorizontalAlignment="Right">
-					<TextBlock
-						Text="Contraseña"
-						FontFamily="Bahnschrift Light"
-						FontSize="20"
-						HorizontalAlignment="Center"
-						Margin="15,15,15,15" />
-					<TextBox
-						Style="{StaticResource TextBoxLindo2}"
-						Width="220"
-						Height="32"
-						FontSize="16"
-						Text="{Binding PasswordHash, UpdateSourceTrigger=PropertyChanged}"
-						HorizontalAlignment="Center"
-						Margin="15,15,15,15" />
-				</StackPanel>
-				<StackPanel
-					Orientation="Horizontal"
-					HorizontalAlignment="Right">
-					<TextBlock
-						Text="Nombre"
-						FontFamily="Bahnschrift Light"
-						FontSize="20"
-						HorizontalAlignment="Center"
-						Margin="15,15,15,15" />
-					<TextBox
-						Style="{StaticResource TextBoxLindo2}"
-						Width="220"
-						Height="32"
-						FontSize="16"
-						Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged}"
-						HorizontalAlignment="Center"
-						Margin="15,15,15,15" />
-				</StackPanel>
-				<StackPanel
-					Orientation="Horizontal"
-					HorizontalAlignment="Right">
-					<TextBlock
-						Text="Apellido"
-						FontFamily="Bahnschrift Light"
-						FontSize="20"
-						HorizontalAlignment="Center"
-						Margin="15,15,15,15" />
-					<TextBox
-						Style="{StaticResource TextBoxLindo2}"
-						Width="220"
-						Height="32"
-						FontSize="16"
-						Text="{Binding Apellido, UpdateSourceTrigger=PropertyChanged}"
-						HorizontalAlignment="Center"
-						Margin="15,15,15,15" />
-				</StackPanel>
-				<StackPanel
-					Orientation="Horizontal"
-					HorizontalAlignment="Right">
-					<TextBlock
-						Text="Email"
-						FontFamily="Bahnschrift Light"
-						FontSize="20"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center"
-						Margin="15,15,15,15" />
-					<TextBox
-						Style="{StaticResource TextBoxLindo2}"
-						Width="220"
-						Height="32"
-						FontSize="16"
-						Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
-						HorizontalAlignment="Center"
-						Margin="15,15,15,15" />
-				</StackPanel>
-				<StackPanel
-					Orientation="Horizontal"
-					HorizontalAlignment="Right">
-					<TextBlock
-						Text="Telefono"
-						FontFamily="Bahnschrift Light"
-						FontSize="20"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center"
-						Margin="15,15,15,15" />
-					<TextBox
-						Style="{StaticResource TextBoxLindo2}"
-						Width="220"
-						Height="32"
-						FontSize="16"
-						Text="{Binding Telefono, UpdateSourceTrigger=PropertyChanged}"
-						HorizontalAlignment="Center"
-						Margin="15,15,15,15"
-						VerticalAlignment="Center" />
-				</StackPanel>
-				<StackPanel
-					Orientation="Horizontal"
-					HorizontalAlignment="Right">
-					<TextBlock
-						Text="Rol de usuario"
-						FontFamily="Bahnschrift Light"
-						FontSize="20"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center"
-						Margin="15,15,15,15" />
-					<ComboBox
-						ItemsSource="{Binding RolesList}"
-						Width="220"
-						Height="32"
-						SelectedItem="{Binding SelectedRole, Mode=TwoWay}"
-						DisplayMemberPath="Nombre"
-						Margin="15,5,15,5" />
-				</StackPanel>
+				Margin="5">
+				<Label
+					Content="Username" />
+				<TextBox
+					Height="30"
+					MaxLength="50"
+					Text="{Binding UserName}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- APELLIDO -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Contraseña" />
+				<TextBox
+					Height="30"
+					MaxLength="50"
+					IsEnabled="{Binding PuedeEscribirContraseña}"
+					Text="{Binding PasswordHash}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- DNI -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Nombre" />
+				<TextBox
+					Height="30"
+					MaxLength="8"
+					Text="{Binding Nombre}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- EMAIL -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Apellido" />
+				<TextBox
+					Height="30"
+					Text="{Binding Apellido}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- TELEFONO -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Teléfono" />
+				<TextBox
+					Height="30"
+					MaxLength="10"
+					Text="{Binding Telefono}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- Email -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Email" />
+				<TextBox
+					Height="30"
+					MaxLength="10"
+					Text="{Binding Email}"
+					Style="{StaticResource TextBoxLindo2}" />
+			</StackPanel>
+			<!-- FECHA NACIMIENTO -->
+			<StackPanel
+				Margin="0,5" />
+		</StackPanel>
+		<!-- Columna 2 -->
+		<StackPanel
+			Grid.Row="2"
+			Grid.Column="1"
+			Margin="20,5,20,5">
+			<!-- PROVINCIA -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Rol de Usuario" />
+				<ComboBox
+					ItemsSource="{Binding EnumRoles}"
+					SelectedItem="{Binding EnumRole}"
+					Height="30" />
+			</StackPanel>
+			<!-- FECHA INGRESO 
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Fecha de ingreso" />
+				<Label
+					Height="30"
+					Content="{Binding FechaIngreso}"
+					Style="{StaticResource LabelLindoCuadroGrisSombreado}"
+					FontSize="12" />
+				</StackPanel> 
+			-->
+			<!-- ID -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="Usuario Id" />
+				<Label
+					Height="30"
+					Content="{Binding Id}"
+					Style="{StaticResource LabelLindoCuadroGrisSombreado}"
+					FontSize="12" />
+			</StackPanel>
+		</StackPanel>
+		<!-- ========================================================= -->
+		<!-- BOTONES A LA DERECHA -->
+		<!-- ========================================================= -->
+		<StackPanel
+			Grid.Column="2"
+			Margin="0,25,0,25"
+			Grid.RowSpan="3"
+			VerticalAlignment="Bottom">
+			<StackPanel
+				Margin="15"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center">
+				<Button
+					Content="Guardar cambios"
+					Width="200"
+					Height="35"
+					Margin="7,7,7,7"
+					Style="{StaticResource BotonRedondeadoVerde}"
+					FontFamily="Baskerville Old Face"
+					IsEnabled="{Binding PuedeGuardarCambios}"
+					Click="ClickBoton_GuardarCambios"
+					Foreground="#FF162F28"
+					FontSize="20" />
+				<Button
+					Content="Eliminar médico"
+					Width="200"
+					Height="35"
+					Margin="7,7,7,7"
+					Style="{StaticResource BotonRedondeadoVerde}"
+					FontFamily="Baskerville Old Face"
+					IsEnabled="{Binding PuedeEliminar}"
+					Click="ClickBoton_Eliminar"
+					FontSize="20" />
 			</StackPanel>
 			<StackPanel
-				Margin="25"
-				Grid.Row="0"
-				Grid.Column="3"
-				VerticalAlignment="Bottom"
-				HorizontalAlignment="Center">
+				Margin="15"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center">
 				<Button
 					Content="Salir"
-					Style="{StaticResource BotonRedondeadoVerde}"
-					Width="110"
-					Height="38"
-					FontSize="20"
+					Width="170"
+					Height="37"
+					Margin="7,7,7,7"
 					Click="ClickBoton_Salir"
-					Margin="0,10,0,10" />
-				<Button
-					Content="Cancelar"
-					Style="{StaticResource BotonRedondeadoVerde}"
-					Width="110"
-					Height="38"
 					FontSize="20"
-					Margin="0,10,0,10"
-					Click="ClickBoton_Cancelar" />
+					Style="{StaticResource BotonRedondeadoVerde}" />
+				<Button
+					Content="Volver"
+					Width="155"
+					Height="35"
+					Style="{StaticResource BotonRedondeadoVerde}"
+					FontFamily="Baskerville Old Face"
+					Click="ClickBoton_Cancelar"
+					FontSize="20"
+					Margin="7,7,7,7" />
 			</StackPanel>
-		</Grid>
+		</StackPanel>
 	</Grid>
 </Window>

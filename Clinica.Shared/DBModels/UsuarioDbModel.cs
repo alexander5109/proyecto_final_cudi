@@ -60,9 +60,9 @@ public static partial class DbModels {
 		=> Usuario2025Agg.CrearResult(
 			UsuarioId.CrearResult(dbModel.Id.Valor),
 			Usuario2025.CrearResult(
-				UserName.CrearResult(dbModel.UserName),
+				UserName2025.CrearResult(dbModel.UserName),
 				NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
-				ContraseñaHasheada.CrearResult(dbModel.PasswordHash),
+				ContraseñaHasheada2025.CrearResult(dbModel.PasswordHash),
 				dbModel.EnumRole.CrearResult(),
 				Email2025.CrearResult(dbModel.Email),
 				Telefono2025.CrearResult(dbModel.Telefono)

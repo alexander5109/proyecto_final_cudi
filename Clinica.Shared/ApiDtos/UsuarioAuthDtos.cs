@@ -57,9 +57,9 @@ public static class UsuarioAuthDtos {
 
 	public static Result<Usuario2025> ToDomain(this UsuarioDto dto)
 		=> Usuario2025.CrearResult(
-			UserName.CrearResult(dto.UserName),
+			UserName2025.CrearResult(dto.UserName),
 			NombreCompleto2025.CrearResult(dto.Nombre, dto.Apellido),
-			ContraseñaHasheada.CrearResult(dto.PasswordHash),
+			ContraseñaHasheada2025.CrearResult(dto.PasswordHash),
 			dto.EnumRole.CrearResult(),
 			Email2025.CrearResult(dto.Email),
 			Telefono2025.CrearResult(dto.Telefono)

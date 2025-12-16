@@ -43,7 +43,7 @@ public class UsuariosController(
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.VerUsuarios,
-			() => repositorio.SelectUsuarioProfileWhereUsername(new UserName(username)),
+			() => repositorio.SelectUsuarioProfileWhereUsername(new UserName2025(username)),
 			notFoundMessage: $"No existe usuario con nombre: {username}"
 		);
 

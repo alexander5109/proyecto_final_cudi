@@ -77,12 +77,12 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 			);
 		});
 
-	Task<Result<UsuarioDbModel>> IRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName nombre)
+	Task<Result<UsuarioDbModel>> IRepositorioUsuarios.SelectUsuarioProfileWhereUsername(UserName2025 nombre)
 		=> TryAsync(async conn => await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
 				"sp_SelectUsuarioWhereNombre",
 				new { UserName = nombre.Valor },
 				commandType: CommandType.StoredProcedure
-			) ?? throw new Exception($"Usuario con UserName={nombre.Valor} no encontrado.")
+			) ?? throw new Exception($"Usuario con UserName2025={nombre.Valor} no encontrado.")
 		);
 
 
