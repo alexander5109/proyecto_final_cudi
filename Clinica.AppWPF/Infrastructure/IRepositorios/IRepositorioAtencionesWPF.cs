@@ -18,6 +18,9 @@ public interface IRepositorioAtencionesWPF {
 	Task<List<TurnoDbModel>> SelectTurnosWhereMedicoId(MedicoId id);
 	Task<List<TurnoDbModel>> SelectTurnosWhereMedicoIdDeLaFecha(MedicoId id, DateOnly fecha);
 	Task<ResultWpf<UnitWpf>> AgendarAtencionConDiagnostico(TurnoId turnoSource, PacienteId pacienteId);
+
+	//string GetFromCacheMedicoDisplayWhereId(MedicoId id);
+	//App.Repositorio.Medicos.GetFromCacheMedicoDisplayWhereId(d.MedicoId);
 }
 
 

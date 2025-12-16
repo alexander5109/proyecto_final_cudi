@@ -192,15 +192,13 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 			MedicoPreferido: SelectedMedico?.Id
 		);
 
-		List<Disponibilidad2025> lista =
-			await App.Repositorio.Dominio.SelectDisponibilidades(solicitudDto);
+		List<Disponibilidad2025> lista = await App.Repositorio.Dominio.SelectDisponibilidades(solicitudDto);
 		await App.Repositorio.Medicos.RefreshCache();
 		DisponibilidadesItemsSource.Clear();
 
 		foreach (Disponibilidad2025 d in lista) {
 
-			string medicoDisplay =
-				App.Repositorio.Medicos.GetFromCacheMedicoDisplayWhereId(d.MedicoId);
+			string medicoDisplay = App.Repositorio.Medicos.GetFromCacheMedicoDisplayWhereId(d.MedicoId);
 
 			DisponibilidadesItemsSource.Add(
 				new DisponibilidadEspecialidadModelView(

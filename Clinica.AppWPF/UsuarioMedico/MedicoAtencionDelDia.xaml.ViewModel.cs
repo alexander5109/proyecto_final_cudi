@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Clinica.AppWPF.Infrastructure.IRepositorios;
+using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
 
@@ -65,16 +66,36 @@ public sealed class MedicoAtencionDelDiaVM : INotifyPropertyChanged {
 	// COLECCIONES
 	// ================================================================
 	private List<TurnoDbModel> _todosLosTurnos = []; // Copia completa para filtrar
-	public ObservableCollection<TurnoDbModel> TurnosList { get; } = [];
+	public ObservableCollection<TurnoDeHoyVM> TurnosList { get; } = [];
 
 
 
 
 	internal async Task RefrescarMisTurnosAsync() {
-		List<TurnoDbModel> turnos = await App.Repositorio.Turnos.SelectTurnos();
+		List<TurnoDbModel> turnos = await App.Repositorio.Turnos.SelectTurnosWhereMedicoId(CurrentMedicoId);
+
+
 
 		_todosLosTurnos = turnos;
+
+
+
+		TurnosList.Clear();
+		foreach (TurnoDbModel t in turnos.OrderBy(t => t.FechaHoraAsignadaDesde)) {
+			PacienteDbModel? paciente = await App.Repositorio.Pacientes.SelectPacienteWhereId(t.PacienteId); // cache de pacientes
+			if (paciente == null) continue;
+
+			TurnosList.Add(new TurnoDeHoyVM(
+				Hora: t.FechaHoraAsignadaDesde.ToString("HH:mm"),
+				PacienteNombreApellido: $"{paciente.Nombre} {paciente.Apellido}",
+				PacienteEdad: CalcularEdad(paciente.FechaNacimiento),
+				FueAtendido: t.OutcomeEstado == TurnoEstadoEnum.Concretado ? "✔" : ""
+			));
+		}
 	}
+
+	private string CalcularEdad(DateTime fechaNacimiento) =>
+		(DateTime.Today.Year - fechaNacimiento.Year - (DateTime.Today < fechaNacimiento.AddYears(DateTime.Today.Year - fechaNacimiento.Year) ? 1 : 0)).ToString();
 
 
 	public string? SelectedPacienteDomicilioCompleto => SelectedPaciente is null ? null : $"{SelectedPaciente?.Localidad}, {SelectedPaciente?.Domicilio}";
