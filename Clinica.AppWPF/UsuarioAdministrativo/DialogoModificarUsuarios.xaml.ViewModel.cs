@@ -219,7 +219,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	// METHODS.VALIDACION
 	// ================================================================
 	private ResultWpf<Usuario2025Edicion> ToEdicionDomain() {
-		MessageBox.Show($"ToEdicionDomain: {UserName}, {Nombre}, {Apellido}");
+		//MessageBox.Show($"ToEdicionDomain: {UserName}, {Nombre}, {Apellido}");
 		return Usuario2025Edicion.CrearResult(
 			UserName2025.CrearResult(UserName),
 			NombreCompleto2025.CrearResult(Nombre, Apellido),
@@ -230,7 +230,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		).ToWpf(MessageBoxImage.Information);
 	}
 	private ResultWpf<Usuario2025> ToCreacionDomain() {
-		MessageBox.Show($"ToCreacionDomain: {UserName}, {Nombre}, {Apellido}, {EnumRole}");
+		//MessageBox.Show($"ToCreacionDomain: {UserName}, {Nombre}, {Apellido}, {EnumRole}");
 		return Usuario2025.CrearResult(
 			UserName2025.CrearResult(UserName),
 			NombreCompleto2025.CrearResult(Nombre, Apellido),

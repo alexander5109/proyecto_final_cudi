@@ -47,15 +47,16 @@ public class UsuariosController(
 			notFoundMessage: $"No existe usuario con nombre: {username}"
 		);
 
-
 	[HttpDelete("{id:int}")]
 	public Task<ActionResult<Unit>> DeleteUsuario(int id)
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.EliminarUsuarios,
-			() => repositorio.DeleteUsuarioWhereId(new UsuarioId(id)),
+			currentUserId => repositorio.DeleteUsuarioWhereId(new UsuarioId(id)),
+			precondicion: currentUserId => currentUserId.Valor != id,
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
+
 
 
 

@@ -1,6 +1,8 @@
 ﻿using System.Net;
+using System.Security.Claims;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEnum;
+using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -87,6 +89,71 @@ public static class ControllerExtensions {
 		}
 	}
 
+	public static bool TryGetUsuarioId(
+		this ControllerBase controller,
+		out UsuarioId usuarioId
+	) {
+		usuarioId = default;
+
+		string? idStr = controller.User
+			.FindFirst("userid")
+			?.Value;
+
+		if (!int.TryParse(idStr, out int id))
+			return false;
+
+		usuarioId = new UsuarioId(id);
+		return true;
+	}
+
+
+
+	public static async Task<ActionResult<T>> SafeExecute<T>(
+		this ControllerBase controller,
+		ILogger logger,
+		AccionesDeUsuarioEnum permiso,
+		Func<UsuarioId, Task<Result<T>>> action,
+		Func<UsuarioId, bool>? precondicion = null,
+		string? notFoundMessage = null
+	) {
+		// 1️⃣ UsuarioId
+		if (!controller.TryGetUsuarioId(out UsuarioId currentUserId))
+			return controller.ToActionResult(UsuarioNoAutorizado<T>());
+
+		// 2️⃣ Rol
+		if (!controller.TryGetUsuarioRole(out UsuarioRoleEnum role))
+			return controller.ToActionResult(UsuarioNoAutorizado<T>());
+
+		// 3️⃣ Permiso
+		if (!role.TienePermisosPara(permiso))
+			return controller.ToActionResult(PermisoDenegado<T>());
+
+		// 4️⃣ Precondición de negocio
+		if (precondicion is not null && !precondicion(currentUserId))
+			return controller.ToActionResult(
+				new ApiResult<T>.Error(
+					new ApiErrorDto(
+						"No está permitido realizar esta acción sobre su propio usuario.",
+						HttpStatusCode.Conflict
+					)
+				)
+			);
+
+		try {
+			Result<T> result = await action(currentUserId);
+			return controller.ToActionResult(result.ToApi());
+		} catch (Exception ex) {
+			logger.LogError(ex, "Error inesperado en SafeExecute");
+			return controller.ToActionResult(
+				new ApiResult<T>.Error(
+					new ApiErrorDto(
+						"Error inesperado al procesar la solicitud.",
+						HttpStatusCode.InternalServerError
+					)
+				)
+			);
+		}
+	}
 
 	// =====================================================================
 	// 🔥 SAFEEXECUTE WITH DOMAIN (RETORNA TIPADO)
