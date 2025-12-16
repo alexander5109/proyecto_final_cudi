@@ -12,7 +12,7 @@
 	WindowStartupLocation="CenterScreen">
 	<Window.Background>
 		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoLila2025.jpeg" />
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoVerde2025.jpg" />
 	</Window.Background>
 	<!-- ===================== LAYOUT GENERAL ===================== -->
 	<Grid
@@ -66,7 +66,7 @@
 				Margin="10,0,10,10"
 				Click="ButtonHome"
 				FontSize="20"
-				Style="{StaticResource BotonRedondeadoVioletaAzul}" />
+				Style="{StaticResource BotonRedondeadoVerde}" />
 			<Button
 				Content="Salir"
 				Width="170"
@@ -74,7 +74,7 @@
 				Margin="10,0,10,10"
 				Click="ClickBoton_Salir"
 				FontSize="20"
-				Style="{StaticResource BotonRedondeadoVioletaAzul}" />
+				Style="{StaticResource BotonRedondeadoVerde}" />
 		</StackPanel>
 		<Grid
 			Grid.Column="0"
@@ -166,7 +166,7 @@
 					Width="155"
 					Height="30"
 					Click="ButtonAgregarMedico"
-					Style="{StaticResource BotonRedondeadoVioletaAzul}"
+					Style="{StaticResource BotonRedondeadoVerde}"
 					Margin="7" />
 				<Button
 					Content="✏ Editar Datos"
@@ -174,7 +174,7 @@
 					Height="30"
 					IsEnabled="{Binding HayMedicoSeleccionado}"
 					Click="ClickBoton_ModificarMedico"
-					Style="{StaticResource BotonRedondeadoVioletaAzul}"
+					Style="{StaticResource BotonRedondeadoVerde}"
 					Margin="7" />
 			</StackPanel>
 		</Grid>
@@ -258,7 +258,7 @@
 				Height="30"
 				IsEnabled="{Binding HayMedicoSeleccionado}"
 				Click="ClickBoton_ModificarMedicoHorarios"
-				Style="{StaticResource BotonRedondeadoVioletaAzul}"
+				Style="{StaticResource BotonRedondeadoVerde}"
 				HorizontalAlignment="Center"
 				Margin="10" />
 		</Grid>

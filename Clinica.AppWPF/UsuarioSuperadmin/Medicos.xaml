@@ -11,13 +11,13 @@
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
 	Activated="Window_Activated"
 	WindowStartupLocation="CenterScreen">
+	<Window.Background>
+		<ImageBrush
+			ImageSource="/PublishedResources/images/falopa.jpg" />
+	</Window.Background>
 	<Grid
 		HorizontalAlignment="Stretch"
 		VerticalAlignment="Stretch">
-		<Grid.Background>
-			<ImageBrush
-				ImageSource="pack://application:,,,/PublishedResources/images/doctor.jpg" />
-		</Grid.Background>
 		<!-- Definicion del grid -->
 		<ContentControl
 			Style="{StaticResource ContentControlLindo}"
@@ -96,7 +96,7 @@
 						Width="150"
 						Click="ButtonAgregarMedico"
 						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						FontWeight="Bold"
 						BorderBrush="#FF0E0D0D"
 						FontFamily="Baskerville Old Face"
@@ -109,7 +109,7 @@
 						Height="35"
 						Click="ClickBoton_ModificarMedico"
 						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						FontWeight="Bold"
 						BorderBrush="#FF0E0D0D"
 						FontFamily="Baskerville Old Face"
@@ -128,7 +128,7 @@
 			Width="170"
 			Click="ButtonHome"
 			FontSize="20"
-			Style="{StaticResource BotonRedondeado}"
+			Style="{StaticResource BotonRedondeadoViejo}"
 			FontWeight="Bold"
 			BorderBrush="#FF0E0D0D"
 			Margin="25,464,0,0"
@@ -141,7 +141,7 @@
 			Width="170"
 			Click="ClickBoton_Salir"
 			FontSize="20"
-			Style="{StaticResource BotonRedondeado}"
+			Style="{StaticResource BotonRedondeadoViejo}"
 			FontWeight="Bold"
 			BorderBrush="#FF0E0D0D"
 			Margin="25,514,0,0"
@@ -208,7 +208,7 @@
 						Height="30"
 						Click="ClickBoton_ModificarPaciente"
 						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						FontWeight="Bold"
 						BorderBrush="#FF0E0D0D"
 						FontFamily="Baskerville Old Face"
@@ -268,7 +268,7 @@
 						Height="30"
 						Click="ClickBoton_ModificarTurno"
 						FontSize="20"
-						Style="{StaticResource BotonRedondeado}"
+						Style="{StaticResource BotonRedondeadoViejo}"
 						FontWeight="Bold"
 						BorderBrush="#FF0E0D0D"
 						FontFamily="Baskerville Old Face"

@@ -10,7 +10,7 @@
 	WindowStartupLocation="CenterScreen">
 	<Window.Background>
 		<ImageBrush
-			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoCeleste2025.jpg" />
+			ImageSource="pack://application:,,,/PublishedResources/images2025sol/fondoLila2025.jpg" />
 	</Window.Background>
 	<Grid
 		Margin="25">
@@ -161,7 +161,7 @@
 				Content="Buscar"
 				Width="120"
 				Height="30"
-				Style="{StaticResource BotonRedondeado}"
+				Style="{StaticResource BotonRedondeadoLila}"
 				IsEnabled="{Binding BotonBuscar_Enabled}"
 				Click="ClickBoton_Consultar"
 				Margin="7,7,7,7" />
@@ -289,7 +289,7 @@
 				Content="Agendar selección"
 				Width="200"
 				Height="35"
-				Style="{StaticResource BotonRedondeado}"
+				Style="{StaticResource BotonRedondeadoLila}"
 				IsEnabled="{Binding BotonAgendar_Enabled}"
 				Click="ClickBoton_NuevoTurno"
 				HorizontalAlignment="Center"
@@ -306,14 +306,14 @@
 				Content="Cancelar"
 				Width="120"
 				Height="35"
-				Style="{StaticResource BotonRedondeado}"
+				Style="{StaticResource BotonRedondeadoLila}"
 				Click="ClickBoton_Cancelar"
 				Margin="7,7,7,7" />
 			<Button
 				Content="Salir"
 				Width="120"
 				Height="35"
-				Style="{StaticResource BotonRedondeado}"
+				Style="{StaticResource BotonRedondeadoLila}"
 				Click="ClickBoton_Salir"
 				Margin="7,7,7,7" />
 		</StackPanel>

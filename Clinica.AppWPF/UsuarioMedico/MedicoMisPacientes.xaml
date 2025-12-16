@@ -12,7 +12,7 @@
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png">
 	<Window.Background>
 		<ImageBrush
-			ImageSource="/PublishedResources/images/doctor.jpg" />
+			ImageSource="/PublishedResources/images2025sol/fondoCeleste2024medico.jpg" />
 	</Window.Background>
 	<!-- ===================== LAYOUT GENERAL ===================== -->
 	<Grid
@@ -80,7 +80,7 @@
 				Margin="10,0,10,10"
 				Click="ButtonHome"
 				FontSize="20"
-				Style="{StaticResource BotonRedondeadoVioletaAzul}" />
+				Style="{StaticResource BotonRedondeadoCeleste}" />
 			<Button
 				Content="Salir"
 				Width="170"
@@ -88,7 +88,7 @@
 				Margin="10,0,10,10"
 				Click="ClickBoton_Salir"
 				FontSize="20"
-				Style="{StaticResource BotonRedondeadoVioletaAzul}" />
+				Style="{StaticResource BotonRedondeadoCeleste}" />
 		</StackPanel>
 		<StackPanel
 			Grid.Column="0"
