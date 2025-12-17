@@ -36,13 +36,6 @@ public class ServiciosPublicos : IServiciosDeDominio {
 		MedicoId2025? medicoPreferidoId,
 		IRepositorioDominioServices repo
 	) {
-
-		//Console.WriteLine($"Solicitud de disponibilidades para {especialidadCodigo}");
-		//Console.WriteLine($"aPartirDeCuando: {aPartirDeCuando}");
-		//Console.WriteLine($"Maximo: {cuantos}");
-		//Console.WriteLine($"diaSemanaPreferido: {diaSemanaPreferido}");
-		//Console.WriteLine($"medicoPreferidoId: {medicoPreferidoId}");
-
 		if (cuantos <= 0)
 			return new Result<IReadOnlyList<Disponibilidad2025>>
 				.Error("La cantidad solicitada debe ser mayor a cero.");
@@ -141,7 +134,6 @@ public class ServiciosPublicos : IServiciosDeDominio {
 							slot.AddMinutes(especialidad.DuracionConsultaMinutos);
 
 						bool solapa = turnos.Any(t =>
-							t.EspecialidadCodigo == especialidad.Codigo &&
 							t.OutcomeEstado == TurnoEstadoEnum.Programado &&
 							t.FechaHoraAsignadaDesde < slotHasta &&
 							slot < t.FechaHoraAsignadaHasta
