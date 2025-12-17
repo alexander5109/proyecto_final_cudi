@@ -9,19 +9,11 @@ namespace Clinica.AppWPF.UsuarioMedico;
 public partial class MedicoAtencionDelDia : Window {
 	public MedicoAtencionDelDiaVM VM { get; }
 
-	public MedicoAtencionDelDia() {
+	public MedicoAtencionDelDia(MedicoId2025 medicoId) {
 		InitializeComponent();
-		if (App.UsuarioActivo!.MedicoRelacionadoId is not MedicoId2025 medicoIdGood) {
-			MessageBox.Show("Su usuario no tiene un medico relacionado. \n No tiene permisos para ver esta sección todavia. \n Consule personal administrativo.");
-			this.CerrarSesion();
-			//throw new Exception("Su usuario no tiene un medico relacionado. Voy a crashear");
-		} else {
-
-			VM = new MedicoAtencionDelDiaVM(medicoIdGood);
-			DataContext = VM;
-
-			Loaded += async (_, __) => await VM.CargaInicial();
-		}
+		VM = new MedicoAtencionDelDiaVM(medicoId);
+		DataContext = VM;
+		Loaded += async (_, __) => await VM.RefrescarTodoAsync();
 	}
 
 
@@ -54,7 +46,7 @@ public partial class MedicoAtencionDelDia : Window {
 			_enCooldown = true;
 			if (sender is Button btn)
 				btn.IsEnabled = false;
-			await VM.RefrescarTodo();
+			await VM.RefrescarTodoAsync();
 		} finally {
 			await Task.Delay(2000);
 			if (sender is Button btn)

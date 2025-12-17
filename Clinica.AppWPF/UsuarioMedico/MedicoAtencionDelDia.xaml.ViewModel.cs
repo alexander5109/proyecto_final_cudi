@@ -85,7 +85,7 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	// METHODS.PUBLIC
 	// ================================================================
 
-	internal async Task RefrescarTodo() {
+	internal async Task RefrescarTodoAsync() {
 
 		await App.Repositorio.Pacientes.RefreshCache();
 		await App.Repositorio.Medicos.RefreshCache();
