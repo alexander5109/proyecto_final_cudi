@@ -36,7 +36,8 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			Apellido: original.Apellido,
 			Telefono: original.Telefono,
 			Email: original.Email,
-			EnumRole: original.EnumRole
+			EnumRole: original.EnumRole,
+			MedicoVinculadoId: original.MedicoRelacionadoId
 		);
 
 		Id = original.Id;
@@ -59,6 +60,12 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	public IReadOnlyList<UsuarioRoleEnum> EnumRoles { get; } = Enum.GetValues<UsuarioRoleEnum>();
 
 	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; } = [.. Especialidad2025.Todas.Select(x => x.ToViewModel())];
+	private ObservableCollection<MedicoVinculadoViewModel> _medicosDisponibles = new();
+	public ObservableCollection<MedicoVinculadoViewModel> MedicosDisponibles {
+		get => _medicosDisponibles;
+		set { _medicosDisponibles = value; OnPropertyChanged(nameof(MedicosDisponibles)); }
+	}
+
 
 	// ================================================================
 	// REGLAS
@@ -152,16 +159,24 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		}
 	}
 
-	private MedicoId2025? _medicoRelacionadoId;
-	public MedicoId2025? MedicoRelacionadoId {
-		get => _medicoRelacionadoId;
-		set {
-			_medicoRelacionadoId = value;
-			OnPropertyChanged(nameof(MedicoRelacionadoId));
-			OnPropertyChanged(nameof(TieneCambios));
-			OnPropertyChanged(nameof(PuedeGuardarCambios));
-		}
+
+	private MedicoId2025? _medicoVinculadoId;
+	public MedicoId2025? MedicoVinculadoId {
+		get => _medicoVinculadoId;
+		set { _medicoVinculadoId = value; OnPropertyChanged(nameof(MedicoVinculadoId)); }
 	}
+
+
+	//private MedicoDbModel? _medicoRelacionado;
+	//public MedicoDbModel? MedicoVinculado {
+	//	get => _medicoRelacionado;
+	//	set {
+	//		_medicoRelacionado = value;
+	//		OnPropertyChanged(nameof(MedicoVinculado));
+	//		OnPropertyChanged(nameof(TieneCambios));
+	//		OnPropertyChanged(nameof(PuedeGuardarCambios));
+	//	}
+	//}
 
 	// -----------------------------
 	// DETECTAR CAMBIOS
@@ -239,7 +254,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			EnumRole.CrearResult(),
 			Email2025.CrearResult(Email),
 			Telefono2025.CrearResult(Telefono),
-			MedicoRelacionadoId
+			MedicoVinculadoId
 
 		).ToWpf(MessageBoxImage.Information);
 	}
@@ -252,7 +267,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			EnumRole.CrearResult(),
 			Email2025.CrearResult(Email),
 			Telefono2025.CrearResult(Telefono),
-			MedicoRelacionadoId
+			MedicoVinculadoId
 		).ToWpf(MessageBoxImage.Information);
 	}
 
@@ -274,26 +289,46 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void OnPropertyChanged(string prop) => PropertyChanged?.Invoke(this, new(prop));
 
+	internal async Task RefrescarMedicosAsync() {
+		await App.Repositorio.Medicos.RefreshCache();
+		MedicosDisponibles.Clear();
+
+		List<MedicoDbModel> medicosDisponibles = await App.Repositorio.Medicos.SelectMedicos();
+
+		foreach (var medico in medicosDisponibles) {
+			MedicosDisponibles.Add(new MedicoVinculadoViewModel(
+				$"{medico.Nombre} {medico.Apellido}", medico.Id));
+		}
+
+		// Opcional: asegurarte que la selección actual sea válida
+		if (MedicoVinculadoId.HasValue &&
+			!MedicosDisponibles.Any(m => m.Id == MedicoVinculadoId.Value)) {
+			MedicoVinculadoId = null;
+		}
+	}
+
+
+
+
+
+
+	// ================================================================
+	// SNAPSHOTS
+	// ================================================================
+
+	public record MedicoVinculadoViewModel(string NombreCompleto, MedicoId2025 Id);
+
+	public record UsuarioEdicionSnapshot(
+		UsuarioId2025 Id,
+		string UserName,
+		//string PasswordHash,
+		string Nombre,
+		string Apellido,
+		string Telefono,
+		string Email,
+		UsuarioRoleEnum EnumRole,
+		MedicoId2025? MedicoVinculadoId
+	) {
+		public UsuarioEdicionSnapshot() : this(default, "", "", "", "", "", default, null) { }
+	}
 }
-
-
-
-
-
-// ================================================================
-// SNAPSHOTS
-// ================================================================
-
-internal record UsuarioEdicionSnapshot(
-	UsuarioId2025 Id,
-	string UserName,
-	//string PasswordHash,
-	string Nombre,
-	string Apellido,
-	string Telefono,
-	string Email,
-	UsuarioRoleEnum EnumRole
-) {
-	public UsuarioEdicionSnapshot() : this(default, "", "", "", "", "", default) { }
-}
-

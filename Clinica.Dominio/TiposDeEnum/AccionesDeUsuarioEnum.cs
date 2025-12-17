@@ -89,6 +89,7 @@ public static class PermisoSistema {
 			AccionesDeUsuarioEnum.VerAtenciones,
 			AccionesDeUsuarioEnum.VerPacientes,
             AccionesDeUsuarioEnum.VerTurnos,
+            AccionesDeUsuarioEnum.VerMedicos,
 			AccionesDeUsuarioEnum.VerHorarios,
 			AccionesDeUsuarioEnum.SolicitarTurno,
 			AccionesDeUsuarioEnum.VerUsuarios

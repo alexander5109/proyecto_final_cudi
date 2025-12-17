@@ -20,6 +20,7 @@ public partial class DialogoTurnoProgramar : Window {
 		InitializeComponent();
 		VM = new DialogoTurnoProgramarVM(paciente);
 		DataContext = VM;
+		Loaded += async (_, __) => await VM.RefrescarMedicosAsync();
 	}
 
 	public DialogoTurnoProgramar(TurnoViewModel turnoAReprogramar) {

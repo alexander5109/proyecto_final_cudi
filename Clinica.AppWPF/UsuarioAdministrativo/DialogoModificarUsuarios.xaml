@@ -134,7 +134,9 @@
 					Content="MedicoRelacionado" />
 				<ComboBox
 					ItemsSource="{Binding MedicosDisponibles}"
-					SelectedItem="{Binding MedicoRelacionado}"
+					DisplayMemberPath="NombreCompleto"
+					SelectedValuePath="Id"
+					SelectedValue="{Binding MedicoVinculadoId}"
 					Height="30" />
 			</StackPanel>
 			<!-- ROLE -->

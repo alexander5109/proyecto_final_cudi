@@ -169,6 +169,11 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 		OnPropertyChanged(nameof(BotonAgendar_Enabled));
 	}
 
+
+	internal async Task RefrescarMedicosAsync() {
+		await App.Repositorio.Medicos.RefreshCache();
+	}
+
 	public async Task RefreshDisponibilidadesAsync() {
 		if (SelectedEspecialidad is not EspecialidadViewModel esp)
 			return;
@@ -193,7 +198,6 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 		);
 
 		List<Disponibilidad2025> lista = await App.Repositorio.Dominio.SelectDisponibilidades(solicitudDto);
-		await App.Repositorio.Medicos.RefreshCache();
 		DisponibilidadesItemsSource.Clear();
 
 		foreach (Disponibilidad2025 d in lista) {
