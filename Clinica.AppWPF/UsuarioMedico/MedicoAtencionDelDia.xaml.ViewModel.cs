@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Shared.ApiDtos;
 using static Clinica.Shared.DbModels.DbModels;
 using static Clinica.Shared.DBModels.DbModels;
 
@@ -44,13 +45,13 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	}
 
 
-	private TurnoDeHoyVM? _turnoSeleccionado;
-	public TurnoDeHoyVM? TurnoSeleccionado {
-		get => _turnoSeleccionado;
+	private TurnoDeHoyVM? _selectedTurno;
+	public TurnoDeHoyVM? SelectedTurno {
+		get => _selectedTurno;
 		set {
-			if (_turnoSeleccionado != value) {
-				_turnoSeleccionado = value;
-				OnPropertyChanged(nameof(TurnoSeleccionado));
+			if (_selectedTurno != value) {
+				_selectedTurno = value;
+				OnPropertyChanged(nameof(SelectedTurno));
 				ActualizarPacienteDesdeTurno();
 			}
 		}
@@ -81,14 +82,14 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	// ================================================================
 
 	private void ActualizarPacienteDesdeTurno() {
-		if (_turnoSeleccionado == null) {
+		if (_selectedTurno == null) {
 			SelectedPaciente = null;
 			return;
 		}
 
 		// Buscar paciente en cache según nombre/ID
 		//SelectedPaciente = App.Repositorio.Pacientes.GetFromCachePacienteWhereId(_todosLosTurnos
-		//	.First(t => t.FechaHoraAsignadaDesde.ToString("HH:mm") == _turnoSeleccionado.Hora
+		//	.First(t => t.FechaHoraAsignadaDesde.ToString("HH:mm") == _selectedTurno.Hora
 		//				&& t.PacienteId2025 == ??? // deberías tener PacienteId2025 en TurnoDeHoyVM o mapearlo
 
 		//	).PacienteId2025);
@@ -110,7 +111,14 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 
 		if (turno == null) return;
 
-		var result = await App.Repositorio.Atenciones.AgendarAtencionConDiagnostico(turno.Id, SelectedPaciente.Id);
+		var result = await App.Repositorio.Atenciones.AgendarAtencionConDiagnostico(
+			new AtencionDto(
+				SelectedTurno.Id.Valor,
+				SelectedPaciente.Id.Valor,
+				CurrentMedicoId.Valor,
+				DiagnosticoText
+			)
+		);
 
 		if (result.IsOk) {
 			DiagnosticoText = null;
@@ -141,13 +149,14 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 			if (paciente == null) continue;
 
 			TurnosList.Add(new TurnoDeHoyVM(
+				t.Id,
 				Hora: t.FechaHoraAsignadaDesde.ToString("HH:mm"),
 				PacienteNombreApellido: $"{paciente.Nombre} {paciente.Apellido}",
 				PacienteEdad: CalcularEdad(paciente.FechaNacimiento),
 				FueAtendido: "" // actually, should be ✔ if there's an Atencion record with this turnoId
 
 
-								//FueAtendido: t.OutcomeEstado == TurnoEstadoEnum.Concretado ? "✔" : ""
+				//FueAtendido: t.OutcomeEstado == TurnoEstadoEnum.Concretado ? "✔" : ""
 				)
 			);
 		}
@@ -201,6 +210,6 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 // MINIVIEWMODELS
 // ================================================================
 
-public record TurnoDeHoyVM(string Hora, string PacienteNombreApellido, string PacienteEdad, string FueAtendido);
+public record TurnoDeHoyVM(TurnoId2025 Id, string Hora, string PacienteNombreApellido, string PacienteEdad, string FueAtendido);
 
 public record AtencionPreviaVM(string FechaHora, string MedicoNombreApellido, string Observaciones);

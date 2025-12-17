@@ -77,7 +77,7 @@
 			<ListView
 				Grid.Row="1"
 				ItemsSource="{Binding TurnosList}"
-				SelectedItem="{Binding TurnoSeleccionado}"
+				SelectedItem="{Binding SelectedTurno}"
 				Margin="10"
 				ScrollViewer.VerticalScrollBarVisibility="Auto">
 				<ListView.View>

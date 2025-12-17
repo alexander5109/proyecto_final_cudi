@@ -58,7 +58,7 @@ public class AtencionesController(
 			atencion => repositorio.InsertAtencionReturnId(atencion)
 		);
 
-	// PUT: /api/Atenciones/{id}
+	 //PUT: /api/Atenciones/{id}
 	//[HttpPut("{id:int}")]
 	//public Task<ActionResult<Unit>> ModificarObservaciones(int id, [FromBody] ModificarObservacionDto dto)
 	//	=> this.SafeExecuteWithDomain(
