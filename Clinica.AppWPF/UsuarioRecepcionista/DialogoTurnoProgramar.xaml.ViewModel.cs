@@ -187,6 +187,7 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 			DateTimeKind.Local
 		).AddMinutes(duracionMin);
 
+
 		DayOfWeek? diaSemanaSelected = SelectedDiaDeLaSemana?.Value;
 
 		SolicitarDisponibilidadesDto solicitudDto = new(

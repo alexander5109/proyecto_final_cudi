@@ -91,8 +91,8 @@
 					<GridView>
 						<GridViewColumn
 							Header="Hora"
-							Width="auto"
-							DisplayMemberBinding="{Binding Model.FechaHoraAsignadaDesde}" />
+							Width="Auto"
+							DisplayMemberBinding="{Binding Model.FechaHoraAsignadaDesde, StringFormat={}{0:HH:mm}}" />
 						<GridViewColumn
 							Header="Paciente"
 							Width="auto"
@@ -227,11 +227,10 @@
 					Margin="0,0,0,5" />
 				<TextBox
 					Grid.Row="1"
-					Text="{Binding Observaciones, Mode=TwoWay}"
+					Text="{Binding TextoDiagnosticoVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 					AcceptsReturn="True"
 					TextWrapping="Wrap"
 					IsEnabled="{Binding PuedeDiagnosticarYConfirmar}"
-					ToolTip="{Binding MotivoDiagnosticoDeshabilitado}"
 					VerticalScrollBarVisibility="Auto"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"

@@ -23,6 +23,7 @@ public partial class MedicoAtencionDelDia : Window {
 	// ==========================================================
 
 	async private void ClickBoton_ConfirmarObservacion(object sender, RoutedEventArgs e) {
+		SoundsService.PlayClickSound();
 		ResultWpf<UnitWpf> result = await VM.ConfirmarDiagnosticoAsync();
 		result.MatchAndDo(
 			async _ => {

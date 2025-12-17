@@ -27,6 +27,7 @@ public partial class GestionPacientes : Window {
 			this.AbrirComoDialogo<DialogoPacienteModificar>(VM.SelectedPaciente);
 			await VM.RefrescarPacientesAsync();
 		} else {
+			SoundsService.PlayClickSound();
 			MessageBox.Show("No hay paciente seleecionado. Pero este mensaje no deberia aparecer nunca porque el boton tendria que estar desabilitado.");
 		}
 	}
@@ -34,6 +35,7 @@ public partial class GestionPacientes : Window {
 		if (VM.SelectedPaciente is not null) {
 			this.AbrirComoDialogo<DialogoTurnoProgramar>(VM.SelectedPaciente);
 		} else {
+			SoundsService.PlayClickSound();
 			MessageBox.Show("No hay paciente seleecionado");
 		}
 	}

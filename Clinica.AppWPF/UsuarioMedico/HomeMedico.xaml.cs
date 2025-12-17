@@ -31,6 +31,7 @@ public partial class HomeMedico : Window {
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 	private void ClickBoton_Logout(object sender, RoutedEventArgs e) => this.CerrarSesion();
 	private void ClickBoton_AtencionDelDia(object sender, RoutedEventArgs e) {
+		SoundsService.PlayClickSound();
 		if (App.UsuarioActivo?.MedicoRelacionadoId is not MedicoId2025 medicoId) {
 			MessageBox.Show("Su usuario no tiene una entidad de médico relacionada. \nComuniquese con un administrativo.");
 			//this.CerrarSesion();

@@ -53,6 +53,29 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 		}
 	}
 
+	private void NotificarEstadoDiagnostico() {
+		OnPropertyChanged(nameof(PuedeDiagnosticarYConfirmar));
+		OnPropertyChanged(nameof(MotivoDiagnosticoDeshabilitado));
+		OnPropertyChanged(nameof(TextoDiagnosticoVisible));
+	}
+
+
+	public string TextoDiagnosticoVisible {
+		get {
+			if (PuedeDiagnosticarYConfirmar)
+				return Observaciones ?? string.Empty;
+
+			return MotivoDiagnosticoDeshabilitado;
+		}
+		set {
+			// Solo permitir escritura real cuando está habilitado
+			if (!PuedeDiagnosticarYConfirmar)
+				return;
+
+			Observaciones = value;
+		}
+	}
+
 	public string MotivoDiagnosticoDeshabilitado {
 		get {
 			if (SelectedTurno is null)
@@ -103,15 +126,15 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	public TurnoDeHoyVM? SelectedTurno {
 		get => _selectedTurno;
 		set {
-			if (_selectedTurno != value) {
-				_selectedTurno = value;
-				OnPropertyChanged(nameof(SelectedTurno));
-				OnPropertyChanged(nameof(PuedeDiagnosticarYConfirmar));
-				OnPropertyChanged(nameof(MotivoDiagnosticoDeshabilitado));
-				ActualizarPacienteDesdeTurno();
-			}
+			if (_selectedTurno == value) return;
+
+			_selectedTurno = value;
+			OnPropertyChanged(nameof(SelectedTurno));
+			ActualizarPacienteDesdeTurno();
+			NotificarEstadoDiagnostico();
 		}
 	}
+
 	private string? _diagnosticoText;
 	public string? Observaciones {
 		get => _diagnosticoText;

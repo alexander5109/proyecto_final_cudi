@@ -41,6 +41,7 @@ public partial class DialogoTurnoProgramar : Window {
 	// ==========================================================
 
 	private async void ClickBoton_Consultar(object sender, RoutedEventArgs e) {
+		SoundsService.PlayClickSound();
 		if (!VM.BotonBuscar_Enabled)
 			return;
 
@@ -81,15 +82,6 @@ public partial class DialogoTurnoProgramar : Window {
 	// ==========================================================
 	// BOTONES: PERSISTENCIA
 	// ==========================================================
-	private static bool MatchAndSetBooleano<T>(ResultWpf<T> result)
-		=> result.MatchAndSet(
-			ok => true,
-			error => {
-				error.ShowMessageBox();
-				return false;
-			}
-		);
-
 	async private void ClickBoton_NuevoTurno(object sender, RoutedEventArgs e) {
 		SoundsService.PlayClickSound();
 
@@ -118,14 +110,13 @@ public partial class DialogoTurnoProgramar : Window {
 				//this.NavegarA<GestionPacientes>();
 				//this.IrARespectivaHome();
 				this.Cerrar();
+				//this.IrARespectivaHome();
 			},
 			caseError => {
 				caseError.ShowMessageBox();
 				//MessageBox.Show($"VM.SelectedDisponibilidad.Original: {VM.SelectedDisponibilidad.Original}");
 			}
 		);
-
-
 
 
 
@@ -142,6 +133,7 @@ public partial class DialogoTurnoProgramar : Window {
 	private ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
 	private void ClickCabecera_OrdenarFilas(object sender, RoutedEventArgs e) {
+		SoundsService.PlayClickSound();
 		if (sender is not GridViewColumnHeader header || header.Tag == null) return;
 
 		string sortBy = header.Tag.ToString()!;
