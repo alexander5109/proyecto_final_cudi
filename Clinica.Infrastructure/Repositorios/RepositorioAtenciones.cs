@@ -14,21 +14,15 @@ public class RepositorioAtenciones(SQLServerConnectionFactory factory)
 	// -----------------------------
 	// Insertar atención
 	// -----------------------------
-	public Task<Result<AtencionId2025>> InsertAtencionReturnId(Atencion2025 instance)
-		=> TryAsync(async conn => {
-            AtencionId2025 newId = await conn.ExecuteScalarAsync<AtencionId2025>(
-				"sp_InsertAtencionReturnId",
-				new {
-					TurnoId = instance.TurnoId.Valor,
-					PacienteId = instance.PacienteId.Valor,
-					MedicoId = instance.MedicoId.Valor,
-					Observaciones = instance.Observaciones
-				},
-				commandType: CommandType.StoredProcedure
-			);
 
-			return newId;
-		});
+	Task<Result<AtencionId2025>> IRepositorioAtenciones.InsertAtencionReturnId(Atencion2025 instance)
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<AtencionId2025>(
+			"sp_InsertAtencionReturnId",
+			instance.ToModel(),
+			commandType: CommandType.StoredProcedure
+		));
+
+
 
 	// -----------------------------
 	// Actualizar observaciones

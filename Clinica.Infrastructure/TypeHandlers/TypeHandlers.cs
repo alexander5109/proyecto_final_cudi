@@ -23,6 +23,15 @@ public class MedicoIdHandler : SqlMapper.TypeHandler<MedicoId2025> {
 	}
 }
 
+public class AtencionIdHandler : SqlMapper.TypeHandler<AtencionId2025> {
+	public override void SetValue(IDbDataParameter parameter, AtencionId2025 value) {
+		parameter.Value = value.Valor; // store as int in DB
+	}
+	public override AtencionId2025 Parse(object value) {
+		return AtencionId2025.Crear(Convert.ToInt32(value)); // read from DB as int
+	}
+}
+
 public class HorarioIdHandler : SqlMapper.TypeHandler<HorarioId2025> {
 	public override void SetValue(IDbDataParameter parameter, HorarioId2025 value) {
 		parameter.Value = value.Valor; // store as int in DB

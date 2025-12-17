@@ -120,7 +120,7 @@
     <Build Include="dbo\Medicos\sp_SelectMedicosWhereEspecialidadCodigo.sql" />
     <Build Include="dbo\HorariosMedicos\udtt_HorarioFranjaUDTT.sql" />
     <Build Include="dbo\HorariosMedicos\sp_UpsertHorariosWhereMedicoId.sql" />
-    <Build Include="dbo\Atenciones\Atencion.sql" />
+    <Build Include="dbo\Atenciones\table_Atencion.sql" />
     <Build Include="dbo\Atenciones\sp_InsertAtencionReturnId.sql" />
     <Build Include="dbo\Atenciones\sp_SelectAtenciones.sql" />
     <Build Include="dbo\Atenciones\sp_SelectAtencionesWherePacienteId.sql" />

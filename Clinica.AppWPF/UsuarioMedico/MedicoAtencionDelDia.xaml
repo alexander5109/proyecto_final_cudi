@@ -85,7 +85,7 @@
 						<GridViewColumn
 							Header="Hora"
 							Width="auto"
-							DisplayMemberBinding="{Binding Hora}" />
+							DisplayMemberBinding="{Binding Model.FechaHoraAsignadaDesde}" />
 						<GridViewColumn
 							Header="Paciente"
 							Width="auto"
@@ -95,7 +95,11 @@
 							Width="auto"
 							DisplayMemberBinding="{Binding PacienteEdad}" />
 						<GridViewColumn
-							Header="FueAtendido"
+							Header="SePresesntó"
+							Width="auto"
+							DisplayMemberBinding="{Binding EsperandoAtencion}" />
+						<GridViewColumn
+							Header="FueDiagnosticado"
 							Width="auto"
 							DisplayMemberBinding="{Binding FueAtendido}" />
 					</GridView>
@@ -167,22 +171,22 @@
 					Margin="0,0,0,5" />
 				<ListView
 					Grid.Row="1"
-					ItemsSource="{Binding HistorialConsultas}"
+					ItemsSource="{Binding AtencionesViewModelList}"
 					ScrollViewer.VerticalScrollBarVisibility="Auto"
 					Margin="10,0,10,0">
 					<ListView.View>
 						<GridView>
 							<GridViewColumn
 								Header="Fecha"
-								Width="80"
+								Width="auto"
 								DisplayMemberBinding="{Binding Fecha}" />
 							<GridViewColumn
 								Header="Medico"
-								Width="70"
-								DisplayMemberBinding="{Binding Medico}" />
+								Width="auto"
+								DisplayMemberBinding="{Binding MedicoNombreApellido}" />
 							<GridViewColumn
 								Header="Observaciones"
-								Width="70"
+								Width="auto"
 								DisplayMemberBinding="{Binding Observaciones}" />
 						</GridView>
 					</ListView.View>
@@ -212,9 +216,10 @@
 					Margin="0,0,0,5" />
 				<TextBox
 					Grid.Row="1"
-					Text="{Binding DiagnosticoText, Mode=TwoWay}"
+					Text="{Binding Observaciones, Mode=TwoWay}"
 					AcceptsReturn="True"
 					TextWrapping="Wrap"
+					IsEnabled="{Binding PuedeDiagnosticar}"
 					VerticalScrollBarVisibility="Auto"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
@@ -224,7 +229,7 @@
 					Content="✏ Confirmar"
 					Width="144"
 					Height="35"
-					IsEnabled="{Binding HayMedicoSeleccionado}"
+					IsEnabled="{Binding PuedeDiagnosticar}"
 					Click="ClickBoton_ConfirmarObservacion"
 					Style="{StaticResource BotonRedondeadoCeleste}"
 					HorizontalAlignment="Center"
