@@ -231,6 +231,7 @@
 					AcceptsReturn="True"
 					TextWrapping="Wrap"
 					IsEnabled="{Binding PuedeDiagnosticarYConfirmar}"
+					ToolTip="{Binding MotivoDiagnosticoDeshabilitado}"
 					VerticalScrollBarVisibility="Auto"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
