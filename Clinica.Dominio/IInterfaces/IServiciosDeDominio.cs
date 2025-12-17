@@ -15,14 +15,14 @@ public interface IServiciosDeDominio {
 		DateTime aPartirDeCuando, 
 		int cuantos,
 		DayOfWeek? diaSemanaPreferido,
-		MedicoId? medicoPreferido,
+		MedicoId2025? medicoPreferido,
 		IRepositorioDominioServices repositorio
 	);
-	Task<Result<Turno2025Agg>> PersistirProgramarTurnoAsync(PacienteId pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad, IRepositorioDominioServices repositorio);
-	Task<Result<Turno2025>> PersistirComoReprogramado(TurnoId turnoOriginalId, DateTime outcomeFecha, string? outcomeComentario, IRepositorioDominioServices repositorio);
+	Task<Result<Turno2025Agg>> PersistirProgramarTurnoAsync(PacienteId2025 pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad, IRepositorioDominioServices repositorio);
+	Task<Result<Turno2025>> PersistirComoReprogramado(TurnoId2025 turnoOriginalId, DateTime outcomeFecha, string? outcomeComentario, IRepositorioDominioServices repositorio);
 
-	Task<Result<Turno2025>> PersistirComoCanceladoAsync(TurnoId turnoOriginalId, DateTime outcomeFecha, string? outcomeComentario, IRepositorioDominioServices repositorio);
-	Task<Result<Turno2025>> PersistirComoAusenteAsync(TurnoId turnoOriginalId, DateTime outcomeFecha, string? outcomeComentario, IRepositorioDominioServices repositorio);
-	Task<Result<Turno2025>> PersistirComoConcretadoAsync(TurnoId turnoOriginalId, DateTime outcomeFecha, string? outcomeComentario, IRepositorioDominioServices repositorio);
+	Task<Result<Turno2025>> PersistirComoCanceladoAsync(TurnoId2025 turnoOriginalId, DateTime outcomeFecha, string? outcomeComentario, IRepositorioDominioServices repositorio);
+	Task<Result<Turno2025>> PersistirComoAusenteAsync(TurnoId2025 turnoOriginalId, DateTime outcomeFecha, string? outcomeComentario, IRepositorioDominioServices repositorio);
+	Task<Result<Turno2025>> PersistirComoConcretadoAsync(TurnoId2025 turnoOriginalId, DateTime outcomeFecha, string? outcomeComentario, IRepositorioDominioServices repositorio);
 }
 		

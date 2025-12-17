@@ -41,7 +41,7 @@ public partial class DialogoModificarUsuarios : Window {
 
 	private async void ClickBoton_Eliminar(object sender, RoutedEventArgs e) {
 		if (
-			VM.Id is not UsuarioId idGood || (
+			VM.Id is not UsuarioId2025 idGood || (
 			MessageBox.Show("¿Esta seguro que desea eliminar este usuario?",
 			"Confirmación", MessageBoxButton.YesNo) == MessageBoxResult.No)
 		) return;

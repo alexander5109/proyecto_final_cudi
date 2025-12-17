@@ -39,7 +39,7 @@ public partial class DialogoPacienteModificar : Window {
 
 	private async void ClickBoton_Eliminar(object sender, RoutedEventArgs e) {
 		if (
-			VM.Id is not PacienteId idGood || (
+			VM.Id is not PacienteId2025 idGood || (
 			MessageBox.Show("¿Esta seguro que desea eliminar este paciente?",
 			"Confirmación", MessageBoxButton.YesNo) == MessageBoxResult.No)
 		) return;

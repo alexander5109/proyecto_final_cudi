@@ -7,7 +7,7 @@ using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.Infrastructure.Repositorio;
 
 public class RepositorioHorariosWPF : IRepositorioHorariosWPF {
-	private static Dictionary<MedicoId, IReadOnlyList<HorarioDbModel>> DictCache { get; set; } = [];
+	private static Dictionary<MedicoId2025, IReadOnlyList<HorarioDbModel>> DictCache { get; set; } = [];
 	
 	
 	
@@ -64,12 +64,12 @@ public class RepositorioHorariosWPF : IRepositorioHorariosWPF {
 
 
 
-	async Task<IReadOnlyList<HorarioDbModel>?> IRepositorioHorariosWPF.SelectHorariosWhereMedicoId(MedicoId id) {
+	async Task<IReadOnlyList<HorarioDbModel>?> IRepositorioHorariosWPF.SelectHorariosWhereMedicoId(MedicoId2025 id) {
 		await EnsureHorariosLoaded();
 		return DictCache.GetValueOrDefault(id);
 	}
 
-	async Task<IReadOnlyList<DayOfWeek>?> IRepositorioHorariosWPF.SelectDiasDeAtencionWhereMedicoId(MedicoId id) {
+	async Task<IReadOnlyList<DayOfWeek>?> IRepositorioHorariosWPF.SelectDiasDeAtencionWhereMedicoId(MedicoId2025 id) {
 		await EnsureHorariosLoaded();
 		IReadOnlyList<HorarioDbModel>? resultad = DictCache.GetValueOrDefault(id);
 		if (resultad is null) {

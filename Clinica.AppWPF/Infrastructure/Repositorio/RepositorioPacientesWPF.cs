@@ -10,7 +10,7 @@ using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.Infrastructure.Repositorio;
 
 public class RepositorioPacientesWPF : IRepositorioPacientesWPF {
-	private static Dictionary<PacienteId, PacienteDbModel> DictCache { get; set; } = [];
+	private static Dictionary<PacienteId2025, PacienteDbModel> DictCache { get; set; } = [];
 
 
 	private bool _pacientesLoaded = false;
@@ -32,7 +32,7 @@ public class RepositorioPacientesWPF : IRepositorioPacientesWPF {
 
 
 
-	public async Task<ResultWpf<UnitWpf>> DeletePacienteWhereId(PacienteId id) {
+	public async Task<ResultWpf<UnitWpf>> DeletePacienteWhereId(PacienteId2025 id) {
 		ResultWpf<UnitWpf> result = await App.Api.TryApiCallAsync(
 			() => App.Api.Cliente.DeleteAsync($"api/pacientes/{id.Valor}"),
 			onOk: async response => UnitWpf.Valor,
@@ -47,14 +47,14 @@ public class RepositorioPacientesWPF : IRepositorioPacientesWPF {
 
 
 
-	public async Task<ResultWpf<PacienteId>> InsertPacienteReturnId(Paciente2025 instance) {
-		ResultWpf<PacienteId> response = await App.Api.TryApiCallAsync(
+	public async Task<ResultWpf<PacienteId2025>> InsertPacienteReturnId(Paciente2025 instance) {
+		ResultWpf<PacienteId2025> response = await App.Api.TryApiCallAsync(
 			() => App.Api.Cliente.PostAsJsonAsync(
 				"api/pacientes",
 				instance.ToDto()
 			),
 			onOk: async response => {
-				return await response.Content.ReadFromJsonAsync<PacienteId>();
+				return await response.Content.ReadFromJsonAsync<PacienteId2025>();
 			},
 			errorTitle: "Error creando paciente"
 		);
@@ -72,7 +72,7 @@ public class RepositorioPacientesWPF : IRepositorioPacientesWPF {
 		return [.. DictCache.Values];
 	}
 
-	public async Task<PacienteDbModel?> SelectPacienteWhereId(PacienteId id) {
+	public async Task<PacienteDbModel?> SelectPacienteWhereId(PacienteId2025 id) {
 		await EnsurePacientesLoaded();
 
 		if (DictCache.TryGetValue(id, out PacienteDbModel? dto))
@@ -107,7 +107,7 @@ public class RepositorioPacientesWPF : IRepositorioPacientesWPF {
 
 
 
-	PacienteDbModel? IRepositorioPacientesWPF.GetFromCachePacienteWhereId(PacienteId id) {
+	PacienteDbModel? IRepositorioPacientesWPF.GetFromCachePacienteWhereId(PacienteId2025 id) {
 		DictCache.TryGetValue(id, out var paciente);
 		return paciente;
 	}

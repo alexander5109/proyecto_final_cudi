@@ -2,6 +2,9 @@
 
 
 public enum AccionesDeUsuarioEnum {
+	VerAtenciones,
+	CrearAtenciones,
+	ModificarAtenciones,
 	EliminarEntidades,
 	EliminarUsuarios,
 
@@ -53,12 +56,10 @@ public static class PermisoSistema {
 
 			AccionesDeUsuarioEnum.ModificarEntidades,
 			AccionesDeUsuarioEnum.VerUsuarios
-            // No borra entidades sensibles
 
 		],
 
 		[UsuarioRoleEnum.Nivel3Recepcionista] = [
-            // Puede operar turnos y datos básicos, pero no estructura
             AccionesDeUsuarioEnum.VerPacientes,
 			AccionesDeUsuarioEnum.VerTurnos,
 			AccionesDeUsuarioEnum.VerMedicos,
@@ -79,19 +80,18 @@ public static class PermisoSistema {
 
 			AccionesDeUsuarioEnum.VerUsuarios,
 
-			AccionesDeUsuarioEnum.ModificarEntidades // ← Puede modificar pacientes
-            // No puede reprogramar turnos (opcional: lo podés habilitar)
-            // No puede crear médicos/usuarios/horarios
-            // No borra entidades
+			AccionesDeUsuarioEnum.ModificarEntidades 
 		],
 
 		[UsuarioRoleEnum.Nivel4Medico] = [
-			AccionesDeUsuarioEnum.VerPacientes,  // opcional
+			AccionesDeUsuarioEnum.ModificarAtenciones,
+			AccionesDeUsuarioEnum.CrearAtenciones,
+			AccionesDeUsuarioEnum.VerAtenciones,
+			AccionesDeUsuarioEnum.VerPacientes,
             AccionesDeUsuarioEnum.VerTurnos,
 			AccionesDeUsuarioEnum.VerHorarios,
 			AccionesDeUsuarioEnum.SolicitarTurno,
 			AccionesDeUsuarioEnum.VerUsuarios
-            // No modifica nada
 		],
 	};
 

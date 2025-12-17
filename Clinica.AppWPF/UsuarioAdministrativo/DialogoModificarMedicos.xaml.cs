@@ -38,7 +38,7 @@ public partial class DialogoModificarMedicos : Window {
 
 	private async void ClickBoton_Eliminar(object sender, RoutedEventArgs e) {
 		if (
-			VM.Id is not MedicoId idGood || (
+			VM.Id is not MedicoId2025 idGood || (
 			MessageBox.Show("¿Esta seguro que desea eliminar este médico?",
 			"Confirmación", MessageBoxButton.YesNo) == MessageBoxResult.No)
 		) return;

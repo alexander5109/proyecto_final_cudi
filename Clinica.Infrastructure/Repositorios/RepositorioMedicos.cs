@@ -16,7 +16,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 
 
 
-	Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWhereId(MedicoId id)
+	Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWhereId(MedicoId2025 id)
 		=> TryAsync(async conn => {
 			return await conn.QuerySingleOrDefaultAsync<MedicoDbModel>(
 				"sp_SelectMedicoWhereId",
@@ -24,7 +24,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 				commandType: CommandType.StoredProcedure
 			);
 		});
-	//Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWithHorarioWhereId(MedicoId id)
+	//Task<Result<MedicoDbModel?>> IRepositorioMedicos.SelectMedicoWithHorarioWhereId(MedicoId2025 id)
 	//	=> TryAsync(async conn => {
 	//		return await conn.QuerySingleOrDefaultAsync<MedicoDbModel>(
 	//			"sp_SelectMedicoWithHorariosWhereId",
@@ -33,8 +33,8 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 	//		);
 	//	});
 
-	Task<Result<MedicoId>> IRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance)
-		=> TryAsync(async conn => await conn.ExecuteScalarAsync<MedicoId>(
+	Task<Result<MedicoId2025>> IRepositorioMedicos.InsertMedicoReturnId(Medico2025 instance)
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<MedicoId2025>(
 			"sp_InsertMedicoReturnId",
 			instance.ToDto(),
 			commandType: CommandType.StoredProcedure
@@ -68,7 +68,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 
 
 	Task<Result<MedicoDbModel>> IRepositorioMedicos.UpdateMedicoWhereId(
-		MedicoId id,
+		MedicoId2025 id,
 		Medico2025 instance
 	)
 		=> TryAsync(async conn => {
@@ -91,7 +91,7 @@ public class RepositorioMedicos(SQLServerConnectionFactory factory) : Repositori
 		});
 
 
-	Task<Result<Unit>> IRepositorioMedicos.DeleteMedicoWhereId(MedicoId id)
+	Task<Result<Unit>> IRepositorioMedicos.DeleteMedicoWhereId(MedicoId2025 id)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_DeleteMedicoWhereId",

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using static Clinica.Shared.DbModels.DbModels;
+using static Clinica.Shared.DBModels.DbModels;
 
 namespace Clinica.AppWPF.UsuarioMedico;
 
@@ -10,7 +11,7 @@ namespace Clinica.AppWPF.UsuarioMedico;
 
 
 
-public sealed class MedicoAtencionDelDiaVM(MedicoId CurrentMedicoId) : INotifyPropertyChanged {
+public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INotifyPropertyChanged {
 	// ==========================================================
 	// BOTONES: SELECTED ITEMS
 	// ==========================================================
@@ -74,9 +75,9 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId CurrentMedicoId) : INotifyPr
 		// Buscar paciente en cache según nombre/ID
 		//SelectedPaciente = App.Repositorio.Pacientes.GetFromCachePacienteWhereId(_todosLosTurnos
 		//	.First(t => t.FechaHoraAsignadaDesde.ToString("HH:mm") == _turnoSeleccionado.Hora
-		//				&& t.PacienteId == ??? // deberías tener PacienteId en TurnoDeHoyVM o mapearlo
+		//				&& t.PacienteId2025 == ??? // deberías tener PacienteId2025 en TurnoDeHoyVM o mapearlo
 
-		//	).PacienteId);
+		//	).PacienteId2025);
 	}
 
 	private string CalcularEdad(DateTime fechaNacimiento) =>
@@ -121,7 +122,7 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId CurrentMedicoId) : INotifyPr
 
 
 		foreach (TurnoDbModel t in turnos.OrderBy(t => t.FechaHoraAsignadaDesde)) {
-			//PacienteDbModel? paciente = await App.Repositorio.Pacientes.SelectPacienteWhereId(t.PacienteId); // cache de pacientes
+			//PacienteDbModel? paciente = await App.Repositorio.Pacientes.SelectPacienteWhereId(t.PacienteId2025); // cache de pacientes
 			PacienteDbModel? paciente = App.Repositorio.Pacientes.GetFromCachePacienteWhereId(t.PacienteId);
 			if (paciente == null) continue;
 

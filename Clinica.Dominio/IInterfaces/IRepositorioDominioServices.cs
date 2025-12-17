@@ -8,8 +8,8 @@ namespace Clinica.Dominio.IInterfaces;
 
 public static class QueryModels {
 	public sealed record TurnoQM(
-		TurnoId Id,
-		MedicoId MedicoId,
+		TurnoId2025 Id,
+		MedicoId2025 MedicoId,
 		EspecialidadEnum EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
@@ -19,7 +19,7 @@ public static class QueryModels {
 			: this(default!, default!, default, default, default, default) { }
 	}
 	public sealed record HorarioMedicoQM(
-		MedicoId MedicoId,
+		MedicoId2025 MedicoId,
 		DayOfWeek DiaSemana, 
 		TimeSpan HoraDesde,
 		TimeSpan HoraHasta
@@ -30,11 +30,11 @@ public static class QueryModels {
 }
 
 public interface IRepositorioDominioServices {
-	Task<Result<IEnumerable<TurnoQM>>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta);
-	Task<Result<IEnumerable<HorarioMedicoQM>>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta);
-	Task<Result<IEnumerable<MedicoId>>> SelectMedicosIdWhereEspecialidadCodigo(EspecialidadEnum code);
-	Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance); //this 2 can stay cause doesnt ask a model
-	Task<Result<Turno2025>> UpdateTurnoWhereIdAndReturnAsDomain(TurnoId id, Turno2025 instance); //this 2 can stay cause doesnt ask a model
-	Task<Result<Usuario2025>> SelectUsuarioWhereIdAsDomain(UsuarioId id); //need domain entitiy because this is not really data to query, it's data that immediatly needs domain methods.
-    Task<Result<Turno2025>> SelectTurnoWhereIdAsDomain(TurnoId id); //need domain entity for comodidad. dominio debe especializarse en poder proveer esto.
+	Task<Result<IEnumerable<TurnoQM>>> SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId2025 medicoId, DateTime fechaDesde, DateTime fechaHasta);
+	Task<Result<IEnumerable<HorarioMedicoQM>>> SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId2025 medicoId, DateTime fechaDesde, DateTime fechaHasta);
+	Task<Result<IEnumerable<MedicoId2025>>> SelectMedicosIdWhereEspecialidadCodigo(EspecialidadEnum code);
+	Task<Result<TurnoId2025>> InsertTurnoReturnId(Turno2025 instance); //this 2 can stay cause doesnt ask a model
+	Task<Result<Turno2025>> UpdateTurnoWhereIdAndReturnAsDomain(TurnoId2025 id, Turno2025 instance); //this 2 can stay cause doesnt ask a model
+	Task<Result<Usuario2025>> SelectUsuarioWhereIdAsDomain(UsuarioId2025 id); //need domain entitiy because this is not really data to query, it's data that immediatly needs domain methods.
+    Task<Result<Turno2025>> SelectTurnoWhereIdAsDomain(TurnoId2025 id); //need domain entity for comodidad. dominio debe especializarse en poder proveer esto.
 }

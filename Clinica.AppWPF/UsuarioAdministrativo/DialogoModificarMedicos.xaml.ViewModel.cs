@@ -99,7 +99,7 @@ public class DialogoMedicoModificarVM : INotifyPropertyChanged {
 	// PROPERTIES
 	// -----------------------------
 
-	public MedicoId? Id { get; private set; }
+	public MedicoId2025? Id { get; private set; }
 
 	private string _dni = "";
 	public string Dni {
@@ -267,11 +267,11 @@ public class DialogoMedicoModificarVM : INotifyPropertyChanged {
 			);
 	}
 	private async Task<ResultWpf<UnitWpf>> GuardarEdicionAsync(Medico2025 medico) {
-		if (Id is MedicoId idNotNull) {
+		if (Id is MedicoId2025 idNotNull) {
             Medico2025Agg agg = new(idNotNull, medico);
 			return await App.Repositorio.Medicos.UpdateMedicoWhereId(agg);
 		} else {
-			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No se puede guardar, la entidad no tiene MedicoId.", MessageBoxImage.Information));
+			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("No se puede guardar, la entidad no tiene MedicoId2025.", MessageBoxImage.Information));
 		}
 	}
 	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync(Medico2025 medico) {
@@ -327,7 +327,7 @@ public class DialogoMedicoModificarVM : INotifyPropertyChanged {
 // ================================================================
 
 internal record MedicoEdicionSnapshot(
-	MedicoId? Id,
+	MedicoId2025? Id,
 	EspecialidadEnum EspecialidadCodigo,
 	string Dni,
 	string Nombre,

@@ -18,7 +18,7 @@ public class RepositorioPacientes(SQLServerConnectionFactory factory) : Reposito
 			commandType: CommandType.StoredProcedure
 			);
 		});
-	Task<Result<PacienteDbModel?>> IRepositorioPacientes.SelectPacienteWhereId(PacienteId id)
+	Task<Result<PacienteDbModel?>> IRepositorioPacientes.SelectPacienteWhereId(PacienteId2025 id)
 		=> TryAsync(async conn => {
 			return await conn.QuerySingleOrDefaultAsync<PacienteDbModel>(
 				"sp_SelectPacienteWhereId",
@@ -29,7 +29,7 @@ public class RepositorioPacientes(SQLServerConnectionFactory factory) : Reposito
 
 
 
-	//Task<Result<PacienteDbModel?>> IRepositorioPacientes.SelectPacienteWhereTurnoId(TurnoId id)
+	//Task<Result<PacienteDbModel?>> IRepositorioPacientes.SelectPacienteWhereTurnoId(TurnoId2025 id)
 	//	=> TryAsync(async conn => {
 	//		return await conn.QuerySingleOrDefaultAsync<PacienteDbModel>(
 	//			"sp_SelectPacienteWhereTurnoId",
@@ -38,8 +38,8 @@ public class RepositorioPacientes(SQLServerConnectionFactory factory) : Reposito
 	//		);
 	//	});
 
-	Task<Result<PacienteId>> IRepositorioPacientes.InsertPacienteReturnId(Paciente2025 instance)
-		=> TryAsync(async conn => await conn.ExecuteScalarAsync<PacienteId>(
+	Task<Result<PacienteId2025>> IRepositorioPacientes.InsertPacienteReturnId(Paciente2025 instance)
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<PacienteId2025>(
 			"sp_InsertPacienteReturnId",
 			instance.ToDto(),
 			commandType: CommandType.StoredProcedure
@@ -48,7 +48,7 @@ public class RepositorioPacientes(SQLServerConnectionFactory factory) : Reposito
 
 
 	Task<Result<PacienteDbModel>> IRepositorioPacientes.UpdatePacienteWhereId(
-		PacienteId id,
+		PacienteId2025 id,
 		Paciente2025 instance
 	)
 		=> TryAsync(async conn => {
@@ -72,7 +72,7 @@ public class RepositorioPacientes(SQLServerConnectionFactory factory) : Reposito
 
 
 
-	Task<Result<Unit>> IRepositorioPacientes.DeletePacienteWhereId(PacienteId id)
+	Task<Result<Unit>> IRepositorioPacientes.DeletePacienteWhereId(PacienteId2025 id)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_DeletePacienteWhereId",

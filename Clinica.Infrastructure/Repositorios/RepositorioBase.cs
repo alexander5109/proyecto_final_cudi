@@ -16,8 +16,8 @@ public abstract class RepositorioBase(SQLServerConnectionFactory factory) {
 
 
 
-	public Task<Result<TurnoId>> InsertTurnoReturnId(Turno2025 instance)
-		=> TryAsync(async conn => await conn.ExecuteScalarAsync<TurnoId>(
+	public Task<Result<TurnoId2025>> InsertTurnoReturnId(Turno2025 instance)
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<TurnoId2025>(
 			"sp_InsertTurnoReturnId",
 			instance.ToDto(),
 			commandType: CommandType.StoredProcedure
@@ -25,7 +25,7 @@ public abstract class RepositorioBase(SQLServerConnectionFactory factory) {
 
 
 
-	public Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWherePacienteId(PacienteId id)
+	public Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWherePacienteId(PacienteId2025 id)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<TurnoDbModel>(
 				"sp_SelectTurnosWherePacienteId",
@@ -33,7 +33,7 @@ public abstract class RepositorioBase(SQLServerConnectionFactory factory) {
 				commandType: CommandType.StoredProcedure
 			);
 		});
-	public Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId id)
+	public Task<Result<IEnumerable<TurnoDbModel>>> SelectTurnosWhereMedicoId(MedicoId2025 id)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<TurnoDbModel>(
 				"sp_SelectTurnosWhereMedicoId",

@@ -8,7 +8,7 @@ namespace Clinica.AppWPF.Infrastructure.IRepositorios;
 
 public interface IRepositorioDominioWPF {
 	Task<List<Disponibilidad2025>> SelectDisponibilidades(SolicitarDisponibilidadesDto solicitud);
-	//Task<IReadOnlyList<TurnoDelDia>> GetTurnosConcretadosAsync(MedicoId medicoId, DateOnly fecha);
+	//Task<IReadOnlyList<TurnoDelDia>> GetTurnosConcretadosAsync(MedicoId2025 medicoId, DateOnly fecha);
 
 
 }

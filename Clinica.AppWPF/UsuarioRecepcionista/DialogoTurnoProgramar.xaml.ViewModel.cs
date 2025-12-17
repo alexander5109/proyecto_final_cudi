@@ -404,7 +404,7 @@ public record DisponibilidadEspecialidadModelView(
 
 
 public record MedicoSimpleViewModel(
-	MedicoId Id,
+	MedicoId2025 Id,
 	EspecialidadEnum EspecialidadCodigo,
 	string Displayear,
 	IReadOnlyList<DayOfWeek> DiasAtencion

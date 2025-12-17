@@ -53,7 +53,7 @@ public record Paciente2025(
 
 
 	//public static Result<Paciente2025> CrearResult(
-	//	Result<PacienteId> idResult,
+	//	Result<PacienteId2025> idResult,
 	//	Result<NombreCompleto2025> nombreResult,
 	//	Result<DniArgentino2025> dniResult,
 	//	Result<Telefono2025> telefonoResult,

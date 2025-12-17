@@ -13,7 +13,7 @@ public sealed record Usuario2025Edicion(
 	UsuarioRoleEnum EnumRole,
 	Email2025 Email,
 	Telefono2025 Telefono,
-	MedicoId? MedicoRelacionadoId
+	MedicoId2025? MedicoRelacionadoId
 ) {
 
 	public static Result<Usuario2025Edicion> CrearResult(
@@ -23,7 +23,7 @@ public sealed record Usuario2025Edicion(
 		Result<UsuarioRoleEnum> enumRoleResult,
 		Result<Email2025> telefonoResult,
 		Result<Telefono2025> emailResult,
-		MedicoId? medicoRelacionadoId
+		MedicoId2025? medicoRelacionadoId
 	)
 		=> userNameResult.BindWithPrefix("Error en UserName2025:\n", userName
 		=> nombreCompletoResult.BindWithPrefix("Error en NombreCompleto:\n", nombreCompleto
@@ -47,14 +47,14 @@ public sealed record Usuario2025Edicion(
 
 
 public sealed record Usuario2025(
-	//UsuarioId Id,
+	//UsuarioId2025 Id,
 	UserName2025 UserName,
 	NombreCompleto2025 NombreCompleto,
 	ContraseñaHasheada2025 PasswordHash,
 	UsuarioRoleEnum EnumRole,
 	Email2025 Email,
 	Telefono2025 Telefono,
-	MedicoId? MedicoRelacionadoId
+	MedicoId2025? MedicoRelacionadoId
 ) : IComoTexto {
 
 	public string ATexto() => $"Usuario: {NombreCompleto.ATexto()} (Rol:{EnumRole}";
@@ -66,7 +66,7 @@ public sealed record Usuario2025(
 		Result<UsuarioRoleEnum> enumRoleResult,
 		Result<Email2025> telefonoResult,
 		Result<Telefono2025> emailResult,
-		MedicoId? medicoRelacionadoId
+		MedicoId2025? medicoRelacionadoId
 	)
 		=> userNameResult.BindWithPrefix("Error en UserName2025:\n", userName
 		=> nombreCompletoResult.BindWithPrefix("Error en NombreCompleto:\n", nombreCompleto

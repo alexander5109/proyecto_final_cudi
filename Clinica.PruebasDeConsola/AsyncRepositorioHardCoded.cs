@@ -11,7 +11,7 @@ public static class AsyncRepositorioHardCoded {
 	public static Task<List<Medico2025>> GetMedicos()
 		=> Task.FromResult(new List<Medico2025> {
 		Medico2025.CrearResult(
-				//MedicoId.CrearResult(1),
+				//MedicoId2025.CrearResult(1),
 				NombreCompleto2025.CrearResult("Carlos Alfredo", "Markier"),
 				Especialidad2025.CrearResult(Especialidad2025.Gastroenterologo.Codigo),
 				//ListaEspecialidadesMedicas2025.CrearResult([
@@ -30,7 +30,7 @@ public static class AsyncRepositorioHardCoded {
 				Email2025.CrearResult("carlosmerkeir@gmail.com"),
 				//ListaHorarioMedicos2025.CrearResult([
 				//	Horario2025.Crear(
-				//		MedicoId.Crear(2341456),
+				//		MedicoId2025.Crear(2341456),
 				//		DayOfWeek.Monday,
 				//		new TimeOnly(09,00),
 				//		new TimeOnly(15,00),
@@ -38,7 +38,7 @@ public static class AsyncRepositorioHardCoded {
 				//		new DateOnly(2026, 1, 1)
 				//	),
 				//	Horario2025.Crear(
-				//		MedicoId.Crear(2311056),
+				//		MedicoId2025.Crear(2311056),
 				//		DayOfWeek.Wednesday,
 				//		new TimeOnly(09,00),
 				//		new TimeOnly(15,00),
@@ -54,7 +54,7 @@ public static class AsyncRepositorioHardCoded {
 			,
 
 			Medico2025.CrearResult(
-				//MedicoId.CrearResult(2),
+				//MedicoId2025.CrearResult(2),
 				NombreCompleto2025.CrearResult("Jorge", "Pereyra"),
 				Especialidad2025.CrearResult(Especialidad2025.Ginecologo.Codigo),
 				//ListaEspecialidadesMedicas2025.CrearResult([
@@ -73,7 +73,7 @@ public static class AsyncRepositorioHardCoded {
 				Email2025.CrearResult("jorgepereiyra@gmail.com"),
 				//ListaHorarioMedicos2025.CrearResult([
 				//	Horario2025.Crear(
-				//		MedicoId.Crear(231156),
+				//		MedicoId2025.Crear(231156),
 				//		DayOfWeek.Tuesday,
 				//		new TimeOnly(08, 0),
 				//		new TimeOnly(18, 00),
@@ -81,7 +81,7 @@ public static class AsyncRepositorioHardCoded {
 				//		new DateOnly(2026, 1, 12)
 				//	),
 				//	Horario2025.Crear(
-				//		MedicoId.Crear(23156),
+				//		MedicoId2025.Crear(23156),
 				//		DayOfWeek.Thursday,
 				//		new TimeOnly(08,00),
 				//		new TimeOnly(18,0),
@@ -115,7 +115,7 @@ public static class AsyncRepositorioHardCoded {
 				Email2025.CrearResult("martaalgerich@gmail.com"),
 				//ListaHorarioMedicos2025.CrearResult([
 				//	Horario2025.Crear(
-				//		MedicoId.Crear(156),
+				//		MedicoId2025.Crear(156),
 				//		DayOfWeek.Monday,
 				//		new TimeOnly(08,00),
 				//		new TimeOnly(12,00),
@@ -123,7 +123,7 @@ public static class AsyncRepositorioHardCoded {
 				//		new DateOnly(2024, 1, 12)
 				//	),
 				//	Horario2025.Crear(
-				//		MedicoId.Crear(1256),
+				//		MedicoId2025.Crear(1256),
 				//		DayOfWeek.Wednesday,
 				//		new TimeOnly(08,00),
 				//		new TimeOnly(12,00),
@@ -131,7 +131,7 @@ public static class AsyncRepositorioHardCoded {
 				//		new DateOnly(2024, 1, 12)
 				//	),
 				//	Horario2025.Crear(
-				//		MedicoId.Crear(12756),
+				//		MedicoId2025.Crear(12756),
 				//		DayOfWeek.Friday,
 				//		new TimeOnly(08,00),
 				//		new TimeOnly(12,00),
@@ -151,7 +151,7 @@ public static class AsyncRepositorioHardCoded {
 	public static Task<List<Result<Paciente2025Agg>>> GetPacientes()
 		=> Task.FromResult(new List<Result<Paciente2025Agg>> {
 		Paciente2025Agg.CrearResult(
-			PacienteId.CrearResult(1),
+			PacienteId2025.CrearResult(1),
 			Paciente2025.CrearResult(
 				NombreCompleto2025.CrearResult("Juan", "Diaz"),
 				DniArgentino2025.CrearResult("44444444"),
@@ -169,7 +169,7 @@ public static class AsyncRepositorioHardCoded {
 			).PrintAndContinue("Creando a Juan: ")),
 
 		Paciente2025Agg.CrearResult(
-			PacienteId.CrearResult(1),
+			PacienteId2025.CrearResult(1),
 			Paciente2025.CrearResult(
 				NombreCompleto2025.CrearResult("Pedro", "Fernandez"),
 				DniArgentino2025.CrearResult("30350123"),
@@ -187,7 +187,7 @@ public static class AsyncRepositorioHardCoded {
 			).PrintAndContinue("Creando a Pedro: ")),
 
 			Paciente2025Agg.CrearResult(
-				PacienteId.CrearResult(1),
+				PacienteId2025.CrearResult(1),
 				Paciente2025.CrearResult(
 					NombreCompleto2025.CrearResult("Herminda", "Gutierrez Lopez"),
 					DniArgentino2025.CrearResult("44444444"),

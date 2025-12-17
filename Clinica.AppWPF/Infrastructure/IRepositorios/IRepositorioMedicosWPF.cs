@@ -9,14 +9,14 @@ namespace Clinica.AppWPF.Infrastructure;
 
 
 public interface IRepositorioMedicosWPF {
-	Task<ResultWpf<UnitWpf>> DeleteMedicoWhereId(MedicoId id);
-	Task<ResultWpf<MedicoId>> InsertMedicoReturnId(Medico2025 instance);
+	Task<ResultWpf<UnitWpf>> DeleteMedicoWhereId(MedicoId2025 id);
+	Task<ResultWpf<MedicoId2025>> InsertMedicoReturnId(Medico2025 instance);
 	Task<ResultWpf<UnitWpf>> UpdateMedicoWhereId(Medico2025Agg instance);
 	Task<List<MedicoDbModel>> SelectMedicos();
 	Task EnsureMedicosLoaded();
 	Task<List<MedicoDbModel>> SelectMedicosWhereEspecialidadCodigo(EspecialidadEnum code);
-	Task<MedicoDbModel?> SelectMedicoWhereId(MedicoId id);
-	string GetFromCacheMedicoDisplayWhereId(MedicoId id);
+	Task<MedicoDbModel?> SelectMedicoWhereId(MedicoId2025 id);
+	string GetFromCacheMedicoDisplayWhereId(MedicoId2025 id);
 	Task RefreshCache();
 }
 

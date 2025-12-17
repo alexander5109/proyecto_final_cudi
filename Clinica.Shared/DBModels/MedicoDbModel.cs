@@ -7,7 +7,7 @@ namespace Clinica.Shared.DbModels;
 
 public static partial class DbModels {
 	public record MedicoDbModel(
-		MedicoId Id,
+		MedicoId2025 Id,
 		EspecialidadEnum EspecialidadCodigo,
 		string Dni,
 		string Nombre,
@@ -44,7 +44,7 @@ public static partial class DbModels {
 		);
 	}
 
-	public static MedicoDbModel ToModel(this Medico2025 instance, MedicoId id) {
+	public static MedicoDbModel ToModel(this Medico2025 instance, MedicoId2025 id) {
 		return new MedicoDbModel(
 			Id: id,
 			EspecialidadCodigo: instance.EspecialidadUnica.Codigo,
@@ -67,7 +67,7 @@ public static partial class DbModels {
 		IReadOnlyList<Horario2025> horariosDto = JsonSerializer.Deserialize<IReadOnlyList<Horario2025>>(json)
 			?? [];
 		return Medico2025Agg.CrearResult(
-			MedicoId.CrearResult(dbModel.Id),
+			MedicoId2025.CrearResult(dbModel.Id),
 			Medico2025.CrearResult(
 				NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
 

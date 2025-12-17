@@ -19,7 +19,7 @@ public static class UsuarioAuthDtos {
 		string Username,
 		UsuarioRoleEnum EnumRole,
 		string Token
-		//MedicoId? MedicoRelacionadoId
+		//MedicoId2025? MedicoRelacionadoId
 	);
 	public record UsuarioLoginRequestDto(
 		string Username,
@@ -53,7 +53,7 @@ public static class UsuarioAuthDtos {
 		UsuarioRoleEnum EnumRole,
 		string Email,
 		string Telefono,
-		MedicoId? MedicoRelacionadoId
+		MedicoId2025? MedicoRelacionadoId
 	);
 	public static Result<Usuario2025Edicion> ToDomain(this UsuarioEditarDto dto) {
 		Result<ContraseñaHasheada2025?> contraseña =
@@ -84,7 +84,7 @@ public static class UsuarioAuthDtos {
 		UsuarioRoleEnum EnumRole,
 		string Email,
 		string Telefono,
-		MedicoId? MedicoRelacionadoId
+		MedicoId2025? MedicoRelacionadoId
 	) {
 		public UsuarioCrearDto() : this("", "", "", "", default, "", "", default) { }
 	}

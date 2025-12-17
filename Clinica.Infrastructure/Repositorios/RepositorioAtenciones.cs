@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Infrastructure.IRepositorios;
 using Dapper;
@@ -13,12 +14,11 @@ public class RepositorioAtenciones(SQLServerConnectionFactory factory)
 	// -----------------------------
 	// Insertar atención
 	// -----------------------------
-	public Task<Result<AtencionId>> InsertAtencionReturnId(AtencionDbModel instance)
+	public Task<Result<AtencionId2025>> InsertAtencionReturnId(Atencion2025 instance)
 		=> TryAsync(async conn => {
-            AtencionId newId = await conn.ExecuteScalarAsync<AtencionId>(
+            AtencionId2025 newId = await conn.ExecuteScalarAsync<AtencionId2025>(
 				"sp_InsertAtencionReturnId",
 				new {
-					Id = instance.Id.Valor,
 					TurnoId = instance.TurnoId.Valor,
 					PacienteId = instance.PacienteId.Valor,
 					MedicoId = instance.MedicoId.Valor,
@@ -33,7 +33,7 @@ public class RepositorioAtenciones(SQLServerConnectionFactory factory)
 	// -----------------------------
 	// Actualizar observaciones
 	// -----------------------------
-	public Task<Result<Unit>> UpdateObservacionesWhereId(AtencionId id, string observaciones)
+	public Task<Result<Unit>> UpdateObservacionesWhereId(AtencionId2025 id, string observaciones)
 		=> TryAsyncVoid(async conn => {
 			int rows = await conn.ExecuteAsync(
 				"sp_UpdateAtencionesWhereId",
@@ -59,7 +59,7 @@ public class RepositorioAtenciones(SQLServerConnectionFactory factory)
 	// -----------------------------
 	// Seleccionar por paciente
 	// -----------------------------
-	public Task<Result<IEnumerable<AtencionDbModel>>> SelectAtencionesWherePacienteId(PacienteId id)
+	public Task<Result<IEnumerable<AtencionDbModel>>> SelectAtencionesWherePacienteId(PacienteId2025 id)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<AtencionDbModel>(
 				"sp_SelectAtencionesWherePacienteId",
@@ -71,7 +71,7 @@ public class RepositorioAtenciones(SQLServerConnectionFactory factory)
 	// -----------------------------
 	// Seleccionar por turno
 	// -----------------------------
-	public Task<Result<AtencionDbModel?>> SelectAtencionWhereTurnoId(TurnoId id)
+	public Task<Result<AtencionDbModel?>> SelectAtencionWhereTurnoId(TurnoId2025 id)
 		=> TryAsync(async conn => {
 			return await conn.QuerySingleOrDefaultAsync<AtencionDbModel>(
 				"sp_SelectAtencionesWhereTurnoId",
@@ -83,7 +83,7 @@ public class RepositorioAtenciones(SQLServerConnectionFactory factory)
 	// -----------------------------
 	// Eliminar atención
 	// -----------------------------
-	public Task<Result<Unit>> DeleteAtencionWhereId(AtencionId id)
+	public Task<Result<Unit>> DeleteAtencionWhereId(AtencionId2025 id)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_DeleteAtencionWhereId",

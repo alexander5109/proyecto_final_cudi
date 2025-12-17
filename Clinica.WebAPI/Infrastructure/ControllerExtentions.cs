@@ -89,7 +89,7 @@ public static class ControllerExtensions {
 
 	public static bool TryGetUsuarioId(
 		this ControllerBase controller,
-		out UsuarioId usuarioId
+		out UsuarioId2025 usuarioId
 	) {
 		usuarioId = default;
 
@@ -100,7 +100,7 @@ public static class ControllerExtensions {
 		if (!int.TryParse(idStr, out int id))
 			return false;
 
-		usuarioId = UsuarioId.Crear(id);
+		usuarioId = UsuarioId2025.Crear(id);
 		return true;
 	}
 
@@ -110,12 +110,12 @@ public static class ControllerExtensions {
 		this ControllerBase controller,
 		ILogger logger,
 		AccionesDeUsuarioEnum permiso,
-		Func<UsuarioId, Task<Result<T>>> action,
-		Func<UsuarioId, bool>? precondicion = null,
+		Func<UsuarioId2025, Task<Result<T>>> action,
+		Func<UsuarioId2025, bool>? precondicion = null,
 		string? notFoundMessage = null
 	) {
-		// 1️⃣ UsuarioId
-		if (!controller.TryGetUsuarioId(out UsuarioId currentUserId))
+		// 1️⃣ UsuarioId2025
+		if (!controller.TryGetUsuarioId(out UsuarioId2025 currentUserId))
 			return controller.ToActionResult(UsuarioNoAutorizado<T>());
 
 		// 2️⃣ Rol

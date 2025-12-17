@@ -4,53 +4,53 @@ using Dapper;
 
 namespace Clinica.Infrastructure.TypeHandlers;
 
-public class TurnoIdHandler : SqlMapper.TypeHandler<TurnoId> {
-	public override void SetValue(IDbDataParameter parameter, TurnoId value) {
+public class TurnoIdHandler : SqlMapper.TypeHandler<TurnoId2025> {
+	public override void SetValue(IDbDataParameter parameter, TurnoId2025 value) {
 		parameter.Value = value.Valor; // store as int in DB
 	}
 
-	public override TurnoId Parse(object value) {
-		return TurnoId.Crear(Convert.ToInt32(value)); // read from DB as int
+	public override TurnoId2025 Parse(object value) {
+		return TurnoId2025.Crear(Convert.ToInt32(value)); // read from DB as int
 	}
 }
 
-public class MedicoIdHandler : SqlMapper.TypeHandler<MedicoId> {
-	public override void SetValue(IDbDataParameter parameter, MedicoId value) {
+public class MedicoIdHandler : SqlMapper.TypeHandler<MedicoId2025> {
+	public override void SetValue(IDbDataParameter parameter, MedicoId2025 value) {
 		parameter.Value = value.Valor; // store as int in DB
 	}
-	public override MedicoId Parse(object value) {
-		return MedicoId.Crear(Convert.ToInt32(value)); // read from DB as int
+	public override MedicoId2025 Parse(object value) {
+		return MedicoId2025.Crear(Convert.ToInt32(value)); // read from DB as int
 	}
 }
 
-public class HorarioIdHandler : SqlMapper.TypeHandler<HorarioId> {
-	public override void SetValue(IDbDataParameter parameter, HorarioId value) {
+public class HorarioIdHandler : SqlMapper.TypeHandler<HorarioId2025> {
+	public override void SetValue(IDbDataParameter parameter, HorarioId2025 value) {
 		parameter.Value = value.Valor; // store as int in DB
 	}
-	public override HorarioId Parse(object value) {
-		return HorarioId.Crear(Convert.ToInt32(value)); // read from DB as int
+	public override HorarioId2025 Parse(object value) {
+		return HorarioId2025.Crear(Convert.ToInt32(value)); // read from DB as int
 	}
 }
 
-public class PacienteIdHandler : SqlMapper.TypeHandler<PacienteId> {
-	public override void SetValue(IDbDataParameter parameter, PacienteId value) {
+public class PacienteIdHandler : SqlMapper.TypeHandler<PacienteId2025> {
+	public override void SetValue(IDbDataParameter parameter, PacienteId2025 value) {
 		parameter.Value = value.Valor; // store as int in DB
 	}
 
-	public override PacienteId Parse(object value) {
-		return PacienteId.Crear(Convert.ToInt32(value)); // read from DB as int
+	public override PacienteId2025 Parse(object value) {
+		return PacienteId2025.Crear(Convert.ToInt32(value)); // read from DB as int
 	}
 }
 
 
 
-public class UsuarioIdHandler : SqlMapper.TypeHandler<UsuarioId> {
-	public override void SetValue(IDbDataParameter parameter, UsuarioId value) {
+public class UsuarioIdHandler : SqlMapper.TypeHandler<UsuarioId2025> {
+	public override void SetValue(IDbDataParameter parameter, UsuarioId2025 value) {
 		parameter.Value = value.Valor; // store as int in DB
 	}
 
-	public override UsuarioId Parse(object value) {
-		return UsuarioId.Crear(Convert.ToInt32(value)); // read from DB as int
+	public override UsuarioId2025 Parse(object value) {
+		return UsuarioId2025.Crear(Convert.ToInt32(value)); // read from DB as int
 	}
 }
 

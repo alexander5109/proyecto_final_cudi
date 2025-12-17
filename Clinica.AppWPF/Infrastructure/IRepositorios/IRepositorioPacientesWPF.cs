@@ -8,11 +8,11 @@ namespace Clinica.AppWPF.Infrastructure;
 
 public interface IRepositorioPacientesWPF {
 	Task EnsurePacientesLoaded();
-	Task<ResultWpf<UnitWpf>> DeletePacienteWhereId(PacienteId id);
-	Task<ResultWpf<PacienteId>> InsertPacienteReturnId(Paciente2025 instance);
+	Task<ResultWpf<UnitWpf>> DeletePacienteWhereId(PacienteId2025 id);
+	Task<ResultWpf<PacienteId2025>> InsertPacienteReturnId(Paciente2025 instance);
 	Task<List<PacienteDbModel>> SelectPacientes();
-	Task<PacienteDbModel?> SelectPacienteWhereId(PacienteId id);
+	Task<PacienteDbModel?> SelectPacienteWhereId(PacienteId2025 id);
 	Task<ResultWpf<UnitWpf>> UpdatePacienteWhereId(Paciente2025Agg instance);
     Task RefreshCache();
-    PacienteDbModel? GetFromCachePacienteWhereId(PacienteId pacienteId);
+    PacienteDbModel? GetFromCachePacienteWhereId(PacienteId2025 pacienteId);
 }

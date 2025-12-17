@@ -20,7 +20,7 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 
 
 
-	Task<Result<UsuarioDbModel?>> IRepositorioUsuarios.SelectUsuarioWhereId(UsuarioId id)
+	Task<Result<UsuarioDbModel?>> IRepositorioUsuarios.SelectUsuarioWhereId(UsuarioId2025 id)
 		=> TryAsync(async conn => {
 			return await conn.QuerySingleOrDefaultAsync<UsuarioDbModel>(
 				"sp_SelectUsuarioWhereId",
@@ -32,7 +32,7 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 
 
 
-	Task<Result<UsuarioDbModel>> IRepositorioUsuarios.UpdateUsuarioWhereId(UsuarioId id,Usuario2025Edicion instance)
+	Task<Result<UsuarioDbModel>> IRepositorioUsuarios.UpdateUsuarioWhereId(UsuarioId2025 id,Usuario2025Edicion instance)
 		=> TryAsync(async conn => {
 			// 1) Convertimos solo UNA VEZ
 			UsuarioDbModel dto = instance.ToModel(id); //need to implement ToModel(dto with Id), or use an anonymous object
@@ -55,7 +55,7 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 
 
 
-	Task<Result<Unit>> IRepositorioUsuarios.DeleteUsuarioWhereId(UsuarioId id)
+	Task<Result<Unit>> IRepositorioUsuarios.DeleteUsuarioWhereId(UsuarioId2025 id)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_DeleteUsuarioWhereId",
@@ -86,8 +86,8 @@ public class RepositorioUsuarios(SQLServerConnectionFactory factory) : Repositor
 
 
 
-	Task<Result<UsuarioId>> IRepositorioUsuarios.InsertUsuarioReturnId(Usuario2025 instance)
-		=> TryAsync(async conn => await conn.ExecuteScalarAsync<UsuarioId>(
+	Task<Result<UsuarioId2025>> IRepositorioUsuarios.InsertUsuarioReturnId(Usuario2025 instance)
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<UsuarioId2025>(
 			"sp_InsertUsuarioReturnId",
 			instance.ToDto(),
 			commandType: CommandType.StoredProcedure

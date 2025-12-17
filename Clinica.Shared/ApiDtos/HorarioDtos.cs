@@ -2,7 +2,7 @@
 
 public static class HorarioDtos {
 	public record HorarioDto(
-		//MedicoId MedicoId,
+		//MedicoId2025 MedicoId2025,
 		DayOfWeek DiaSemana,
 		TimeSpan HoraDesde,
 		TimeSpan HoraHasta,
@@ -14,7 +14,7 @@ public static class HorarioDtos {
 	}
 	//public static HorarioDto ToDto(this Horario2025 instance) {
 	//	return new HorarioDto {
-	//		MedicoId = instance.MedicoId,
+	//		MedicoId2025 = instance.MedicoId2025,
 	//		DiaSemana = instance.DiaSemana,
 	//		HoraDesde = instance.HoraDesde.ToTimeSpan(),
 	//		HoraHasta = instance.HoraHasta.ToTimeSpan(),
@@ -25,7 +25,7 @@ public static class HorarioDtos {
 
 	//public static Result<Horario2025> ToDomain(this HorarioDto dto) {
 	//	return Horario2025.CrearResult(
-	//		dto.MedicoId,
+	//		dto.MedicoId2025,
 	//		dto.DiaSemana,
 	//		TimeOnly.FromTimeSpan(dto.HoraDesde),
 	//		TimeOnly.FromTimeSpan(dto.HoraHasta),

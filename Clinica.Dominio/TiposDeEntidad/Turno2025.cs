@@ -56,8 +56,8 @@ public static class TurnoPolicyRaw {
 
 public record Turno2025(
 	DateTime FechaDeCreacion,
-	PacienteId PacienteId,
-	MedicoId MedicoId,
+	PacienteId2025 PacienteId,
+	MedicoId2025 MedicoId,
 	Especialidad2025 Especialidad,
 	DateTime FechaHoraAsignadaDesdeValor,
 	DateTime FechaHoraAsignadaHastaValor,
@@ -73,8 +73,8 @@ public record Turno2025(
 		// double duracion = (FechaHoraAsignadaHastaValor - FechaHoraAsignadaDesdeValor).TotalMinutes;
 		// return
 			// $"Turno de {Especialidad.ATexto()}\n" +
-			// $"  • PacienteId: {PacienteId}\n" +
-			// $"  • Médico asignado: {MedicoId}\n" +
+			// $"  • PacienteId2025: {PacienteId2025}\n" +
+			// $"  • Médico asignado: {MedicoId2025}\n" +
 			// $"  • Fecha: {fecha}\n" +
 			// $"  • Horario: {desde}–{hasta} ({duracion} min)\n" +
 			// $"  • OutcomeEstado: {OutcomeEstado}\n";
@@ -82,8 +82,8 @@ public record Turno2025(
 
 	public static Turno2025 Representar(
 		DateTime fechaCreacion,
-		PacienteId pacienteId,
-		MedicoId medicoId,
+		PacienteId2025 pacienteId,
+		MedicoId2025 medicoId,
 		EspecialidadEnum especialidadCododigo,
 		DateTime desde,
 		DateTime hasta,
@@ -106,10 +106,10 @@ public record Turno2025(
 
 
 	public static Result<Turno2025> CrearResult(
-		//Result<TurnoId> idResult,
+		//Result<TurnoId2025> idResult,
 		DateTime fechaCreacion,
-		Result<PacienteId> pacienteIdResult,
-		Result<MedicoId> medicoIdResult,
+		Result<PacienteId2025> pacienteIdResult,
+		Result<MedicoId2025> medicoIdResult,
 		Result<Especialidad2025> especialidadResult,
 		DateTime desde,
 		DateTime hasta,
@@ -140,7 +140,7 @@ public record Turno2025(
 
 
 	public static Result<Turno2025> Programar(
-		PacienteId pacienteId,
+		PacienteId2025 pacienteId,
 		DateTime solicitadoEn,
 		Disponibilidad2025 disp
 	) {

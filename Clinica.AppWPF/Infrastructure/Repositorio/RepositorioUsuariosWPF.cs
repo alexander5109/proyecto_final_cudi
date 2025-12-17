@@ -13,7 +13,7 @@ using static Clinica.Shared.DbModels.DbModels;
 namespace Clinica.AppWPF.Infrastructure.Repositorio;
 
 public class RepositorioUsuariosWPF : IRepositorioUsuariosWPF {
-	public static Dictionary<UsuarioId, UsuarioDbModel> DictCache { get; set; } = [];
+	public static Dictionary<UsuarioId2025, UsuarioDbModel> DictCache { get; set; } = [];
 
 
 	private bool _usuariosLoaded = false;
@@ -44,7 +44,7 @@ public class RepositorioUsuariosWPF : IRepositorioUsuariosWPF {
 		return Task.FromResult(ServiciosPublicos.GetTodasLasAcciones());
 	}
 	async Task<ResultWpf<UnitWpf>> IRepositorioUsuariosWPF.DeleteUsuarioWhereId(
-		UsuarioId id
+		UsuarioId2025 id
 	) {
 		ResultWpf<UnitWpf> result = await App.Api.TryApiCallAsync(
 			httpCall: () => App.Api.Cliente.DeleteAsync($"api/usuarios/{id.Valor}"),
@@ -76,14 +76,14 @@ public class RepositorioUsuariosWPF : IRepositorioUsuariosWPF {
 		}
 		return result;
 	}
-	async Task<ResultWpf<UsuarioId>> IRepositorioUsuariosWPF.InsertUsuarioReturnId(Usuario2025 instance) {
-		ResultWpf<UsuarioId> result = await App.Api.TryApiCallAsync(
+	async Task<ResultWpf<UsuarioId2025>> IRepositorioUsuariosWPF.InsertUsuarioReturnId(Usuario2025 instance) {
+		ResultWpf<UsuarioId2025> result = await App.Api.TryApiCallAsync(
 			() => App.Api.Cliente.PostAsJsonAsync(
 				"api/usuarios",
 				instance.ToDto()
 			),
 			onOk: async response => {
-				return await response.Content.ReadFromJsonAsync<UsuarioId>();
+				return await response.Content.ReadFromJsonAsync<UsuarioId2025>();
 			},
 			errorTitle: "Error creando usuario"
 		);

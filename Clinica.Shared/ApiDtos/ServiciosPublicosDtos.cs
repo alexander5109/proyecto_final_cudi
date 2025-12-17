@@ -11,29 +11,29 @@ public static class ServiciosPublicosDtos {
 		int Cuantos,
 		DateTime? APartirDeCuando = null,
 		DayOfWeek? DiaSemanaPreferido = null,
-		MedicoId? MedicoPreferido = null
+		MedicoId2025? MedicoPreferido = null
 	);
 
 
 
 	public sealed record ConcretarTurnoDto(
-		TurnoId TurnoId,
+		TurnoId2025 TurnoId,
 		DateTime FechaSolicitud,
 		string? Comentario
 	);
 	public sealed record ModificarTurnoDto(
-		TurnoId TurnoId,
+		TurnoId2025 TurnoId,
 		DateTime FechaSolicitud,
 		string? Comentario
 	);
 	public sealed record ProgramarTurnoDto(
-		PacienteId PacienteId,
+		PacienteId2025 PacienteId,
 		DateTime FechaSolicitud,
 		Disponibilidad2025 Disponibilidad
 	);
 	//public sealed record DisponibilidadDto( //usemos el del domino
 	//	EspecialidadEnum EspecialidadEnum,
-	//	MedicoId MedicoId,
+	//	MedicoId2025 MedicoId2025,
 	//	DateTime FechaHoraDesde,
 	//	DateTime FechaHoraHasta
 	//);

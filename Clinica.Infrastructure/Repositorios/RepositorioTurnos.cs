@@ -15,8 +15,8 @@ public class RepositorioTurnos(SQLServerConnectionFactory factory) : Repositorio
 
 
 
-	Task<Result<TurnoId>> IRepositorioTurnos.InsertTurnoReturnId(Turno2025 instance)
-		=> TryAsync(async conn => await conn.ExecuteScalarAsync<TurnoId>(
+	Task<Result<TurnoId2025>> IRepositorioTurnos.InsertTurnoReturnId(Turno2025 instance)
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<TurnoId2025>(
 			"sp_InsertTurnoReturnId",
 			instance.ToDto(),
 			commandType: CommandType.StoredProcedure
@@ -25,7 +25,7 @@ public class RepositorioTurnos(SQLServerConnectionFactory factory) : Repositorio
 
 
 	Task<Result<TurnoDbModel>> IRepositorioTurnos.UpdateTurnoWhereId(
-		TurnoId id,
+		TurnoId2025 id,
 		Turno2025 instance
 	) {
 		TurnoDbModel parametros = instance.ToModel(id);
@@ -51,7 +51,7 @@ public class RepositorioTurnos(SQLServerConnectionFactory factory) : Repositorio
 		});
 	}
 
-	Task<Result<TurnoDbModel?>> IRepositorioTurnos.SelectTurnoWhereId(TurnoId id)
+	Task<Result<TurnoDbModel?>> IRepositorioTurnos.SelectTurnoWhereId(TurnoId2025 id)
 		=> TryAsync(async conn => {
 			return await conn.QuerySingleOrDefaultAsync<TurnoDbModel>(
 				"sp_SelectTurnoWhereId",
@@ -60,7 +60,7 @@ public class RepositorioTurnos(SQLServerConnectionFactory factory) : Repositorio
 			);
 		});
 
-	Task<Result<Unit>> IRepositorioTurnos.DeleteTurnoWhereId(TurnoId id)
+	Task<Result<Unit>> IRepositorioTurnos.DeleteTurnoWhereId(TurnoId2025 id)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_DeleteTurnoWhereId",

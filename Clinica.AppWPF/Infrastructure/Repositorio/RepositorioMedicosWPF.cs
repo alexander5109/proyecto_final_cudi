@@ -12,7 +12,7 @@ namespace Clinica.AppWPF.Infrastructure.Repositorio;
 
 public class RepositorioMedicosWPF : IRepositorioMedicosWPF {
 	
-	public static Dictionary<MedicoId, MedicoDbModel> DictCache { get; set; } = [];
+	public static Dictionary<MedicoId2025, MedicoDbModel> DictCache { get; set; } = [];
 	
 
 	private bool _medicosLoaded = false;
@@ -24,7 +24,7 @@ public class RepositorioMedicosWPF : IRepositorioMedicosWPF {
 
 		DictCache.Clear();
 		DictCache = list.ToDictionary(m => m.Id, m => m);
-		//foreach (KeyValuePair<MedicoId, MedicoDbModel> m in DictMedicos) {
+		//foreach (KeyValuePair<MedicoId2025, MedicoDbModel> m in DictMedicos) {
 		//	Console.WriteLine($"Medico cache loaded: {m.Key} -> {m.Value.Nombre} {m.Value.Apellido}");
 		//}
 		_medicosLoaded = true;
@@ -57,7 +57,7 @@ public class RepositorioMedicosWPF : IRepositorioMedicosWPF {
 		//return await App.Api.TryGetJsonAsync<List<MedicoDto>>($"api/medicos/por-especialidad/{code}", defaultValue: []);
 	}
 
-	async Task<ResultWpf<UnitWpf>> IRepositorioMedicosWPF.DeleteMedicoWhereId(MedicoId id) {
+	async Task<ResultWpf<UnitWpf>> IRepositorioMedicosWPF.DeleteMedicoWhereId(MedicoId2025 id) {
 		ResultWpf<UnitWpf> result = await App.Api.TryApiCallAsync(
 			() => App.Api.Cliente.DeleteAsync($"api/medicos/{id.Valor}"),
 			onOk: async response => UnitWpf.Valor,
@@ -91,14 +91,14 @@ public class RepositorioMedicosWPF : IRepositorioMedicosWPF {
 	}
 
 
-	async Task<ResultWpf<MedicoId>> IRepositorioMedicosWPF.InsertMedicoReturnId(Medico2025 instance) {
-		ResultWpf<MedicoId> result = await App.Api.TryApiCallAsync(
+	async Task<ResultWpf<MedicoId2025>> IRepositorioMedicosWPF.InsertMedicoReturnId(Medico2025 instance) {
+		ResultWpf<MedicoId2025> result = await App.Api.TryApiCallAsync(
 			() => App.Api.Cliente.PostAsJsonAsync(
 				"api/medicos",
 				instance.ToDto()
 			),
 			onOk: async response => {
-				return await response.Content.ReadFromJsonAsync<MedicoId>();
+				return await response.Content.ReadFromJsonAsync<MedicoId2025>();
 			},
 			errorTitle: "Error creando médico"
 		);
@@ -108,7 +108,7 @@ public class RepositorioMedicosWPF : IRepositorioMedicosWPF {
 		return result;
 	}
 
-	async Task<MedicoDbModel?> IRepositorioMedicosWPF.SelectMedicoWhereId(MedicoId id) {
+	async Task<MedicoDbModel?> IRepositorioMedicosWPF.SelectMedicoWhereId(MedicoId2025 id) {
 		await EnsureMedicosLoaded();
 
 		if (DictCache.TryGetValue(id, out MedicoDbModel? dto))
@@ -120,7 +120,7 @@ public class RepositorioMedicosWPF : IRepositorioMedicosWPF {
 		return res;
 	}
 
-	string IRepositorioMedicosWPF.GetFromCacheMedicoDisplayWhereId(MedicoId id) {
+	string IRepositorioMedicosWPF.GetFromCacheMedicoDisplayWhereId(MedicoId2025 id) {
 		// i don't do it. but consumer should // await RefreshCache();
 		if (DictCache.TryGetValue(id, out MedicoDbModel? dto))
 			return $"{dto.Nombre} {dto.Apellido}";

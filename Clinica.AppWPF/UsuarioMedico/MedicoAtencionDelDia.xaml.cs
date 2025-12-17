@@ -9,7 +9,7 @@ public partial class MedicoAtencionDelDia : Window {
 
 	public MedicoAtencionDelDia() {
 		InitializeComponent();
-		if (App.UsuarioActivo!.MedicoRelacionadoId is not MedicoId medicoIdGood) {
+		if (App.UsuarioActivo!.MedicoRelacionadoId is not MedicoId2025 medicoIdGood) {
 			MessageBox.Show("Su usuario no tiene un medico relacionado. Voy a crashear");
 			throw new Exception("Su usuario no tiene un medico relacionado. Voy a crashear");
 		}

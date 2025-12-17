@@ -43,7 +43,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 	public MedicoDbModel ActiveMedicoModel { get; private set; }
-	public MedicoId MedicoId { get; private set; }
+	public MedicoId2025 MedicoId { get; private set; }
 	public string? ActiveMedicoEspecialidad => ActiveMedicoModel?.EspecialidadCodigo.ToString();
 	public string? ActiveMedicoNombreCompleto => $"{ActiveMedicoModel?.Nombre} {ActiveMedicoModel?.Apellido}";
 
@@ -505,7 +505,7 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 	// NODO_FRANJA.METHODS
 	// ================================================================
 	public HorarioDto ToDto() => new() {
-		//MedicoId = medicoId,
+		//MedicoId2025 = medicoId,
 		DiaSemana = DiaSemana,
 		HoraDesde = HoraDesde.ToTimeSpan(),
 		HoraHasta = HoraHasta.ToTimeSpan(),

@@ -33,7 +33,7 @@ public class UsuariosController(
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.VerUsuarios,
-			() => repositorio.SelectUsuarioWhereId(UsuarioId.Crear(id)),
+			() => repositorio.SelectUsuarioWhereId(UsuarioId2025.Crear(id)),
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
 
@@ -52,7 +52,7 @@ public class UsuariosController(
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.EliminarUsuarios,
-			currentUserId => repositorio.DeleteUsuarioWhereId(UsuarioId.Crear(id)),
+			currentUserId => repositorio.DeleteUsuarioWhereId(UsuarioId2025.Crear(id)),
 			precondicion: currentUserId => currentUserId.Valor != id,
 			notFoundMessage: $"No existe usuario con id {id}"
 		);
@@ -67,14 +67,14 @@ public class UsuariosController(
 		AccionesDeUsuarioEnum.ModificarEntidades,
 		dto,
 		x => x.ToDomain(), ///here validation or insta return bad request + domain error. requires 
-		usuario => repositorio.UpdateUsuarioWhereId(UsuarioId.Crear(id), usuario),
+		usuario => repositorio.UpdateUsuarioWhereId(UsuarioId2025.Crear(id), usuario),
 		notFoundMessage: $"No existe usuario con id {id}"
 	);
 
 
 
 	[HttpPost]
-	public Task<ActionResult<UsuarioId>> CrearUsuario([FromBody] UsuarioCrearDto dto) {
+	public Task<ActionResult<UsuarioId2025>> CrearUsuario([FromBody] UsuarioCrearDto dto) {
 
 		Console.WriteLine(dto.ToString());
 

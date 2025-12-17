@@ -9,7 +9,7 @@ namespace Clinica.Shared.DbModels;
 
 public static partial class DbModels {
 	public record PacienteDbModel(
-		PacienteId Id,
+		PacienteId2025 Id,
 		string Dni,
 		string Nombre,
 		string Apellido,
@@ -40,7 +40,7 @@ public static partial class DbModels {
 			FechaNacimiento: aggrg.Paciente.FechaNacimiento.Valor.ToDateTime(TimeOnly.MinValue)
 		);
 	}
-	public static PacienteDbModel ToModel(this Paciente2025 instance, PacienteId id) {
+	public static PacienteDbModel ToModel(this Paciente2025 instance, PacienteId2025 id) {
 		return new PacienteDbModel(
 			Id: id,
 			Dni: instance.Dni.Valor,
@@ -60,7 +60,7 @@ public static partial class DbModels {
 
 	public static Result<Paciente2025Agg> ToDomainAgg(this PacienteDbModel dbModel) {
 		return Paciente2025Agg.CrearResult(
-			PacienteId.CrearResult(dbModel.Id.Valor),
+			PacienteId2025.CrearResult(dbModel.Id.Valor),
 			Paciente2025.CrearResult(
 				NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),
 				DniArgentino2025.CrearResult(dbModel.Dni),

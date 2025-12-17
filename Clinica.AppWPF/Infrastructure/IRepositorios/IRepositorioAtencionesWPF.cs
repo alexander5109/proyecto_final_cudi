@@ -8,13 +8,13 @@ namespace Clinica.AppWPF.Infrastructure.IRepositorios;
 
 public interface IRepositorioAtencionesWPF {
 	Task<List<AtencionDbModel>> SelectAtenciones();
-	Task<List<AtencionDbModel>> SelectAtencionesWherePacienteId(PacienteId id);
-	Task<List<TurnoDbModel>> SelectTurnosWhereMedicoId(MedicoId id);
-	Task<List<TurnoDbModel>> SelectTurnosWhereMedicoIdDeLaFecha(MedicoId id, DateOnly fecha);
-	Task<ResultWpf<UnitWpf>> AgendarAtencionConDiagnostico(TurnoId turnoSource, PacienteId pacienteId);
+	Task<List<AtencionDbModel>> SelectAtencionesWherePacienteId(PacienteId2025 id);
+	Task<List<TurnoDbModel>> SelectTurnosWhereMedicoId(MedicoId2025 id);
+	Task<List<TurnoDbModel>> SelectTurnosWhereMedicoIdDeLaFecha(MedicoId2025 id, DateOnly fecha);
+	Task<ResultWpf<UnitWpf>> AgendarAtencionConDiagnostico(TurnoId2025 turnoSource, PacienteId2025 pacienteId);
 
-	//string GetFromCacheMedicoDisplayWhereId(MedicoId id);
-	//App.Repositorio.Medicos.GetFromCacheMedicoDisplayWhereId(d.MedicoId);
+	//string GetFromCacheMedicoDisplayWhereId(MedicoId2025 id);
+	//App.Repositorio.Medicos.GetFromCacheMedicoDisplayWhereId(d.MedicoId2025);
 }
 
 

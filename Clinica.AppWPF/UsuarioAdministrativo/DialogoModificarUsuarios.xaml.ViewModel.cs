@@ -74,7 +74,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	// PROPERTIES
 	// -----------------------------
 
-	public UsuarioId? Id { get; private set; }
+	public UsuarioId2025? Id { get; private set; }
 
 	private string _userName = "";
 	public string UserName {
@@ -152,8 +152,8 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		}
 	}
 
-	private MedicoId? _medicoRelacionadoId;
-	public MedicoId? MedicoRelacionadoId {
+	private MedicoId2025? _medicoRelacionadoId;
+	public MedicoId2025? MedicoRelacionadoId {
 		get => _medicoRelacionadoId;
 		set {
 			_medicoRelacionadoId = value;
@@ -191,10 +191,10 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			: await GuardarCreacionAsync();
 	}
 	private async Task<ResultWpf<UnitWpf>> GuardarEdicionAsync() {
-		if (Id is not UsuarioId id)
+		if (Id is not UsuarioId2025 id)
 			return new ResultWpf<UnitWpf>.Error(
 				new ErrorInfo(
-					"No se puede guardar, la entidad no tiene UsuarioId.",
+					"No se puede guardar, la entidad no tiene UsuarioId2025.",
 					MessageBoxImage.Information
 				)
 			);
@@ -285,7 +285,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 // ================================================================
 
 internal record UsuarioEdicionSnapshot(
-	UsuarioId Id,
+	UsuarioId2025 Id,
 	string UserName,
 	//string PasswordHash,
 	string Nombre,

@@ -10,8 +10,8 @@ public static class TurnoDtos {
 
 	public record TurnoDto(
 		DateTime FechaDeCreacion,
-		PacienteId PacienteId,
-		MedicoId MedicoId,
+		PacienteId2025 PacienteId,
+		MedicoId2025 MedicoId,
 		EspecialidadEnum EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
@@ -42,8 +42,8 @@ public static class TurnoDtos {
 	public static Result<Turno2025> ToDomain(this TurnoDto dbModel) {
 		return Turno2025.CrearResult(
 			dbModel.FechaDeCreacion,
-			PacienteId.CrearResult(dbModel.PacienteId.Valor),
-			MedicoId.CrearResult(dbModel.MedicoId.Valor),
+			PacienteId2025.CrearResult(dbModel.PacienteId.Valor),
+			MedicoId2025.CrearResult(dbModel.MedicoId.Valor),
 			Especialidad2025.CrearResult(dbModel.EspecialidadCodigo),
 			dbModel.FechaHoraAsignadaDesde,
 			dbModel.FechaHoraAsignadaHasta,

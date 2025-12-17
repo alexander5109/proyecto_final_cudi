@@ -13,13 +13,13 @@ public class RepositorioTurnosWPF : IRepositorioTurnosWPF {
 	
 	
 
-	async Task<List<TurnoDbModel>> IRepositorioTurnosWPF.SelectTurnosWherePacienteId(PacienteId id) {
+	async Task<List<TurnoDbModel>> IRepositorioTurnosWPF.SelectTurnosWherePacienteId(PacienteId2025 id) {
 		return await App.Api.TryGetJsonOrNullAsync<List<TurnoDbModel>>(
 			$"api/pacientes/{id.Valor}/turnos"
 		) ?? [];
 	}
 
-	async Task<List<TurnoDbModel>> IRepositorioTurnosWPF.SelectTurnosWhereMedicoId(MedicoId id) {
+	async Task<List<TurnoDbModel>> IRepositorioTurnosWPF.SelectTurnosWhereMedicoId(MedicoId2025 id) {
 		return await App.Api.TryGetJsonOrNullAsync<List<TurnoDbModel>>(
 			$"api/medicos/{id.Valor}/turnos"
 		) ?? [];
@@ -35,7 +35,7 @@ public class RepositorioTurnosWPF : IRepositorioTurnosWPF {
 
 
 	async Task<ResultWpf<UnitWpf>> IRepositorioTurnosWPF.CancelarTurno(
-		TurnoId turnoId,
+		TurnoId2025 turnoId,
 		DateTime fechaOutcome,
 		string? reason
 	) {
@@ -52,7 +52,7 @@ public class RepositorioTurnosWPF : IRepositorioTurnosWPF {
 	}
 
 
-	async Task<ResultWpf<UnitWpf>> IRepositorioTurnosWPF.AgendarNuevoTurno(PacienteId pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad) {
+	async Task<ResultWpf<UnitWpf>> IRepositorioTurnosWPF.AgendarNuevoTurno(PacienteId2025 pacienteId, DateTime fechaSolicitud, Disponibilidad2025 disponibilidad) {
 		ResultWpf<UnitWpf> response = await App.Api.TryApiCallAsync(
 			() => App.Api.Cliente.PostAsJsonAsync(
 				"api/ServiciosPublicos/Turnos/Programar",
@@ -73,7 +73,7 @@ public class RepositorioTurnosWPF : IRepositorioTurnosWPF {
 	}
 
 	async Task<ResultWpf<UnitWpf>> IRepositorioTurnosWPF.ReprogramarTurno(
-		TurnoId turnoId,
+		TurnoId2025 turnoId,
 		DateTime fechaOutcome,
 		string? reason
 	) {
@@ -98,7 +98,7 @@ public class RepositorioTurnosWPF : IRepositorioTurnosWPF {
 
 
 	async Task<ResultWpf<UnitWpf>> IRepositorioTurnosWPF.MarcarTurnoComoAusente(
-		TurnoId turnoId,
+		TurnoId2025 turnoId,
 		DateTime fechaOutcome,
 		string? reason
 	) {
@@ -120,7 +120,7 @@ public class RepositorioTurnosWPF : IRepositorioTurnosWPF {
 
 
 	async Task<ResultWpf<UnitWpf>> IRepositorioTurnosWPF.MarcarTurnoComoConcretado(
-		TurnoId turnoId,
+		TurnoId2025 turnoId,
 		DateTime fechaOutcome,
 		string? reason
 	) {

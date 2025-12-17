@@ -10,16 +10,16 @@ namespace Clinica.Infrastructure.Repositorios;
 
 
 public class RepositorioHorarios(SQLServerConnectionFactory factory) : RepositorioBase(factory), IRepositorioHorarios {
-	//Task<Result<HorarioId>> IRepositorioHorarios.InsertHorarioReturnId(Horario2025 instance)
+	//Task<Result<HorarioId2025>> IRepositorioHorarios.InsertHorarioReturnId(Horario2025 instance)
 	//	=> TryAsync(async conn => await conn.ExecuteScalarAsync<int>(
 	//		"sp_InsertHorarioReturnId",
 	//		instance.ToDto(),
 	//		commandType: CommandType.StoredProcedure
-	//	)).MapAsync(newId => new HorarioId(newId));
+	//	)).MapAsync(newId => new HorarioId2025(newId));
 
 
 
-	Task<Result<Unit>> IRepositorioHorarios.DeleteHorarioWhereId(HorarioId id)
+	Task<Result<Unit>> IRepositorioHorarios.DeleteHorarioWhereId(HorarioId2025 id)
 		=> TryAsyncVoid(async conn => {
 			await conn.ExecuteAsync(
 				"sp_DeleteHorarioWhereId",
@@ -38,7 +38,7 @@ public class RepositorioHorarios(SQLServerConnectionFactory factory) : Repositor
 			);
 		});
 
-	Task<Result<HorarioDbModel?>> IRepositorioHorarios.SelectHorarioWhereId(HorarioId id)
+	Task<Result<HorarioDbModel?>> IRepositorioHorarios.SelectHorarioWhereId(HorarioId2025 id)
 		=> TryAsync(async conn => {
 			return await conn.QuerySingleOrDefaultAsync<HorarioDbModel>(
 				"sp_SelectHorarioWhereId",
@@ -48,7 +48,7 @@ public class RepositorioHorarios(SQLServerConnectionFactory factory) : Repositor
 		});
 
 
-	//Task<Result<HorarioDbModel>> IRepositorioHorarios.UpdateHorarioWhereId(HorarioId id, Horario2025 instance)
+	//Task<Result<HorarioDbModel>> IRepositorioHorarios.UpdateHorarioWhereId(HorarioId2025 id, Horario2025 instance)
 	//	=> TryAsync(async conn => {
 	//		HorarioDbModel dto = instance.ToModel(id);
 	//		int rowsAffected = await conn.ExecuteScalarAsync<int>(
@@ -87,7 +87,7 @@ public class RepositorioHorarios(SQLServerConnectionFactory factory) : Repositor
 
 
 
-	//Task<Result<HorarioDbModel?>> IRepositorioHorarios.SelectHorarioWhereId(HorarioId id)
+	//Task<Result<HorarioDbModel?>> IRepositorioHorarios.SelectHorarioWhereId(HorarioId2025 id)
 	//	=> TryAsync(async conn => {
 	//		return await conn.QuerySingleOrDefaultAsync<HorarioDbModel>(
 	//			"sp_SelectHorarioWhereId",
@@ -113,7 +113,7 @@ public class RepositorioHorarios(SQLServerConnectionFactory factory) : Repositor
 	//		);
 	//	});
 
-	//Task<Result<IEnumerable<HorarioFranja2025WithMedicoId>>> IRepositorioHorarios.SelectHorariosWhereMedicoId(MedicoId medicoId)
+	//Task<Result<IEnumerable<HorarioFranja2025WithMedicoId>>> IRepositorioHorarios.SelectHorariosWhereMedicoId(MedicoId2025 medicoId)
 	//	=> TryAsync(async conn => {
 	//		return await conn.QueryAsync<HorarioFranja2025WithMedicoId>(
 	//			"sp_SelectHorariosWhereMedicoId",
