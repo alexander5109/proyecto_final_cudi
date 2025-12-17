@@ -1,9 +1,10 @@
-﻿using Clinica.Dominio.TiposDeEntidad;
-
-namespace Clinica.Dominio.TiposDeEnum;
+﻿namespace Clinica.Dominio.TiposDeEnum;
 
 
 public enum AccionesDeUsuarioEnum {
+	VerAtenciones,
+	CrearAtenciones,
+	ModificarAtenciones,
 	EliminarEntidades,
 	EliminarUsuarios,
 
@@ -50,21 +51,15 @@ public static class PermisoSistema {
 			AccionesDeUsuarioEnum.CrearMedicos,
 			AccionesDeUsuarioEnum.CrearHorarios,
 			AccionesDeUsuarioEnum.CrearUsuarios,
-
-			AccionesDeUsuarioEnum.CancelarTurno,
-			AccionesDeUsuarioEnum.ReprogramarTurno,
-			AccionesDeUsuarioEnum.SolicitarTurno,
 			AccionesDeUsuarioEnum.ModificarHorarios,
 
 
 			AccionesDeUsuarioEnum.ModificarEntidades,
 			AccionesDeUsuarioEnum.VerUsuarios
-            // No borra entidades sensibles
 
 		],
 
 		[UsuarioRoleEnum.Nivel3Recepcionista] = [
-            // Puede operar turnos y datos básicos, pero no estructura
             AccionesDeUsuarioEnum.VerPacientes,
 			AccionesDeUsuarioEnum.VerTurnos,
 			AccionesDeUsuarioEnum.VerMedicos,
@@ -75,26 +70,28 @@ public static class PermisoSistema {
 
 
 			AccionesDeUsuarioEnum.ProgramarTurno,
-			AccionesDeUsuarioEnum.CancelarTurno,
 			AccionesDeUsuarioEnum.SolicitarTurno,
 			AccionesDeUsuarioEnum.ConcretarTurno,
 			AccionesDeUsuarioEnum.ConcretarComoAusente,
+			AccionesDeUsuarioEnum.CancelarTurno,
+			AccionesDeUsuarioEnum.ReprogramarTurno,
+
+
 
 			AccionesDeUsuarioEnum.VerUsuarios,
 
-			AccionesDeUsuarioEnum.ModificarEntidades // ← Puede modificar pacientes
-            // No puede reprogramar turnos (opcional: lo podés habilitar)
-            // No puede crear médicos/usuarios/horarios
-            // No borra entidades
+			AccionesDeUsuarioEnum.ModificarEntidades 
 		],
 
 		[UsuarioRoleEnum.Nivel4Medico] = [
-			AccionesDeUsuarioEnum.VerPacientes,  // opcional
+			AccionesDeUsuarioEnum.ModificarAtenciones,
+			AccionesDeUsuarioEnum.CrearAtenciones,
+			AccionesDeUsuarioEnum.VerAtenciones,
+			AccionesDeUsuarioEnum.VerPacientes,
             AccionesDeUsuarioEnum.VerTurnos,
 			AccionesDeUsuarioEnum.VerHorarios,
 			AccionesDeUsuarioEnum.SolicitarTurno,
 			AccionesDeUsuarioEnum.VerUsuarios
-            // No modifica nada
 		],
 	};
 

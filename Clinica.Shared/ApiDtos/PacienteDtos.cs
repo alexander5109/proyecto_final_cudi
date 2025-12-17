@@ -6,7 +6,7 @@ using Clinica.Dominio.TiposDeValor;
 namespace Clinica.Shared.ApiDtos;
 
 //public record PacienteListDto(
-//	PacienteId Id,
+//	PacienteId2025 Id,
 //	string Dni,
 //	string Username,
 //	string Apellido,
@@ -14,12 +14,12 @@ namespace Clinica.Shared.ApiDtos;
 //	string Telefono
 //);
 //public record TurnoListDto(
-//	TurnoId Id,
+//	TurnoId2025 Id,
 //	TimeSpan Hora,
 //	DateTime Fecha,
 //	EspecialidadEnum EspecialidadEnum,
 //	TurnoEstadoEnum Estado,
-//	MedicoId MedicoId
+//	MedicoId2025 MedicoId2025
 //);
 
 //public record MedicoListDto(

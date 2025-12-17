@@ -1,6 +1,7 @@
-﻿using System.Net;
+﻿using System.Collections.Specialized;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Text.Json;
 using System.Windows;
 using Clinica.Shared.ApiDtos;
@@ -185,4 +186,26 @@ public static class ApiExtensions {
 			MessageBoxImage.Warning
 		);
 	}
+
+
+
+
+	public static string BuildQuery(this ApiHelper aphielper, string baseUrl, object dto) {
+		NameValueCollection query = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+		foreach (PropertyInfo prop in dto.GetType().GetProperties()) {
+			object? value = prop.GetValue(dto);
+			if (value is null)
+				continue;
+
+			if (value is DateTime dt)
+				query[prop.Name] = dt.ToString("O");
+			else
+				query[prop.Name] = value.ToString();
+		}
+
+		return $"{baseUrl}?{query}";
+	}
+
+
 }

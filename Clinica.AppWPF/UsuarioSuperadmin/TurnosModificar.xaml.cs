@@ -31,10 +31,10 @@ public partial class TurnosModificar : Window {
 	{
 		txtEspecialidades.ItemsSource = new List<EspecialidadEnum>(); //await App.Repositorio.SelectDistinctEspecialidades();
 
-		txtPacientes.ItemsSource = await App.Repositorio.SelectPacientes();
+		txtPacientes.ItemsSource = await App.Repositorio.Pacientes.SelectPacientes();
 		txtPacientes.DisplayMemberPath = "Displayear";  //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 
-		txtMedicos.ItemsSource = await App.Repositorio.SelectMedicos();
+		txtMedicos.ItemsSource = await App.Repositorio.Medicos.SelectMedicos();
 		txtMedicos.DisplayMemberPath = "Displayear";    //Property de cada Objeto para mostrarse como una union de dni nombre y apellido. 
 	}
 	async private void txtEspecialidades_SelectionChanged(object sender, SelectionChangedEventArgs e) {

@@ -6,7 +6,8 @@
     @Apellido NVARCHAR(50),
     @Telefono CHAR(10),
     @Email VARCHAR(320),
-    @EnumRole TINYINT
+    @EnumRole TINYINT,
+    @MedicoRelacionadoId INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -19,7 +20,8 @@ BEGIN
         Apellido     = @Apellido,
         Telefono     = @Telefono,
         Email        = @Email,
-        EnumRole     = @EnumRole
+        EnumRole     = @EnumRole,
+        MedicoRelacionadoId     = @MedicoRelacionadoId
     WHERE Id = @Id;
 
     SELECT @@ROWCOUNT AS RowsAffected;

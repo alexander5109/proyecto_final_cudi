@@ -1,12 +1,9 @@
-﻿using System.Net;
-using System.Text;
+﻿using System.Text;
 using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.Servicios;
 using Clinica.Infrastructure.IRepositorios;
 using Clinica.Infrastructure.Repositorios;
-using Clinica.Shared.ApiDtos;
 using Clinica.WebAPI.Controllers;
-using Clinica.WebAPI.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 
 

@@ -15,6 +15,9 @@ public partial class DialogoModificarUsuarios : Window {
 		InitializeComponent();
 		VM = new();
 		DataContext = VM;
+
+		//DEFINIR MedicosDisponibles //PARA COMBOBOX
+		//DEFINIR MedicoRelacionado //COMO VIEWMODEL
 	}
 
 	public DialogoModificarUsuarios(UsuarioDbModel model) {
@@ -38,12 +41,12 @@ public partial class DialogoModificarUsuarios : Window {
 
 	private async void ClickBoton_Eliminar(object sender, RoutedEventArgs e) {
 		if (
-			VM.Id is not UsuarioId idGood || (
+			VM.Id is not UsuarioId2025 idGood || (
 			MessageBox.Show("¿Esta seguro que desea eliminar este usuario?",
 			"Confirmación", MessageBoxButton.YesNo) == MessageBoxResult.No)
 		) return;
 
-		ResultWpf<UnitWpf> result = await App.Repositorio.DeleteUsuarioWhereId(idGood);
+		ResultWpf<UnitWpf> result = await App.Repositorio.Usuarios.DeleteUsuarioWhereId(idGood);
 		result.MatchAndDo(
 			caseOk => {
 				MessageBox.Show("Usuario eliminado.", "Éxito", MessageBoxButton.OK);

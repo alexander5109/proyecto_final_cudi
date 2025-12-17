@@ -39,7 +39,7 @@
 		<Label
 			Grid.Column="0"
 			Grid.Row="0"
-			Content="Medicos"
+			Content="Personal médico"
 			FontSize="55"
 			FontFamily="Segoe UI Historic"
 			Style="{StaticResource LabelLindoConPiu}"
@@ -83,19 +83,14 @@
 			<Grid.RowDefinitions>
 				<RowDefinition
 					Height="Auto" />
-				<!-- Título -->
 				<RowDefinition
 					Height="Auto" />
-				<!-- Subtítulo -->
 				<RowDefinition
 					Height="Auto" />
-				<!-- Filtro -->
 				<RowDefinition
 					Height="*" />
-				<!-- LISTVIEW -->
 				<RowDefinition
 					Height="Auto" />
-				<!-- Botones -->
 			</Grid.RowDefinitions>
 			<Label
 				Grid.Row="0"

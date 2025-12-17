@@ -16,7 +16,7 @@ public partial class Turnos : Window {
 
 	//----------------------ActualizarSecciones-------------------//
 	async private void UpdateTurnoUI() {
-		turnosListView.ItemsSource = await App.Repositorio.SelectTurnos();
+		turnosListView.ItemsSource = await App.Repositorio.Turnos.SelectTurnos();
 		x_BotonModificarPaciente.IsEnabled = SelectedTurno != null;
 		txtCalendario.SelectedDate = SelectedTurno?.FechaHoraAsignadaDesde;
 		txtCalendario.DisplayDate = SelectedTurno?.FechaHoraAsignadaDesde ?? DateTime.Today;

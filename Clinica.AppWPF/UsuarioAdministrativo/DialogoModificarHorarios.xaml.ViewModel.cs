@@ -43,7 +43,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 
 
 	public MedicoDbModel ActiveMedicoModel { get; private set; }
-	public MedicoId MedicoId { get; private set; }
+	public MedicoId2025 MedicoId { get; private set; }
 	public string? ActiveMedicoEspecialidad => ActiveMedicoModel?.EspecialidadCodigo.ToString();
 	public string? ActiveMedicoNombreCompleto => $"{ActiveMedicoModel?.Nombre} {ActiveMedicoModel?.Apellido}";
 
@@ -294,7 +294,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 		}
 
 		return await resultadoAgg.Bind(
-			agregado => App.Repositorio.UpdateHorariosWhereMedicoId(agregado)
+			agregado => App.Repositorio.Horarios.UpdateHorariosWhereMedicoId(agregado)
 		);
 	}
 
@@ -349,7 +349,7 @@ public class DialogoModificarHorariosVM : INotifyPropertyChanged {
 	public async Task CargarHorariosAsync() {
 		HorariosAgrupados.Clear();
 
-		IReadOnlyList<HorarioDbModel> horarios = await App.Repositorio.SelectHorariosWhereMedicoId(MedicoId)
+		IReadOnlyList<HorarioDbModel> horarios = await App.Repositorio.Horarios.SelectHorariosWhereMedicoId(MedicoId)
 					   ?? [];
 
 		Dictionary<DayOfWeek, List<HorarioDbModel>> dict = horarios
@@ -505,7 +505,7 @@ public class NodoFranjaHorariaViewModel : INotifyPropertyChanged {
 	// NODO_FRANJA.METHODS
 	// ================================================================
 	public HorarioDto ToDto() => new() {
-		//MedicoId = medicoId,
+		//MedicoId2025 = medicoId,
 		DiaSemana = DiaSemana,
 		HoraDesde = HoraDesde.ToTimeSpan(),
 		HoraHasta = HoraHasta.ToTimeSpan(),

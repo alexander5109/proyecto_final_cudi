@@ -86,7 +86,7 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 				"La fecha de asistencia es inválida.")
 			);
 		}
-		return await App.Repositorio.ReprogramarTurno(
+		return await App.Repositorio.Turnos.ReprogramarTurno(
 			TurnoAReprogramar.Id,
 			DateTime.Now,
 			comentario
@@ -170,20 +170,19 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 	}
 
 	public async Task RefreshDisponibilidadesAsync() {
-		if (SelectedEspecialidad is not EspecialidadViewModel esp) return;
+		if (SelectedEspecialidad is not EspecialidadViewModel esp)
+			return;
+
 		InvalidateDisponibilidades();
 
 		int duracionMin = SelectedEspecialidad?.Duracion ?? 0;
+
 		DateTime desde = DateTime.SpecifyKind(
 			SelectedFecha < DateTime.Now ? DateTime.Now : SelectedFecha,
 			DateTimeKind.Local
 		).AddMinutes(duracionMin);
 
 		DayOfWeek? diaSemanaSelected = SelectedDiaDeLaSemana?.Value;
-
-
-		//MessageBox.Show($"Selected dia de la semana que vamos a mandar: Desde: {desde}, solo dias {diaSemanaSelected}");
-
 
 		SolicitarDisponibilidadesDto solicitudDto = new(
 			EspecialidadCodigo: esp.Codigo,
@@ -193,14 +192,29 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 			MedicoPreferido: SelectedMedico?.Id
 		);
 
+		List<Disponibilidad2025> lista = await App.Repositorio.Dominio.SelectDisponibilidades(solicitudDto);
+		await App.Repositorio.Medicos.RefreshCache();
+		DisponibilidadesItemsSource.Clear();
 
-		List<Disponibilidad2025> lista = await App.Repositorio.SelectDisponibilidades(solicitudDto);
+		foreach (Disponibilidad2025 d in lista) {
 
-		foreach (Disponibilidad2025 d in lista)
-			DisponibilidadesItemsSource.Add(new(d));
+			string medicoDisplay = App.Repositorio.Medicos.GetFromCacheMedicoDisplayWhereId(d.MedicoId);
+
+			DisponibilidadesItemsSource.Add(
+				new DisponibilidadEspecialidadModelView(
+					MedicoDisplayear: medicoDisplay,
+					DiaSemana: new DiaDeSemanaViewModel(
+						d.FechaHoraDesde.DayOfWeek,
+						d.FechaHoraDesde.DayOfWeek.ATexto()
+					),
+					Original: d
+				)
+			);
+		}
 
 		DisponibilidadesView?.Refresh();
 	}
+
 
 
 	private void ActualizarDiasSemana() {
@@ -242,11 +256,11 @@ public class DialogoTurnoProgramarVM : INotifyPropertyChanged {
 		OnPropertyChanged(nameof(ComboBoxMedicos_Enabled));
 	}
 	public async Task LoadMedicosTodosAsync() {
-		List<MedicoDbModel> medicos = await App.Repositorio.SelectMedicos();
+		List<MedicoDbModel> medicos = await App.Repositorio.Medicos.SelectMedicos();
 
 		IEnumerable<Task<MedicoSimpleViewModel>> tasks = medicos.Select(async medico => {
 			IReadOnlyList<DayOfWeek>? dias =
-				await App.Repositorio.SelectDiasDeAtencionWhereMedicoId(medico.Id)
+				await App.Repositorio.Horarios.SelectDiasDeAtencionWhereMedicoId(medico.Id)
 				?? [];
 
 			return new MedicoSimpleViewModel(
@@ -385,28 +399,12 @@ public record DisponibilidadEspecialidadModelView(
 	string MedicoDisplayear,
 	DiaDeSemanaViewModel DiaSemana,
 	Disponibilidad2025 Original
-) {
-	internal DisponibilidadEspecialidadModelView(Disponibilidad2025 domainValue)
-		: this(
-			MedicoDisplayear: BuildMedicoDisplay(domainValue.MedicoId),
-			DiaSemana: new DiaDeSemanaViewModel(
-				domainValue.FechaHoraDesde.DayOfWeek,
-				domainValue.FechaHoraDesde.DayOfWeek.ATexto()
-			),
-			Original: domainValue
-		) {
-	}
-
-	private static string BuildMedicoDisplay(MedicoId medicoId) {
-        MedicoDbModel? medico = RepoCache.DictMedicos.GetValueOrDefault(medicoId);
-		return medico is null ? "Médico desconocido" : $"{medico.Nombre} {medico.Apellido}";
-	}
-}
+);
 
 
 
 public record MedicoSimpleViewModel(
-	MedicoId Id,
+	MedicoId2025 Id,
 	EspecialidadEnum EspecialidadCodigo,
 	string Displayear,
 	IReadOnlyList<DayOfWeek> DiasAtencion

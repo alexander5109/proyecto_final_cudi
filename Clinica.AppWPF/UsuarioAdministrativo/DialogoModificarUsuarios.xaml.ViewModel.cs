@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Windows;
 using Clinica.AppWPF.CommonViewModels;
 using Clinica.AppWPF.Infrastructure;
-using Clinica.AppWPF.UsuarioSuperadmin;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
@@ -23,6 +22,8 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	// ================================================================
 	public DialogoUsuarioModificarVM() {
 		_original = new UsuarioEdicionSnapshot();
+
+
 
 	}
 
@@ -73,7 +74,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	// PROPERTIES
 	// -----------------------------
 
-	public UsuarioId? Id { get; private set; }
+	public UsuarioId2025? Id { get; private set; }
 
 	private string _userName = "";
 	public string UserName {
@@ -151,6 +152,17 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		}
 	}
 
+	private MedicoId2025? _medicoRelacionadoId;
+	public MedicoId2025? MedicoRelacionadoId {
+		get => _medicoRelacionadoId;
+		set {
+			_medicoRelacionadoId = value;
+			OnPropertyChanged(nameof(MedicoRelacionadoId));
+			OnPropertyChanged(nameof(TieneCambios));
+			OnPropertyChanged(nameof(PuedeGuardarCambios));
+		}
+	}
+
 	// -----------------------------
 	// DETECTAR CAMBIOS
 	// -----------------------------
@@ -179,10 +191,10 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			: await GuardarCreacionAsync();
 	}
 	private async Task<ResultWpf<UnitWpf>> GuardarEdicionAsync() {
-		if (Id is not UsuarioId id)
+		if (Id is not UsuarioId2025 id)
 			return new ResultWpf<UnitWpf>.Error(
 				new ErrorInfo(
-					"No se puede guardar, la entidad no tiene UsuarioId.",
+					"No se puede guardar, la entidad no tiene UsuarioId2025.",
 					MessageBoxImage.Information
 				)
 			);
@@ -190,7 +202,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		return await ToEdicionDomain()
 			.Bind(edicion => {
 				var agg = Usuario2025EdicionAgg.Crear(id, edicion);
-				return App.Repositorio.UpdateUsuarioWhereId(agg);
+				return App.Repositorio.Usuarios.UpdateUsuarioWhereId(agg);
 			});
 	}
 
@@ -199,7 +211,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync() {
 		return await ToCreacionDomain()
 			.Bind(async usuario => {
-				var result = await App.Repositorio.InsertUsuarioReturnId(usuario);
+				var result = await App.Repositorio.Usuarios.InsertUsuarioReturnId(usuario);
 
 				return result.MatchTo(
 					ok => {
@@ -226,7 +238,9 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			CrearNuevaPasswordSiCorresponde(),
 			EnumRole.CrearResult(),
 			Email2025.CrearResult(Email),
-			Telefono2025.CrearResult(Telefono)
+			Telefono2025.CrearResult(Telefono),
+			MedicoRelacionadoId
+
 		).ToWpf(MessageBoxImage.Information);
 	}
 	private ResultWpf<Usuario2025> ToCreacionDomain() {
@@ -237,7 +251,8 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			ContraseñaHasheada2025.CrearResultFromRaw(NuevaPassword!), // obligatoria
 			EnumRole.CrearResult(),
 			Email2025.CrearResult(Email),
-			Telefono2025.CrearResult(Telefono)
+			Telefono2025.CrearResult(Telefono),
+			MedicoRelacionadoId
 		).ToWpf(MessageBoxImage.Information);
 	}
 
@@ -270,7 +285,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 // ================================================================
 
 internal record UsuarioEdicionSnapshot(
-	UsuarioId Id,
+	UsuarioId2025 Id,
 	string UserName,
 	//string PasswordHash,
 	string Nombre,

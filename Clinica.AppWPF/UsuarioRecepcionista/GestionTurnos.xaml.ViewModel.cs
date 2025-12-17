@@ -69,7 +69,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		}
 
 		// 3️⃣ Llamada al repositorio
-		return await App.Repositorio.MarcarTurnoComoAusente(
+		return await App.Repositorio.Turnos.MarcarTurnoComoAusente(
 			SelectedTurno.Original.Id,
 			now,
 			comentario
@@ -85,7 +85,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 			return new ResultWpf<UnitWpf>.Error(new ErrorInfo("El comentario es muy corto.", MessageBoxImage.Information));
 		}
 
-		return await App.Repositorio.CancelarTurno(
+		return await App.Repositorio.Turnos.CancelarTurno(
 			SelectedTurno.Original.Id,
 			now,
 			comentario
@@ -108,7 +108,7 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 		}
 
 		// 2️⃣ Delegación al repositorio
-		return await App.Repositorio.MarcarTurnoComoConcretado(
+		return await App.Repositorio.Turnos.MarcarTurnoComoConcretado(
 			SelectedTurno.Original.Id,
 			fechaAsistencia,
 			SelectedTurno.Original.OutcomeComentario
@@ -121,9 +121,9 @@ public sealed class SecretariaTurnosViewModel : INotifyPropertyChanged {
 	// METODOS DE UI
 	// ================================================================
 	internal async Task RefrescarTurnosAsync() {
-		await App.Repositorio.EnsureMedicosLoaded(); 
-		await App.Repositorio.EnsurePacientesLoaded();
-        List<TurnoDbModel> turnos = await App.Repositorio.SelectTurnos();
+		//await App.Repositorio.EnsureMedicosLoaded(); 
+		//await App.Repositorio.EnsurePacientesLoaded();
+        List<TurnoDbModel> turnos = await App.Repositorio.Turnos.SelectTurnos();
         IEnumerable<Task<TurnoViewModel>> turnoTasks = turnos.Select(async t => {
             TurnoViewModel vm = new(t);
 			await vm.LoadRelacionesAsync();
@@ -266,7 +266,7 @@ public class TurnoViewModel(TurnoDbModel model) {
 	public string PacienteDisplayear => PacienteRelacionado is null ? "N/A" : $"{PacienteRelacionado.Dni}: {PacienteRelacionado.Nombre} {PacienteRelacionado.Apellido}";
 
 	public async Task LoadPacienteRelacionadoAsync() {
-		_pacienteRelacionado = await App.Repositorio.SelectPacienteWhereId(Original.PacienteId);
+		_pacienteRelacionado = await App.Repositorio.Pacientes.SelectPacienteWhereId(Original.PacienteId);
 		OnPropertyChanged(nameof(PacienteRelacionado));
 		OnPropertyChanged(nameof(PacienteDisplayear));
 	}
@@ -278,7 +278,7 @@ public class TurnoViewModel(TurnoDbModel model) {
 	public string MedicoDisplayear => MedicoRelacionado is null ? "N/A" : $"{MedicoRelacionado.Nombre} {MedicoRelacionado.Apellido} {MedicoRelacionado.Dni}";
 
 	public async Task LoadMedicoRelacionadoAsync() {
-		_medicoRelacionado = await App.Repositorio.SelectMedicoWhereId(Original.MedicoId);
+		_medicoRelacionado = await App.Repositorio.Medicos.SelectMedicoWhereId(Original.MedicoId);
 		OnPropertyChanged(nameof(MedicoRelacionado));
 		OnPropertyChanged(nameof(MedicoDisplayear));
 	}

@@ -64,7 +64,7 @@ public record HorarioFranja2026(
 
 
 	public static Result<HorarioFranja2026> CrearResult(
-		//MedicoId medicoId,
+		//MedicoId2025 medicoId,
 		DayOfWeek dia,
 		TimeOnly desde,
 		TimeOnly hasta,
@@ -105,11 +105,11 @@ public record HorarioFranja2026(
 
 
 public readonly record struct HorariosMedicos2026Agg(
-	MedicoId MedicoId,
+	MedicoId2025 MedicoId,
 	IReadOnlyCollection<HorarioFranja2026> Franjas
 ) {
 	public static Result<HorariosMedicos2026Agg> CrearResult(
-		MedicoId medicoId,
+		MedicoId2025 medicoId,
 		IReadOnlyCollection<HorarioFranja2026> franjas
 	) {
 		List<HorarioFranja2026> lista = [.. franjas];
@@ -133,7 +133,7 @@ public readonly record struct HorariosMedicos2026Agg(
 
 /*
 public readonly record struct Horario2025(
-   MedicoId MedicoId,
+   MedicoId2025 MedicoId2025,
    DayOfWeek DiaSemana,
    TimeOnly HoraDesde,
    TimeOnly HoraHasta,
@@ -144,7 +144,7 @@ public readonly record struct Horario2025(
 		=> $"{DiaSemana.ATexto()}: {HoraDesde.ATextoHoras()} — {HoraHasta.ATextoHoras()} (vigencia {VigenteDesde.ATexto()} → {VigenteHasta.ATexto()}";
 
 	public static Horario2025 Crear(
-		MedicoId medicoId,
+		MedicoId2025 medicoId,
 		DayOfWeek dia,
 		TimeOnly desde,
 		TimeOnly hasta,
@@ -156,7 +156,7 @@ public readonly record struct Horario2025(
 
 
 	public static Result<Horario2025> CrearResult(
-		MedicoId medicoId,
+		MedicoId2025 medicoId,
 		DayOfWeek dia,
 		TimeOnly desde,
 		TimeOnly hasta,
@@ -197,14 +197,14 @@ public readonly record struct Horario2025(
 
 
 //public readonly record HorariosMedicos2026Agg(
-//	HorarioId Id,
-//	MedicoId MedicoId,
+//	HorarioId2025 Id,
+//	MedicoId2025 MedicoId2025,
 //	HorarioFranja2026 Horario
 //);
-//public readonly record struct HorariosMedicos2026Agg(HorarioId Id, HorarioFranja2026 Horario) {
-//	public static HorariosMedicos2026Agg Crear(HorarioId id, HorarioFranja2026 turno) => new(id, turno);
+//public readonly record struct HorariosMedicos2026Agg(HorarioId2025 Id, HorarioFranja2026 Horario) {
+//	public static HorariosMedicos2026Agg Crear(HorarioId2025 id, HorarioFranja2026 turno) => new(id, turno);
 //	public static Result<HorariosMedicos2026Agg> CrearResult(
-//		Result<HorarioId> idResult,
+//		Result<HorarioId2025> idResult,
 //		Result<HorarioFranja2026> pacienteResult
 //	)
 //		=> from id in idResult
@@ -253,10 +253,10 @@ public readonly record struct HorariosMedicos2026Agg(
 
         // VALIDACION DE SUPERPOSICIONES
         // Agrupar por médico y día
-        IEnumerable<IGrouping<(MedicoId MedicoId, DayOfWeek DiaSemana), HorarioFranja2026>> grupos = lista
-			.GroupBy(h => (h.MedicoId, h.DiaSemana));
+        IEnumerable<IGrouping<(MedicoId2025 MedicoId2025, DayOfWeek DiaSemana), HorarioFranja2026>> grupos = lista
+			.GroupBy(h => (h.MedicoId2025, h.DiaSemana));
 
-		foreach (IGrouping<(MedicoId MedicoId, DayOfWeek DiaSemana), HorarioFranja2026> g in grupos) {
+		foreach (IGrouping<(MedicoId2025 MedicoId2025, DayOfWeek DiaSemana), HorarioFranja2026> g in grupos) {
             List<HorarioFranja2026> horarios = [.. g.OrderBy(h => h.HoraDesde)];
 
 			for (int i = 0; i < horarios.Count - 1; i++) {
@@ -266,7 +266,7 @@ public readonly record struct HorariosMedicos2026Agg(
 				// Superposición si actual termina después de que empieza el siguiente
 				if (actual.HoraHasta > siguiente.HoraDesde) {
 					errores.Add(
-						$"Superposición detectada para el médico {actual.MedicoId} " +
+						$"Superposición detectada para el médico {actual.MedicoId2025} " +
 						$"el día {actual.DiaSemana}: " +
 						$"({actual.HoraDesde} - {actual.HoraHasta}) se solapa con " +
 						$"({siguiente.HoraDesde} - {siguiente.HoraHasta})."
@@ -329,10 +329,10 @@ public readonly record struct ListaHorarioMedicos2025(
 
 		// VALIDACION DE SUPERPOSICIONES
 		// Agrupar por médico y día
-		IEnumerable<IGrouping<(MedicoId MedicoId, DayOfWeek DiaSemana), Horario2025>> grupos = lista
-			.GroupBy(h => (h.MedicoId, h.DiaSemana));
+		IEnumerable<IGrouping<(MedicoId2025 MedicoId2025, DayOfWeek DiaSemana), Horario2025>> grupos = lista
+			.GroupBy(h => (h.MedicoId2025, h.DiaSemana));
 
-		foreach (IGrouping<(MedicoId MedicoId, DayOfWeek DiaSemana), Horario2025> g in grupos) {
+		foreach (IGrouping<(MedicoId2025 MedicoId2025, DayOfWeek DiaSemana), Horario2025> g in grupos) {
 			List<Horario2025> horarios = [.. g.OrderBy(h => h.HoraDesde)];
 
 			for (int i = 0; i < horarios.Count - 1; i++) {
@@ -342,7 +342,7 @@ public readonly record struct ListaHorarioMedicos2025(
 				// Superposición si actual termina después de que empieza el siguiente
 				if (actual.HoraHasta > siguiente.HoraDesde) {
 					errores.Add(
-						$"Superposición detectada para el médico {actual.MedicoId} " +
+						$"Superposición detectada para el médico {actual.MedicoId2025} " +
 						$"el día {actual.DiaSemana}: " +
 						$"({actual.HoraDesde} - {actual.HoraHasta}) se solapa con " +
 						$"({siguiente.HoraDesde} - {siguiente.HoraHasta})."

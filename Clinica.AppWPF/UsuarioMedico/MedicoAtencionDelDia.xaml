@@ -1,0 +1,232 @@
+﻿<Window
+	x:Class="Clinica.AppWPF.UsuarioMedico.MedicoAtencionDelDia"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Clinica Medica - Home"
+	Width="1024"
+	Height="600"
+	MinWidth="1024"
+	MinHeight="600"
+	WindowStartupLocation="CenterScreen">
+	<Window.Background>
+		<ImageBrush
+			ImageSource="/PublishedResources/images2025sol/fondoCeleste2024medico.jpg" />
+	</Window.Background>
+	<!-- ===================== LAYOUT GENERAL ===================== -->
+	<Grid
+		Margin="25">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition
+				Width="*" />
+			<!-- Columna izquierda: turnos + botón -->
+			<ColumnDefinition
+				Width="*" />
+			<!-- Columna derecha: paciente + historial + diagnóstico -->
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition
+				Height="Auto" />
+			<!-- Título superior -->
+			<RowDefinition
+				Height="*" />
+			<!-- Contenido principal -->
+		</Grid.RowDefinitions>
+		<!-- ===================== TITULO ===================== -->
+		<Label
+			Grid.Row="0"
+			Grid.ColumnSpan="2"
+			Content="Atención del día"
+			FontSize="25"
+			Style="{StaticResource LabelLindoConPiu}"
+			HorizontalContentAlignment="Center"
+			FontWeight="Bold"
+			VerticalContentAlignment="Center" />
+		<!-- ===================== COLUMNA IZQUIERDA ===================== -->
+		<Grid
+			Grid.Row="1"
+			Grid.Column="0"
+			Margin="10">
+			<Grid.RowDefinitions>
+				<RowDefinition
+					Height="Auto" />
+				<!-- Turnos label + datepicker -->
+				<RowDefinition
+					Height="*" />
+				<!-- ListView de turnos -->
+				<RowDefinition
+					Height="Auto" />
+				<!-- Botones Home/Salir -->
+			</Grid.RowDefinitions>
+			<!-- Turnos -->
+			<StackPanel
+				Grid.Row="0"
+				HorizontalAlignment="Center">
+				<Label
+					Content="Turnos de hoy"
+					FontSize="25"
+					Style="{StaticResource LabelLindoConTextoSombra}"
+					HorizontalAlignment="Center"
+					FontWeight="Bold" />
+				<DatePicker
+					HorizontalAlignment="Center" />
+			</StackPanel>
+			<!-- ListView de turnos -->
+			<ListView
+				Grid.Row="1"
+				ItemsSource="{Binding TurnosDelDia}"
+				SelectedItem="{Binding TurnoSeleccionado}"
+				Margin="10"
+				ScrollViewer.VerticalScrollBarVisibility="Auto">
+				<ListView.View>
+					<GridView>
+						<GridViewColumn
+							Header="Hora"
+							Width="70"
+							DisplayMemberBinding="{Binding HoraDesde}" />
+						<GridViewColumn
+							Header="PacienteNombreApellido"
+							Width="155"
+							DisplayMemberBinding="{Binding PacienteNombreApellido}" />
+						<GridViewColumn
+							Header="PacienteEdad"
+							Width="155"
+							DisplayMemberBinding="{Binding PacienteEdad}" />
+						<GridViewColumn
+							Header="FueAtendido"
+							Width="55"
+							DisplayMemberBinding="{Binding FueAtendido}" />
+					</GridView>
+				</ListView.View>
+			</ListView>
+			<!-- Botonera -->
+			<StackPanel
+				Grid.Row="2"
+				Orientation="Vertical"
+				Margin="0,10,0,0">
+				<Button
+					Content="Home"
+					Width="170"
+					Height="37"
+					Margin="0,0,0,10"
+					Click="ClickBoton_Home"
+					FontSize="20"
+					Style="{StaticResource BotonRedondeadoCeleste}" />
+				<Button
+					Content="Salir"
+					Width="170"
+					Height="37"
+					Click="ClickBoton_Salir"
+					FontSize="20"
+					Style="{StaticResource BotonRedondeadoCeleste}" />
+			</StackPanel>
+		</Grid>
+		<!-- ===================== COLUMNA DERECHA ===================== -->
+		<Grid
+			Grid.Row="1"
+			Grid.Column="1"
+			Margin="10">
+			<Grid.RowDefinitions>
+				<RowDefinition
+					Height="Auto" />
+				<!-- Paciente seleccionado -->
+				<RowDefinition
+					Height="3*" />
+				<!-- Historial -->
+				<RowDefinition
+					Height="2*" />
+				<!-- Diagnóstico -->
+			</Grid.RowDefinitions>
+			<!-- Paciente seleccionado -->
+			<Label
+				Grid.Row="0"
+				Content="Paciente seleccionado"
+				FontSize="25"
+				Style="{StaticResource LabelLindoConTextoSombra}"
+				HorizontalAlignment="Center"
+				FontWeight="Bold"
+				Margin="0,0,0,10" />
+			<!-- Historial de consultas -->
+			<Grid
+				Grid.Row="1">
+				<Grid.RowDefinitions>
+					<RowDefinition
+						Height="Auto" />
+					<RowDefinition
+						Height="*" />
+				</Grid.RowDefinitions>
+				<Label
+					Grid.Row="0"
+					Content="Historial de consultas en su especialidad"
+					FontSize="20"
+					Style="{StaticResource LabelLindoConTextoSombra}"
+					HorizontalAlignment="Center"
+					FontWeight="Bold"
+					Margin="0,0,0,5" />
+				<ListView
+					Grid.Row="1"
+					ItemsSource="{Binding HistorialConsultas}"
+					ScrollViewer.VerticalScrollBarVisibility="Auto"
+					Margin="10,0,10,0">
+					<ListView.View>
+						<GridView>
+							<GridViewColumn
+								Header="Fecha"
+								Width="80"
+								DisplayMemberBinding="{Binding Fecha}" />
+							<GridViewColumn
+								Header="Medico"
+								Width="70"
+								DisplayMemberBinding="{Binding Medico}" />
+							<GridViewColumn
+								Header="Observaciones"
+								Width="70"
+								DisplayMemberBinding="{Binding Observaciones}" />
+						</GridView>
+					</ListView.View>
+				</ListView>
+			</Grid>
+			<!-- Diagnóstico -->
+			<Grid
+				Grid.Row="2"
+				Margin="0,10,0,0">
+				<Grid.RowDefinitions>
+					<RowDefinition
+						Height="Auto" />
+					<RowDefinition
+						Height="*" />
+					<!-- TextBox ocupa todo el espacio -->
+					<RowDefinition
+						Height="Auto" />
+					<!-- Botón confirmar -->
+				</Grid.RowDefinitions>
+				<Label
+					Grid.Row="0"
+					Content="Observación y diagnóstico"
+					FontSize="20"
+					Style="{StaticResource LabelLindoConTextoSombra}"
+					HorizontalAlignment="Center"
+					FontWeight="Bold"
+					Margin="0,0,0,5" />
+				<TextBox
+					Grid.Row="1"
+					Text="{Binding DiagnosticoText, Mode=TwoWay}"
+					AcceptsReturn="True"
+					TextWrapping="Wrap"
+					VerticalScrollBarVisibility="Auto"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Margin="10,0,10,0" />
+				<Button
+					Grid.Row="2"
+					Content="✏ Confirmar"
+					Width="144"
+					Height="35"
+					IsEnabled="{Binding HayMedicoSeleccionado}"
+					Click="ClickBoton_ConfirmarObservacion"
+					Style="{StaticResource BotonRedondeadoCeleste}"
+					HorizontalAlignment="Center"
+					Margin="0,10,0,0" />
+			</Grid>
+		</Grid>
+	</Grid>
+</Window>

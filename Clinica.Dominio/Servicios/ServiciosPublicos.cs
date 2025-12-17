@@ -33,7 +33,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 		DateTime aPartirDeCuando,
 		int cuantos,
 		DayOfWeek? diaSemanaPreferido,
-		MedicoId? medicoPreferidoId,
+		MedicoId2025? medicoPreferidoId,
 		IRepositorioDominioServices repo
 	) {
 
@@ -57,7 +57,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 		// 1️⃣ Médicos de la especialidad
 
-		Result<IEnumerable<MedicoId>> medicosResult =
+		Result<IEnumerable<MedicoId2025>> medicosResult =
 			await repo.SelectMedicosIdWhereEspecialidadCodigo(especialidadCodigo);
 
 
@@ -67,7 +67,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 		List<Disponibilidad2025> disponibilidades = new();
 
-		IEnumerable<MedicoId> medicos = medicosResult.UnwrapAsOk();
+		IEnumerable<MedicoId2025> medicos = medicosResult.UnwrapAsOk();
 
 		if (medicoPreferidoId is not null) {
 			if (!medicos.Contains(medicoPreferidoId.Value)) {
@@ -79,7 +79,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 		}
 
 
-		foreach (MedicoId medicoId in medicos) {
+		foreach (MedicoId2025 medicoId in medicos) {
 
 			// 2️⃣ Turnos existentes
 			Result<IEnumerable<TurnoQM>> turnosResult =
@@ -181,7 +181,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 
 	async Task<Result<Turno2025>> IServiciosDeDominio.PersistirComoAusenteAsync(
-		TurnoId turnoOriginalId,
+		TurnoId2025 turnoOriginalId,
 		DateTime outcomeFecha,
 		string? outcomeComentario,
 		IRepositorioDominioServices repositorio
@@ -198,7 +198,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 
 	async Task<Result<Turno2025>> IServiciosDeDominio.PersistirComoConcretadoAsync(
-		TurnoId turnoOriginalId,
+		TurnoId2025 turnoOriginalId,
 		DateTime outcomeFecha,
 		string? outcomeComentario,
 		IRepositorioDominioServices repositorio
@@ -216,7 +216,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 
 	async Task<Result<Turno2025>> IServiciosDeDominio.PersistirComoCanceladoAsync(
-		TurnoId turnoOriginalId,
+		TurnoId2025 turnoOriginalId,
 		DateTime outcomeFecha,
 		string? outcomeComentario,
 		IRepositorioDominioServices repositorio
@@ -234,7 +234,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 
 	async Task<Result<Turno2025>> IServiciosDeDominio.PersistirComoReprogramado(
-		TurnoId turnoOriginalId,
+		TurnoId2025 turnoOriginalId,
 		DateTime outcomeFecha,
 		string? outcomeComentario,
 		IRepositorioDominioServices repositorio
@@ -252,7 +252,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 
 
 	async Task<Result<Turno2025Agg>> IServiciosDeDominio.PersistirProgramarTurnoAsync(
-		PacienteId pacienteId,
+		PacienteId2025 pacienteId,
 		DateTime fechaSolicitud,
 		Disponibilidad2025 disponibilidad,
 		IRepositorioDominioServices repositorio

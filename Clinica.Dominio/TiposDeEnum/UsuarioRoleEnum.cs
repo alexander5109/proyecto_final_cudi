@@ -1,6 +1,4 @@
-﻿using Clinica.Dominio.FunctionalToolkit;
-
-namespace Clinica.Dominio.TiposDeEnum;
+﻿namespace Clinica.Dominio.TiposDeEnum;
 
 public enum UsuarioRoleEnum : byte {
 	Nivel1Superadmin = 1,

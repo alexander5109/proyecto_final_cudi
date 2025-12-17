@@ -1,10 +1,8 @@
 ﻿using System.Net;
-using System.Security.Claims;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Shared.ApiDtos;
-using Clinica.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -91,7 +89,7 @@ public static class ControllerExtensions {
 
 	public static bool TryGetUsuarioId(
 		this ControllerBase controller,
-		out UsuarioId usuarioId
+		out UsuarioId2025 usuarioId
 	) {
 		usuarioId = default;
 
@@ -102,7 +100,7 @@ public static class ControllerExtensions {
 		if (!int.TryParse(idStr, out int id))
 			return false;
 
-		usuarioId = new UsuarioId(id);
+		usuarioId = UsuarioId2025.Crear(id);
 		return true;
 	}
 
@@ -112,12 +110,12 @@ public static class ControllerExtensions {
 		this ControllerBase controller,
 		ILogger logger,
 		AccionesDeUsuarioEnum permiso,
-		Func<UsuarioId, Task<Result<T>>> action,
-		Func<UsuarioId, bool>? precondicion = null,
+		Func<UsuarioId2025, Task<Result<T>>> action,
+		Func<UsuarioId2025, bool>? precondicion = null,
 		string? notFoundMessage = null
 	) {
-		// 1️⃣ UsuarioId
-		if (!controller.TryGetUsuarioId(out UsuarioId currentUserId))
+		// 1️⃣ UsuarioId2025
+		if (!controller.TryGetUsuarioId(out UsuarioId2025 currentUserId))
 			return controller.ToActionResult(UsuarioNoAutorizado<T>());
 
 		// 2️⃣ Rol

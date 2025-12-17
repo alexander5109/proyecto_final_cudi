@@ -16,11 +16,11 @@ public partial class Pacientes : Window {
 
 	//----------------------ActualizarSecciones-------------------//
 	async private void UpdatePacienteUI() {
-		pacientesListView.ItemsSource = await App.Repositorio.SelectPacientes();
+		pacientesListView.ItemsSource = await App.Repositorio.Pacientes.SelectPacientes();
 		x_BotonModificarPaciente.IsEnabled = SelectedPaciente != null;
 	}
 	async private void UpdateTurnoUI() {
-		turnosListView.ItemsSource = SelectedPaciente is not null? await App.Repositorio.SelectTurnosWherePacienteId(SelectedPaciente.Id): [];
+		turnosListView.ItemsSource = SelectedPaciente is not null? await App.Repositorio.Turnos.SelectTurnosWherePacienteId(SelectedPaciente.Id): [];
 		x_BotonModificarTurno.IsEnabled = SelectedTurno != null;
 	}
 	async private void UpdateMedicoUI() {
@@ -43,7 +43,7 @@ public partial class Pacientes : Window {
 	}
 	async private void listViewTurnos_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 		SelectedTurno = (TurnoDbModel)turnosListView.SelectedItem;
-		RelatedMedico = SelectedTurno is not null? await App.Repositorio.SelectMedicoWhereId(SelectedTurno.MedicoId): null ;
+		RelatedMedico = SelectedTurno is not null? await App.Repositorio.Medicos.SelectMedicoWhereId(SelectedTurno.MedicoId): null ;
 		UpdatePacienteUI();
 		UpdateTurnoUI();
 		UpdateMedicoUI();

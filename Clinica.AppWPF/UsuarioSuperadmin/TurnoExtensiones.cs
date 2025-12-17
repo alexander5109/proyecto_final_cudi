@@ -5,9 +5,9 @@ namespace Clinica.AppWPF.UsuarioSuperadmin;
 //---------------------------------Tablas.Turnos-------------------------------//
 public static class TurnoExtensiones {
 	public static void LeerDesdeVentana(this TurnoDbModel? instance, TurnosModificar window) {
-		//this.MedicoId = window.txtId.Content?.ToString() ?? this.MedicoId;
-		//this.PacienteId = window.txtPacientes.SelectedValue.ToString();
-		//this.MedicoId = window.txtMedicos.SelectedValue.ToString();
+		//this.MedicoId2025 = window.txtId.Content?.ToString() ?? this.MedicoId2025;
+		//this.PacienteId2025 = window.txtPacientes.SelectedValue.ToString();
+		//this.MedicoId2025 = window.txtMedicos.SelectedValue.ToString();
 		//instance.FechaHoraAsignadaDesde = window.txtFecha?.SelectedDate; // Set as DateTime, keeping only the date part
 		//instance.FechaHoraAsignadaDesde = TimeSpan.Parse(window.txtHora.Text);
 	}

@@ -35,7 +35,7 @@ public class PacientesController(
 	//	=> this.SafeExecute(
 	//		logger,
 	//		AccionesDeUsuarioEnum.VerPacientes,
-	//		() => repositorio.SelectPacienteWhereTurnoId(new TurnoId(id)),
+	//		() => repositorio.SelectPacienteWhereTurnoId(TurnoId2025.Crear(id)),
 	//		notFoundMessage: $"No existe paciente con id {id}"
 	//	);
 
@@ -45,7 +45,7 @@ public class PacientesController(
 
 
 	//Result<Turno2025> result = await ServiciosPublicos.PersistirComoCanceladoAsync(
-	//	dto.TurnoId,
+	//	dto.TurnoId2025,
 	//	dto.OutcomeFecha,
 	//	dto.OutcomeComentario,
 	//	repositorio
@@ -70,7 +70,7 @@ public class PacientesController(
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.VerPacientes,
-			() => repositorio.SelectPacienteWhereId(new PacienteId(id)),
+			() => repositorio.SelectPacienteWhereId(PacienteId2025.Crear(id)),
 			notFoundMessage: $"No existe paciente con id {id}"
 		);
 
@@ -82,7 +82,7 @@ public class PacientesController(
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.VerTurnos,
-			() => repositorio.SelectTurnosWherePacienteId(new PacienteId(id)),
+			() => repositorio.SelectTurnosWherePacienteId(PacienteId2025.Crear(id)),
 			notFoundMessage: $"No existen turnos con pacienteid {id}"
 		);
 
@@ -93,7 +93,7 @@ public class PacientesController(
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.EliminarEntidades,
-			() => repositorio.DeletePacienteWhereId(new PacienteId(id)),
+			() => repositorio.DeletePacienteWhereId(PacienteId2025.Crear(id)),
 			notFoundMessage: $"No existe paciente con id {id}"
 		);
 
@@ -106,14 +106,14 @@ public class PacientesController(
 		AccionesDeUsuarioEnum.ModificarPacientes,
 		dto,
 		x => x.ToDomain(),
-		paciente => repositorio.UpdatePacienteWhereId(new PacienteId(id), paciente),
+		paciente => repositorio.UpdatePacienteWhereId(PacienteId2025.Crear(id), paciente),
 		notFoundMessage: $"No existe paciente con id {id}"
 	);
 
 
 
 	[HttpPost]
-	public Task<ActionResult<PacienteId>> CrearPaciente([FromBody] PacienteDto dto) {
+	public Task<ActionResult<PacienteId2025>> CrearPaciente([FromBody] PacienteDto dto) {
 		Console.WriteLine(dto.ToString());
 
 		return this.SafeExecuteWithDomain(

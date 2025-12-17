@@ -6,7 +6,7 @@ namespace Clinica.Dominio.TiposDeEntidad;
 
 public record Medico2025(
 	//ListaEspecialidadesMedicas2025 Especialidades,
-	//MedicoId Id,
+	//MedicoId2025 Id,
 	NombreCompleto2025 NombreCompleto,
 	Especialidad2025 EspecialidadUnica,
 	DniArgentino2025 Dni,
@@ -18,7 +18,7 @@ public record Medico2025(
 	bool HaceGuardiasValor
 ) {
     public static Result<Medico2025> CrearResult(
-		//Result<MedicoId> idResult,
+		//Result<MedicoId2025> idResult,
 		Result<NombreCompleto2025> nombreResult,
 		Result<Especialidad2025> especialidadResult,
 		//Result<ListaEspecialidadesMedicas2025> especialidadResult,

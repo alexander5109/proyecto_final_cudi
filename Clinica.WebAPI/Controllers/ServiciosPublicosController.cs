@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using Azure;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.IInterfaces;
 using Clinica.Dominio.TiposDeAgregado;

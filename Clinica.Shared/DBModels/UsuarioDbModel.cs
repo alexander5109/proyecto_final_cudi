@@ -1,18 +1,14 @@
-﻿using Clinica.Dominio.FunctionalToolkit;
-using Clinica.Dominio.TiposDeAgregado;
+﻿using Clinica.Dominio.TiposDeAgregado;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Dominio.TiposDeValor;
-using Clinica.Dominio.TiposExtensiones;
 
 namespace Clinica.Shared.DbModels;
 
 public static partial class DbModels {
-
-
 	public sealed record UsuarioPersistido(
-		UsuarioId Id,
+		UsuarioId2025 Id,
 		UserName2025 UserName,
 		ContraseñaHasheada2025 Password,
 		NombreCompleto2025 Nombre,
@@ -37,26 +33,27 @@ public static partial class DbModels {
 
 
 	public sealed record UsuarioAutenticadoDbModel(
-		UsuarioId Id,
+		UsuarioId2025 Id,
 		string UserName,
 		UsuarioRoleEnum EnumRole
 	);
 
 
 	public record UsuarioDbModel(
-		UsuarioId Id,
+		UsuarioId2025 Id,
 		string UserName,
 		string? PasswordHash,
 		string Nombre,
 		string Apellido,
 		string Telefono,
 		string Email,
-		UsuarioRoleEnum EnumRole
+		UsuarioRoleEnum EnumRole,
+		MedicoId2025? MedicoRelacionadoId
 	) {
-		public UsuarioDbModel() : this(default, "", "", "", "", "", "", default) { }
+		public UsuarioDbModel() : this(default, "", "", "", "", "", "", default, default) { }
 	}
 
-	public static UsuarioDbModel ToModel(this Usuario2025Edicion edicion, UsuarioId id)
+	public static UsuarioDbModel ToModel(this Usuario2025Edicion edicion, UsuarioId2025 id)
 		=> new(
 			Id: id,
 			UserName: edicion.UserName.Valor,
@@ -65,7 +62,8 @@ public static partial class DbModels {
 			Apellido: edicion.NombreCompleto.ApellidoValor,
 			Telefono: edicion.Telefono.Valor,
 			Email: edicion.Email.Valor,
-			EnumRole: edicion.EnumRole
+			EnumRole: edicion.EnumRole,
+			MedicoRelacionadoId: edicion.MedicoRelacionadoId
 		);
 
 
@@ -78,7 +76,8 @@ public static partial class DbModels {
 			aggrg.Usuario.NombreCompleto.ApellidoValor,
 			aggrg.Usuario.Telefono.Valor,
 			aggrg.Usuario.Email.Valor,
-			aggrg.Usuario.EnumRole
+			aggrg.Usuario.EnumRole,
+			aggrg.Usuario.MedicoRelacionadoId
 		);
 	}
 	public static UsuarioDbModel ToModel(this Usuario2025EdicionAgg aggrg) {
@@ -90,10 +89,11 @@ public static partial class DbModels {
 			aggrg.Usuario.NombreCompleto.ApellidoValor,
 			aggrg.Usuario.Telefono.Valor,
 			aggrg.Usuario.Email.Valor,
-			aggrg.Usuario.EnumRole
+			aggrg.Usuario.EnumRole,
+			aggrg.Usuario.MedicoRelacionadoId
 		);
 	}
-	public static UsuarioDbModel ToModel(this Usuario2025 instance, UsuarioId id) {
+	public static UsuarioDbModel ToModel(this Usuario2025 instance, UsuarioId2025 id) {
 		return new UsuarioDbModel(
 			id,
 			instance.UserName.Valor,
@@ -102,13 +102,14 @@ public static partial class DbModels {
 			instance.NombreCompleto.ApellidoValor,
 			instance.Telefono.Valor,
 			instance.Email.Valor,
-			instance.EnumRole
+			instance.EnumRole,
+			instance.MedicoRelacionadoId
 		);
 	}
 
 	//public static Result<Usuario2025Agg> ToDomainAgg(this UsuarioDbModel dbModel)
 	//	=> Usuario2025Agg.CrearResult(
-	//		UsuarioId.CrearResult(dbModel.Id.Valor),
+	//		UsuarioId2025.CrearResult(dbModel.Id.Valor),
 	//		Usuario2025.CrearResult(
 	//			UserName2025.CrearResult(dbModel.UserName),
 	//			NombreCompleto2025.CrearResult(dbModel.Nombre, dbModel.Apellido),

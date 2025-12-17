@@ -19,7 +19,7 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 
 
 	Task<Result<Turno2025>> IRepositorioDominioServices.UpdateTurnoWhereIdAndReturnAsDomain(
-		TurnoId id,
+		TurnoId2025 id,
 		Turno2025 instance
 	)
 		=> TryAsync(async conn => {
@@ -44,9 +44,9 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 
 
 
-	Task<Result<IEnumerable<MedicoId>>> IRepositorioDominioServices.SelectMedicosIdWhereEspecialidadCodigo(EspecialidadEnum code)
+	Task<Result<IEnumerable<MedicoId2025>>> IRepositorioDominioServices.SelectMedicosIdWhereEspecialidadCodigo(EspecialidadEnum code)
 		=> TryAsync(async conn => {
-			return await conn.QueryAsync<MedicoId>(
+			return await conn.QueryAsync<MedicoId2025>(
 				"sp_SelectMedicosIdWhereEspecialidadCodigo",
 				new { EspecialidadCodigo = code },
 				commandType: CommandType.StoredProcedure
@@ -55,7 +55,7 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 
 
 
-	Task<Result<IEnumerable<TurnoQM>>> IRepositorioDominioServices.SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
+	Task<Result<IEnumerable<TurnoQM>>> IRepositorioDominioServices.SelectTurnosProgramadosBetweenFechasWhereMedicoId(MedicoId2025 medicoId, DateTime fechaDesde, DateTime fechaHasta)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<TurnoQM>(
 				"sp_SelectTurnosProgramadosBetweenFechasWhereMedicoId",
@@ -70,7 +70,7 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 
 
 
-	Task<Result<IEnumerable<HorarioMedicoQM>>> IRepositorioDominioServices.SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId medicoId, DateTime fechaDesde, DateTime fechaHasta)
+	Task<Result<IEnumerable<HorarioMedicoQM>>> IRepositorioDominioServices.SelectHorariosVigentesBetweenFechasWhereMedicoId(MedicoId2025 medicoId, DateTime fechaDesde, DateTime fechaHasta)
 		=> TryAsync(async conn => {
 			return await conn.QueryAsync<HorarioMedicoQM>(
 				"sp_SelectHorariosVigentesBetweenFechasWhereMedicoId",
@@ -83,7 +83,7 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 			);
 		});
 
-	Task<Result<Usuario2025>> IRepositorioDominioServices.SelectUsuarioWhereIdAsDomain(UsuarioId id)
+	Task<Result<Usuario2025>> IRepositorioDominioServices.SelectUsuarioWhereIdAsDomain(UsuarioId2025 id)
 		=> TryResultAsync(async conn => {
 			UsuarioCrearDto? dto =
 				await conn.QuerySingleOrDefaultAsync<UsuarioCrearDto>(
@@ -99,7 +99,7 @@ public class RepositorioDominioServices(SQLServerConnectionFactory factory) : Re
 		});
 
 
-	Task<Result<Turno2025>> IRepositorioDominioServices.SelectTurnoWhereIdAsDomain(TurnoId id)
+	Task<Result<Turno2025>> IRepositorioDominioServices.SelectTurnoWhereIdAsDomain(TurnoId2025 id)
 		=> TryAsyncAndMap(
 			query: conn => conn.QuerySingleOrDefaultAsync<TurnoDto>(
 				"sp_SelectTurnoWhereId",

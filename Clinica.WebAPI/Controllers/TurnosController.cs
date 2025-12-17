@@ -38,7 +38,7 @@ public class TurnosController(
 	=> this.SafeExecute(
 		logger,
 		AccionesDeUsuarioEnum.VerTurnos,
-		() => repositorio.SelectTurnoWhereId(new TurnoId(id)),
+		() => repositorio.SelectTurnoWhereId(TurnoId2025.Crear(id)),
 		notFoundMessage: $"No existe turno con id {id}"
 	);
 
@@ -47,7 +47,7 @@ public class TurnosController(
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.VerTurnos,
-			() => repositorio.SelectTurnosWhereMedicoId(new MedicoId(id)),
+			() => repositorio.SelectTurnosWhereMedicoId(MedicoId2025.Crear(id)),
 			notFoundMessage: $"No existen turnos con medicoid {id}"
 		);
 
@@ -56,8 +56,8 @@ public class TurnosController(
 		=> this.SafeExecute(
 			logger,
 			AccionesDeUsuarioEnum.VerTurnos,
-			() => repositorio.SelectTurnosWherePacienteId(new PacienteId(id)),
-			notFoundMessage: $"No existen turnos con PacienteId {id}"
+			() => repositorio.SelectTurnosWherePacienteId(PacienteId2025.Crear(id)),
+			notFoundMessage: $"No existen turnos con PacienteId2025 {id}"
 		);
 
 
@@ -66,7 +66,7 @@ public class TurnosController(
 	=> this.SafeExecute(
 		logger,
 		AccionesDeUsuarioEnum.EliminarEntidades,
-		() => repositorio.DeleteTurnoWhereId(new TurnoId(id)),
+		() => repositorio.DeleteTurnoWhereId(TurnoId2025.Crear(id)),
 		notFoundMessage: $"No existe turno con id {id}"
 	);
 
@@ -79,14 +79,14 @@ public class TurnosController(
 		AccionesDeUsuarioEnum.ModificarEntidades,
 		dto,
 		x => x.ToDomain(),
-		turno => repositorio.UpdateTurnoWhereId(new TurnoId(id), turno),
+		turno => repositorio.UpdateTurnoWhereId(TurnoId2025.Crear(id), turno),
 		notFoundMessage: $"No existe turno con id {id}"
 	);
 
 
 
 	[HttpPost]
-	public Task<ActionResult<TurnoId>> CrearTurno([FromBody] TurnoDto dto)
+	public Task<ActionResult<TurnoId2025>> CrearTurno([FromBody] TurnoDto dto)
 	=> this.SafeExecuteWithDomain(
 		logger,
 		AccionesDeUsuarioEnum.CrearTurnos,

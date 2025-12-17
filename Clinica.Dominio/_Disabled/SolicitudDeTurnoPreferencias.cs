@@ -50,13 +50,13 @@ public readonly record struct SolicitudDeTurnoPreferencias(
 
 
 //public readonly record struct SolicitudDeTurno(
-//	PacienteId PacienteId,
+//	PacienteId2025 PacienteId2025,
 //	Especialidad2025 Especialidad,
 //	DateTime FechaCreacion
 //) : IComoTexto {
 
 //	public static Result<SolicitudDeTurno> CrearFromStrings(
-//		PacienteId pacienteId,
+//		PacienteId2025 pacienteId,
 //		Especialidad2025 especialidad,
 //		DateTime fechaSolicitada
 //	) {
@@ -65,7 +65,7 @@ public readonly record struct SolicitudDeTurnoPreferencias(
 
 //	public string ATextoDia() =>
 //		$"Solicitud básica:\n" +
-//		$"  • Nivel4Medico: {PacienteId}\n" +
+//		$"  • Nivel4Medico: {PacienteId2025}\n" +
 //		$"  • Especialidad: {Especialidad.ATextoDia()}\n" +
 //		$"  • Solicitado en: {FechaCreacion:G}";
 //}

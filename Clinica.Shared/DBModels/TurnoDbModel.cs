@@ -9,10 +9,10 @@ namespace Clinica.Shared.DbModels;
 
 public static partial class DbModels {
 	public record TurnoDbModel(
-		TurnoId Id,
+		TurnoId2025 Id,
 		DateTime FechaDeCreacion,
-		PacienteId PacienteId,
-		MedicoId MedicoId,
+		PacienteId2025 PacienteId,
+		MedicoId2025 MedicoId,
 		EspecialidadEnum EspecialidadCodigo,
 		DateTime FechaHoraAsignadaDesde,
 		DateTime FechaHoraAsignadaHasta,
@@ -38,7 +38,7 @@ public static partial class DbModels {
 			aggrg.Turno.OutcomeComentarioOption.Match(s => s, () => (string?)null)
 		);
 	}
-	public static TurnoDbModel ToModel(this Turno2025 instance, TurnoId id) {
+	public static TurnoDbModel ToModel(this Turno2025 instance, TurnoId2025 id) {
 		return new TurnoDbModel(
 			id,
 			instance.FechaDeCreacion,
@@ -54,12 +54,12 @@ public static partial class DbModels {
 	}
 	public static Result<Turno2025Agg> ToDomainAgg(this TurnoDbModel dbModel) {
 		return Turno2025Agg.CrearResult(
-			TurnoId.CrearResult(dbModel.Id),
+			TurnoId2025.CrearResult(dbModel.Id),
 			Turno2025.CrearResult(
-			//TurnoId.CrearResult(dbModel.Id.Valor),
+			//TurnoId2025.CrearResult(dbModel.Id.Valor),
 			dbModel.FechaDeCreacion,
-			PacienteId.CrearResult(dbModel.PacienteId.Valor),
-			MedicoId.CrearResult(dbModel.MedicoId.Valor),
+			PacienteId2025.CrearResult(dbModel.PacienteId.Valor),
+			MedicoId2025.CrearResult(dbModel.MedicoId.Valor),
 			Especialidad2025.CrearResult(dbModel.EspecialidadCodigo),
 			dbModel.FechaHoraAsignadaDesde,
 			dbModel.FechaHoraAsignadaHasta,

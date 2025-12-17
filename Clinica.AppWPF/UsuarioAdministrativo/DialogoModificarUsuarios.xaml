@@ -127,7 +127,17 @@
 			Grid.Row="2"
 			Grid.Column="1"
 			Margin="20,5,20,5">
-			<!-- PROVINCIA -->
+			<!-- ROLE -->
+			<StackPanel
+				Margin="0,5">
+				<Label
+					Content="MedicoRelacionado" />
+				<ComboBox
+					ItemsSource="{Binding MedicosDisponibles}"
+					SelectedItem="{Binding MedicoRelacionado}"
+					Height="30" />
+			</StackPanel>
+			<!-- ROLE -->
 			<StackPanel
 				Margin="0,5">
 				<Label
