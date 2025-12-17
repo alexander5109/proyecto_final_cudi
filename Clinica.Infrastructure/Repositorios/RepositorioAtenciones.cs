@@ -63,6 +63,18 @@ public class RepositorioAtenciones(SQLServerConnectionFactory factory)
 		});
 
 	// -----------------------------
+	// Seleccionar por medico
+	// -----------------------------
+	public Task<Result<IEnumerable<AtencionDbModel>>> SelectAtencionesWhereMedicoId(MedicoId2025 id)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<AtencionDbModel>(
+				"sp_SelectAtencionesWhereMedicoId",
+				new { MedicoId = id.Valor },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+	// -----------------------------
 	// Seleccionar por turno
 	// -----------------------------
 	public Task<Result<AtencionDbModel?>> SelectAtencionWhereTurnoId(TurnoId2025 id)

@@ -54,6 +54,7 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 			if (_selectedTurno != value) {
 				_selectedTurno = value;
 				OnPropertyChanged(nameof(SelectedTurno));
+				OnPropertyChanged(nameof(PuedeDiagnosticarYConfirmar));
 				ActualizarPacienteDesdeTurno();
 			}
 		}
@@ -109,14 +110,14 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 			);
 
 
-		//MessageBox.Show($"|SelectedPaciente?.Nombre: {SelectedPaciente?.Nombre} \n| SelectedTurno?.Hora: {SelectedTurno?.Model.FechaHoraAsignadaDesde}| SelectedTurno?.EsperandoAtencion: {SelectedTurno?.EsperandoAtencion}| ObservacionActual: {Observaciones}|");
+		//MessageBox.Show($"|SelectedPaciente?.Nombre: {SelectedPaciente?.Nombre} \n| SelectedTurno?.Hora: {SelectedTurno?.Model.FechaHoraAsignadaDesde}| SelectedTurno?.EsTurnoConcretado: {SelectedTurno?.EsTurnoConcretado}| ObservacionActual: {Observaciones}|");
 		if (SelectedPaciente == null || SelectedTurno == null || string.IsNullOrWhiteSpace(Observaciones)) {
 			return new ResultWpf<UnitWpf>.Error(
 				new ErrorInfo("No hay nada seleccionado.", MessageBoxImage.Information)
 			);
 		}
 		// Solo permitir si el turno está concretado
-		if (!SelectedTurno.EsperandoAtencion)
+		if (!SelectedTurno.EsTurnoConcretado)
 			return new ResultWpf<UnitWpf>.Error(
 				new ErrorInfo("El turno ya esta concretado.", MessageBoxImage.Information)
 			);
@@ -139,41 +140,71 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 
 
 	internal async Task RefrescarMisTurnosAsync() {
-		List<TurnoDbModel> turnos = await App.Repositorio.Turnos.SelectTurnosWhereMedicoId(CurrentMedicoId);
+
+		// 1. Cargar caches necesarios
 		await App.Repositorio.Pacientes.RefreshCache();
 		await App.Repositorio.Medicos.RefreshCache();
 
+		// 2. Traer TODOS mis turnos
+		List<TurnoDbModel> turnos =
+			await App.Repositorio.Turnos.SelectTurnosWhereMedicoId(CurrentMedicoId);
+
 		_todosLosTurnos = turnos;
+
+		// 3. Traer TODAS las atenciones asociadas a MIS turnos
+		//    (sirve solo para saber si el turno ya fue atendido)
+		var atencionesDelMedico =
+			await App.Repositorio.Atenciones.SelectAtencionesWhereMedicoId(CurrentMedicoId);
+
+		var turnosAtendidos = atencionesDelMedico
+			.Select(a => a.TurnoId)
+			.ToHashSet();
+
+		// 4. Reconstruir la lista
 		TurnosList.Clear();
 
+		foreach (var turno in turnos.OrderBy(t => t.FechaHoraAsignadaDesde)) {
 
-		foreach (TurnoDbModel turnoDbModel in turnos.OrderBy(t => t.FechaHoraAsignadaDesde)) {
-			PacienteDbModel? paciente = App.Repositorio.Pacientes.GetFromCachePacienteWhereId(turnoDbModel.PacienteId);
-			if (paciente == null) {
-				MessageBox.Show("Por que este paciente id es null?");
+			var paciente = App.Repositorio.Pacientes
+				.GetFromCachePacienteWhereId(turno.PacienteId);
+
+			if (paciente is null) {
+				// Esto ya es inconsistencia de datos
+				MessageBox.Show($"Paciente inexistente para turno {turno.Id.Valor}");
 				continue;
 			}
 
-			bool tieneAtencion = (await App.Repositorio.Atenciones.SelectAtencionesWherePacienteId(paciente.Id))
-									.Any(a => a.TurnoId == turnoDbModel.Id);
+			bool esTurnoConcretado =
+				turno.OutcomeEstado == TurnoEstadoEnum.Concretado;
+
+			bool tieneAtencion =
+				turnosAtendidos.Contains(turno.Id);
 
 			TurnosList.Add(new TurnoDeHoyVM(
-				Model: turnoDbModel,
-				PacienteNombreApellido: $"{paciente.Nombre} {paciente.Apellido}",
-				PacienteEdad: CalcularEdad(paciente.FechaNacimiento),
-				EsperandoAtencion: turnoDbModel.OutcomeEstado == TurnoEstadoEnum.Concretado,
-				FueAtendido: tieneAtencion ? "✔" : ""
+				model: turno,
+				pacienteNombreApellido: $"{paciente.Nombre} {paciente.Apellido}",
+				pacienteEdad: CalcularEdad(paciente.FechaNacimiento),
+				esTurnoConcretado: esTurnoConcretado,
+				tieneAtencion: tieneAtencion
 			));
 		}
 	}
+
 
 
 	internal async Task CargarAtencionesDePacienteSeleccionado() {
 		AtencionesViewModelList.Clear();
 
 		if (SelectedPaciente is null) return;
+		if (SelectedTurno is null) return;
 
-		List<AtencionDbModel>? atenciones = await App.Repositorio.Atenciones.SelectAtencionesWherePacienteId(SelectedPaciente.Id);
+		var atenciones = await App.Repositorio.Atenciones.SelectAtencionesWhereMedicoId(CurrentMedicoId);
+
+		HashSet<TurnoId2025> turnosAtendidos = atenciones
+			.Select(a => a.TurnoId)
+			.ToHashSet();
+
+		bool tieneAtencion = turnosAtendidos.Contains(SelectedTurno.Model.Id);
 
 		//MessageBox.Show($"Atenciones de pacienteconid [ID: {SelectedPaciente.Id.Valor}]: [Count: {atenciones.Count}]");
 		if (atenciones is null || atenciones.Count == 0) return;
@@ -198,7 +229,8 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	// ================================================================
 	// REGLAS
 	// ================================================================
-	public bool PuedeDiagnosticarYConfirmar => SelectedTurno != null && SelectedTurno.EsperandoAtencion;
+	public bool PuedeDiagnosticarYConfirmar =>
+		SelectedTurno?.PuedeDiagnosticar == true;
 
 	public bool HayPacienteSeleccionado => SelectedPaciente is not null;
 
@@ -208,6 +240,15 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	// ================================================================
 
 	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+	internal async Task PostConfirmarDiagnosticoAsync() {
+		Observaciones = null;
+		await CargarAtencionesDePacienteSeleccionado();
+		await RefrescarMisTurnosAsync();
+		OnPropertyChanged(nameof(PuedeDiagnosticarYConfirmar));
+	}
+
+
 	public event PropertyChangedEventHandler? PropertyChanged;
 }
 
@@ -217,16 +258,37 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 // MINIVIEWMODELS
 // ================================================================
 
-public record TurnoDeHoyVM(
-	TurnoDbModel Model,
-	string PacienteNombreApellido,
-	string PacienteEdad,
-	bool EsperandoAtencion,
-	string FueAtendido
-);
+public sealed class TurnoDeHoyVM : INotifyPropertyChanged {
+	public TurnoDbModel Model { get; }
+	public string PacienteNombreApellido { get; }
+	public string PacienteEdad { get; }
+	public bool EsTurnoConcretado { get; }
+	public bool PuedeDiagnosticar => EsTurnoConcretado && !TieneAtencion;
+
+	public bool TieneAtencion { get; }
+
+	public string FueAtendido => TieneAtencion ? "✔" : "";
+
+	//public string FueAtendido => TieneAtencion ? "✔" : "";
+	public TurnoDeHoyVM(
+		TurnoDbModel model,
+		string pacienteNombreApellido,
+		string pacienteEdad,
+		bool esTurnoConcretado,
+		bool tieneAtencion
+	) {
+		Model = model;
+		PacienteNombreApellido = pacienteNombreApellido;
+		PacienteEdad = pacienteEdad;
+		EsTurnoConcretado = esTurnoConcretado;
+		TieneAtencion = tieneAtencion;
+	}
+
+	public event PropertyChangedEventHandler? PropertyChanged;
+}
 
 public record AtencionPreviaVM(
-	string Fecha, 
-	string MedicoNombreApellido, 
+	string Fecha,
+	string MedicoNombreApellido,
 	string Observaciones
 );

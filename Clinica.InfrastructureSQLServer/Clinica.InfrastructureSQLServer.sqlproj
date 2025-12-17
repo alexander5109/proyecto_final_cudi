@@ -127,6 +127,7 @@
     <Build Include="dbo\Atenciones\sp_SelectAtencionesWhereTurnoId.sql" />
     <Build Include="dbo\Atenciones\sp_UpdateAtencionesWhereId.sql" />
     <Build Include="dbo\Atenciones\sp_DeleteAtencionWhereId.sql" />
+    <Build Include="dbo\Atenciones\sp_SelectAtencionesWhereMedicoId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Clinica.InfrastructureSQLServer.publish.xml" />

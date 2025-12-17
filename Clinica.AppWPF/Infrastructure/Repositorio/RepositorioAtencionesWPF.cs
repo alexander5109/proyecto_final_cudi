@@ -22,6 +22,12 @@ public class RepositorioAtencionesWPF : IRepositorioAtencionesWPF {
 		) ?? new List<AtencionDbModel>();
 	}
 
+	async Task<List<AtencionDbModel>> IRepositorioAtencionesWPF.SelectAtencionesWhereMedicoId(MedicoId2025 id) {
+		return await App.Api.TryGetJsonOrNullAsync<List<AtencionDbModel>>(
+			$"api/Atenciones/medico/{id.Valor}"
+		) ?? new List<AtencionDbModel>();
+	}
+
 	async Task<ResultWpf<UnitWpf>> IRepositorioAtencionesWPF.AgendarAtencionConDiagnostico(AtencionDto atencionDto) {
 
 		ResultWpf<UnitWpf> result = await App.Api.TryApiCallAsync(

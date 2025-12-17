@@ -47,6 +47,16 @@ public class AtencionesController(
 			notFoundMessage: $"No existen atenciones para el paciente con id {id}"
 		);
 
+	// GET: /api/Atenciones/medico/{id}
+	[HttpGet("medico/{id:int}")]
+	public Task<ActionResult<IEnumerable<AtencionDbModel>>> GetAtencionesPorMedico([FromRoute] int id)
+		=> this.SafeExecute(
+			logger,
+			AccionesDeUsuarioEnum.VerAtenciones,
+			() => repositorio.SelectAtencionesWhereMedicoId(MedicoId2025.Crear(id)),
+			notFoundMessage: $"No existen atenciones para el medico con id {id}"
+		);
+
 	// POST: /api/Atenciones
 	[HttpPost]
 	public Task<ActionResult<AtencionId2025>> CrearAtencion([FromBody] AtencionDto dto)

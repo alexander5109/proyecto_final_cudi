@@ -33,13 +33,11 @@ public partial class MedicoAtencionDelDia : Window {
 	async private void ClickBoton_ConfirmarObservacion(object sender, RoutedEventArgs e) {
 		var result = await VM.ConfirmarDiagnosticoAsync();
 		result.MatchAndDo(
-			async caseOk => {
-				VM.Observaciones = null;
-				await VM.CargarAtencionesDePacienteSeleccionado();
-				await VM.RefrescarMisTurnosAsync();
-				MessageBox.Show("Cambios guardados.", "Éxito", MessageBoxButton.OK);
+			async _ => {
+				await VM.PostConfirmarDiagnosticoAsync();
+				MessageBox.Show("Cambios guardados.", "Éxito");
 			},
-			caseError => caseError.ShowMessageBox()
+			err => err.ShowMessageBox()
 		);
 
 

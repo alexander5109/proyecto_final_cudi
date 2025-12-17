@@ -218,7 +218,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 
 		return await ToEdicionDomain()
 			.Bind(edicion => {
-				var agg = Usuario2025EdicionAgg.Crear(id, edicion);
+                Usuario2025EdicionAgg agg = Usuario2025EdicionAgg.Crear(id, edicion);
 				return App.Repositorio.Usuarios.UpdateUsuarioWhereId(agg);
 			});
 	}
