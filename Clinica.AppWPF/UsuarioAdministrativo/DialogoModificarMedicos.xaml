@@ -62,7 +62,7 @@
 				<TextBox
 					Height="30"
 					MaxLength="50"
-					Text="{Binding Nombre}"
+					Text="{Binding Nombre, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" />
 			</StackPanel>
 			<!-- APELLIDO -->
@@ -73,7 +73,7 @@
 				<TextBox
 					Height="30"
 					MaxLength="50"
-					Text="{Binding Apellido}"
+					Text="{Binding Apellido, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" />
 			</StackPanel>
 			<!-- DNI -->
@@ -84,7 +84,7 @@
 				<TextBox
 					Height="30"
 					MaxLength="8"
-					Text="{Binding Dni}"
+					Text="{Binding Dni, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" />
 			</StackPanel>
 			<!-- EMAIL -->
@@ -94,7 +94,7 @@
 					Content="Email" />
 				<TextBox
 					Height="30"
-					Text="{Binding Email}"
+					Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" />
 			</StackPanel>
 			<!-- TELEFONO -->
@@ -105,7 +105,7 @@
 				<TextBox
 					Height="30"
 					MaxLength="10"
-					Text="{Binding Telefono}"
+					Text="{Binding Telefono, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" />
 			</StackPanel>
 			<!-- FECHA NACIMIENTO -->
@@ -114,7 +114,7 @@
 				<Label
 					Content="Especialidad" />
 				<ComboBox
-					ItemsSource="{Binding EspecialidadesDisponiblesItemsSource}"
+					ItemsSource="{Binding EspecialidadesDisponiblesItemsSource, UpdateSourceTrigger=PropertyChanged}"
 					DisplayMemberPath="NombreEspecialidad"
 					SelectedItem="{Binding Especialidad, Mode=TwoWay}"
 					Height="30" />
@@ -132,7 +132,7 @@
 					Content="Provincia" />
 				<ComboBox
 					ItemsSource="{Binding Provincias}"
-					SelectedItem="{Binding Provincia}"
+					SelectedItem="{Binding Provincia, UpdateSourceTrigger=PropertyChanged}"
 					Height="30"
 					DisplayMemberPath="Nombre" />
 			</StackPanel>
@@ -144,7 +144,7 @@
 				<TextBox
 					Height="30"
 					MaxLength="50"
-					Text="{Binding Domicilio}"
+					Text="{Binding Domicilio, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" />
 			</StackPanel>
 			<!-- LOCALIDAD -->
@@ -155,7 +155,7 @@
 				<TextBox
 					Height="30"
 					MaxLength="50"
-					Text="{Binding Localidad}"
+					Text="{Binding Localidad, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource TextBoxLindo2}" />
 			</StackPanel>
 			<!-- GUARDIA -->
@@ -165,7 +165,7 @@
 				<Label
 					Content="Hace guardias: " />
 				<CheckBox
-					IsChecked="{Binding HaceGuardias, Mode=TwoWay}"
+					IsChecked="{Binding HaceGuardias, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 					Height="30"
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center"
@@ -179,7 +179,7 @@
 					Content="Fecha de ingreso" />
 				<Label
 					Height="30"
-					Content="{Binding FechaIngreso}"
+					Content="{Binding FechaIngreso, UpdateSourceTrigger=PropertyChanged}"
 					Style="{StaticResource LabelLindoCuadroGrisSombreado}"
 					FontSize="12" />
 			</StackPanel>

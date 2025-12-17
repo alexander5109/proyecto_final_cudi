@@ -37,7 +37,11 @@ public class ServiciosPublicos : IServiciosDeDominio {
 		IRepositorioDominioServices repo
 	) {
 
-		Console.WriteLine(especialidadCodigo.ToString());
+		//Console.WriteLine($"Solicitud de disponibilidades para {especialidadCodigo}");
+		//Console.WriteLine($"aPartirDeCuando: {aPartirDeCuando}");
+		//Console.WriteLine($"Maximo: {cuantos}");
+		//Console.WriteLine($"diaSemanaPreferido: {diaSemanaPreferido}");
+		//Console.WriteLine($"medicoPreferidoId: {medicoPreferidoId}");
 
 		if (cuantos <= 0)
 			return new Result<IReadOnlyList<Disponibilidad2025>>
@@ -91,6 +95,9 @@ public class ServiciosPublicos : IServiciosDeDominio {
 					.Error(turnosResult.UnwrapAsError());
 
 			List<TurnoQM> turnos = turnosResult.UnwrapAsOk().ToList();
+			Console.WriteLine($"TurnosCount: {turnos.Count}");
+			Console.WriteLine($"medicoId: {medicoId}");
+			//Console.WriteLine($"TurnosCount: {turnos.Select(x => x).Count}");
 
 			// 3️⃣ Horarios vigentes
 			Result<IEnumerable<HorarioMedicoQM>> horariosResult =

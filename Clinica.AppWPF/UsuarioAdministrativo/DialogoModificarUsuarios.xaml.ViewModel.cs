@@ -22,9 +22,8 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	// ================================================================
 	public DialogoUsuarioModificarVM() {
 		_original = new UsuarioEdicionSnapshot();
-
-
-
+		_medicosDisponibles = new ObservableCollection<MedicoVinculadoViewModel>();
+		MedicoVinculadoId = null; // inicializamos el SelectedValue
 	}
 
 
@@ -41,13 +40,16 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		);
 
 		Id = original.Id;
-		UserName = original.UserName;   // ← OK
+		UserName = original.UserName;
 		Nombre = original.Nombre;
 		Apellido = original.Apellido;
 		Telefono = original.Telefono;
 		Email = original.Email;
 		EnumRole = original.EnumRole;
+		MedicoVinculadoId = original.MedicoRelacionadoId; // importante
 		NuevaPassword = null;
+
+		_medicosDisponibles = new ObservableCollection<MedicoVinculadoViewModel>();
 	}
 
 
@@ -297,14 +299,16 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 
 		foreach (var medico in medicosDisponibles) {
 			MedicosDisponibles.Add(new MedicoVinculadoViewModel(
-				$"{medico.Nombre} {medico.Apellido}", medico.Id));
+				$"{medico.Nombre} {medico.Apellido} {medico.EspecialidadCodigo} ", medico.Id));
 		}
 
-		// Opcional: asegurarte que la selección actual sea válida
+		// Opcional: si el Id actual no está en la lista, lo limpiamos
 		if (MedicoVinculadoId.HasValue &&
 			!MedicosDisponibles.Any(m => m.Id == MedicoVinculadoId.Value)) {
 			MedicoVinculadoId = null;
 		}
+
+		OnPropertyChanged(nameof(MedicosDisponibles));
 	}
 
 

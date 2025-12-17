@@ -22,6 +22,7 @@ public partial class DialogoModificarUsuarios : Window {
 		InitializeComponent();
 		VM = new DialogoUsuarioModificarVM(model);
 		DataContext = VM;
+		Loaded += async (_, __) => await VM.RefrescarMedicosAsync();
 	}
 
 	// ==========================================================
