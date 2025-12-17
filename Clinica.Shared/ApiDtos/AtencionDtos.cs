@@ -12,6 +12,8 @@ public record AtencionDto(
 	int MedicoId,
 	string Observaciones
 ) {
+	public AtencionDto()
+		: this(default, default, default, "") { }
 	public Result<Atencion2025> ToDomain() => Atencion2025.CrearResult(
 			pacienteId: PacienteId2025.Crear(PacienteId),
 			medicoId: MedicoId2025.Crear(MedicoId),
@@ -25,5 +27,7 @@ public record AtencionDto(
 public record ModificarObservacionDto(
 	string Observaciones
 ) {
+	public ModificarObservacionDto()
+		: this("") { }
 	public string ToDomain() => Observaciones;
 }

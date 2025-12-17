@@ -15,15 +15,14 @@ public partial class DialogoModificarUsuarios : Window {
 		InitializeComponent();
 		VM = new();
 		DataContext = VM;
-
-		//DEFINIR MedicosDisponibles //PARA COMBOBOX
-		//DEFINIR MedicoRelacionado //COMO VIEWMODEL
+		Loaded += async (_, __) => await VM.RefrescarMedicosAsync();
 	}
 
 	public DialogoModificarUsuarios(UsuarioDbModel model) {
 		InitializeComponent();
 		VM = new DialogoUsuarioModificarVM(model);
 		DataContext = VM;
+		Loaded += async (_, __) => await VM.RefrescarMedicosAsync();
 	}
 
 	// ==========================================================

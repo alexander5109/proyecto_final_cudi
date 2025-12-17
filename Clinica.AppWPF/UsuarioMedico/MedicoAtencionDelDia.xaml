@@ -5,8 +5,6 @@
 	Title="Clinica Medica - Home"
 	Width="1024"
 	Height="600"
-	MinWidth="1024"
-	MinHeight="600"
 	WindowStartupLocation="CenterScreen">
 	<Window.Background>
 		<ImageBrush
@@ -61,39 +59,59 @@
 			<StackPanel
 				Grid.Row="0"
 				HorizontalAlignment="Center">
-				<Label
-					Content="Turnos de hoy"
-					FontSize="25"
-					Style="{StaticResource LabelLindoConTextoSombra}"
-					HorizontalAlignment="Center"
-					FontWeight="Bold" />
+				<StackPanel
+					Orientation="Horizontal">
+					<Button
+						Click="ClickBoton_Refrescar"
+						Grid.Row="1"
+						Style="{StaticResource BotonRefrescar}"></Button>
+					<Label
+						Content="Turnos de hoy"
+						FontSize="25"
+						Style="{StaticResource LabelLindoConTextoSombra}"
+						HorizontalAlignment="Center"
+						FontWeight="Bold" />
+				</StackPanel>
 				<DatePicker
-					HorizontalAlignment="Center" />
+					SelectedDate="{Binding SelectedFecha, Mode=TwoWay}"
+					SelectedDateFormat="Short"
+					Text="{Binding SelectedFecha, StringFormat=dd/MM/yyyy}"
+					Margin="0,5,0,5"
+					HorizontalAlignment="Center"
+					Width="200" />
 			</StackPanel>
 			<!-- ListView de turnos -->
 			<ListView
 				Grid.Row="1"
-				ItemsSource="{Binding TurnosDelDia}"
-				SelectedItem="{Binding TurnoSeleccionado}"
+				ItemsSource="{Binding TurnosList}"
+				SelectedItem="{Binding SelectedTurno}"
 				Margin="10"
 				ScrollViewer.VerticalScrollBarVisibility="Auto">
 				<ListView.View>
 					<GridView>
 						<GridViewColumn
 							Header="Hora"
-							Width="70"
-							DisplayMemberBinding="{Binding HoraDesde}" />
+							Width="Auto"
+							DisplayMemberBinding="{Binding Model.FechaHoraAsignadaDesde, StringFormat={}{0:HH:mm}}" />
 						<GridViewColumn
-							Header="PacienteNombreApellido"
-							Width="155"
+							Header="Paciente"
+							Width="auto"
 							DisplayMemberBinding="{Binding PacienteNombreApellido}" />
 						<GridViewColumn
-							Header="PacienteEdad"
-							Width="155"
+							Header="Edad"
+							Width="auto"
 							DisplayMemberBinding="{Binding PacienteEdad}" />
 						<GridViewColumn
-							Header="FueAtendido"
-							Width="55"
+							Header="SePresesntó"
+							Width="auto"
+							DisplayMemberBinding="{Binding EsperandoAtencion}" />
+						<GridViewColumn
+							Header="Estado"
+							Width="auto"
+							DisplayMemberBinding="{Binding Model.OutcomeEstado}" />
+						<GridViewColumn
+							Header="FueDiagnosticado"
+							Width="auto"
 							DisplayMemberBinding="{Binding FueAtendido}" />
 					</GridView>
 				</ListView.View>
@@ -164,22 +182,22 @@
 					Margin="0,0,0,5" />
 				<ListView
 					Grid.Row="1"
-					ItemsSource="{Binding HistorialConsultas}"
+					ItemsSource="{Binding AtencionesViewModelList}"
 					ScrollViewer.VerticalScrollBarVisibility="Auto"
 					Margin="10,0,10,0">
 					<ListView.View>
 						<GridView>
 							<GridViewColumn
 								Header="Fecha"
-								Width="80"
+								Width="66"
 								DisplayMemberBinding="{Binding Fecha}" />
 							<GridViewColumn
 								Header="Medico"
-								Width="70"
-								DisplayMemberBinding="{Binding Medico}" />
+								Width="144"
+								DisplayMemberBinding="{Binding MedicoNombreApellido}" />
 							<GridViewColumn
 								Header="Observaciones"
-								Width="70"
+								Width="222"
 								DisplayMemberBinding="{Binding Observaciones}" />
 						</GridView>
 					</ListView.View>
@@ -209,9 +227,10 @@
 					Margin="0,0,0,5" />
 				<TextBox
 					Grid.Row="1"
-					Text="{Binding DiagnosticoText, Mode=TwoWay}"
+					Text="{Binding TextoDiagnosticoVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 					AcceptsReturn="True"
 					TextWrapping="Wrap"
+					IsEnabled="{Binding PuedeDiagnosticarYConfirmar}"
 					VerticalScrollBarVisibility="Auto"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
@@ -221,7 +240,7 @@
 					Content="✏ Confirmar"
 					Width="144"
 					Height="35"
-					IsEnabled="{Binding HayMedicoSeleccionado}"
+					IsEnabled="{Binding PuedeDiagnosticarYConfirmar}"
 					Click="ClickBoton_ConfirmarObservacion"
 					Style="{StaticResource BotonRedondeadoCeleste}"
 					HorizontalAlignment="Center"

@@ -20,7 +20,6 @@
 				Content="Sistema de Gestión"
 				FontSize="30"
 				FontFamily="SachaWynterTight Linotype"
-				Background="{x:Null}"
 				Foreground="#FF1F1F3C"
 				Padding="0,0,0,0"
 				HorizontalAlignment="Center" />
@@ -74,15 +73,14 @@
 				FontWeight="Bold" />
 		</StackPanel>
 		<CheckBox
-			x:Name="soundCheckBox"
 			Content="Sonidos?"
-			Click="soundCheckBox_Checked"
 			Margin="0,25,25,0"
 			HorizontalAlignment="Right"
 			VerticalAlignment="Top"
 			FontFamily="SachaWynterTight"
 			FontSize="10"
-			Grid.RowSpan="2">
+			Grid.RowSpan="2"
+			IsChecked="{Binding IsSoundOn, Mode=TwoWay}">
 			<CheckBox.Template>
 				<ControlTemplate
 					TargetType="CheckBox">
@@ -95,7 +93,6 @@
 								<Style
 									TargetType="Image">
 									<Style.Triggers>
-										<!-- Checked state without hover -->
 										<DataTrigger
 											Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}"
 											Value="True">
@@ -103,7 +100,6 @@
 												Property="Source"
 												Value="pack://application:,,,/PublishedResources/images/sonidoOn.png" />
 										</DataTrigger>
-										<!-- Unchecked state without hover -->
 										<DataTrigger
 											Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=CheckBox}}"
 											Value="False">
@@ -111,7 +107,6 @@
 												Property="Source"
 												Value="pack://application:,,,/PublishedResources/images/sonidoOff.png" />
 										</DataTrigger>
-										<!-- Checked state with hover -->
 										<MultiDataTrigger>
 											<MultiDataTrigger.Conditions>
 												<Condition
@@ -125,7 +120,6 @@
 												Property="Source"
 												Value="pack://application:,,,/PublishedResources/images/sonidoOn_hover.png" />
 										</MultiDataTrigger>
-										<!-- Unchecked state with hover -->
 										<MultiDataTrigger>
 											<MultiDataTrigger.Conditions>
 												<Condition
@@ -155,14 +149,17 @@
 			Margin="25,0,0,25"
 			HorizontalAlignment="Left"
 			VerticalAlignment="Bottom"
-			Width="200">
+			Width="200"
+			Height="242">
 			<Label.Content>
 				<TextBlock
 					Text="{Binding MensajeBienvenida}"
 					TextTrimming="CharacterEllipsis"
 					TextAlignment="Center"
 					VerticalAlignment="Center"
-					TextWrapping="Wrap" />
+					TextWrapping="Wrap"
+					Width="190"
+					Height="210" />
 			</Label.Content>
 		</Label>
 	</Grid>

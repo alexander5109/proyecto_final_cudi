@@ -2,7 +2,7 @@
 
 namespace Clinica.Dominio.TiposDeIdentificacion;
 
-public readonly record struct PacienteId2025(int Valor) {
+public record struct PacienteId2025(int Valor) {
 	public static Result<PacienteId2025> CrearResult(PacienteId2025? id) =>
 		(id is PacienteId2025 idGood && idGood.Valor >= 0)
 		? new Result<PacienteId2025>.Ok(idGood)

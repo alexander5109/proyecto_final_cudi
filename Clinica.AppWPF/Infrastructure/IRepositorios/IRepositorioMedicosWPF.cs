@@ -17,6 +17,7 @@ public interface IRepositorioMedicosWPF {
 	Task<List<MedicoDbModel>> SelectMedicosWhereEspecialidadCodigo(EspecialidadEnum code);
 	Task<MedicoDbModel?> SelectMedicoWhereId(MedicoId2025 id);
 	string GetFromCacheMedicoDisplayWhereId(MedicoId2025 id);
+	MedicoDbModel? GetFromCacheMedicoWhereId(MedicoId2025 id);
 	Task RefreshCache();
 }
 

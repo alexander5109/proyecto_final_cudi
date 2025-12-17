@@ -60,11 +60,13 @@ public partial class SecretariaTurnos : Window {
 
 	private async void Button_ReprogramarTurno(object sender, RoutedEventArgs e) {
 		if (VM.SelectedTurno is null) {
+			SoundsService.PlayClickSound();
 			MessageBox.Show("No hay turno seleccionado.");
 			return;
 		}
 
 		if (VM.SelectedTurno.PacienteRelacionado is null) {
+			SoundsService.PlayClickSound();
 			MessageBox.Show("Paciente no encontrado.");
 			return;
 		}

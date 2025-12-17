@@ -22,9 +22,8 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	// ================================================================
 	public DialogoUsuarioModificarVM() {
 		_original = new UsuarioEdicionSnapshot();
-
-
-
+		_medicosDisponibles = new ObservableCollection<MedicoVinculadoViewModel>();
+		MedicoVinculadoId = null; // inicializamos el SelectedValue
 	}
 
 
@@ -36,17 +35,21 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			Apellido: original.Apellido,
 			Telefono: original.Telefono,
 			Email: original.Email,
-			EnumRole: original.EnumRole
+			EnumRole: original.EnumRole,
+			MedicoVinculadoId: original.MedicoRelacionadoId
 		);
 
 		Id = original.Id;
-		UserName = original.UserName;   // ← OK
+		UserName = original.UserName;
 		Nombre = original.Nombre;
 		Apellido = original.Apellido;
 		Telefono = original.Telefono;
 		Email = original.Email;
 		EnumRole = original.EnumRole;
+		MedicoVinculadoId = original.MedicoRelacionadoId; // importante
 		NuevaPassword = null;
+
+		_medicosDisponibles = new ObservableCollection<MedicoVinculadoViewModel>();
 	}
 
 
@@ -59,6 +62,12 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	public IReadOnlyList<UsuarioRoleEnum> EnumRoles { get; } = Enum.GetValues<UsuarioRoleEnum>();
 
 	public ObservableCollection<EspecialidadViewModel> EspecialidadesDisponiblesItemsSource { get; } = [.. Especialidad2025.Todas.Select(x => x.ToViewModel())];
+	private ObservableCollection<MedicoVinculadoViewModel> _medicosDisponibles = new();
+	public ObservableCollection<MedicoVinculadoViewModel> MedicosDisponibles {
+		get => _medicosDisponibles;
+		set { _medicosDisponibles = value; OnPropertyChanged(nameof(MedicosDisponibles)); }
+	}
+
 
 	// ================================================================
 	// REGLAS
@@ -152,16 +161,24 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 		}
 	}
 
-	private MedicoId2025? _medicoRelacionadoId;
-	public MedicoId2025? MedicoRelacionadoId {
-		get => _medicoRelacionadoId;
-		set {
-			_medicoRelacionadoId = value;
-			OnPropertyChanged(nameof(MedicoRelacionadoId));
-			OnPropertyChanged(nameof(TieneCambios));
-			OnPropertyChanged(nameof(PuedeGuardarCambios));
-		}
+
+	private MedicoId2025? _medicoVinculadoId;
+	public MedicoId2025? MedicoVinculadoId {
+		get => _medicoVinculadoId;
+		set { _medicoVinculadoId = value; OnPropertyChanged(nameof(MedicoVinculadoId)); }
 	}
+
+
+	//private MedicoDbModel? _medicoRelacionado;
+	//public MedicoDbModel? MedicoVinculado {
+	//	get => _medicoRelacionado;
+	//	set {
+	//		_medicoRelacionado = value;
+	//		OnPropertyChanged(nameof(MedicoVinculado));
+	//		OnPropertyChanged(nameof(TieneCambios));
+	//		OnPropertyChanged(nameof(PuedeGuardarCambios));
+	//	}
+	//}
 
 	// -----------------------------
 	// DETECTAR CAMBIOS
@@ -201,7 +218,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 
 		return await ToEdicionDomain()
 			.Bind(edicion => {
-				var agg = Usuario2025EdicionAgg.Crear(id, edicion);
+                Usuario2025EdicionAgg agg = Usuario2025EdicionAgg.Crear(id, edicion);
 				return App.Repositorio.Usuarios.UpdateUsuarioWhereId(agg);
 			});
 	}
@@ -211,7 +228,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync() {
 		return await ToCreacionDomain()
 			.Bind(async usuario => {
-				var result = await App.Repositorio.Usuarios.InsertUsuarioReturnId(usuario);
+                ResultWpf<UsuarioId2025> result = await App.Repositorio.Usuarios.InsertUsuarioReturnId(usuario);
 
 				return result.MatchTo(
 					ok => {
@@ -239,7 +256,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			EnumRole.CrearResult(),
 			Email2025.CrearResult(Email),
 			Telefono2025.CrearResult(Telefono),
-			MedicoRelacionadoId
+			MedicoVinculadoId
 
 		).ToWpf(MessageBoxImage.Information);
 	}
@@ -252,7 +269,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 			EnumRole.CrearResult(),
 			Email2025.CrearResult(Email),
 			Telefono2025.CrearResult(Telefono),
-			MedicoRelacionadoId
+			MedicoVinculadoId
 		).ToWpf(MessageBoxImage.Information);
 	}
 
@@ -274,26 +291,48 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	public event PropertyChangedEventHandler? PropertyChanged;
 	private void OnPropertyChanged(string prop) => PropertyChanged?.Invoke(this, new(prop));
 
+	internal async Task RefrescarMedicosAsync() {
+		await App.Repositorio.Medicos.RefreshCache();
+		MedicosDisponibles.Clear();
+
+		List<MedicoDbModel> medicosDisponibles = await App.Repositorio.Medicos.SelectMedicos();
+
+		foreach (MedicoDbModel medico in medicosDisponibles) {
+			MedicosDisponibles.Add(new MedicoVinculadoViewModel(
+				$"{medico.Nombre} {medico.Apellido} {medico.EspecialidadCodigo} ", medico.Id));
+		}
+
+		// Opcional: si el Id actual no está en la lista, lo limpiamos
+		if (MedicoVinculadoId.HasValue &&
+			!MedicosDisponibles.Any(m => m.Id == MedicoVinculadoId.Value)) {
+			MedicoVinculadoId = null;
+		}
+
+		OnPropertyChanged(nameof(MedicosDisponibles));
+	}
+
+
+
+
+
+
+	// ================================================================
+	// SNAPSHOTS
+	// ================================================================
+
+	public record MedicoVinculadoViewModel(string NombreCompleto, MedicoId2025 Id);
+
+	public record UsuarioEdicionSnapshot(
+		UsuarioId2025 Id,
+		string UserName,
+		//string PasswordHash,
+		string Nombre,
+		string Apellido,
+		string Telefono,
+		string Email,
+		UsuarioRoleEnum EnumRole,
+		MedicoId2025? MedicoVinculadoId
+	) {
+		public UsuarioEdicionSnapshot() : this(default, "", "", "", "", "", default, null) { }
+	}
 }
-
-
-
-
-
-// ================================================================
-// SNAPSHOTS
-// ================================================================
-
-internal record UsuarioEdicionSnapshot(
-	UsuarioId2025 Id,
-	string UserName,
-	//string PasswordHash,
-	string Nombre,
-	string Apellido,
-	string Telefono,
-	string Email,
-	UsuarioRoleEnum EnumRole
-) {
-	public UsuarioEdicionSnapshot() : this(default, "", "", "", "", "", default) { }
-}
-

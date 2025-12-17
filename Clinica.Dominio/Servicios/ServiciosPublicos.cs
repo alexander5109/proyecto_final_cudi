@@ -18,7 +18,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 		if (rol == UsuarioRoleEnum.Nivel1Superadmin)
 			return Enum.GetValues<AccionesDeUsuarioEnum>();
 
-		if (!PermisoSistema.DiccionarioDeRoles.TryGetValue(rol, out var permisos))
+		if (!PermisoSistema.DiccionarioDeRoles.TryGetValue(rol, out HashSet<AccionesDeUsuarioEnum>? permisos))
 			return Array.Empty<AccionesDeUsuarioEnum>();
 
 		return permisos;
@@ -36,9 +36,6 @@ public class ServiciosPublicos : IServiciosDeDominio {
 		MedicoId2025? medicoPreferidoId,
 		IRepositorioDominioServices repo
 	) {
-
-		Console.WriteLine(especialidadCodigo.ToString());
-
 		if (cuantos <= 0)
 			return new Result<IReadOnlyList<Disponibilidad2025>>
 				.Error("La cantidad solicitada debe ser mayor a cero.");
@@ -91,6 +88,9 @@ public class ServiciosPublicos : IServiciosDeDominio {
 					.Error(turnosResult.UnwrapAsError());
 
 			List<TurnoQM> turnos = turnosResult.UnwrapAsOk().ToList();
+			Console.WriteLine($"TurnosCount: {turnos.Count}");
+			Console.WriteLine($"medicoId: {medicoId}");
+			//Console.WriteLine($"TurnosCount: {turnos.Select(x => x).Count}");
 
 			// 3️⃣ Horarios vigentes
 			Result<IEnumerable<HorarioMedicoQM>> horariosResult =
@@ -134,7 +134,6 @@ public class ServiciosPublicos : IServiciosDeDominio {
 							slot.AddMinutes(especialidad.DuracionConsultaMinutos);
 
 						bool solapa = turnos.Any(t =>
-							t.EspecialidadCodigo == especialidad.Codigo &&
 							t.OutcomeEstado == TurnoEstadoEnum.Programado &&
 							t.FechaHoraAsignadaDesde < slotHasta &&
 							slot < t.FechaHoraAsignadaHasta

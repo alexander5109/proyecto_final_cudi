@@ -159,6 +159,7 @@ public static class ExtensionMethods {
 
 
 	public static void CerrarSesion(this Window previousWindow) {
+		//App.Repositorio.Atenciones.clearCache?;
 		previousWindow.NavegarA<Login>();
 	}
 

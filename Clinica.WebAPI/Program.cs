@@ -31,6 +31,7 @@ builder.Services.AddSingleton<RepositorioMedicos>();
 builder.Services.AddSingleton<RepositorioUsuarios>();
 builder.Services.AddSingleton<RepositorioDominioServices>();
 builder.Services.AddSingleton<RepositorioHorarios>();
+builder.Services.AddSingleton<RepositorioAtenciones>();
 
 // Luego mapeás interfaces → implementación
 builder.Services.AddSingleton<IRepositorioPacientes, RepositorioPacientes>();
@@ -39,6 +40,7 @@ builder.Services.AddSingleton<IRepositorioMedicos, RepositorioMedicos>();
 builder.Services.AddSingleton<IRepositorioUsuarios, RepositorioUsuarios>();
 builder.Services.AddSingleton<IRepositorioDominioServices, RepositorioDominioServices>();
 builder.Services.AddSingleton<IRepositorioHorarios, RepositorioHorarios>();
+builder.Services.AddSingleton<IRepositorioAtenciones, RepositorioAtenciones>();
 
 // Servicios públicos
 builder.Services.AddSingleton<IServiciosDeDominio, ServiciosPublicos>();

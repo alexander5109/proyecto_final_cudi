@@ -89,6 +89,7 @@ public static class PermisoSistema {
 			AccionesDeUsuarioEnum.VerAtenciones,
 			AccionesDeUsuarioEnum.VerPacientes,
             AccionesDeUsuarioEnum.VerTurnos,
+            AccionesDeUsuarioEnum.VerMedicos,
 			AccionesDeUsuarioEnum.VerHorarios,
 			AccionesDeUsuarioEnum.SolicitarTurno,
 			AccionesDeUsuarioEnum.VerUsuarios
@@ -106,7 +107,7 @@ public static class PermisoSistema {
 		if (rol == UsuarioRoleEnum.Nivel1Superadmin)
 			return true;
 
-		return DiccionarioDeRoles.TryGetValue(rol, out var set)
+		return DiccionarioDeRoles.TryGetValue(rol, out HashSet<AccionesDeUsuarioEnum>? set)
 			   && set.Contains(permiso);
 	}
 	//public static bool HasPermission(this Usuario2025 u, AccionesDeUsuarioEnum permiso) => TienePermisosPara(u.EnumRole, permiso);

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
 //using Clinica.AppWPF.Ventanas;
 
@@ -42,5 +43,27 @@ public partial class GestionMedicos : Window {
 			MessageBox.Show("No hay médico seleccionado. (este boton deberia estar desabilitado)");
 		}
 
+	}
+
+	// ==========================================================
+	// BOTONES: REFRESH
+	// ==========================================================
+
+	private bool _enCooldown;
+	private async void ClickBoton_Refrescar(object sender, RoutedEventArgs e) {
+		if (_enCooldown)
+			return;
+		try {
+			_enCooldown = true;
+			if (sender is Button btn)
+				btn.IsEnabled = false;
+			await VM.RefrescarMedicosAsync();
+		} finally {
+			await Task.Delay(2000);
+			if (sender is Button btn)
+				btn.IsEnabled = true;
+
+			_enCooldown = false;
+		}
 	}
 }

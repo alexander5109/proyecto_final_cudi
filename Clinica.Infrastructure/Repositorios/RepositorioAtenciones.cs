@@ -14,21 +14,15 @@ public class RepositorioAtenciones(SQLServerConnectionFactory factory)
 	// -----------------------------
 	// Insertar atención
 	// -----------------------------
-	public Task<Result<AtencionId2025>> InsertAtencionReturnId(Atencion2025 instance)
-		=> TryAsync(async conn => {
-            AtencionId2025 newId = await conn.ExecuteScalarAsync<AtencionId2025>(
-				"sp_InsertAtencionReturnId",
-				new {
-					TurnoId = instance.TurnoId.Valor,
-					PacienteId = instance.PacienteId.Valor,
-					MedicoId = instance.MedicoId.Valor,
-					Observaciones = instance.Observaciones
-				},
-				commandType: CommandType.StoredProcedure
-			);
 
-			return newId;
-		});
+	Task<Result<AtencionId2025>> IRepositorioAtenciones.InsertAtencionReturnId(Atencion2025 instance)
+		=> TryAsync(async conn => await conn.ExecuteScalarAsync<AtencionId2025>(
+			"sp_InsertAtencionReturnId",
+			instance.ToModel(),
+			commandType: CommandType.StoredProcedure
+		));
+
+
 
 	// -----------------------------
 	// Actualizar observaciones
@@ -64,6 +58,18 @@ public class RepositorioAtenciones(SQLServerConnectionFactory factory)
 			return await conn.QueryAsync<AtencionDbModel>(
 				"sp_SelectAtencionesWherePacienteId",
 				new { PacienteId = id.Valor },
+				commandType: CommandType.StoredProcedure
+			);
+		});
+
+	// -----------------------------
+	// Seleccionar por medico
+	// -----------------------------
+	public Task<Result<IEnumerable<AtencionDbModel>>> SelectAtencionesWhereMedicoId(MedicoId2025 id)
+		=> TryAsync(async conn => {
+			return await conn.QueryAsync<AtencionDbModel>(
+				"sp_SelectAtencionesWhereMedicoId",
+				new { MedicoId = id.Valor },
 				commandType: CommandType.StoredProcedure
 			);
 		});

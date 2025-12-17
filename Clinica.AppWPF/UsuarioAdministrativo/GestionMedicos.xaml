@@ -92,13 +92,21 @@
 				<RowDefinition
 					Height="Auto" />
 			</Grid.RowDefinitions>
-			<Label
+			<StackPanel
 				Grid.Row="0"
-				Content="Buscar Medico"
-				FontSize="25"
-				Style="{StaticResource LabelLindoConTextoSombra}"
-				HorizontalAlignment="Center"
-				FontWeight="Bold" />
+				Orientation="Horizontal"
+				HorizontalAlignment="Center">
+				<Button
+					Click="ClickBoton_Refrescar"
+					Grid.Row="1"
+					Style="{StaticResource BotonRefrescar}"></Button>
+				<Label
+					Content="Buscar Medico"
+					FontSize="25"
+					Style="{StaticResource LabelLindoConTextoSombra}"
+					HorizontalAlignment="Center"
+					FontWeight="Bold" />
+			</StackPanel>
 			<Label
 				Grid.Row="1"
 				Content="Filtrar por Nombre, Apellido o Especialidad"

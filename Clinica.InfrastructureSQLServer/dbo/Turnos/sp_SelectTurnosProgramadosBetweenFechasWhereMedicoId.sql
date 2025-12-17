@@ -15,7 +15,7 @@ BEGIN
         OutcomeEstado
     FROM dbo.Turno
     WHERE MedicoId = @MedicoId
-      AND OutcomeEstado = 0 -- Programado
+      AND OutcomeEstado = 1 -- Programado
       AND FechaHoraAsignadaDesde < @FechaHasta
       AND FechaHoraAsignadaHasta > @FechaDesde
     ORDER BY FechaHoraAsignadaDesde ASC;
