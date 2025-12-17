@@ -99,6 +99,10 @@
 							Width="auto"
 							DisplayMemberBinding="{Binding EsperandoAtencion}" />
 						<GridViewColumn
+							Header="Estado"
+							Width="auto"
+							DisplayMemberBinding="{Binding Model.OutcomeEstado}" />
+						<GridViewColumn
 							Header="FueDiagnosticado"
 							Width="auto"
 							DisplayMemberBinding="{Binding FueAtendido}" />
@@ -178,15 +182,15 @@
 						<GridView>
 							<GridViewColumn
 								Header="Fecha"
-								Width="auto"
+								Width="66"
 								DisplayMemberBinding="{Binding Fecha}" />
 							<GridViewColumn
 								Header="Medico"
-								Width="auto"
+								Width="144"
 								DisplayMemberBinding="{Binding MedicoNombreApellido}" />
 							<GridViewColumn
 								Header="Observaciones"
-								Width="auto"
+								Width="222"
 								DisplayMemberBinding="{Binding Observaciones}" />
 						</GridView>
 					</ListView.View>
@@ -219,7 +223,7 @@
 					Text="{Binding Observaciones, Mode=TwoWay}"
 					AcceptsReturn="True"
 					TextWrapping="Wrap"
-					IsEnabled="{Binding PuedeDiagnosticar}"
+					IsEnabled="{Binding PuedeDiagnosticarYConfirmar}"
 					VerticalScrollBarVisibility="Auto"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch"
@@ -229,7 +233,7 @@
 					Content="✏ Confirmar"
 					Width="144"
 					Height="35"
-					IsEnabled="{Binding PuedeDiagnosticar}"
+					IsEnabled="{Binding PuedeDiagnosticarYConfirmar}"
 					Click="ClickBoton_ConfirmarObservacion"
 					Style="{StaticResource BotonRedondeadoCeleste}"
 					HorizontalAlignment="Center"

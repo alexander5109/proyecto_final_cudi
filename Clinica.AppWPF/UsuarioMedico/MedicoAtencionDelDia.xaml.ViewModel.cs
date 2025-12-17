@@ -90,7 +90,7 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 		}
 
 		SelectedPaciente = App.Repositorio.Pacientes.GetFromCachePacienteWhereId(SelectedTurno.Model.PacienteId);
-		OnPropertyChanged(nameof(PuedeDiagnosticar));
+		OnPropertyChanged(nameof(PuedeDiagnosticarYConfirmar));
 	}
 
 
@@ -101,32 +101,33 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	// METHODS.ASYNC
 	// ================================================================
 
-	public async Task ConfirmarDiagnosticoAsync() {
-		MessageBox.Show($"|SelectedPaciente?.Nombre: {SelectedPaciente?.Nombre} \n| SelectedTurno?.Hora: {SelectedTurno?.Model.FechaHoraAsignadaDesde}| SelectedTurno?.EsperandoAtencion: {SelectedTurno?.EsperandoAtencion}| ObservacionActual: {Observaciones}|");
+	public async Task<ResultWpf<UnitWpf>> ConfirmarDiagnosticoAsync() {
+
+		if (!PuedeDiagnosticarYConfirmar)
+			return new ResultWpf<UnitWpf>.Error(
+				new ErrorInfo("No hay cambios para guardar.", MessageBoxImage.Information)
+			);
+
+
+		//MessageBox.Show($"|SelectedPaciente?.Nombre: {SelectedPaciente?.Nombre} \n| SelectedTurno?.Hora: {SelectedTurno?.Model.FechaHoraAsignadaDesde}| SelectedTurno?.EsperandoAtencion: {SelectedTurno?.EsperandoAtencion}| ObservacionActual: {Observaciones}|");
 		if (SelectedPaciente == null || SelectedTurno == null || string.IsNullOrWhiteSpace(Observaciones)) {
-			return;
+			return new ResultWpf<UnitWpf>.Error(
+				new ErrorInfo("No hay nada seleccionado.", MessageBoxImage.Information)
+			);
 		}
 		// Solo permitir si el turno está concretado
-		if (!SelectedTurno.EsperandoAtencion) return;
+		if (!SelectedTurno.EsperandoAtencion)
+			return new ResultWpf<UnitWpf>.Error(
+				new ErrorInfo("El turno ya esta concretado.", MessageBoxImage.Information)
+			);
 
-		ResultWpf<UnitWpf> result = await App.Repositorio.Atenciones.AgendarAtencionConDiagnostico(new AtencionDto(
+		return await App.Repositorio.Atenciones.AgendarAtencionConDiagnostico(new AtencionDto(
 			SelectedTurno.Model.Id.Valor,
 			SelectedPaciente.Id.Valor,
 			CurrentMedicoId.Valor,
 			Observaciones
 			)
 		);
-		result.MatchAndDo(
-			async caseok => {
-				Observaciones = null;
-				MessageBox.Show("Llegamos a result.isok?");
-				await CargarAtencionesDePacienteSeleccionado();
-				await RefrescarMisTurnosAsync();
-
-			},
-			casError => { casError.ShowMessageBox(); }
-
-			);
 	}
 
 
@@ -167,14 +168,14 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	}
 
 
-	private async Task CargarAtencionesDePacienteSeleccionado() {
+	internal async Task CargarAtencionesDePacienteSeleccionado() {
 		AtencionesViewModelList.Clear();
 
 		if (SelectedPaciente is null) return;
 
 		List<AtencionDbModel>? atenciones = await App.Repositorio.Atenciones.SelectAtencionesWherePacienteId(SelectedPaciente.Id);
 
-		MessageBox.Show($"Atenciones de pacienteconid [ID: {SelectedPaciente.Id.Valor}]: [Count: {atenciones.Count}]");
+		//MessageBox.Show($"Atenciones de pacienteconid [ID: {SelectedPaciente.Id.Valor}]: [Count: {atenciones.Count}]");
 		if (atenciones is null || atenciones.Count == 0) return;
 
 
@@ -197,7 +198,7 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	// ================================================================
 	// REGLAS
 	// ================================================================
-	public bool PuedeDiagnosticar => SelectedTurno != null && SelectedTurno.EsperandoAtencion;
+	public bool PuedeDiagnosticarYConfirmar => SelectedTurno != null && SelectedTurno.EsperandoAtencion;
 
 	public bool HayPacienteSeleccionado => SelectedPaciente is not null;
 
@@ -218,9 +219,6 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 
 public record TurnoDeHoyVM(
 	TurnoDbModel Model,
-	//TurnoId2025 Id,
-	//PacienteId2025 PacienteId,
-	//string Hora,
 	string PacienteNombreApellido,
 	string PacienteEdad,
 	bool EsperandoAtencion,

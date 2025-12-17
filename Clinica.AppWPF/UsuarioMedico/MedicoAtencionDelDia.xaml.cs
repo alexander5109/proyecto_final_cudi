@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeIdentificacion;
 
 namespace Clinica.AppWPF.UsuarioMedico;
@@ -30,6 +31,17 @@ public partial class MedicoAtencionDelDia : Window {
 	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 
 	async private void ClickBoton_ConfirmarObservacion(object sender, RoutedEventArgs e) {
-		await VM.ConfirmarDiagnosticoAsync();
+		var result = await VM.ConfirmarDiagnosticoAsync();
+		result.MatchAndDo(
+			async caseOk => {
+				VM.Observaciones = null;
+				await VM.CargarAtencionesDePacienteSeleccionado();
+				await VM.RefrescarMisTurnosAsync();
+				MessageBox.Show("Cambios guardados.", "Éxito", MessageBoxButton.OK);
+			},
+			caseError => caseError.ShowMessageBox()
+		);
+
+
 	}
 }
