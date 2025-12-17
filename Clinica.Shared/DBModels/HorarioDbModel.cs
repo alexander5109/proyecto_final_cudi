@@ -35,7 +35,7 @@ public static partial class DbModels {
 		table.Columns.Add("VigenteDesde", typeof(DateTime));
 		table.Columns.Add("VigenteHasta", typeof(DateTime));
 
-		foreach (var f in agg.Franjas) {
+		foreach (HorarioFranja2026 f in agg.Franjas) {
 			table.Rows.Add(
 				(byte)f.DiaSemana,
 				f.HoraDesde.ToTimeSpan(),

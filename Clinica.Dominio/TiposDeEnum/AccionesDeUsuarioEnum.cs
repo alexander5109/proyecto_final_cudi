@@ -107,7 +107,7 @@ public static class PermisoSistema {
 		if (rol == UsuarioRoleEnum.Nivel1Superadmin)
 			return true;
 
-		return DiccionarioDeRoles.TryGetValue(rol, out var set)
+		return DiccionarioDeRoles.TryGetValue(rol, out HashSet<AccionesDeUsuarioEnum>? set)
 			   && set.Contains(permiso);
 	}
 	//public static bool HasPermission(this Usuario2025 u, AccionesDeUsuarioEnum permiso) => TienePermisosPara(u.EnumRole, permiso);

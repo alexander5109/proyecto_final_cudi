@@ -18,7 +18,7 @@ public class ServiciosPublicos : IServiciosDeDominio {
 		if (rol == UsuarioRoleEnum.Nivel1Superadmin)
 			return Enum.GetValues<AccionesDeUsuarioEnum>();
 
-		if (!PermisoSistema.DiccionarioDeRoles.TryGetValue(rol, out var permisos))
+		if (!PermisoSistema.DiccionarioDeRoles.TryGetValue(rol, out HashSet<AccionesDeUsuarioEnum>? permisos))
 			return Array.Empty<AccionesDeUsuarioEnum>();
 
 		return permisos;

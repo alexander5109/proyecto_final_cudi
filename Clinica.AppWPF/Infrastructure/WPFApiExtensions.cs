@@ -12,7 +12,7 @@ namespace Clinica.AppWPF.Infrastructure;
 public static class ApiExtensions {
 	static async Task<ApiErrorDto?> ReadApiError(HttpResponseMessage response) {
 		try {
-			var envelope = await response.Content.ReadFromJsonAsync<ApiErrorDto>();
+            ApiErrorDto? envelope = await response.Content.ReadFromJsonAsync<ApiErrorDto>();
 
 			return envelope;
 		} catch {

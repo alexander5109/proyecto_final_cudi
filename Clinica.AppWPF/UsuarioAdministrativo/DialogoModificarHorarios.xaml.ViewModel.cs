@@ -559,7 +559,7 @@ public class TimeOnly24hConverter : IValueConverter {
 
 	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
 		if (value is string text &&
-			TimeOnly.TryParseExact(text, Format, culture, DateTimeStyles.None, out var time)) {
+			TimeOnly.TryParseExact(text, Format, culture, DateTimeStyles.None, out TimeOnly time)) {
 			return time;
 		}
 

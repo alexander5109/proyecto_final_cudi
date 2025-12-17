@@ -1,6 +1,7 @@
 ﻿using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeEntidad;
 using Clinica.Dominio.TiposDeIdentificacion;
+using Clinica.Dominio.TiposDeValor;
 using Clinica.Dominio.TiposExtensiones;
 
 namespace Clinica.Dominio.TiposDeAgregado;
@@ -40,12 +41,12 @@ public record HorarioFranja2026(
 		if (DiaSemana != other.DiaSemana)
 			return false;
 
-		// intersección de vigencias
-		var desde = VigenteDesde > other.VigenteDesde
+        // intersección de vigencias
+        DateOnly desde = VigenteDesde > other.VigenteDesde
 			? VigenteDesde
 			: other.VigenteDesde;
 
-		var hasta = MinNullable(VigenteHasta, other.VigenteHasta);
+        DateOnly? hasta = MinNullable(VigenteHasta, other.VigenteHasta);
 
 		if (hasta is not null && desde > hasta)
 			return false;
@@ -85,10 +86,10 @@ public record HorarioFranja2026(
 				"Error en horario {dia.ATexto()} {desde}-{hasta} vigente entre {vigenteDesde}{vigenteHasta}: \n   La fecha de inicio de vigencia debe ser anterior a la fecha de fin."
 			);
 
-		// -----------------------------
-		// REGLAS DE NEGOCIO (CLÍNICA)
-		// -----------------------------
-		var atencion = ClinicaNegocio.Atencion;
+        // -----------------------------
+        // REGLAS DE NEGOCIO (CLÍNICA)
+        // -----------------------------
+        HorarioDeAtencion atencion = ClinicaNegocio.Atencion;
 
 		if (desde < atencion.DesdeHs || hasta > atencion.HastaHs)
 			return new Result<HorarioFranja2026>.Error(

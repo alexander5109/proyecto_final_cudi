@@ -81,8 +81,21 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 
 
 	// ================================================================
-	// METHODS
+	// METHODS.PUBLIC
 	// ================================================================
+
+	internal async Task RefrescarTodosMisTurnosAsync() {
+		//QUE REFRESQUE A _todosMisTurnos, no solo los en pantalla.
+	}
+
+	internal async Task PostConfirmarDiagnosticoAsync() {
+		Observaciones = null;
+		await CargarAtencionesDePacienteSeleccionado();
+		await RefrescarMisTurnosAsync();
+		OnPropertyChanged(nameof(PuedeDiagnosticarYConfirmar));
+	}
+
+
 
 	private void ActualizarPacienteDesdeTurno() {
 		if (SelectedTurno == null) {
@@ -93,7 +106,6 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 		SelectedPaciente = App.Repositorio.Pacientes.GetFromCachePacienteWhereId(SelectedTurno.Model.PacienteId);
 		OnPropertyChanged(nameof(PuedeDiagnosticarYConfirmar));
 	}
-
 
 	private string CalcularEdad(DateTime fechaNacimiento) =>
 		(DateTime.Today.Year - fechaNacimiento.Year - (DateTime.Today < fechaNacimiento.AddYears(DateTime.Today.Year - fechaNacimiento.Year) ? 1 : 0)).ToString();
@@ -139,22 +151,26 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	}
 
 
-	internal async Task RefrescarMisTurnosAsync() {
+	internal async Task CargaInicial() {
+
+		await RefrescarMisTurnosAsync();
+	}
+
+
+	private async Task RefrescarMisTurnosAsync() {
 
 		// 1. Cargar caches necesarios
 		await App.Repositorio.Pacientes.RefreshCache();
 		await App.Repositorio.Medicos.RefreshCache();
 
 		// 2. Traer TODOS mis turnos
-		List<TurnoDbModel> turnos =
-			await App.Repositorio.Turnos.SelectTurnosWhereMedicoId(CurrentMedicoId);
+		List<TurnoDbModel> turnos =await App.Repositorio.Turnos.SelectTurnosWhereMedicoId(CurrentMedicoId);
 
 		_todosLosTurnos = turnos;
 
 		// 3. Traer TODAS las atenciones asociadas a MIS turnos
 		//    (sirve solo para saber si el turno ya fue atendido)
-		var atencionesDelMedico =
-			await App.Repositorio.Atenciones.SelectAtencionesWhereMedicoId(CurrentMedicoId);
+		List<AtencionDbModel> atencionesDelMedico = await App.Repositorio.Atenciones.SelectAtencionesWhereMedicoId(CurrentMedicoId);
 
 		var turnosAtendidos = atencionesDelMedico
 			.Select(a => a.TurnoId)
@@ -163,9 +179,9 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 		// 4. Reconstruir la lista
 		TurnosList.Clear();
 
-		foreach (var turno in turnos.OrderBy(t => t.FechaHoraAsignadaDesde)) {
+		foreach (TurnoDbModel? turno in turnos.OrderBy(t => t.FechaHoraAsignadaDesde)) {
 
-			var paciente = App.Repositorio.Pacientes
+			PacienteDbModel? paciente = App.Repositorio.Pacientes
 				.GetFromCachePacienteWhereId(turno.PacienteId);
 
 			if (paciente is null) {
@@ -193,37 +209,52 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 
 
 	internal async Task CargarAtencionesDePacienteSeleccionado() {
+
 		AtencionesViewModelList.Clear();
 
-		if (SelectedPaciente is null) return;
-		if (SelectedTurno is null) return;
+		if (SelectedPaciente is null)
+			return;
 
-		var atenciones = await App.Repositorio.Atenciones.SelectAtencionesWhereMedicoId(CurrentMedicoId);
+		// 1. Especialidad del médico actual (desde cache)
+		EspecialidadEnum? especialidadActual =
+			App.Repositorio.Medicos.GetFromCacheMedicoWhereId(CurrentMedicoId)?.EspecialidadCodigo;
 
-		HashSet<TurnoId2025> turnosAtendidos = atenciones
-			.Select(a => a.TurnoId)
-			.ToHashSet();
+		if (especialidadActual is null)
+			return;
 
-		bool tieneAtencion = turnosAtendidos.Contains(SelectedTurno.Model.Id);
+		// 2. Traer TODAS las atenciones del paciente
+		List<AtencionDbModel>? atencionesPaciente =
+			await App.Repositorio.Atenciones
+				.SelectAtencionesWherePacienteId(SelectedPaciente.Id);
 
-		//MessageBox.Show($"Atenciones de pacienteconid [ID: {SelectedPaciente.Id.Valor}]: [Count: {atenciones.Count}]");
-		if (atenciones is null || atenciones.Count == 0) return;
+		if (atencionesPaciente is null || atencionesPaciente.Count == 0)
+			return;
 
+		// 3. Filtrar por misma especialidad
+		IOrderedEnumerable<AtencionDbModel> atencionesFiltradas = atencionesPaciente
+			.Where(a => {
+				MedicoDbModel? medico = App.Repositorio.Medicos.GetFromCacheMedicoWhereId(a.MedicoId);
 
-		foreach (AtencionDbModel atencion in atenciones.OrderByDescending(x => x.Fecha)) {
-			//TurnoDbModel? turno = _todosLosTurnos.FirstOrDefault(t => t.Id == atencion.TurnoId);
-			//string horaStr = turno?.FechaHoraAsignadaDesde.ToString("HH:mm") ?? "";
+				return medico?.EspecialidadCodigo == especialidadActual;
+			})
+			.OrderByDescending(a => a.Fecha);
 
+		// 4. Construir VMs
+		foreach (AtencionDbModel? atencion in atencionesFiltradas) {
 
-			string selectedMedicoNombreCompleto = App.Repositorio.Medicos.GetFromCacheMedicoDisplayWhereId(atencion.MedicoId);
+			string medicoNombreCompleto =
+				App.Repositorio.Medicos
+					.GetFromCacheMedicoDisplayWhereId(atencion.MedicoId)
+				?? "Médico desconocido";
 
 			AtencionesViewModelList.Add(new AtencionPreviaVM(
 				Fecha: atencion.Fecha.ToString("yyyy-MM-dd HH:mm"),
-				MedicoNombreApellido: selectedMedicoNombreCompleto!,
+				MedicoNombreApellido: medicoNombreCompleto,
 				Observaciones: atencion.Observaciones
 			));
 		}
 	}
+
 
 
 	// ================================================================
@@ -241,12 +272,6 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 
 	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-	internal async Task PostConfirmarDiagnosticoAsync() {
-		Observaciones = null;
-		await CargarAtencionesDePacienteSeleccionado();
-		await RefrescarMisTurnosAsync();
-		OnPropertyChanged(nameof(PuedeDiagnosticarYConfirmar));
-	}
 
 
 	public event PropertyChangedEventHandler? PropertyChanged;

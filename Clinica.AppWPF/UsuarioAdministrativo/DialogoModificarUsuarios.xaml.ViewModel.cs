@@ -228,7 +228,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 	private async Task<ResultWpf<UnitWpf>> GuardarCreacionAsync() {
 		return await ToCreacionDomain()
 			.Bind(async usuario => {
-				var result = await App.Repositorio.Usuarios.InsertUsuarioReturnId(usuario);
+                ResultWpf<UsuarioId2025> result = await App.Repositorio.Usuarios.InsertUsuarioReturnId(usuario);
 
 				return result.MatchTo(
 					ok => {
@@ -297,7 +297,7 @@ public class DialogoUsuarioModificarVM : INotifyPropertyChanged {
 
 		List<MedicoDbModel> medicosDisponibles = await App.Repositorio.Medicos.SelectMedicos();
 
-		foreach (var medico in medicosDisponibles) {
+		foreach (MedicoDbModel medico in medicosDisponibles) {
 			MedicosDisponibles.Add(new MedicoVinculadoViewModel(
 				$"{medico.Nombre} {medico.Apellido} {medico.EspecialidadCodigo} ", medico.Id));
 		}

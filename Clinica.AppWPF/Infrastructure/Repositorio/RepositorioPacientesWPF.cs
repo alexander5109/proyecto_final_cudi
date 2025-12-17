@@ -108,7 +108,7 @@ public class RepositorioPacientesWPF : IRepositorioPacientesWPF {
 
 
 	PacienteDbModel? IRepositorioPacientesWPF.GetFromCachePacienteWhereId(PacienteId2025 id) {
-		DictCache.TryGetValue(id, out var paciente);
+		DictCache.TryGetValue(id, out PacienteDbModel? paciente);
 		return paciente;
 	}
 }

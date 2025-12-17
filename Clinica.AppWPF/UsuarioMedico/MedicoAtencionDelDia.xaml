@@ -59,12 +59,19 @@
 			<StackPanel
 				Grid.Row="0"
 				HorizontalAlignment="Center">
-				<Label
-					Content="Turnos de hoy"
-					FontSize="25"
-					Style="{StaticResource LabelLindoConTextoSombra}"
-					HorizontalAlignment="Center"
-					FontWeight="Bold" />
+				<StackPanel
+					Orientation="Horizontal">
+					<Button
+						Click="ClickBoton_Refrescar"
+						Grid.Row="1"
+						Style="{StaticResource BotonRefrescar}"></Button>
+					<Label
+						Content="Turnos de hoy"
+						FontSize="25"
+						Style="{StaticResource LabelLindoConTextoSombra}"
+						HorizontalAlignment="Center"
+						FontWeight="Bold" />
+				</StackPanel>
 				<DatePicker
 					SelectedDate="{Binding SelectedFecha, Mode=TwoWay}"
 					SelectedDateFormat="Short"

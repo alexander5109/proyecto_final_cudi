@@ -135,10 +135,13 @@ public class RepositorioMedicosWPF : IRepositorioMedicosWPF {
 		return [.. DictCache.Values];
 	}
 
-	
-	
-	
-	
-	
-	
+
+
+	MedicoDbModel? IRepositorioMedicosWPF.GetFromCacheMedicoWhereId(MedicoId2025 id) {
+		DictCache.TryGetValue(id, out MedicoDbModel? medico);
+		return medico;
+	}
+
+
+
 }

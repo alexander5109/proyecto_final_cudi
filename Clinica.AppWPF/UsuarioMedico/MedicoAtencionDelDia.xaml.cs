@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using Clinica.AppWPF.Infrastructure;
 using Clinica.Dominio.FunctionalToolkit;
 using Clinica.Dominio.TiposDeIdentificacion;
@@ -19,22 +20,20 @@ public partial class MedicoAtencionDelDia : Window {
 			VM = new MedicoAtencionDelDiaVM(medicoIdGood);
 			DataContext = VM;
 
-			Loaded += async (_, __) => await VM.RefrescarMisTurnosAsync();
+			Loaded += async (_, __) => await VM.CargaInicial();
 		}
 	}
 
 
+
 	// ==========================================================
-	// BOTONES: NAV
+	// BOTONES: PERSISTENCIA
 	// ==========================================================
-	private void ClickBoton_Home(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
-	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 
 	async private void ClickBoton_ConfirmarObservacion(object sender, RoutedEventArgs e) {
-		var result = await VM.ConfirmarDiagnosticoAsync();
+		ResultWpf<UnitWpf> result = await VM.ConfirmarDiagnosticoAsync();
 		result.MatchAndDo(
 			async _ => {
-				await VM.PostConfirmarDiagnosticoAsync();
 				MessageBox.Show("Cambios guardados.", "Éxito");
 			},
 			err => err.ShowMessageBox()
@@ -42,4 +41,32 @@ public partial class MedicoAtencionDelDia : Window {
 
 
 	}
+
+	// ==========================================================
+	// BOTONES: REFRESH
+	// ==========================================================
+
+	private bool _enCooldown;
+	private async void ClickBoton_Refrescar(object sender, RoutedEventArgs e) {
+		if (_enCooldown)
+			return;
+		try {
+			_enCooldown = true;
+			if (sender is Button btn)
+				btn.IsEnabled = false;
+			await VM.RefrescarTodosMisTurnosAsync();
+		} finally {
+			await Task.Delay(2000);
+			if (sender is Button btn)
+				btn.IsEnabled = true;
+
+			_enCooldown = false;
+		}
+	}
+
+	// ==========================================================
+	// BOTONES: NAV
+	// ==========================================================
+	private void ClickBoton_Home(object sender, RoutedEventArgs e) => this.IrARespectivaHome();
+	private void ClickBoton_Salir(object sender, RoutedEventArgs e) => this.Salir();
 }
