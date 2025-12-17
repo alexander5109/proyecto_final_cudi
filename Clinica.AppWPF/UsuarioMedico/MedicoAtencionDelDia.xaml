@@ -5,8 +5,6 @@
 	Title="Clinica Medica - Home"
 	Width="1024"
 	Height="600"
-	MinWidth="1024"
-	MinHeight="600"
 	WindowStartupLocation="CenterScreen">
 	<Window.Background>
 		<ImageBrush

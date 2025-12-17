@@ -2,7 +2,7 @@
 	x:Class="Clinica.AppWPF.UsuarioRecepcionista.DialogoPacienteModificar"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	Title="Clinica Medica - Pacientes Agregar"
+	Title="Clinica Medica - Pacientes"
 	Width="1024"
 	Height="600"
 	Icon="pack://application:,,,/PublishedResources/icons/icono.png"
