@@ -28,10 +28,16 @@ BEGIN
     INSERT INTO dbo.Medico 
         (Id, Email, Nombre, Apellido, ProvinciaCodigo, Domicilio, Localidad, EspecialidadCodigo, Telefono, HaceGuardias, FechaIngreso, Dni)
     VALUES 
-        (1, 'Ricardo@gmail.com', 'Dr. Ricardo', 'Arjona', 2, 'Av. Siempre Viva 123', 'Capital Federal', 1, '1234567890', 1, '20220115', '12345678'),
-        (2, 'TocandoShells@gmail.com', 'Dr. Tocando', 'Shells', 14, 'Calle Falsa 456', 'Villa Carlos Paz', 9, '2345678901', 0, '20210520', '87654321'),
-        (7, 'Miguelito12@gmail.com', 'Dr. Miguel', 'DedoGordo', 12, 'Ruta 40 Km 13', 'Italia', 4, '2348905216', 0, '20211003', '54355292'),
-        (8, 'carlosmerkier@gmail.com', 'Dr. Carlos', 'Merkier', 10, 'Av. Curva Peligrosa 78', 'Resistencia', 6, '6781234567', 1, '20230714', '65432198')
+        (1, 'Ricardo@gmail.com', 'Dr. Ricardo', 'Arjona', 1, 'Av. Siempre Viva 123', 'Capital Federal', 1, '1234567890', 1, '20220115', '12345678'),
+        (2, 'TocandoShells@gmail.com', 'Dr. Tocando', 'Shells', 2, 'Calle Falsa 456', 'Villa Carlos Paz', 9, '2345678901', 0, '20210520', '87654321'),
+        (3, 'MarioPergo123@gmail.com', 'Dr. Mario', 'Socolinsky', 3, 'Ruta 40 Km 12', 'Godoy Cruz', 7, '3456789012', 1, '20200910', '11223344'),
+        (4, 'Roxana123@gmail.com', 'Dra. Roxana', 'Toledo', 4, 'Calle San Martin 100', 'Salta', 5, '4567890123', 0, '20230205', '55667788'),
+        (5, 'TeteFalopa@gmail.com', 'Dra. Tete', 'Falopa', 5, 'Boulevard Galvez 2000', 'Rosario',  3, '5678901234', 1, '20191225', '99887766'),
+        (6, 'Debora123@gmail.com', 'Dra. Debora', 'Meltrozo', 6, 'Ruta 40 Km 10', 'Uruguay', 2, '1238909252', 1, '20241005', '40350997'),
+        (7, 'Miguelito12@gmail.com', 'Dr. Miguel', 'DedoGordo', 7, 'Ruta 40 Km 13', 'Italia', 4, '2348905216', 0, '20211003', '54355292'),
+        (8, 'Felipe123@gmail.com', 'Dr. Felipe', 'Estomagón', 8, 'Av. Curva Peligrosa 78', 'Resistencia', 6, '6781234567', 1, '20230714', '65432198'),
+        (9, 'Paco123@gmail.com', 'Dr. Paco', 'Lespiedras', 9, 'Ruta de Tierra 99', 'Posadas', 8, '7892345678', 0, '20221101', '45678901'),
+        (10, 'Clara123@gmail.com', 'Dra. Clara', 'Mentoni', 10, 'Calle Polvorienta 101', 'Santa Rosa', 10, '8903456789', 1, '20200420', '11225588');
     SET IDENTITY_INSERT dbo.Medico OFF;
 END;
 GO
@@ -53,13 +59,38 @@ END;
 GO
 
 ----------------------------------------------------
+
+
+IF NOT EXISTS (SELECT 1 FROM dbo.Horario)
+BEGIN
+    INSERT INTO dbo.Horario 
+        (MedicoId, DiaSemana, HoraDesde, HoraHasta, VigenteDesde, VigenteHasta)
+    VALUES
+        (1, 3, '12:00', '17:00', '2025-01-01', NULL),
+        (1, 5, '12:00', '17:00', '2025-01-01', NULL),
+        (1, 2, '08:30', '12:00', '2025-01-01', NULL),
+        (1, 4, '08:30', '12:00', '2025-01-01', NULL),
+        (1, 6, '08:30', '12:00', '2025-01-01', NULL),
+
+        (2, 3, '10:00', '17:00', '2025-01-01', NULL),
+        (2, 5, '10:00', '17:00', '2025-01-01', NULL),
+
+        (3, 4, '11:00', '14:00', '2025-01-01', NULL),
+        (3, 2, '11:00', '14:00', '2025-01-01', NULL),
+
+        (5, 6, '09:00', '13:00', '2025-01-01', NULL),
+        (5, 6, '15:00', '17:00', '2025-01-01', NULL);
+END;
+GO
+
+----------------------------------------------------
 -- Cargar datos de ejemplo en Paciente
 ----------------------------------------------------
 IF NOT EXISTS (SELECT 1 FROM dbo.Paciente)
 BEGIN
     INSERT INTO dbo.Paciente (Dni, Nombre, Apellido, FechaIngreso, Domicilio, ProvinciaCodigo, Localidad, Telefono, Email, FechaNacimiento)
     VALUES 
-        ('87654321', 'Ariel', 'Baez', '2023-04-15 09:30', 'Calle Flores 123', 1, 'Gregorio de Laferrere', '1234567890', 'ana.gonzalez@example.com', '1985-06-10'),
+        ('87654321', 'Ana', 'Gonzalez', '2023-04-15 09:30', 'Calle Flores 123', 1, 'Gregorio de Laferrere', '1234567890', 'ana.gonzalez@example.com', '1990-06-10'),
         ('12345678', 'Carlos', 'Pereira', '2022-11-30 14:45', 'Av. Libertad 456', 2, 'Venado Tuerto', '2345678901', 'carlos.pereira@example.com', '1985-02-18'),
         ('23456789', 'Maria', 'Lopez', '2024-01-05 08:00', 'San Martin 789',3, 'El erizo', '3456789012', 'maria.lopez@example.com', '1992-09-25'),
         ('34567890', 'Juan', 'Martinez', '2021-08-20 10:15', 'Ruta 9 Km 15', 4, 'Las Flores', '4567890123', 'juan.martinez@example.com', '1978-12-05'),
@@ -77,4 +108,24 @@ GO
 ----------------------------------------------------
 -- Cargar datos de ejemplo en Turno
 ----------------------------------------------------
+IF NOT EXISTS (SELECT 1 FROM dbo.Turno)
+BEGIN
+    INSERT INTO dbo.Turno 
+        (FechaDeCreacion, PacienteId, MedicoId, EspecialidadCodigo, FechaHoraAsignadaDesde, FechaHoraAsignadaHasta, OutcomeEstado, OutcomeFecha, OutcomeComentario)
+    VALUES
+        ('2025-01-10 08:00', 1, 1, 1, '2025-01-15 09:00', '2025-01-15 09:30', 4, '2025-01-15 09:30', 'Ok'),
+        ('2025-01-12 10:30', 2, 2, 9, '2025-01-18 11:00', '2025-01-18 11:30', 4, '2025-01-15 09:30', 'Ok'),
+
+        ('2025-01-14 09:45', 3, 3, 7, '2025-01-20 08:30', '2025-01-20 09:00', 3, '2025-01-16 09:45', 'Cancelado por accidente'),
+        ('2025-01-16 09:45', 3, 3, 7, '2025-01-24 08:30', '2025-01-24 09:00', 4, '2025-01-24 09:45', 'Ok'),
+
+        ('2025-01-15 11:00', 4, 4, 5, '2025-01-22 10:00', '2025-01-22 10:30', 2, '2025-01-22 10:30', 'Ausente y no avisó'),
+        ('2025-01-16 14:00', 5, 5, 3, '2025-01-25 14:30', '2025-01-25 15:00', 2, '2025-01-22 10:30', 'Ausente y no avisó'),
+        ('2025-01-17 15:10', 6, 6, 2, '2025-01-26 16:00', '2025-01-26 16:30', 4, '2025-01-26 16:30', 'Ok'),
+        ('2025-11-18 09:20', 7, 7, 4, '2026-01-28 09:00', '2026-01-28 09:30', 1, NULL, NULL),
+        ('2025-11-18 11:40', 8, 8, 6, '2026-01-29 10:00', '2026-01-29 10:30', 1, NULL, NULL),
+        ('2025-11-19 13:00', 9, 9, 8,'2026-01-30 11:00', '2026-01-30 11:30', 1, NULL, NULL),
+        ('2025-11-21 15:30', 10, 10, 10, '2026-02-01 12:00', '2026-02-01 12:30', 1, NULL, NULL);
+END;
+GO
 PRINT 'POST DEPLOY COMPLETO';
