@@ -54,7 +54,7 @@ public partial class MedicoAtencionDelDia : Window {
 			_enCooldown = true;
 			if (sender is Button btn)
 				btn.IsEnabled = false;
-			await VM.RefrescarTodosMisTurnosAsync();
+			await VM.RefrescarTodo();
 		} finally {
 			await Task.Delay(2000);
 			if (sender is Button btn)

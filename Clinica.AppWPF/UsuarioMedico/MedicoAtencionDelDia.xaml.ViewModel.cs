@@ -29,6 +29,7 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 			if (_selectedFecha == value) return;
 			_selectedFecha = value;
 			OnPropertyChanged(nameof(SelectedFecha));
+			AplicarFiltroPorFecha(); // 🔥 CLAVE
 		}
 	}
 
@@ -75,18 +76,31 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	// ================================================================
 
 	public ObservableCollection<AtencionPreviaVM> AtencionesViewModelList { get; } = [];
-	private List<TurnoDbModel> _todosLosTurnos = []; // Copia completa para filtrar
 	public ObservableCollection<TurnoDeHoyVM> TurnosList { get; } = [];
-
+	private List<TurnoDbModel> _todosLosTurnos = [];
+	private List<AtencionDbModel> _atencionesDelDia = [];
 
 
 	// ================================================================
 	// METHODS.PUBLIC
 	// ================================================================
 
-	internal async Task RefrescarTodosMisTurnosAsync() {
-		//QUE REFRESQUE A _todosMisTurnos, no solo los en pantalla.
+	internal async Task RefrescarTodo() {
+
+		await App.Repositorio.Pacientes.RefreshCache();
+		await App.Repositorio.Medicos.RefreshCache();
+
+		_todosLosTurnos =
+			await App.Repositorio.Turnos
+				.SelectTurnosWhereMedicoId(CurrentMedicoId);
+
+		_atencionesDelDia =
+			await App.Repositorio.Atenciones
+				.SelectAtencionesWhereMedicoId(CurrentMedicoId);
+
+		AplicarFiltroPorFecha();
 	}
+
 
 	internal async Task PostConfirmarDiagnosticoAsync() {
 		Observaciones = null;
@@ -95,6 +109,9 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 		OnPropertyChanged(nameof(PuedeDiagnosticarYConfirmar));
 	}
 
+	private void RestaurarSeleccionTurnoSiExiste(TurnoId2025 turnoId) {
+		SelectedTurno = TurnosList.FirstOrDefault(t => t.Model.Id == turnoId);
+	}
 
 
 	private void ActualizarPacienteDesdeTurno() {
@@ -113,6 +130,51 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	// ================================================================
 	// METHODS.ASYNC
 	// ================================================================
+
+	private void AplicarFiltroPorFecha() {
+
+		TurnoId2025? turnoSeleccionadoId = SelectedTurno?.Model.Id;
+
+		TurnosList.Clear();
+
+		var turnosAtendidos = _atencionesDelDia
+			.Select(a => a.TurnoId)
+			.ToHashSet();
+
+		var turnosDelDia = _todosLosTurnos
+			.Where(t => t.FechaHoraAsignadaDesde.Date == SelectedFecha.Date)
+			.OrderBy(t => t.FechaHoraAsignadaDesde);
+
+		foreach (var turno in turnosDelDia) {
+
+			var paciente = App.Repositorio.Pacientes
+				.GetFromCachePacienteWhereId(turno.PacienteId);
+
+			if (paciente is null)
+				continue;
+
+			bool esTurnoConcretado =
+				turno.OutcomeEstado == TurnoEstadoEnum.Concretado;
+
+			bool tieneAtencion =
+				turnosAtendidos.Contains(turno.Id);
+
+			TurnosList.Add(new TurnoDeHoyVM(
+				model: turno,
+				pacienteNombreApellido: $"{paciente.Nombre} {paciente.Apellido}",
+				pacienteEdad: CalcularEdad(paciente.FechaNacimiento),
+				esTurnoConcretado: esTurnoConcretado,
+				tieneAtencion: tieneAtencion
+			));
+		}
+
+		if (turnoSeleccionadoId is not null)
+			SelectedTurno = TurnosList.FirstOrDefault(t => t.Model.Id == turnoSeleccionadoId);
+
+		OnPropertyChanged(nameof(PuedeDiagnosticarYConfirmar));
+	}
+
+
 
 	public async Task<ResultWpf<UnitWpf>> ConfirmarDiagnosticoAsync() {
 
@@ -164,7 +226,7 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 		await App.Repositorio.Medicos.RefreshCache();
 
 		// 2. Traer TODOS mis turnos
-		List<TurnoDbModel> turnos =await App.Repositorio.Turnos.SelectTurnosWhereMedicoId(CurrentMedicoId);
+		List<TurnoDbModel> turnos = await App.Repositorio.Turnos.SelectTurnosWhereMedicoId(CurrentMedicoId);
 
 		_todosLosTurnos = turnos;
 
