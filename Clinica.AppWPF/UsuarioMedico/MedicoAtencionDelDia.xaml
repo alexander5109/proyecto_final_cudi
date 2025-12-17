@@ -68,12 +68,17 @@
 					HorizontalAlignment="Center"
 					FontWeight="Bold" />
 				<DatePicker
-					HorizontalAlignment="Center" />
+					SelectedDate="{Binding SelectedFecha, Mode=TwoWay}"
+					SelectedDateFormat="Short"
+					Text="{Binding SelectedFecha, StringFormat=dd/MM/yyyy}"
+					Margin="0,5,0,5"
+					HorizontalAlignment="Center"
+					Width="200" />
 			</StackPanel>
 			<!-- ListView de turnos -->
 			<ListView
 				Grid.Row="1"
-				ItemsSource="{Binding TurnosDelDia}"
+				ItemsSource="{Binding TurnosList}"
 				SelectedItem="{Binding TurnoSeleccionado}"
 				Margin="10"
 				ScrollViewer.VerticalScrollBarVisibility="Auto">
@@ -81,19 +86,19 @@
 					<GridView>
 						<GridViewColumn
 							Header="Hora"
-							Width="70"
-							DisplayMemberBinding="{Binding HoraDesde}" />
+							Width="auto"
+							DisplayMemberBinding="{Binding Hora}" />
 						<GridViewColumn
-							Header="PacienteNombreApellido"
-							Width="155"
+							Header="Paciente"
+							Width="auto"
 							DisplayMemberBinding="{Binding PacienteNombreApellido}" />
 						<GridViewColumn
-							Header="PacienteEdad"
-							Width="155"
+							Header="Edad"
+							Width="auto"
 							DisplayMemberBinding="{Binding PacienteEdad}" />
 						<GridViewColumn
 							Header="FueAtendido"
-							Width="55"
+							Width="auto"
 							DisplayMemberBinding="{Binding FueAtendido}" />
 					</GridView>
 				</ListView.View>

@@ -14,7 +14,21 @@ namespace Clinica.AppWPF.UsuarioMedico;
 public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INotifyPropertyChanged {
 	// ==========================================================
 	// BOTONES: SELECTED ITEMS
-	// ==========================================================
+	// ==========================================================.
+
+
+
+
+	private DateTime _selectedFecha = DateTime.Now;
+	public DateTime SelectedFecha {
+		get => _selectedFecha;
+		set {
+			if (_selectedFecha == value) return;
+			_selectedFecha = value;
+			OnPropertyChanged(nameof(SelectedFecha));
+		}
+	}
+
 
 	private PacienteDbModel? _selectedPaciente;
 	public PacienteDbModel? SelectedPaciente {
@@ -55,7 +69,7 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	// ================================================================
 	// COLECCIONES
 	// ================================================================
-	
+
 	public ObservableCollection<AtencionPreviaVM> AtencionesViewModelList { get; } = [];
 	private List<TurnoDbModel> _todosLosTurnos = []; // Copia completa para filtrar
 	public ObservableCollection<TurnoDeHoyVM> TurnosList { get; } = [];
@@ -130,8 +144,12 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 				Hora: t.FechaHoraAsignadaDesde.ToString("HH:mm"),
 				PacienteNombreApellido: $"{paciente.Nombre} {paciente.Apellido}",
 				PacienteEdad: CalcularEdad(paciente.FechaNacimiento),
-				FueAtendido: t.OutcomeEstado == TurnoEstadoEnum.Concretado ? "✔" : ""
-			));
+				FueAtendido: "" // actually, should be ✔ if there's an Atencion record with this turnoId
+
+
+								//FueAtendido: t.OutcomeEstado == TurnoEstadoEnum.Concretado ? "✔" : ""
+				)
+			);
 		}
 	}
 
@@ -141,14 +159,14 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 
 		if (SelectedPaciente is null) return;
 
-        List<AtencionDbModel>? atenciones = await App.Repositorio.Atenciones.SelectAtencionesWherePacienteId(SelectedPaciente.Id);
+		List<AtencionDbModel>? atenciones = await App.Repositorio.Atenciones.SelectAtencionesWherePacienteId(SelectedPaciente.Id);
 
 		if (atenciones is null || atenciones.Count == 0) return;
 
 
 		foreach (AtencionDbModel atencion in atenciones.OrderByDescending(x => x.FechaHora)) {
-            TurnoDbModel? turno = _todosLosTurnos.FirstOrDefault(t => t.Id == atencion.TurnoId);
-            string horaStr = turno?.FechaHoraAsignadaDesde.ToString("HH:mm") ?? "";
+			TurnoDbModel? turno = _todosLosTurnos.FirstOrDefault(t => t.Id == atencion.TurnoId);
+			string horaStr = turno?.FechaHoraAsignadaDesde.ToString("HH:mm") ?? "";
 
 
 			string selectedMedicoNombreCompleto = App.Repositorio.Medicos.GetFromCacheMedicoDisplayWhereId(atencion.MedicoId);
@@ -167,12 +185,12 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	// ================================================================
 
 	public bool HayPacienteSeleccionado => SelectedPaciente is not null;
-	
-	
+
+
 	// ================================================================
 	// INFRASTRUCTURE
 	// ================================================================
-	
+
 	private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	public event PropertyChangedEventHandler? PropertyChanged;
 }
