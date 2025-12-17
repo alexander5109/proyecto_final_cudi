@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Windows;
 using Clinica.AppWPF.Infrastructure;
+using Clinica.Dominio.FunctionalToolkit;
+using Clinica.Dominio.Politicas;
 using Clinica.Dominio.TiposDeEnum;
 using Clinica.Dominio.TiposDeIdentificacion;
 using Clinica.Shared.ApiDtos;
@@ -16,26 +18,6 @@ namespace Clinica.AppWPF.UsuarioMedico;
 
 public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INotifyPropertyChanged {
 
-	// ================================================================
-	// REGLAS DE NEGOCIO - DIAGNÓSTICO
-	// ================================================================
-
-	private static bool PuedeDiagnosticarTurno(
-		TurnoDbModel turno,
-		bool tieneAtencion
-	) {
-		if (turno.OutcomeEstado != TurnoEstadoEnum.Concretado)
-			return false;
-
-		if (DateTime.Today < turno.FechaHoraAsignadaDesde.Date)
-			return false;
-
-		if (tieneAtencion)
-			return false;
-
-		return true;
-	}
-
 
 	// ================================================================
 	// ESTADO DERIVADO PARA UI
@@ -46,10 +28,11 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 			if (SelectedTurno is null)
 				return false;
 
-			return PuedeDiagnosticarTurno(
-				SelectedTurno.Model,
+			return PoliticaDeAtencionMedica.PuedeDiagnosticarTurno(
+				SelectedTurno.Model.OutcomeEstado,
+				SelectedTurno.Model.FechaHoraAsignadaDesde,
 				SelectedTurno.TieneAtencion
-			);
+			).IsOk;
 		}
 	}
 
@@ -81,10 +64,11 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 			if (SelectedTurno is null)
 				return "Seleccione un turno.";
 
-			return ObtenerMotivoNoDiagnostico(
-				SelectedTurno.Model,
+			return PoliticaDeAtencionMedica.PuedeDiagnosticarTurno(
+				SelectedTurno.Model.OutcomeEstado,
+				SelectedTurno.Model.FechaHoraAsignadaDesde,
 				SelectedTurno.TieneAtencion
-			);
+			).MatchAndSet(caseok => "Ingrese diagnóstico. ", caseError => caseError);
 		}
 	}
 
@@ -159,23 +143,6 @@ public sealed class MedicoAtencionDelDiaVM(MedicoId2025 CurrentMedicoId) : INoti
 	// ================================================================
 	// METHODS.PUBLIC
 	// ================================================================
-
-	private static string ObtenerMotivoNoDiagnostico(
-		TurnoDbModel turno,
-		bool tieneAtencion
-	) {
-		if (turno.OutcomeEstado != TurnoEstadoEnum.Concretado)
-			return "El paciente aún no se presentó en la clínica.";
-
-		if (DateTime.Today < turno.FechaHoraAsignadaDesde.Date)
-			return "El diagnóstico solo puede cargarse el día del turno o después.";
-
-		if (tieneAtencion)
-			return "Este turno ya tiene un diagnóstico registrado.";
-
-		return string.Empty;
-	}
-
 
 	internal async Task RefrescarTodoAsync() {
 
